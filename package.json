@@ -1,0 +1,43 @@
+{
+  "name": "jitsi-meet-spot",
+  "version": "0.0.0",
+  "description": "jitsi-meet-spot",
+  "main": "main.js",
+  "productName": "Jitsi Meet Spot",
+  "scripts": {
+    "start": "electron .",
+    "clean": "rm -rf node_modules",
+    "lint": "eslint .",
+    "pack": "electron-packager .",
+    "postinstall": "electron-rebuild",
+    "validate": "npm ls"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jitsi/jitsi-meet-spot"
+  },
+  "keywords": [
+    "jingle",
+    "webrtc",
+    "xmpp",
+    "electron",
+    "jitsi-meet"
+  ],
+  "author": "",
+  "readmeFilename": "README.md",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "*",
+    "electron-packager": "*",
+    "electron-rebuild": "^1.5.6",
+    "eslint": ">=3",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsdoc": "*",
+    "eslint-plugin-node": "^5.1.1",
+    "precommit-hook": "3.0.0"
+  }
+}
