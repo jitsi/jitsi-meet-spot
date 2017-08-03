@@ -32,7 +32,7 @@ function setUpHttpServer() {
         console.log('Server listening at port %d', port);
     });
 
-    function handler (req, res) {````````````````````````````````
+    function handler (req, res) {
         res.writeHead(200);
         res.end("Connected")
     }
