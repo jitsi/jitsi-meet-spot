@@ -29,7 +29,9 @@
   "author": "",
   "readmeFilename": "README.md",
   "license": "Apache-2.0",
-  "dependencies": {},
+  "dependencies": {
+    "socket.io": "^2.0.3"
+  },
   "devDependencies": {
     "electron": "*",
     "electron-packager": "*",
