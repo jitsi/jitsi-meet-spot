@@ -7,8 +7,8 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const url = require("url");
 
-const port = 1024;
-const theOtherPort = 1025;
+const listeningPort = 1024;
+const targetPort = 1025;
 
 /**
  * URL for index.html which will be our entry point.
@@ -65,10 +65,10 @@ function setUpHttpServer () {
     const server = require('http').createServer(handler);
     const io = require('socket.io')(server);
 
-    server.listen(port, function () {
-        console.log('Server listening at port %d', port);
+    server.listen(listeningPort, function () {
+        console.log('Server listening at port %d', listeningPort);
     });
-
+    
     function handler (req, res) {
         res.writeHead(200);
         res.end("Connected")
@@ -77,6 +77,7 @@ function setUpHttpServer () {
     io.on('connection', function (socket) {
         console.log("server-side socket connected")
         socket.emit('connected', 'you have been connected.');
+        console.log('message emitted');
         socket.on('enter-room', function (roomName) {
             console.log("Connect to https://meet.jit.si/" + roomName);
             jitsiMeetWindow.send('enter-room', roomName);
@@ -87,29 +88,15 @@ function setUpHttpServer () {
 //client
 function sendHttpRequest (roomName) {
     const {net} = require('electron');
-    const request = net.request('http://localhost:'+theOtherPort);
-    const socket = require('socket.io-client')('http://localhost:'+theOtherPort);
+    const socket = require('socket.io-client')('http://localhost:'+targetPort);
 
-
-    request.on('response', (response) => {
-        console.log(`STATUS: ${response.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
-        response.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-        });
-        response.on('end', () => {
-            console.log('No more data in response.')
-        });
-
-        socket.on('connect', () => {
-            console.log('client-side socket connected')
-            socket.emit('enter-room', roomName);
-        });
-        socket.on('connected', (message) => {
-            console.log("Message: " + message);
-        });
-    })
-    request.end();
+    socket.on('connect', () => {
+        console.log('client-side socket connected')
+        socket.emit('enter-room', roomName);
+    });
+    socket.on('connected', (message) => {
+        console.log("Message: " + message);
+    });
 }
 
 //Start the application:
