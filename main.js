@@ -3,6 +3,7 @@ const electron = require("electron");
 const {app} = electron;
 const APP = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = require('electron').ipcMain;
 
 const path = require("path");
 const url = require("url");
@@ -60,49 +61,27 @@ function setUpHttpServer () {
     jitsiMeetWindow = new BrowserWindow(jitsiMeetWindowOptions);
     jitsiMeetWindow.loadURL(indexURL);
 
-
-
-    const server = require('http').createServer(handler);
-    const io = require('socket.io')(server);
-
-    server.listen(listeningPort, function () {
-        console.log('Server listening at port %d', listeningPort);
-    });
-    
-    function handler (req, res) {
-        res.writeHead(200);
-        res.end("Connected")
-    }
-
-    io.on('connection', function (socket) {
-        console.log("server-side socket connected")
-        socket.emit('connected', 'you have been connected.');
-        console.log('message emitted');
-        socket.on('enter-room', function (roomName) {
-            console.log("Connect to https://meet.jit.si/" + roomName);
-            jitsiMeetWindow.send('enter-room', roomName);
-        });
+    const server = require('./modules/httpcontrol').HttpServer;
+    server.init(listeningPort);
+    server.onJoinConferenceRequest( (roomName) => {
+        console.log("Connect to https://meet.jit.si/" + roomName);
+        jitsiMeetWindow.send('enter-room', roomName);
     });
 }
 
 //client
-function sendHttpRequest (roomName) {
-    const {net} = require('electron');
-    const socket = require('socket.io-client')('http://localhost:'+targetPort);
+ipcMain.on('sendRequest', (event, roomName) => {
+    sendHttpRequest(roomName);
+});
 
-    socket.on('connect', () => {
-        console.log('client-side socket connected')
-        socket.emit('enter-room', roomName);
-    });
-    socket.on('connected', (message) => {
-        console.log("Message: " + message);
+function sendHttpRequest (roomName) {
+    const client = require('./modules/httpcontrol').HttpClient;
+    client.sendJoinConferenceRequest('http://localhost:'+targetPort, roomName);
+    client.onConnectionEstablisehd ( () => {
+        console.log('Connection Established');
     });
 }
 
 //Start the application:
 setAPPListeners();
 
-const ipcMain = require('electron').ipcMain;
-ipcMain.on('sendRequest', (event, roomName) => {
-    sendHttpRequest(roomName);
-});
