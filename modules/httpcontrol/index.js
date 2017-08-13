@@ -5,7 +5,7 @@ const url = require('url');
 /**
  * Receives http requests from another peer.
  */
-class HttpServer extends EventEmitter {
+class HttpControl extends EventEmitter {
     /**
      * Construcs new instance.
      * 
@@ -79,6 +79,28 @@ class HttpServer extends EventEmitter {
     }
 
     /**
+     * Sends join jitsi-meet conference http request
+     *
+     * @param {string} targetUrl - target server url
+     * @param {string} command - command for JitsiMeetExternalAPI
+     * @param {Function} callback - callback function
+     * @returns {null}
+     */
+    sendHttpCommand(targetUrl, command, callback) {
+        const xmlHttp = new XMLHttpRequest();
+        const queryString = `${targetUrl}
+                        ?command=${command.type}&args=${command.args}`;
+
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+                callback(xmlHttp.responseText);
+            }
+        };
+        xmlHttp.open('GET', queryString, true); // true for asynchronous
+        xmlHttp.send();
+    }
+
+    /**
      * Disposes the http server.
      * 
      * @returns {null}
@@ -90,4 +112,4 @@ class HttpServer extends EventEmitter {
     }
 }
 
-module.exports.HttpServer = new HttpServer();
+module.exports = new HttpControl();

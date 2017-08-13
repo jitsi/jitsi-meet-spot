@@ -1,6 +1,6 @@
-const server = require('../../modules/httpcontrol').HttpServer;
-const listeningPort = 1025;
-const targetPort = 1024;
+const http = require('../../modules/httpcontrol');
+const listeningPort = 1024;
+const targetPort = 1025;
 
 /**
  * The jitsi-meet api.
@@ -8,8 +8,8 @@ const targetPort = 1024;
 let api;
 
 window.onload = function() {
-    server.init(listeningPort);
-    server.onReceivedCommand((type, args) => {
+    http.init(listeningPort);
+    http.onReceivedCommand((type, args) => {
         handleCommand(type, args);
     });
 
@@ -22,7 +22,7 @@ window.onload = function() {
         };
 
         triggerLoader();
-        sendHttpCommand(`http://localhost:${targetPort}`, command,
+        http.sendHttpCommand(`http://localhost:${targetPort}`, command,
             data => {
                 console.log(data);
             }
@@ -31,35 +31,80 @@ window.onload = function() {
 
     /**
      * Listener for Eneter key down event.
+     * For testing purpose
      *
      * @param {event} event - key down event
      * @returns {null}
      */
     function _onKeyDown(event) {
         if (event.keyCode === /* Enter */ 13) {
-            const roomName = document.getElementById('enter_room_field').value;
-            const command = {
-                type: 'join',
-                args: roomName
-            };
+            const input = document.getElementById('enter_room_field').value;
 
-            triggerLoader();
-            sendHttpCommand(`http://localhost:${targetPort}`, command,
-                data => {
-                    console.log(data);
-                }
-            );
+            switch (input) {
+            case 'toggleAudio': {
+                const command = {
+                    type: 'toggleAudio'
+                };
+
+                console.log('toggleAudio');
+                http.sendHttpCommand(`http://localhost:${targetPort}`, command,
+                    data => {
+                        console.log(data);
+                    }
+                );
+                break;
+            }
+            case 'toggleVideo': {
+                const command = {
+                    type: 'toggleVideo'
+                };
+
+                console.log('toggleVideo');
+                http.sendHttpCommand(`http://localhost:${targetPort}`, command,
+                    data => {
+                        console.log(data);
+                    }
+                );
+                break;
+            }
+            case 'hangup': {
+                const command = {
+                    type: 'hangup'
+                };
+
+                console.log('hangup');
+                http.sendHttpCommand(`http://localhost:${targetPort}`, command,
+                    data => {
+                        console.log(data);
+                    }
+                );
+                break;
+            }
+            default: {
+                const command = {
+                    type: 'join',
+                    args: input
+                };
+
+                console.log('join');
+                http.sendHttpCommand(`http://localhost:${targetPort}`, command,
+                    data => {
+                        console.log(data);
+                    }
+                );
+            }
+            }
         }
     }
 };
 
 /**
- * Loads Jitsi-meet page in iframe with given room name.
+ * Trigger loadding screen.
  *
  * @returns {null}
  */
 function triggerLoader() {
-    document.onkeydown = null;
+    // document.onkeydown = null;
     document.getElementById('welcome_page_main').classList.add('animated');
     document.getElementById('welcome_page_main').classList.add('fadeOutUpBig');
     setTimeout(() => {
@@ -134,27 +179,6 @@ function handleCommand(type, args) {
     default:
         console.log(`Bad Request: ${type}`);
     }
-}
-
-/**
- * Sends join jitsi-meet conference http request
- *
- * @param {string} url - target server url
- * @param {string} command - command for JitsiMeetExternalAPI
- * @param {Function} callback - callback function
- * @returns {null}
- */
-function sendHttpCommand(url, command, callback) {
-    const xmlHttp = new XMLHttpRequest();
-    const queryString = `${url}?command=${command.type}&args=${command.args}`;
-
-    xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-            callback(xmlHttp.responseText);
-        }
-    };
-    xmlHttp.open('GET', queryString, true); // true for asynchronous
-    xmlHttp.send();
 }
 
 /**
