@@ -1,22 +1,17 @@
-/* eslint-disable */
-const electron = require("electron");
-const {app} = electron;
+const electron = require('electron');
 const APP = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const ipcMain = require('electron').ipcMain;
 
-const path = require("path");
-const url = require("url");
+const path = require('path');
+const url = require('url');
 
-const listeningPort = 1024;
-const targetPort = 1025;
 
 /**
  * URL for index.html which will be our entry point.
  */
 const indexURL = url.format({
-    pathname: path.join(__dirname, "windows", "jitsi-meet", "index.html"),
-    protocol: "file:",
+    pathname: path.join(__dirname, 'windows', 'jitsi-meet', 'index.html'),
+    protocol: 'file:',
     slashes: true
 });
 
@@ -40,48 +35,34 @@ const jitsiMeetWindowOptions = {
 
 /**
  * Sets the APP object listeners.
+ * 
+ * @returns {null}
  */
-function setAPPListeners () {
-    APP.on("ready", setUpHttpServer);
-    APP.on("activate", () => {
+function setAPPListeners() {
+    APP.on('ready', createJitsiIframe);
+    APP.on('activate', () => {
         if (jitsiMeetWindow === null) {
-            setUpHttpServer();
+            createJitsiIframe();
         }
     });
-    APP.on("window-all-closed", () => {
+    APP.on('window-all-closed', () => {
         // Don"t quit the application for Mac OS
-        if (process.platform !== "darwin") {
+        if (process.platform !== 'darwin') {
             APP.quit();
         }
     });
 }
 
-//server
-function setUpHttpServer () {
+/**
+ * Creates a BrowserWindow to contain jitsi-meet.
+ * 
+ * @returns {null}
+ */
+function createJitsiIframe() {
     jitsiMeetWindow = new BrowserWindow(jitsiMeetWindowOptions);
     jitsiMeetWindow.loadURL(indexURL);
-
-    const server = require('./modules/httpcontrol').HttpServer;
-    server.init(listeningPort);
-    server.onJoinConferenceRequest( (roomName) => {
-        console.log("Connect to https://meet.jit.si/" + roomName);
-        jitsiMeetWindow.send('enter-room', roomName);
-    });
 }
 
-//client
-ipcMain.on('sendRequest', (event, roomName) => {
-    sendHttpRequest(roomName);
-});
-
-function sendHttpRequest (roomName) {
-    const client = require('./modules/httpcontrol').HttpClient;
-    client.sendJoinConferenceRequest('http://localhost:'+targetPort, roomName);
-    client.onConnectionEstablisehd ( () => {
-        console.log('Connection Established');
-    });
-}
-
-//Start the application:
+// Start the application:
 setAPPListeners();
 

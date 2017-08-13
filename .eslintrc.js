@@ -21,7 +21,9 @@ module.exports = {
         'sourceType': 'module'
     },
     'plugins': [
-        'jsdoc'
+        'jsdoc',
+        'import',
+        'node'
     ],
     'rules': {
         // Possible Errors group
