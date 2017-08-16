@@ -1,6 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
-const url = require('url');
-
+const qs = require('querystring');
 
 /**
  * Receives http requests from another peer.
@@ -29,18 +28,39 @@ class HttpControl extends EventEmitter {
         this.started = true;
         this.server = require('http').createServer((req, res) => {
             if (this.started) {
+                /*  HTTP request format: 
+        curl --data "command=<command.type>&args=<arguments>" <targetURL>
+                 */
                 console.log('HTTP request received');
-                const queryData = url.parse(req.url, true).query;
+                let body = '';
+                let query;
 
-                console.log('Received request: ');
-                console.log(queryData);
-                self.emit('command', queryData.command, queryData.args);
-                res.writeHead(200);
-                res.end('Server OK');
+                req.on('data', data => {
+                    body += data;
+                });
+                req.on('end', () => {
+                    query = qs.parse(body);
+                    console.log('Received request: ');
+                    console.log(query);
+
+                    self.on('response', (success, message) => {
+                        if (success) {
+                            console.log('Command execution success');
+                            res.writeHead(200);
+                            res.end(message);
+                        } else {
+                            console.log('Command execution failed');
+                            res.writeHead(400);
+                            res.end(message);
+                        }
+                    });
+
+                    self.emit('command', query.command, query.args);
+                });
             } else {
                 console.log('Server disabled');
                 res.writeHead(503);
-                res.end('Service Unavailable');
+                res.end('Service Unavailable\n');
             }
         });
         this.server.listen(port, () => {
@@ -79,25 +99,14 @@ class HttpControl extends EventEmitter {
     }
 
     /**
-     * Sends join jitsi-meet conference http request
+     * Send command execution result to the client.
      *
-     * @param {string} targetUrl - target server url
-     * @param {string} command - command for JitsiMeetExternalAPI
-     * @param {Function} callback - callback function
+     * @param {boolean} status - true if execution is success
+     * @param {string} message - response messsage
      * @returns {null}
      */
-    sendHttpCommand(targetUrl, command, callback) {
-        const xmlHttp = new XMLHttpRequest();
-        const queryString = `${targetUrl}
-                        ?command=${command.type}&args=${command.args}`;
-
-        xmlHttp.onreadystatechange = function() {
-            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-                callback(xmlHttp.responseText);
-            }
-        };
-        xmlHttp.open('GET', queryString, true); // true for asynchronous
-        xmlHttp.send();
+    sendResponse(status, message) {
+        this.emit('response', status, message);
     }
 
     /**

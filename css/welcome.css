@@ -5,15 +5,14 @@ body, html {
     height: 100%;
     overflow: hidden;
 }
-body {
-    -webkit-app-region: drag
+
+iframe {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 0 none;
 }
 
-#welcome_page_main {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
 #background_pattern {
     position: absolute;
     background-image: url(../images/pattern-body.png);
@@ -26,168 +25,4 @@ body {
     background-size: 100% 100%;
     height: 100%;
     width: 100%;
-}
-
-#enter_room {
-    display: block;
-    position: relative;
-    width: 100%;
-    animation-delay: 1.5s;  
-}
-#enter_room_text {
-    height: 100px;
-    width: 100%;
-    padding-top: 130px;
-    text-align: center;
-    animation-delay: 0.5s;  
-}
-#enter_room_text span {
-    position: relative;
-    display: block;
-    color: #FFFFFF;
-    font-size: 9vw;
-    font-weight: 900;
-    font-family: open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-#enter_room_field {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    margin: 40px 0 0 -330px;
-    height: 100px; 
-    width: 660px;
-    text-align: center;
-    font-size: 50px;
-    color: #404040;
-    font-weight: 800;
-    font-family: open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    border: none;
-    border-radius: 5px;
-}
-#enter_room_field:focus {
-    outline: none;
-}
-
-#button_container {
-    display: block;
-    position: relative;
-    text-align: center;
-    width: 100%;
-    padding-top: 30px;
-    animation-delay: 2.5s; 
-}
-#enter_room_button {
-    height: 80px;
-    width: 300px;
-    background: none;
-    border-width: 5px;
-    border-color: #FFFFFF;
-    border-style: solid;
-    border-radius: 5px;
-    color: #FFFFFF;
-    font-size: 5vw;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 300ms ease;
-}
-#enter_room_button:hover {
-    background-color: #FFFFFF;
-    color: #00ccff;
-}
-#enter_room_button:focus {
-        outline: none;
-}
-
-.cs-loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  visibility: hidden;
-}
-
-.cs-loader-inner {
-  transform: translateY(-50%);
-  top: 50%;
-  position: absolute;
-  width: calc(100% - 200px);
-  color: #FFF;
-  padding: 0 100px;
-  text-align: center;
-}
-
-.cs-loader-inner label {
-  font-size: 20px;
-  opacity: 0;
-  display:inline-block;
-}
-
-@keyframes lol {
-  0% {
-    opacity: 0;
-    transform: translateX(-300px);
-  }
-  33% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-  66% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(300px);
-  }
-}
-
-@-webkit-keyframes lol {
-  0% {
-    opacity: 0;
-    -webkit-transform: translateX(-300px);
-  }
-  33% {
-    opacity: 1;
-    -webkit-transform: translateX(0px);
-  }
-  66% {
-    opacity: 1;
-    -webkit-transform: translateX(0px);
-  }
-  100% {
-    opacity: 0;
-    -webkit-transform: translateX(300px);
-  }
-}
-
-.cs-loader-inner label:nth-child(6) {
-  -webkit-animation: lol 3s infinite ease-in-out;
-  animation: lol 3s infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(5) {
-  -webkit-animation: lol 3s 100ms infinite ease-in-out;
-  animation: lol 3s 100ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(4) {
-  -webkit-animation: lol 3s 200ms infinite ease-in-out;
-  animation: lol 3s 200ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(3) {
-  -webkit-animation: lol 3s 300ms infinite ease-in-out;
-  animation: lol 3s 300ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(2) {
-  -webkit-animation: lol 3s 400ms infinite ease-in-out;
-  animation: lol 3s 400ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(1) {
-  -webkit-animation: lol 3s 500ms infinite ease-in-out;
-  animation: lol 3s 500ms infinite ease-in-out;
 }
