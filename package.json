@@ -30,7 +30,8 @@
   "readmeFilename": "README.md",
   "license": "Apache-2.0",
   "dependencies": {
-    "electron": "*"
+    "electron": "*",
+    "load-script2": "^1.0.0"
   },
   "devDependencies": {
     "electron": "*",

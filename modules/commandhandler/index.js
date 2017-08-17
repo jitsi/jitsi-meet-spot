@@ -1,4 +1,5 @@
 const config = require('../../config.js');
+const load = require('load-script2');
 
 /**
  * The jitsi-meet api.
@@ -59,14 +60,20 @@ function handleCommand(type, args) {
  * @returns {null}
  */
 function createJitsiIframe(room) {
-    const options = {
-        roomName: room,
-        width: 800,
-        height: 600,
-        parentNode: document.querySelector('#meet')
-    };
+    load(config.EXTERNAL_API_DOMAIN, err => {
+        if (err) {
+            console.log(`Error creating Jtisi-Meet iframe: ${err}`);
+        } else {
+            const options = {
+                roomName: room,
+                width: 800,
+                height: 600,
+                parentNode: document.querySelector('#meet')
+            };
 
-    api = new JitsiMeetExternalAPI(config.JITSI_MEET_DOMAIN, options);
+            api = new JitsiMeetExternalAPI(config.JITSI_MEET_DOMAIN, options);
+        }
+    });
 }
 
 module.exports = handleCommand;
