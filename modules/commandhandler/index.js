@@ -23,6 +23,8 @@ function handleCommand(type, args) {
         case 'hangup': {
             console.log('Hanging up...');
             api.executeCommand('hangup');
+            api.dispose();
+            api = null;
 
             return 'Success: Conference hung up\n';
         }
