@@ -1,4 +1,5 @@
 const http = require('../../modules/httpcontrol');
+const config = require('../../config.js');
 const listeningPort = process.env.PORT || 8000;
 
 /**
@@ -26,7 +27,6 @@ window.onload = function() {
  * @returns {null}
  */
 function createJitsiIframe(room) {
-    const domain = 'meet.jit.si';
     const options = {
         roomName: room,
         width: 800,
@@ -34,7 +34,7 @@ function createJitsiIframe(room) {
         parentNode: document.querySelector('#meet')
     };
 
-    api = new JitsiMeetExternalAPI(domain, options);
+    api = new JitsiMeetExternalAPI(config.JITSI_MEET_DOMAIN, options);
 }
 
 /**

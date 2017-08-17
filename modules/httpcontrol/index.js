@@ -118,6 +118,7 @@ class HttpControl extends EventEmitter {
         this.started = false;
         this.server = null;
         this.removeListener('command');
+        this.removeListener('response');
     }
 }
 
