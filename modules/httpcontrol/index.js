@@ -1,4 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
+const http = require('http');
 const qs = require('querystring');
 
 /**
@@ -23,10 +24,7 @@ class HttpControl extends EventEmitter {
      * @returns {null}
      */
     init(port) {
-        const self = this;
-
-        this.started = true;
-        this.server = require('http').createServer((req, res) => {
+        this.server = http.createServer((req, res) => {
             if (this.started) {
                 /*  HTTP request format: 
         curl --data "command=<command.type>&args=<arguments>" <targetURL>
@@ -43,7 +41,7 @@ class HttpControl extends EventEmitter {
                     console.log('Received request: ');
                     console.log(query);
 
-                    self.on('response', (success, message) => {
+                    this.on('response', (success, message) => {
                         if (success) {
                             console.log('Command execution success');
                             res.writeHead(200);
@@ -55,7 +53,7 @@ class HttpControl extends EventEmitter {
                         }
                     });
 
-                    self.emit('command', query.command, query.args);
+                    this.emit('command', query.command, query.args);
                 });
             } else {
                 console.log('Server disabled');
