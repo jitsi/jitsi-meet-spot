@@ -1,3 +1,7 @@
+/*eslint-disable*/
+//Error message: 'React' is defined but never used
+import React from 'react';
+/*eslint-enable*/
 import ReactDom from 'react-dom';
 
 import http from '../../modules/httpcontrol';
