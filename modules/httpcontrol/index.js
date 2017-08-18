@@ -1,6 +1,6 @@
-const EventEmitter = require('events').EventEmitter;
-const http = require('http');
-const qs = require('querystring');
+import { EventEmitter } from 'events';
+import http from 'http';
+import querystring from 'querystring';
 
 /**
  * Receives http requests from another peer.
@@ -21,7 +21,7 @@ class HttpControl extends EventEmitter {
      * Initializes the http server.
      * 
      * @param {integer} port - listening port for http server
-     * @returns {null}
+     * @returns {void}
      */
     init(port) {
         this.server = http.createServer((req, res) => {
@@ -37,7 +37,7 @@ class HttpControl extends EventEmitter {
                     body += data;
                 });
                 req.on('end', () => {
-                    query = qs.parse(body);
+                    query = querystring.parse(body);
                     console.log('Received request: ');
                     console.log(query);
 
@@ -69,7 +69,7 @@ class HttpControl extends EventEmitter {
     /**
      * Starts processing the events.
      * 
-     * @returns {null}
+     * @returns {void}
      */
     start() {
         this.started = true;
@@ -78,7 +78,7 @@ class HttpControl extends EventEmitter {
     /**
      * Stops processing the events.
      * 
-     * @returns {null}
+     * @returns {void}
      */
     stop() {
         this.started = false;
@@ -88,7 +88,7 @@ class HttpControl extends EventEmitter {
      * Event listener for join conference request.
      * 
      * @param {Function} callback - callback function
-     * @returns {null}
+     * @returns {void}
      */
     onReceivedCommand(callback) {
         return this.on('command', (type, args) => {
@@ -101,7 +101,7 @@ class HttpControl extends EventEmitter {
      *
      * @param {boolean} status - true if execution is success
      * @param {string} message - response messsage
-     * @returns {null}
+     * @returns {void}
      */
     sendResponse(status, message) {
         this.emit('response', status, message);
@@ -110,7 +110,7 @@ class HttpControl extends EventEmitter {
     /**
      * Disposes the http server.
      * 
-     * @returns {null}
+     * @returns {void}
      */
     dispose() {
         this.started = false;
@@ -120,4 +120,4 @@ class HttpControl extends EventEmitter {
     }
 }
 
-module.exports = new HttpControl();
+export default new HttpControl();

@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
     /*
      * Jitsi Meet domain
      */
@@ -14,3 +14,5 @@ module.exports = {
      */
     PORT: process.env.PORT || 8000
 };
+
+export default config;

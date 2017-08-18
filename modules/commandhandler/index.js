@@ -1,5 +1,5 @@
-const config = require('../../config.js');
-const load = require('load-script2');
+import load from 'load-script2';
+import config from '../../config.js';
 
 /**
  * The jitsi-meet api.
@@ -59,7 +59,7 @@ function handleCommand(type, args) {
  * Creates the iframe that will load Jitsi Meet.
  *
  * @param {string} room - conference room name
- * @returns {null}
+ * @returns {void}
  */
 function createJitsiIframe(room) {
     load(config.EXTERNAL_API_DOMAIN, err => {
@@ -78,4 +78,4 @@ function createJitsiIframe(room) {
     });
 }
 
-module.exports = handleCommand;
+export default handleCommand;

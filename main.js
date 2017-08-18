@@ -1,6 +1,6 @@
-const electron = require('electron');
-const path = require('path');
-const url = require('url');
+import electron from 'electron';
+import path from 'path';
+import url from 'url';
 
 const APP = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -29,13 +29,14 @@ const jitsiMeetWindowOptions = {
     height: 600,
     minWidth: 800,
     minHeight: 600,
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    webPreferences: { experimentalFeatures: true }
 };
 
 /**
  * Sets the APP object listeners.
  * 
- * @returns {null}
+ * @returns {void}
  */
 function setAPPListeners() {
     APP.on('ready', createJitsiIframe);
@@ -55,7 +56,7 @@ function setAPPListeners() {
 /**
  * Creates a BrowserWindow to contain jitsi-meet.
  * 
- * @returns {null}
+ * @returns {void}
  */
 function createJitsiIframe() {
     jitsiMeetWindow = new BrowserWindow(jitsiMeetWindowOptions);

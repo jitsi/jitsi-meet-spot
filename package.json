@@ -31,11 +31,16 @@
   "license": "Apache-2.0",
   "dependencies": {
     "electron": "*",
-    "load-script2": "^1.0.0"
+    "load-script2": "^1.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "redux": "^3.7.2",
+    "react-redux": "^5.0.6"
   },
   "devDependencies": {
-    "electron": "*",
+    "electron": "^1.7.5",
     "electron-packager": "*",
+    "electron-prebuilt-compile": "^1.7.5",
     "electron-rebuild": "^1.5.6",
     "eslint": ">=3",
     "eslint-plugin-import": "^2.7.0",

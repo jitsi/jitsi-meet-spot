@@ -17,7 +17,8 @@ module.exports = {
     },
     'parserOptions': {
         'ecmaFeatures': {
-            'experimentalObjectRestSpread': true
+            'experimentalObjectRestSpread': true,
+            "jsx": true
         },
         'sourceType': 'module'
     },
@@ -333,7 +334,9 @@ module.exports = {
         'jsdoc/require-param-description': 0,
         'jsdoc/require-param-type': 0,
         'jsdoc/require-returns-description': 0,
-        'jsdoc/require-returns-type': 0
+        'jsdoc/require-returns-type': 0,
+
+        'node/no-unsupported-features': 'off'
 
     }
 };
