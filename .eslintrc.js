@@ -5,7 +5,7 @@ module.exports = {
         'es6': true
     },
     'extends': [
-        'eslint:recommended', "plugin:node/recommended"
+        'eslint:recommended', "plugin:node/recommended", 'plugin:react/recommended'
     ],
     'globals': {
         // The globals that (1) are accessed but not defined within many of our
@@ -25,7 +25,8 @@ module.exports = {
     'plugins': [
         'jsdoc',
         'import',
-        'node'
+        'node',
+        'react'
     ],
     'rules': {
         // Possible Errors group
@@ -336,7 +337,7 @@ module.exports = {
         'jsdoc/require-returns-description': 0,
         'jsdoc/require-returns-type': 0,
 
-        'node/no-unsupported-features': 'off'
+        'node/no-unsupported-features': 0,
 
     }
 };

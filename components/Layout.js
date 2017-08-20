@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react';
 
 /**
@@ -6,11 +5,16 @@ import React from 'react';
  *
  */
 class Layout extends React.Component {
+    /**
+     * Renders component.
+     * 
+     * @returns {void}
+     */
     render() {
         return (
             <div>
-                <div id="background_pattern"></div>
-                <div id="background_logo"></div>
+                <div id='background_pattern'></div>
+                <div id='background_logo'></div>
             </div>
         );
     }

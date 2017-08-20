@@ -1,16 +1,10 @@
-/*eslint-disable*/
-//Error message: 'React' is defined but never used
 import React from 'react';
-/*eslint-enable*/
 import ReactDom from 'react-dom';
 
 import http from '../../modules/httpcontrol';
 import handleCommand from '../../modules/commandhandler';
 import config from '../../config.js';
-/*eslint-disable*/
-//Error message: 'App' is defined but never used
 import App from '../../components';
-/*eslint-enable*/
 
 const listeningPort = config.PORT;
 
