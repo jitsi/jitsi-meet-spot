@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import http from '../../modules/httpcontrol';
+import HttpControl from '../../modules/httpcontrol';
 import handleCommand from '../../modules/commandhandler';
 import config from '../../config.js';
 import App from '../../components';
 
-const listeningPort = config.PORT;
+const LISTENING_PORT = config.PORT;
+let http;
 
 window.onload = function() {
     ReactDom.render(
@@ -14,9 +15,9 @@ window.onload = function() {
         document.getElementById('app')
     );
 
-    http.init(listeningPort);
-    http.start();
-    http.onReceivedCommand((type, args) => {
+    http = new HttpControl(LISTENING_PORT);
+
+    http.on('command', (type, args) => {
         try {
             const message = handleCommand(type, args);
 

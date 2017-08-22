@@ -9,21 +9,12 @@ class HttpControl extends EventEmitter {
     /**
      * Construcs new instance.
      * 
+     * @param {integer} port - listening port for http server
      * @class
      */
-    constructor() {
+    constructor(port) {
         super();
-        this.started = false;
-        this.server = null;
-    }
-
-    /**
-     * Initializes the http server.
-     * 
-     * @param {integer} port - listening port for http server
-     * @returns {void}
-     */
-    init(port) {
+        this.started = true;
         this.server = http.createServer((req, res) => {
             if (this.started) {
                 /*  HTTP request format: 
@@ -38,9 +29,6 @@ class HttpControl extends EventEmitter {
                 });
                 req.on('end', () => {
                     query = querystring.parse(body);
-                    console.log('Received request: ');
-                    console.log(query);
-
                     this.on('response', (success, message) => {
                         if (success) {
                             console.log('Command execution success');
@@ -64,24 +52,6 @@ class HttpControl extends EventEmitter {
         this.server.listen(port, () => {
             console.log('Server listening at port %d', port);
         });
-    }
-
-    /**
-     * Starts processing the events.
-     * 
-     * @returns {void}
-     */
-    start() {
-        this.started = true;
-    }
-
-    /**
-     * Stops processing the events.
-     * 
-     * @returns {void}
-     */
-    stop() {
-        this.started = false;
     }
 
     /**
@@ -113,11 +83,11 @@ class HttpControl extends EventEmitter {
      * @returns {void}
      */
     dispose() {
-        this.started = false;
         this.server = null;
+        this.started = false;
         this.removeListener('command');
         this.removeListener('response');
     }
 }
 
-export default new HttpControl();
+export default HttpControl;

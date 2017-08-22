@@ -46,7 +46,11 @@ function handleCommand(type, args) {
         }
     } else if (type === 'join') {
         console.log(`Joining conference: ${args}`);
-        createJitsiIframe(args);
+        try {
+            createJitsiIframe(args);
+        } catch (err) {
+            return `Error loading Jitsi external api script: ${err}`;
+        }
 
         return `Success: Joined conference room: ${args}\n`;
     } else {
@@ -64,17 +68,16 @@ function handleCommand(type, args) {
 function createJitsiIframe(room) {
     load(config.EXTERNAL_API_DOMAIN, err => {
         if (err) {
-            console.log(`Error creating Jtisi-Meet iframe: ${err}`);
-        } else {
-            const options = {
-                roomName: room,
-                width: 800,
-                height: 600,
-                parentNode: document.querySelector('#meet')
-            };
-
-            api = new JitsiMeetExternalAPI(config.JITSI_MEET_DOMAIN, options);
+            return err;
         }
+        const options = {
+            roomName: room,
+            width: 800,
+            height: 600,
+            parentNode: document.querySelector('#meet')
+        };
+
+        api = new JitsiMeetExternalAPI(config.JITSI_MEET_DOMAIN, options);
     });
 }
 

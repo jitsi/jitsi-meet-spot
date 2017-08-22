@@ -29,8 +29,7 @@ const jitsiMeetWindowOptions = {
     height: 600,
     minWidth: 800,
     minHeight: 600,
-    titleBarStyle: 'hidden',
-    webPreferences: { experimentalFeatures: true }
+    titleBarStyle: 'hidden'
 };
 
 /**
