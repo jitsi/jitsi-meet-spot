@@ -1,3 +1,4 @@
+/* global JitsiMeetExternalAPI */
 import load from 'load-script2';
 import config from '../../config.js';
 

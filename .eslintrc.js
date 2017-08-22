@@ -12,8 +12,7 @@ module.exports = {
         // files, (2) are certainly defined, and (3) we would like to use
         // without explicitly specifying them (using a comment) inside of our
         // files.
-        '__filename': false,
-        'JitsiMeetExternalAPI': true
+        '__filename': false
     },
     'parserOptions': {
         'ecmaFeatures': {
