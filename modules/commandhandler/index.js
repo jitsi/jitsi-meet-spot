@@ -41,6 +41,24 @@ function handleCommand(type, args) {
 
             return 'Success: Video toggled\n';
         }
+        case 'toggleFilmStrip': {
+            console.log('Toggle Film Strip');
+            api.executeCommand('toggleFilmStrip');
+
+            return 'Success: Film strip toggled\n';
+        }
+        case 'toggleChat': {
+            console.log('Toggle Chat');
+            api.executeCommand('toggleChat');
+
+            return 'Success: Chat toggled\n';
+        }
+        case 'toggleContactList': {
+            console.log('Toggle Contact List');
+            api.executeCommand('toggleContactList');
+
+            return 'Success: Contact list toggled\n';
+        }
         default:
             console.log(`Bad Request: ${type}`);
             throw new Error('Fail: Unkown command\n');
