@@ -14,40 +14,33 @@ class HttpControl extends EventEmitter {
      */
     constructor(port) {
         super();
-        this.started = true;
         this.server = http.createServer((req, res) => {
-            if (this.started) {
-                /*  HTTP request format: 
-        curl --data "command=<command.type>&args=<arguments>" <targetURL>
-                 */
-                console.log('HTTP request received');
-                let body = '';
-                let query;
+            /*  HTTP request format: 
+    curl --data "command=<command.type>&args=<arguments>" <targetURL>
+                */
+            console.log('HTTP request received');
+            let body = '';
+            let query;
 
-                req.on('data', data => {
-                    body += data;
+            req.on('data', data => {
+                body += data;
+            });
+            req.on('end', () => {
+                query = querystring.parse(body);
+                this.on('response', (success, message) => {
+                    if (success) {
+                        console.log('Command execution success');
+                        res.writeHead(200);
+                        res.end(message);
+                    } else {
+                        console.log('Command execution failed');
+                        res.writeHead(400);
+                        res.end(message);
+                    }
                 });
-                req.on('end', () => {
-                    query = querystring.parse(body);
-                    this.on('response', (success, message) => {
-                        if (success) {
-                            console.log('Command execution success');
-                            res.writeHead(200);
-                            res.end(message);
-                        } else {
-                            console.log('Command execution failed');
-                            res.writeHead(400);
-                            res.end(message);
-                        }
-                    });
 
-                    this.emit('command', query.command, query.args);
-                });
-            } else {
-                console.log('Server disabled');
-                res.writeHead(503);
-                res.end('Service Unavailable\n');
-            }
+                this.emit('command', query.command, query.args);
+            });
         });
         this.server.listen(port, () => {
             console.log('Server listening at port %d', port);
@@ -84,7 +77,6 @@ class HttpControl extends EventEmitter {
      */
     dispose() {
         this.server = null;
-        this.started = false;
         this.removeListener('command');
         this.removeListener('response');
     }
