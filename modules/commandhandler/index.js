@@ -10,72 +10,29 @@ let api;
 /**
  * Handles JitsiMeetExternalAPI command.
  *
- * @param {string} type - command type
+ * @param {string} command - command type
  * @param {string} args - arguments for the command
  * @returns {string} execution status message
  */
-function handleCommand(type, args) {
-    if (api) {
-        switch (type) {
-        case 'join': {
-            console.log('Conference already exists');
-            throw new Error('Fail: You are already in conference\n');
-        }
-        case 'hangup': {
-            console.log('Hanging up...');
-            api.executeCommand('hangup');
-            api.dispose();
-            api = null;
+function handleCommand(command, args) {
+    if (!api) {
+        if (command === 'join') {
+            try {
+                createJitsiIframe(args);
 
-            return 'Success: Conference hung up\n';
-        }
-        case 'toggleAudio': {
-            console.log('Toggle Audio');
-            api.executeCommand('toggleAudio');
-
-            return 'Success: Audio toggled\n';
-        }
-        case 'toggleVideo': {
-            console.log('Toggle Video');
-            api.executeCommand('toggleVideo');
-
-            return 'Success: Video toggled\n';
-        }
-        case 'toggleFilmStrip': {
-            console.log('Toggle Film Strip');
-            api.executeCommand('toggleFilmStrip');
-
-            return 'Success: Film strip toggled\n';
-        }
-        case 'toggleChat': {
-            console.log('Toggle Chat');
-            api.executeCommand('toggleChat');
-
-            return 'Success: Chat toggled\n';
-        }
-        case 'toggleContactList': {
-            console.log('Toggle Contact List');
-            api.executeCommand('toggleContactList');
-
-            return 'Success: Contact list toggled\n';
-        }
-        default:
-            console.log(`Bad Request: ${type}`);
-            throw new Error('Fail: Unkown command\n');
-        }
-    } else if (type === 'join') {
-        console.log(`Joining conference: ${args}`);
-        try {
-            createJitsiIframe(args);
-        } catch (err) {
-            return `Error loading Jitsi external api script: ${err}`;
+                return `Conference joined: ${args}\n`;
+            } catch (err) {
+                return `Error loading Jitsi external api script: ${err}\n`;
+            }
         }
 
-        return `Success: Joined conference room: ${args}\n`;
-    } else {
-        console.log('API not initialized yet');
-        throw new Error('Fail: You are not in conference yet\n');
+        return 'There is no conference\n';
+    } else if (command === 'join') {
+        return 'Error: You are already in conference\n';
     }
+    api.executeCommand(command, args);
+
+    return `Success: ${command}\n`;
 }
 
 /**
@@ -91,8 +48,8 @@ function createJitsiIframe(room) {
         }
         const options = {
             roomName: room,
-            width: 800,
-            height: 600,
+            width: '100%',
+            height: '100%',
             parentNode: document.querySelector('#meet')
         };
 
