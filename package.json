@@ -31,11 +31,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "electron": "*",
+    "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger",
     "load-script2": "^1.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "redux": "^3.7.2",
-    "react-redux": "^5.0.6"
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "electron": "^1.7.5",

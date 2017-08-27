@@ -20,13 +20,13 @@ function handleCommand(command, args) {
             try {
                 createJitsiIframe(args);
 
-                return `Conference joined: ${args}\n`;
+                return `Success: Conference joined: ${args}\n`;
             } catch (err) {
-                return `Error loading Jitsi external api script: ${err}\n`;
+                return `Error: Unable to load Jitsi external api script: ${err}\n`;
             }
         }
 
-        return 'There is no conference\n';
+        return 'Error: No conference joined\n';
     } else if (command === 'join') {
         return 'Error: You are already in conference\n';
     }

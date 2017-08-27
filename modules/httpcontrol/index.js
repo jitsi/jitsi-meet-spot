@@ -1,6 +1,11 @@
 import { EventEmitter } from 'events';
 import http from 'http';
 import querystring from 'querystring';
+import Logger from 'jitsi-meet-logger';
+
+const logger = Logger.getLogger();
+
+logger.setLevel(Logger.levels.debug);
 
 /**
  * Receives http requests from another peer.
@@ -18,7 +23,7 @@ class HttpControl extends EventEmitter {
             /*  HTTP request format: 
     curl --data "command=<command.type>&args=<arguments>" <targetURL>
                 */
-            console.log('HTTP request received');
+            logger.log('HTTP request received');
             let body = '';
             let query;
 
@@ -29,11 +34,11 @@ class HttpControl extends EventEmitter {
                 query = querystring.parse(body);
                 this.on('response', (success, message) => {
                     if (success) {
-                        console.log('Command execution success');
+                        logger.log(message);
                         res.writeHead(200);
                         res.end(message);
                     } else {
-                        console.log('Command execution failed');
+                        logger.error(message);
                         res.writeHead(400);
                         res.end(message);
                     }
@@ -43,7 +48,7 @@ class HttpControl extends EventEmitter {
             });
         });
         this.server.listen(port, () => {
-            console.log('Server listening at port %d', port);
+            logger.log('Server listening at port %d', port);
         });
     }
 
