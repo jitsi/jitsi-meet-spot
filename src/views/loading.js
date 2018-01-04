@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 
 import { loadComplete } from 'actions';
 import { google } from 'calendars';
+import { preloadImage } from 'utils';
 
 import View from './view';
+import styles from './view.css';
 
+import { BACKGROUND_IMAGE_URL } from 'constants';
 import { getApiKey, getClientId } from 'reducers';
 
 export class LoadingView extends React.Component {
@@ -24,8 +27,8 @@ export class LoadingView extends React.Component {
 
     render() {
         return (
-            <View>
-                <div>Loading</div>
+            <View hideBackground = { true }>
+                <div className = { styles.loading }>Loading</div>
             </View>
         );
     }
@@ -38,18 +41,30 @@ export class LoadingView extends React.Component {
         const { _apiKey, _clientId } = this.props;
 
         if (_clientId && _apiKey) {
-            return google.authenticate(_clientId, _apiKey)
+            const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
+                .catch(error => {
+                    console.error(error);
+                })
+
+            const authPromise = google.authenticate(_clientId, _apiKey)
                 .then(() => {
                     if (!google.isAuthenticated()) {
                         return google.triggerSignIn();
                     }
                 })
+                .catch(() => {
+                    this.redirectToSetup();
+                    return Promise.reject();
+                })
+
+            return Promise.all([imageLoadPromise, authPromise])
                 .then(() => {
-                    this.props.dispatch(loadComplete())
+                    this.props.dispatch(loadComplete());
                     this.props.history.push('/');
                 })
                 .catch(() => {
-                    this.redirectToSetup();
+                    this.props.dispatch(loadComplete())
+                    console.warn('error loading app');
                 })
         }
 

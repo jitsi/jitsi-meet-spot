@@ -55,8 +55,7 @@ export class CalendarView extends React.Component {
                     <div className = { styles.meetings }>
                         <ScheduledMeetings
                             onMeetingClick = { this._onGoToMeeting }
-                            events = { this._getFutureEvents() }
-                        />
+                            events = { this._getFutureEvents() } />
                     </div>
                     <div className = { styles.code }>
                         <QRCode />

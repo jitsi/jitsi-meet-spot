@@ -15,6 +15,12 @@
     width: 50%;
 }
 
+.loading {
+    background: black;
+    height: 100%;
+    width: 100%;
+}
+
 .meetings {
     flex-grow: 1;
     overflow: scroll;
