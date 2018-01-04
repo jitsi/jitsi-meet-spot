@@ -96,7 +96,7 @@ export class CalendarView extends React.Component {
 function mapStateToProps(state) {
     return {
         calendarName: getCalendarName(state),
-        events: getCalendarEvents(state)
+        events: getCalendarEvents(state) || []
     };
 }
 

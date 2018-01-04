@@ -23,21 +23,15 @@ const DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
 ];
 const googleApi = {
-    authenticate(apiKey, clientId) {
+    authenticate(clientId, apiKey) {
         return this.load()
             .then(() => {
-                console.log('loaded');
                 return gapi.client.init({
                     apiKey,
                     clientId,
                     discoveryDocs: DISCOVERY_DOCS,
                     scope: SCOPES
                 });
-            })
-            .then(() => {
-                if (!this.isAuthenticated()) {
-                    return gapi.auth2.getAuthInstance().signIn();
-                }
             });
     },
 
@@ -77,6 +71,10 @@ const googleApi = {
                 return resolve();
             });
         })
+    },
+
+    triggerSignIn() {
+         return gapi.auth2.getAuthInstance().signIn();
     }
 };
 

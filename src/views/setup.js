@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { CalendarAccountSetup } from 'features/calendar-account';
+import { Setup } from 'features/setup';
 
 import View from './view';
 import styles from './view.css';
@@ -22,7 +22,7 @@ export class SetupView extends React.Component {
         return (
             <View>
                 <div className = { styles.container }>
-                    <CalendarAccountSetup
+                    <Setup
                         onCancel = { this._redirectToCalendar }
                         onSuccess = { this._redirectToCalendar } />
                 </div>

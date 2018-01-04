@@ -3,9 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setSetupCompleted } from 'actions';
-import { GoogleAuth, GoogleSelectRoom, Welcome } from 'features/setup';
+import GoogleAuth from './google-auth';
+import GoogleSelectRoom from './google-select-room'
+import Welcome from './welcome';
 
-export class CalendarSetup extends React.Component {
+export class Setup extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         onCancel: PropTypes.func,
@@ -91,4 +93,4 @@ export class CalendarSetup extends React.Component {
     }
 }
 
-export default connect()(CalendarSetup);
+export default connect()(Setup);

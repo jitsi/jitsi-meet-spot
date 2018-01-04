@@ -7,14 +7,19 @@ const setup = (state = defaultState, action) => {
     case 'SETUP_COMPLETED':
         return {
             ...state,
-            apiKey: action.apiKey,
-            clientId: action.clientId,
             completed: true
         };
     case 'LOAD_COMPLETED':
         return {
             ...state,
             loadCompleted: true
+        };
+
+    case 'SET_GOOGLE_CLIENT':
+        return {
+            ...state,
+            apiKey: action.apiKey,
+            clientId: action.clientId
         };
 
     default:
@@ -28,6 +33,15 @@ export function isLoadComplete(state) {
 
 export function isSetupComplete(state) {
     return state['setup'].completed;
+}
+
+
+export function getApiKey(state) {
+    return state['setup'].apiKey;
+}
+
+export function getClientId(state) {
+    return state['setup'].clientId;
 }
 
 export default setup;

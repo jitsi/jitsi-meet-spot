@@ -27,3 +27,11 @@ export function setSetupCompleted(completed, apiKey, clientId) {
         completed
     };
 }
+
+export function updateGoogleClient(clientId, apiKey) {
+    return {
+        type: 'SET_GOOGLE_CLIENT',
+        apiKey,
+        clientId
+    };
+}
