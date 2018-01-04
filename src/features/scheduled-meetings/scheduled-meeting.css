@@ -1,0 +1,16 @@
+.details {
+    margin-left: 20px;
+}
+
+.meeting {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.name {
+    font-size: 3vw;
+}
+
+.time {
+    font-size: 3vw;
+}

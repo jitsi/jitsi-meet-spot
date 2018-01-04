@@ -1,43 +1,35 @@
 {
-  "name": "jitsi-meet-spot",
-  "version": "0.0.0",
-  "description": "jitsi-meet-spot",
-  "main": "main.js",
-  "productName": "Jitsi Meet Spot",
-  "scripts": {
-    "start": "electron .",
-    "clean": "rm -rf node_modules",
-    "lint": "eslint .",
-    "pack": "electron-packager .",
-    "postinstall": "electron-rebuild",
-    "validate": "npm ls"
-  },
-  "pre-commit": [
-    "lint"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jitsi/jitsi-meet-spot"
-  },
-  "keywords": [
-    "jingle",
-    "webrtc",
-    "xmpp",
-    "electron",
-    "jitsi-meet"
-  ],
-  "author": "",
-  "readmeFilename": "README.md",
-  "license": "Apache-2.0",
-  "dependencies": {},
-  "devDependencies": {
-    "electron": "*",
-    "electron-packager": "*",
-    "electron-rebuild": "^1.5.6",
-    "eslint": ">=3",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsdoc": "*",
-    "eslint-plugin-node": "^5.1.1",
-    "precommit-hook": "3.0.0"
-  }
+    "devDependencies": {
+        "babel-core": "6.26.0",
+        "babel-eslint": "8.1.2",
+        "babel-loader": "7.1.2",
+        "babel-preset-react": "6.24.1",
+        "babel-preset-stage-2": "6.24.1",
+        "circular-dependency-plugin": "4.3.0",
+        "css-loader": "0.28.7",
+        "eslint": "4.14.0",
+        "eslint-loader": "1.9.0",
+        "eslint-plugin-react": "7.5.1",
+        "prop-types": "15.6.0",
+        "react": "16.2.0",
+        "react-dom": "16.2.0",
+        "react-redux": "5.0.6",
+        "react-router-dom": "4.2.2",
+        "redux": "3.7.2",
+        "style-loader": "0.19.1",
+        "uglifyjs-webpack-plugin": "1.1.5",
+        "webpack": "3.10.0"
+    },
+    "engines": {
+        "node": "8.9.1",
+        "npm": "5.5.1"
+    },
+    "name": "proto",
+    "scripts": {
+        "build-dev": "webpack --config ./webpack.config.js --progress",
+        "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
+        "watch-dev": "webpack --config ./webpack.config.js --progress --watch",
+        "watch-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress --watch"
+    },
+    "version": "0.0.1"
 }
