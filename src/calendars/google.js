@@ -27,7 +27,8 @@ function generateGetCalendarApi(roomId) {
 }
 
 const SCOPES = [
-    `${GOOGLE_API_ROOM}/auth/admin.directory.resource.calendar.readonly`
+    `${GOOGLE_API_ROOM}/auth/admin.directory.resource.calendar.readonly`,
+    `${GOOGLE_API_ROOM}/auth/calendar.readonly`
 ].join(' ');
 
 const DISCOVERY_DOCS = [
