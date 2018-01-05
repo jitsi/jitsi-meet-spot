@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { BACKGROUND_IMAGE_URL } from 'constants';
+import { BACKGROUND_IMAGE_URL } from 'app-constants';
 
 import styles from './view.css';
 

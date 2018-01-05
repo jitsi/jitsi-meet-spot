@@ -9,7 +9,7 @@ import { preloadImage } from 'utils';
 import View from './view';
 import styles from './view.css';
 
-import { BACKGROUND_IMAGE_URL } from 'constants';
+import { BACKGROUND_IMAGE_URL } from 'app-constants';
 import { getApiKey, getClientId } from 'reducers';
 
 export class LoadingView extends React.Component {

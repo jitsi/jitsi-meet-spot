@@ -12,7 +12,23 @@ function generateCalendarResourcesApi(customerId) {
 }
 
 function generateGetCalendarApi(roomId) {
-    return `${GOOGLE_API_ROOM}/calendar/v3/calendars/${roomId}/events`;
+    const date = new Date();
+    const currentTimestamp = date.toISOString();
+
+    date.setHours(date.getHours() + 24);
+
+    const futureTimestamp = date.toISOString();
+
+    const GET_CALENDAR_PARAMS = [
+        'alwaysIncludeEmail=true',
+        'orderBy=starttime',
+        'singleEvents=true',
+        `timeMax=${futureTimestamp}`,
+        `timeMin=${currentTimestamp}`
+    ].join('&');
+
+    return `${GOOGLE_API_ROOM}/calendar/v3/calendars/${roomId}/events?${
+        GET_CALENDAR_PARAMS}`
 }
 
 const SCOPES = [

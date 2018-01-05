@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Avatar from './avatar';
+
 import styles from './scheduled-meeting.css';
 
 export default class ScheduledMeeting extends React.Component {
@@ -20,9 +22,6 @@ export default class ScheduledMeeting extends React.Component {
 
         const time = new Date(event.start.dateTime);
         const name = event.summary;
-        const participants = event.attendees.map(attendee => {
-            return <span key = { attendee.email }>{ attendee.email }</span>
-        });
 
         return (
             <div
@@ -36,11 +35,21 @@ export default class ScheduledMeeting extends React.Component {
                         { name }
                     </div>
                     <div className = { styles.participants }>
-                        { participants }
+                        { this._generateAvatars() }
                     </div>
                 </div>
             </div>
         );
+    }
+
+    _generateAvatars() {
+        return this.props.event.attendees.map(attendee => {
+            return (
+                <Avatar
+                    key = { attendee.email }
+                    email = { attendee.email } />
+            );
+        });
     }
 
     _onMeetingClick() {
