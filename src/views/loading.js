@@ -31,8 +31,7 @@ export class LoadingView extends React.Component {
         return (
             <View hideBackground = { true }>
                 <div className = { styles.loading }>
-                    <LoadingIcon />
-
+                    <LoadingIcon color = 'white' />
                 </div>
             </View>
         );

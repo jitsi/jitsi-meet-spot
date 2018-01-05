@@ -15,8 +15,11 @@
 }
 
 .loading {
+    align-items: center;
     background: black;
+    display: flex;
     height: 100%;
+    justify-content: center;
     width: 100%;
 }
 
