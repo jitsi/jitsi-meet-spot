@@ -5,17 +5,35 @@
 
 .details {
     margin-left: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .meeting {
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    padding: 20px;
     display: flex;
     margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.meeting:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.ongoing {
+
 }
 
 .name {
     font-size: 3vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .time {
     font-size: 3vw;
+    white-space: nowrap;
+    width: 30%;
 }

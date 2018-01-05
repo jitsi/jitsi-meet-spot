@@ -55,6 +55,9 @@ html {
   box-sizing: inherit;
 }
 
+body {
+  font-family: 'Yanone Kaffeesatz', 'Helvetica Neue', Helvetica, sans-serif;
+}
 
 body,
 body > div {

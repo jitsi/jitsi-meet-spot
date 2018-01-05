@@ -9,6 +9,7 @@ css-loader: css scoped to components
 eslint: linter
 eslint-loader: lint with webpack build
 eslint-plugin-react: to lint react and jsx
+moment: for date formatting
 prop-types: for react
 react: view library
 react-dom: bootstrap react onto the page

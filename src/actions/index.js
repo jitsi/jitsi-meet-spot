@@ -4,11 +4,10 @@ export function loadComplete() {
     };
 }
 
-export function setCalendar(name, events = []) {
+export function setCalendar(name) {
     return {
         type: 'CALENDAR_ADD_ACCOUNT',
-        name,
-        events
+        name
     };
 }
 

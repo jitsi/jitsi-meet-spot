@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import styles from './meeting-name-entry.css';
+
 export class MeetingNameEntry extends React.Component {
     static propTypes = {
         onSubmit: PropTypes.func
@@ -20,15 +22,18 @@ export class MeetingNameEntry extends React.Component {
 
     render() {
         return (
-            <div>
-                <form onSubmit = { this._onSubmit } >
-                    <input
-                        onChange = { this._onMeetingNameChange }
-                        placeholder = 'GO!'
-                        value = { this.state.meetingName } />
-                    <button type = 'submit'>Go!</button>
-                </form>
-            </div>
+            <form
+                className = { styles.wrapper }
+                onSubmit = { this._onSubmit } >
+                <input
+                    className = { styles.input }
+                    onChange = { this._onMeetingNameChange }
+                    placeholder = 'Enter a meeting name'
+                    value = { this.state.meetingName } />
+                <button
+                    className = { styles.button }
+                    type = 'submit'>GO</button>
+            </form>
         );
     }
 
@@ -40,7 +45,7 @@ export class MeetingNameEntry extends React.Component {
 
     _onSubmit(event) {
         event.preventDefault();
-        if (this.props.onSubmit) {
+        if (this.props.onSubmit && this.state.meetingName) {
             this.props.onSubmit(this.state.meetingName);
         }
     }

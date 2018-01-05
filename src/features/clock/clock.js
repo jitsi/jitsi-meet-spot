@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 
 import styles from './clock.css';
@@ -7,7 +8,7 @@ export default class Clock extends React.Component {
         super(props);
 
         this.state = {
-            date: new Date()
+            time: this._getFormattedCurrentTime()
         };
 
         this._dateUpdateInterval = null;
@@ -15,7 +16,7 @@ export default class Clock extends React.Component {
 
     componentDidMount() {
         this._dateUpdateInterval = setInterval(() => {
-            this.setState({ date: new Date() })
+            this.setState({ time: this._getFormattedCurrentTime() })
         }, 500);
     }
 
@@ -26,8 +27,12 @@ export default class Clock extends React.Component {
     render() {
         return (
             <div className = { styles.clock }>
-                { this.state.date.toLocaleTimeString() }
+                { this.state.time }
             </div>
         );
+    }
+
+    _getFormattedCurrentTime() {
+        return moment().format('hh:mm');
     }
 }

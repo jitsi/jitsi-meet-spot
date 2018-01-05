@@ -24,7 +24,6 @@ export class CalendarView extends React.Component {
     constructor(props) {
         super(props);
 
-        this._getFutureEvents = this._getFutureEvents.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
@@ -34,7 +33,7 @@ export class CalendarView extends React.Component {
     componentDidMount() {
         this._pollForEvents();
 
-        this._updateEventsInterval = setInterval(this._pollForEvents, 30000)
+        this._updateEventsInterval = setInterval(this._pollForEvents, 30000);
     }
 
     componentWillUnmount() {
@@ -49,13 +48,11 @@ export class CalendarView extends React.Component {
                     <div>
                         <Clock />
                     </div>
-                    <div>
                         <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
-                    </div>
                     <div className = { styles.meetings }>
                         <ScheduledMeetings
                             onMeetingClick = { this._onGoToMeeting }
-                            events = { this._getFutureEvents() } />
+                            events = { this.props.events } />
                     </div>
                     <div className = { styles.code }>
                         <QRCode />
@@ -65,19 +62,6 @@ export class CalendarView extends React.Component {
         );
     }
 
-    _getFutureEvents() {
-        return this.props.events.filter(event => {
-            if (!event.location.includes('meet.jit.si')) {
-                return false;
-            }
-
-            const ending = new Date(event.end.dateTime);
-            const now = new Date();
-
-            return ending > now;
-        });
-    }
-
     _onGoToMeeting(meetingName = 'temp_placeholder') {
         this.props.history.push(`/meeting/${meetingName}`);
     }
@@ -85,9 +69,11 @@ export class CalendarView extends React.Component {
     _pollForEvents() {
         google.getCalendar(this.props.calendarName)
             .then(events => {
-                if (!this._isUnmounting) {
-                    this.props.dispatch(setCalendarEvents(events));
+                if (this._isUnmounting) {
+                    return;
                 }
+
+                this.props.dispatch(setCalendarEvents(events));
             });
     }
 }

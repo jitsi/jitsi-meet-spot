@@ -1,3 +1,4 @@
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,50 +19,42 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     render() {
-        const { event } = this.props;
-
-        const time = new Date(event.start.dateTime);
-        const name = event.summary;
+        const { name, participants, start } = this.props.event;
+        const startTime = new Date(start);
+        const className = startTime.getTime() <= Date.now()
+            ? `${styles.meeting} ${styles.ongoing}`
+            : `${styles.meeting}`;
 
         return (
             <div
-                className = { styles.meeting }
+                className = { className }
                 onClick = { this._onMeetingClick }>
                 <div className = { styles.time }>
-                    { time.toLocaleTimeString() }
+                    { moment(startTime).format('hh:mm') }
                 </div>
                 <div className = { styles.details }>
                     <div className = { styles.name }>
                         { name }
                     </div>
                     <div className = { styles.participants }>
-                        { this._generateAvatars() }
+                        { this._generateAvatars(participants) }
                     </div>
                 </div>
             </div>
         );
     }
 
-    _generateAvatars() {
-        return this.props.event.attendees.map(attendee => {
+    _generateAvatars(participants = []) {
+        return participants.map(participant => {
             return (
                 <Avatar
-                    key = { attendee.email }
-                    email = { attendee.email } />
+                    key = { participant.email }
+                    email = { participant.email } />
             );
         });
     }
 
     _onMeetingClick() {
-        this.props.onMeetingClick(this._parseMeetingLocation());
-    }
-
-    _parseMeetingLocation() {
-        // eslint-disable-next-line no-useless-escape
-        const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
-        const matches = linkRegex.exec(this.props.event.location);
-
-        // eslint-disable-next-line no-useless-escape
-        return matches[1].replace(/,\s*$/, '');
+        this.props.onMeetingClick(this.props.event.name);
     }
 }

@@ -6,24 +6,19 @@ function generateCalendarResourcesApi(customerId) {
     const url = `${GOOGLE_API_ROOM}/admin/directory/v1/customer/${
         customerId}/resources/calendars`;
 
-    console.log(url);
-
     return url;
 }
 
 function generateGetCalendarApi(roomId) {
-    const date = new Date();
-    const currentTimestamp = date.toISOString();
-
-    date.setHours(date.getHours() + 24);
-
-    const futureTimestamp = date.toISOString();
-
+    const now = new Date();
+    const currentTimestamp = now.toISOString();
+    const future = new Date(now.setHours(now.getHours() + 24));
+    const futuretimestamp = future.toISOString();
     const GET_CALENDAR_PARAMS = [
         'alwaysIncludeEmail=true',
         'orderBy=starttime',
         'singleEvents=true',
-        `timeMax=${futureTimestamp}`,
+        `timeMax=${futuretimestamp}`,
         `timeMin=${currentTimestamp}`
     ].join('&');
 
