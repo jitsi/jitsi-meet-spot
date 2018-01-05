@@ -7,6 +7,8 @@ import GoogleAuth from './google-auth';
 import GoogleSelectRoom from './google-select-room';
 import Welcome from './welcome';
 
+import styles from './setup.css';
+
 export class Setup extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
@@ -33,10 +35,8 @@ export class Setup extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className = 'content'>
-                    { this.state.renderCurrentStep() }
-                </div>
+            <div className = { styles.setup }>
+                { this.state.renderCurrentStep() }
             </div>
         );
     }

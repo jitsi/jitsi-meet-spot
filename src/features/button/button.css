@@ -1,0 +1,14 @@
+.button:focus {
+    outline: none;
+}
+
+.button {
+    background: steelblue;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 17pt;
+}
+.button:hover {
+    background: teal;
+};

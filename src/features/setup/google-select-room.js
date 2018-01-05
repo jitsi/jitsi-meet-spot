@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 
 import { setCalendar } from 'actions';
 import { google } from 'calendars';
+import { Button } from 'features/button';
 import { LoadingIcon } from 'features/loading-icon';
+
+import styles from './setup.css';
 
 export class GoogleSelectRoom extends React.Component {
     static propTypes = {
@@ -30,33 +33,47 @@ export class GoogleSelectRoom extends React.Component {
     render() {
         const { loading, rooms } = this.state;
 
-        if (loading) {
-            return <div><LoadingIcon /></div>;
-        }
+        let content;
+        let continueButton = null;
 
-        if (!rooms.length) {
-            return (
+        if (loading) {
+            content = <LoadingIcon />;
+        } else if (rooms.length) {
+            content = rooms.map(room =>
+                <div key = { room.etags }>
+                    <Button onClick = { () => this._onRoomClick(room) }>
+                        { room.resourceName }
+                    </Button>
+                </div>
+            );
+        } else {
+            content = rooms.map(room =>
                 <div>
-                    No rooms found
-                    <button onClick = { this.onSuccess }>Next</button>
+                    <Button
+                        key = { room.etags }
+                        onClick = { () => this._onRoomClick(room) }>
+                        { room.resourceName }
+                    </Button>
                 </div>
             );
         }
 
-        const roomSelections = rooms.map(room =>
-            <button
-                key = { room.etags }
-                onClick = { () => this._onRoomClick(room) }>
-                { room.resourceName }
-            </button>
-        );
-
         return (
-            <div>
-                { roomSelections }
+            <div className = { styles.step }>
+                <div className = { styles.title }>
+                    Select A Room
+                </div>
+                <div className = { styles.content }>
+                    { content }
+                </div>
+                <div className = { styles.buttons }>
+                    { continueButton }
+                </div>
             </div>
         );
     }
+
+
 
     // FIXME: move into action
     _fetchRooms() {

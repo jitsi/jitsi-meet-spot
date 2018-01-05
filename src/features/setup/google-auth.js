@@ -6,6 +6,10 @@ import { updateGoogleClient } from 'actions';
 import { google } from 'calendars';
 import { getApiKey, getClientId } from 'reducers';
 
+import { Button } from 'features/button';
+
+import styles from './setup.css';
+
 export class GoogleAuth extends React.Component {
     static propTypes = {
         _apiKey: PropTypes.string,
@@ -29,19 +33,31 @@ export class GoogleAuth extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Auth</h1>
-                <input
-                    onChange = { this._onApiKeyChange }
-                    placeholder = 'API_KEY'
-                    value = { this.state.apiKey } />
-                <input
-                    onChange = { this._onCliendIdChange }
-                    placeholder = 'CLIENT_ID'
-                    value = { this.state.clientId } />
-                <button onClick = { this._onAuthEnter }>
-                    Submit
-                </button>
+            <div className = { styles.step }>
+                <div className = { styles.title }>
+                    Authenticate With Google
+                </div>
+                <div className = { styles.content }>
+                    <div>
+                        <div>Api Key</div>
+                        <input
+                            onChange = { this._onApiKeyChange }
+                            placeholder = 'API_KEY'
+                            value = { this.state.apiKey } />
+                    </div>
+                    <div>
+                        <div>Client ID</div>
+                        <input
+                            onChange = { this._onCliendIdChange }
+                            placeholder = 'CLIENT_ID'
+                            value = { this.state.clientId } />
+                    </div>
+                </div>
+                <div className = { styles.buttons }>
+                    <Button onClick = { this._onAuthEnter }>
+                        Submit
+                    </Button>
+                </div>
             </div>
         );
     }

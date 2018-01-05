@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { Button } from 'features/button';
+
 import styles from './meeting-name-entry.css';
 
 export class MeetingNameEntry extends React.Component {
@@ -30,9 +32,7 @@ export class MeetingNameEntry extends React.Component {
                     onChange = { this._onMeetingNameChange }
                     placeholder = 'Enter a meeting name'
                     value = { this.state.meetingName } />
-                <button
-                    className = { styles.button }
-                    type = 'submit'>GO</button>
+                <Button type = 'submit'>GO</Button>
             </form>
         );
     }

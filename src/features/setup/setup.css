@@ -1,0 +1,21 @@
+.setup {
+    background-color: white;
+    border-radius: 25px;
+    height: 100%;
+    padding: 40px;
+    width: 100%;
+}
+
+.step {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 2em;
+}
+
+.content {
+    flex: 1;
+}
