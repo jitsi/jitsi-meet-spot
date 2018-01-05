@@ -9,14 +9,12 @@ export default class ScheduledMeetings extends React.Component {
     };
 
     render() {
-        const events = (this.props.events || []).map(event => {
-            return (
-                <ScheduledMeeting
-                    key = { event.id }
-                    event = { event }
-                    onMeetingClick = { this.props.onMeetingClick } />
-            );
-        });
+        const events = (this.props.events || []).map(event =>
+            <ScheduledMeeting
+                key = { event.id }
+                event = { event }
+                onMeetingClick = { this.props.onMeetingClick } />
+        );
 
         return (
             <div>

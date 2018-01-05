@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 import calendars from './calendars';
 import setup from './setup';
 

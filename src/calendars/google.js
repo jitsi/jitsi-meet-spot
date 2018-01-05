@@ -23,7 +23,7 @@ function generateGetCalendarApi(roomId) {
     ].join('&');
 
     return `${GOOGLE_API_ROOM}/calendar/v3/calendars/${roomId}/events?${
-        GET_CALENDAR_PARAMS}`
+        GET_CALENDAR_PARAMS}`;
 }
 
 const SCOPES = [
@@ -36,14 +36,12 @@ const DISCOVERY_DOCS = [
 const googleApi = {
     authenticate(clientId, apiKey) {
         return this.load()
-            .then(() => {
-                return gapi.client.init({
-                    apiKey,
-                    clientId,
-                    discoveryDocs: DISCOVERY_DOCS,
-                    scope: SCOPES
-                });
-            });
+            .then(() => gapi.client.init({
+                apiKey,
+                clientId,
+                discoveryDocs: DISCOVERY_DOCS,
+                scope: SCOPES
+            }));
     },
 
     isAuthenticated() {
@@ -70,22 +68,18 @@ const googleApi = {
             .then(response => {
                 const allCalendars = response.result.items;
 
-                return allCalendars.filter(calendar => {
-                    return calendar.resourceCategory === 'CONFERENCE_ROOM';
-                });
+                return allCalendars.filter(calendar =>
+                    calendar.resourceCategory === 'CONFERENCE_ROOM');
             });
     },
 
     load() {
-        return new Promise((resolve) => {
-            gapi.load('client:auth2', () => {
-                return resolve();
-            });
-        })
+        return new Promise(resolve =>
+            gapi.load('client:auth2', () => resolve()));
     },
 
     triggerSignIn() {
-         return gapi.auth2.getAuthInstance().signIn();
+        return gapi.auth2.getAuthInstance().signIn();
     }
 };
 

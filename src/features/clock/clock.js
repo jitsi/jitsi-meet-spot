@@ -16,7 +16,7 @@ export default class Clock extends React.Component {
 
     componentDidMount() {
         this._dateUpdateInterval = setInterval(() => {
-            this.setState({ time: this._getFormattedCurrentTime() })
+            this.setState({ time: this._getFormattedCurrentTime() });
         }, 500);
     }
 

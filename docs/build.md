@@ -7,7 +7,10 @@ babel-preset-stage-2: for newer syntax, including spread operators
 circular-dependency-plugin: force thinking of relationships
 css-loader: css scoped to components
 eslint: linter
+eslint-config-jitsi: eslint settings common to jitsi frontend
 eslint-loader: lint with webpack build
+eslint-plugin-flowtype: because eslint-config-jitsi depends on it
+eslint-plugin-import: because eslint-config-jitsi depends on it
 eslint-plugin-react: to lint react and jsx
 moment: for date formatting
 prop-types: for react

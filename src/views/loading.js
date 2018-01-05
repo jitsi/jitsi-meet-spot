@@ -44,7 +44,7 @@ export class LoadingView extends React.Component {
             const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
                 .catch(error => {
                     console.error(error);
-                })
+                });
 
             const authPromise = google.authenticate(_clientId, _apiKey)
                 .then(() => {
@@ -54,18 +54,19 @@ export class LoadingView extends React.Component {
                 })
                 .catch(() => {
                     this.redirectToSetup();
-                    return Promise.reject();
-                })
 
-            return Promise.all([imageLoadPromise, authPromise])
+                    return Promise.reject();
+                });
+
+            return Promise.all([ imageLoadPromise, authPromise ])
                 .then(() => {
                     this.props.dispatch(loadComplete());
                     this.props.history.push('/');
                 })
                 .catch(() => {
-                    this.props.dispatch(loadComplete())
+                    this.props.dispatch(loadComplete());
                     console.warn('error loading app');
-                })
+                });
         }
 
         setTimeout(() => {
@@ -74,7 +75,7 @@ export class LoadingView extends React.Component {
     }
 
     redirectToSetup() {
-        this.props.dispatch(loadComplete())
+        this.props.dispatch(loadComplete());
         this.props.history.push('/setup');
     }
 }

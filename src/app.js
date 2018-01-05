@@ -26,12 +26,12 @@ export class App extends React.Component {
                 <Switch>
                     <PrivateRoute
                         isInitialLoadComplete = { _loadCompleted }
-                        isSetupComplete = { _isSetupComplete }
+                        _isSetupComplete = { _isSetupComplete }
                         path = '/admin'
                         component = { AdminView } />
                     <PrivateRoute
                         isInitialLoadComplete = { _loadCompleted }
-                        isSetupComplete = { _isSetupComplete }
+                        _isSetupComplete = { _isSetupComplete }
                         path = '/meeting/:name'
                         component = { MeetingView } />
                     <Route
@@ -42,7 +42,7 @@ export class App extends React.Component {
                         component = { LoadingView } />
                     <PrivateRoute
                         isInitialLoadComplete = { _loadCompleted }
-                        isSetupComplete = { _isSetupComplete }
+                        _isSetupComplete = { _isSetupComplete }
                         component = { CalendarView } />
                 </Switch>
             </div>
@@ -54,7 +54,7 @@ class PrivateRoute extends React.Component {
     static propTypes = {
         component: PropTypes.func,
         isInitialLoadComplete: PropTypes.bool,
-        isSetupComplete: PropTypes.bool
+        _isSetupComplete: PropTypes.bool
     }
 
     constructor(props) {
@@ -70,13 +70,13 @@ class PrivateRoute extends React.Component {
     }
 
     _renderRoute() {
-        const { isSetupComplete, isInitialLoadComplete, ...rest } = this.props;
+        const { _isSetupComplete, isInitialLoadComplete, ...rest } = this.props;
 
         if (!isInitialLoadComplete) {
             return <Redirect to = '/loading' />;
         }
 
-        if (!isSetupComplete) {
+        if (!_isSetupComplete) {
             return <Redirect to = {{ pathname: '/setup' }} />;
         }
 

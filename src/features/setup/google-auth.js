@@ -22,7 +22,7 @@ export class GoogleAuth extends React.Component {
         this._onCliendIdChange = this._onCliendIdChange.bind(this);
 
         this.state = {
-            apiKey: props._apiKey|| '',
+            apiKey: props._apiKey || '',
             clientId: props._clientId || ''
         };
     }

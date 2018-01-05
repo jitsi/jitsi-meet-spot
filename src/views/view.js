@@ -8,7 +8,7 @@ import styles from './view.css';
 export default class View extends React.Component {
     static propTypes = {
         hideBackground: PropTypes.bool,
-        children: PropTypes.node,
+        children: PropTypes.node
     };
 
     render() {

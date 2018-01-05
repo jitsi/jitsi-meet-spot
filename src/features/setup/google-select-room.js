@@ -31,15 +31,13 @@ export class GoogleSelectRoom extends React.Component {
     }
 
     render() {
-        const rooms = this.state.rooms.map(room => {
-            return (
-                <button
-                    key = { room.etags }
-                    onClick = { () => this._onRoomClick(room) }>
-                    { room.resourceName }
-                </button>
-            )
-        });
+        const rooms = this.state.rooms.map(room =>
+            <button
+                key = { room.etags }
+                onClick = { () => this._onRoomClick(room) }>
+                { room.resourceName }
+            </button>
+        );
 
         return (
             <div>

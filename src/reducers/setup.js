@@ -23,25 +23,25 @@ const setup = (state = defaultState, action) => {
         };
 
     default:
-        return state
+        return state;
     }
-}
+};
 
 export function isLoadComplete(state) {
-    return state['setup'].loadCompleted;
+    return state.setup.loadCompleted;
 }
 
 export function isSetupComplete(state) {
-    return state['setup'].completed;
+    return state.setup.completed;
 }
 
 
 export function getApiKey(state) {
-    return state['setup'].apiKey;
+    return state.setup.apiKey;
 }
 
 export function getClientId(state) {
-    return state['setup'].clientId;
+    return state.setup.clientId;
 }
 
 export default setup;

@@ -4,7 +4,7 @@ export default {
     get(key) {
         const value = storage.getItem(key);
 
-        return (value === 'undefined' || !value)
+        return value === 'undefined' || !value
             ? undefined : JSON.parse(value);
     },
 

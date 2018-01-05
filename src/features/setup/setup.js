@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { setSetupCompleted } from 'actions';
 import GoogleAuth from './google-auth';
-import GoogleSelectRoom from './google-select-room'
+import GoogleSelectRoom from './google-select-room';
 import Welcome from './welcome';
 
 export class Setup extends React.Component {
@@ -28,7 +28,7 @@ export class Setup extends React.Component {
 
         this.state = {
             renderCurrentStep: this.steps[0]
-        }
+        };
     }
 
     render() {
@@ -72,7 +72,7 @@ export class Setup extends React.Component {
         } else {
             this.setState({
                 renderCurrentStep: this._getNextStep()
-            })
+            });
         }
     }
 
@@ -83,7 +83,7 @@ export class Setup extends React.Component {
     }
 
     _renderWelcome() {
-        return <Welcome onSuccess = { this._nextStep } />
+        return <Welcome onSuccess = { this._nextStep } />;
     }
 
     _selectRoom() {

@@ -20,15 +20,10 @@ export default class Avatar extends React.Component {
     }
 
     _generateAvatarUrl() {
-        const { email } = this.props;
-
-        if (email) {
-            return 'https://www.gravatar.com/avatar/' +
-                email.trim().toLowerCase() +
-                '?size=30';
-        }
-
-        return DEFAULT_AVATAR_URL;
+        return this.props.email
+            ? `https://www.gravatar.com/avatar/${
+                this.props.email.trim().toLowerCase()}?size=30`
+            : DEFAULT_AVATAR_URL;
     }
 }
 

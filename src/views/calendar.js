@@ -45,10 +45,8 @@ export class CalendarView extends React.Component {
         return (
             <View>
                 <div className = { styles.container }>
-                    <div>
-                        <Clock />
-                    </div>
-                        <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
+                    <Clock />
+                    <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
                     <div className = { styles.meetings }>
                         <ScheduledMeetings
                             onMeetingClick = { this._onGoToMeeting }

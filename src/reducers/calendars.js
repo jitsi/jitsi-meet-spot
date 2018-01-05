@@ -22,18 +22,17 @@ const calendarAccounts = (state = defaultState, action) => {
         return state;
 
     default:
-        return state
+        return state;
     }
-}
+};
 
 // TODO do not create new objects if unnecessary. Right now filterJoinableEvents
 // creates new objects and a new array with each call, causing unnecessary
 // re-renders.
 function filterJoinableEvents(currentEvents, newEvents = []) {
-    const meetingsWithLinks = newEvents.filter(event => {
-        // TODO make this smarter by verifying room name as well and protocol
-        return event.location.includes('meet.jit.si');
-    });
+    // TODO make this filter smarter by verifying room name as well and protocol
+    const meetingsWithLinks = newEvents.filter(event =>
+        event.location.includes('meet.jit.si'));
 
     const events = meetingsWithLinks.map(event => {
         const { attendees, location, end, id, start } = event;
@@ -60,11 +59,11 @@ function parseMeetingLocation(location) {
 }
 
 export function getCalendarEvents(state) {
-    return state['calendars'].events;
+    return state.calendars.events;
 }
 
 export function getCalendarName(state) {
-    return state['calendars'].name;
+    return state.calendars.name;
 }
 
 export default calendarAccounts;

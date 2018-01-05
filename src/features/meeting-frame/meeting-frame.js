@@ -25,6 +25,7 @@ export default class MeetingFrame extends React.Component {
 
     componentDidMount() {
         const options = this._generateMeetingOptions();
+
         this._api = new JitsiMeetExternalAPI(MEETING_DOMAN, options);
 
         this._api.addListener('readyToClose', this._onMeetingLeave);
@@ -47,7 +48,7 @@ export default class MeetingFrame extends React.Component {
         return {
             roomName: this.props.meetingName,
             parentNode: this._meetingContainer
-        }
+        };
     }
 
     _onMeetingLeave() {
@@ -55,6 +56,6 @@ export default class MeetingFrame extends React.Component {
     }
 
     _setMeetingContainerRef(ref) {
-        this._meetingContainer = ref
+        this._meetingContainer = ref;
     }
 }

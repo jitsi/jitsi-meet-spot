@@ -10,12 +10,12 @@ export function getPersistedState() {
             apiKey: persistence.get('setup-api-key'),
             clientId: persistence.get('setup-client-id')
         }
-    }
+    };
 }
 
 export function setPersistedState(store) {
-    persistence.set('calendar-name', store.getState()['calendars'].name);
-    persistence.set('setup-completed', store.getState()['setup'].completed);
-    persistence.set('setup-api-key', store.getState()['setup'].apiKey);
-    persistence.set('setup-client-id', store.getState()['setup'].clientId);
+    persistence.set('calendar-name', store.getState().calendars.name);
+    persistence.set('setup-completed', store.getState().setup.completed);
+    persistence.set('setup-api-key', store.getState().setup.apiKey);
+    persistence.set('setup-client-id', store.getState().setup.clientId);
 }

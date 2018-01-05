@@ -45,13 +45,11 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     _generateAvatars(participants = []) {
-        return participants.map(participant => {
-            return (
-                <Avatar
-                    key = { participant.email }
-                    email = { participant.email } />
-            );
-        });
+        return participants.map(participant =>
+            <Avatar
+                key = { participant.email }
+                email = { participant.email } />
+        );
     }
 
     _onMeetingClick() {
