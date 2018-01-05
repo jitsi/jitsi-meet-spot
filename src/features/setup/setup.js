@@ -37,14 +37,6 @@ export class Setup extends React.Component {
                 <div className = 'content'>
                     { this.state.renderCurrentStep() }
                 </div>
-                <div className = 'nav'>
-                    <button onClick = { this._cancelSetup }>
-                        Cancel
-                    </button>
-                    <button onClick = { this._nextStep }>
-                        Next
-                    </button>
-                </div>
             </div>
         );
     }

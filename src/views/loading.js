@@ -11,7 +11,7 @@ import styles from './view.css';
 
 import { BACKGROUND_IMAGE_URL } from 'app-constants';
 import { LoadingIcon } from 'features/loading-icon';
-import { getApiKey, getCalendarName, getClientId } from 'reducers';
+import { getApiKey, getClientId } from 'reducers';
 
 export class LoadingView extends React.Component {
     static propTypes = {
@@ -43,9 +43,9 @@ export class LoadingView extends React.Component {
     }
 
     handle() {
-        const { _apiKey, _calendarName, _clientId } = this.props;
+        const { _apiKey, _clientId } = this.props;
 
-        if (_clientId && _apiKey && _calendarName) {
+        if (_clientId && _apiKey) {
             const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
                 .catch(error => {
                     console.error(error);
@@ -88,8 +88,7 @@ export class LoadingView extends React.Component {
 function mapStateToProps(state) {
     return {
         _apiKey: getApiKey(state),
-        _clientId: getClientId(state),
-        _calendarName: getCalendarName(state)
+        _clientId: getClientId(state)
     };
 }
 

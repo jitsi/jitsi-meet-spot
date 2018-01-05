@@ -65,7 +65,13 @@ export class CalendarView extends React.Component {
     }
 
     _pollForEvents() {
-        google.getCalendar(this.props.calendarName)
+        const { calendarName } = this.props;
+
+        if (!calendarName) {
+            return;
+        }
+
+        google.getCalendar(calendarName)
             .then(events => {
                 if (this._isUnmounting) {
                     return;

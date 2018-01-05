@@ -24,22 +24,26 @@ export class GoogleSelectRoom extends React.Component {
     }
 
     componentDidMount() {
-        // FIXME: move into action
-        google.getRooms()
-            .then(rooms => {
-                this.setState({
-                    loading: false,
-                    rooms
-                });
-            });
+        this._fetchRooms();
     }
 
     render() {
-        if (this.state.loading) {
+        const { loading, rooms } = this.state;
+
+        if (loading) {
             return <div><LoadingIcon /></div>;
         }
 
-        const rooms = this.state.rooms.map(room =>
+        if (!rooms.length) {
+            return (
+                <div>
+                    No rooms found
+                    <button onClick = { this.onSuccess }>Next</button>
+                </div>
+            );
+        }
+
+        const roomSelections = rooms.map(room =>
             <button
                 key = { room.etags }
                 onClick = { () => this._onRoomClick(room) }>
@@ -49,9 +53,21 @@ export class GoogleSelectRoom extends React.Component {
 
         return (
             <div>
-                { rooms }
+                { roomSelections }
             </div>
         );
+    }
+
+    // FIXME: move into action
+    _fetchRooms() {
+        this.setState({ loading: true }, () =>
+            google.getRooms()
+                .then(rooms => {
+                    this.setState({
+                        loading: false,
+                        rooms
+                    });
+                }));
     }
 
     _onRoomClick(room) {
