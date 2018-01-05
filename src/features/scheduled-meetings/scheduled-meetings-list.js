@@ -18,7 +18,7 @@ export default class ScheduledMeetings extends React.Component {
 
         return (
             <div>
-                { events.length ? events : <div>none</div> }
+                { events.length ? events : <div></div> }
             </div>
         );
     }

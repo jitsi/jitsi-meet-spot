@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { setCalendar } from 'actions';
 import { google } from 'calendars';
+import { LoadingIcon } from 'features/loading-icon';
 
 export class GoogleSelectRoom extends React.Component {
     static propTypes = {
@@ -26,11 +27,18 @@ export class GoogleSelectRoom extends React.Component {
         // FIXME: move into action
         google.getRooms()
             .then(rooms => {
-                this.setState({ rooms });
+                this.setState({
+                    loading: false,
+                    rooms
+                });
             });
     }
 
     render() {
+        if (this.state.loading) {
+            return <div><LoadingIcon /></div>;
+        }
+
         const rooms = this.state.rooms.map(room =>
             <button
                 key = { room.etags }
