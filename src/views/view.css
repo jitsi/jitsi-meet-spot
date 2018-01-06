@@ -39,3 +39,12 @@
     overflow: hidden;
     width: 100%;
 }
+
+.admin {
+    background-color: white;
+    border-radius: 25px;
+    height: 100%;
+    overflow: hidden;
+    padding: 40px;
+    width: 100%;
+}

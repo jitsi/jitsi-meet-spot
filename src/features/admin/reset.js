@@ -1,6 +1,9 @@
 import React from 'react';
 import { persistence, windowHandler } from 'utils';
 
+import { Button } from 'features/button';
+import styles from './admin.css';
+
 export default class ResetState extends React.Component {
     state = {
         showResetConfirm: false
@@ -16,21 +19,26 @@ export default class ResetState extends React.Component {
 
     render() {
         return (
-            <div>
-                {
-                    this.state.showResetConfirm
-                        ? this._renderResetConfirm()
-                        : this._renderResetButton()
-                }
+            <div className = { styles.container }>
+                <div className = { styles.title }>
+                    Reset
+                </div>
+                <div className = { styles.content }>
+                    {
+                        this.state.showResetConfirm
+                            ? this._renderResetConfirm()
+                            : this._renderResetButton()
+                    }
+                </div>
             </div>
         );
     }
 
     _renderResetButton() {
         return (
-            <button onClick = { this._showResetConfirm }>
+            <Button onClick = { this._showResetConfirm }>
                 Reset app
-            </button>
+            </Button>
         );
     }
 
@@ -38,12 +46,12 @@ export default class ResetState extends React.Component {
         return (
             <div>
                 <div>Are you sure? The app will reload</div>
-                <button onClick = { this._showResetButton }>
+                <Button onClick = { this._showResetButton }>
                     Cancel
-                </button>
-                <button onClick = { this._resetApp }>
+                </Button>
+                <Button onClick = { this._resetApp }>
                     Confirm
-                </button>
+                </Button>
             </div>
         );
     }

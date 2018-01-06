@@ -1,0 +1,14 @@
+.container {
+    padding: 10px;
+    margin: 20px 0;
+    word-wrap: break-word;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.detail {
+    margin-bottom: 5px;
+}

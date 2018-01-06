@@ -47,15 +47,11 @@ export class GoogleSelectRoom extends React.Component {
                 </div>
             );
         } else {
-            content = rooms.map(room =>
-                <div>
-                    <Button
-                        key = { room.etags }
-                        onClick = { () => this._onRoomClick(room) }>
-                        { room.resourceName }
-                    </Button>
-                </div>
-            );
+            content = <div>No rooms</div>;
+
+            continueButton
+                = <Button onClick = { this.props.onSuccess }>Continue</Button>;
+
         }
 
         return (
@@ -72,8 +68,6 @@ export class GoogleSelectRoom extends React.Component {
             </div>
         );
     }
-
-
 
     // FIXME: move into action
     _fetchRooms() {

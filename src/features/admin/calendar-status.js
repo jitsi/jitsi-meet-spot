@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { getClientId, getCalendarName } from 'reducers';
 
+import styles from './admin.css';
+
 export class CalendarStatus extends React.Component {
     static propTypes = {
         _calendarName: PropTypes.string,
@@ -14,9 +16,18 @@ export class CalendarStatus extends React.Component {
         const { _calendarName, _clientId } = this.props;
 
         return (
-            <div>
-                <div>Current calendar name: { _calendarName }</div>
-                <div>Current client used: { _clientId }</div>
+            <div className = { styles.container }>
+                <div className = { styles.title }>
+                    Calendar Status
+                </div>
+                <div className = { styles.content }>
+                    <div className = { styles.detail }>
+                        calendar: { _calendarName }
+                    </div>
+                    <div className = { styles.detail }>
+                        app client: { _clientId }
+                    </div>
+                </div>
             </div>
         );
     }
