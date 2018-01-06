@@ -1,21 +1,39 @@
 import persistence from './persistence';
 
 export function getPersistedState() {
+    return persistence.get('spot') || {};
+}
+
+let cachedState;
+
+function parsePersistedState(state) {
     return {
         calendars: {
-            name: persistence.get('calendar-name') || null
+            name: state.calendars.name
         },
         setup: {
-            completed: persistence.get('setup-completed') || false,
-            apiKey: persistence.get('setup-api-key'),
-            clientId: persistence.get('setup-client-id')
+            completed: state.setup.completed,
+            apiKey: state.setup.apiKey,
+            clientId: state.setup.clientId
         }
     };
 }
 
+function hasUpdateOfInterest(oldState, newState) {
+    return oldState.calendars.name !== newState.calendars.name
+        || oldState.setup.completed !== newState.setup.completed
+        || oldState.setup.apiKey !== newState.setup.apiKey
+        || oldState.setup.clientId !== newState.setup.clientId;
+}
+
 export function setPersistedState(store) {
-    persistence.set('calendar-name', store.getState().calendars.name);
-    persistence.set('setup-completed', store.getState().setup.completed);
-    persistence.set('setup-api-key', store.getState().setup.apiKey);
-    persistence.set('setup-client-id', store.getState().setup.clientId);
+    const newState = parsePersistedState(store.getState());
+
+    // Check if cached state exists to intentionally skip the initial hydrating
+    // of the redux store.
+    if (cachedState && hasUpdateOfInterest(cachedState, newState)) {
+        persistence.set('spot', newState);
+    }
+
+    cachedState = newState;
 }
