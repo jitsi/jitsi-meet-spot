@@ -28,9 +28,13 @@ export class MeetingNameEntry extends React.Component {
                 className = { styles.wrapper }
                 onSubmit = { this._onSubmit } >
                 <input
+                    autoComplete = 'off'
+                    autoCorrect = 'off'
                     className = { styles.input }
+                    id = 'meeting-name-input'
                     onChange = { this._onMeetingNameChange }
                     placeholder = 'Enter a meeting name'
+                    spellCheck = 'false'
                     value = { this.state.meetingName } />
                 <Button type = 'submit'>GO</Button>
             </form>

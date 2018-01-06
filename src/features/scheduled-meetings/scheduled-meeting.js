@@ -22,8 +22,8 @@ export default class ScheduledMeeting extends React.Component {
         const { name, participants, start } = this.props.event;
         const startTime = new Date(start);
         const className = startTime.getTime() <= Date.now()
-            ? `${styles.meeting} ${styles.ongoing}`
-            : `${styles.meeting}`;
+            ? `meeting ${styles.meeting} ${styles.ongoing}`
+            : `meeting ${styles.meeting}`;
 
         return (
             <div

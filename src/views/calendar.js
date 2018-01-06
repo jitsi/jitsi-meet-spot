@@ -13,6 +13,8 @@ import { getCalendarEvents, getCalendarName } from 'reducers';
 import View from './view';
 import styles from './view.css';
 
+import { keyboardNavigation } from 'utils';
+
 export class CalendarView extends React.Component {
     static propTypes = {
         calendarName: PropTypes.string,
@@ -31,12 +33,16 @@ export class CalendarView extends React.Component {
     }
 
     componentDidMount() {
+        keyboardNavigation.startListening('calendar');
+
         this._pollForEvents();
 
         this._updateEventsInterval = setInterval(this._pollForEvents, 30000);
     }
 
     componentWillUnmount() {
+        keyboardNavigation.stopListening();
+
         this._isUnmounting = true;
         clearInterval(this._updateEventsInterval);
     }

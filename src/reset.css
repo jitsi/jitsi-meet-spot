@@ -65,3 +65,8 @@ body > div {
   overflow: hidden;
   width: 100%;
 }
+
+:global #keyboard-handler {
+  border: 3px solid red;
+  position: fixed;
+}
