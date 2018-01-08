@@ -19,7 +19,7 @@ export class KeyboardNavigation {
     constructor() {
         this.handleKeypress = this.handleKeypress.bind(this);
         this.handleMousemove = this.handleMousemove.bind(this);
-
+        keyboardBox.style.display = 'none';
         this.cursor = null;
         this.subCursor = null;
         this.viewName = null;
@@ -135,7 +135,13 @@ export class KeyboardNavigation {
         const details
             = this._getElementDetails(this._getCurrentQuery());
 
-        keyboardBox.style.display = 'block';
+        if (keyboardBox.style.display === 'none') {
+            keyboardBox.style.transition = 0;
+            keyboardBox.style.display = 'block';
+        } else {
+            keyboardBox.style.transition = '500ms';
+        }
+
         keyboardBox.style.height = details.height;
         keyboardBox.style.width = details.width;
         keyboardBox.style.left = details.left;
@@ -194,6 +200,13 @@ export class KeyboardNavigation {
 
         const details
             = this._getElementDetails(this._getCurrentQuery());
+
+        if (keyboardBox.style.display === 'none') {
+            keyboardBox.style.transition = 0;
+            keyboardBox.style.display = 'block';
+        } else {
+            keyboardBox.style.transition = '500ms';
+        }
 
         keyboardBox.style.display = 'block';
         keyboardBox.style.height = details.height;
