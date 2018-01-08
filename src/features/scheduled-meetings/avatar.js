@@ -22,8 +22,8 @@ export default class Avatar extends React.Component {
 
     _generateAvatarUrl() {
         return this.props.email
-            ? `https://abotars.jitsi.net/meeple/${
-                hash(this.props.email.trim().toLowerCase())}`
+            ? `https://www.gravatar.com/avatar/${
+                hash(this.props.email.trim().toLowerCase())}?d=wavatar`
             : DEFAULT_AVATAR_URL;
     }
 }
