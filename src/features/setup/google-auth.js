@@ -7,7 +7,7 @@ import { google } from 'calendars';
 import { getApiKey, getClientId } from 'reducers';
 
 import { Button } from 'features/button';
-
+import { Input } from 'features/input';
 import styles from './setup.css';
 
 export class GoogleAuth extends React.Component {
@@ -40,16 +40,16 @@ export class GoogleAuth extends React.Component {
                 <div className = { styles.content }>
                     <div>
                         <div>Api Key</div>
-                        <input
+                        <Input
                             onChange = { this._onApiKeyChange }
-                            placeholder = 'API_KEY'
+                            placeholder = 'Enter api key'
                             value = { this.state.apiKey } />
                     </div>
                     <div>
                         <div>Client ID</div>
-                        <input
+                        <Input
                             onChange = { this._onCliendIdChange }
-                            placeholder = 'CLIENT_ID'
+                            placeholder = 'Enter client id'
                             value = { this.state.clientId } />
                     </div>
                 </div>

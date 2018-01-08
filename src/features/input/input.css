@@ -1,0 +1,10 @@
+.input {
+    border: none;
+    cursor: pointer;
+    flex: 1;
+    font-size: 17pt;
+}
+.input:focus,
+.button:focus {
+    outline: none;
+}

@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Button } from 'features/button';
+import { Input } from 'features/input';
 
 import styles from './meeting-name-entry.css';
 
@@ -27,14 +28,10 @@ export class MeetingNameEntry extends React.Component {
             <form
                 className = { styles.wrapper }
                 onSubmit = { this._onSubmit } >
-                <input
-                    autoComplete = 'off'
-                    autoCorrect = 'off'
-                    className = { styles.input }
+                <Input
                     id = 'meeting-name-input'
                     onChange = { this._onMeetingNameChange }
                     placeholder = 'Enter a meeting name'
-                    spellCheck = 'false'
                     value = { this.state.meetingName } />
                 <Button type = 'submit'>GO</Button>
             </form>
