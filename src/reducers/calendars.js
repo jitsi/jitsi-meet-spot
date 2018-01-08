@@ -38,6 +38,7 @@ function filterJoinableEvents(currentEvents, newEvents = []) {
         const { attendees, location, end, id, start, summary } = event;
 
         return {
+            conferenceUrl: parseConferenceUrl(location),
             conferenceName: parseConferenceName(location),
             end: end.dateTime,
             id,
@@ -57,6 +58,15 @@ function parseConferenceName(location) {
 
     // eslint-disable-next-line no-useless-escape
     return matches[1].replace(/,\s*$/, '');
+}
+
+function parseConferenceUrl(location) {
+    // eslint-disable-next-line no-useless-escape
+    const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
+    const matches = linkRegex.exec(location);
+
+    // eslint-disable-next-line no-useless-escape
+    return matches[0].replace(/,\s*$/, '');
 }
 
 export function getCalendarEvents(state) {

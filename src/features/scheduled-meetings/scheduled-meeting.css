@@ -23,10 +23,6 @@
     background: rgba(255, 255, 255, 0.7);
 }
 
-.ongoing {
-
-}
-
 .name {
     font-size: 3vw;
     overflow: hidden;
@@ -38,4 +34,11 @@
     font-size: 3vw;
     white-space: nowrap;
     width: 30%;
+}
+
+.url {
+    overflow: hidden;
+    margin: 10px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

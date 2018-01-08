@@ -19,7 +19,12 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     render() {
-        const { meetingName, participants, start } = this.props.event;
+        const {
+            conferenceUrl,
+            meetingName,
+            participants,
+            start
+        } = this.props.event;
         const startTime = new Date(start);
         const className = startTime.getTime() <= Date.now()
             ? `meeting ${styles.meeting} ${styles.ongoing}`
@@ -35,6 +40,9 @@ export default class ScheduledMeeting extends React.Component {
                 <div className = { styles.details }>
                     <div className = { styles.name }>
                         { meetingName }
+                    </div>
+                    <div className = { styles.url }>
+                        { conferenceUrl }
                     </div>
                     <div className = { styles.participants }>
                         { this._generateAvatars(participants) }
