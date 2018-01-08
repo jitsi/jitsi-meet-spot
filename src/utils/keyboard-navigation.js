@@ -87,9 +87,11 @@ export class KeyboardNavigation {
         this.cursor = null;
 
         const keyboardBox = this.getBox();
+
         keyboardBox.style.display = 'none';
 
         const overlay = this.getOverlay();
+
         overlay.style.display = 'none';
     }
 
@@ -148,11 +150,13 @@ export class KeyboardNavigation {
             = this._getElementDetails(this._getCurrentQuery());
 
         const keyboardBox = this.getBox();
+
         if (keyboardBox.style.display === 'none') {
             keyboardBox.style.transition = 0;
             keyboardBox.style.display = 'block';
 
             const overlay = this.getOverlay();
+
             overlay.style.display = 'block';
         } else {
             keyboardBox.style.transition = '500ms';
@@ -218,11 +222,13 @@ export class KeyboardNavigation {
             = this._getElementDetails(this._getCurrentQuery());
 
         const keyboardBox = this.getBox();
+
         if (keyboardBox.style.display === 'none') {
             keyboardBox.style.transition = 0;
             keyboardBox.style.display = 'block';
 
             const overlay = this.getOverlay();
+
             overlay.style.display = 'block';
         } else {
             keyboardBox.style.transition = '500ms';
@@ -273,9 +279,11 @@ export class KeyboardNavigation {
         document.addEventListener('keydown', this.handleKeypress);
         document.addEventListener('mousemove', this.handleMousemove);
         const keyboardBox = this.getBox();
+
         keyboardBox.style.display = 'none';
 
         const overlay = this.getOverlay();
+
         overlay.style.display = 'none';
     }
 
@@ -286,9 +294,11 @@ export class KeyboardNavigation {
         document.removeEventListener('mousemove', this.handleMousemove);
 
         const keyboardBox = this.getBox();
+
         keyboardBox.style.display = 'none';
 
         const overlay = this.getOverlay();
+
         overlay.style.display = 'none';
     }
 }
