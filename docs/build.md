@@ -12,6 +12,7 @@ eslint-loader: lint with webpack build
 eslint-plugin-flowtype: because eslint-config-jitsi depends on it
 eslint-plugin-import: because eslint-config-jitsi depends on it
 eslint-plugin-react: to lint react and jsx
+md5: used for hashing email for avatars, same as jitsi-meet's implementation
 moment: for date formatting
 prop-types: for react
 react: view library

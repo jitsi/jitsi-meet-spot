@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { DEFAULT_AVATAR_URL } from 'app-constants';
+import { hash } from 'utils';
 
 import styles from './scheduled-meeting.css';
 
@@ -13,7 +14,7 @@ export default class Avatar extends React.Component {
     render() {
         return (
             <img
-                className = {styles.avatar }
+                className = { styles.avatar }
                 title = { this.props.email }
                 src = { this._generateAvatarUrl() } />
         );
@@ -21,8 +22,8 @@ export default class Avatar extends React.Component {
 
     _generateAvatarUrl() {
         return this.props.email
-            ? `https://www.gravatar.com/avatar/${
-                this.props.email.trim().toLowerCase()}?size=30`
+            ? `https://abotars.jitsi.net/meeple/${
+                hash(this.props.email.trim().toLowerCase())}`
             : DEFAULT_AVATAR_URL;
     }
 }

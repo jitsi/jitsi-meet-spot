@@ -15,7 +15,8 @@ const calendarAccounts = (state = defaultState, action) => {
     case 'CALENDAR_SET_EVENTS':
         return {
             ...state,
-            events: filterJoinableEvents(state.events, action.events)
+            events:
+                filterJoinableEvents(state.events, action.events, state.name)
         };
 
     case 'CALENDAR_REMOVE_ACCOUNT':
@@ -26,10 +27,21 @@ const calendarAccounts = (state = defaultState, action) => {
     }
 };
 
+function filterAttendees(attendees = [], currentCalendar) {
+    const otherAttendees = attendees.filter(attendee =>
+        attendee.email !== currentCalendar);
+
+    return otherAttendees.map(attendee => {
+        return {
+            email: attendee.email
+        };
+    });
+}
+
 // TODO do not create new objects if unnecessary. Right now filterJoinableEvents
 // creates new objects and a new array with each call, causing unnecessary
 // re-renders.
-function filterJoinableEvents(currentEvents, newEvents = []) {
+function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
     // TODO make this filter smarter by verifying room name as well and protocol
     const meetingsWithLinks = newEvents.filter(event =>
         event.location.includes('meet.jit.si'));
@@ -43,7 +55,7 @@ function filterJoinableEvents(currentEvents, newEvents = []) {
             end: end.dateTime,
             id,
             meetingName: summary,
-            participants: attendees,
+            participants: filterAttendees(attendees, currentCalendar),
             start: start.dateTime
         };
     });
