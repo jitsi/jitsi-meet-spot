@@ -125,13 +125,17 @@ export class KeyboardNavigation {
 
             this.subCursor = this._getSubCursorMax();
         }
+        const element = this._getCurrentElement(this._getCurrentQuery());
+
+        if (!element) {
+            return;
+        }
+        element.scrollIntoView()
 
         const details
             = this._getElementDetails(this._getCurrentQuery());
 
-        if (!details) {
-            return;
-        }
+        element.scrollIntoView();
 
         keyboardBox.style.display = 'block';
         keyboardBox.style.height = details.height;
@@ -183,11 +187,15 @@ export class KeyboardNavigation {
             this.subCursor = 0;
         }
 
-        const details = this._getElementDetails();
+        const element = this._getCurrentElement(this._getCurrentQuery());
 
-        if (!details) {
+        if (!element) {
             return;
         }
+        element.scrollIntoView()
+
+        const details
+            = this._getElementDetails(this._getCurrentQuery());
 
         keyboardBox.style.display = 'block';
         keyboardBox.style.height = details.height;
