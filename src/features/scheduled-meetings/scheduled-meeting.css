@@ -12,7 +12,7 @@
 }
 
 .meeting {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     padding: 20px;
     display: flex;
@@ -38,6 +38,7 @@
 }
 
 .url {
+    color: rgba(64, 64, 64, 0.8);
     overflow: hidden;
     margin: 10px 0;
     text-overflow: ellipsis;
