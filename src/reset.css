@@ -12,8 +12,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
     margin: 0;
@@ -49,24 +49,32 @@ table {
 
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 *, *:before, *:after {
-  box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 body {
-  font-family: 'Yanone Kaffeesatz', 'Helvetica Neue', Helvetica, sans-serif;
+    font-family: 'Yanone Kaffeesatz', 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 body,
 body > div {
-  height: 100%;
-  overflow: hidden;
-  width: 100%;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
 }
 
 :global #keyboard-handler {
-  border: 3px solid red;
-  position: fixed;
+    border: 3px solid red;
+    display: none;
+    position: fixed;
+}
+:global #keyboard-handler-overlay {
+    display: none;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }

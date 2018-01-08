@@ -13,16 +13,17 @@ const config = {
     ]
 };
 
-const keyboardBox = document.getElementById('keyboard-handler');
-
 export class KeyboardNavigation {
     constructor() {
         this.handleKeypress = this.handleKeypress.bind(this);
         this.handleMousemove = this.handleMousemove.bind(this);
-        keyboardBox.style.display = 'none';
         this.cursor = null;
         this.subCursor = null;
         this.viewName = null;
+    }
+
+    getBox() {
+        return document.getElementById('keyboard-handler');
     }
 
     handleKeypress(event) {
@@ -40,6 +41,7 @@ export class KeyboardNavigation {
             return;
 
         case 38: // up
+            event.preventDefault();
             this._up();
 
             return;
@@ -48,6 +50,7 @@ export class KeyboardNavigation {
             return;
 
         case 40: // down
+            event.preventDefault();
             this._down();
 
             return;
@@ -82,7 +85,16 @@ export class KeyboardNavigation {
 
     handleMousemove() {
         this.cursor = null;
+
+        const keyboardBox = this.getBox();
         keyboardBox.style.display = 'none';
+
+        const overlay = this.getOverlay();
+        overlay.style.display = 'none';
+    }
+
+    getOverlay() {
+        return document.getElementById('keyboard-handler-overlay');
     }
 
     _hasGoneThroughAllReverse() {
@@ -135,9 +147,13 @@ export class KeyboardNavigation {
         const details
             = this._getElementDetails(this._getCurrentQuery());
 
+        const keyboardBox = this.getBox();
         if (keyboardBox.style.display === 'none') {
             keyboardBox.style.transition = 0;
             keyboardBox.style.display = 'block';
+
+            const overlay = this.getOverlay();
+            overlay.style.display = 'block';
         } else {
             keyboardBox.style.transition = '500ms';
         }
@@ -201,9 +217,13 @@ export class KeyboardNavigation {
         const details
             = this._getElementDetails(this._getCurrentQuery());
 
+        const keyboardBox = this.getBox();
         if (keyboardBox.style.display === 'none') {
             keyboardBox.style.transition = 0;
             keyboardBox.style.display = 'block';
+
+            const overlay = this.getOverlay();
+            overlay.style.display = 'block';
         } else {
             keyboardBox.style.transition = '500ms';
         }
@@ -252,6 +272,11 @@ export class KeyboardNavigation {
 
         document.addEventListener('keydown', this.handleKeypress);
         document.addEventListener('mousemove', this.handleMousemove);
+        const keyboardBox = this.getBox();
+        keyboardBox.style.display = 'none';
+
+        const overlay = this.getOverlay();
+        overlay.style.display = 'none';
     }
 
     stopListening() {
@@ -260,7 +285,11 @@ export class KeyboardNavigation {
         document.removeEventListener('keydown', this.handleKeypress);
         document.removeEventListener('mousemove', this.handleMousemove);
 
+        const keyboardBox = this.getBox();
         keyboardBox.style.display = 'none';
+
+        const overlay = this.getOverlay();
+        overlay.style.display = 'none';
     }
 }
 
