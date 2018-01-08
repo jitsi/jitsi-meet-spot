@@ -19,7 +19,7 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     render() {
-        const { name, participants, start } = this.props.event;
+        const { meetingName, name, participants, start } = this.props.event;
         const startTime = new Date(start);
         const className = startTime.getTime() <= Date.now()
             ? `meeting ${styles.meeting} ${styles.ongoing}`
@@ -34,7 +34,7 @@ export default class ScheduledMeeting extends React.Component {
                 </div>
                 <div className = { styles.details }>
                     <div className = { styles.name }>
-                        { name }
+                        { meetingName }
                     </div>
                     <div className = { styles.participants }>
                         { this._generateAvatars(participants) }
@@ -53,6 +53,6 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     _onMeetingClick() {
-        this.props.onMeetingClick(this.props.event.name);
+        this.props.onMeetingClick(this.props.event.conferenceName);
     }
 }

@@ -133,8 +133,6 @@ export class KeyboardNavigation {
             return;
         }
 
-        console.warn(details);
-
         keyboardBox.style.display = 'block';
         keyboardBox.style.height = details.height;
         keyboardBox.style.width = details.width;
@@ -190,8 +188,6 @@ export class KeyboardNavigation {
         if (!details) {
             return;
         }
-
-        console.warn(details);
 
         keyboardBox.style.display = 'block';
         keyboardBox.style.height = details.height;

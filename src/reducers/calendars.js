@@ -35,12 +35,13 @@ function filterJoinableEvents(currentEvents, newEvents = []) {
         event.location.includes('meet.jit.si'));
 
     const events = meetingsWithLinks.map(event => {
-        const { attendees, location, end, id, start } = event;
+        const { attendees, location, end, id, start, summary } = event;
 
         return {
-            name: parseMeetingLocation(location),
+            conferenceName: parseConferenceName(location),
             end: end.dateTime,
             id,
+            meetingName: summary,
             participants: attendees,
             start: start.dateTime
         };
@@ -49,7 +50,7 @@ function filterJoinableEvents(currentEvents, newEvents = []) {
     return events;
 }
 
-function parseMeetingLocation(location) {
+function parseConferenceName(location) {
     // eslint-disable-next-line no-useless-escape
     const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
     const matches = linkRegex.exec(location);
