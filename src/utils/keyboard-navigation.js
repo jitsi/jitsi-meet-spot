@@ -130,7 +130,7 @@ export class KeyboardNavigation {
         if (!currentElement) {
             return;
         }
-        currentElement.scrollIntoView();
+        currentElement.scrollIntoViewIfNeeded();
 
         const details
             = this._getElementDetails(this._getCurrentQuery());
@@ -196,7 +196,7 @@ export class KeyboardNavigation {
         if (!currentElement) {
             return;
         }
-        currentElement.scrollIntoView();
+        currentElement.scrollIntoViewIfNeeded();
 
         const details
             = this._getElementDetails(this._getCurrentQuery());
