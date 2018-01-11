@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setCalendarEvents } from 'actions';
 import { google } from 'calendars';
 import { Clock } from 'features/clock';
+import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { getCalendarEvents, getCalendarName } from 'reducers';
@@ -19,6 +20,10 @@ export class CalendarView extends React.Component {
         dispatch: PropTypes.func,
         events: PropTypes.array,
         history: PropTypes.object
+    };
+
+    state = {
+        hasLoadedEvents: false
     };
 
     constructor(props) {
@@ -48,15 +53,24 @@ export class CalendarView extends React.Component {
     }
 
     render() {
+        let contents;
+
+        if (!this.state.hasLoadedEvents && !this.props.events.length) {
+            contents = <LoadingIcon color = 'white' />;
+        } else {
+            contents = <ScheduledMeetings
+                events = { this.props.events }
+                onMeetingClick = { this._onGoToMeeting } />;
+        }
+
+
         return (
             <View>
                 <div className = { styles.container }>
                     <Clock />
                     <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
                     <div className = { styles.meetings }>
-                        <ScheduledMeetings
-                            events = { this.props.events }
-                            onMeetingClick = { this._onGoToMeeting } />
+                        { contents }
                     </div>
                 </div>
             </View>
@@ -85,6 +99,10 @@ export class CalendarView extends React.Component {
 
                 this.props.dispatch(setCalendarEvents(events));
             });
+
+        if (!this.state.hasLoadedEvents) {
+            this.setState({ hasLoadedEvents: true });
+        }
     }
 }
 

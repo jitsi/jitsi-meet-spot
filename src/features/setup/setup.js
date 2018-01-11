@@ -56,7 +56,7 @@ export class Setup extends React.Component {
 
     _nextStep() {
         if (this._isOnLastStep()) {
-            this.props.dispatch(setSetupCompleted(true));
+            this.props.dispatch(setSetupCompleted());
             this.props.onSuccess();
         } else {
             this.setState({

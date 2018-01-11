@@ -1,23 +1,23 @@
-const defaultState = {
-    completed: false
+const DEFAULT_STATE = {
+    completed: false,
+    loadCompleted: false
 };
 
-const setup = (state = defaultState, action) => {
+export const SETUP_COMPLETED = 'SETUP_COMPLETED';
+export const LOAD_COMPLETED = 'LOAD_COMPLETED';
+
+const setup = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case 'SETUP_COMPLETED':
+    case SETUP_COMPLETED:
         return {
             ...state,
             completed: true
         };
-    case 'LOAD_COMPLETED':
+
+    case LOAD_COMPLETED:
         return {
             ...state,
             loadCompleted: true
-        };
-
-    case 'SET_GOOGLE_CLIENT':
-        return {
-            ...state
         };
 
     default:

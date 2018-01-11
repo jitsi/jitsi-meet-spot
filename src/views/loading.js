@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { loadComplete } from 'actions';
+import { setLoadCompleted } from 'actions';
 import { google } from 'calendars';
 import { LoadingIcon } from 'features/loading-icon';
 import { backgroundService, logger } from 'utils';
@@ -35,7 +35,7 @@ export class LoadingView extends React.Component {
                 this.props.history.push('/setup');
             })
             .then(() => {
-                this.props.dispatch(loadComplete());
+                this.props.dispatch(setLoadCompleted());
             });
     }
 

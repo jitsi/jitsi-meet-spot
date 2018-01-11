@@ -1,11 +1,15 @@
-const defaultState = {
+const DEFAULT_STATE = {
     name: null,
+    displayName: null,
     events: []
 };
 
-const calendarAccounts = (state = defaultState, action) => {
+export const CALENDAR_ADD_ACCOUNT = 'CALENDAR_ADD_ACCOUNT';
+export const CALENDAR_SET_EVENTS = 'CALENDAR_SET_EVENTS';
+
+const calendarAccounts = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case 'CALENDAR_ADD_ACCOUNT':
+    case CALENDAR_ADD_ACCOUNT:
         return {
             ...state,
             name: action.name,
@@ -13,15 +17,12 @@ const calendarAccounts = (state = defaultState, action) => {
             events: []
         };
 
-    case 'CALENDAR_SET_EVENTS':
+    case CALENDAR_SET_EVENTS:
         return {
             ...state,
             events:
                 filterJoinableEvents(state.events, action.events, state.name)
         };
-
-    case 'CALENDAR_REMOVE_ACCOUNT':
-        return state;
 
     default:
         return state;
