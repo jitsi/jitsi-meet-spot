@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { updateGoogleClient } from 'actions';
 import { google } from 'calendars';
-import { getApiKey, getClientId } from 'reducers';
+import { getClientId } from 'reducers';
 
 import { Button } from 'features/button';
 import { Input } from 'features/input';
@@ -12,7 +12,6 @@ import styles from './setup.css';
 
 export class GoogleAuth extends React.Component {
     static propTypes = {
-        _apiKey: PropTypes.string,
         _clientId: PropTypes.string,
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func
@@ -22,11 +21,9 @@ export class GoogleAuth extends React.Component {
         super(props);
 
         this._onAuthEnter = this._onAuthEnter.bind(this);
-        this._onApiKeyChange = this._onApiKeyChange.bind(this);
         this._onCliendIdChange = this._onCliendIdChange.bind(this);
 
         this.state = {
-            apiKey: props._apiKey || '',
             clientId: props._clientId || ''
         };
     }
@@ -38,13 +35,6 @@ export class GoogleAuth extends React.Component {
                     Authenticate With Google
                 </div>
                 <div className = { styles.content }>
-                    <div>
-                        <div>Api Key</div>
-                        <Input
-                            onChange = { this._onApiKeyChange }
-                            placeholder = 'Enter api key'
-                            value = { this.state.apiKey } />
-                    </div>
                     <div>
                         <div>Client ID</div>
                         <Input
@@ -62,23 +52,17 @@ export class GoogleAuth extends React.Component {
         );
     }
 
-    _onApiKeyChange(event) {
-        this.setState({
-            apiKey: event.target.value
-        });
-    }
-
     _onAuthEnter() {
-        const { apiKey, clientId } = this.state;
+        const { clientId } = this.state;
 
-        return google.authenticate(clientId, apiKey)
+        return google.authenticate(clientId)
             .then(() => {
                 if (!google.isAuthenticated()) {
                     return google.triggerSignIn();
                 }
             })
             .then(() => {
-                this.props.dispatch(updateGoogleClient(clientId, apiKey));
+                this.props.dispatch(updateGoogleClient(clientId));
                 this.props.onSuccess();
             })
             .catch(error => {
@@ -95,7 +79,6 @@ export class GoogleAuth extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        _apiKey: getApiKey(state),
         _clientId: getClientId(state)
     };
 }

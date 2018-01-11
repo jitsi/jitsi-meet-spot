@@ -35,10 +35,9 @@ const DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
 ];
 const googleApi = {
-    authenticate(clientId, apiKey) {
+    authenticate(clientId) {
         return this.load()
             .then(() => gapi.client.init({
-                apiKey,
                 clientId,
                 discoveryDocs: DISCOVERY_DOCS,
                 scope: SCOPES

@@ -13,7 +13,6 @@ function parsePersistedState(state) {
         },
         setup: {
             completed: state.setup.completed,
-            apiKey: state.setup.apiKey,
             clientId: state.setup.clientId
         }
     };
@@ -22,7 +21,6 @@ function parsePersistedState(state) {
 function hasUpdateOfInterest(oldState, newState) {
     return oldState.calendars.name !== newState.calendars.name
         || oldState.setup.completed !== newState.setup.completed
-        || oldState.setup.apiKey !== newState.setup.apiKey
         || oldState.setup.clientId !== newState.setup.clientId;
 }
 

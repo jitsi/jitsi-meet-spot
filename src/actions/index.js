@@ -18,19 +18,17 @@ export function setCalendarEvents(events = []) {
     };
 }
 
-export function setSetupCompleted(completed, apiKey, clientId) {
+export function setSetupCompleted(completed, clientId) {
     return {
         type: 'SETUP_COMPLETED',
-        apiKey,
         clientId,
         completed
     };
 }
 
-export function updateGoogleClient(clientId, apiKey) {
+export function updateGoogleClient(clientId) {
     return {
         type: 'SET_GOOGLE_CLIENT',
-        apiKey,
         clientId
     };
 }
