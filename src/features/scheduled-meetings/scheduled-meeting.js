@@ -61,6 +61,8 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     _onMeetingClick() {
-        this.props.onMeetingClick(this.props.event.conferenceName);
+        if (this.props.event.conferenceName) {
+            this.props.onMeetingClick(this.props.event.conferenceName);
+        }
     }
 }

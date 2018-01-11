@@ -42,11 +42,7 @@ function filterAttendees(attendees = [], currentCalendar) {
 // creates new objects and a new array with each call, causing unnecessary
 // re-renders.
 function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
-    // TODO make this filter smarter by verifying room name as well and protocol
-    const meetingsWithLinks = newEvents.filter(event =>
-        event.location.includes('meet.jit.si'));
-
-    const events = meetingsWithLinks.map(event => {
+    const events = newEvents.map(event => {
         const { attendees, location, end, id, start, summary } = event;
 
         return {
@@ -68,6 +64,10 @@ function parseConferenceName(location) {
     const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
     const matches = linkRegex.exec(location);
 
+    if (!matches || matches.length < 2) {
+        return;
+    }
+
     // eslint-disable-next-line no-useless-escape
     return matches[1].replace(/,\s*$/, '');
 }
@@ -76,6 +76,10 @@ function parseConferenceUrl(location) {
     // eslint-disable-next-line no-useless-escape
     const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
     const matches = linkRegex.exec(location);
+
+    if (!matches || !matches.length) {
+        return;
+    }
 
     // eslint-disable-next-line no-useless-escape
     return matches[0].replace(/,\s*$/, '');
