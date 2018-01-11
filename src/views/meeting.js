@@ -4,10 +4,13 @@ import { connect } from 'react-redux';
 
 import { MeetingFrame } from 'features/meeting-frame';
 
+import { getDisplayName } from 'reducers';
+
 import View from './view';
 
 export class MeetingView extends React.Component {
     static propTypes = {
+        displayName: PropTypes.string,
         history: PropTypes.object,
         match: PropTypes.object
     };
@@ -22,6 +25,7 @@ export class MeetingView extends React.Component {
         return (
             <View>
                 <MeetingFrame
+                    displayName = { this.props.displayName }
                     meetingName = { this.props.match.params.name }
                     onMeetingLeave = { this._onMeetingLeave } />
             </View>
@@ -33,4 +37,10 @@ export class MeetingView extends React.Component {
     }
 }
 
-export default connect()(MeetingView);
+function mapStateToProps(state) {
+    return {
+        displayName: getDisplayName(state)
+    };
+}
+
+export default connect(mapStateToProps)(MeetingView);

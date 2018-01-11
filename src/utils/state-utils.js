@@ -9,7 +9,8 @@ let cachedState;
 function parsePersistedState(state) {
     return {
         calendars: {
-            name: state.calendars.name
+            name: state.calendars.name,
+            displayName: state.calendars.displayName
         },
         setup: {
             completed: state.setup.completed
@@ -19,7 +20,8 @@ function parsePersistedState(state) {
 
 function hasUpdateOfInterest(oldState, newState) {
     return oldState.calendars.name !== newState.calendars.name
-        || oldState.setup.completed !== newState.setup.completed;
+        || oldState.setup.completed !== newState.setup.completed
+        || oldState.calendars.displayName !== newState.calendars.displayName;
 }
 
 export function setPersistedState(store) {

@@ -9,6 +9,7 @@ const MEETING_DOMAN = 'meet.jit.si';
 
 export default class MeetingFrame extends React.Component {
     static propTypes = {
+        displayName: PropTypes.string,
         meetingName: PropTypes.string,
         onMeetingLeave: PropTypes.func
     };
@@ -29,6 +30,7 @@ export default class MeetingFrame extends React.Component {
         this._api = new JitsiMeetExternalAPI(MEETING_DOMAN, options);
 
         this._api.addListener('readyToClose', this._onMeetingLeave);
+        this._api.executeCommand('displayName', this.props.displayName);
     }
 
     componentWillUnmount() {

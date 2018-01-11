@@ -9,6 +9,7 @@ const calendarAccounts = (state = defaultState, action) => {
         return {
             ...state,
             name: action.name,
+            displayName: action.displayName,
             events: []
         };
 
@@ -91,6 +92,10 @@ export function getCalendarEvents(state) {
 
 export function getCalendarName(state) {
     return state.calendars.name;
+}
+
+export function getDisplayName(state) {
+    return state.calendars.displayName;
 }
 
 export default calendarAccounts;

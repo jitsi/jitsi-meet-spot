@@ -82,7 +82,7 @@ export class GoogleSelectRoom extends React.Component {
     }
 
     _onRoomClick(room) {
-        this.props.dispatch(setCalendar(room.resourceEmail));
+        this.props.dispatch(setCalendar(room.resourceEmail, room.resourceName));
         this.props.onSuccess();
     }
 }
