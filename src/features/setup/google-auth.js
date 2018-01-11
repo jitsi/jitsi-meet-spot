@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { google } from 'calendars';
-
 import { Button } from 'features/button';
+import { logger } from 'utils';
+
 import styles from './setup.css';
 
 export class GoogleAuth extends React.Component {
@@ -34,18 +35,9 @@ export class GoogleAuth extends React.Component {
     }
 
     _onAuthEnter() {
-        return google.authenticate()
-            .then(() => {
-                if (!google.isAuthenticated()) {
-                    return google.triggerSignIn();
-                }
-            })
-            .then(() => {
-                this.props.onSuccess();
-            })
-            .catch(error => {
-                console.warn('error', error);
-            });
+        return google.triggerSignIn()
+            .then(() => this.props.onSuccess())
+            .catch(error => logger.error(error));
     }
 }
 

@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { Button } from 'features/button';
 import { Input } from 'features/input';
-
 import styles from './meeting-name-entry.css';
 
 export class MeetingNameEntry extends React.Component {
@@ -27,7 +25,7 @@ export class MeetingNameEntry extends React.Component {
         return (
             <form
                 className = { styles.wrapper }
-                onSubmit = { this._onSubmit } >
+                onSubmit = { this._onSubmit} >
                 <Input
                     id = 'meeting-name-input'
                     onChange = { this._onMeetingNameChange }
@@ -44,10 +42,11 @@ export class MeetingNameEntry extends React.Component {
         });
     }
 
-    _onSubmit(event) {
-        event.preventDefault();
-        if (this.props.onSubmit && this.state.meetingName) {
-            this.props.onSubmit(this.state.meetingName);
+    _onSubmit() {
+        const meetingName = this.state.meetingName.trim();
+
+        if (meetingName) {
+            this.props.onSubmit(meetingName);
         }
     }
 }

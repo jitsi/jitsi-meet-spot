@@ -10,24 +10,14 @@ export default class Clock extends React.Component {
         text: PropTypes.string
     }
 
-    constructor(props) {
-        super(props);
-
-        this._onClick = this._onClick.bind(this);
-    }
-
     render() {
         return (
             <button
                 { ...this.props }
                 className = { styles.button }
-                onClick = { this._onClick }>
+                onClick = { this.props.onClick }>
                 { this.props.children }
             </button>
         );
-    }
-
-    _onClick() {
-        this.props.onClick && this.props.onClick();
     }
 }

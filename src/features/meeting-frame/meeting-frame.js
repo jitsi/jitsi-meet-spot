@@ -18,24 +18,25 @@ export default class MeetingFrame extends React.Component {
         super(props);
 
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
-        this._onMeetingLeave = this._onMeetingLeave.bind(this);
 
+        this._jitsiApi = null;
         this._meetingContainer = null;
-        this._api = null;
     }
 
     componentDidMount() {
-        const options = this._generateMeetingOptions();
+        this._jitsiApi = new JitsiMeetExternalAPI(MEETING_DOMAN, {
+            roomName: this.props.meetingName,
+            parentNode: this._meetingContainer
+        });
 
-        this._api = new JitsiMeetExternalAPI(MEETING_DOMAN, options);
-
-        this._api.addListener('readyToClose', this._onMeetingLeave);
-        this._api.executeCommand('displayName', this.props.displayName);
+        this._jitsiApi.addListener('readyToClose', this.props.onMeetingLeave);
+        this._jitsiApi.executeCommand('displayName', this.props.displayName);
     }
 
     componentWillUnmount() {
-        this._api.removeListener('readyToClose', this._onMeetingLeave);
-        this._api.dispose();
+        this._jitsiApi.removeListener(
+            'readyToClose', this.props.onMeetingLeave);
+        this._jitsiApi.dispose();
     }
 
     render() {
@@ -44,17 +45,6 @@ export default class MeetingFrame extends React.Component {
                 className = { styles.frame }
                 ref = { this._setMeetingContainerRef } />
         );
-    }
-
-    _generateMeetingOptions() {
-        return {
-            roomName: this.props.meetingName,
-            parentNode: this._meetingContainer
-        };
-    }
-
-    _onMeetingLeave() {
-        this.props.onMeetingLeave();
     }
 
     _setMeetingContainerRef(ref) {

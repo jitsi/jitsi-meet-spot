@@ -8,8 +8,7 @@ import { protoState } from 'reducers';
 import { getPersistedState, setPersistedState } from 'utils';
 
 import App from './app';
-
-import 'reset.css';
+import './reset.css';
 
 const store = createStore(protoState, getPersistedState());
 
@@ -17,9 +16,12 @@ store.subscribe(() => {
     setPersistedState(store);
 });
 
-window.debug = {
-    store
-};
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV !== 'production') {
+    window.spot = {
+        store
+    };
+}
 
 render(
     <Provider store = { store }>

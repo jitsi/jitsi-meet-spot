@@ -21,7 +21,7 @@ export class CalendarStatus extends React.Component {
                 </div>
                 <div className = { styles.content }>
                     <div className = { styles.detail }>
-                        calendar: { _calendarName }
+                        Current Calendar: { _calendarName }
                     </div>
                 </div>
             </div>

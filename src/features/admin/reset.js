@@ -1,7 +1,8 @@
 import React from 'react';
-import { persistence, windowHandler } from 'utils';
 
 import { Button } from 'features/button';
+import { persistence, windowHandler } from 'utils';
+
 import styles from './admin.css';
 
 export default class ResetState extends React.Component {

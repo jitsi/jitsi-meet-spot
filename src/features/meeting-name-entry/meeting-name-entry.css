@@ -1,19 +1,11 @@
-.wrapper {
-    background: rgba(255, 255, 255, 0.7);
-    display: flex;
-    flex-shrink: 0;
-    padding: 10px 20px;
-    width: 100%;
-}
-
 .input {
     border: none;
     cursor: pointer;
     flex: 1;
     font-size: 17pt;
 }
-.input:focus,
-.button:focus {
+
+.input:focus {
     outline: none;
 }
 
@@ -24,6 +16,19 @@
     cursor: pointer;
     font-size: 17pt;
 }
+
 .button:hover {
     background: teal;
-};
+}
+
+.button:focus {
+    outline: none;
+}
+
+.wrapper {
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-shrink: 0;
+    padding: 10px 20px;
+    width: 100%;
+}

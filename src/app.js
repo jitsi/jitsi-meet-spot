@@ -1,10 +1,8 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { Nav } from 'features/nav';
-import { isLoadComplete, isSetupComplete } from 'reducers';
+import { PrivateRoute } from 'routing';
+
 import AdminView from 'views/admin';
 import CalendarView from 'views/calendar';
 import LoadingView from 'views/loading';
@@ -12,26 +10,14 @@ import MeetingView from 'views/meeting';
 import SetupView from 'views/setup';
 
 export class App extends React.Component {
-    static propTypes = {
-        _isSetupComplete: PropTypes.bool,
-        _loadCompleted: PropTypes.bool
-    };
-
     render() {
-        const { _loadCompleted, _isSetupComplete } = this.props;
-
         return (
             <div>
-                <Nav />
                 <Switch>
                     <PrivateRoute
-                        isInitialLoadComplete = { _loadCompleted }
-                        _isSetupComplete = { _isSetupComplete }
                         path = '/admin'
                         component = { AdminView } />
                     <PrivateRoute
-                        isInitialLoadComplete = { _loadCompleted }
-                        _isSetupComplete = { _isSetupComplete }
                         path = '/meeting/:name'
                         component = { MeetingView } />
                     <Route
@@ -41,8 +27,6 @@ export class App extends React.Component {
                         path = '/loading'
                         component = { LoadingView } />
                     <PrivateRoute
-                        isInitialLoadComplete = { _loadCompleted }
-                        _isSetupComplete = { _isSetupComplete }
                         component = { CalendarView } />
                 </Switch>
             </div>
@@ -50,45 +34,4 @@ export class App extends React.Component {
     }
 }
 
-class PrivateRoute extends React.Component {
-    static propTypes = {
-        component: PropTypes.func,
-        isInitialLoadComplete: PropTypes.bool,
-        _isSetupComplete: PropTypes.bool
-    }
-
-    constructor(props) {
-        super(props);
-
-        this._renderRoute = this._renderRoute.bind(this);
-    }
-
-    render() {
-        return (
-            <Route render = { this._renderRoute } />
-        );
-    }
-
-    _renderRoute() {
-        const { _isSetupComplete, isInitialLoadComplete, ...rest } = this.props;
-
-        if (!isInitialLoadComplete) {
-            return <Redirect to = '/loading' />;
-        }
-
-        if (!_isSetupComplete) {
-            return <Redirect to = {{ pathname: '/setup' }} />;
-        }
-
-        return <Route { ...rest } />;
-    }
-}
-
-function mapStateToProps(state) {
-    return {
-        _isSetupComplete: isSetupComplete(state),
-        _loadCompleted: isLoadComplete(state)
-    };
-}
-
-export default withRouter(connect(mapStateToProps)(App));
+export default withRouter(App);

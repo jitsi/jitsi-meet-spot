@@ -6,8 +6,8 @@ import styles from './input.css';
 export class Input extends React.Component {
     static propTypes = {
         id: PropTypes.string,
-        placeholder: PropTypes.string,
         onChange: PropTypes.func,
+        placeholder: PropTypes.string,
         value: PropTypes.string
     };
 

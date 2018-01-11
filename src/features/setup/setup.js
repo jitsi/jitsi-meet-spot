@@ -12,76 +12,57 @@ import styles from './setup.css';
 export class Setup extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        onCancel: PropTypes.func,
         onSuccess: PropTypes.func
     };
 
     constructor(props) {
         super(props);
 
-        this._cancelSetup = this._cancelSetup.bind(this);
         this._nextStep = this._nextStep.bind(this);
 
         this.steps = [
-            this._renderWelcome.bind(this),
-            this._renderEnterAuth.bind(this),
-            this._selectRoom.bind(this)
+            Welcome,
+            GoogleAuth,
+            GoogleSelectRoom
         ];
 
         this.state = {
-            renderCurrentStep: this.steps[0]
+            currentStep: this.steps[0]
         };
     }
 
     render() {
+        const CurrentStep = this.state.currentStep;
+
         return (
             <div className = { styles.setup }>
-                { this.state.renderCurrentStep() }
+                <CurrentStep onSuccess = { this._nextStep } />
             </div>
         );
     }
 
-    _cancelSetup() {
-        this.props.onCancel && this.props.onCancel();
-    }
-
-    _isOnLastStep() {
-        return this.steps[this.steps.length - 1]
-            === this.state.renderCurrentStep;
-    }
-
     _getNextStep() {
         const currentStepIndex
-            = this.steps.indexOf(this.state.renderCurrentStep);
+            = this.steps.indexOf(this.state.currentStep);
 
         return this.steps[currentStepIndex + 1];
     }
 
+    _isOnLastStep() {
+        return this.steps[this.steps.length - 1]
+            === this.state.currentStep;
+    }
+
+
     _nextStep() {
         if (this._isOnLastStep()) {
             this.props.dispatch(setSetupCompleted(true));
-            this.props.onSuccess && this.props.onSuccess();
+            this.props.onSuccess();
         } else {
             this.setState({
-                renderCurrentStep: this._getNextStep()
+                currentStep: this._getNextStep()
             });
         }
-    }
-
-    _renderEnterAuth() {
-        return (
-            <GoogleAuth onSuccess = { this._nextStep } />
-        );
-    }
-
-    _renderWelcome() {
-        return <Welcome onSuccess = { this._nextStep } />;
-    }
-
-    _selectRoom() {
-        return (
-            <GoogleSelectRoom onSuccess = { this._nextStep } />
-        );
     }
 }
 

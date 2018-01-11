@@ -25,9 +25,3 @@ export function setSetupCompleted(completed) {
         completed
     };
 }
-
-export function updateGoogleClient() {
-    return {
-        type: 'SET_GOOGLE_CLIENT'
-    };
-}

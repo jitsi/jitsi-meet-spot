@@ -55,6 +55,8 @@ html {
     box-sizing: inherit;
 }
 
+/** custom resets **/
+
 body {
     font-family: 'Yanone Kaffeesatz', 'Helvetica Neue', Helvetica, sans-serif;
 }

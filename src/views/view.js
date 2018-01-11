@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { BACKGROUND_IMAGE_URL } from 'app-constants';
+import { backgroundService } from 'utils';
 
 import styles from './view.css';
 
@@ -12,9 +12,13 @@ export default class View extends React.Component {
     };
 
     render() {
-        const backgroundStyles = this.props.hideBackground
-            ? {}
-            : { backgroundImage: `url('${BACKGROUND_IMAGE_URL}')` };
+        let backgroundStyles;
+
+        if (!this.props.hideBackground) {
+            const backgroundUrl = backgroundService.getBackgroundUrl();
+
+            backgroundStyles = { backgroundImage: `url('${backgroundUrl}')` };
+        }
 
         return (
             <div

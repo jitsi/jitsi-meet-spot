@@ -31,6 +31,10 @@
     white-space: nowrap;
 }
 
+.participants {
+    height: 50px;
+}
+
 .time {
     font-size: 3vw;
     white-space: nowrap;
@@ -43,8 +47,4 @@
     margin: 10px 0;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.participants {
-    height: 50px;
 }

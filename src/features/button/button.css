@@ -1,7 +1,3 @@
-.button:focus {
-    outline: none;
-}
-
 .button {
     background: steelblue;
     border: none;
@@ -9,6 +5,11 @@
     cursor: pointer;
     font-size: 17pt;
 }
+
+.button:focus {
+    outline: none;
+}
+
 .button:hover {
     background: teal;
 };

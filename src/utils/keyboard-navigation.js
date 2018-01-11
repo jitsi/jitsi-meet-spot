@@ -269,7 +269,9 @@ export class KeyboardNavigation {
     }
 
     _currentlyHasMultiple() {
-        return config[this.viewName][this.cursor].multiple;
+        const currentCursor = config[this.viewName][this.cursor];
+
+        return currentCursor && currentCursor.multiple;
     }
 
     startListening(viewName) {

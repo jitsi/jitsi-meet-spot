@@ -4,24 +4,39 @@ import { connect } from 'react-redux';
 
 import { loadComplete } from 'actions';
 import { google } from 'calendars';
-import { preloadImage } from 'utils';
+import { LoadingIcon } from 'features/loading-icon';
+import { backgroundService, logger } from 'utils';
 
 import View from './view';
 import styles from './view.css';
 
-import { BACKGROUND_IMAGE_URL } from 'app-constants';
-import { LoadingIcon } from 'features/loading-icon';
 
 export class LoadingView extends React.Component {
     static propTypes = {
-        _calendarName: PropTypes.string,
         dispatch: PropTypes.func,
-        history: PropTypes.object
+        history: PropTypes.object,
+        location: PropTypes.object
     };
 
     componentDidMount() {
-        this.loadGoogle()
-            .then(() => this.handle());
+        backgroundService.loadBackground()
+            .catch(error => logger.error(error))
+            .then(() => google.initialize())
+            .then(() => {
+                if (!google.isAuthenticated()) {
+                    return google.triggerSignIn();
+                }
+            })
+            .then(() => {
+                this.props.history.push(
+                    this.props.location.state.referrer || '');
+            })
+            .catch(() => {
+                this.props.history.push('/setup');
+            })
+            .then(() => {
+                this.props.dispatch(loadComplete());
+            });
     }
 
     render() {
@@ -32,44 +47,6 @@ export class LoadingView extends React.Component {
                 </div>
             </View>
         );
-    }
-
-    loadGoogle() {
-        return google.load();
-    }
-
-    handle() {
-        const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
-            .catch(error => {
-                console.error(error);
-            });
-
-        const authPromise = google.authenticate()
-            .then(() => {
-                if (!google.isAuthenticated()) {
-                    return google.triggerSignIn();
-                }
-            })
-            .catch(() => {
-                this.redirectToSetup();
-
-                return Promise.reject();
-            });
-
-        return Promise.all([ imageLoadPromise, authPromise ])
-            .then(() => {
-                this.props.dispatch(loadComplete());
-                this.props.history.push('/');
-            })
-            .catch(() => {
-                this.props.dispatch(loadComplete());
-                console.warn('error loading app');
-            });
-    }
-
-    redirectToSetup() {
-        this.props.dispatch(loadComplete());
-        this.props.history.push('/setup');
     }
 }
 

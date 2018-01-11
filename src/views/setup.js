@@ -22,9 +22,7 @@ export class SetupView extends React.Component {
         return (
             <View>
                 <div className = { styles.container }>
-                    <Setup
-                        onCancel = { this._redirectToCalendar }
-                        onSuccess = { this._redirectToCalendar } />
+                    <Setup onSuccess = { this._redirectToCalendar } />
                 </div>
             </View>
         );

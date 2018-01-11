@@ -1,15 +1,13 @@
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import { date } from 'utils';
 import Avatar from './avatar';
-
 import styles from './scheduled-meeting.css';
 
 export default class ScheduledMeeting extends React.Component {
     static propTypes = {
-        onMeetingClick: PropTypes.func,
-        event: PropTypes.object
+        event: PropTypes.object,
+        onMeetingClick: PropTypes.func
     };
 
     constructor(props) {
@@ -35,7 +33,7 @@ export default class ScheduledMeeting extends React.Component {
                 className = { className }
                 onClick = { this._onMeetingClick }>
                 <div className = { styles.time }>
-                    { moment(startTime).format('hh:mm') }
+                    { date.formatToTime(startTime) }
                 </div>
                 <div className = { styles.details }>
                     <div className = { styles.name }>

@@ -6,14 +6,12 @@ import { setCalendarEvents } from 'actions';
 import { google } from 'calendars';
 import { Clock } from 'features/clock';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
-import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { getCalendarEvents, getCalendarName } from 'reducers';
+import { keyboardNavigation } from 'utils';
 
 import View from './view';
 import styles from './view.css';
-
-import { keyboardNavigation } from 'utils';
 
 export class CalendarView extends React.Component {
     static propTypes = {
@@ -30,6 +28,7 @@ export class CalendarView extends React.Component {
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
+        this._updateEventsInterval = null;
     }
 
     componentDidMount() {
@@ -41,9 +40,10 @@ export class CalendarView extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isUnmounting = true;
+
         keyboardNavigation.stopListening();
 
-        this._isUnmounting = true;
         clearInterval(this._updateEventsInterval);
     }
 
@@ -55,19 +55,18 @@ export class CalendarView extends React.Component {
                     <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
                     <div className = { styles.meetings }>
                         <ScheduledMeetings
-                            onMeetingClick = { this._onGoToMeeting }
-                            events = { this.props.events } />
-                    </div>
-                    <div className = { styles.code }>
-                        <QRCode />
+                            events = { this.props.events }
+                            onMeetingClick = { this._onGoToMeeting } />
                     </div>
                 </div>
             </View>
         );
     }
 
-    _onGoToMeeting(meetingName = 'temp_placeholder') {
-        this.props.history.push(`/meeting/${meetingName}`);
+    _onGoToMeeting(meetingName) {
+        if (meetingName) {
+            this.props.history.push(`/meeting/${meetingName}`);
+        }
     }
 
     _pollForEvents() {
@@ -77,6 +76,7 @@ export class CalendarView extends React.Component {
             return;
         }
 
+        // TODO: prevent multiple requests being in flight at the same time
         google.getCalendar(calendarName)
             .then(events => {
                 if (this._isUnmounting) {

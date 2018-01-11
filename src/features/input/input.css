@@ -4,7 +4,7 @@
     flex: 1;
     font-size: 17pt;
 }
-.input:focus,
-.button:focus {
+
+.input:focus {
     outline: none;
 }

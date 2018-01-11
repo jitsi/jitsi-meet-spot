@@ -3,11 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { MeetingFrame } from 'features/meeting-frame';
-
 import { getDisplayName } from 'reducers';
 
 import View from './view';
 
+// TODO: handle the error case where no meeting name is present
 export class MeetingView extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,

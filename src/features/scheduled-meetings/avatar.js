@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { DEFAULT_AVATAR_URL } from 'app-constants';
 import { hash } from 'utils';
-
 import styles from './scheduled-meeting.css';
+
+export const DEFAULT_AVATAR_URL = 'https://meet.jit.si/images/avatar.png';
 
 export default class Avatar extends React.Component {
     static propTypes = {
@@ -27,4 +26,3 @@ export default class Avatar extends React.Component {
             : DEFAULT_AVATAR_URL;
     }
 }
-

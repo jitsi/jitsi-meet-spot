@@ -1,48 +1,21 @@
 /* global gapi */
 
-const GOOGLE_API_ROOM = 'https://www.googleapis.com';
-
 import { CLIENT_ID } from 'config';
+import { date } from 'utils';
 
-function generateCalendarResourcesApi(customerId) {
-    const url = `${GOOGLE_API_ROOM}/admin/directory/v1/customer/${
-        customerId}/resources/calendars`;
+export default {
+    initialize() {
+        const loadGapi = new Promise(resolve =>
+            gapi.load('client:auth2', () => resolve()));
 
-    return url;
-}
-
-function generateGetCalendarApi(roomId) {
-    const now = new Date();
-    const currentTimestamp = now.toISOString();
-    const future = new Date(now.setHours(now.getHours() + 24));
-    const futuretimestamp = future.toISOString();
-    const GET_CALENDAR_PARAMS = [
-        'alwaysIncludeEmail=true',
-        'orderBy=starttime',
-        'singleEvents=true',
-        `timeMax=${futuretimestamp}`,
-        `timeMin=${currentTimestamp}`
-    ].join('&');
-
-    return `${GOOGLE_API_ROOM}/calendar/v3/calendars/${roomId}/events?${
-        GET_CALENDAR_PARAMS}`;
-}
-
-const SCOPES = [
-    `${GOOGLE_API_ROOM}/auth/admin.directory.resource.calendar.readonly`,
-    `${GOOGLE_API_ROOM}/auth/calendar.readonly`
-].join(' ');
-
-const DISCOVERY_DOCS = [
-    'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
-];
-const googleApi = {
-    authenticate() {
-        return this.load()
+        return loadGapi
             .then(() => gapi.client.init({
                 clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
+                scope: [
+                    'https://www.googleapis.com/auth/'
+                        + 'admin.directory.resource.calendar.readonly',
+                    'https://www.googleapis.com/auth/calendar.readonly'
+                ].join(' ')
             }));
     },
 
@@ -56,33 +29,36 @@ const googleApi = {
         );
     },
 
-    get() {
-        return gapi;
-    },
-
     getCalendar(roomId) {
-        return gapi.client.request(generateGetCalendarApi(roomId))
+        const params = [
+            'alwaysIncludeEmail=true',
+            'orderBy=starttime',
+            'singleEvents=true',
+            `timeMax=${date.getEndOfDate().toISOString()}`,
+            `timeMin=${date.getCurrentDate().toISOString()}`
+        ].join('&');
+
+        const calendarEventsEndpoint
+            = `https://www.googleapis.com/calendar/v3/calendars/${roomId}/`
+            + `events?${params}`;
+
+        return gapi.client.request(calendarEventsEndpoint)
             .then(response => response.result.items);
     },
 
     getRooms() {
-        return gapi.client.request(generateCalendarResourcesApi('my_customer'))
-            .then(response => {
-                const allCalendars = response.result.items;
+        const roomsListEndpoint
+            = 'https://www.googleapis.com/admin/directory/v1/customer/'
+                + 'my_customer/resources/calendars';
 
-                return allCalendars.filter(calendar =>
-                    calendar.resourceCategory === 'CONFERENCE_ROOM');
-            });
-    },
-
-    load() {
-        return new Promise(resolve =>
-            gapi.load('client:auth2', () => resolve()));
+        return gapi.client.request(roomsListEndpoint)
+            .then(response => response.result.items.filter(calendar =>
+                calendar.resourceCategory === 'CONFERENCE_ROOM'));
     },
 
     triggerSignIn() {
-        return gapi.auth2.getAuthInstance().signIn();
+        return this.initialize()
+            .then(() => gapi.auth2.getAuthInstance().signIn());
     }
 };
 
-export default googleApi;
