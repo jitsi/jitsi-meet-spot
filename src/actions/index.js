@@ -18,17 +18,15 @@ export function setCalendarEvents(events = []) {
     };
 }
 
-export function setSetupCompleted(completed, clientId) {
+export function setSetupCompleted(completed) {
     return {
         type: 'SETUP_COMPLETED',
-        clientId,
         completed
     };
 }
 
-export function updateGoogleClient(clientId) {
+export function updateGoogleClient() {
     return {
-        type: 'SET_GOOGLE_CLIENT',
-        clientId
+        type: 'SET_GOOGLE_CLIENT'
     };
 }

@@ -12,16 +12,14 @@ function parsePersistedState(state) {
             name: state.calendars.name
         },
         setup: {
-            completed: state.setup.completed,
-            clientId: state.setup.clientId
+            completed: state.setup.completed
         }
     };
 }
 
 function hasUpdateOfInterest(oldState, newState) {
     return oldState.calendars.name !== newState.calendars.name
-        || oldState.setup.completed !== newState.setup.completed
-        || oldState.setup.clientId !== newState.setup.clientId;
+        || oldState.setup.completed !== newState.setup.completed;
 }
 
 export function setPersistedState(store) {

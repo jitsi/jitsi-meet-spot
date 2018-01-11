@@ -17,8 +17,7 @@ const setup = (state = defaultState, action) => {
 
     case 'SET_GOOGLE_CLIENT':
         return {
-            ...state,
-            clientId: action.clientId
+            ...state
         };
 
     default:
@@ -32,10 +31,6 @@ export function isLoadComplete(state) {
 
 export function isSetupComplete(state) {
     return state.setup.completed;
-}
-
-export function getClientId(state) {
-    return state.setup.clientId;
 }
 
 export default setup;

@@ -11,12 +11,10 @@ import styles from './view.css';
 
 import { BACKGROUND_IMAGE_URL } from 'app-constants';
 import { LoadingIcon } from 'features/loading-icon';
-import { getClientId } from 'reducers';
 
 export class LoadingView extends React.Component {
     static propTypes = {
         _calendarName: PropTypes.string,
-        _clientId: PropTypes.string,
         dispatch: PropTypes.func,
         history: PropTypes.object
     };
@@ -41,40 +39,32 @@ export class LoadingView extends React.Component {
     }
 
     handle() {
-        const { _clientId } = this.props;
+        const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
+            .catch(error => {
+                console.error(error);
+            });
 
-        if (_clientId) {
-            const imageLoadPromise = preloadImage(BACKGROUND_IMAGE_URL)
-                .catch(error => {
-                    console.error(error);
-                });
+        const authPromise = google.authenticate()
+            .then(() => {
+                if (!google.isAuthenticated()) {
+                    return google.triggerSignIn();
+                }
+            })
+            .catch(() => {
+                this.redirectToSetup();
 
-            const authPromise = google.authenticate(_clientId)
-                .then(() => {
-                    if (!google.isAuthenticated()) {
-                        return google.triggerSignIn();
-                    }
-                })
-                .catch(() => {
-                    this.redirectToSetup();
+                return Promise.reject();
+            });
 
-                    return Promise.reject();
-                });
-
-            return Promise.all([ imageLoadPromise, authPromise ])
-                .then(() => {
-                    this.props.dispatch(loadComplete());
-                    this.props.history.push('/');
-                })
-                .catch(() => {
-                    this.props.dispatch(loadComplete());
-                    console.warn('error loading app');
-                });
-        }
-
-        setTimeout(() => {
-            this.redirectToSetup();
-        }, 2000);
+        return Promise.all([ imageLoadPromise, authPromise ])
+            .then(() => {
+                this.props.dispatch(loadComplete());
+                this.props.history.push('/');
+            })
+            .catch(() => {
+                this.props.dispatch(loadComplete());
+                console.warn('error loading app');
+            });
     }
 
     redirectToSetup() {
@@ -83,10 +73,4 @@ export class LoadingView extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        _clientId: getClientId(state)
-    };
-}
-
-export default connect(mapStateToProps)(LoadingView);
+export default connect()(LoadingView);

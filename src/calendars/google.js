@@ -2,6 +2,8 @@
 
 const GOOGLE_API_ROOM = 'https://www.googleapis.com';
 
+import { CLIENT_ID } from 'config';
+
 function generateCalendarResourcesApi(customerId) {
     const url = `${GOOGLE_API_ROOM}/admin/directory/v1/customer/${
         customerId}/resources/calendars`;
@@ -35,10 +37,10 @@ const DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
 ];
 const googleApi = {
-    authenticate(clientId) {
+    authenticate() {
         return this.load()
             .then(() => gapi.client.init({
-                clientId,
+                clientId: CLIENT_ID,
                 discoveryDocs: DISCOVERY_DOCS,
                 scope: SCOPES
             }));

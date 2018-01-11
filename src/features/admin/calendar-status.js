@@ -2,18 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getClientId, getCalendarName } from 'reducers';
+import { getCalendarName } from 'reducers';
 
 import styles from './admin.css';
 
 export class CalendarStatus extends React.Component {
     static propTypes = {
-        _calendarName: PropTypes.string,
-        _clientId: PropTypes.string
+        _calendarName: PropTypes.string
     };
 
     render() {
-        const { _calendarName, _clientId } = this.props;
+        const { _calendarName } = this.props;
 
         return (
             <div className = { styles.container }>
@@ -24,9 +23,6 @@ export class CalendarStatus extends React.Component {
                     <div className = { styles.detail }>
                         calendar: { _calendarName }
                     </div>
-                    <div className = { styles.detail }>
-                        app client: { _clientId }
-                    </div>
                 </div>
             </div>
         );
@@ -35,8 +31,7 @@ export class CalendarStatus extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        _calendarName: getCalendarName(state),
-        _clientId: getClientId(state)
+        _calendarName: getCalendarName(state)
     };
 }
 
