@@ -3,5 +3,9 @@
 export default {
     error(...args) {
         console.error(...args);
+    },
+
+    log(...args) {
+        console.log(...args);
     }
 };

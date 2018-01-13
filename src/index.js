@@ -6,6 +6,7 @@ import { HashRouter } from 'react-router-dom';
 
 import { protoState } from 'reducers';
 import { getPersistedState, setPersistedState } from 'utils';
+import { remoteControlService } from 'remote-control';
 
 import App from './app';
 import './reset.css';
@@ -19,6 +20,7 @@ store.subscribe(() => {
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== 'production') {
     window.spot = {
+        remoteControlService,
         store
     };
 }

@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import { remoteControlService } from 'remote-control';
 import styles from './meeting-frame.css';
 
 const MEETING_DOMAN = 'meet.jit.si';
@@ -18,9 +18,12 @@ export default class MeetingFrame extends React.Component {
         super(props);
 
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
+        this._onCommand = this._onCommand.bind(this);
 
         this._jitsiApi = null;
-        this._meetingContainer = null;
+        this._meetingContainere = null;
+
+        remoteControlService.addCommandListener(this._onCommand);
     }
 
     componentDidMount() {
@@ -34,6 +37,8 @@ export default class MeetingFrame extends React.Component {
     }
 
     componentWillUnmount() {
+        remoteControlService.removeCommandListener(this._onCommand);
+
         this._jitsiApi.removeListener(
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.dispose();
@@ -45,6 +50,10 @@ export default class MeetingFrame extends React.Component {
                 className = { styles.frame }
                 ref = { this._setMeetingContainerRef } />
         );
+    }
+
+    _onCommand(command) {
+        this._jitsiApi.executeCommand(command);
     }
 
     _setMeetingContainerRef(ref) {

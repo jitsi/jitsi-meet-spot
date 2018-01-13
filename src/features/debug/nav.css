@@ -1,0 +1,11 @@
+.nav {
+    background: rgba(255, 255, 255, 0.5);
+    bottom: 25;
+    padding: 25px;
+    position: fixed;
+    right: 25;
+}
+
+.nav > * {
+    margin-right: 10px;
+}
