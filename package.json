@@ -30,7 +30,7 @@
         "node": "8.9.1",
         "npm": "5.5.1"
     },
-    "name": "proto",
+    "name": "jitsi-meet-spot",
     "scripts": {
         "build-dev": "webpack --config ./webpack.config.js --progress",
         "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
