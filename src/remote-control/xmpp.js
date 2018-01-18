@@ -3,6 +3,7 @@
 import { XMPP_CONFIG } from 'config';
 import { $msg } from 'strophe.js';
 import { logger, persistence } from 'utils';
+import { setLocalRemoteControlID } from 'actions';
 
 let commandListeners = [];
 let initPromise;
@@ -12,13 +13,14 @@ let xmppConnection;
 const skipDebugStoring = window.location.href.includes('remote-control-debug');
 
 const xmppControl = {
-    init() {
+    init(dispatch) {
         if (initPromise) {
             return;
         }
 
         initPromise = JitsiMeetJS.init({})
             .then(() => {
+                JitsiMeetJS.setLogLevel('error');
                 xmppConnection
                     = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
 
@@ -26,6 +28,7 @@ const xmppControl = {
                     JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
                     () => {
                         if (!skipDebugStoring) {
+                            dispatch(setLocalRemoteControlID(this.getJid()));
                             persistence.set('debug-jid', this.getJid());
                         }
                     });
@@ -62,13 +65,14 @@ const xmppControl = {
         commandListeners = commandListeners.filter(cb => cb !== callback);
     },
 
-    sendCommand(jid, command) {
+    sendCommand(jid, command, options = {}) {
         const message = $msg({
             to: jid,
             type: 'spot-command'
         });
 
         message.c('body', command).up();
+        message.c('options', JSON.stringify(options)).up();
 
         xmppConnection.xmpp.connection.send(message);
     },
@@ -84,9 +88,11 @@ function onCommand(message) {
     }
 
     const body = message.getElementsByTagName('body')[0];
+    const options = message.getElementsByTagName('options')[0];
 
     if (body && body.textContent) {
-        commandListeners.forEach(cb => cb(body.textContent));
+        commandListeners.forEach(cb =>
+            cb(body.textContent, JSON.parse(options.textContent)));
     }
 
     return true;

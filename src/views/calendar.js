@@ -7,9 +7,16 @@ import { google } from 'calendars';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
+import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
-import { getCalendarEvents, getCalendarName } from 'reducers';
-import { keyboardNavigation } from 'utils';
+import {
+    getCalendarEvents,
+    getCalendarName,
+    getLocalRemoteControlId
+} from 'reducers';
+import { keyboardNavigation, windowHandler } from 'utils';
+
+import { remoteControlService } from 'remote-control';
 
 import View from './view';
 import styles from './view.css';
@@ -19,6 +26,7 @@ export class CalendarView extends React.Component {
         calendarName: PropTypes.string,
         dispatch: PropTypes.func,
         events: PropTypes.array,
+        localRemoteControlId: PropTypes.string,
         history: PropTypes.object
     };
 
@@ -29,7 +37,9 @@ export class CalendarView extends React.Component {
     constructor(props) {
         super(props);
 
+        this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
+        this._openQRCodeUrl = this._openQRCodeUrl.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
@@ -42,10 +52,14 @@ export class CalendarView extends React.Component {
         this._pollForEvents();
 
         this._updateEventsInterval = setInterval(this._pollForEvents, 30000);
+
+        remoteControlService.addCommandListener(this._onCommand);
     }
 
     componentWillUnmount() {
         this._isUnmounting = true;
+
+        remoteControlService.removeCommandListener(this._onCommand);
 
         keyboardNavigation.stopListening();
 
@@ -63,6 +77,7 @@ export class CalendarView extends React.Component {
                 onMeetingClick = { this._onGoToMeeting } />;
         }
 
+        const remoteControlUrl = this._getRemoteControlUrl();
 
         return (
             <View>
@@ -72,15 +87,48 @@ export class CalendarView extends React.Component {
                     <div className = { styles.meetings }>
                         { contents }
                     </div>
+                    <div
+                        className = { styles.qrcode }
+                        onClick = { this._openQRCodeUrl }>
+                        { remoteControlUrl
+                            ? <QRCode text = { remoteControlUrl } />
+                            : null }
+                    </div>
                 </div>
             </View>
         );
+    }
+
+    _getRemoteControlUrl() {
+        const { localRemoteControlId } = this.props;
+
+        if (!localRemoteControlId) {
+            return '';
+        }
+
+        return `${windowHandler.getBaseUrl()}#/remote-control/${
+            window.encodeURIComponent(localRemoteControlId)}`;
+    }
+
+    _onCommand(command, options) {
+        if (command === 'goToMeeting') {
+            this._onGoToMeeting(options.meetingName);
+        } else if (command === 'requestCalendar') {
+            remoteControlService.sendCommand(
+                options.requester,
+                'calendarData',
+                { events: this.props.events });
+        }
     }
 
     _onGoToMeeting(meetingName) {
         if (meetingName) {
             this.props.history.push(`/meeting/${meetingName}`);
         }
+    }
+
+    _openQRCodeUrl() {
+        windowHandler.openNewWindow(this._getRemoteControlUrl());
     }
 
     _pollForEvents() {
@@ -109,7 +157,8 @@ export class CalendarView extends React.Component {
 function mapStateToProps(state) {
     return {
         calendarName: getCalendarName(state),
-        events: getCalendarEvents(state) || []
+        events: getCalendarEvents(state) || [],
+        localRemoteControlId: getLocalRemoteControlId(state)
     };
 }
 

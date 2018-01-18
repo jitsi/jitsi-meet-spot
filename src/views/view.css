@@ -38,6 +38,12 @@
     width: 100%;
 }
 
+.qrcode {
+    bottom: 20;
+    left: 20;
+    position: absolute;
+}
+
 .view {
     align-items: center;
     background-size: cover;

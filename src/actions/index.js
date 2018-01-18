@@ -2,7 +2,9 @@ import {
     CALENDAR_ADD_ACCOUNT,
     CALENDAR_SET_EVENTS,
     LOAD_COMPLETED,
-    SETUP_COMPLETED } from 'reducers';
+    REMOTE_CONTROL_SET_LOCAL_ID,
+    SETUP_COMPLETED
+} from 'reducers';
 
 export function setLoadCompleted() {
     return {
@@ -22,6 +24,13 @@ export function setCalendarEvents(events = []) {
     return {
         type: CALENDAR_SET_EVENTS,
         events
+    };
+}
+
+export function setLocalRemoteControlID(id) {
+    return {
+        type: REMOTE_CONTROL_SET_LOCAL_ID,
+        id
     };
 }
 

@@ -17,6 +17,8 @@ store.subscribe(() => {
     setPersistedState(store);
 });
 
+remoteControlService.init(store.dispatch);
+
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== 'production') {
     window.spot = {

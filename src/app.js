@@ -2,14 +2,13 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { Nav } from 'features/debug';
-import { remoteControlService } from 'remote-control';
 import { PrivateRoute } from 'routing';
 import {
     Admin,
     Calendar,
     Loading,
     Meeting,
-    RemoteControlDebug,
+    RemoteControl,
     Setup
 } from 'views';
 
@@ -17,10 +16,6 @@ import {
 const showDebugNav = process.env.NODE_ENV !== 'production';
 
 export class App extends React.Component {
-    componentDidMount() {
-        remoteControlService.init();
-    }
-
     render() {
         return (
             <div>
@@ -38,8 +33,8 @@ export class App extends React.Component {
                         path = '/loading'
                         component = { Loading } />
                     <Route
-                        path = '/remote-control-debug'
-                        component = { RemoteControlDebug } />
+                        path = '/remote-control/:remoteId'
+                        component = { RemoteControl } />
                     <PrivateRoute
                         component = { Calendar} />
                 </Switch>
