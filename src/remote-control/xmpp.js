@@ -9,9 +9,6 @@ let commandListeners = [];
 let initPromise;
 let xmppConnection;
 
-
-const skipDebugStoring = window.location.href.includes('remote-control-debug');
-
 const xmppControl = {
     init(dispatch) {
         if (initPromise) {
@@ -27,10 +24,7 @@ const xmppControl = {
                 xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
                     () => {
-                        if (!skipDebugStoring) {
-                            dispatch(setLocalRemoteControlID(this.getJid()));
-                            persistence.set('debug-jid', this.getJid());
-                        }
+                        dispatch(setLocalRemoteControlID(this.getJid()));
                     });
 
                 xmppConnection.addEventListener(
