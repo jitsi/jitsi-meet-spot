@@ -42,7 +42,9 @@ export class MeetingNameEntry extends React.Component {
         });
     }
 
-    _onSubmit() {
+    _onSubmit(event) {
+        event.preventDefault();
+
         const meetingName = this.state.meetingName.trim();
 
         if (meetingName) {

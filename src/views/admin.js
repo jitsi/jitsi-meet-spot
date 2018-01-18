@@ -5,7 +5,7 @@ import { CalendarStatus, ResetState } from 'features/admin';
 import View from './view';
 import styles from './view.css';
 
-export default class CalendarView extends React.Component {
+export default class AdminView extends React.Component {
     render() {
         return (
             <View>
