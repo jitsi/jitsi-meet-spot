@@ -90,7 +90,9 @@ export class RemoteControl extends React.Component {
     _getInCallView() {
         return (
             <RemoteControlMenu
-                remoteId = { this._getRemoteId() } />
+                remoteId = { this._getRemoteId() }
+                audioMuted = { this.state.audioMuted === 'true' }
+                videoMuted = { this.state.videoMuted === 'true' } />
         );
     }
 
@@ -126,6 +128,14 @@ export class RemoteControl extends React.Component {
         switch (data.tagName) {
         case 'view':
             this.setState({ view: data.value });
+            break;
+
+        case 'audioMuted':
+            this.setState({ audioMuted: data.value });
+            break;
+
+        case 'videoMuted':
+            this.setState({ videoMuted: data.value });
             break;
         }
     }

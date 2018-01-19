@@ -62,6 +62,8 @@ const xmppControl = {
 
         this.room = this.xmppConnection.xmpp.createRoom(roomName, {});
         this.room.addPresenceListener('view', this._onPresence);
+        this.room.addPresenceListener('audioMuted', this._onPresence);
+        this.room.addPresenceListener('videoMuted', this._onPresence);
     },
 
     joinMuc() {
@@ -110,13 +112,9 @@ const xmppControl = {
         if (!this.room) {
             return;
         }
-        const pres = $pres({
-            to: this.room.myroomjid
-        });
 
-        pres.c(type, value).up();
-
-        this.xmppConnection.xmpp.connection.send(pres);
+        this.room.addToPresence(type, { value });
+        this.room.sendPresence();
     },
 
     addPresenceListener(callback) {

@@ -6,7 +6,9 @@ import { COMMANDS, remoteControlService } from 'remote-control';
 
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
-        remoteId: PropTypes.string
+        audioMuted: PropTypes.bool,
+        remoteId: PropTypes.string,
+        videoMuted: PropTypes.bool
     };
 
     constructor(props) {
@@ -19,11 +21,13 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     render() {
+        const { audioMuted, videoMuted } = this.props;
+
         return (
             <div>
                 <div>
                     <Button onClick = { this._onToggleAudioMute }>
-                        Toggle Audio Mute
+                        { audioMuted ? 'Audio Unmute' : 'Audio Mute' }
                     </Button>
                 </div>
                 <div>
@@ -33,7 +37,7 @@ export default class RemoteControlMenu extends React.Component {
                 </div>
                 <div>
                     <Button onClick = { this._onToggleVideoMute }>
-                        Toggle Video Mute
+                        { videoMuted ? 'Video Unmute' : 'Video Mute' }
                     </Button>
                 </div>
                 <div>

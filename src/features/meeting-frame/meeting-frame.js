@@ -19,6 +19,8 @@ export default class MeetingFrame extends React.Component {
 
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
         this._onCommand = this._onCommand.bind(this);
+        this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
+        this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
 
         this._jitsiApi = null;
         this._meetingContainere = null;
@@ -33,6 +35,10 @@ export default class MeetingFrame extends React.Component {
         });
 
         this._jitsiApi.addListener('readyToClose', this.props.onMeetingLeave);
+        this._jitsiApi.addListener(
+            'videoMuteStatusChanged', this._onVideoMuteChange);
+        this._jitsiApi.addListener(
+            'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
     }
 
@@ -50,6 +56,16 @@ export default class MeetingFrame extends React.Component {
                 className = { styles.frame }
                 ref = { this._setMeetingContainerRef } />
         );
+    }
+
+    _onAudioMuteChange(event) {
+        remoteControlService.sendPresence(
+            'audioMuted', JSON.stringify(event.muted));
+    }
+
+    _onVideoMuteChange(event) {
+        remoteControlService.sendPresence(
+            'videoMuted', JSON.stringify(event.muted));
     }
 
     _onCommand(command) {
