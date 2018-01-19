@@ -20,7 +20,7 @@ export class SetupView extends React.Component {
 
     render() {
         return (
-            <View>
+            <View name = 'setup'>
                 <div className = { styles.container }>
                     <Setup onSuccess = { this._redirectToCalendar } />
                 </div>

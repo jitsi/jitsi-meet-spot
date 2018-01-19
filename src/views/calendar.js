@@ -80,7 +80,7 @@ export class CalendarView extends React.Component {
         const remoteControlUrl = this._getRemoteControlUrl();
 
         return (
-            <View>
+            <View name = 'calendar'>
                 <div className = { styles.container }>
                     <Clock />
                     <MeetingNameEntry onSubmit = { this._onGoToMeeting } />

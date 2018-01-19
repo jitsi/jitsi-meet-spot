@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import { protoState } from 'reducers';
-import { getPersistedState, setPersistedState } from 'utils';
 import { remoteControlService } from 'remote-control';
+import { getPersistedState, setPersistedState } from 'utils';
 
 import App from './app';
 import './reset.css';
@@ -16,8 +16,6 @@ const store = createStore(protoState, getPersistedState());
 store.subscribe(() => {
     setPersistedState(store);
 });
-
-remoteControlService.init(store.dispatch);
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== 'production') {

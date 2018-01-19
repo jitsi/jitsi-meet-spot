@@ -8,7 +8,7 @@ import styles from './view.css';
 export default class AdminView extends React.Component {
     render() {
         return (
-            <View>
+            <View name = 'admin'>
                 <div className = { styles.container }>
                     <div className = { styles.admin }>
                         <CalendarStatus />

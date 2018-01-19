@@ -7,11 +7,13 @@ import { RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { remoteControlService } from 'remote-control';
 import { getLocalRemoteControlId } from 'reducers';
+
 import View from './view';
 import styles from './view.css';
 
 export class RemoteControl extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         localRemoteControlId: PropTypes.string,
         match: PropTypes.object
     };
@@ -20,24 +22,32 @@ export class RemoteControl extends React.Component {
         super(props);
 
         this.state = {
-            events: []
+            events: [],
+            view: ''
         };
 
         this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
+        this._onPresence = this._onPresence.bind(this);
     }
 
     componentDidMount() {
-        remoteControlService.addCommandListener(this._onCommand);
+        remoteControlService.init(this.props.dispatch)
+            .then(() => {
+                remoteControlService.addCommandListener(this._onCommand);
 
-        // TODO: waiting for xmpp to connect should be part of loading
-        setTimeout(() => {
-            remoteControlService.sendCommand(
-                this._getRemoteId(),
-                'requestCalendar',
-                { requester: this.props.localRemoteControlId }
-            );
-        }, 3000);
+                remoteControlService.sendCommand(
+                    this._getRemoteId(),
+                    'requestCalendar',
+                    { requester: this.props.localRemoteControlId }
+                );
+
+                remoteControlService.createMuc(this._getRemoteNode());
+
+                remoteControlService.joinMuc();
+
+                remoteControlService.addPresenceListener(this._onPresence);
+            });
     }
 
     componentWillUnmount() {
@@ -48,11 +58,29 @@ export class RemoteControl extends React.Component {
         return (
             <View name = 'remoteControl'>
                 <div className = { styles.container }>
-                    { this._getInCallView() }
-                    { this._getWaitingForCallView() }
+                    { this._getView() }
                 </div>
             </View>
         );
+    }
+
+    _getView() {
+        switch (this.state.view) {
+        case 'admin':
+            return <div>currently in admin tools</div>;
+        case 'calendar':
+            return this._getWaitingForCallView();
+        case 'meeting':
+            return this._getInCallView();
+        case 'setup':
+            return <div>currently in setup</div>;
+        default:
+            return <div>loading</div>;
+        }
+    }
+
+    _getRemoteNode() {
+        return this._getRemoteId().split('@')[0];
     }
 
     _getRemoteId() {
@@ -88,6 +116,18 @@ export class RemoteControl extends React.Component {
     _onGoToMeeting(meetingName) {
         remoteControlService.sendCommand(
             this._getRemoteId(), 'goToMeeting', { meetingName });
+    }
+
+    _onPresence(data, from) {
+        if (this._getRemoteId().indexOf(from) !== 0) {
+            return;
+        }
+
+        switch (data.tagName) {
+        case 'view':
+            this.setState({ view: data.value });
+            break;
+        }
     }
 }
 

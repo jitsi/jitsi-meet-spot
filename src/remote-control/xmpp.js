@@ -1,41 +1,46 @@
 /* global JitsiMeetJS */
 
 import { XMPP_CONFIG } from 'config';
-import { $msg } from 'strophe.js';
-import { logger, persistence } from 'utils';
+import { $msg, $pres } from 'strophe.js';
+import { logger } from 'utils';
 import { setLocalRemoteControlID } from 'actions';
 
 let commandListeners = [];
+let presenceListeners = [];
 let initPromise;
-let xmppConnection;
 
 const xmppControl = {
     init(dispatch) {
         if (initPromise) {
-            return;
+            return initPromise;
         }
 
-        initPromise = JitsiMeetJS.init({})
+        this._onPresence = this._onPresence.bind(this);
+
+        initPromise = new Promise(resolve => {
+            JitsiMeetJS.init({})
             .then(() => {
                 JitsiMeetJS.setLogLevel('error');
-                xmppConnection
+                this.xmppConnection
                     = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
 
-                xmppConnection.addEventListener(
+                this.xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
                     () => {
                         dispatch(setLocalRemoteControlID(this.getJid()));
+
+                        resolve();
                     });
 
-                xmppConnection.addEventListener(
+                this.xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_FAILED,
                     logger.error);
 
-                xmppConnection.addEventListener(
+                this.xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
                     logger.error);
 
-                xmppConnection.xmpp.connection.addHandler(
+                this.xmppConnection.xmpp.connection.addHandler(
                     onCommand,
                     null,
                     'message',
@@ -43,8 +48,28 @@ const xmppControl = {
                     null
                 );
 
-                xmppConnection.connect();
+                this.xmppConnection.connect();
             });
+        });
+
+        return initPromise;
+    },
+
+    createMuc(roomName) {
+        if (this.room) {
+            return this.room;
+        }
+
+        this.room = this.xmppConnection.xmpp.createRoom(roomName, {});
+        this.room.addPresenceListener('view', this._onPresence);
+    },
+
+    joinMuc() {
+        if (this.attemptedJoin) {
+            return;
+        }
+        this.room.sendPresence(true);
+        this.attemptedJoin = true;
     },
 
     addCommandListener(callback) {
@@ -52,7 +77,13 @@ const xmppControl = {
     },
 
     getJid() {
-        return xmppConnection.xmpp.connection.jid;
+        return this.xmppConnection.xmpp.connection.jid;
+    },
+
+    getNode() {
+        const jid = this.getJid();
+
+        return jid.split('@')[0];
     },
 
     removeCommandListener(callback) {
@@ -68,11 +99,32 @@ const xmppControl = {
         message.c('body', command).up();
         message.c('options', JSON.stringify(options)).up();
 
-        xmppConnection.xmpp.connection.send(message);
+        this.xmppConnection.xmpp.connection.send(message);
     },
 
-    _getConnection() {
-        return xmppConnection;
+    _onPresence(data, from, jid) {
+        presenceListeners.forEach(cb => cb(data, from, jid));
+    },
+
+    sendPresence(type, value) {
+        if (!this.room) {
+            return;
+        }
+        const pres = $pres({
+            to: this.room.myroomjid
+        });
+
+        pres.c(type, value).up();
+
+        this.xmppConnection.xmpp.connection.send(pres);
+    },
+
+    addPresenceListener(callback) {
+        presenceListeners.push(callback);
+    },
+
+    removePresenceListener(callback) {
+        presenceListeners = presenceListeners.filter(cb => cb !== callback);
     }
 };
 

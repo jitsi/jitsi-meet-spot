@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setLoadCompleted } from 'actions';
 import { google } from 'calendars';
 import { LoadingIcon } from 'features/loading-icon';
+import { remoteControlService } from 'remote-control';
 import { backgroundService, logger } from 'utils';
 
 import View from './view';
@@ -20,6 +21,11 @@ export class LoadingView extends React.Component {
 
     componentDidMount() {
         backgroundService.loadBackground()
+            .catch(error => logger.error(error))
+            .then(() => remoteControlService.init(this.props.dispatch))
+            .then(() =>
+                remoteControlService.createMuc(remoteControlService.getNode()))
+            .then(() => remoteControlService.joinMuc())
             .catch(error => logger.error(error))
             .then(() => google.initialize())
             .then(() => {

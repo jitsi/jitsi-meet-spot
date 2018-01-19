@@ -23,7 +23,7 @@ export class MeetingView extends React.Component {
 
     render() {
         return (
-            <View>
+            <View name = 'meeting'>
                 <MeetingFrame
                     displayName = { this.props.displayName }
                     meetingName = { this.props.match.params.name }

@@ -2,14 +2,22 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { backgroundService } from 'utils';
+import { remoteControlService } from 'remote-control';
 
 import styles from './view.css';
 
 export default class View extends React.Component {
     static propTypes = {
         hideBackground: PropTypes.bool,
-        children: PropTypes.node
+        children: PropTypes.node,
+        name: PropTypes.string
     };
+
+    componentDidMount() {
+        if (this.props.name) {
+            remoteControlService.sendPresence('view', this.props.name);
+        }
+    }
 
     render() {
         let backgroundStyles;
