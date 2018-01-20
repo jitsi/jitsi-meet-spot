@@ -1,0 +1,15 @@
+.container {
+    margin: 20px 0;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+.detail {
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
