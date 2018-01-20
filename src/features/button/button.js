@@ -5,6 +5,7 @@ import styles from './button.css';
 
 export default class Clock extends React.Component {
     static propTypes = {
+        className: PropTypes.string,
         children: PropTypes.any,
         onClick: PropTypes.func,
         text: PropTypes.string
@@ -14,7 +15,7 @@ export default class Clock extends React.Component {
         return (
             <button
                 { ...this.props }
-                className = { styles.button }
+                className = { `${styles.button} ${this.props.className || ''}` }
                 onClick = { this.props.onClick }>
                 { this.props.children }
             </button>

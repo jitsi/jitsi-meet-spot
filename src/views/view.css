@@ -44,6 +44,10 @@
     position: absolute;
 }
 
+.subcontent {
+    width: 100%;
+}
+
 .view {
     align-items: center;
     background-size: cover;
