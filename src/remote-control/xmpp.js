@@ -1,7 +1,7 @@
 /* global JitsiMeetJS */
 
 import { XMPP_CONFIG } from 'config';
-import { $msg, $pres } from 'strophe.js';
+import { $msg } from 'strophe.js';
 import { logger } from 'utils';
 import { setLocalRemoteControlID } from 'actions';
 

@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
-import { RemoteControlMenu } from 'features/remote-control-menu';
+import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { remoteControlService } from 'remote-control';
 import { getLocalRemoteControlId } from 'reducers';
@@ -70,13 +71,19 @@ export class RemoteControl extends React.Component {
             return <div>currently in admin tools</div>;
         case 'calendar':
             return this._getWaitingForCallView();
+        case 'feedback':
+            return this._getFeedbackView();
         case 'meeting':
             return this._getInCallView();
         case 'setup':
             return <div>currently in setup</div>;
         default:
-            return <div>loading</div>;
+            return <LoadingIcon />;
         }
+    }
+
+    _getFeedbackView() {
+        return <FeedbackForm remoteId = { this._getRemoteId() } />;
     }
 
     _getRemoteNode() {
@@ -98,11 +105,13 @@ export class RemoteControl extends React.Component {
 
     _getWaitingForCallView() {
         return (
-            <div>
+            <div className = { styles.subcontent }>
                 <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
-                <ScheduledMeetings
-                    events = { this.state.events }
-                    onMeetingClick = { this._onGoToMeeting } />
+                <div className = { styles.meetings }>
+                    <ScheduledMeetings
+                        events = { this.state.events }
+                        onMeetingClick = { this._onGoToMeeting } />
+                </div>
             </div>
         );
     }

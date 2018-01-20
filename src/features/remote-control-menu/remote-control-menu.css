@@ -1,0 +1,39 @@
+.menu {
+    display: flex;
+    flex-direction: column;
+}
+.button {
+    margin-right: 20px;
+}
+.comment {
+    font-size: 1.5em;
+    height: 50%;
+    margin: 20px 0;
+    resize: none;
+    width: 100%;
+}
+.feedback {
+    text-align: center;
+    width: 100%;
+}
+.hangup {
+    background: crimson;
+}
+/**
+ * TODO: remove !important usage. It is being used right now to override
+ * jitsi-meet icon styling.
+ */
+.score {
+    font-size: 2.5em !important;
+}
+.selection {
+    align-items: center;
+    border: 1px solid black;
+    cursor: pointer;
+    display: flex;
+    padding: 10px 10px;
+    margin-bottom: 10px
+}
+.selection:active {
+    background: white;
+}

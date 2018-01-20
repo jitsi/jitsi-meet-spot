@@ -1,8 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button } from 'features/button';
 import { COMMANDS, remoteControlService } from 'remote-control';
+
+import AudioMuteButton from './buttons/audio-mute-button';
+import HangupButton from './buttons/hangup-button';
+import ScreenshareButton from './buttons/screenshare-button';
+import VideoMuteButton from './buttons/video-mute-button';
+
+import styles from './remote-control-menu.css';
 
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
@@ -24,27 +30,15 @@ export default class RemoteControlMenu extends React.Component {
         const { audioMuted, videoMuted } = this.props;
 
         return (
-            <div>
-                <div>
-                    <Button onClick = { this._onToggleAudioMute }>
-                        { audioMuted ? 'Audio Unmute' : 'Audio Mute' }
-                    </Button>
-                </div>
-                <div>
-                    <Button onClick = { this._onHangUp }>
-                        Hangup
-                    </Button>
-                </div>
-                <div>
-                    <Button onClick = { this._onToggleVideoMute }>
-                        { videoMuted ? 'Video Unmute' : 'Video Mute' }
-                    </Button>
-                </div>
-                <div>
-                    <Button onClick = { this._onToggleScreenshare }>
-                        Toggle Screenshare
-                    </Button>
-                </div>
+            <div className = { styles.menu }>
+                <AudioMuteButton
+                    isMuted = { audioMuted }
+                    onClick = { this._onToggleAudioMute } />
+                <VideoMuteButton
+                    isMuted = { videoMuted }
+                    onClick = { this._onToggleVideoMute } />
+                <ScreenshareButton onClick = { this._onToggleScreenshare } />
+                <HangupButton onClick = { this._onHangUp } />
             </div>
         );
     }

@@ -52,6 +52,14 @@ module.exports = {
                 ]
             },
             {
+                test: /\.(svg|jpg|gif)$/,
+                use: [
+                    {
+                        loader: 'file-loader'
+                    }
+                ]
+            },
+            {
                 exclude: /(node_modules)/,
                 loader: 'babel-loader',
                 test: /\.js$/
