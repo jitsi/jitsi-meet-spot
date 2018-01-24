@@ -20,6 +20,11 @@ export default class RemoteControlMenu extends React.Component {
     constructor(props) {
         super(props);
 
+        // FIXME: temporarily store this in state
+        this.state = {
+            isScreensharing: false
+        };
+
         this._onHangUp = this._onHangUp.bind(this);
         this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
@@ -37,7 +42,9 @@ export default class RemoteControlMenu extends React.Component {
                 <VideoMuteButton
                     isMuted = { videoMuted }
                     onClick = { this._onToggleVideoMute } />
-                <ScreenshareButton onClick = { this._onToggleScreenshare } />
+                <ScreenshareButton
+                    isScreensharing = { this.state.isScreensharing }
+                    onClick = { this._onToggleScreenshare } />
                 <HangupButton onClick = { this._onHangUp } />
             </div>
         );
@@ -55,6 +62,10 @@ export default class RemoteControlMenu extends React.Component {
     _onToggleScreenshare() {
         remoteControlService.sendCommand(
             this.props.remoteId, COMMANDS.TOGGLE_SCREENSHARE);
+
+        this.setState({
+            isScreensharing: !this.state.isScreensharing
+        });
     }
 
     _onToggleVideoMute() {
