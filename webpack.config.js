@@ -52,10 +52,18 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(svg|jpg|gif)$/,
+                test: /\.(jpg|gif)$/,
                 use: [
                     {
                         loader: 'file-loader'
+                    }
+                ]
+            },
+            {
+                test: /\.(svg|ttf|eot|woff)$/,
+                use: [
+                    {
+                        loader: 'url-loader'
                     }
                 ]
             },

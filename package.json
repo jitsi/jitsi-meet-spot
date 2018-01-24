@@ -25,6 +25,7 @@
         "strophe.js": "1.2.14",
         "style-loader": "0.19.1",
         "uglifyjs-webpack-plugin": "1.1.5",
+        "url-loader": "0.6.2",
         "webpack": "3.10.0"
     },
     "engines": {
