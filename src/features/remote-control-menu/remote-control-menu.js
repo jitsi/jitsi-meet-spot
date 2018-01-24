@@ -20,7 +20,11 @@ export default class RemoteControlMenu extends React.Component {
     constructor(props) {
         super(props);
 
-        // FIXME: temporarily store this in state
+        // FIXME: There is no event coming from the jitsi-meet iframe api to
+        // successful screenshare start or stop. So for now assume success and
+        // update state to toggle the screenshare button display. In the future,
+        // listen for updates from the iframe and update the button based on
+        // the update.
         this.state = {
             isScreensharing: false
         };
