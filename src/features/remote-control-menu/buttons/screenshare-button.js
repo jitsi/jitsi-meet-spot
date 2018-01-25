@@ -6,6 +6,7 @@ import styles from '../remote-control-menu.css';
 
 export default class ScreenshareButton extends React.Component {
     static propTypes = {
+        isScreensharing: PropTypes.bool,
         onClick: PropTypes.func
     };
 
@@ -17,7 +18,9 @@ export default class ScreenshareButton extends React.Component {
                 <Button className = { styles.button }>
                     <div className = 'icon-share-desktop' />
                 </Button>
-                <span>Screenshare</span>
+                <span>{ this.props.isScreensharing
+                    ? 'Stop screensharing'
+                    : 'Start screensharing' }</span>
             </div>
         );
     }
