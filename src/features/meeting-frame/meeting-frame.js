@@ -2,12 +2,12 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import config from 'config';
 import { COMMANDS, remoteControlService } from 'remote-control';
 import styles from './meeting-frame.css';
 
-// TODO: make this configuratble. This is definitely useful for switching
-// environments for the meeting for development.
-const MEETING_DOMAN = 'lenny.jitsi.net';
+const meetingDomain = config.get('meetingDomain');
 
 export default class MeetingFrame extends React.Component {
     static propTypes = {
@@ -31,7 +31,7 @@ export default class MeetingFrame extends React.Component {
     }
 
     componentDidMount() {
-        this._jitsiApi = new JitsiMeetExternalAPI(MEETING_DOMAN, {
+        this._jitsiApi = new JitsiMeetExternalAPI(meetingDomain, {
             roomName: this.props.meetingName,
             parentNode: this._meetingContainer
         });

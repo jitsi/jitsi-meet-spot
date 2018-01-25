@@ -1,6 +1,6 @@
 /* global gapi */
 
-import { CLIENT_ID } from 'config';
+import config from 'config';
 import { date } from 'utils';
 
 export default {
@@ -10,7 +10,7 @@ export default {
 
         return loadGapi
             .then(() => gapi.client.init({
-                clientId: CLIENT_ID,
+                clientId: config.get('googleApiClientId'),
                 scope: [
                     'https://www.googleapis.com/auth/'
                         + 'admin.directory.resource.calendar.readonly',

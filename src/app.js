@@ -9,6 +9,7 @@ import {
     Loading,
     Meeting,
     RemoteControl,
+    RemoteControlListener,
     Setup
 } from 'views';
 
@@ -32,6 +33,9 @@ export class App extends React.Component {
                     <Route
                         path = '/loading'
                         component = { Loading } />
+                    <Route
+                        path = '/connect'
+                        component = { RemoteControlListener } />
                     <Route
                         path = '/remote-control/:remoteId'
                         component = { RemoteControl } />
