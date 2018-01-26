@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { debounce } from 'lodash';
+import { Strophe } from 'strophe.js';
 
 import config from 'config';
 import { logger, windowHandler } from 'utils';
@@ -86,6 +87,7 @@ export default class Receiver extends React.Component {
         } catch (e) {
             logger.error(e);
         }
+
         if (isValid) {
             window.location = this._textContent;
         }
@@ -98,50 +100,20 @@ export default class Receiver extends React.Component {
         this._textContent = '';
     }
 
-    /* eslint-disable max-len */
-    // An example valid format is:
-    // ABCDEFGH-ABCD-ABCD-ABCD-ABCDEFGHIJKL@lenny.jitsi.net/OPQRSTUV-OPQR-OPQR-OPQR-OPQRSTUVWXYZ
-    /* eslint-enable max-len */
     _isValidJid(jid) {
-        const uuidPartsLengths = [ 8, 4, 4, 4, 12 ];
+        const node = Strophe.getNodeFromJid(jid);
+        const domain = Strophe.getDomainFromJid(jid);
+        const resource = Strophe.getResourceFromJid(jid);
 
-        // First process the bare jid's uuid:
-        // ABCDEFGH-ABCD-ABCD-ABCD-ABCDEFGHIJKL@lenny.jitsi.net
-        const bareJid = jid.split('/')[0];
-
-        if (!bareJid.includes(meetingDomain)) {
-            return false;
-        }
-
-        const splitBareJid = bareJid.split('@');
-        const uuid = splitBareJid[0];
-        const uuidParts = uuid.split('-');
-
-        if (uuidParts.length !== uuidPartsLengths.length) {
-            return false;
-        }
-
-        for (let i = 0; i < uuidParts.length; i++) {
-            if (uuidParts[i].length !== uuidPartsLengths[i]) {
-                return false;
-            }
-        }
-
-        // Then process the resource:
-        // OPQRSTUV-OPQR-OPQR-OPQR-OPQRSTUVWXYZ
-        const resource = jid.split('/')[1];
-        const resourceParts = resource.split('-');
-
-        if (resourceParts.length !== uuidPartsLengths.length) {
-            return false;
-        }
-
-        for (let i = 0; i < resourceParts.length; i++) {
-            if (resourceParts[i].length !== uuidPartsLengths[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        // TODO: Implement better validity checking... As a quick check way to
+        // implement jid validity, it is assumed nodes and resources always have
+        // a length of 36 characters. However, 36 is not a standard and is just
+        // an assumption that the jids used for spot have 36 characters.
+        return Boolean(node
+            && node.length === 36
+            && domain
+            && domain === meetingDomain
+            && resource
+            && resource.length === 36);
     }
 }
