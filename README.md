@@ -18,7 +18,7 @@ If developing, running `npm run watch-dev` to build the javascript will run webp
 
 ### Special note about ultrasound support
 
-The app currently uses Quiet.js for ultrasound. The spot client can emit an ultra sound message for remote clients to be notified of which remote control url to go to. The Quiet.js files are currently in the top level of the project and should not be modified directly as they are third-party files.
+The app currently uses Quiet.js for ultrasound. The spot client can emit an ultra sound message for remote clients to be notified of the url to visit to remotely control the spot client. The Quiet.js files are currently in the top level of the project and should not be modified directly as they are third-party files.
 
 ## Contributing
 
