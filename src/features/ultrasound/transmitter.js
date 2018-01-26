@@ -72,11 +72,9 @@ export default class Transmitter extends React.Component {
             <div className = { className }>
                 { this.state.transmitte
                     ? <div>Transmitting</div>
-                    : (
-                        <Button onClick = { this._onTransmit }>
-                            Transmit
-                        </Button>
-                    ) }
+                    : <Button onClick = { this._onTransmit }>
+                        Transmit
+                    </Button>}
             </div>
         );
     }
