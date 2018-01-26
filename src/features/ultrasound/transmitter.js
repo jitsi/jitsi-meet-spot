@@ -11,6 +11,10 @@ import styles from './styles.css';
 const ultrasoundFilesDirectory = config.get('ultrasoundFilesDirectory');
 
 export default class Transmitter extends React.Component {
+    static defaultProps = {
+        interval: 1000
+    };
+
     static propTypes = {
         hidden: PropTypes.bool,
 
@@ -60,7 +64,7 @@ export default class Transmitter extends React.Component {
     componentWillUnmount() {
         clearInterval(this._transmitInterval);
 
-        if (this.transmitter) {
+        if (this._transmitter) {
             this._transmitter.destroy();
         }
     }
