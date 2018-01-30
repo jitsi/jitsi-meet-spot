@@ -26,7 +26,7 @@
 }
 
 .wrapper {
-    background: rgba(255, 255, 255, 0.7);
+    background: white;
     display: flex;
     flex-shrink: 0;
     padding: 10px 20px;

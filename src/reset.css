@@ -58,7 +58,7 @@ html {
 /** custom resets **/
 
 body {
-    font-family: 'Yanone Kaffeesatz', 'Helvetica Neue', Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Noto Sans", "Ubuntu", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 body,
