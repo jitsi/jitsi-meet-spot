@@ -12,20 +12,21 @@
 }
 
 .meeting {
-    background: rgba(255, 255, 255, 0.5);
+    background: white;
     cursor: pointer;
     padding: 20px;
     display: flex;
-    margin-bottom: 2px;
+    margin-top: 2px;
     overflow: hidden;
 }
 
 .meeting:hover {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgb(250, 251, 252);
 }
 
 .name {
     font-size: 3vw;
+    line-height: 3.5vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -37,6 +38,7 @@
 
 .time {
     font-size: 3vw;
+    line-height: 3.5vw;
     white-space: nowrap;
     width: 30%;
 }

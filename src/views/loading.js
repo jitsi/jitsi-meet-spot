@@ -11,7 +11,6 @@ import { backgroundService, logger } from 'utils';
 import View from './view';
 import styles from './view.css';
 
-
 export class LoadingView extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
@@ -20,7 +19,12 @@ export class LoadingView extends React.Component {
     };
 
     componentDidMount() {
-        backgroundService.loadBackground()
+        const backgroundUrl = backgroundService.getBackgroundUrl();
+        const backgroundLoad = backgroundUrl
+            ? backgroundService.loadBackground(backgroundUrl)
+            : Promise.resolve();
+
+        backgroundLoad
             .catch(error => logger.error(error))
             .then(() => remoteControlService.init(this.props.dispatch))
             .then(() =>

@@ -25,7 +25,11 @@ export default class View extends React.Component {
         if (!this.props.hideBackground) {
             const backgroundUrl = backgroundService.getBackgroundUrl();
 
-            backgroundStyles = { backgroundImage: `url('${backgroundUrl}')` };
+            if (backgroundUrl) {
+                backgroundStyles = {
+                    backgroundImage: `url('${backgroundUrl}')`
+                };
+            }
         }
 
         return (

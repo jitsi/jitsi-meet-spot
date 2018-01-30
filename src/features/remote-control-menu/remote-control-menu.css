@@ -24,10 +24,12 @@
  * jitsi-meet icon styling.
  */
 .score {
+    color: white;
     font-size: 2.5em !important;
 }
 .selection {
     align-items: center;
+    background-color: white;
     border: 1px solid black;
     cursor: pointer;
     display: flex;
@@ -35,5 +37,5 @@
     margin-bottom: 10px
 }
 .selection:active {
-    background: white;
+    background: rgb(250, 251, 252);
 }

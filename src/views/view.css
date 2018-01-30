@@ -25,7 +25,6 @@
 
 .loading {
     align-items: center;
-    background: black;
     display: flex;
     height: 100%;
     justify-content: center;
@@ -34,7 +33,7 @@
 
 .meetings {
     flex-grow: 1;
-    overflow: scroll;
+    overflow: auto;
     width: 100%;
 }
 

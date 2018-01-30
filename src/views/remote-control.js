@@ -78,7 +78,7 @@ export class RemoteControl extends React.Component {
         case 'setup':
             return <div>currently in setup</div>;
         default:
-            return <LoadingIcon />;
+            return <LoadingIcon color = 'white' />;
         }
     }
 

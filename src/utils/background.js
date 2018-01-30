@@ -1,15 +1,14 @@
-export const BACKGROUND_IMAGE_URL
-    = 'https://static.pexels.com/photos/4827/nature-forest-trees-fog.jpeg';
+const BACKGROUND_IMAGE_URL = '';
 
 export default {
-    loadBackground() {
+    loadBackground(imageUrl) {
         return new Promise((resolve, reject) => {
             const image = new Image();
 
             image.onload = resolve;
             image.onerror = reject;
 
-            image.src = BACKGROUND_IMAGE_URL;
+            image.src = imageUrl;
         });
     },
 
