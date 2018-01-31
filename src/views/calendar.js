@@ -9,6 +9,7 @@ import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
+import { Transmitter } from 'features/ultrasound';
 import {
     getCalendarEvents,
     getCalendarName,
@@ -92,6 +93,14 @@ export class CalendarView extends React.Component {
                         onClick = { this._openQRCodeUrl }>
                         { remoteControlUrl
                             ? <QRCode text = { remoteControlUrl } />
+                            : null }
+                    </div>
+                    <div>
+                        { remoteControlUrl
+                            ? <Transmitter
+                                hidden = { true }
+                                interval = { 1000 }
+                                transmission = { remoteControlUrl } />
                             : null }
                     </div>
                 </div>

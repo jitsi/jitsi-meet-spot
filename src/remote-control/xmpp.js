@@ -1,6 +1,6 @@
 /* global JitsiMeetJS */
 
-import { XMPP_CONFIG } from 'config';
+import config from 'config';
 import { $msg } from 'strophe.js';
 import { logger } from 'utils';
 import { setLocalRemoteControlID } from 'actions';
@@ -22,7 +22,8 @@ const xmppControl = {
             .then(() => {
                 JitsiMeetJS.setLogLevel('error');
                 this.xmppConnection
-                    = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
+                    = new JitsiMeetJS.JitsiConnection(
+                        null, null, config.get('xmppConfig'));
 
                 this.xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
