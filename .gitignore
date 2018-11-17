@@ -1,6 +1,6 @@
 *.log*
 .DS_STORE
 
+.env
 dist
 node_modules
-src/config/*

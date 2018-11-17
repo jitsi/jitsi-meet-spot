@@ -1,32 +1,25 @@
 # Jitsi-Meet-Spot
 
-A web frontend for integrating a google calendar with jitsi meetings. The intent is to run the frontend application within a room and leave it on.
+This is a web frontend application for integrating a Google calendar with jitsi-meetings. The application is intended to be running within a conference room, and left running, so it can be used to join conferences. Remote control functionality is available.
 
 ## Getting Started
 
-### Prerequisites
+There are a few requirements before the application can be launched.
+1. Have access to a computer that can build this application using node and npm; specific versions that are known to work should be listed in package.json.
+1. Have a Google client application that can be used for calendar syncing. Check `docs/creating_a_calendar_client.md` for more details.
+1. Clone this repository.
+1. In the local clone, fill out the configuration for this project. The actual configuration file is at `src/config/index.js`. and its values can be filled by creating a `.env` file in the project root and defining the configuration variables within the newly created file.
+1. Build the application by running `npm install` to download dependencies and `npm run build-prod` to create the javascript file for the application.
+1. Host the `index.html` and javascript on a server. For example use `python -m SimpleHTTPServer`.
 
-The application must be built first in order to run. A pre-requisite to building is having node and npm installed; specific versions that are known to work should be listed in package.json. Another prerequisite is filling out `src/config/index.js`. The file is left out intentionally so people can add their own configurations. Here is a sample:
+## Development
 
-```
-export CLIENT_ID = 'id-here';
-export XMPP_CONFIG = {
-    bosh: 'bosh-url',
-    hosts: {
-        domain: 'host-url',
-        muc: 'muc-url',
-        focus: 'focus-url'
-    }
-}
-```
+Run `npm run watch-dev` to launch webpack in watch mode.
 
-The XMPP_CONFIG is what is expected by `lib-jitsi-meet` so please view that repository for more information.
+## Known limitations
 
-### Installing
-
-To build the frontend, run `npm install` to download dependencies and `npm run build-prod` to build the javascript bundle. Next serve `index.html` from a server, such as with `python -m SimpleHTTPServer`.
-
-If developing, running `npm run watch-dev` to build the javascript will run webpack in watch mode to automatically rebundle on changes and also enable debug features.
+- Remote control only works when joining conferences that are using the same XMPP services as those configured for this application.
+- This application is currently developing against latest chrome only.
 
 ## Contributing
 
