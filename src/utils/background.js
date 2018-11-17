@@ -1,4 +1,4 @@
-const BACKGROUND_IMAGE_URL = '';
+import { DEFAULT_BACKGROUND_IMAGE_URL } from 'config';
 
 export default {
     loadBackground(imageUrl) {
@@ -13,6 +13,6 @@ export default {
     },
 
     getBackgroundUrl() {
-        return BACKGROUND_IMAGE_URL;
+        return DEFAULT_BACKGROUND_IMAGE_URL;
     }
 };

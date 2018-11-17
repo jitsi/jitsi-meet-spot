@@ -2,12 +2,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import { MEETING_DOMAIN } from 'config';
 import { COMMANDS, remoteControlService } from 'remote-control';
-import styles from './meeting-frame.css';
 
-// TODO: make this configuratble. This is definitely useful for switching
-// environments for the meeting for development.
-const MEETING_DOMAN = 'lenny.jitsi.net';
+import styles from './meeting-frame.css';
 
 export default class MeetingFrame extends React.Component {
     static propTypes = {
@@ -31,7 +29,7 @@ export default class MeetingFrame extends React.Component {
     }
 
     componentDidMount() {
-        this._jitsiApi = new JitsiMeetExternalAPI(MEETING_DOMAN, {
+        this._jitsiApi = new JitsiMeetExternalAPI(MEETING_DOMAIN, {
             roomName: this.props.meetingName,
             parentNode: this._meetingContainer
         });
