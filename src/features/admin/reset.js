@@ -5,11 +5,23 @@ import { persistence, windowHandler } from 'utils';
 
 import styles from './admin.css';
 
+/**
+ * Displays a menu option, with confirmation, to clear all local application
+ * state.
+ *
+ * @extends React.Component
+ */
 export default class ResetState extends React.Component {
     state = {
         showResetConfirm: false
     };
 
+    /**
+     * Initializes a new {@code ResetState} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -18,6 +30,11 @@ export default class ResetState extends React.Component {
         this._showResetConfirm = this._showResetConfirm.bind(this);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         return (
             <div className = { styles.container }>
@@ -35,6 +52,13 @@ export default class ResetState extends React.Component {
         );
     }
 
+    /**
+     * Creates a new React Element which starts the application state reset
+     * flow.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
     _renderResetButton() {
         return (
             <Button onClick = { this._showResetConfirm }>
@@ -43,6 +67,13 @@ export default class ResetState extends React.Component {
         );
     }
 
+    /**
+     * Creates a new React Element asking for confirmation before application
+     * state reset and shows a button to complete the reset.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
     _renderResetConfirm() {
         return (
             <div>
@@ -57,15 +88,35 @@ export default class ResetState extends React.Component {
         );
     }
 
+    /**
+     * Clears saved application state.
+     *
+     * @private
+     * @returns {void}
+     */
     _resetApp() {
         persistence.reset();
         windowHandler.reload();
     }
 
+    /**
+     * Sets the internal state to display the UI to start the application reset
+     * flow.
+     *
+     * @private
+     * @returns {void}
+     */
     _showResetButton() {
         this.setState({ showResetConfirm: false });
     }
 
+    /**
+     * Sets the internal state to display the UI to execute the application
+     * reset flow.
+     *
+     * @private
+     * @returns {void}
+     */
     _showResetConfirm() {
         this.setState({ showResetConfirm: true });
     }

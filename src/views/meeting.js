@@ -7,21 +7,38 @@ import { getDisplayName } from 'reducers';
 
 import View from './view';
 
-// TODO: handle the error case where no meeting name is present
-export class MeetingView extends React.Component {
+/**
+ * Displays the jitsi conference.
+ *
+ * @extends React.Component
+ */
+export class Meeting extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,
         history: PropTypes.object,
         match: PropTypes.object
     };
 
+    /**
+     * Initializes a new {@code Meeting} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
         this._onMeetingLeave = this._onMeetingLeave.bind(this);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
+        // TODO: handle the error case where no meeting name is present
+
         return (
             <View name = 'meeting'>
                 <MeetingFrame
@@ -32,15 +49,27 @@ export class MeetingView extends React.Component {
         );
     }
 
+    /**
+     * Callback invoked when the conference ends. Attempts to redirect to the
+     * home view.
+     */
     _onMeetingLeave() {
         this.props.history.push('/');
     }
 }
 
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code Meeting}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
 function mapStateToProps(state) {
     return {
         displayName: getDisplayName(state)
     };
 }
 
-export default connect(mapStateToProps)(MeetingView);
+export default connect(mapStateToProps)(Meeting);

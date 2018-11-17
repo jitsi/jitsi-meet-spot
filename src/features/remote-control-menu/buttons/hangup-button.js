@@ -5,6 +5,13 @@ import { Button } from 'features/button';
 
 import styles from '../remote-control-menu.css';
 
+/**
+ * A component for a button intended for leaving a conference call.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
+ */
 export default function HangupButton({ onClick }) {
     return (
         <div

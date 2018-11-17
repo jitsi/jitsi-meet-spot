@@ -5,11 +5,22 @@ import { Button } from 'features/button';
 import { Input } from 'features/input';
 import styles from './meeting-name-entry.css';
 
+/**
+ * Displays an input for submitting a conference name to join or create.
+ *
+ * @extends React.Component
+ */
 export class MeetingNameEntry extends React.Component {
     static propTypes = {
         onSubmit: PropTypes.func
     };
 
+    /**
+     * Initializes a new {@code MeetingNameEntry} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -21,6 +32,11 @@ export class MeetingNameEntry extends React.Component {
         };
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         return (
             <form
@@ -36,12 +52,26 @@ export class MeetingNameEntry extends React.Component {
         );
     }
 
+    /**
+     * Updates the known meeting name that has been entered into the input.
+     *
+     * @param {Event} event
+     * @private
+     * @returns {void}
+     */
     _onMeetingNameChange(event) {
         this.setState({
             meetingName: event.target.value
         });
     }
 
+    /**
+     * Callback invoked to signal the entered meeting should be joined.
+     *
+     * @param {Event} event
+     * @private
+     * @returns {void}
+     */
     _onSubmit(event) {
         event.preventDefault();
 

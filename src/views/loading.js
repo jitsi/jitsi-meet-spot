@@ -11,13 +11,25 @@ import { backgroundService, logger } from 'utils';
 import View from './view';
 import styles from './view.css';
 
-export class LoadingView extends React.Component {
+/**
+ * The initial view of the application which displays a loading indicator while
+ * bootstrapping the application.
+ *
+ * @extends React.Component
+ */
+export class Loading extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         history: PropTypes.object,
         location: PropTypes.object
     };
 
+    /**
+     * Bootstraps the application with resources and data necessary to use the
+     * application.
+     *
+     * @inheritdoc
+     */
     componentDidMount() {
         const backgroundUrl = backgroundService.getBackgroundUrl();
         const backgroundLoad = backgroundUrl
@@ -49,6 +61,12 @@ export class LoadingView extends React.Component {
             });
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
     render() {
         return (
             <View hideBackground = { true }>
@@ -60,4 +78,4 @@ export class LoadingView extends React.Component {
     }
 }
 
-export default connect()(LoadingView);
+export default connect()(Loading);

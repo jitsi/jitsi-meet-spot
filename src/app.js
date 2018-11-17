@@ -15,7 +15,18 @@ import {
 // eslint-disable-next-line no-undef
 const showDebugNav = process.env.NODE_ENV !== 'production';
 
+/**
+ * The root of the application which determines what view should be displayed.
+ *
+ * @extends React.Component
+ */
 export class App extends React.Component {
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
     render() {
         return (
             <div>
