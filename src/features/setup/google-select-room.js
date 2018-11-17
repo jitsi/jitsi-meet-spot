@@ -10,12 +10,24 @@ import { LoadingIcon } from 'features/loading-icon';
 
 import styles from './setup.css';
 
+/**
+ * Prompts to select which calender to synchronize the application with. Either
+ * a room can be selected or a calendar email manually entered.
+ *
+ * @extends React.Component
+ */
 export class GoogleSelectRoom extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func
     };
 
+    /**
+     * Initializes a new {@code GoogleSelectRoom} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -30,10 +42,29 @@ export class GoogleSelectRoom extends React.Component {
         };
     }
 
+    /**
+     * Requests a list of rooms that may be connected to the application.
+     *
+     * @inheritdoc
+     */
     componentDidMount() {
-        this._fetchRooms();
+        // TODO: move into action
+
+        this.setState({ loading: true }, () =>
+            google.getRooms()
+                .then(rooms => {
+                    this.setState({
+                        loading: false,
+                        rooms
+                    });
+                }));
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         const { loading, rooms } = this.state;
 
@@ -86,29 +117,37 @@ export class GoogleSelectRoom extends React.Component {
         );
     }
 
-    // FIXME: move into action
-    _fetchRooms() {
-        this.setState({ loading: true }, () =>
-            google.getRooms()
-                .then(rooms => {
-                    this.setState({
-                        loading: false,
-                        rooms
-                    });
-                }));
-    }
-
+    /**
+     * Updates the known manually entered email for which to connect with the
+     * application.
+     *
+     * @param {Event} event
+     * @private
+     * @returns {void}
+     */
     _onEmailChange(event) {
         this.setState({
             email: event.target.value
         });
     }
 
+    /**
+     * Sets the email from which calendar events should be fetched by the
+     * application and ends this setup step.
+     *
+     * @returns {void}
+     */
     _onEmailSubmit() {
         this.props.dispatch(setCalendar(this.state.email, ''));
         this.props.onSuccess();
     }
 
+    /**
+     * Sets the room from which calendar events should be fetched by the
+     * application and ends this setup step.
+     *
+     * @returns {void}
+     */
     _onRoomClick(room) {
         this.props.dispatch(setCalendar(room.resourceEmail, room.resourceName));
         this.props.onSuccess();

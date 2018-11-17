@@ -7,18 +7,33 @@ import { logger } from 'utils';
 
 import styles from './setup.css';
 
+/**
+ * Prompts to sign in to Google and allow the application to access calendar
+ * events.
+ */
 export class GoogleAuth extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func
     };
 
+    /**
+     * Initializes a new {@code GoogleAuth} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
         this._onAuthEnter = this._onAuthEnter.bind(this);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         return (
             <div className = { styles.step }>
@@ -34,6 +49,13 @@ export class GoogleAuth extends React.Component {
         );
     }
 
+    /**
+     * Starts the Google authentication flow to sign in to Google and allow
+     * the application to access calendar events.
+     *
+     * @private
+     * @returns {Promise}
+     */
     _onAuthEnter() {
         return google.triggerSignIn()
             .then(() => this.props.onSuccess())

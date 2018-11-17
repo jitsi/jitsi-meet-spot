@@ -3,6 +3,13 @@ import React from 'react';
 
 import styles from './loading-icon.css';
 
+/**
+ * A component indicating loading is occurring.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
+ */
 export default function LoadingIcon(props) {
     return (
         <div

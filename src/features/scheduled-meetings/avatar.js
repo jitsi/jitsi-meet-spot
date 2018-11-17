@@ -5,6 +5,14 @@ import { hash } from 'utils';
 
 import styles from './scheduled-meeting.css';
 
+/**
+ * A component that displays the gravatar of a provided email or a configured
+ * default avatar.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
+ */
 export default function Avatar({ email }) {
     const avatarUrl = email
         ? `https://www.gravatar.com/avatar/${

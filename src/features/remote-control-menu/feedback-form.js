@@ -6,11 +6,23 @@ import { COMMANDS, remoteControlService } from 'remote-control';
 
 import styles from './remote-control-menu.css';
 
+/**
+ * A React Component for inputting and submitting post-call feedback by leaving
+ * a rating and a
+ *
+ * @extends React.Component
+ */
 export default class FeedbackForm extends React.Component {
     static propTypes = {
         remoteId: PropTypes.string
     };
 
+    /**
+     * Initializes a new {@code FeedbackForm} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -24,6 +36,12 @@ export default class FeedbackForm extends React.Component {
         this._onSubmit = this._onSubmit.bind(this);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
     render() {
         return (
             <form
@@ -40,6 +58,14 @@ export default class FeedbackForm extends React.Component {
         );
     }
 
+    /**
+     * Instantiates styled stars to display for the conference rating, each of
+     * which display in a filled or empty state depending on the selected
+     * rating.
+     *
+     * @private
+     * @returns {Array<ReactElement>}
+     */
     _renderStars() {
         const { score } = this.state;
 
@@ -59,14 +85,36 @@ export default class FeedbackForm extends React.Component {
         return stars;
     }
 
+    /**
+     * Updates the known feedback description that has been entered.
+     *
+     * @param {Event} event - The change event triggered when entered feedback
+     * text has been updated.
+     * @private
+     * @returns {void}
+     */
     _onMessageChange(event) {
         this.setState({ message: event.target.value });
     }
 
+    /**
+     * Updates the known number of stars selected for rating the conference.
+     *
+     * @param {int} score - The star value that has been selected.
+     * @private
+     * @returns {void}
+     */
     _onRatingChange(score) {
         this.setState({ score });
     }
 
+    /**
+     * Sends the entered feedback to the application so it can be submitted.
+     *
+     * @param {Event} event - The submit event passed through by the form.
+     * @private
+     * @returns {void}
+     */
     _onSubmit(event) {
         event.preventDefault();
 

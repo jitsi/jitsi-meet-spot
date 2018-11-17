@@ -12,7 +12,6 @@
         }
     },
     "rules": {
-        "no-console": 1,
-        "require-jsdoc": 0
+        "no-console": 1
     }
 }

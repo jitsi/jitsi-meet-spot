@@ -6,6 +6,14 @@ import { getCalendarName } from 'reducers';
 
 import styles from './admin.css';
 
+/**
+ * A component intended for displaying information about the calendar currently
+ * configured for the application.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
+ */
 export function CalendarStatus(props) {
     return (
         <div className = { styles.container }>
@@ -25,6 +33,14 @@ CalendarStatus.propTypes = {
     calendarName: PropTypes.string.isRequired
 };
 
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code CalendarStatus}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
 function mapStateToProps(state) {
     return {
         calendarName: getCalendarName(state)

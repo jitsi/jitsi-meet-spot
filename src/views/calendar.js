@@ -14,14 +14,20 @@ import {
     getCalendarName,
     getLocalRemoteControlId
 } from 'reducers';
-import { keyboardNavigation, windowHandler } from 'utils';
-
 import { remoteControlService } from 'remote-control';
+import { keyboardNavigation, windowHandler } from 'utils';
 
 import View from './view';
 import styles from './view.css';
 
-export class CalendarView extends React.Component {
+/**
+ * A view of all known meetings in the calendar connected with the application.
+ * Provides the ability to join those meetings and open a remote control
+ * instance.
+ *
+ * @extends React.Component
+ */
+export class Calendar extends React.Component {
     static propTypes = {
         calendarName: PropTypes.string,
         dispatch: PropTypes.func,
@@ -34,6 +40,12 @@ export class CalendarView extends React.Component {
         hasLoadedEvents: false
     };
 
+    /**
+     * Initializes a new {@code Meeting} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -46,6 +58,11 @@ export class CalendarView extends React.Component {
         this._updateEventsInterval = null;
     }
 
+    /**
+     * Registers listeners for updating the view's data and display.
+     *
+     * @inheritdoc
+     */
     componentDidMount() {
         keyboardNavigation.startListening('calendar');
 
@@ -56,6 +73,11 @@ export class CalendarView extends React.Component {
         remoteControlService.addCommandListener(this._onCommand);
     }
 
+    /**
+     * Cleans up listeners for daemons and long-running updaters.
+     *
+     * @inheritdoc
+     */
     componentWillUnmount() {
         this._isUnmounting = true;
 
@@ -66,6 +88,11 @@ export class CalendarView extends React.Component {
         clearInterval(this._updateEventsInterval);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         let contents;
 
@@ -99,6 +126,12 @@ export class CalendarView extends React.Component {
         );
     }
 
+    /**
+     * Generates the full URL for opening a remote control for the application.
+     *
+     * @private
+     * @returns void
+     */
     _getRemoteControlUrl() {
         const { localRemoteControlId } = this.props;
 
@@ -110,27 +143,61 @@ export class CalendarView extends React.Component {
             window.encodeURIComponent(localRemoteControlId)}`;
     }
 
+    /**
+     * Listens for and reacts to commands from remote controllers.
+     *
+     * @param {string} command - The type of the command.
+     * @param {Object} options - Additional information about how to execute the
+     * command.
+     * @private
+     * @returns {void}
+     */
     _onCommand(command, options) {
-        if (command === 'goToMeeting') {
+        switch (command) {
+        case 'goToMeeting':
             this._onGoToMeeting(options.meetingName);
-        } else if (command === 'requestCalendar') {
+            break;
+        case 'requestCalendar':
             remoteControlService.sendCommand(
                 options.requester,
                 'calendarData',
                 { events: this.props.events });
+            break;
         }
     }
 
+    /**
+     * Callback invoked to join a conference. Only if a conference name is
+     * passed in will it be joined.
+     *
+     * @param {string} meetingName - The conference name to join.
+     * @private
+     * @returns {void}
+     */
     _onGoToMeeting(meetingName) {
         if (meetingName) {
             this.props.history.push(`/meeting/${meetingName}`);
         }
     }
 
+    /**
+     * Callback invoked to open a window for controlling the main application.
+     * This is intended for now to be a debugging and development feature.
+     *
+     * @private
+     * @returns {void}
+     */
     _openQRCodeUrl() {
         windowHandler.openNewWindow(this._getRemoteControlUrl());
     }
 
+    /**
+     * Fetches the latest calendar data and updates the internal state of known
+     * calendar events.
+     *
+     * @private
+     * @returns {void}
+     */
     _pollForEvents() {
         const { calendarName } = this.props;
 
@@ -154,6 +221,14 @@ export class CalendarView extends React.Component {
     }
 }
 
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code Calendar}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
 function mapStateToProps(state) {
     return {
         calendarName: getCalendarName(state),
@@ -162,4 +237,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(CalendarView);
+export default connect(mapStateToProps)(Calendar);

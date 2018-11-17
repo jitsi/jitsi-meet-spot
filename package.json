@@ -16,6 +16,7 @@
         "eslint-plugin-import": "2.8.0",
         "eslint-plugin-react": "7.5.1",
         "file-loader": "1.1.6",
+        "jsdoc": "3.5.5",
         "md5": "2.2.1",
         "moment": "2.20.1",
         "prop-types": "15.6.0",
@@ -38,7 +39,8 @@
     "scripts": {
         "build-dev": "webpack --config ./webpack.config.js --progress",
         "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
-        "lint": "eslint ." ,
+        "docs": "jsdoc -c ./jsdoc.config.js",
+        "lint": "eslint .",
         "watch-dev": "webpack --config ./webpack.config.js --progress --watch",
         "watch-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress --watch"
     },

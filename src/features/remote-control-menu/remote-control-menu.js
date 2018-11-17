@@ -10,6 +10,11 @@ import VideoMuteButton from './buttons/video-mute-button';
 
 import styles from './remote-control-menu.css';
 
+/**
+ * Displays buttons used for remotely controlling the main application.
+ *
+ * @extends React.Component
+ */
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
@@ -17,6 +22,12 @@ export default class RemoteControlMenu extends React.Component {
         videoMuted: PropTypes.bool
     };
 
+    /**
+     * Initializes a new {@code RemoteControlMenu} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -35,6 +46,11 @@ export default class RemoteControlMenu extends React.Component {
         this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         const { audioMuted, videoMuted } = this.props;
 
@@ -54,15 +70,33 @@ export default class RemoteControlMenu extends React.Component {
         );
     }
 
+    /**
+     * Leaves the currently joined conference.
+     *
+     * @private
+     * @returns {void}
+     */
     _onHangUp() {
         remoteControlService.sendCommand(this.props.remoteId, COMMANDS.HANG_UP);
     }
 
+    /**
+     * Changes the current local audio mute state.
+     *
+     * @private
+     * @returns {void}
+     */
     _onToggleAudioMute() {
         remoteControlService.sendCommand(
             this.props.remoteId, COMMANDS.TOGGLE_AUDIO_MUTE);
     }
 
+    /**
+     * Starts or stops local screensharing.
+     *
+     * @private
+     * @returns {void}
+     */
     _onToggleScreenshare() {
         remoteControlService.sendCommand(
             this.props.remoteId, COMMANDS.TOGGLE_SCREENSHARE);
@@ -72,6 +106,12 @@ export default class RemoteControlMenu extends React.Component {
         });
     }
 
+    /**
+     * Changes the current local video mute state.
+     *
+     * @private
+     * @returns {void}
+     */
     _onToggleVideoMute() {
         remoteControlService.sendCommand(
             this.props.remoteId, COMMANDS.TOGGLE_VIDEO_MUTE);

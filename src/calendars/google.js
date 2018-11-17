@@ -3,7 +3,15 @@
 import { CLIENT_ID } from 'config';
 import { date } from 'utils';
 
+/**
+ * Functions for interacting with Google and its calendar API.
+ */
 export default {
+    /**
+     * Loads the external script for accessing the Google API.
+     *
+     * @returns {Promise} Resolves when the Google API javascript has loaded.
+     */
     initialize() {
         const loadGapi = new Promise(resolve =>
             gapi.load('client:auth2', () => resolve()));
@@ -19,6 +27,11 @@ export default {
             }));
     },
 
+    /**
+     * Checks if currently signed in to Google.
+     *
+     * @returns {boolean} True if currently signed in with the Google.
+     */
     isAuthenticated() {
         return Boolean(
             gapi
@@ -29,6 +42,13 @@ export default {
         );
     },
 
+    /**
+     * Requests current Google calendar events for a provided room.
+     *
+     * @param {string} roomId - The Google-provided id of the room from which to
+     * request calendar events.
+     * @returns {Promise<Array<Object>>}
+     */
     getCalendar(roomId) {
         const params = [
             'alwaysIncludeEmail=true',
@@ -46,6 +66,12 @@ export default {
             .then(response => response.result.items);
     },
 
+    /**
+     * Requests the rooms accessible by the Google calendar of the email
+     * currently authenticated with the Google API.
+     *
+     * @returns {Promise<Array<Object>>}
+     */
     getRooms() {
         const roomsListEndpoint
             = 'https://www.googleapis.com/admin/directory/v1/customer/'
@@ -56,9 +82,13 @@ export default {
                 calendar.resourceCategory === 'CONFERENCE_ROOM'));
     },
 
+    /**
+     * Display the Google sign in flow.
+     *
+     * @returns {Promise} Resolves when sign in completes successfully.
+     */
     triggerSignIn() {
         return this.initialize()
             .then(() => gapi.auth2.getAuthInstance().signIn());
     }
 };
-

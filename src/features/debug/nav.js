@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 
 import styles from './nav.css';
 
+/**
+ * A component with links to switch between different views of the application.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
+ */
 export default function Nav() {
     return (
         <nav className = { styles.nav }>

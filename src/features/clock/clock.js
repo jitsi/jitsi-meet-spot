@@ -4,7 +4,18 @@ import { date } from 'utils';
 
 import styles from './clock.css';
 
+/**
+ * Displays the current time and updates itself at an interval.
+ *
+ * @extends React.Component
+ */
 export default class Clock extends React.Component {
+    /**
+     * Initializes a new {@code Clock} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
     constructor(props) {
         super(props);
 
@@ -15,16 +26,31 @@ export default class Clock extends React.Component {
         };
     }
 
+    /**
+     * Starts an interval to update the currently displayed time.
+     *
+     * @inheritdoc
+     */
     componentDidMount() {
         this._dateUpdateInterval = setInterval(() => {
             this.setState({ time: this._getTime() });
         }, 500);
     }
 
+    /**
+     * Clears the interval to update the currently displayed time.
+     *
+     * @inheritdoc
+     */
     componentWillUnmount() {
         clearInterval(this._dateUpdateInterval);
     }
 
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
     render() {
         return (
             <div className = { styles.clock }>
@@ -33,6 +59,12 @@ export default class Clock extends React.Component {
         );
     }
 
+    /**
+     * Returns the current time in HH:MM format.
+     *
+     * @private
+     * @returns {string}
+     */
     _getTime() {
         return date.formatToTime(date.getCurrentDate());
     }
