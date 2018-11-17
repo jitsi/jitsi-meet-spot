@@ -1,3 +1,5 @@
+/* global __dirname, process */
+
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -12,7 +14,7 @@ let plugins = [
         failOnError: true
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(current),
+        'process.env.NODE_ENV': JSON.stringify(current)
     }),
     new Dotenv()
 ];
