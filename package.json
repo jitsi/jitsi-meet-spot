@@ -7,6 +7,8 @@
         "babel-preset-stage-2": "6.24.1",
         "circular-dependency-plugin": "4.3.0",
         "css-loader": "0.28.7",
+        "dotenv": "6.1.0",
+        "dotenv-webpack": "1.5.7",
         "eslint": "4.14.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#v0.1",
         "eslint-loader": "1.9.0",

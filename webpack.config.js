@@ -1,4 +1,5 @@
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
@@ -12,7 +13,8 @@ let plugins = [
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(current),
-    })
+    }),
+    new Dotenv()
 ];
 
 if (current === 'production') {
