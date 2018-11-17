@@ -38,6 +38,7 @@
     "scripts": {
         "build-dev": "webpack --config ./webpack.config.js --progress",
         "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
+        "lint": "eslint ." ,
         "watch-dev": "webpack --config ./webpack.config.js --progress --watch",
         "watch-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress --watch"
     },
