@@ -5,24 +5,24 @@ import { hash } from 'utils';
 
 import styles from './scheduled-meeting.css';
 
-export default class Avatar extends React.Component {
-    static propTypes = {
-        email: PropTypes.string
-    };
+export default function Avatar({ email }) {
+    const avatarUrl = email
+        ? `https://www.gravatar.com/avatar/${
+            hash(email.trim().toLowerCase())}?d=wavatar`
+        : DEFAULT_AVATAR_URL;
 
-    render() {
-        return (
-            <img
-                className = { styles.avatar }
-                title = { this.props.email }
-                src = { this._generateAvatarUrl() } />
-        );
-    }
-
-    _generateAvatarUrl() {
-        return this.props.email
-            ? `https://www.gravatar.com/avatar/${
-                hash(this.props.email.trim().toLowerCase())}?d=wavatar`
-            : DEFAULT_AVATAR_URL;
-    }
+    return (
+        <img
+            className = { styles.avatar }
+            title = { email }
+            src = { avatarUrl } />
+    );
 }
+
+Avatar.defaultProps = {
+    email: ''
+};
+
+Avatar.propTypes = {
+    email: PropTypes.string
+};

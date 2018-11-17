@@ -6,32 +6,28 @@ import { getCalendarName } from 'reducers';
 
 import styles from './admin.css';
 
-export class CalendarStatus extends React.Component {
-    static propTypes = {
-        _calendarName: PropTypes.string
-    };
-
-    render() {
-        const { _calendarName } = this.props;
-
-        return (
-            <div className = { styles.container }>
-                <div className = { styles.title }>
-                    Calendar Status
-                </div>
-                <div className = { styles.content }>
-                    <div className = { styles.detail }>
-                        Current Calendar: { _calendarName }
-                    </div>
+export function CalendarStatus(props) {
+    return (
+        <div className = { styles.container }>
+            <div className = { styles.title }>
+                Calendar Status
+            </div>
+            <div className = { styles.content }>
+                <div className = { styles.detail }>
+                    Current Calendar: { props.calendarName }
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
+
+CalendarStatus.propTypes = {
+    calendarName: PropTypes.string.isRequired
+};
 
 function mapStateToProps(state) {
     return {
-        _calendarName: getCalendarName(state)
+        calendarName: getCalendarName(state)
     };
 }
 
