@@ -31,16 +31,9 @@ export function parseMeetingUrl(url) {
     const { host, pathname } = new URL(url);
     const pathParts = pathname.split('/');
     const roomName = pathParts.pop();
-    const newPath = pathParts.reduce((accumulator, currentValue) => {
-        if (currentValue) {
-            return `${accumulator}/${currentValue}`;
-        }
-
-        return accumulator;
-    }, '');
 
     return {
-        path: newPath,
+        path: pathParts.join('/'),
         host,
         roomName
     };
