@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { VALID_MEETING_HOSTS } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
-import { isValidMeetingUrl } from 'utils';
+import { isValidMeetingUrl, logger } from 'utils';
 
 import View from './view';
 
@@ -41,6 +41,10 @@ export class Meeting extends React.Component {
      */
     componentDidMount() {
         if (!this._getMeetingUrl()) {
+            logger.error(
+                'No valid meeting url detected. Params are: ',
+                this.props.location.search
+            );
             this._onMeetingLeave();
         }
     }
