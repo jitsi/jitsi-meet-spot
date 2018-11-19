@@ -7,9 +7,9 @@
  */
 export function isValidMeetingUrl(meetingUrl, validHosts) {
     try {
-        const { domain, host, roomName } = parseMeetingUrl(meetingUrl);
+        const { host, roomName } = parseMeetingUrl(meetingUrl);
 
-        return domain && roomName && validHosts.includes(host);
+        return host && roomName && validHosts.includes(host);
     } catch (e) {
         return false;
     }
@@ -17,7 +17,12 @@ export function isValidMeetingUrl(meetingUrl, validHosts) {
 
 /**
  * Parses a meeting url so its parts can be accessed through meeting-related
- * keys.
+ * keys. For example: 'https://meet.jit.si/path/meeting' would be returned as:
+ * {
+ *     host: 'meet.jit.si',
+ *     path: '/path',
+ *     roomName: 'meeting'
+ * }
  *
  * @param {string} url
  * @return {Object} An object with details about the meeting location.
@@ -35,7 +40,7 @@ export function parseMeetingUrl(url) {
     }, '');
 
     return {
-        domain: `${host}${newPath}`,
+        path: newPath,
         host,
         roomName
     };
