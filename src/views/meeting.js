@@ -6,6 +6,7 @@ import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
 import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
+import { ROUTES } from 'routing';
 
 import View from './view';
 
@@ -96,7 +97,7 @@ export class Meeting extends React.Component {
      * home view.
      */
     _onMeetingLeave() {
-        this.props.history.push('/');
+        this.props.history.push(ROUTES.CALENDAR);
     }
 }
 

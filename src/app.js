@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { Nav } from 'features/debug';
-import { PrivateRoute } from 'routing';
+import { ROUTES, PrivateRoute } from 'routing';
 import {
     Admin,
     Calendar,
@@ -32,19 +32,19 @@ export class App extends React.Component {
             <div>
                 <Switch>
                     <PrivateRoute
-                        path = '/admin'
+                        path = { ROUTES.ADMIN }
                         component = { Admin } />
                     <PrivateRoute
-                        path = '/meeting'
+                        path = { ROUTES.MEETING }
                         component = { Meeting } />
                     <Route
-                        path = '/setup'
+                        path = { ROUTES.SETUP }
                         component = { Setup } />
                     <Route
-                        path = '/loading'
+                        path = { ROUTES.LOADING }
                         component = { Loading } />
                     <Route
-                        path = '/remote-control/:remoteId'
+                        path = { ROUTES.REMOTE_CONTROL }
                         component = { RemoteControl } />
                     <PrivateRoute
                         component = { Calendar} />

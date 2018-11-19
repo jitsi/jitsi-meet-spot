@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Setup as SetupSteps } from 'features/setup';
+import { ROUTES } from 'routing';
 
 import View from './view';
 import styles from './view.css';
@@ -51,7 +52,7 @@ export class Setup extends React.Component {
      * @returns {void}
      */
     _redirectToCalendar() {
-        this.props.history.push('/');
+        this.props.history.push(ROUTES.CALENDAR);
     }
 }
 
