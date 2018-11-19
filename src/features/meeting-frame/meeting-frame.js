@@ -46,10 +46,14 @@ export default class MeetingFrame extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        const { host, path, roomName } = parseMeetingUrl(this.props.meetingUrl);
+        const {
+            host,
+            meetingName,
+            path
+        } = parseMeetingUrl(this.props.meetingUrl);
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
-            roomName,
+            roomName: meetingName,
             parentNode: this._meetingContainer
         });
 

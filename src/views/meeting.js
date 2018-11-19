@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
-import { isValidMeetingUrl, logger } from 'utils';
+import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 
 import View from './view';
 
@@ -80,14 +80,15 @@ export class Meeting extends React.Component {
      */
     _getMeetingUrl() {
         const queryParams = new URLSearchParams(this.props.location.search);
-        const meetingUrl = queryParams.get('location');
+        const location = queryParams.get('location');
 
-        if (!meetingUrl) {
-            return null;
+        if (isValidMeetingUrl(location)) {
+            return location;
+        } else if (isValidMeetingName(location)) {
+            return `https://${DEFAULT_MEETING_DOMAIN}/${location}`;
         }
 
-        return isValidMeetingUrl(meetingUrl)
-            ? meetingUrl : `https://${DEFAULT_MEETING_DOMAIN}/${meetingUrl}`;
+        return null;
     }
 
     /**
