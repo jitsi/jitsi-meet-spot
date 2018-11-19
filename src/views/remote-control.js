@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { remoteControlService } from 'remote-control';
-import { getLocalRemoteControlId } from 'reducers';
 
 import View from './view';
 import styles from './view.css';
@@ -52,14 +50,14 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        remoteControlService.init(this.props.dispatch)
-            .then(() => {
+        remoteControlService.init()
+            .then(jid => {
                 remoteControlService.addCommandListener(this._onCommand);
 
                 remoteControlService.sendCommand(
                     this._getRemoteId(),
                     'requestCalendar',
-                    { requester: this.props.localRemoteControlId }
+                    { requester: jid }
                 );
 
                 remoteControlService.createMuc(this._getRemoteNode());
@@ -242,18 +240,4 @@ export class RemoteControl extends React.Component {
     }
 }
 
-/**
- * Selects parts of the Redux state to pass in with the props of
- * {@code RemoteControl}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    return {
-        localRemoteControlId: getLocalRemoteControlId(state)
-    };
-}
-
-export default connect(mapStateToProps)(RemoteControl);
+export default RemoteControl;
