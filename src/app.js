@@ -35,7 +35,7 @@ export class App extends React.Component {
                         path = '/admin'
                         component = { Admin } />
                     <PrivateRoute
-                        path = '/meeting/:name'
+                        path = '/meeting'
                         component = { Meeting } />
                     <Route
                         path = '/setup'

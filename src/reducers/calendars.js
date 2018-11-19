@@ -1,3 +1,6 @@
+import { VALID_MEETING_HOSTS } from 'config';
+import { isValidMeetingUrl } from 'utils';
+
 const DEFAULT_STATE = {
     name: null,
     displayName: null,
@@ -67,9 +70,11 @@ function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
     // created with each call, causing unnecessary re-renders.
     const events = newEvents.map(event => {
         const { attendees, location, end, id, start, summary } = event;
+        const conferenceUrl = parseConferenceUrl(location);
 
         return {
-            conferenceUrl: parseConferenceUrl(location),
+            conferenceUrl: isValidMeetingUrl(conferenceUrl, VALID_MEETING_HOSTS)
+                ? conferenceUrl : null,
             conferenceName: parseConferenceName(location),
             end: end.dateTime,
             id,
