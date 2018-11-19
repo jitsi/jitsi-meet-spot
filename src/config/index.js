@@ -20,13 +20,8 @@ export const DEFAULT_AVATAR_URL
 export const DEFAULT_BACKGROUND_IMAGE_URL
     = process.env.DEFAULT_BACKGROUND_IMAGE_URL || '';
 
-/**
- * A string of host names, delineated by spaces. The host names are used as
- * a whitelist of which meeting urls can be visited.
- */
-export const VALID_MEETING_HOSTS = process.env.VALID_MEETING_HOSTS
-    ? process.env.VALID_MEETING_HOSTS.split(' ')
-    : [ 'meet.jit.si' ];
+export const DEFAULT_MEETING_DOMAIN
+    = process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si';
 
 /**
  * This configuration is used to establish a connection with the XMPP service

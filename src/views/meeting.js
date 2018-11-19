@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { VALID_MEETING_HOSTS } from 'config';
+import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
 import { isValidMeetingUrl, logger } from 'utils';
@@ -86,11 +86,8 @@ export class Meeting extends React.Component {
             return null;
         }
 
-        if (isValidMeetingUrl(meetingUrl, VALID_MEETING_HOSTS)) {
-            return meetingUrl;
-        }
-
-        return `https://${VALID_MEETING_HOSTS[0]}/${meetingUrl}`;
+        return isValidMeetingUrl(meetingUrl)
+            ? meetingUrl : `https://${DEFAULT_MEETING_DOMAIN}/${meetingUrl}`;
     }
 
     /**

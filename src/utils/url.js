@@ -2,14 +2,13 @@
  * Checks if a passed in url can be opened in the application.
  *
  * @param {string} meetingUrl
- * @param {Array<string>} validHosts
  * @return {boolean}
  */
-export function isValidMeetingUrl(meetingUrl, validHosts) {
+export function isValidMeetingUrl(meetingUrl) {
     try {
-        const { host, roomName } = parseMeetingUrl(meetingUrl);
+        const { roomName } = parseMeetingUrl(meetingUrl);
 
-        return host && roomName && validHosts.includes(host);
+        return Boolean(roomName);
     } catch (e) {
         return false;
     }

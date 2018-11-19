@@ -1,4 +1,3 @@
-import { VALID_MEETING_HOSTS } from 'config';
 import { isValidMeetingUrl } from 'utils';
 
 const DEFAULT_STATE = {
@@ -73,7 +72,7 @@ function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
         const conferenceUrl = parseConferenceUrl(location);
 
         return {
-            conferenceUrl: isValidMeetingUrl(conferenceUrl, VALID_MEETING_HOSTS)
+            conferenceUrl: isValidMeetingUrl(conferenceUrl)
                 ? conferenceUrl : null,
             conferenceName: parseConferenceName(location),
             end: end.dateTime,
