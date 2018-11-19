@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
 import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
@@ -16,6 +15,7 @@ import View from './view';
  */
 export class Meeting extends React.Component {
     static propTypes = {
+        defautMeetingDomain: PropTypes.string,
         displayName: PropTypes.string,
         history: PropTypes.object,
         location: PropTypes.object,
@@ -85,7 +85,7 @@ export class Meeting extends React.Component {
         if (isValidMeetingUrl(location)) {
             return location;
         } else if (isValidMeetingName(location)) {
-            return `https://${DEFAULT_MEETING_DOMAIN}/${location}`;
+            return `https://${this.props.defautMeetingDomain}/${location}`;
         }
 
         return null;
@@ -110,6 +110,7 @@ export class Meeting extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        defautMeetingDomain: state.config.DEFAULT_MEETING_DOMAIN,
         displayName: getDisplayName(state)
     };
 }

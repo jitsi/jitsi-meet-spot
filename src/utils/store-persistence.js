@@ -31,7 +31,8 @@ let cachedState = null;
 function hasUpdateOfInterest(oldState, newState) {
     return oldState.calendars.name !== newState.calendars.name
         || oldState.calendars.displayName !== newState.calendars.displayName
-        || oldState.setup.completed !== newState.setup.completed;
+        || oldState.setup.completed !== newState.setup.completed
+        || oldState.config !== newState.config;
 }
 
 /**
@@ -47,6 +48,7 @@ function parsePersistedState(state) {
             name: state.calendars.name,
             displayName: state.calendars.displayName
         },
+        config: state.config,
         setup: {
             completed: state.setup.completed
         }

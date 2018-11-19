@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { CalendarStatus, ResetState } from 'features/admin';
 
@@ -10,9 +12,11 @@ import styles from './view.css';
  *
  * @returns {ReactElement}
  */
-export default function AdminView() {
+export function AdminView({ backgroundImageUrl }) {
     return (
-        <View name = 'admin'>
+        <View
+            backgroundImageUrl = { backgroundImageUrl }
+            name = 'admin'>
             <div className = { styles.container }>
                 <div className = { styles.admin }>
                     <CalendarStatus />
@@ -22,3 +26,24 @@ export default function AdminView() {
         </View>
     );
 }
+
+AdminView.propTypes = {
+    backgroundImageUrl: PropTypes.string
+};
+
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code AdminView}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        backgroundImageUrl: state.config.DEFAULT_BACKGROUND_IMAGE_URL
+    };
+}
+
+
+export default connect(mapStateToProps)(AdminView);

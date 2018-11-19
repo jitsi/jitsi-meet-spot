@@ -1,5 +1,3 @@
-import { DEFAULT_BACKGROUND_IMAGE_URL } from 'config';
-
 /**
  * Utilities for interacting with the application background image.
  */
@@ -21,13 +19,5 @@ export default {
 
             image.src = imageUrl;
         });
-    },
-
-    /**
-     * Returns the url of the background image currently configured for display
-     * in the application background.
-     */
-    getBackgroundUrl() {
-        return DEFAULT_BACKGROUND_IMAGE_URL;
     }
 };

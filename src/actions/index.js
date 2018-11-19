@@ -1,6 +1,7 @@
 import {
     CALENDAR_ADD_ACCOUNT,
     CALENDAR_SET_EVENTS,
+    CONFIG_UPDATED,
     LOAD_COMPLETED,
     REMOTE_CONTROL_SET_LOCAL_ID,
     SETUP_COMPLETED
@@ -70,5 +71,18 @@ export function setLocalRemoteControlID(id) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
+    };
+}
+
+/**
+ * Signals to update some fields of the current application configuration.
+ *
+ * @param {Object} newConfig
+ * @returns {Object}
+ */
+export function updateConfig(newConfig) {
+    return {
+        type: CONFIG_UPDATED,
+        newConfig
     };
 }

@@ -19,9 +19,12 @@ import styles from './view.css';
  */
 export class Loading extends React.Component {
     static propTypes = {
+        backgroundImageUrl: PropTypes.string,
+        clientId: PropTypes.string,
         dispatch: PropTypes.func,
         history: PropTypes.object,
-        location: PropTypes.object
+        location: PropTypes.object,
+        remoteControlServiceConfig: PropTypes.object
     };
 
     /**
@@ -31,19 +34,19 @@ export class Loading extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        const backgroundUrl = backgroundService.getBackgroundUrl();
-        const backgroundLoad = backgroundUrl
-            ? backgroundService.loadBackground(backgroundUrl)
+        const backgroundLoad = this.props.backgroundImageUrl
+            ? backgroundService.loadBackground(this.props.backgroundImageUrl)
             : Promise.resolve();
 
         backgroundLoad
             .catch(error => logger.error(error))
-            .then(() => remoteControlService.init(this.props.dispatch))
+            .then(() => remoteControlService.init(
+                this.props.dispatch, this.props.remoteControlServiceConfig))
             .then(() =>
                 remoteControlService.createMuc(remoteControlService.getNode()))
             .then(() => remoteControlService.joinMuc())
             .catch(error => logger.error(error))
-            .then(() => google.initialize())
+            .then(() => google.initialize(this.props.clientId))
             .then(() => {
                 if (!google.isAuthenticated()) {
                     return google.triggerSignIn();
@@ -69,7 +72,7 @@ export class Loading extends React.Component {
      */
     render() {
         return (
-            <View hideBackground = { true }>
+            <View>
                 <div className = { styles.loading }>
                     <LoadingIcon color = 'white' />
                 </div>
@@ -78,4 +81,20 @@ export class Loading extends React.Component {
     }
 }
 
-export default connect()(Loading);
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code Loading}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        backgroundImageUrl: state.config.DEFAULT_BACKGROUND_IMAGE_URL,
+        clientId: state.config.CLIENT_ID,
+        remoteControlServiceConfig: state.config.XMPP_CONFIG
+    };
+}
+
+export default connect(mapStateToProps)(Loading);

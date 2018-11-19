@@ -1,6 +1,5 @@
 /* global gapi */
 
-import { CLIENT_ID } from 'config';
 import { date } from 'utils';
 
 /**
@@ -10,15 +9,17 @@ export default {
     /**
      * Loads the external script for accessing the Google API.
      *
+     * @param {string} clientId - The Google application id used for accessing
+     * the calendar API.
      * @returns {Promise} Resolves when the Google API javascript has loaded.
      */
-    initialize() {
+    initialize(clientId) {
         const loadGapi = new Promise(resolve =>
             gapi.load('client:auth2', () => resolve()));
 
         return loadGapi
             .then(() => gapi.client.init({
-                clientId: CLIENT_ID,
+                clientId,
                 scope: [
                     'https://www.googleapis.com/auth/'
                         + 'admin.directory.resource.calendar.readonly',
@@ -88,7 +89,6 @@ export default {
      * @returns {Promise} Resolves when sign in completes successfully.
      */
     triggerSignIn() {
-        return this.initialize()
-            .then(() => gapi.auth2.getAuthInstance().signIn());
+        return gapi.auth2.getAuthInstance().signIn();
     }
 };

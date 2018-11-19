@@ -29,6 +29,7 @@ import styles from './view.css';
  */
 export class Calendar extends React.Component {
     static propTypes = {
+        backgroundImageUrl: PropTypes.string,
         calendarName: PropTypes.string,
         dispatch: PropTypes.func,
         events: PropTypes.array,
@@ -107,7 +108,9 @@ export class Calendar extends React.Component {
         const remoteControlUrl = this._getRemoteControlUrl();
 
         return (
-            <View name = 'calendar'>
+            <View
+                backgroundImageUrl = { this.props.backgroundImageUrl }
+                name = 'calendar'>
                 <div className = { styles.container }>
                     <Clock />
                     <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
@@ -231,6 +234,7 @@ export class Calendar extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        backgroundImageUrl: state.config.DEFAULT_BACKGROUND_IMAGE_URL,
         calendarName: getCalendarName(state),
         events: getCalendarEvents(state) || [],
         localRemoteControlId: getLocalRemoteControlId(state)

@@ -4,6 +4,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
+import config from 'config';
 import { protoState } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { getPersistedState, setPersistedState } from 'utils';
@@ -15,7 +16,15 @@ import './reset.css';
 // I copied from https://github.com/css-modules/css-modules/issues/164
 import '!style-loader!css-loader!fonts/fonts.css';
 
-const store = createStore(protoState, getPersistedState());
+const persistedState = getPersistedState();
+const initialState = {
+    ...persistedState,
+    config: {
+        ...persistedState.config,
+        ...config
+    }
+};
+const store = createStore(protoState, initialState);
 
 store.subscribe(() => {
     setPersistedState(store);

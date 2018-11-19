@@ -7,7 +7,6 @@ import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { remoteControlService } from 'remote-control';
-import { getLocalRemoteControlId } from 'reducers';
 
 import View from './view';
 import styles from './view.css';
@@ -21,8 +20,8 @@ import styles from './view.css';
 export class RemoteControl extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        localRemoteControlId: PropTypes.string,
-        match: PropTypes.object
+        match: PropTypes.object,
+        remoteControlServiceConfiguration: PropTypes.object
     };
 
     /**
@@ -52,14 +51,19 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        remoteControlService.init(this.props.dispatch)
-            .then(() => {
+        const {
+            dispatch,
+            remoteControlServiceConfiguration
+        } = this.props;
+
+        remoteControlService.init(dispatch, remoteControlServiceConfiguration)
+            .then(jid => {
                 remoteControlService.addCommandListener(this._onCommand);
 
                 remoteControlService.sendCommand(
                     this._getRemoteId(),
                     'requestCalendar',
-                    { requester: this.props.localRemoteControlId }
+                    { requester: jid }
                 );
 
                 remoteControlService.createMuc(this._getRemoteNode());
@@ -252,7 +256,7 @@ export class RemoteControl extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        localRemoteControlId: getLocalRemoteControlId(state)
+        remoteControlServiceConfiguration: state.config.XMPP_CONFIG
     };
 }
 

@@ -1,6 +1,5 @@
 /* global JitsiMeetJS */
 
-import { XMPP_CONFIG } from 'config';
 import { $msg } from 'strophe.js';
 import { logger } from 'utils';
 import { setLocalRemoteControlID } from 'actions';
@@ -21,9 +20,11 @@ const xmppControl = {
      *
      * @param {Function} dispatch - The Redux dispatch function used to signal
      * state updates.
+     * @param {Object} config - Describes endpoints to use for establishting the
+     * connection.
      * @returns {Promise<void>}
      */
-    init(dispatch) {
+    init(dispatch, config) {
         if (initPromise) {
             return initPromise;
         }
@@ -34,15 +35,15 @@ const xmppControl = {
             JitsiMeetJS.init({})
             .then(() => {
                 JitsiMeetJS.setLogLevel('error');
-                this.xmppConnection
-                    = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
+                this.xmppConnection = new JitsiMeetJS.JitsiConnection(
+                    null, null, config);
 
                 this.xmppConnection.addEventListener(
                     JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
                     () => {
                         dispatch(setLocalRemoteControlID(this.getJid()));
 
-                        resolve();
+                        resolve(this.getJid());
                     });
 
                 this.xmppConnection.addEventListener(

@@ -1,6 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { DEFAULT_AVATAR_URL } from 'config';
 import { hash } from 'utils';
 
 import styles from './scheduled-meeting.css';
@@ -13,11 +13,11 @@ import styles from './scheduled-meeting.css';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function Avatar({ email }) {
+export function Avatar({ defaultAvatarUrl, email }) {
     const avatarUrl = email
         ? `https://www.gravatar.com/avatar/${
             hash(email.trim().toLowerCase())}?d=wavatar`
-        : DEFAULT_AVATAR_URL;
+        : defaultAvatarUrl;
 
     return (
         <img
@@ -32,5 +32,21 @@ Avatar.defaultProps = {
 };
 
 Avatar.propTypes = {
+    defaultAvatarUrl: PropTypes.string,
     email: PropTypes.string
 };
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code Avatar}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        defaultAvatarUrl: state.config.DEFAULT_AVATAR_URL
+    };
+}
+
+export default connect(mapStateToProps)(Avatar);

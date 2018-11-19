@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { remoteControlService } from 'remote-control';
-import { backgroundService } from 'utils';
 
 import styles from './view.css';
 
@@ -14,7 +13,7 @@ import styles from './view.css';
  */
 export default class View extends React.Component {
     static propTypes = {
-        hideBackground: PropTypes.bool,
+        backgroundImageUrl: PropTypes.string,
         children: PropTypes.node,
         name: PropTypes.string
     };
@@ -39,14 +38,10 @@ export default class View extends React.Component {
     render() {
         let backgroundStyles;
 
-        if (!this.props.hideBackground) {
-            const backgroundUrl = backgroundService.getBackgroundUrl();
-
-            if (backgroundUrl) {
-                backgroundStyles = {
-                    backgroundImage: `url('${backgroundUrl}')`
-                };
-            }
+        if (this.props.backgroundImageUrl) {
+            backgroundStyles = {
+                backgroundImage: `url('${this.props.backgroundImageUrl}')`
+            };
         }
 
         return (

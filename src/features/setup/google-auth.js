@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { google } from 'calendars';
 import { Button } from 'features/button';
@@ -13,8 +14,10 @@ import styles from './setup.css';
  */
 export class GoogleAuth extends React.Component {
     static propTypes = {
+        clientId: PropTypes.string,
         dispatch: PropTypes.func,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        remoteControlServiceConfig: PropTypes.object
     };
 
     /**
@@ -57,10 +60,25 @@ export class GoogleAuth extends React.Component {
      * @returns {Promise}
      */
     _onAuthEnter() {
-        return google.triggerSignIn()
+        google.initialize(this.props.clientId)
+            .then(() => google.triggerSignIn())
             .then(() => this.props.onSuccess())
             .catch(error => logger.error(error));
     }
 }
 
-export default GoogleAuth;
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code GoogleAuth}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        clientId: state.config.CLIENT_ID
+    };
+}
+
+export default connect(mapStateToProps)(GoogleAuth);

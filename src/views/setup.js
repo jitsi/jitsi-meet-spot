@@ -14,6 +14,7 @@ import styles from './view.css';
  */
 export class Setup extends React.Component {
     static propTypes = {
+        backgroundImageUrl: PropTypes.string,
         history: PropTypes.object
     };
 
@@ -36,7 +37,9 @@ export class Setup extends React.Component {
      */
     render() {
         return (
-            <View name = 'setup'>
+            <View
+                backgroundImageUrl = { this.props.backgroundImageUrl }
+                name = 'setup'>
                 <div className = { styles.container }>
                     <SetupSteps onSuccess = { this._redirectToCalendar } />
                 </div>
@@ -55,4 +58,18 @@ export class Setup extends React.Component {
     }
 }
 
-export default connect()(Setup);
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code Setup}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        backgroundImageUrl: state.config.DEFAULT_BACKGROUND_IMAGE_URL
+    };
+}
+
+export default connect(mapStateToProps)(Setup);
