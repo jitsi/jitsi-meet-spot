@@ -54,7 +54,7 @@ export default {
             'alwaysIncludeEmail=true',
             'orderBy=starttime',
             'singleEvents=true',
-            `timeMax=${date.getEndOfDate().toISOString()}`,
+            `timeMax=${date.getEndOfDate(date.getCurrentDate()).toISOString()}`,
             `timeMin=${date.getCurrentDate().toISOString()}`
         ].join('&');
 
