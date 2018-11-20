@@ -7,7 +7,7 @@ describe('formatToTime', () => {
 });
 
 describe('getEndOfDate', () => {
-    test('returns a date object set to the end of the pased in day', () => {
+    test('returns a date object set to the end of the passed-in day', () => {
         const testDate = new Date(1542683873254);
         const calculatedDate = date.getEndOfDate(testDate);
         const expectedDate = new Date(1542700799999);
