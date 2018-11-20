@@ -26,10 +26,11 @@ export default {
     /**
      * Calculates and returns the end time of the current day.
      *
+     * @param {Date} date
      * @returns {Date}
      */
-    getEndOfDate() {
-        return moment(Date.now())
+    getEndOfDate(date) {
+        return moment(date)
             .endOf('day')
             .toDate();
     }

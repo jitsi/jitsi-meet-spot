@@ -3,6 +3,16 @@
         "plugin:react/recommended",
         "eslint-config-jitsi"
     ],
+    "overrides": [
+        {
+            "files": [
+                "**/*.test.js"
+            ],
+            "env": {
+                "jest": true
+            }
+        }
+    ],
     "plugins": [
         "react"
     ],
