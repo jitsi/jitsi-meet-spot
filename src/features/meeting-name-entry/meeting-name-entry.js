@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Button } from 'features/button';
 import { Input } from 'features/input';
 import styles from './meeting-name-entry.css';
@@ -83,4 +82,4 @@ export class MeetingNameEntry extends React.Component {
     }
 }
 
-export default connect()(MeetingNameEntry);
+export default MeetingNameEntry;
