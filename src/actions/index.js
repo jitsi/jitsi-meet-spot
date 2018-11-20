@@ -1,21 +1,9 @@
 import {
     CALENDAR_ADD_ACCOUNT,
     CALENDAR_SET_EVENTS,
-    LOAD_COMPLETED,
     REMOTE_CONTROL_SET_LOCAL_ID,
     SETUP_COMPLETED
 } from 'reducers';
-
-/**
- * Signals the application has completed bootstrapping and is ready to be used.
- *
- * @returns {Object}
- */
-export function setLoadCompleted() {
-    return {
-        type: LOAD_COMPLETED
-    };
-}
 
 /**
  * Signals a calendar has been selected to be displayed in the application.

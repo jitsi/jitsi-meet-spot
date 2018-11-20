@@ -9,6 +9,7 @@ import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 import { ROUTES } from 'routing';
 
 import View from './view';
+import { withRemoteControl } from './loaders';
 
 /**
  * Displays the jitsi conference.
@@ -115,4 +116,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(Meeting);
+export default withRemoteControl(connect(mapStateToProps)(Meeting));

@@ -19,6 +19,10 @@ export default class MeetingFrame extends React.Component {
         onMeetingLeave: PropTypes.func
     };
 
+    static defaultProps = {
+        displayName: ''
+    };
+
     /**
      * Initializes a new {@code MeetingFrame} instance.
      *

@@ -3,7 +3,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { Nav } from 'features/debug';
 import { ErrorBoundary } from 'features/error-boundary';
-import { ROUTES, PrivateRoute } from 'routing';
+import { ROUTES } from 'routing';
 import {
     Admin,
     Calendar,
@@ -34,10 +34,10 @@ export class App extends React.Component {
             <div>
                 <ErrorBoundary errorComponent = { FatalError }>
                     <Switch>
-                        <PrivateRoute
+                        <Route
                             path = { ROUTES.ADMIN }
                             component = { Admin } />
-                        <PrivateRoute
+                        <Route
                             path = { ROUTES.MEETING }
                             component = { Meeting } />
                         <Route
@@ -49,7 +49,7 @@ export class App extends React.Component {
                         <Route
                             path = { ROUTES.REMOTE_CONTROL }
                             component = { RemoteControl } />
-                        <PrivateRoute
+                        <Route
                             component = { Calendar} />
                     </Switch>
                 </ErrorBoundary>

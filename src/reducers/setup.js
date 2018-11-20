@@ -1,10 +1,8 @@
 const DEFAULT_STATE = {
-    completed: false,
-    loadCompleted: false
+    completed: false
 };
 
 export const SETUP_COMPLETED = 'SETUP_COMPLETED';
-export const LOAD_COMPLETED = 'LOAD_COMPLETED';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'setup' feature.
@@ -22,27 +20,10 @@ const setup = (state = DEFAULT_STATE, action) => {
             completed: true
         };
 
-    case LOAD_COMPLETED:
-        return {
-            ...state,
-            loadCompleted: true
-        };
-
     default:
         return state;
     }
 };
-
-/**
- * A selector which returns whether or not the application has completed loading
- * external resources and processes.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function isLoadComplete(state) {
-    return state.setup.loadCompleted;
-}
 
 /**
  * A selector which returns whether or not the application has been configured.

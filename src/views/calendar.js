@@ -12,13 +12,15 @@ import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
     getCalendarEvents,
     getCalendarName,
-    getLocalRemoteControlId
+    getLocalRemoteControlId,
+    isSetupComplete
 } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { keyboardNavigation, windowHandler } from 'utils';
 
 import View from './view';
 import styles from './view.css';
+import { withCalendar, withRemoteControl } from './loaders';
 
 /**
  * A view of all known meetings in the calendar connected with the application.
@@ -32,6 +34,7 @@ export class Calendar extends React.Component {
         calendarName: PropTypes.string,
         dispatch: PropTypes.func,
         events: PropTypes.array,
+        isSetupComplete: PropTypes.bool,
         localRemoteControlId: PropTypes.string,
         history: PropTypes.object
     };
@@ -66,9 +69,12 @@ export class Calendar extends React.Component {
     componentDidMount() {
         keyboardNavigation.startListening('calendar');
 
-        this._pollForEvents();
+        if (this.props.isSetupComplete) {
+            this._pollForEvents();
 
-        this._updateEventsInterval = setInterval(this._pollForEvents, 30000);
+            this._updateEventsInterval
+                = setInterval(this._pollForEvents, 30000);
+        }
 
         remoteControlService.addCommandListener(this._onCommand);
     }
@@ -96,7 +102,9 @@ export class Calendar extends React.Component {
     render() {
         let contents;
 
-        if (!this.state.hasLoadedEvents && !this.props.events.length) {
+        if (this.props.isSetupComplete
+            && !this.state.hasLoadedEvents
+            && !this.props.events.length) {
             contents = <LoadingIcon color = 'white' />;
         } else {
             contents = <ScheduledMeetings
@@ -110,7 +118,8 @@ export class Calendar extends React.Component {
             <View name = 'calendar'>
                 <div className = { styles.container }>
                     <Clock />
-                    <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
+                    <MeetingNameEntry
+                        onSubmit = { this._onGoToMeeting } />
                     <div className = { styles.meetings }>
                         { contents }
                     </div>
@@ -233,8 +242,10 @@ function mapStateToProps(state) {
     return {
         calendarName: getCalendarName(state),
         events: getCalendarEvents(state) || [],
+        isSetupComplete: isSetupComplete(state),
         localRemoteControlId: getLocalRemoteControlId(state)
     };
 }
 
-export default connect(mapStateToProps)(Calendar);
+export default withRemoteControl(withCalendar(
+    connect(mapStateToProps)(Calendar)));
