@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
 import { isLoadComplete, isSetupComplete } from 'reducers';
+import { ROUTES } from './constants';
 
 /**
  * A React Component wrapping {@code Route}, which prevents direct visiting of
@@ -53,7 +54,7 @@ export class PrivateRoute extends React.Component {
         if (!_isLoadComplete) {
             return <Redirect
                 to = {{
-                    pathname: '/loading',
+                    pathname: ROUTES.LOADING,
                     state: {
                         referrer: `${this.props.location.pathname}${
                             this.props.location.search}`
@@ -62,7 +63,7 @@ export class PrivateRoute extends React.Component {
         }
 
         if (!_isSetupComplete) {
-            return <Redirect to = {{ pathname: '/setup' }} />;
+            return <Redirect to = {{ pathname: ROUTES.SETUP }} />;
         }
 
         return <Route { ...rest } />;

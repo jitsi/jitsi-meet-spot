@@ -6,6 +6,7 @@ import { setLoadCompleted } from 'actions';
 import { google } from 'calendars';
 import { LoadingIcon } from 'features/loading-icon';
 import { remoteControlService } from 'remote-control';
+import { ROUTES } from 'routing';
 import { backgroundService, logger } from 'utils';
 
 import View from './view';
@@ -54,7 +55,7 @@ export class Loading extends React.Component {
                     this.props.location.state.referrer || '');
             })
             .catch(() => {
-                this.props.history.push('/setup');
+                this.props.history.push(ROUTES.SETUP);
             })
             .then(() => {
                 this.props.dispatch(setLoadCompleted());

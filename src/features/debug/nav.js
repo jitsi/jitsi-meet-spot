@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { ROUTES } from '../../routing/constants';
 import styles from './nav.css';
 
 /**
@@ -13,11 +14,9 @@ import styles from './nav.css';
 export default function Nav() {
     return (
         <nav className = { styles.nav }>
-            <Link to = '/admin'>Admin</Link>
-            <Link to = '/meeting/spot-test-test-spot'>Meeting</Link>
-            <Link to = '/setup'>Setup</Link>
-            <Link to = '/'>Calendar</Link>
-            <Link to = '/asdfsdf'>Nonexistent</Link>
+            <Link to = { ROUTES.ADMIN }>Admin</Link>
+            <Link to = { ROUTES.SETUP }>Setup</Link>
+            <Link to = { ROUTES.CALENDAR }>Calendar</Link>
         </nav>
     );
 }
