@@ -29,6 +29,9 @@
         "style-loader": "0.19.1",
         "uglifyjs-webpack-plugin": "1.1.5",
         "url-loader": "0.6.2",
+        "wdio-jasmine-framework": "0.3.6",
+        "wdio-selenium-standalone-service": "0.0.11",
+        "webdriverio": "4.14.0",
         "webpack": "3.10.0"
     },
     "engines": {
@@ -41,6 +44,7 @@
         "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
         "docs": "jsdoc -c ./jsdoc.config.js",
         "lint": "eslint .",
+        "ui-tests": "./node_modules/.bin/wdio ui-tests/wdio.conf.js",
         "watch-dev": "webpack --config ./webpack.config.js --progress --watch",
         "watch-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress --watch"
     },
