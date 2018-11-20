@@ -20,11 +20,8 @@ export const DEFAULT_AVATAR_URL
 export const DEFAULT_BACKGROUND_IMAGE_URL
     = process.env.DEFAULT_BACKGROUND_IMAGE_URL || '';
 
-/**
- * The domain on which all meeting URLs should redirect to join a jitsi
- * conference.
- */
-export const MEETING_DOMAIN = process.env.MEETING_DOMAINS || 'meet.jit.si';
+export const DEFAULT_MEETING_DOMAIN
+    = process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si';
 
 /**
  * This configuration is used to establish a connection with the XMPP service

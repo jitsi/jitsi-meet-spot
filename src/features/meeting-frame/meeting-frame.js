@@ -2,8 +2,8 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { MEETING_DOMAIN } from 'config';
 import { COMMANDS, remoteControlService } from 'remote-control';
+import { parseMeetingUrl } from 'utils';
 
 import styles from './meeting-frame.css';
 
@@ -15,7 +15,7 @@ import styles from './meeting-frame.css';
 export default class MeetingFrame extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,
-        meetingName: PropTypes.string,
+        meetingUrl: PropTypes.string,
         onMeetingLeave: PropTypes.func
     };
 
@@ -46,8 +46,14 @@ export default class MeetingFrame extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        this._jitsiApi = new JitsiMeetExternalAPI(MEETING_DOMAIN, {
-            roomName: this.props.meetingName,
+        const {
+            host,
+            meetingName,
+            path
+        } = parseMeetingUrl(this.props.meetingUrl);
+
+        this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
+            roomName: meetingName,
             parentNode: this._meetingContainer
         });
 

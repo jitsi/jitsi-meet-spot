@@ -54,7 +54,10 @@ export class PrivateRoute extends React.Component {
             return <Redirect
                 to = {{
                     pathname: '/loading',
-                    state: { referrer: this.props.location.pathname }
+                    state: {
+                        referrer: `${this.props.location.pathname}${
+                            this.props.location.search}`
+                    }
                 }} />;
         }
 

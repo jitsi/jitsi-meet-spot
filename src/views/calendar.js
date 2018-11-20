@@ -167,16 +167,16 @@ export class Calendar extends React.Component {
     }
 
     /**
-     * Callback invoked to join a conference. Only if a conference name is
-     * passed in will it be joined.
+     * Callback invoked to join a conference. Only if a conference url is
+     * passed in will join be attempted.
      *
-     * @param {string} meetingName - The conference name to join.
+     * @param {string} meetingUrl - The conference url to join.
      * @private
      * @returns {void}
      */
-    _onGoToMeeting(meetingName) {
-        if (meetingName) {
-            this.props.history.push(`/meeting/${meetingName}`);
+    _onGoToMeeting(meetingUrl) {
+        if (meetingUrl) {
+            this.props.history.push(`/meeting?location=${meetingUrl}`);
         }
     }
 

@@ -90,8 +90,8 @@ export default class ScheduledMeeting extends React.Component {
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.event.conferenceName) {
-            this.props.onMeetingClick(this.props.event.conferenceName);
+        if (this.props.event.conferenceUrl) {
+            this.props.onMeetingClick(this.props.event.conferenceUrl);
         }
     }
 }

@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
+import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 
 import View from './view';
 
@@ -16,6 +18,7 @@ export class Meeting extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,
         history: PropTypes.object,
+        location: PropTypes.object,
         match: PropTypes.object
     };
 
@@ -32,21 +35,60 @@ export class Meeting extends React.Component {
     }
 
     /**
+     * Redirects back the home view if no valid meeting url has been detected.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        if (!this._getMeetingUrl()) {
+            logger.error(
+                'No valid meeting url detected. Params are: ',
+                this.props.location.search
+            );
+            this._onMeetingLeave();
+        }
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
      */
     render() {
-        // TODO: handle the error case where no meeting name is present
+        const meetingUrl = this._getMeetingUrl();
+
+        if (!meetingUrl) {
+            return null;
+        }
 
         return (
             <View name = 'meeting'>
                 <MeetingFrame
                     displayName = { this.props.displayName }
-                    meetingName = { this.props.match.params.name }
+                    meetingUrl = { meetingUrl }
                     onMeetingLeave = { this._onMeetingLeave } />
             </View>
         );
+    }
+
+    /**
+     * Parses the current window location for a valid meeting url. The value
+     * {@code null} will be returned if no valid meeting url is found.
+     *
+     * @private
+     * @returns {string|null}
+     */
+    _getMeetingUrl() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const location = queryParams.get('location');
+
+        if (isValidMeetingUrl(location)) {
+            return location;
+        } else if (isValidMeetingName(location)) {
+            return `https://${DEFAULT_MEETING_DOMAIN}/${location}`;
+        }
+
+        return null;
     }
 
     /**
