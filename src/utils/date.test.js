@@ -1,27 +1,29 @@
 import date from './date';
 
+/**
+ * Test helper to create a date with a set time, regardless of local timezone.
+ */
+function createTestDate() {
+    const testDate = new Date();
+
+    testDate.setMonth(11);
+    testDate.setDate(20);
+    testDate.setHours(19);
+    testDate.setMinutes(17);
+    testDate.setFullYear(2018);
+
+    return testDate;
+}
+
 describe('formatToTime', () => {
     test('returns the time in hh:mm format', () => {
-        const testDate = new Date();
-        testDate.setMonth(11);
-        testDate.setDate(20);
-        testDate.setHours(19);
-        testDate.setMinutes(17);
-
-        expect(date.formatToTime(testDate)).toBe('07:17');
+        expect(date.formatToTime(createTestDate())).toBe('07:17');
     });
 });
 
 describe('getEndOfDate', () => {
     test('returns a date object set to the end of the passed-in day', () => {
-        const testDate = new Date();
-        testDate.setMonth(11);
-        testDate.setDate(20);
-        testDate.setHours(19);
-        testDate.setMinutes(17);
-        testDate.setFullYear(2018);
-
-        const calculatedDate = date.getEndOfDate(testDate);
+        const calculatedDate = date.getEndOfDate(createTestDate());
 
         expect(calculatedDate.getFullYear()).toBe(2018);
         expect(calculatedDate.getMonth()).toBe(11);
