@@ -1,7 +1,9 @@
 import date from './date';
 
 /**
- * Test helper to create a date with a set time, regardless of local timezone.
+ * Create a date with a set time, regardless of local timezone.
+ *
+ * @returns {Date}
  */
 function createTestDate() {
     const testDate = new Date();
