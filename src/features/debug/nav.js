@@ -5,7 +5,7 @@ import { ROUTES } from '../../routing/constants';
 import styles from './nav.css';
 
 /**
- * A component with links to switch between different views of the application.
+ * A component with links to switch between different views of Spot.
  *
  * @param {Object} props - The read-only properties with which the new
  * instance is to be initialized.

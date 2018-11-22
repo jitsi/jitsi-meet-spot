@@ -110,7 +110,7 @@ export default class FeedbackForm extends React.Component {
     }
 
     /**
-     * Sends the entered feedback to the application so it can be submitted.
+     * Sends the entered feedback to the Spot instance so it can be submitted.
      *
      * @param {Event} event - The submit event passed through by the form.
      * @private

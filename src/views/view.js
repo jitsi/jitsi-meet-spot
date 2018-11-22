@@ -7,8 +7,8 @@ import { backgroundService } from 'utils';
 import styles from './view.css';
 
 /**
- * A React Component representing a single screen in the application and is
- * responsible for basic layout.
+ * A React Component representing a single screen in the single-page application
+ * and is responsible for basic layout.
  *
  * @extends React.Component
  */

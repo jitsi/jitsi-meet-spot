@@ -6,8 +6,7 @@ export const SETUP_COMPLETED = 'SETUP_COMPLETED';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'setup' feature.
- * The 'setup' feature tracks whether the application has been initialized and
- * configured.
+ * The 'setup' feature tracks whether Spot has been configured.
  *
  * @param {Object} state - The current Redux state for the 'setup' feature.
  * @param {Object} action - The Redux state update payload.

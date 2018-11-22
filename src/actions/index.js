@@ -9,7 +9,7 @@ import {
  * Signals a calendar has been selected to be displayed in the application.
  *
  * @param {string} email - The email address of the calendar to be connected
- * with the application.
+ * with Spot.
  * @param {string} displayName - The name to associate the calendar.
  */
 export function setCalendar(email, displayName) {
@@ -34,12 +34,13 @@ export function setCalendarEvents(events = []) {
 }
 
 /**
- * Signals to update the known id of the participant the application has used
- * to connect to the XMPP service. The id is used so remote controllers can
- * connect to the XMPP service and send messages to control the application.
+ * Signals to update the known client id that has been assigned by connecting
+ * to the remote control service. The id is used to allow Spot instances and
+ * remoteController instances identify each other for sending messages and
+ * commands.
  *
- * @param {string} id - The id (jid) of the application's participant that has
- * connected to the XMPP service.
+ * @param {string} id - The id (jid) of the client that has connected to the
+ * remote control service.
  * @returns {Object}
  */
 export function setLocalRemoteControlID(id) {
@@ -50,8 +51,8 @@ export function setLocalRemoteControlID(id) {
 }
 
 /**
- * Signals that the application setup flow has been successfully completed and
- * should no longer be displayed.
+ * Signals that the Spot setup flow has been successfully completed and should
+ * no longer be displayed.
  *
  * @returns {Object}
  */

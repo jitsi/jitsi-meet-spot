@@ -14,7 +14,7 @@ import View from './view';
 import styles from './view.css';
 
 /**
- * Displays the remote control view for controlling the application from another
+ * Displays the remote control view for controlling a Spot instance from another
  * browser window.
  *
  * @extends React.Component
@@ -47,7 +47,7 @@ export class RemoteControl extends React.Component {
 
     /**
      * Connects to the remote control service so it can send commands back to
-     * the main application instance and starts listening for application state
+     * the Spot instance and starts listening for that Spot instance's state
      * updates.
      *
      * @inheritdoc
@@ -65,7 +65,7 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Cleans up listeners waiting for application state updates.
+     * Cleans up listeners waiting for Spot state updates.
      *
      * @inheritdoc
      */
@@ -123,25 +123,30 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Parses the id of the main application given by
-     * {@code remoteControlService} and returns only the unique id, without any
-     * domain information.
+     * Parses the id of the Spot given by {@code remoteControlService} and
+     * returns only the unique id, without any domain information.
+     *
+     * @private
+     * @returns {string}
      */
     _getRemoteNode() {
         return this._getRemoteId().split('@')[0];
     }
 
     /**
-     * Parses url params to get the id assigned to the main application and used
-     * for communicating back to the main application.
+     * Parses url params to get the id of the targeted Spot instance, used
+     * for communicating back to the Spot instance.
+     *
+     * @private
+     * @returns {string}
      */
     _getRemoteId() {
         return decodeURIComponent(this.props.match.params.remoteId);
     }
 
     /**
-     * Returns the remote control view to display when the main application is
-     * in a meeting.
+     * Returns the remote control view to display when the Spot instance is in a
+     * meeting.
      *
      * @private
      * @returns {ReactElement}
@@ -156,8 +161,8 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Returns the React Element to display while the main application is not
-     * in a meeting.
+     * Returns the React Element to display while the Spot instance is not in a
+     * meeting.
      *
      * @private
      * @returns {ReactElement}
@@ -176,7 +181,7 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Callback to parse direct updates received from the main application.
+     * Callback to parse direct updates received from the Spot instance.
      *
      * @param {string} command - The type of command received.
      * @param {Object} options - Additional information passed with the command.
@@ -192,8 +197,8 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Callback invoked when the remote control needs to signal to the main
-     * application that it should join a specific meeting.
+     * Callback invoked when a remote control needs to signal to a Spot to
+     * join a specific meeting.
      *
      * @param {string} meetingName - The name of the jitsi meeting to join.
      * @private
@@ -205,13 +210,12 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Callback invoked when an application has published a status update
-     * through the remoteControlService.
+     * Callback invoked when a client has published a status update through the
+     * {@code remoteControlService}.
      *
-     * @param {Object} data - The status update broadcasted by an application
+     * @param {Object} data - The status update broadcasted by a client
      * connected to {@code remoteControlService}.
-     * @param {String} from - The id of the application that broadcasted the
-     * update.
+     * @param {String} from - The id of the client that broadcasted the update.
      * @private
      * @returns {void}
      */

@@ -23,9 +23,8 @@ import styles from './view.css';
 import { withCalendar, withRemoteControl } from './loaders';
 
 /**
- * A view of all known meetings in the calendar connected with the application.
- * Provides the ability to join those meetings and open a remote control
- * instance.
+ * A view of all known meetings in the calendar connected with Spot. Provides
+ * the ability to join those meetings and open a remote control instance.
  *
  * @extends React.Component
  */
@@ -136,7 +135,7 @@ export class Calendar extends React.Component {
     }
 
     /**
-     * Generates the full URL for opening a remote control for the application.
+     * Generates the full URL for opening a remote control for Spot.
      *
      * @private
      * @returns void
@@ -190,8 +189,8 @@ export class Calendar extends React.Component {
     }
 
     /**
-     * Callback invoked to open a window for controlling the main application.
-     * This is intended for now to be a debugging and development feature.
+     * Callback invoked to open a window for controlling a Spot instance. This
+     * is intended for now to be a debugging and development feature.
      *
      * @private
      * @returns {void}

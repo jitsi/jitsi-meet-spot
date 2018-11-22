@@ -6,7 +6,7 @@ import View from './view';
 import styles from './view.css';
 
 /**
- * A component for providing post-setup application configuration.
+ * A component for providing post-setup Spot configuration.
  *
  * @returns {ReactElement}
  */

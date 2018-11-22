@@ -57,8 +57,7 @@ function filterAttendees(attendees = [], currentCalendar) {
 }
 
 /**
- * Converts the passed in events into a standard format expected by the
- * application.
+ * Converts the passed in events into a standard format expected by UI features.
  *
  * @param {Array<Object>} currentEvents
  * @param {Array<Object>} newEvents

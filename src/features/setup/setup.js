@@ -10,7 +10,7 @@ import Welcome from './welcome';
 import styles from './setup.css';
 
 /**
- * Displays the application setup flow by handling display of each setup step.
+ * Displays the Spot setup flow by handling display of each setup step.
  *
  * @extends React.Component
  */
