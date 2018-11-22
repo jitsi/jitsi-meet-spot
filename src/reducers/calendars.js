@@ -6,7 +6,7 @@ const DEFAULT_STATE = {
     events: []
 };
 
-export const CALENDAR_ADD_ACCOUNT = 'CALENDAR_ADD_ACCOUNT';
+export const CALENDAR_SET_ACCOUNT = 'CALENDAR_SET_ACCOUNT';
 export const CALENDAR_SET_EVENTS = 'CALENDAR_SET_EVENTS';
 
 /**
@@ -19,11 +19,11 @@ export const CALENDAR_SET_EVENTS = 'CALENDAR_SET_EVENTS';
  */
 const calendar = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case CALENDAR_ADD_ACCOUNT:
+    case CALENDAR_SET_ACCOUNT:
         return {
             ...state,
-            name: action.name,
             displayName: action.displayName,
+            email: action.email,
             events: []
         };
 
@@ -31,7 +31,7 @@ const calendar = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             events:
-                filterJoinableEvents(state.events, action.events, state.name)
+                filterJoinableEvents(state.events, action.events, state.email)
         };
 
     default:
@@ -127,6 +127,17 @@ function getMeetingUrl(location) {
 }
 
 /**
+ * A selector which returns the email associated with the currently configured
+ * calendar.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getCalendarEmail(state) {
+    return state.calendars.email;
+}
+
+/**
  * A selector which returns calendar events associated with the currently
  * configured calendar.
  *
@@ -135,17 +146,6 @@ function getMeetingUrl(location) {
  */
 export function getCalendarEvents(state) {
     return state.calendars.events;
-}
-
-/**
- * A selector which returns the email associated with the currently configured
- * calendar.
- *
- * @param {Object} state - The Redux state.
- * @returns {string}
- */
-export function getCalendarName(state) {
-    return state.calendars.name;
 }
 
 /**
