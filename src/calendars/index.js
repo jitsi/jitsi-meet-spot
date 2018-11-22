@@ -1,1 +1,1 @@
-export { default as google } from './google';
+export { default as calendarService } from './google';
