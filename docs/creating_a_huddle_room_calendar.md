@@ -1,8 +1,8 @@
-## Creating a room for Google calendar
+## Creating a room for Google Calendar
 
 A targeted use case for jitsi-meet-spot is showing meetings that have been booked in a meeting room.
 
-1. Log in as a Google suite admin.
+1. Log in as a G Suite admin.
 1. Proceed to the calendar resources dashboard of the admin dashboard. https://admin.google.com/ac/calendarresources
 1. Under Resource Management click Edit Resources.
 1. Click the big yellow circle with the + to add a building as necessary if one does not already exist. Rooms must be associated with buildings.

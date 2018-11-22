@@ -1,6 +1,6 @@
-## Creating the Google API client for calendar integration
+## Creating the Google API client for Google Calendar integration
 
-In summary, a google application will be made so that a google calendar can be accessed by jitsi-meet-spot.
+In summary, a Google application will be made so that a Google Calendar can be accessed by jitsi-meet-spot.
 
 1. Log into a Google account.
 1. Go to Google cloud platform dashboard. https://console.cloud.google.com/apis/dashboard
