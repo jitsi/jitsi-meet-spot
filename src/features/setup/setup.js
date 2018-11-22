@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setSetupCompleted } from 'actions';
-import GoogleAuth from './google-auth';
-import GoogleSelectRoom from './google-select-room';
+import CalendarAuth from './calendar-auth';
+import SelectRoom from './select-room';
 import Welcome from './welcome';
 
 import styles from './setup.css';
@@ -33,8 +33,8 @@ export class Setup extends React.Component {
 
         this.steps = [
             Welcome,
-            GoogleAuth,
-            GoogleSelectRoom
+            CalendarAuth,
+            SelectRoom
         ];
 
         this.state = {

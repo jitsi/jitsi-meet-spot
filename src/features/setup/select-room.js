@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendar } from 'actions';
-import { google } from 'calendars';
+import { calendarService } from 'calendars';
 import { Button } from 'features/button';
 import { Input } from 'features/input';
 import { LoadingIcon } from 'features/loading-icon';
@@ -16,14 +16,14 @@ import styles from './setup.css';
  *
  * @extends React.Component
  */
-export class GoogleSelectRoom extends React.Component {
+export class SelectRoom extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func
     };
 
     /**
-     * Initializes a new {@code GoogleSelectRoom} instance.
+     * Initializes a new {@code SelectRoom} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -51,7 +51,7 @@ export class GoogleSelectRoom extends React.Component {
         // TODO: move into action
 
         this.setState({ loading: true }, () =>
-            google.getRooms()
+            calendarService.getRooms()
                 .then(rooms => {
                     this.setState({
                         loading: false,
@@ -154,4 +154,4 @@ export class GoogleSelectRoom extends React.Component {
     }
 }
 
-export default connect()(GoogleSelectRoom);
+export default connect()(SelectRoom);

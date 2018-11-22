@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { google } from 'calendars';
+import { calendarService } from 'calendars';
 import { Button } from 'features/button';
 import { logger } from 'utils';
 
 import styles from './setup.css';
 
 /**
- * Prompts to sign in to Google and allow the application to access calendar
- * events.
+ * Prompts to sign in to the calendar service and allow the application to
+ * access calendar events.
  */
-export class GoogleAuth extends React.Component {
+export class CalendarAuth extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func
     };
 
     /**
-     * Initializes a new {@code GoogleAuth} instance.
+     * Initializes a new {@code CalendarAuth} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -50,17 +50,17 @@ export class GoogleAuth extends React.Component {
     }
 
     /**
-     * Starts the Google authentication flow to sign in to Google and allow
-     * the application to access calendar events.
+     * Starts the authentication flow to sign in to calendar integration and
+     * allow the application to access calendar events.
      *
      * @private
      * @returns {Promise}
      */
     _onAuthEnter() {
-        return google.triggerSignIn()
+        return calendarService.triggerSignIn()
             .then(() => this.props.onSuccess())
             .catch(error => logger.error(error));
     }
 }
 
-export default GoogleAuth;
+export default CalendarAuth;

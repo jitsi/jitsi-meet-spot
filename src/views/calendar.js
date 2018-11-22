@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendarEvents } from 'actions';
-import { google } from 'calendars';
+import { calendarService } from 'calendars';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
@@ -215,7 +215,7 @@ export class Calendar extends React.Component {
         }
 
         // TODO: prevent multiple requests being in flight at the same time
-        google.getCalendar(calendarName)
+        calendarService.getCalendar(calendarName)
             .then(events => {
                 if (this._isUnmounting) {
                     return;
