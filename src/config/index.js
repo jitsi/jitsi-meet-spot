@@ -2,7 +2,7 @@
 
 /**
  * The Google application client id to be used for interacting with a Google
- * calendar.
+ * Calendar.
  */
 export const CLIENT_ID = process.env.CLIENT_ID;
 
