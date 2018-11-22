@@ -1,6 +1,7 @@
-# Jitsi-Meet-Spot
+# Spot
 
-This is a web frontend application for integrating a Google calendar with jitsi-meetings. The application is intended to be running within a physically-existing meeting room, and left running, so it can be used to join online meetings. Remote control functionality is available.
+
+This is a web frontend application for integrating a Google calendar with jitsi meetings. The application is intended to be running within a physically-existing meeting room, and left running, so it can be used to join online meetings. Remote control functionality is available.
 
 ## Getting Started
 
@@ -14,7 +15,8 @@ There are a few requirements before the application can be launched.
 
 ## Development
 
-Run `npm run start:dev` to launch webpack-dev-server. The server is configured to run on `http://localhost:8000`.
+Webdriver tests also exist and can be run with `npm run test:webdriver`, but some setup is needed; please see the README in ui-tests/ for more details.
+
 
 ## Known limitations
 

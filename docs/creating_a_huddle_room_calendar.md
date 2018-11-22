@@ -1,6 +1,6 @@
 ## Creating a room for Google Calendar
 
-A targeted use case for jitsi-meet-spot is showing meetings that have been booked in a meeting room.
+A targeted use case for Spot is showing meetings that have been booked in a meeting room.
 
 1. Log in as a G Suite admin.
 1. Proceed to the calendar resources dashboard of the admin dashboard. https://admin.google.com/ac/calendarresources

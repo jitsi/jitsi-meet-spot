@@ -11,7 +11,7 @@ export function isValidMeetingName(meetingName) {
 }
 
 /**
- * Checks if a passed in url can be opened in the application.
+ * Checks if a passed in url can be opened in Spot.
  *
  * @param {string} meetingUrl
  * @return {boolean}

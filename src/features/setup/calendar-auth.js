@@ -8,8 +8,10 @@ import { logger } from 'utils';
 import styles from './setup.css';
 
 /**
- * Prompts to sign in to the calendar service and allow the application to
- * access calendar events.
+ * Prompts to sign in to the calendar service and allow Spot to access calendar
+ * events.
+ *
+ * @extends React.Component
  */
 export class CalendarAuth extends React.Component {
     static propTypes = {
@@ -51,7 +53,7 @@ export class CalendarAuth extends React.Component {
 
     /**
      * Starts the authentication flow to sign in to calendar integration and
-     * allow the application to access calendar events.
+     * allow Spot to access calendar events.
      *
      * @private
      * @returns {Promise}

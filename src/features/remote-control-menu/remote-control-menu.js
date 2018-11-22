@@ -11,7 +11,7 @@ import VideoMuteButton from './buttons/video-mute-button';
 import styles from './remote-control-menu.css';
 
 /**
- * Displays buttons used for remotely controlling the main application.
+ * Displays buttons used for remotely controlling a Spot instance.
  *
  * @extends React.Component
  */

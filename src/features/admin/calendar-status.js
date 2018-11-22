@@ -8,7 +8,7 @@ import styles from './admin.css';
 
 /**
  * A component intended for displaying information about the calendar currently
- * configured for the application.
+ * configured for Spot.
  *
  * @param {Object} props - The read-only properties with which the new
  * instance is to be initialized.

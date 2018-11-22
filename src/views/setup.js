@@ -9,7 +9,7 @@ import View from './view';
 import styles from './view.css';
 
 /**
- * Displays the application setup flow.
+ * Displays the Spot setup flow.
  *
  * @extends React.Component
  */

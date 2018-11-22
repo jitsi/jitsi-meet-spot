@@ -10,9 +10,9 @@ let initPromise;
 
 /**
  * The interface for interacting with the XMPP service which powers the
- * communication between the main application instance and remote control
- * instances. Both the main application and remote controls join the same
- * MUC and can get messages to each other.
+ * communication between a Spot instance and remote control instances. Both the
+ * Spot instance and remote controls join the same MUC and can get messages to
+ * each other.
  */
 const xmppControl = {
     /**
@@ -63,8 +63,8 @@ const xmppControl = {
     },
 
     /**
-     * Creates a MUC for the main application and remote controllers to join
-     * to communicate with each other.
+     * Creates a MUC for the Spot and remote controllers to join to communicate
+     * with each other.
      *
      * @param {string} roomName - The name of the muc to create.
      * @returns {Object} The instance of the created muc.
@@ -217,8 +217,7 @@ const xmppControl = {
 };
 
 /**
- * Callback invoked to sniff out application related commands and notify
- * observers.
+ * Callback invoked to detect Spot-related commands and notify observers.
  *
  * @param {*} message
  * @private

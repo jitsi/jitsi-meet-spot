@@ -6,8 +6,8 @@ import { persistence, windowHandler } from 'utils';
 import styles from './admin.css';
 
 /**
- * Displays a menu option, with confirmation, to clear all local application
- * state.
+ * Displays a menu option, with confirmation, to clear all saved Spot state,
+ * including its setup.
  *
  * @extends React.Component
  */
@@ -53,7 +53,7 @@ export default class ResetState extends React.Component {
     }
 
     /**
-     * Creates a new React Element which starts the application state reset
+     * Creates a new React Element which starts the Spot state reset
      * flow.
      *
      * @private
@@ -68,8 +68,8 @@ export default class ResetState extends React.Component {
     }
 
     /**
-     * Creates a new React Element asking for confirmation before application
-     * state reset and shows a button to complete the reset.
+     * Creates a new React Element asking for confirmation before resetting Spot
+     * state and shows a button to complete the reset.
      *
      * @private
      * @returns {ReactElement}
@@ -89,7 +89,7 @@ export default class ResetState extends React.Component {
     }
 
     /**
-     * Clears saved application state.
+     * Clears saved Spot state.
      *
      * @private
      * @returns {void}
@@ -100,8 +100,7 @@ export default class ResetState extends React.Component {
     }
 
     /**
-     * Sets the internal state to display the UI to start the application reset
-     * flow.
+     * Sets the internal state to display the UI to start the Spot reset flow.
      *
      * @private
      * @returns {void}
@@ -111,8 +110,7 @@ export default class ResetState extends React.Component {
     }
 
     /**
-     * Sets the internal state to display the UI to execute the application
-     * reset flow.
+     * Sets the internal state to display the UI to execute the Spot reset flow.
      *
      * @private
      * @returns {void}

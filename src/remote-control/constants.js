@@ -1,6 +1,6 @@
 /**
- * An enumeration of supported commands the main application can processes. All
- * values are from events triggered by the jitsi meet iframe api.
+ * An enumeration of supported commands Spot can processes. All values are from
+ * events triggered by the jitsi meet iframe api.
  */
 export const COMMANDS = {
     /**

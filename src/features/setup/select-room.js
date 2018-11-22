@@ -11,8 +11,8 @@ import { LoadingIcon } from 'features/loading-icon';
 import styles from './setup.css';
 
 /**
- * Prompts to select which calender to synchronize the application with. Either
- * a room can be selected or a calendar email manually entered.
+ * Prompts to select which calender to synchronize with Spot. Either a room can
+ * be selected or a calendar email manually entered.
  *
  * @extends React.Component
  */
@@ -43,7 +43,7 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Requests a list of rooms that may be connected to the application.
+     * Requests a list of rooms that may be connected to Spot.
      *
      * @inheritdoc
      */
@@ -118,8 +118,7 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Updates the known manually entered email for which to connect with the
-     * application.
+     * Updates the known manually entered email for which to connect with Spot.
      *
      * @param {Event} event
      * @private
@@ -132,8 +131,8 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Sets the email from which calendar events should be fetched by the
-     * application and ends this setup step.
+     * Sets the email from which calendar events should be fetched by Spot and
+     * ends this setup step.
      *
      * @returns {void}
      */
@@ -143,8 +142,8 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Sets the room from which calendar events should be fetched by the
-     * application and ends this setup step.
+     * Sets the room from which calendar events should be fetched by Spot and
+     * ends this setup step.
      *
      * @returns {void}
      */
