@@ -29,7 +29,7 @@ let cachedState = null;
  * trigger a persistence update.
  */
 function hasUpdateOfInterest(oldState, newState) {
-    return oldState.calendars.name !== newState.calendars.name
+    return oldState.calendars.email !== newState.calendars.email
         || oldState.calendars.displayName !== newState.calendars.displayName
         || oldState.setup.completed !== newState.setup.completed;
 }
@@ -44,8 +44,8 @@ function hasUpdateOfInterest(oldState, newState) {
 function parsePersistedState(state) {
     return {
         calendars: {
-            name: state.calendars.name,
-            displayName: state.calendars.displayName
+            displayName: state.calendars.displayName,
+            email: state.calendars.email
         },
         setup: {
             completed: state.setup.completed

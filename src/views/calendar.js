@@ -10,8 +10,8 @@ import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
+    getCalendarEmail,
     getCalendarEvents,
-    getCalendarName,
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
@@ -31,7 +31,7 @@ import { withCalendar, withRemoteControl } from './loaders';
  */
 export class Calendar extends React.Component {
     static propTypes = {
-        calendarName: PropTypes.string,
+        calendarEmail: PropTypes.string,
         dispatch: PropTypes.func,
         events: PropTypes.array,
         isSetupComplete: PropTypes.bool,
@@ -208,14 +208,14 @@ export class Calendar extends React.Component {
      * @returns {void}
      */
     _pollForEvents() {
-        const { calendarName } = this.props;
+        const { calendarEmail } = this.props;
 
-        if (!calendarName) {
+        if (!calendarEmail) {
             return;
         }
 
         // TODO: prevent multiple requests being in flight at the same time
-        calendarService.getCalendar(calendarName)
+        calendarService.getCalendar(calendarEmail)
             .then(events => {
                 if (this._isUnmounting) {
                     return;
@@ -240,7 +240,7 @@ export class Calendar extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        calendarName: getCalendarName(state),
+        calendarEmail: getCalendarEmail(state),
         events: getCalendarEvents(state) || [],
         isSetupComplete: isSetupComplete(state),
         localRemoteControlId: getLocalRemoteControlId(state)

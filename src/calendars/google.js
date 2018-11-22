@@ -51,11 +51,12 @@ export default {
     /**
      * Requests current Google calendar events for a provided room.
      *
-     * @param {string} roomId - The Google-provided id of the room from which to
-     * request calendar events.
+     * @param {string} email - The Google-provided id of a meeting room (which
+     * looks like an email) or the account email from which to request calendar
+     * events.
      * @returns {Promise<Array<Object>>}
      */
-    getCalendar(roomId) {
+    getCalendar(email) {
         const params = [
             'alwaysIncludeEmail=true',
             'orderBy=starttime',
@@ -65,7 +66,7 @@ export default {
         ].join('&');
 
         const calendarEventsEndpoint
-            = `https://www.googleapis.com/calendar/v3/calendars/${roomId}/`
+            = `https://www.googleapis.com/calendar/v3/calendars/${email}/`
             + `events?${params}`;
 
         return gapi.client.request(calendarEventsEndpoint)

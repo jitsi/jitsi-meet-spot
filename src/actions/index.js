@@ -1,5 +1,5 @@
 import {
-    CALENDAR_ADD_ACCOUNT,
+    CALENDAR_SET_ACCOUNT,
     CALENDAR_SET_EVENTS,
     REMOTE_CONTROL_SET_LOCAL_ID,
     SETUP_COMPLETED
@@ -8,15 +8,15 @@ import {
 /**
  * Signals a calendar has been selected to be displayed in the application.
  *
- * @param {string} name - The email address of the calendar to be connected with
- * the application.
+ * @param {string} email - The email address of the calendar to be connected
+ * with the application.
  * @param {string} displayName - The name to associate the calendar.
  */
-export function setCalendar(name, displayName) {
+export function setCalendar(email, displayName) {
     return {
-        type: CALENDAR_ADD_ACCOUNT,
-        name,
-        displayName
+        type: CALENDAR_SET_ACCOUNT,
+        displayName,
+        email
     };
 }
 

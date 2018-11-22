@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getCalendarName } from 'reducers';
+import { getCalendarEmail } from 'reducers';
 
 import styles from './admin.css';
 
@@ -22,7 +22,7 @@ export function CalendarStatus(props) {
             </div>
             <div className = { styles.content }>
                 <div className = { styles.detail }>
-                    Current Calendar: { props.calendarName }
+                    Current Calendar: { props.calendarEmail }
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@ export function CalendarStatus(props) {
 }
 
 CalendarStatus.propTypes = {
-    calendarName: PropTypes.string.isRequired
+    calendarEmail: PropTypes.string.isRequired
 };
 
 /**
@@ -43,7 +43,7 @@ CalendarStatus.propTypes = {
  */
 function mapStateToProps(state) {
     return {
-        calendarName: getCalendarName(state)
+        calendarEmail: getCalendarEmail(state)
     };
 }
 
