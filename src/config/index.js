@@ -25,12 +25,11 @@ export const DEFAULT_MEETING_DOMAIN
 
 /**
  * This configuration is used to establish a connection with the XMPP service
- * used for jitsi conferences. The service is re-used to support communication
+ * used for jitsi deployments. The service is re-used to support communication
  * between the remote control and main application window. More details about
  * what these configuration values mean be found in the lib-jitsi-meet
  * repository, https://github.com/jitsi/lib-jitsi-meet. This configuration
- * can essentially copy the configuration already being used by the jitsi
- * conference UI.
+ * can essentially copy the configuration already being used by the jitsi UI.
  */
 export const XMPP_CONFIG = {
     bosh: process.env.XMPP_BOSH,

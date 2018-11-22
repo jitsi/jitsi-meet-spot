@@ -71,7 +71,7 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     /**
-     * Leaves the currently joined conference.
+     * Leaves the currently joined meeting.
      *
      * @private
      * @returns {void}

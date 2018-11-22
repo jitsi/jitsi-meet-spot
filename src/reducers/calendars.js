@@ -69,17 +69,16 @@ function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
     // created with each call, causing unnecessary re-renders.
     const events = newEvents.map(event => {
         const { attendees, location, end, id, start, summary } = event;
-        const conferenceUrl = parseConferenceUrl(location);
+        const meetingUrl = getMeetingUrl(location);
 
         return {
-            conferenceUrl: isValidMeetingUrl(conferenceUrl)
-                ? conferenceUrl : null,
-            conferenceName: parseConferenceName(location),
             end: end.dateTime,
             id,
-            meetingName: summary,
+            meetingUrl: isValidMeetingUrl(meetingUrl) ? meetingUrl : null,
+            meetingName: getMeetingName(location),
             participants: filterAttendees(attendees, currentCalendar),
-            start: start.dateTime
+            start: start.dateTime,
+            title: summary
         };
     });
 
@@ -87,14 +86,14 @@ function filterJoinableEvents(currentEvents, newEvents = [], currentCalendar) {
 }
 
 /**
- * Extrapolates a jitsi conference name from a given string.
+ * Extrapolates the name for a jitsi meeting from a given string.
  *
- * @param {string} location - A string which may contains a jitsi conference
- * url.
+ * @param {string} location - A string which may contain a url to a jitsi
+ * meeting.
  * @private
  * @returns {string}
  */
-function parseConferenceName(location) {
+function getMeetingName(location) {
     // eslint-disable-next-line no-useless-escape
     const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
     const matches = linkRegex.exec(location);
@@ -108,14 +107,13 @@ function parseConferenceName(location) {
 }
 
 /**
- * Extrapolates a jitsi conference url from a given string.
+ * Extrapolates a url for a jitsi meeting from a given string.
  *
- * @param {string} location - A string which may contains a jitsi conference
- * url.
+ * @param {string} location - A string which may contains a jitsi meeting url.
  * @private
  * @returns {string}
  */
-function parseConferenceUrl(location) {
+function getMeetingUrl(location) {
     // eslint-disable-next-line no-useless-escape
     const linkRegex = /https?:\/\/[^\s]+\/([^\s\/]+)/g;
     const matches = linkRegex.exec(location);

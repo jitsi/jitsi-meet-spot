@@ -1,6 +1,6 @@
 # Jitsi-Meet-Spot
 
-This is a web frontend application for integrating a Google calendar with jitsi-meetings. The application is intended to be running within a conference room, and left running, so it can be used to join conferences. Remote control functionality is available.
+This is a web frontend application for integrating a Google calendar with jitsi-meetings. The application is intended to be running within a physically-existing meeting room, and left running, so it can be used to join online meetings. Remote control functionality is available.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ Run `npm run start:dev` to launch webpack-dev-server. The server is configured t
 
 ## Known limitations
 
-- Remote control only works when joining conferences that are using the same XMPP services as those configured for this application.
+- Remote control only works when joining meetings that are using the same XMPP services as those configured for this application.
 - This application is currently developing against latest chrome only.
 
 ## Contributing

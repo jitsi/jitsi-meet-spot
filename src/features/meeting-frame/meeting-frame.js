@@ -8,7 +8,7 @@ import { parseMeetingUrl } from 'utils';
 import styles from './meeting-frame.css';
 
 /**
- * The iFrame used to to display a jitsi conference.
+ * The iFrame used to to display a meeting hosted on a jitsi instance.
  *
  * @extends React.Component
  */
@@ -99,8 +99,7 @@ export default class MeetingFrame extends React.Component {
     }
 
     /**
-     * Callback invoked after toggling audio mute from within the conference
-     * iframe.
+     * Callback invoked after toggling audio mute from within the jitsi meeting.
      *
      * @private
      * @returns {void}
@@ -133,8 +132,7 @@ export default class MeetingFrame extends React.Component {
     }
 
     /**
-     * Callback invoked after toggling video mute from within the conference
-     * iframe.
+     * Callback invoked after toggling video mute from within the jitsi meeting.
      *
      * @private
      * @returns {void}
@@ -146,7 +144,7 @@ export default class MeetingFrame extends React.Component {
 
     /**
      * Sets the internal reference to the iFrame element displaying the jitsi
-     * conference.
+     * meeting.
      *
      * @param {HTMLIFrameElement} ref
      * @private

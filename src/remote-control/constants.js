@@ -4,12 +4,12 @@
  */
 export const COMMANDS = {
     /**
-     * End the current conference.
+     * End the current meeting.
      */
     HANG_UP: 'hangup',
 
     /**
-     * Send the conference rating and the entered feedback.
+     * Send the meeting rating and the entered feedback.
      */
     SUBMIT_FEEDBACK: 'submitFeedback',
 

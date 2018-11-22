@@ -176,10 +176,10 @@ export class Calendar extends React.Component {
     }
 
     /**
-     * Callback invoked to join a conference. Only if a conference url is
-     * passed in will join be attempted.
+     * Callback invoked to join a meeting. Only if a meeting url is passed in
+     * will join be attempted.
      *
-     * @param {string} meetingUrl - The conference url to join.
+     * @param {string} meetingUrl - The meeting url to join.
      * @private
      * @returns {void}
      */
