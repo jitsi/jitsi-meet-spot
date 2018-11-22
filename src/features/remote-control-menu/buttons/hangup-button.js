@@ -6,7 +6,7 @@ import { Button } from 'features/button';
 import styles from '../remote-control-menu.css';
 
 /**
- * A component for a button intended for leaving a conference call.
+ * A component for a button intended for leaving a meeting in progress.
  *
  * @param {Object} props - The read-only properties with which the new
  * instance is to be initialized.

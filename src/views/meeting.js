@@ -12,7 +12,7 @@ import View from './view';
 import { withRemoteControl } from './loaders';
 
 /**
- * Displays the jitsi conference.
+ * Displays the meeting url specified in the url.
  *
  * @extends React.Component
  */
@@ -94,8 +94,8 @@ export class Meeting extends React.Component {
     }
 
     /**
-     * Callback invoked when the conference ends. Attempts to redirect to the
-     * home view.
+     * Callback invoked when the meeting ends. Attempts to redirect to the
+     * calendar.
      */
     _onMeetingLeave() {
         this.props.history.push(ROUTES.CALENDAR);

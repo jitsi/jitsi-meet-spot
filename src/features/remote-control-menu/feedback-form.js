@@ -59,7 +59,7 @@ export default class FeedbackForm extends React.Component {
     }
 
     /**
-     * Instantiates styled stars to display for the conference rating, each of
+     * Instantiates styled stars to display for the meeting rating, each of
      * which display in a filled or empty state depending on the selected
      * rating.
      *
@@ -98,7 +98,8 @@ export default class FeedbackForm extends React.Component {
     }
 
     /**
-     * Updates the known number of stars selected for rating the conference.
+     * Updates the known number of stars selected for rating the meeting
+     * experience.
      *
      * @param {int} score - The star value that has been selected.
      * @private

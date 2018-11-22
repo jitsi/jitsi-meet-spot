@@ -5,7 +5,7 @@ import { Input } from 'features/input';
 import styles from './meeting-name-entry.css';
 
 /**
- * Displays an input for submitting a conference name to join or create.
+ * Displays an input for entering the name of a meeting.
  *
  * @extends React.Component
  */

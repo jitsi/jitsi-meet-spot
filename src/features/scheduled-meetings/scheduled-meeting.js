@@ -35,10 +35,10 @@ export default class ScheduledMeeting extends React.Component {
      */
     render() {
         const {
-            conferenceUrl,
-            meetingName,
+            meetingUrl,
             participants,
-            start
+            start,
+            title
         } = this.props.event;
         const startTime = new Date(start);
         const className = startTime.getTime() <= Date.now()
@@ -54,10 +54,10 @@ export default class ScheduledMeeting extends React.Component {
                 </div>
                 <div className = { styles.details }>
                     <div className = { styles.name }>
-                        { meetingName }
+                        { title }
                     </div>
                     <div className = { styles.url }>
-                        { conferenceUrl }
+                        { meetingUrl }
                     </div>
                     <div className = { styles.participants }>
                         { this._generateAvatars(participants) }
@@ -90,8 +90,8 @@ export default class ScheduledMeeting extends React.Component {
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.event.conferenceUrl) {
-            this.props.onMeetingClick(this.props.event.conferenceUrl);
+        if (this.props.event.meetingUrl) {
+            this.props.onMeetingClick(this.props.event.meetingUrl);
         }
     }
 }

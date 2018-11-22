@@ -113,7 +113,7 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Returns the React Element for submitting conference feedback.
+     * Returns the React Element for submitting meeting feedback.
      *
      * @private
      * @returns {ReactElement}
@@ -141,7 +141,7 @@ export class RemoteControl extends React.Component {
 
     /**
      * Returns the remote control view to display when the main application is
-     * in a conference.
+     * in a meeting.
      *
      * @private
      * @returns {ReactElement}
@@ -157,7 +157,7 @@ export class RemoteControl extends React.Component {
 
     /**
      * Returns the React Element to display while the main application is not
-     * in a conference.
+     * in a meeting.
      *
      * @private
      * @returns {ReactElement}
@@ -195,7 +195,7 @@ export class RemoteControl extends React.Component {
      * Callback invoked when the remote control needs to signal to the main
      * application that it should join a specific meeting.
      *
-     * @param {string} meetingName - The name of the jitsi conference to join.
+     * @param {string} meetingName - The name of the jitsi meeting to join.
      * @private
      * @returns {void}
      */
