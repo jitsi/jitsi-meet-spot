@@ -42,11 +42,16 @@ export class MeetingNameEntry extends React.Component {
                 className = { styles.wrapper }
                 onSubmit = { this._onSubmit} >
                 <Input
+                    data-qa-id = 'meeting-name-input'
                     id = 'meeting-name-input'
                     onChange = { this._onMeetingNameChange }
                     placeholder = 'Enter a meeting name'
                     value = { this.state.meetingName } />
-                <Button type = 'submit'>GO</Button>
+                <Button
+                    data-qa-id = 'meeting-name-submit'
+                    type = 'submit'>
+                    GO
+                </Button>
             </form>
         );
     }

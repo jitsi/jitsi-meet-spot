@@ -52,6 +52,7 @@ export default class View extends React.Component {
         return (
             <div
                 className = { styles.view }
+                data-qa-id = { `${this.props.name}-view` }
                 style = { backgroundStyles }>
                 { this.props.children }
             </div>
