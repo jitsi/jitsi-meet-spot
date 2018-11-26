@@ -1,0 +1,20 @@
+.default {
+    background: white;
+}
+
+.error {
+    background: red;
+}
+
+.notifications {
+    opacity: 0.5;
+    overflow: hidden;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+}
+
+.notification {
+    padding: 5px;
+}

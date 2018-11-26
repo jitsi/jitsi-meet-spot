@@ -133,7 +133,9 @@ export default class MeetingFrame extends React.Component {
             'meeting join:', this._meetingJoined
         );
 
-        this.props.onMeetingLeave();
+        this.props.onMeetingLeave({
+            error: 'An error occurred while joining the meeting'
+        });
     }
 
     /**
