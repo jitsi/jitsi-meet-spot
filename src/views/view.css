@@ -43,6 +43,13 @@
     position: absolute;
 }
 
+.settings_cog {
+    bottom: 20;
+    font-size: 1.4em;
+    position: absolute;
+    right: 20;
+}
+
 .subcontent {
     width: 100%;
 }

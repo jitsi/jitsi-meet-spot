@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { setCalendarEvents } from 'actions';
 import { calendarService } from 'calendars';
+import { SettingsButton } from 'features/admin';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
@@ -122,14 +123,17 @@ export class Home extends React.Component {
                     <div className = { styles.meetings }>
                         { contents }
                     </div>
-                    <div
-                        className = { styles.qrcode }
-                        data-qa-id = 'remote-control-link'
-                        onClick = { this._openQRCodeUrl }>
-                        { remoteControlUrl
-                            ? <QRCode text = { remoteControlUrl } />
-                            : null }
-                    </div>
+                </div>
+                <div
+                    className = { styles.qrcode }
+                    data-qa-id = 'remote-control-link'
+                    onClick = { this._openQRCodeUrl }>
+                    { remoteControlUrl
+                        ? <QRCode text = { remoteControlUrl } />
+                        : null }
+                </div>
+                <div className = { styles.settings_cog }>
+                    <SettingsButton />
                 </div>
             </View>
         );
