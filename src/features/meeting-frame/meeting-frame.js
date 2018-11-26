@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { COMMANDS, remoteControlService } from 'remote-control';
-import { parseMeetingUrl } from 'utils';
+import { logger, parseMeetingUrl } from 'utils';
 
 import styles from './meeting-frame.css';
 
@@ -32,13 +32,17 @@ export default class MeetingFrame extends React.Component {
     constructor(props) {
         super(props);
 
-        this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
-        this._onCommand = this._onCommand.bind(this);
-        this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
+        this._onCommand = this._onCommand.bind(this);
+        this._onMeetingJoined = this._onMeetingJoined.bind(this);
+        this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
+        this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
+        this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
 
         this._jitsiApi = null;
-        this._meetingContainere = null;
+        this._meetingContainer = null;
+        this._meetingLoaded = false;
+        this._meetingJoined = false;
 
         remoteControlService.addCommandListener(this._onCommand);
     }
@@ -58,6 +62,7 @@ export default class MeetingFrame extends React.Component {
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             roomName: meetingName,
+            onload: this._onMeetingLoad,
             parentNode: this._meetingContainer
         });
 
@@ -68,6 +73,13 @@ export default class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
+
+        this._jitsiApi.addListener(
+            'videoConferenceJoined', this._onMeetingJoined);
+
+        this._assumeMeetingFailedTimeout = setTimeout(() => {
+            this._leaveIfErrorDetected();
+        }, 10000);
     }
 
     /**
@@ -96,6 +108,32 @@ export default class MeetingFrame extends React.Component {
                 className = { styles.frame }
                 ref = { this._setMeetingContainerRef } />
         );
+    }
+
+    /**
+     * Check if the iFrame has encountered any errors while loading the meeting
+     * and trigger meeting leave if one has been detected.
+     *
+     * @private
+     * @returns {void}
+     */
+    _leaveIfErrorDetected() {
+        // TODO: implement smarter detection of iframe errors. Currently there
+        // is no hook within the jitsi iframe api to know if the meeting
+        // encountered an error. There may also be no definitive way to know if
+        // the user has proceeded to an erroneous, non-meeting page or if a page
+        // failed to load (404).
+        if (this._meetingLoaded && this._meetingJoined) {
+            return;
+        }
+
+        logger.error(
+            'Assuming an error occured while joining the meeting',
+            'iFrame loaded:', this._meetingLoaded,
+            'meeting join:', this._meetingJoined
+        );
+
+        this.props.onMeetingLeave();
     }
 
     /**
@@ -129,6 +167,29 @@ export default class MeetingFrame extends React.Component {
         } else {
             this._jitsiApi.executeCommand(command, options);
         }
+    }
+
+    /**
+     * Sets the internal flag for the jitsi meeting having successfully been
+     * joined.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onMeetingJoined() {
+        this._meetingJoined = true;
+    }
+
+    /**
+     * Sets the internal flag for the jitsi iframe api having loaded the page.
+     * This event fires no matter the state of the page load, for example on
+     * 404.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onMeetingLoaded() {
+        this._meetingLoaded = true;
     }
 
     /**
