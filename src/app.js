@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { Nav } from 'features/debug';
 import { Notifications } from 'features/notifications';
 import { ErrorBoundary } from 'features/error-boundary';
 import { ROUTES } from 'routing';
@@ -14,9 +13,6 @@ import {
     RemoteControl,
     Setup
 } from 'views';
-
-// eslint-disable-next-line no-undef
-const showDebugNav = process.env.NODE_ENV !== 'production';
 
 /**
  * The root of the application which determines what view should be displayed.
@@ -55,7 +51,6 @@ export class App extends React.Component {
                             component = { Home } />
                     </Switch>
                 </ErrorBoundary>
-                { showDebugNav ? <Nav /> : null }
             </div>
         );
     }
