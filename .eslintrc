@@ -28,5 +28,10 @@
             "named": "never",
             "asyncArrow": "always"
         }]
+    },
+    "settings": {
+        "react": {
+            "version": "16.6.3"
+        }
     }
 }
