@@ -2,10 +2,12 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { Nav } from 'features/debug';
+import { ErrorBoundary } from 'features/error-boundary';
 import { ROUTES, PrivateRoute } from 'routing';
 import {
     Admin,
     Calendar,
+    FatalError,
     Loading,
     Meeting,
     RemoteControl,
@@ -30,25 +32,27 @@ export class App extends React.Component {
     render() {
         return (
             <div>
-                <Switch>
-                    <PrivateRoute
-                        path = { ROUTES.ADMIN }
-                        component = { Admin } />
-                    <PrivateRoute
-                        path = { ROUTES.MEETING }
-                        component = { Meeting } />
-                    <Route
-                        path = { ROUTES.SETUP }
-                        component = { Setup } />
-                    <Route
-                        path = { ROUTES.LOADING }
-                        component = { Loading } />
-                    <Route
-                        path = { ROUTES.REMOTE_CONTROL }
-                        component = { RemoteControl } />
-                    <PrivateRoute
-                        component = { Calendar} />
-                </Switch>
+                <ErrorBoundary errorComponent = { FatalError }>
+                    <Switch>
+                        <PrivateRoute
+                            path = { ROUTES.ADMIN }
+                            component = { Admin } />
+                        <PrivateRoute
+                            path = { ROUTES.MEETING }
+                            component = { Meeting } />
+                        <Route
+                            path = { ROUTES.SETUP }
+                            component = { Setup } />
+                        <Route
+                            path = { ROUTES.LOADING }
+                            component = { Loading } />
+                        <Route
+                            path = { ROUTES.REMOTE_CONTROL }
+                            component = { RemoteControl } />
+                        <PrivateRoute
+                            component = { Calendar} />
+                    </Switch>
+                </ErrorBoundary>
                 { showDebugNav ? <Nav /> : null }
             </div>
         );
