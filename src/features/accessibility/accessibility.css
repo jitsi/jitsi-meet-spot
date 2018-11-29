@@ -1,0 +1,6 @@
+.focus {
+    border: 3px solid red;
+    display: none;
+    position: fixed;
+    transition: 500ms;
+}

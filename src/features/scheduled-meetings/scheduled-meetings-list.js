@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ScheduledMeeting from './scheduled-meeting';
+import { Navigatable } from 'features/accessibility';
 
 /**
  * A component for displaying a list of meetings.
@@ -14,10 +15,11 @@ export default function ScheduledMeetings({ events, onMeetingClick }) {
         <div id = 'meeting-list'>
             {
                 events.map(event =>
-                    <ScheduledMeeting
-                        key = { event.id }
-                        event = { event }
-                        onMeetingClick = { onMeetingClick } />
+                    <Navigatable key = { event.id }>
+                        <ScheduledMeeting
+                            event = { event }
+                            onMeetingClick = { onMeetingClick } />
+                    </Navigatable>
                 )
             }
         </div>

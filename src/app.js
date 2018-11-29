@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import { FocusBorder } from 'features/accessibility';
 import { Nav } from 'features/debug';
 import { ErrorBoundary } from 'features/error-boundary';
 import { ROUTES } from 'routing';
@@ -54,6 +55,7 @@ export class App extends React.Component {
                     </Switch>
                 </ErrorBoundary>
                 { showDebugNav ? <Nav /> : null }
+                <FocusBorder />
             </div>
         );
     }
