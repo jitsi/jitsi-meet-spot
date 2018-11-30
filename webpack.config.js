@@ -3,28 +3,7 @@
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
-
-const current = process.env.NODE_ENV;
-
-let plugins = [
-    new CircularDependencyPlugin({
-        exclude: /node_modules/,
-        failOnError: true
-    }),
-    new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(current)
-    }),
-    new Dotenv()
-];
-
-if (current === 'production') {
-    plugins = [
-        new UglifyJSPlugin(),
-        ...plugins
-    ];
-}
 
 module.exports = {
     entry: './src/index.js',
@@ -32,7 +11,17 @@ module.exports = {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist')
     },
-    plugins,
+    plugins: [
+        new CircularDependencyPlugin({
+            exclude: /node_modules/,
+            failOnError: true
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        new Dotenv()
+    ],
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     module: {
         rules: [
             {
