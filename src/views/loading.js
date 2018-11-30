@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setLoadCompleted } from 'actions';
+import { setLoadCompleted, setLocalRemoteControlID } from 'actions';
 import { google } from 'calendars';
 import { LoadingIcon } from 'features/loading-icon';
 import { remoteControlService } from 'remote-control';
@@ -39,7 +39,8 @@ export class Loading extends React.Component {
 
         backgroundLoad
             .catch(error => logger.error(error))
-            .then(() => remoteControlService.init(this.props.dispatch))
+            .then(() => remoteControlService.init())
+            .then(jid => this.props.dispatch(setLocalRemoteControlID(jid)))
             .then(() =>
                 remoteControlService.createMuc(remoteControlService.getNode()))
             .then(() => remoteControlService.joinMuc())
