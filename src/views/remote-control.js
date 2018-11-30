@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
+import { getLocalRemoteControlId } from 'reducers';
 import { remoteControlService } from 'remote-control';
 
+import { withRemoteControl } from './loaders';
 import View from './view';
 import styles from './view.css';
 
@@ -50,22 +53,15 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        remoteControlService.init()
-            .then(jid => {
-                remoteControlService.addCommandListener(this._onCommand);
+        remoteControlService.addCommandListener(this._onCommand);
 
-                remoteControlService.sendCommand(
-                    this._getRemoteId(),
-                    'requestCalendar',
-                    { requester: jid }
-                );
+        remoteControlService.sendCommand(
+            this._getRemoteId(),
+            'requestCalendar',
+            { requester: this.props.localRemoteControlId }
+        );
 
-                remoteControlService.createMuc(this._getRemoteNode());
-
-                remoteControlService.joinMuc();
-
-                remoteControlService.addPresenceListener(this._onPresence);
-            });
+        remoteControlService.addPresenceListener(this._onPresence);
     }
 
     /**
@@ -240,4 +236,18 @@ export class RemoteControl extends React.Component {
     }
 }
 
-export default RemoteControl;
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code RemoteControl}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        localRemoteControlId: getLocalRemoteControlId(state)
+    };
+}
+
+export default withRemoteControl(connect(mapStateToProps)(RemoteControl));
