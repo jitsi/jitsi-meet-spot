@@ -1,8 +1,8 @@
 import { isValidMeetingUrl } from 'utils';
 
 const DEFAULT_STATE = {
-    name: null,
-    displayName: null,
+    name: undefined,
+    displayName: undefined,
     events: []
 };
 

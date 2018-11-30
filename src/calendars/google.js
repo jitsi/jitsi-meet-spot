@@ -3,6 +3,8 @@
 import { CLIENT_ID } from 'config';
 import { date } from 'utils';
 
+let initPromise;
+
 /**
  * Functions for interacting with Google and its calendar API.
  */
@@ -13,10 +15,14 @@ export default {
      * @returns {Promise} Resolves when the Google API javascript has loaded.
      */
     initialize() {
-        const loadGapi = new Promise(resolve =>
+        if (initPromise) {
+            return initPromise;
+        }
+
+        initPromise = new Promise(resolve =>
             gapi.load('client:auth2', () => resolve()));
 
-        return loadGapi
+        return initPromise
             .then(() => gapi.client.init({
                 clientId: CLIENT_ID,
                 scope: [
