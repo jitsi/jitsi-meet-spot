@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { setLocalRemoteControlID } from 'actions';
 import { remoteControlService } from 'remote-control';
@@ -20,18 +21,37 @@ export class RemoteControlLoader extends AbstractLoader {
     };
 
     /**
+     * Returns the name of the muc to join. The name is taken from the query
+     * params, if set, or taken from the jid created by the remote control
+     * service during initialization.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getMucName() {
+        const remoteIdParam = this.props.match
+            && this.props.match.params
+            && this.props.match.params.remoteId;
+        const remoteId = remoteIdParam && decodeURIComponent(remoteIdParam);
+
+        return remoteId
+            ? remoteId.split('@')[0]
+            : remoteControlService.getNode();
+    }
+
+    /**
      * @override
      */
     _loadService() {
         return remoteControlService.init()
             .then(jid => this.props.dispatch(setLocalRemoteControlID(jid)))
             .then(() =>
-                remoteControlService.createMuc(remoteControlService.getNode()))
+                remoteControlService.createMuc(this._getMucName()))
             .then(() => remoteControlService.joinMuc())
             .catch(error => logger.error(error));
     }
 }
 
-const ConnectedRemoteControlLoader = connect()(RemoteControlLoader);
+const ConnectedRemoteControlLoader = withRouter(connect()(RemoteControlLoader));
 
 export default generateWrapper(ConnectedRemoteControlLoader);
