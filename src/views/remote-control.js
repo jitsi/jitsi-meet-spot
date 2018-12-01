@@ -105,10 +105,10 @@ export class RemoteControl extends React.Component {
         switch (this.state.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
-        case 'calendar':
-            return this._getWaitingForCallView();
         case 'feedback':
             return <FeedbackForm remoteId = { this._getSpotResource() } />;
+        case 'home':
+            return this._getWaitingForCallView();
         case 'meeting':
             return this._getInCallView();
         case 'setup':

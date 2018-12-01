@@ -3,7 +3,7 @@
  */
 export const ROUTES = {
     ADMIN: '/admin',
-    CALENDAR: '/',
+    HOME: '/',
     LOADING: '/loading',
     MEETING: '/meeting',
     REMOTE_CONTROL: '/remote-control/:remoteId',

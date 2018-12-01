@@ -15,8 +15,8 @@ export default function Nav() {
     return (
         <nav className = { styles.nav }>
             <Link to = { ROUTES.ADMIN }>Admin</Link>
+            <Link to = { ROUTES.HOME }>Home</Link>
             <Link to = { ROUTES.SETUP }>Setup</Link>
-            <Link to = { ROUTES.CALENDAR }>Calendar</Link>
         </nav>
     );
 }
