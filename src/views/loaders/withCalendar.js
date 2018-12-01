@@ -16,6 +16,15 @@ export class CalendarLoader extends AbstractLoader {
     /**
      * @override
      */
+    _getPropsForChildren() {
+        return {
+            calendarService
+        };
+    }
+
+    /**
+     * @override
+     */
     _loadService() {
         return calendarService.initialize(this.props.calendarType);
     }

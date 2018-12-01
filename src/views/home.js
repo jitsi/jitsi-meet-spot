@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendarEvents } from 'actions';
-import { calendarService } from 'calendars';
 import { SettingsButton } from 'features/admin';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
@@ -17,7 +16,6 @@ import {
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
-import { remoteControlService } from 'remote-control';
 import { keyboardNavigation, windowHandler } from 'utils';
 
 import View from './view';
@@ -33,12 +31,14 @@ import { withCalendar, withRemoteControl } from './loaders';
 export class Home extends React.Component {
     static propTypes = {
         calendarEmail: PropTypes.string,
+        calendarService: PropTypes.object,
         dispatch: PropTypes.func,
         events: PropTypes.array,
+        history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         localRemoteControlId: PropTypes.string,
         lock: PropTypes.string,
-        history: PropTypes.object
+        remoteControlService: PropTypes.object
     };
 
     state = {
@@ -78,7 +78,7 @@ export class Home extends React.Component {
                 = setInterval(this._pollForEvents, 30000);
         }
 
-        remoteControlService.addCommandListener(this._onCommand);
+        this.props.remoteControlService.addCommandListener(this._onCommand);
     }
 
     /**
@@ -89,7 +89,7 @@ export class Home extends React.Component {
     componentWillUnmount() {
         this._isUnmounting = true;
 
-        remoteControlService.removeCommandListener(this._onCommand);
+        this.props.remoteControlService.removeCommandListener(this._onCommand);
 
         keyboardNavigation.stopListening();
 
@@ -171,10 +171,11 @@ export class Home extends React.Component {
         case 'goToMeeting':
             this._onGoToMeeting(data.meetingName);
             break;
+
         case 'requestCalendar': {
             const resource = from.split('/')[1];
 
-            remoteControlService.sendCommand(
+            this.props.remoteControlService.sendCommand(
                 resource,
                 'calendarData',
                 { events: this.props.events }
@@ -224,7 +225,7 @@ export class Home extends React.Component {
         }
 
         // TODO: prevent multiple requests being in flight at the same time
-        calendarService.getCalendar(calendarEmail)
+        this.props.calendarService.getCalendar(calendarEmail)
             .then(events => {
                 if (this._isUnmounting) {
                     return;
