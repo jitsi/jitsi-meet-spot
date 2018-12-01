@@ -13,6 +13,15 @@ export class CalendarLoader extends AbstractLoader {
     /**
      * @override
      */
+    _getPropsForChildren() {
+        return {
+            calendarService: google
+        };
+    }
+
+    /**
+     * @override
+     */
     _loadService() {
         return google.initialize();
     }

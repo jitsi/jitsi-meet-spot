@@ -42,6 +42,15 @@ export class RemoteControlLoader extends AbstractLoader {
     /**
      * @override
      */
+    _getPropsForChildren() {
+        return {
+            remoteControlService
+        };
+    }
+
+    /**
+     * @override
+     */
     _loadService() {
         return remoteControlService.init()
             .then(jid => this.props.dispatch(setLocalRemoteControlID(jid)))

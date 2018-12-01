@@ -7,7 +7,6 @@ import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import { getLocalRemoteControlId } from 'reducers';
-import { remoteControlService } from 'remote-control';
 
 import { withRemoteControl } from './loaders';
 import View from './view';
@@ -23,7 +22,8 @@ export class RemoteControl extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         localRemoteControlId: PropTypes.string,
-        match: PropTypes.object
+        match: PropTypes.object,
+        remoteControlService: PropTypes.object
     };
 
     /**
@@ -53,6 +53,8 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        const { remoteControlService } = this.props;
+
         remoteControlService.addCommandListener(this._onCommand);
 
         remoteControlService.sendCommand(
@@ -70,7 +72,7 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        remoteControlService.removeCommandListener(this._onCommand);
+        this.props.remoteControlService.removeCommandListener(this._onCommand);
     }
 
     /**
@@ -200,7 +202,7 @@ export class RemoteControl extends React.Component {
      * @returns {void}
      */
     _onGoToMeeting(meetingName) {
-        remoteControlService.sendCommand(
+        this.props.remoteControlService.sendCommand(
             this._getRemoteId(), 'goToMeeting', { meetingName });
     }
 

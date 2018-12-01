@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendarEvents } from 'actions';
-import { google } from 'calendars';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
@@ -15,7 +14,6 @@ import {
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
-import { remoteControlService } from 'remote-control';
 import { keyboardNavigation, windowHandler } from 'utils';
 
 import View from './view';
@@ -31,12 +29,14 @@ import { withCalendar, withRemoteControl } from './loaders';
  */
 export class Calendar extends React.Component {
     static propTypes = {
+        calendarService: PropTypes.object,
         calendarName: PropTypes.string,
         dispatch: PropTypes.func,
         events: PropTypes.array,
         isSetupComplete: PropTypes.bool,
         localRemoteControlId: PropTypes.string,
-        history: PropTypes.object
+        history: PropTypes.object,
+        remoteControlService: PropTypes.object
     };
 
     state = {
@@ -76,7 +76,7 @@ export class Calendar extends React.Component {
                 = setInterval(this._pollForEvents, 30000);
         }
 
-        remoteControlService.addCommandListener(this._onCommand);
+        this.props.remoteControlService.addCommandListener(this._onCommand);
     }
 
     /**
@@ -87,7 +87,7 @@ export class Calendar extends React.Component {
     componentWillUnmount() {
         this._isUnmounting = true;
 
-        remoteControlService.removeCommandListener(this._onCommand);
+        this.props.remoteControlService.removeCommandListener(this._onCommand);
 
         keyboardNavigation.stopListening();
 
@@ -167,7 +167,7 @@ export class Calendar extends React.Component {
             this._onGoToMeeting(options.meetingName);
             break;
         case 'requestCalendar':
-            remoteControlService.sendCommand(
+            this.props.remoteControlService.sendCommand(
                 options.requester,
                 'calendarData',
                 { events: this.props.events });
@@ -215,7 +215,7 @@ export class Calendar extends React.Component {
         }
 
         // TODO: prevent multiple requests being in flight at the same time
-        google.getCalendar(calendarName)
+        this.props.calendarService.getCalendar(calendarName)
             .then(events => {
                 if (this._isUnmounting) {
                     return;

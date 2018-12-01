@@ -43,10 +43,25 @@ export class AbstractLoader extends React.Component {
      */
     render() {
         if (this.state.loaded) {
-            return this.props.children;
+            const { children } = this.props;
+            const childProps = this._getPropsForChildren();
+
+            return React.Children.map(children, child =>
+                React.cloneElement(child, childProps));
         }
 
         return <Loading />;
+    }
+
+    /**
+     * Creates props the service should pass into children so the service can
+     * be called.
+     *
+     * @abstract
+     * @returns {Object | null}
+     */
+    _getPropsForChildren() {
+        throw new Error('Method _loadService must be implemented by subclass');
     }
 
     /**
@@ -72,7 +87,7 @@ AbstractLoader.propTypes = {
  */
 export function generateWrapper(LoaderImpl) {
     return function withLoader(WrappedComponent) {
-        return class WithRemoteControl extends React.Component {
+        return class ComponentWrappedWithService extends React.Component {
             /**
              * Implements React's {@link Component#render()}.
              *
