@@ -40,7 +40,7 @@ export class Calendar extends React.Component {
     };
 
     state = {
-        hasLoadedEvents: false
+        hasCompletedInitialCalendarFetch: false
     };
 
     /**
@@ -100,18 +100,6 @@ export class Calendar extends React.Component {
      * @inheritdoc
      */
     render() {
-        let contents;
-
-        if (this.props.isSetupComplete
-            && !this.state.hasLoadedEvents
-            && !this.props.events.length) {
-            contents = <LoadingIcon color = 'white' />;
-        } else {
-            contents = <ScheduledMeetings
-                events = { this.props.events }
-                onMeetingClick = { this._onGoToMeeting } />;
-        }
-
         const remoteControlUrl = this._getRemoteControlUrl();
 
         return (
@@ -121,7 +109,13 @@ export class Calendar extends React.Component {
                     <MeetingNameEntry
                         onSubmit = { this._onGoToMeeting } />
                     <div className = { styles.meetings }>
-                        { contents }
+                        {
+                            this._showCalendarLoadingIcon()
+                                ? <LoadingIcon color = 'white' />
+                                : <ScheduledMeetings
+                                    events = { this.props.events }
+                                    onMeetingClick = { this._onGoToMeeting } />
+                        }
                     </div>
                     <div
                         className = { styles.qrcode }
@@ -222,11 +216,35 @@ export class Calendar extends React.Component {
                 }
 
                 this.props.dispatch(setCalendarEvents(events));
-            });
 
-        if (!this.state.hasLoadedEvents) {
-            this.setState({ hasLoadedEvents: true });
+                if (!this.state.hasCompletedInitialCalendarFetch) {
+                    this.setState({ hasCompletedInitialCalendarFetch: true });
+                }
+            });
+    }
+
+    /**
+     * Returns whether or not events have been loaded yet or attempted to be
+     * loaded.
+     *
+     * @boolean
+     * @private
+     */
+    _showCalendarLoadingIcon() {
+        if (!this.props.isSetupComplete) {
+            // Only when setup is complete is there calendar data to load.
+            return false;
         }
+
+        // If there is data already cached, then it should be shown instead of
+        // the loading icon.
+        if (this.props.events.length) {
+            return false;
+        }
+
+        // If there is no cache, show the icon based on the state of initial
+        // calendar fetch request since mount.
+        return !this.state.hasCompletedInitialCalendarFetch;
     }
 }
 
