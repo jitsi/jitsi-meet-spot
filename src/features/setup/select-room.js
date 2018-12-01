@@ -7,6 +7,7 @@ import { calendarService } from 'calendars';
 import { Button } from 'features/button';
 import { Input } from 'features/input';
 import { LoadingIcon } from 'features/loading-icon';
+import { logger } from 'utils';
 
 import styles from './setup.css';
 
@@ -48,16 +49,7 @@ export class SelectRoom extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        // TODO: move into action
-
-        this.setState({ loading: true }, () =>
-            calendarService.getRooms()
-                .then(rooms => {
-                    this.setState({
-                        loading: false,
-                        rooms
-                    });
-                }));
+        this._fetchRooms();
     }
 
     /**
@@ -115,6 +107,30 @@ export class SelectRoom extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    /**
+     * Queries the calendar service for room calendars.
+     *
+     * @private
+     * @returns {Promise<void>}
+     */
+    _fetchRooms() {
+        return calendarService.getRooms()
+            .then(rooms => {
+                this.setState({
+                    loading: false,
+                    rooms
+                });
+            })
+            .catch(error => {
+                logger.error('Error occurred while fetching rooms', error);
+
+                this.setState({
+                    loading: false,
+                    rooms: []
+                });
+            });
     }
 
     /**
