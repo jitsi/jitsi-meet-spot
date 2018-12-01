@@ -7,8 +7,8 @@ import { ErrorBoundary } from 'features/error-boundary';
 import { ROUTES } from 'routing';
 import {
     Admin,
-    Calendar,
     FatalError,
+    Home,
     Loading,
     Meeting,
     RemoteControl,
@@ -52,7 +52,7 @@ export class App extends React.Component {
                             path = { ROUTES.REMOTE_CONTROL }
                             component = { RemoteControl } />
                         <Route
-                            component = { Calendar} />
+                            component = { Home } />
                     </Switch>
                 </ErrorBoundary>
                 { showDebugNav ? <Nav /> : null }

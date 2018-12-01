@@ -28,7 +28,7 @@ import { withCalendar, withRemoteControl } from './loaders';
  *
  * @extends React.Component
  */
-export class Calendar extends React.Component {
+export class Home extends React.Component {
     static propTypes = {
         calendarEmail: PropTypes.string,
         dispatch: PropTypes.func,
@@ -43,7 +43,7 @@ export class Calendar extends React.Component {
     };
 
     /**
-     * Initializes a new {@code Meeting} instance.
+     * Initializes a new {@code Home} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -114,7 +114,7 @@ export class Calendar extends React.Component {
         const remoteControlUrl = this._getRemoteControlUrl();
 
         return (
-            <View name = 'calendar'>
+            <View name = 'home'>
                 <div className = { styles.container }>
                     <Clock />
                     <MeetingNameEntry
@@ -237,7 +237,7 @@ export class Calendar extends React.Component {
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code Calendar}.
+ * {@code Home}.
  *
  * @param {Object} state - The Redux state.
  * @private
@@ -253,4 +253,4 @@ function mapStateToProps(state) {
 }
 
 export default withRemoteControl(withCalendar(
-    connect(mapStateToProps)(Calendar)));
+    connect(mapStateToProps)(Home)));

@@ -27,7 +27,7 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this._redirectToCalendar = this._redirectToCalendar.bind(this);
+        this._redirectHome = this._redirectHome.bind(this);
     }
 
     /**
@@ -39,7 +39,7 @@ export class Setup extends React.Component {
         return (
             <View name = 'setup'>
                 <div className = { styles.container }>
-                    <SetupSteps onSuccess = { this._redirectToCalendar } />
+                    <SetupSteps onSuccess = { this._redirectHome } />
                 </div>
             </View>
         );
@@ -51,8 +51,8 @@ export class Setup extends React.Component {
      * @private
      * @returns {void}
      */
-    _redirectToCalendar() {
-        this.props.history.push(ROUTES.CALENDAR);
+    _redirectHome() {
+        this.props.history.push(ROUTES.HOME);
     }
 }
 

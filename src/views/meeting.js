@@ -104,7 +104,7 @@ export class Meeting extends React.Component {
             this.props.dispatch(addNotification('error', leaveEvent.error));
         }
 
-        this.props.history.push(ROUTES.CALENDAR);
+        this.props.history.push(ROUTES.HOME);
     }
 }
 
