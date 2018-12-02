@@ -17,10 +17,16 @@ export default {
      * Opens a popup window with the provided url.
      *
      * @param {string} url - The url to go to in the new window.
-     * @returns {void}
+     * @param {string} name - The identifying name to give the new window.
+     * @param {Object} options - The windows features settings to override.
+     * @returns {Window}
      */
-    openNewWindow(url) {
-        window.open(url, '_blank', 'noopener');
+    openNewWindow(url, name = '_blank', options = {}) {
+        const windowFeatures = Object.entries(options)
+            .map(([ key, value ]) => `${key}=${value}`)
+            .join(',');
+
+        return window.open(url, name, windowFeatures);
     },
 
     /**

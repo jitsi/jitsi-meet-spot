@@ -14,7 +14,7 @@ import {
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
-import { keyboardNavigation, windowHandler } from 'utils';
+import { keyboardNavigation } from 'utils';
 
 import View from './view';
 import styles from './view.css';
@@ -36,7 +36,8 @@ export class Calendar extends React.Component {
         isSetupComplete: PropTypes.bool,
         localRemoteControlId: PropTypes.string,
         history: PropTypes.object,
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        remoteControlWindowService: PropTypes.object
     };
 
     state = {
@@ -112,7 +113,8 @@ export class Calendar extends React.Component {
                 onMeetingClick = { this._onGoToMeeting } />;
         }
 
-        const remoteControlUrl = this._getRemoteControlUrl();
+        const remoteControlUrl = this.props.remoteControlWindowService.getUrl(
+            this.props.localRemoteControlId);
 
         return (
             <View name = 'calendar'>
@@ -126,30 +128,11 @@ export class Calendar extends React.Component {
                     <div
                         className = { styles.qrcode }
                         onClick = { this._openQRCodeUrl }>
-                        { remoteControlUrl
-                            ? <QRCode text = { remoteControlUrl } />
-                            : null }
+                        <QRCode text = { remoteControlUrl } />
                     </div>
                 </div>
             </View>
         );
-    }
-
-    /**
-     * Generates the full URL for opening a remote control for the application.
-     *
-     * @private
-     * @returns void
-     */
-    _getRemoteControlUrl() {
-        const { localRemoteControlId } = this.props;
-
-        if (!localRemoteControlId) {
-            return '';
-        }
-
-        return `${windowHandler.getBaseUrl()}#/remote-control/${
-            window.encodeURIComponent(localRemoteControlId)}`;
     }
 
     /**
@@ -197,7 +180,9 @@ export class Calendar extends React.Component {
      * @returns {void}
      */
     _openQRCodeUrl() {
-        windowHandler.openNewWindow(this._getRemoteControlUrl());
+        const { localRemoteControlId, remoteControlWindowService } = this.props;
+
+        remoteControlWindowService.open(localRemoteControlId);
     }
 
     /**
