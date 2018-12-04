@@ -14,7 +14,7 @@ There are a few requirements before the application can be launched.
 
 ## Development
 
-Run `npm run watch-dev` to launch webpack in watch mode.
+Run `npm run start:dev` to launch webpack-dev-server. The server is configured to run on `http://localhost:8000`.
 
 ## Known limitations
 

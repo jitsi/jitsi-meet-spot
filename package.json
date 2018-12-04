@@ -35,7 +35,8 @@
         "wdio-selenium-standalone-service": "0.0.11",
         "webdriverio": "4.14.0",
         "webpack": "4.26.1",
-        "webpack-cli": "3.1.2"
+        "webpack-cli": "3.1.2",
+        "webpack-dev-server": "3.1.10"
     },
     "engines": {
         "node": "8.9.1",
@@ -48,14 +49,13 @@
     },
     "name": "jitsi-meet-spot",
     "scripts": {
-        "build-dev": "webpack --config ./webpack.config.js --progress",
-        "build-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
+        "build:dev": "webpack --config ./webpack.config.js --progress",
+        "build:prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
         "docs": "jsdoc -c ./jsdoc.config.js",
         "lint": "eslint .",
-        "ui-tests": "./node_modules/.bin/wdio ui-tests/wdio.conf.js",
+        "start:dev": "webpack-dev-server",
         "test": "jest",
-        "watch-dev": "webpack --config ./webpack.config.js --progress --watch",
-        "watch-prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress --watch"
+        "test:webdriver": "./node_modules/.bin/wdio ui-tests/wdio.conf.js"
     },
     "version": "0.0.1"
 }
