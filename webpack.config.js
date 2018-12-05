@@ -6,6 +6,12 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+    devServer: {
+        compress: true,
+        contentBase: path.join(__dirname, '/'),
+        port: 8000,
+        publicPath: '/dist/'
+    },
     entry: './src/index.js',
     output: {
         filename: 'app.js',
