@@ -21,6 +21,6 @@ if [ -z "$TEST_SERVER_URL" ]; then
     [ $? -eq 0 ] || exit $?;
 fi
 
-npm run ui-tests
+npm run test:webdriver
 
 kill $pid
