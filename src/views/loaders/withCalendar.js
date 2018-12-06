@@ -1,4 +1,4 @@
-import { google } from 'calendars';
+import { calendarService } from 'calendars';
 
 import { AbstractLoader, generateWrapper } from './abstract-loader';
 
@@ -14,7 +14,7 @@ export class CalendarLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        return google.initialize();
+        return calendarService.initialize();
     }
 }
 
