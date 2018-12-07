@@ -22,6 +22,8 @@ class MeetingInput extends PageObject {
     /**
      * Sets the input value.
      *
+     * @param {string} meetingName - The text to enter into
+     * {@code MeetingInput}.
      * @returns {void}
      */
     setMeetingName(meetingName) {
