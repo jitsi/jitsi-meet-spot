@@ -7,11 +7,12 @@ npm run lint
 npm run test
 
 if [ -z "$TEST_SERVER_URL" ]; then
-    npm run build:prod
+    npm run build-prod
 
-    export TEST_SERVER_URL="http://localhost:8000"
+    port=TEST_PORT
+    export TEST_SERVER_URL="http://localhost:$TEST_PORT"
 
-    npm run start:dev &
+    python -m SimpleHTTPServer $TEST_PORT &
     pid=$!
 
     sleep 1
