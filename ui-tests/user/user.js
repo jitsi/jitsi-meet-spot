@@ -10,8 +10,7 @@ class User {
     /**
      * Initializes a new {@code User} instance.
      *
-     * @param {Object} driver - The webdriver.io browser instance which can
-     * interact with Spot.
+     * @inheritdoc
      */
     constructor(driver) {
         this.driver = driver;

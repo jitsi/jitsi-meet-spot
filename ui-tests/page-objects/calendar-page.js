@@ -12,8 +12,7 @@ class CalendarPage extends PageObject {
     /**
      * Initializes a new {@code CalendarPage} instance.
      *
-     * @param {Object} driver - The webdriver.io browser instance which can
-     * interact with Spot.
+     * @inheritdoc
      */
     constructor(driver) {
         super(driver);

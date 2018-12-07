@@ -12,8 +12,7 @@ class MeetingPage extends PageObject {
     /**
      * Initializes a new {@code MeetingPage} instance.
      *
-     * @param {Object} driver - The webdriver.io browser instance which can
-     * interact with Spot.
+     * @inheritdoc
      */
     constructor(driver) {
         super(driver);
