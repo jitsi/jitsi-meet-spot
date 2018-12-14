@@ -155,22 +155,27 @@ export class Calendar extends React.Component {
      * Listens for and reacts to commands from remote controllers.
      *
      * @param {string} command - The type of the command.
-     * @param {Object} options - Additional information about how to execute the
+     * @param {string} from - The full jid of the sender of the command.
+     * @param {Object} data - Additional information about how to execute the
      * command.
      * @private
      * @returns {void}
      */
-    _onCommand(command, options) {
+    _onCommand(command, from, data) {
         switch (command) {
         case 'goToMeeting':
-            this._onGoToMeeting(options.meetingName);
+            this._onGoToMeeting(data.meetingName);
             break;
-        case 'requestCalendar':
+        case 'requestCalendar': {
+            const resource = from.split('/')[1];
+
             remoteControlService.sendCommand(
-                options.requester,
+                resource,
                 'calendarData',
-                { events: this.props.events });
+                { events: this.props.events }
+            );
             break;
+        }
         }
     }
 
