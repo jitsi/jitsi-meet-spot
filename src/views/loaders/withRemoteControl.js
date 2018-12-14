@@ -28,26 +28,21 @@ export class RemoteControlLoader extends AbstractLoader {
      * @private
      * @returns {string}
      */
-    _getMucName() {
+    _getRoomName() {
         const remoteIdParam = this.props.match
             && this.props.match.params
             && this.props.match.params.remoteId;
         const remoteId = remoteIdParam && decodeURIComponent(remoteIdParam);
 
-        return remoteId
-            ? remoteId.split('@')[0]
-            : remoteControlService.getNode();
+        return remoteId && remoteId.split('@')[0];
     }
 
     /**
      * @override
      */
     _loadService() {
-        return remoteControlService.init()
+        return remoteControlService.init(this._getRoomName())
             .then(jid => this.props.dispatch(setLocalRemoteControlID(jid)))
-            .then(() =>
-                remoteControlService.createMuc(this._getMucName()))
-            .then(() => remoteControlService.joinMuc())
             .catch(error => logger.error(error));
     }
 }

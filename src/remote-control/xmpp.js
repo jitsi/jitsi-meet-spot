@@ -1,7 +1,6 @@
 /* global JitsiMeetJS */
 
 import { XMPP_CONFIG } from 'config';
-import { $msg } from 'strophe.js';
 import { logger } from 'utils';
 
 let commandListeners = [];
@@ -21,79 +20,60 @@ const xmppControl = {
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    init() {
+    init(roomName) {
         if (initPromise) {
             return initPromise;
         }
 
+        this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
 
+        JitsiMeetJS.init({});
+        JitsiMeetJS.setLogLevel('error');
+
+        this.xmppConnection
+            = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
+
         initPromise = new Promise(resolve => {
-            JitsiMeetJS.init({})
-            .then(() => {
-                JitsiMeetJS.setLogLevel('error');
-                this.xmppConnection
-                    = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
-
-                this.xmppConnection.addEventListener(
-                    JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-                    () => resolve(this.getJid()));
-
-                this.xmppConnection.addEventListener(
-                    JitsiMeetJS.events.connection.CONNECTION_FAILED,
-                    logger.error);
-
-                this.xmppConnection.addEventListener(
-                    JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-                    logger.error);
-
-                this.xmppConnection.xmpp.connection.addHandler(
-                    onCommand,
-                    null,
-                    'message',
-                    null,
-                    null
-                );
-
-                this.xmppConnection.connect();
-            });
+            this.xmppConnection.addEventListener(
+                JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+                () => resolve(this.getJid()));
         });
 
-        return initPromise;
-    },
+        this.xmppConnection.addEventListener(
+            JitsiMeetJS.events.connection.CONNECTION_FAILED,
+            logger.error);
 
-    /**
-     * Creates a MUC for the Spot and remote controllers to join to communicate
-     * with each other.
-     *
-     * @param {string} roomName - The name of the muc to create.
-     * @returns {Object} The instance of the created muc.
-     */
-    createMuc(roomName) {
-        if (this.room) {
-            return this.room;
-        }
+        this.xmppConnection.addEventListener(
+            JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
+            logger.error);
 
-        this.room = this.xmppConnection.xmpp.createRoom(roomName, {});
-        this.room.addPresenceListener('view', this._onPresence);
-        this.room.addPresenceListener('audioMuted', this._onPresence);
-        this.room.addPresenceListener('videoMuted', this._onPresence);
+        this.xmppConnection.xmpp.connection.addHandler(
+            this._onMessage,
+            null,
+            'message',
+            null,
+            null
+        );
 
-        return this.room;
-    },
+        this.xmppConnection.xmpp.connection.addHandler(
+            this._onPresence,
+            null,
+            'presence',
+            null,
+            null
+        );
 
-    /**
-     * Signals to the muc that the participant is joining the muc. This allows
-     * for receipt of messages from other participants in the muc.
-     *
-     * @returns {void}
-     */
-    joinMuc() {
-        if (this.attemptedJoin) {
-            return;
-        }
-        this.room.sendPresence(true);
-        this.attemptedJoin = true;
+        this.xmppConnection.connect();
+
+        // FIXME: the existence of room name is being used to add spot identity
+        // to presence for now.
+
+        return initPromise
+            .then(() => this._createMuc(roomName || `${Date.now()}-spot`))
+            .then(() => this.updatePresence('isSpot', !roomName))
+            .then(() => this._joinMuc())
+            .then(() => this.getRoomFullJid());
     },
 
     /**
@@ -130,6 +110,26 @@ const xmppControl = {
     },
 
     /**
+     * The identifier for the the muc. Returns the full jid, which has
+     * user@domain.
+     *
+     * @returns {string}
+     */
+    getRoomBareJid() {
+        return this.room.roomjid.split('/')[0];
+    },
+
+    /**
+     * The identifier for the local user in the MUC. Returns the full jid, which
+     * has user@domain/resource.
+     *
+     * @returns {string}
+     */
+    getRoomFullJid() {
+        return this.room.myroomjid;
+    },
+
+    /**
      * Unsubscribes an observer from commands received through XMPP channels.
      *
      * @param {Function} callback - The observer to unsubscribe.
@@ -143,37 +143,19 @@ const xmppControl = {
      * Send a direct message to another participant in the muc. This is a fire
      * and forget function with no ack.
      *
-     * @param {string} jid - The target of the command.
-     * @param {string} command - The command type to send.
-     * @param {Object} options - Additional information about how to execute the
+     * @param {string} resource - The target of the command.
+     * @param {string} type - The command type to send.
+     * @param {Object} data - Additional information about how to execute the
      * command.
      * @returns {void}
      */
-    sendCommand(jid, command, options = {}) {
-        const message = $msg({
-            to: jid,
-            type: 'spot-command'
-        });
+    sendCommand(resource, type, data) {
+        const message = {
+            type,
+            data
+        };
 
-        message.c('body', command).up();
-        message.c('options', JSON.stringify(options)).up();
-
-        this.xmppConnection.xmpp.connection.send(message);
-    },
-
-    /**
-     * Callback invoked when the status of another participant in the muc has
-     * changed.
-     *
-     * @param {Object} data - An object containing information about the status
-     * update.
-     * @param {string} from - The id of the participant sending the presence
-     * update.
-     * @param {string} jid
-     * @returns {void}
-     */
-    _onPresence(data, from, jid) {
-        presenceListeners.forEach(cb => cb(data, from, jid));
+        this.room.sendPrivateMessage(resource, JSON.stringify(message), 'body');
     },
 
     /**
@@ -185,11 +167,7 @@ const xmppControl = {
      * @returns {void}
      */
     sendPresence(type, value) {
-        if (!this.room) {
-            return;
-        }
-
-        this.room.addToPresence(type, { value });
+        this.updatePresence(type, value);
         this.room.sendPresence();
     },
 
@@ -213,31 +191,105 @@ const xmppControl = {
      */
     removePresenceListener(callback) {
         presenceListeners = presenceListeners.filter(cb => cb !== callback);
-    }
-};
+    },
 
-/**
- * Callback invoked to detect Spot-related commands and notify observers.
- *
- * @param {*} message
- * @private
- * @returns {boolean} True so the XMPP service knows to continue with processing
- * the command.
- */
-function onCommand(message) {
-    if (message.getAttribute('type') !== 'spot-command') {
+    /**
+     * Sets the presence status for a give  type.
+     *
+     * @param {string} type
+     * @param {*} value
+     * @returns {void}
+     */
+    updatePresence(type, value) {
+        this.room.addToPresence(type, { value });
+    },
+
+    /**
+     * Creates a MUC for the Spot and remote controllers to join to communicate
+     * with each other.
+     *
+     * @param {string} roomName - The name of the muc to create.
+     * @returns {Object} The instance of the created muc.
+     */
+    _createMuc(roomName) {
+        if (this.room) {
+            return this.room;
+        }
+
+        this.room = this.xmppConnection.xmpp.createRoom(roomName, {});
+
+        return this.room;
+    },
+
+    /**
+     * Signals to the muc that the participant is joining the muc. This allows
+     * for receipt of messages from other participants in the muc.
+     *
+     * @returns {void}
+     */
+    _joinMuc() {
+        // send presence manually to avoid focus joining
+        this.room.sendPresence(true);
+        this.attemptedJoin = true;
+    },
+
+    /**
+     * Callback invoked to respond to private messages.
+     *
+     * @param {XML} messages - A potential private message.
+     * @private
+     * @returns {boolean}
+     */
+    _onMessage(message) {
+        const from = message.getAttribute('from');
+
+        // Exit if not a private message from the current MUC.
+        if (from.split('/')[0] !== this.getRoomBareJid()
+            || message.getAttribute('type') !== 'chat') {
+
+            return true;
+        }
+
+        const body = message.getElementsByTagName('body')[0];
+        const { type, data } = JSON.parse(body.textContent) || {};
+
+        if (type) {
+            commandListeners.forEach(cb => cb(type, from, data));
+        }
+
+        return true;
+    },
+
+    /**
+     * Callback invoked when the status of another participant in the muc has
+     * changed.
+     *
+     * @param {XML} presence - Details of the current presence.
+     * @private
+     * @returns {boolean}
+     */
+    _onPresence(presence) {
+        if (!presenceListeners.length) {
+            return true;
+        }
+
+        const status = Array.from(presence.children).map(child =>
+            [ child.tagName, child.textContent ])
+            .reduce((acc, current) => {
+                acc[current[0]] = current[1];
+
+                return acc;
+            }, {});
+
+        const formattedPresence = {
+            from: presence.getAttribute('from'),
+            status
+        };
+
+        presenceListeners.forEach(cb => cb(formattedPresence));
+
         return true;
     }
-
-    const body = message.getElementsByTagName('body')[0];
-    const options = message.getElementsByTagName('options')[0];
-
-    if (body && body.textContent) {
-        commandListeners.forEach(cb =>
-            cb(body.textContent, JSON.parse(options.textContent)));
-    }
-
-    return true;
-}
+};
 
 export default xmppControl;

@@ -13,6 +13,13 @@ import { withRemoteControl } from './loaders';
 import View from './view';
 import styles from './view.css';
 
+const presenceToStoreAsState = new Set([
+    'audioMuted',
+    'isSpot',
+    'videoMuted',
+    'view'
+]);
+
 /**
  * Displays the remote control view for controlling a Spot instance from another
  * browser window.
@@ -56,9 +63,8 @@ export class RemoteControl extends React.Component {
         remoteControlService.addCommandListener(this._onCommand);
 
         remoteControlService.sendCommand(
-            this._getRemoteId(),
-            'requestCalendar',
-            { requester: this.props.localRemoteControlId }
+            this._getSpotResource(),
+            'requestCalendar'
         );
 
         remoteControlService.addPresenceListener(this._onPresence);
@@ -102,7 +108,7 @@ export class RemoteControl extends React.Component {
         case 'calendar':
             return this._getWaitingForCallView();
         case 'feedback':
-            return <FeedbackForm remoteId = { this._getRemoteId() } />;
+            return <FeedbackForm remoteId = { this._getSpotResource() } />;
         case 'meeting':
             return this._getInCallView();
         case 'setup':
@@ -119,18 +125,7 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getFeedbackView() {
-        return <FeedbackForm remoteId = { this._getRemoteId() } />;
-    }
-
-    /**
-     * Parses the id of the Spot given by {@code remoteControlService} and
-     * returns only the unique id, without any domain information.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getRemoteNode() {
-        return this._getRemoteId().split('@')[0];
+        return <FeedbackForm remoteId = { this._getSpotFullJid() } />;
     }
 
     /**
@@ -140,8 +135,18 @@ export class RemoteControl extends React.Component {
      * @private
      * @returns {string}
      */
-    _getRemoteId() {
+    _getSpotFullJid() {
         return decodeURIComponent(this.props.match.params.remoteId);
+    }
+
+    /**
+     * Returns the resource from the full jid for the spot user in the MUC.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getSpotResource() {
+        return this._getSpotFullJid().split('/')[1];
     }
 
     /**
@@ -154,8 +159,8 @@ export class RemoteControl extends React.Component {
     _getInCallView() {
         return (
             <RemoteControlMenu
-                remoteId = { this._getRemoteId() }
                 audioMuted = { this.state.audioMuted === 'true' }
+                targetResource = { this._getSpotResource() }
                 videoMuted = { this.state.videoMuted === 'true' } />
         );
     }
@@ -184,14 +189,15 @@ export class RemoteControl extends React.Component {
      * Callback to parse direct updates received from the Spot instance.
      *
      * @param {string} command - The type of command received.
-     * @param {Object} options - Additional information passed with the command.
+     * @param {string} from - The MUC user that sent the command.
+     * @param {Object} data - Additional information passed with the command.
      * @private
      * @returns {void}
      */
-    _onCommand(command, options) {
+    _onCommand(command, from, data) {
         if (command === 'calendarData') {
             this.setState({
-                events: options.events
+                events: data.events
             });
         }
     }
@@ -206,7 +212,7 @@ export class RemoteControl extends React.Component {
      */
     _onGoToMeeting(meetingName) {
         remoteControlService.sendCommand(
-            this._getRemoteId(), 'goToMeeting', { meetingName });
+            this._getSpotResource(), 'goToMeeting', { meetingName });
     }
 
     /**
@@ -215,28 +221,25 @@ export class RemoteControl extends React.Component {
      *
      * @param {Object} data - The status update broadcasted by a client
      * connected to {@code remoteControlService}.
-     * @param {String} from - The id of the client that broadcasted the update.
      * @private
      * @returns {void}
      */
-    _onPresence(data, from) {
-        if (this._getRemoteId().indexOf(from) !== 0) {
+    _onPresence(data) {
+        const { status } = data;
+
+        if (status.isSpot !== 'true') {
             return;
         }
 
-        switch (data.tagName) {
-        case 'view':
-            this.setState({ view: data.value });
-            break;
+        const newState = {};
 
-        case 'audioMuted':
-            this.setState({ audioMuted: data.value });
-            break;
+        Object.keys(status).forEach(key => {
+            if (presenceToStoreAsState.has(key)) {
+                newState[key] = status[key];
+            }
+        });
 
-        case 'videoMuted':
-            this.setState({ videoMuted: data.value });
-            break;
-        }
+        this.setState(newState);
     }
 }
 

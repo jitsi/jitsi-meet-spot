@@ -18,7 +18,7 @@ import styles from './remote-control-menu.css';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
-        remoteId: PropTypes.string,
+        targetResource: PropTypes.string,
         videoMuted: PropTypes.bool
     };
 
@@ -77,7 +77,10 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onHangUp() {
-        remoteControlService.sendCommand(this.props.remoteId, COMMANDS.HANG_UP);
+        remoteControlService.sendCommand(
+            this.props.targetResource,
+            COMMANDS.HANG_UP
+        );
     }
 
     /**
@@ -88,7 +91,9 @@ export default class RemoteControlMenu extends React.Component {
      */
     _onToggleAudioMute() {
         remoteControlService.sendCommand(
-            this.props.remoteId, COMMANDS.TOGGLE_AUDIO_MUTE);
+            this.props.targetResource,
+            COMMANDS.TOGGLE_AUDIO_MUTE
+        );
     }
 
     /**
@@ -99,7 +104,9 @@ export default class RemoteControlMenu extends React.Component {
      */
     _onToggleScreenshare() {
         remoteControlService.sendCommand(
-            this.props.remoteId, COMMANDS.TOGGLE_SCREENSHARE);
+            this.props.targetResource,
+            COMMANDS.TOGGLE_SCREENSHARE
+        );
 
         this.setState({
             isScreensharing: !this.state.isScreensharing
@@ -114,6 +121,8 @@ export default class RemoteControlMenu extends React.Component {
      */
     _onToggleVideoMute() {
         remoteControlService.sendCommand(
-            this.props.remoteId, COMMANDS.TOGGLE_VIDEO_MUTE);
+            this.props.targetResource,
+            COMMANDS.TOGGLE_VIDEO_MUTE
+        );
     }
 }
