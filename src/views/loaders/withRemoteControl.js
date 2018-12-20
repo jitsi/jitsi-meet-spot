@@ -42,7 +42,11 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     _loadService() {
         return remoteControlService.init(this._getRoomName())
-            .then(jid => this.props.dispatch(setLocalRemoteControlID(jid)))
+            .then(() => {
+                const roomFullJid = remoteControlService.getRoomFullJid();
+
+                this.props.dispatch(setLocalRemoteControlID(roomFullJid));
+            })
             .catch(error => logger.error(error));
     }
 }

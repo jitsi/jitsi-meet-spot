@@ -37,7 +37,7 @@ const xmppControl = {
         initPromise = new Promise(resolve => {
             this.xmppConnection.addEventListener(
                 JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-                () => resolve(this.getJid()));
+                () => resolve());
         });
 
         this.xmppConnection.addEventListener(
@@ -72,8 +72,7 @@ const xmppControl = {
         return initPromise
             .then(() => this._createMuc(roomName || `${Date.now()}-spot`))
             .then(() => this.updatePresence('isSpot', !roomName))
-            .then(() => this._joinMuc())
-            .then(() => this.getRoomFullJid());
+            .then(() => this._joinMuc());
     },
 
     /**
