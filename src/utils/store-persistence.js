@@ -19,6 +19,20 @@ const STORE_PERSISTENCE_KEY = 'spot';
 let cachedState = null;
 
 /**
+ * A list of store values that should trigger persistance updating if the value
+ * has changed.
+ *
+ * @private
+ * @type {Array<string>}
+ */
+const keysToStore = [
+    'calendars.calendarType',
+    'calendars.email',
+    'calendars.displayName',
+    'setup.completed'
+];
+
+/**
  * Checks if the new state update should update the persisted state.
  *
  * @param {Object} oldState - The outdated state object.
@@ -29,9 +43,13 @@ let cachedState = null;
  * trigger a persistence update.
  */
 function hasUpdateOfInterest(oldState, newState) {
-    return oldState.calendars.email !== newState.calendars.email
-        || oldState.calendars.displayName !== newState.calendars.displayName
-        || oldState.setup.completed !== newState.setup.completed;
+    return keysToStore.some(key => {
+        const statePath = key.split('.');
+        const oldValue = statePath.reduce((a, b) => a[b], oldState);
+        const newValue = statePath.reduce((a, b) => a[b], newState);
+
+        return oldValue !== newValue;
+    });
 }
 
 /**
@@ -44,6 +62,7 @@ function hasUpdateOfInterest(oldState, newState) {
 function parsePersistedState(state) {
     return {
         calendars: {
+            calendarType: state.calendars.calendarType,
             displayName: state.calendars.displayName,
             email: state.calendars.email
         },

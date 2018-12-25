@@ -1,7 +1,10 @@
 /* global gapi */
 
 import { CLIENT_ID } from 'config';
-import { date } from 'utils';
+import { date, isValidMeetingUrl } from 'utils';
+
+import { integrationTypes } from './constants';
+import { getMeetingUrl } from './event-parsers';
 
 let initPromise;
 
@@ -34,21 +37,6 @@ export default {
     },
 
     /**
-     * Checks if currently signed in to Google.
-     *
-     * @returns {boolean} True if currently signed in with the Google.
-     */
-    isAuthenticated() {
-        return Boolean(
-            gapi
-            && gapi.auth2
-            && gapi.auth2.getAuthInstance
-            && gapi.auth2.getAuthInstance().isSignedIn
-            && gapi.auth2.getAuthInstance().isSignedIn.get()
-        );
-    },
-
-    /**
      * Requests current Google calendar events for a provided room.
      *
      * @param {string} email - The Google-provided id of a meeting room (which
@@ -70,7 +58,17 @@ export default {
             + `events?${params}`;
 
         return gapi.client.request(calendarEventsEndpoint)
-            .then(response => response.result.items);
+            .then(response => response.result.items)
+            .then(events => filterJoinableEvents(events, email));
+    },
+
+    /**
+     * Returns which calendar integration is being implemented by this module.
+     *
+     * @returns {string}
+     */
+    getType() {
+        return integrationTypes.GOOGLE;
     },
 
     /**
@@ -107,3 +105,45 @@ export default {
             .then(() => gapi.auth2.getAuthInstance().signIn());
     }
 };
+
+/**
+ * Converts the passed in events into a standard format expected by UI features.
+ *
+ * @param {Array<Object>} events
+ * @param {string} calendarEmail
+ * @returns {Array<Object>}
+ */
+function filterJoinableEvents(events = [], calendarEmail) {
+    return events.map(event => {
+        const { attendees, location, end, id, start, summary } = event;
+        const meetingUrl = getMeetingUrl(location);
+
+        return {
+            end: end.dateTime,
+            id,
+            meetingUrl: isValidMeetingUrl(meetingUrl) ? meetingUrl : null,
+            participants: filterAttendees(attendees, calendarEmail),
+            start: start.dateTime,
+            title: summary
+        };
+    });
+}
+
+/**
+ * Removes the currently configured calendar from the attendees and formats
+ * the attendees to a standard format.
+ *
+ * @param {Array<Object>} attendees
+ * @param {string} currentCalendar
+ * @returns {Array<Object>}
+ */
+function filterAttendees(attendees = [], currentCalendar) {
+    const otherAttendees = attendees.filter(attendee =>
+        attendee.email !== currentCalendar);
+
+    return otherAttendees.map(attendee => {
+        return {
+            email: attendee.email
+        };
+    });
+}

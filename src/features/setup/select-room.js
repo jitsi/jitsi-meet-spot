@@ -67,7 +67,7 @@ export class SelectRoom extends React.Component {
             content = <LoadingIcon />;
         } else if (rooms.length) {
             content = rooms.map(room =>
-                <div key = { room.etags }>
+                <div key = { room.resourceName }>
                     <Button onClick = { () => this._onRoomClick(room) }>
                         { room.resourceName }
                     </Button>
@@ -155,7 +155,11 @@ export class SelectRoom extends React.Component {
      * @returns {void}
      */
     _onEmailSubmit() {
-        this.props.dispatch(setCalendar(this.state.email, ''));
+        this.props.dispatch(setCalendar(
+            this.state.email,
+            '',
+            calendarService.getType()
+        ));
         this.props.onSuccess();
     }
 
@@ -166,7 +170,11 @@ export class SelectRoom extends React.Component {
      * @returns {void}
      */
     _onRoomClick(room) {
-        this.props.dispatch(setCalendar(room.resourceEmail, room.resourceName));
+        this.props.dispatch(setCalendar(
+            room.resourceEmail,
+            room.resourceName,
+            calendarService.getType()
+        ));
         this.props.onSuccess();
     }
 }
