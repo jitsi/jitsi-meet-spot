@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { calendarService } from 'calendars';
+import { calendarService, integrationTypes } from 'calendars';
 import { Button } from 'features/button';
 import { logger } from 'utils';
 
@@ -28,7 +28,8 @@ export class CalendarAuth extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onAuthEnter = this._onAuthEnter.bind(this);
+        this._onAuthEnterGoogle = this._onAuthEnterGoogle.bind(this);
+        this._onAuthEnterOutlook = this._onAuthEnterOutlook.bind(this);
     }
 
     /**
@@ -43,7 +44,15 @@ export class CalendarAuth extends React.Component {
                     Authenticate With Google
                 </div>
                 <div className = { styles.buttons }>
-                    <Button onClick = { this._onAuthEnter }>
+                    <Button onClick = { this._onAuthEnterGoogle }>
+                        Submit
+                    </Button>
+                </div>
+                <div className = { styles.title }>
+                    Authenticate With Outlook
+                </div>
+                <div className = { styles.buttons }>
+                    <Button onClick = { this._onAuthEnterOutlook }>
                         Submit
                     </Button>
                 </div>
@@ -52,16 +61,39 @@ export class CalendarAuth extends React.Component {
     }
 
     /**
-     * Starts the authentication flow to sign in to calendar integration and
+     * Starts the authentication flow to sign in to a calendar integration and
      * allow Spot to access calendar events.
      *
      * @private
      * @returns {Promise}
      */
-    _onAuthEnter() {
-        return calendarService.triggerSignIn()
+    _onAuthEnter(type) {
+        return calendarService.initialize(type)
+            .then(() => calendarService.triggerSignIn())
             .then(() => this.props.onSuccess())
             .catch(error => logger.error(error));
+    }
+
+    /**
+     * Starts the authentication flow to sign in to Google calendar integration
+     * and allow Spot to access calendar events.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _onAuthEnterGoogle() {
+        return this._onAuthEnter(integrationTypes.GOOGLE);
+    }
+
+    /**
+     * Starts the authentication flow to sign in to Outlook calendar integration
+     * and allow Spot to access calendar events.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _onAuthEnterOutlook() {
+        return this._onAuthEnter(integrationTypes.OUTLOOK);
     }
 }
 

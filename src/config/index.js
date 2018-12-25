@@ -20,8 +20,17 @@ export const DEFAULT_AVATAR_URL
 export const DEFAULT_BACKGROUND_IMAGE_URL
     = process.env.DEFAULT_BACKGROUND_IMAGE_URL || '';
 
+/**
+ * The domain to proceed to when a meeting name is submitted with a base url.
+ */
 export const DEFAULT_MEETING_DOMAIN
     = process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si';
+
+/*
+ * The Microsoft application client id to be used for interacting with an
+ * Outlook calendar.
+ */
+export const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
 
 /**
  * This configuration is used to establish a connection with the XMPP service

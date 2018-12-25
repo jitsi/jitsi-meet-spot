@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
@@ -23,6 +24,10 @@ const showDebugNav = process.env.NODE_ENV !== 'production';
  * @extends React.Component
  */
 export class App extends React.Component {
+    static propTypes = {
+        location: PropTypes.object
+    };
+
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -30,6 +35,23 @@ export class App extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        // Outlook auth redirect URL cannot be a direct hash route. The
+        // workaround implemented is redirecting to the home route but detecting
+        // when it might be a oauth redirect.
+        if (window.opener
+            && this.props.location.pathname.includes('access_token')) {
+            window.opener.postMessage({
+                type: 'ms-login',
+                url: window.location.href
+            }, window.location.origin);
+
+            return (
+                <div>
+                    Auth successful!
+                </div>
+            );
+        }
+
         return (
             <div>
                 <ErrorBoundary errorComponent = { FatalError }>
