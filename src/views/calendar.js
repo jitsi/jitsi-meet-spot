@@ -124,6 +124,7 @@ export class Calendar extends React.Component {
                     </div>
                     <div
                         className = { styles.qrcode }
+                        data-qa-id = 'remote-control-link'
                         onClick = { this._openQRCodeUrl }>
                         { remoteControlUrl
                             ? <QRCode text = { remoteControlUrl } />

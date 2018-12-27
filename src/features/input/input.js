@@ -16,6 +16,7 @@ export default function Input(props) {
             autoComplete = 'off'
             autoCorrect = 'off'
             className = { styles.input }
+            data-qa-id = { props['data-qa-id'] }
             id = { props.id }
             onChange = { props.onChange }
             placeholder = { props.placeholder }
@@ -25,6 +26,7 @@ export default function Input(props) {
 }
 
 Input.propTypes = {
+    'data-qa-id': PropTypes.string,
     id: PropTypes.string,
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
