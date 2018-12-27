@@ -1,9 +1,44 @@
 import {
     CALENDAR_SET_ACCOUNT,
     CALENDAR_SET_EVENTS,
+    NOTIFICATION_ADD,
+    NOTIFICATION_REMOVE,
     REMOTE_CONTROL_SET_LOCAL_ID,
     SETUP_COMPLETED
 } from 'reducers';
+
+let notificationId = 0;
+
+/**
+ * Queues a notification message to be displayed.
+ *
+ * @param {string} type
+ * @param {string} message
+ * @returns {Object}
+ */
+export function addNotification(type, message) {
+    return {
+        type: NOTIFICATION_ADD,
+        notification: {
+            id: notificationId++,
+            type,
+            message
+        }
+    };
+}
+
+/**
+ * Dequeues a notification message from displaying.
+ *
+ * @param {string} id
+ * @returns {Object}
+ */
+export function remoteNotification(id) {
+    return {
+        type: NOTIFICATION_REMOVE,
+        id
+    };
+}
 
 /**
  * Signals a calendar has been selected to be displayed in the application.

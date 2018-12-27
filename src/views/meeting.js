@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { addNotification } from 'actions';
 import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
@@ -18,6 +19,7 @@ import { withRemoteControl } from './loaders';
  */
 export class Meeting extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
         location: PropTypes.object,
@@ -97,7 +99,11 @@ export class Meeting extends React.Component {
      * Callback invoked when the meeting ends. Attempts to redirect to the
      * calendar.
      */
-    _onMeetingLeave() {
+    _onMeetingLeave(leaveEvent = {}) {
+        if (leaveEvent.error) {
+            this.props.dispatch(addNotification('error', leaveEvent.error));
+        }
+
         this.props.history.push(ROUTES.CALENDAR);
     }
 }

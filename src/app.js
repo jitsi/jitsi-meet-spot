@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { Nav } from 'features/debug';
+import { Notifications } from 'features/notifications';
 import { ErrorBoundary } from 'features/error-boundary';
 import { ROUTES } from 'routing';
 import {
@@ -32,6 +33,7 @@ export class App extends React.Component {
     render() {
         return (
             <div>
+                <Notifications />
                 <ErrorBoundary errorComponent = { FatalError }>
                     <Switch>
                         <Route
