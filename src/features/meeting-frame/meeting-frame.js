@@ -62,7 +62,7 @@ export default class MeetingFrame extends React.Component {
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             roomName: meetingName,
-            onload: this._onMeetingLoad,
+            onload: this._onMeetingLoaded,
             parentNode: this._meetingContainer
         });
 
@@ -88,6 +88,8 @@ export default class MeetingFrame extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
+        clearTimeout(this._assumeMeetingFailedTimeout);
+
         remoteControlService.removeCommandListener(this._onCommand);
 
         this._jitsiApi.removeListener(
