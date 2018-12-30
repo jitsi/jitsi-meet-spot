@@ -2,6 +2,10 @@
     flex: 1;
 }
 
+.roomList {
+    overflow: auto;
+}
+
 .setup {
     background-color: white;
     border-radius: 25px;
