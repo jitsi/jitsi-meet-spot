@@ -82,7 +82,7 @@ export class SelectRoom extends React.Component {
         }
 
         return (
-            <div className = { styles.step }>
+            <div className = { `${styles.step} ${styles.roomList}` }>
                 <div className = { styles.title }>
                     Select A Room
                 </div>
@@ -99,7 +99,9 @@ export class SelectRoom extends React.Component {
                     </div>
                     <div>
                         <h1>Or select a rooms:</h1>
-                        { content }
+                        <div>
+                            { content }
+                        </div>
                     </div>
                 </div>
                 <div className = { styles.buttons }>

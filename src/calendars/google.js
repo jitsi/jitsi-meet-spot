@@ -85,8 +85,16 @@ export default {
                 + 'my_customer/resources/calendars';
 
         return gapi.client.request(roomsListEndpoint)
-            .then(response => response.result.items.filter(calendar =>
-                calendar.resourceCategory === 'CONFERENCE_ROOM'));
+            .then(response => response.result.items.filter(
+                ({ resourceCategory, resourceType = '' }) => {
+                    if (resourceCategory === 'CONFERENCE_ROOM') {
+                        return true;
+                    }
+
+                    const lowercaseResourceType = resourceType.toLowerCase();
+
+                    return lowercaseResourceType.includes('conference');
+                }));
     },
 
     /**
