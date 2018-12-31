@@ -13,6 +13,7 @@ import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
     getCalendarEmail,
     getCalendarEvents,
+    getCurrentLock,
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
@@ -36,6 +37,7 @@ export class Home extends React.Component {
         events: PropTypes.array,
         isSetupComplete: PropTypes.bool,
         localRemoteControlId: PropTypes.string,
+        lock: PropTypes.string,
         history: PropTypes.object
     };
 
@@ -123,17 +125,21 @@ export class Home extends React.Component {
                     <div className = { styles.meetings }>
                         { contents }
                     </div>
-                </div>
-                <div
-                    className = { styles.qrcode }
-                    data-qa-id = 'remote-control-link'
-                    onClick = { this._openQRCodeUrl }>
-                    { remoteControlUrl
-                        ? <QRCode text = { remoteControlUrl } />
-                        : null }
-                </div>
-                <div className = { styles.settings_cog }>
-                    <SettingsButton />
+                    <div
+                        className = { styles.qrcode }
+                        data-qa-id = 'remote-control-link'
+                        onClick = { this._openQRCodeUrl }>
+                        { remoteControlUrl
+                            ? <QRCode text = { remoteControlUrl } />
+                            : null }
+                    </div>
+                    <div className = { styles.joinInfo }>
+                        { `${this.props.localRemoteControlId} code: ${
+                            this.props.lock}` }
+                    </div>
+                    <div className = { styles.settings_cog }>
+                        <SettingsButton />
+                    </div>
                 </div>
             </View>
         );
@@ -146,14 +152,14 @@ export class Home extends React.Component {
      * @returns void
      */
     _getRemoteControlUrl() {
-        const { localRemoteControlId } = this.props;
+        const { localRemoteControlId, lock } = this.props;
 
         if (!localRemoteControlId) {
             return '';
         }
 
         return `${windowHandler.getBaseUrl()}#/remote-control/${
-            window.encodeURIComponent(localRemoteControlId)}`;
+            window.encodeURIComponent(localRemoteControlId)}?lock=${lock}`;
     }
 
     /**
@@ -252,7 +258,8 @@ function mapStateToProps(state) {
         calendarEmail: getCalendarEmail(state),
         events: getCalendarEvents(state) || [],
         isSetupComplete: isSetupComplete(state),
-        localRemoteControlId: getLocalRemoteControlId(state)
+        localRemoteControlId: getLocalRemoteControlId(state),
+        lock: getCurrentLock(state)
     };
 }
 

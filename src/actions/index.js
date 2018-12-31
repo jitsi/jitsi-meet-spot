@@ -4,6 +4,7 @@ import {
     NOTIFICATION_ADD,
     NOTIFICATION_REMOVE,
     REMOTE_CONTROL_SET_LOCAL_ID,
+    REMOTE_CONTROL_SET_LOCK,
     SETUP_COMPLETED
 } from 'reducers';
 
@@ -86,6 +87,20 @@ export function setLocalRemoteControlID(id) {
     return {
         type: REMOTE_CONTROL_SET_LOCAL_ID,
         id
+    };
+}
+
+/**
+ * Updates the known lock code necessary to establish a remote control
+ * connection.
+ *
+ * @param {string} lock - The latest lock code string.
+ * @returns {Object}
+ */
+export function setLock(lock) {
+    return {
+        type: REMOTE_CONTROL_SET_LOCK,
+        lock
     };
 }
 

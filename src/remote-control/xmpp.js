@@ -17,10 +17,13 @@ const xmppControl = {
     /**
      * Establishes the XMPP connection with a jitsi deployment.
      *
+     * @param {string} roomName - The name of the MUC to join. A MUC will be
+     * created if a name is not provided.
+     * @param {string} lock - The lock code needed to join an existing MUC.
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    init(roomName) {
+    init(roomName, lock) {
         if (initPromise) {
             return initPromise;
         }
@@ -72,7 +75,7 @@ const xmppControl = {
         return initPromise
             .then(() => this._createMuc(roomName || `${Date.now()}-spot`))
             .then(() => this.updatePresence('isSpot', !roomName))
-            .then(() => this._joinMuc());
+            .then(() => this._joinMuc(lock));
     },
 
     /**
@@ -193,6 +196,20 @@ const xmppControl = {
     },
 
     /**
+     * Sets a new lock code on the current MUC.
+     *
+     * @param {string} lock - The new code code to place on the MUC.
+     * @returns {Promise}
+     */
+    setLock(lock) {
+        this._lock = lock;
+
+        return new Promise(resolve => {
+            this.room.lockRoom(this._lock, resolve);
+        });
+    },
+
+    /**
      * Sets the presence status for a give  type.
      *
      * @param {string} type
@@ -224,9 +241,15 @@ const xmppControl = {
      * Signals to the muc that the participant is joining the muc. This allows
      * for receipt of messages from other participants in the muc.
      *
+     * @param {string} lock - A lock code, if any, to set in order to join the
+     * muc.
      * @returns {void}
      */
-    _joinMuc() {
+    _joinMuc(lock) {
+        if (lock) {
+            this.room.join(lock);
+        }
+
         // send presence manually to avoid focus joining
         this.room.sendPresence(true);
         this.attemptedJoin = true;
