@@ -23,6 +23,11 @@
     width: 50%;
 }
 
+.joinInfo {
+    position: absolute;
+    bottom: 20;
+}
+
 .loading {
     align-items: center;
     display: flex;

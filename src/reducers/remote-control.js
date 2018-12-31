@@ -1,9 +1,11 @@
 const DEFAULT_STATE = {
     localId: null,
+    lock: null,
     remoteId: null
 };
 
 export const REMOTE_CONTROL_SET_LOCAL_ID = 'REMOTE_CONTROL_SET_LOCAL_ID';
+export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'remoteControl'
@@ -21,10 +23,27 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
             localId: action.id
         };
 
+    case REMOTE_CONTROL_SET_LOCK:
+        return {
+            ...state,
+            lock: action.lock
+        };
+
     default:
         return state;
     }
 };
+
+/**
+ * A selector which returns the last known lock code for establishing a remote
+ * control connection.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string};
+ */
+export function getCurrentLock(state) {
+    return state.remoteControl.lock;
+}
 
 /**
  * A selector which returns an id to be used by Spot and remote controls to

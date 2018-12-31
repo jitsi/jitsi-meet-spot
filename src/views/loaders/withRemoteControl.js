@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setLocalRemoteControlID } from 'actions';
+import { setLocalRemoteControlID, setLock } from 'actions';
 import { remoteControlService } from 'remote-control';
 import { logger } from 'utils';
 
@@ -19,6 +19,15 @@ export class RemoteControlLoader extends AbstractLoader {
         ...AbstractLoader.propTypes,
         dispatch: PropTypes.func
     };
+
+    /**
+     * Clears the interval to update the remote control lock.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        clearInterval(this._lockUpdateInterval);
+    }
 
     /**
      * Returns the name of the muc to join. The name is taken from the query
@@ -38,16 +47,66 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
+     * Returns the lock code for the room to be joined, if any.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getRoomLock() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const lock = queryParams.get('lock');
+
+        return lock && decodeURIComponent(lock);
+    }
+
+    /**
      * @override
      */
     _loadService() {
-        return remoteControlService.init(this._getRoomName())
+        return remoteControlService.init(
+            this._getRoomName(),
+            this._getRoomLock())
             .then(() => {
                 const roomFullJid = remoteControlService.getRoomFullJid();
 
                 this.props.dispatch(setLocalRemoteControlID(roomFullJid));
+
+                if (!this._getRoomName()) {
+                    this._setLock();
+                    this._startLockUpdate();
+                }
             })
             .catch(error => logger.error(error));
+    }
+
+    /**
+     * Places a new password on the current remote control connection.
+     *
+     * @private
+     * @returns {void}
+     */
+    _setLock() {
+        const currentTime = `${Date.now()}`;
+        const lock = currentTime.substring(
+            currentTime.length - 4, currentTime.length);
+
+        remoteControlService.setLock(currentTime.substring(
+            currentTime.length - 4, currentTime.length));
+
+        this.props.dispatch(setLock(lock));
+    }
+
+    /**
+     * Starts an update loop to change the password of the current remote
+     * control connection.
+     *
+     * @private
+     * @returns {void}
+     */
+    _startLockUpdate() {
+        this._lockUpdateInterval = setInterval(() => {
+            this._setLock();
+        }, 30000);
     }
 }
 
