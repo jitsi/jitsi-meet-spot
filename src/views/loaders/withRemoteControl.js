@@ -120,7 +120,7 @@ export class RemoteControlLoader extends AbstractLoader {
     _startLockUpdate() {
         this._lockUpdateInterval = setInterval(() => {
             this._setLock();
-        }, 30000);
+        }, 300000);
     }
 }
 
