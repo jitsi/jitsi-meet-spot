@@ -29,7 +29,8 @@ const keysToStore = [
     'calendars.calendarType',
     'calendars.email',
     'calendars.displayName',
-    'setup.completed'
+    'setup.completed',
+    'setup.screenshareDevice'
 ];
 
 /**
@@ -67,7 +68,8 @@ function parsePersistedState(state) {
             email: state.calendars.email
         },
         setup: {
-            completed: state.setup.completed
+            completed: state.setup.completed,
+            screenshareDevice: state.setup.screenshareDevice
         }
     };
 }

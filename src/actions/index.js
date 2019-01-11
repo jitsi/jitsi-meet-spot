@@ -7,7 +7,8 @@ import {
     REMOTE_CONTROL_SET_MEETING,
     REMOTE_CONTROL_SET_SPOT_STATE,
     REMOTE_CONTROL_SPOT_LEFT,
-    SETUP_COMPLETED
+    SETUP_COMPLETED,
+    SETUP_SET_SCREENSHARE_DEVICE
 } from 'reducers';
 
 let notificationId = 0;
@@ -73,6 +74,21 @@ export function setCalendarEvents(events = []) {
     return {
         type: CALENDAR_SET_EVENTS,
         events
+    };
+}
+
+/**
+ * Signals to store the preferred video input source for screensharing with
+ * a physical connector.
+ *
+ * @param {string} label - The label value set to the video input device as
+ * listed by Webrtc (enumerateDevices).
+ * @returns {Object}
+ */
+export function setScreenshareDevice(label) {
+    return {
+        type: SETUP_SET_SCREENSHARE_DEVICE,
+        label
     };
 }
 
