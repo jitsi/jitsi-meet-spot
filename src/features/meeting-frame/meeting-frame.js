@@ -36,6 +36,7 @@ export default class MeetingFrame extends React.Component {
         this._onCommand = this._onCommand.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
+        this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
 
@@ -67,15 +68,17 @@ export default class MeetingFrame extends React.Component {
         });
 
         this._jitsiApi.addListener(
-            'videoMuteStatusChanged', this._onVideoMuteChange);
+            'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.addListener(
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
-            'audioMuteStatusChanged', this._onAudioMuteChange);
-        this._jitsiApi.executeCommand('displayName', this.props.displayName);
-
+            'screenSharingStatusChanged', this._onScreenshareChange);
         this._jitsiApi.addListener(
             'videoConferenceJoined', this._onMeetingJoined);
+        this._jitsiApi.addListener(
+            'videoMuteStatusChanged', this._onVideoMuteChange);
+
+        this._jitsiApi.executeCommand('displayName', this.props.displayName);
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
@@ -147,9 +150,8 @@ export default class MeetingFrame extends React.Component {
      * @private
      * @returns {void}
      */
-    _onAudioMuteChange(event) {
-        remoteControlService.sendPresence(
-            'audioMuted', JSON.stringify(event.muted));
+    _onAudioMuteChange({ muted }) {
+        remoteControlService.updateStatus('audioMuted', muted);
     }
 
     /**
@@ -163,7 +165,7 @@ export default class MeetingFrame extends React.Component {
      */
     _onCommand(command, options) {
         if (command === COMMANDS.HANG_UP) {
-            remoteControlService.sendPresence('view', 'feedback');
+            remoteControlService.updateStatus('view', 'feedback');
             this._jitsiApi.executeCommand(command, options);
         } else if (command === COMMANDS.SUBMIT_FEEDBACK) {
             this._jitsiApi.addListener(
@@ -198,15 +200,26 @@ export default class MeetingFrame extends React.Component {
     }
 
     /**
+     * Callback invoked after screensharing is enabled or disabled within the
+     * jitsi meeting.
+     *
+     * @param {Object} event - The screensharing change event.
+     * @private
+     * @returns {void}
+     */
+    _onScreenshareChange({ on }) {
+        remoteControlService.updateStatus('screensharing', on);
+    }
+
+    /**
      * Callback invoked after toggling video mute from within the jitsi meeting.
      *
      * @param {Object} event - The mute event from JitsiMeetExternalAPI.
      * @private
      * @returns {void}
      */
-    _onVideoMuteChange(event) {
-        remoteControlService.sendPresence(
-            'videoMuted', JSON.stringify(event.muted));
+    _onVideoMuteChange({ muted }) {
+        remoteControlService.updateStatus('videoMuted', muted);
     }
 
     /**

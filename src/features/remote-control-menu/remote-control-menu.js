@@ -18,6 +18,7 @@ import styles from './remote-control-menu.css';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        screensharing: PropTypes.bool,
         targetResource: PropTypes.string,
         videoMuted: PropTypes.bool
     };
@@ -31,15 +32,6 @@ export default class RemoteControlMenu extends React.Component {
     constructor(props) {
         super(props);
 
-        // FIXME: There is no event coming from the jitsi-meet iframe api to
-        // successful screenshare start or stop. So for now assume success and
-        // update state to toggle the screenshare button display. In the future,
-        // listen for updates from the iframe and update the button based on
-        // the update.
-        this.state = {
-            isScreensharing: false
-        };
-
         this._onHangUp = this._onHangUp.bind(this);
         this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
@@ -52,7 +44,7 @@ export default class RemoteControlMenu extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { audioMuted, videoMuted } = this.props;
+        const { audioMuted, screensharing, videoMuted } = this.props;
 
         return (
             <div className = { styles.menu }>
@@ -63,7 +55,7 @@ export default class RemoteControlMenu extends React.Component {
                     isMuted = { videoMuted }
                     onClick = { this._onToggleVideoMute } />
                 <ScreenshareButton
-                    isScreensharing = { this.state.isScreensharing }
+                    isScreensharing = { screensharing }
                     onClick = { this._onToggleScreenshare } />
                 <HangupButton onClick = { this._onHangUp } />
             </div>
@@ -107,10 +99,6 @@ export default class RemoteControlMenu extends React.Component {
             this.props.targetResource,
             COMMANDS.TOGGLE_SCREENSHARE
         );
-
-        this.setState({
-            isScreensharing: !this.state.isScreensharing
-        });
     }
 
     /**
