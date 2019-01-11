@@ -37,7 +37,7 @@ const xmppControl = {
         this.xmppConnection
             = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
 
-        initPromise = new Promise(resolve => {
+        const connectionPromise = new Promise(resolve => {
             this.xmppConnection.addEventListener(
                 JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
                 () => resolve());
@@ -72,10 +72,20 @@ const xmppControl = {
         // FIXME: the existence of room name is being used to add spot identity
         // to presence for now.
 
-        return initPromise
+        let mucJoinedPromise;
+
+        initPromise = connectionPromise
             .then(() => this._createMuc(roomName || `${Date.now()}-spot`))
+            .then(room => {
+                mucJoinedPromise = new Promise(resolve => {
+                    room.addEventListener('xmpp.muc_joined', resolve);
+                });
+            })
             .then(() => this.updatePresence('isSpot', !roomName))
-            .then(() => this._joinMuc(lock));
+            .then(() => this._joinMuc(lock))
+            .then(() => mucJoinedPromise);
+
+        return initPromise;
     },
 
     /**
