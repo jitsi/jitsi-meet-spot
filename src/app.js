@@ -55,20 +55,20 @@ export class App extends React.Component {
                 <ErrorBoundary errorComponent = { FatalError }>
                     <Switch>
                         <Route
-                            path = { ROUTES.ADMIN }
-                            component = { Admin } />
+                            component = { Admin }
+                            path = { ROUTES.ADMIN } />
                         <Route
-                            path = { ROUTES.MEETING }
-                            component = { Meeting } />
+                            component = { Meeting }
+                            path = { ROUTES.MEETING } />
                         <Route
-                            path = { ROUTES.SETUP }
-                            component = { Setup } />
+                            component = { Setup }
+                            path = { ROUTES.SETUP } />
                         <Route
-                            path = { ROUTES.LOADING }
-                            component = { Loading } />
+                            component = { Loading }
+                            path = { ROUTES.LOADING } />
                         <Route
-                            path = { ROUTES.REMOTE_CONTROL }
-                            component = { RemoteControl } />
+                            component = { RemoteControl }
+                            path = { ROUTES.REMOTE_CONTROL } />
                         <Route
                             component = { Home } />
                     </Switch>

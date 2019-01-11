@@ -40,7 +40,7 @@ export class MeetingNameEntry extends React.Component {
         return (
             <form
                 className = { styles.wrapper }
-                onSubmit = { this._onSubmit} >
+                onSubmit = { this._onSubmit } >
                 <Input
                     data-qa-id = 'meeting-name-input'
                     id = 'meeting-name-input'
@@ -59,7 +59,8 @@ export class MeetingNameEntry extends React.Component {
     /**
      * Updates the known meeting name that has been entered into the input.
      *
-     * @param {Event} event
+     * @param {Event} event - The change event from updating the entered meeting
+     * name.
      * @private
      * @returns {void}
      */
@@ -72,7 +73,8 @@ export class MeetingNameEntry extends React.Component {
     /**
      * Callback invoked to signal the entered meeting should be joined.
      *
-     * @param {Event} event
+     * @param {Event} event - The form submission event to proceed to the
+     * meeting.
      * @private
      * @returns {void}
      */

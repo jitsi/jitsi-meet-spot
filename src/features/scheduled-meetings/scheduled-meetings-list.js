@@ -13,12 +13,12 @@ export default function ScheduledMeetings({ events, onMeetingClick }) {
     return (
         <div id = 'meeting-list'>
             {
-                events.map(event =>
+                events.map(event => (
                     <ScheduledMeeting
-                        key = { event.id }
                         event = { event }
+                        key = { event.id }
                         onMeetingClick = { onMeetingClick } />
-                )
+                ))
             }
         </div>
     );
@@ -29,6 +29,6 @@ ScheduledMeetings.defaultProps = {
 };
 
 ScheduledMeetings.propTypes = {
-    onMeetingClick: PropTypes.func,
-    events: PropTypes.array
+    events: PropTypes.array,
+    onMeetingClick: PropTypes.func
 };

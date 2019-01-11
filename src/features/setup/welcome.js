@@ -18,7 +18,7 @@ export default function Welcome({ onSuccess }) {
                 Welcome To Spot
             </h2>
             <div className = { styles.content } />
-            <div className = { styles.buttons}>
+            <div className = { styles.buttons }>
                 <Button onClick = { onSuccess }>
                     Next
                 </Button>

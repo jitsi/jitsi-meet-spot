@@ -143,6 +143,7 @@ export default class MeetingFrame extends React.Component {
     /**
      * Callback invoked after toggling audio mute from within the jitsi meeting.
      *
+     * @param {Object} event - The mute event from JitsiMeetExternalAPI.
      * @private
      * @returns {void}
      */
@@ -199,6 +200,7 @@ export default class MeetingFrame extends React.Component {
     /**
      * Callback invoked after toggling video mute from within the jitsi meeting.
      *
+     * @param {Object} event - The mute event from JitsiMeetExternalAPI.
      * @private
      * @returns {void}
      */
@@ -211,7 +213,8 @@ export default class MeetingFrame extends React.Component {
      * Sets the internal reference to the iFrame element displaying the jitsi
      * meeting.
      *
-     * @param {HTMLIFrameElement} ref
+     * @param {HTMLIFrameElement} ref - The HTMLIFrameElement displaying the
+     * jitsi meeting.
      * @private
      * @returns {void}
      */

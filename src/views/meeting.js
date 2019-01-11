@@ -98,6 +98,12 @@ export class Meeting extends React.Component {
     /**
      * Callback invoked when the meeting ends. Attempts to redirect to the
      * calendar.
+     *
+     * @param {Object} leaveEvent - Details about why the current view is being
+     * exited.
+     * @param {string} leaveEvent.error - An error, if any, which caused the
+     * current view to be exited.
+     * @returns {void}
      */
     _onMeetingLeave(leaveEvent = {}) {
         if (leaveEvent.error) {

@@ -14,6 +14,7 @@ export const CALENDAR_SET_EVENTS = 'CALENDAR_SET_EVENTS';
  *
  * @param {Object} state - The current Redux state for the 'setup' feature.
  * @param {Object} action - The Redux state update payload.
+ * @returns {Object}
  */
 const calendar = (state = DEFAULT_STATE, action) => {
     switch (action.type) {

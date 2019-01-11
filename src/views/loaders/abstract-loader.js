@@ -79,11 +79,15 @@ AbstractLoader.propTypes = {
     children: PropTypes.node
 };
 
+/* eslint-disable react/no-multi-comp */
 /**
  * Generates a higher-order component that ensures a service is loaded before
  * displaying passed-in children.
  *
- * @param {Function}
+ * @param {Function} LoaderImpl - The concrete implementation of
+ * {@code AbstractLoader} which should wrap another component.
+ * @returns {Function} A factory function for creating a loader which can
+ * wrap another component.
  */
 export function generateWrapper(LoaderImpl) {
     return function withLoader(WrappedComponent) {
@@ -104,3 +108,4 @@ export function generateWrapper(LoaderImpl) {
         };
     };
 }
+/* eslint-enable react/no-multi-comp */

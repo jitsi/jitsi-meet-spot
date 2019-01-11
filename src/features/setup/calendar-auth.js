@@ -64,6 +64,8 @@ export class CalendarAuth extends React.Component {
      * Starts the authentication flow to sign in to a calendar integration and
      * allow Spot to access calendar events.
      *
+     * @param {string} type - The constant for the calendar integration to
+     * authenticate with.
      * @private
      * @returns {Promise}
      */

@@ -14,6 +14,9 @@ export class CalendarLoader extends AbstractLoader {
     static propTypes = AbstractLoader.propTypes;
 
     /**
+     * Returns the props that should be passed into this loader's child
+     * elements.
+     *
      * @override
      */
     _getPropsForChildren() {
@@ -23,6 +26,8 @@ export class CalendarLoader extends AbstractLoader {
     }
 
     /**
+     * Establishes the connection to the calendar service.
+     *
      * @override
      */
     _loadService() {

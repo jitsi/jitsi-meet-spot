@@ -23,6 +23,13 @@ export default {
      * Sets a previously loaded access token if available. Caches the config
      * for future use.
      *
+     * @param {Object} config - The configuration object to reference when
+     * making requests.
+     * @param {string} config.clientId - The id of the integration application.
+     * @param {string} config.scopes - The API scopes to use for the requests
+     * that will be made.
+     * @param {string} config.redirectUri - The URI to go to after the
+     * integration application has been authorized.
      * @returns {Promise}
      */
     initialize(config) {

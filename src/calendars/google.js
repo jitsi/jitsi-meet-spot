@@ -109,8 +109,9 @@ export default {
 /**
  * Converts the passed in events into a standard format expected by UI features.
  *
- * @param {Array<Object>} events
- * @param {string} calendarEmail
+ * @param {Array<Object>} events - The calendar events to filter.
+ * @param {string} calendarEmail - The email of the calendar configured to
+ * display.
  * @returns {Array<Object>}
  */
 function filterJoinableEvents(events = [], calendarEmail) {
@@ -133,8 +134,9 @@ function filterJoinableEvents(events = [], calendarEmail) {
  * Removes the currently configured calendar from the attendees and formats
  * the attendees to a standard format.
  *
- * @param {Array<Object>} attendees
- * @param {string} currentCalendar
+ * @param {Array<Object>} attendees - All participants in the event.
+ * @param {string} currentCalendar - The email of the calendar configured to
+ * display.
  * @returns {Array<Object>}
  */
 function filterAttendees(attendees = [], currentCalendar) {

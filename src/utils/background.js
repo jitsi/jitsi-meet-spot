@@ -26,6 +26,8 @@ export default {
     /**
      * Returns the url of the background image currently configured for display
      * in the application background.
+     *
+     * @returns {string}
      */
     getBackgroundUrl() {
         return DEFAULT_BACKGROUND_IMAGE_URL;

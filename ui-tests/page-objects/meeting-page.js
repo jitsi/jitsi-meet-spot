@@ -23,7 +23,7 @@ class MeetingPage extends PageObject {
     /**
      * Checks the jitsi iFrame for the meeting name it is displaying.
      *
-     * @return {string}
+     * @returns {string}
      */
     getMeetingName() {
         const meetingUrl = this.driver.getAttribute(

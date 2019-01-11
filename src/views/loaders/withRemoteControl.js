@@ -60,6 +60,9 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
+     * Returns the props that should be passed into this loader's child
+     * elements.
+     *
      * @override
      */
     _getPropsForChildren() {
@@ -69,6 +72,8 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
+     * Establishes the connection to the remote control service.
+     *
      * @override
      */
     _loadService() {

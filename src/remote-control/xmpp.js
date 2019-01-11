@@ -82,7 +82,8 @@ const xmppControl = {
      * Add an observers which should be notified when a command is received
      * through the muc.
      *
-     * @param {Function} callback
+     * @param {Function} callback - The listener to invoke when a command is
+     * received from a remote.
      * @returns {void}
      */
     addCommandListener(callback) {
@@ -93,7 +94,7 @@ const xmppControl = {
      * Get the id of the XMPP connection so other participants can send direct
      * messages or identify who sent the messages.
      *
-     * @return {string}
+     * @returns {string}
      */
     getJid() {
         return this.xmppConnection.xmpp.connection.jid;
@@ -177,7 +178,8 @@ const xmppControl = {
      * Subscribes an observers for status updates from other participants in the
      * muc.
      *
-     * @param {Function} callback
+     * @param {Function} callback - The listener which should be called when
+     * another participant has updated its presence.
      * @returns {void}
      */
     addPresenceListener(callback) {
@@ -188,7 +190,7 @@ const xmppControl = {
      * Unsubscribes an observer from status updates from other participants in
      * the muc.
      *
-     * @param {Function} callback
+     * @param {Function} callback - The listener to be removed.
      * @returns {void}
      */
     removePresenceListener(callback) {
@@ -210,10 +212,11 @@ const xmppControl = {
     },
 
     /**
-     * Sets the presence status for a give  type.
+     * Sets the presence status for a given type.
      *
-     * @param {string} type
-     * @param {*} value
+     * @param {string} type - The present attribute to change.
+     * @param {string} value - The new value to associate with the presence
+     * attribute.
      * @returns {void}
      */
     updatePresence(type, value) {
@@ -258,7 +261,7 @@ const xmppControl = {
     /**
      * Callback invoked to respond to private messages.
      *
-     * @param {XML} messages - A potential private message.
+     * @param {XML} message - A potential private message.
      * @private
      * @returns {boolean}
      */

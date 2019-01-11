@@ -66,13 +66,16 @@ export class SelectRoom extends React.Component {
         if (loading) {
             content = <LoadingIcon />;
         } else if (rooms.length) {
-            content = rooms.map(room =>
+            content = rooms.map(room => (
                 <div key = { room.resourceName }>
-                    <Button onClick = { () => this._onRoomClick(room) }>
+                    <Button
+
+                        // eslint-disable-next-line react/jsx-no-bind
+                        onClick = { () => this._onRoomClick(room) }>
                         { room.resourceName }
                     </Button>
                 </div>
-            );
+            ));
         } else {
             content = <div>No rooms</div>;
 
@@ -138,7 +141,7 @@ export class SelectRoom extends React.Component {
     /**
      * Updates the known manually entered email for which to connect with Spot.
      *
-     * @param {Event} event
+     * @param {Event} event - The change event for updating the entered email.
      * @private
      * @returns {void}
      */
@@ -167,6 +170,7 @@ export class SelectRoom extends React.Component {
      * Sets the room from which calendar events should be fetched by Spot and
      * ends this setup step.
      *
+     * @param {Object} room - The room to be used for calendar integration.
      * @returns {void}
      */
     _onRoomClick(room) {

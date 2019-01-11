@@ -14,6 +14,7 @@ export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
  *
  * @param {Object} state - The current Redux state for the 'setup' feature.
  * @param {Object} action - The Redux state update payload.
+ * @returns {Object}
  */
 const remoteControl = (state = DEFAULT_STATE, action) => {
     switch (action.type) {

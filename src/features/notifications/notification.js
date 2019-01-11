@@ -7,7 +7,7 @@ import styles from './notifications.css';
  * Displays a notification message with the approriate styling for the
  * notification type.
  *
- * @extends React.Component
+ * @returns {ReactElement}
  */
 export function Notification({ message, type }) {
     const typeStyles = styles[type] || styles.default;
