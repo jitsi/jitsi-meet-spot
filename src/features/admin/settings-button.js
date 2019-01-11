@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import throttle from 'lodash.throttle';
 import { Link } from 'react-router-dom';
 
+import { IdleCursorDetector } from 'features/idle-cursor-detector';
 import { ROUTES } from 'routing/constants';
 
 import styles from './admin.css';
@@ -24,7 +24,7 @@ class SettingsButton extends React.Component {
 
     state = {
         hovered: false,
-        visible: false
+        isCursorIdle: false
     };
 
     /**
@@ -36,38 +36,9 @@ class SettingsButton extends React.Component {
     constructor(props) {
         super(props);
 
-        this._hideTimeout = null;
-
-        this._onMouseMoveDisplay = throttle(
-            this._onMouseMoveDisplay.bind(this),
-            props.autohideTimeout / 3
-        );
-
+        this._onCursorIdleChange = this._onCursorIdleChange.bind(this);
         this._onHoverDisplay = this._onHoverDisplay.bind(this);
         this._onHoverStop = this._onHoverStop.bind(this);
-    }
-
-    /**
-     * Adds a listener to automatically show {@SettingsButton} on mousemove.
-     *
-     * @inheritdoc
-     */
-    componentDidMount() {
-        if (!this.props.alwaysVisible) {
-            window.addEventListener('mousemove', this._onMouseMoveDisplay);
-        }
-    }
-
-    /**
-     * Cleans up any processes for automatically hiding or showing
-     * {@code SettingsButton}.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        clearTimeout(this._hideTimeout);
-        this._onMouseMoveDisplay.cancel();
-        window.removeEventListener('mousemove', this._onMouseMoveDisplay);
     }
 
     /**
@@ -76,19 +47,37 @@ class SettingsButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const visibilityClass = this.props.alwaysVisible || this.state.visible
+        const visibilityClass = this.props.alwaysVisible
+            || !this.state.isCursorIdle
+            || this.state.hovered
             ? '' : styles.hidden;
 
         return (
-            <div
-                className = { `${styles.cog} ${visibilityClass}` }
-                onMouseOut = { this._onHoverStop }
-                onMouseOver = { this._onHoverDisplay }>
-                <Link to = { ROUTES.ADMIN } >
-                    <i className = 'icon-settings' />
-                </Link>
-            </div>
+            <IdleCursorDetector
+                onCursorIdleChange = { this._onCursorIdleChange }>
+                <div
+                    className = { `${styles.cog} ${visibilityClass}` }
+                    onMouseOut = { this._onHoverStop }
+                    onMouseOver = { this._onHoverDisplay }>
+                    <Link to = { ROUTES.ADMIN } >
+                        <i className = 'icon-settings' />
+                    </Link>
+                </div>
+            </IdleCursorDetector>
         );
+    }
+
+    /**
+     * Callback invoked to update the known idle state of the cursor.
+     *
+     * @param {boolean} isCursorIdle - Whether or not the cursor is idle.
+     * @private
+     * @returns {void}
+     */
+    _onCursorIdleChange(isCursorIdle) {
+        this.setState({
+            isCursorIdle
+        });
     }
 
     /**
@@ -112,28 +101,6 @@ class SettingsButton extends React.Component {
     _onHoverStop() {
         this.setState({ hovered: false });
         this._onMouseMoveDisplay();
-    }
-
-    /**
-     * Sets {@code SettingsButton} to be visible now and automatically hide.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onMouseMoveDisplay() {
-        clearTimeout(this._hideTimeout);
-
-        this._hideTimeout = setTimeout(() => {
-            if (!this.state.hovered) {
-                this.setState({
-                    visible: false
-                });
-            }
-        }, this.props.autohideTimeout);
-
-        this.setState({
-            visible: true
-        });
     }
 }
 
