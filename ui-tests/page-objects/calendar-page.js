@@ -2,7 +2,7 @@ const constants = require('../constants');
 const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
-const CALENDAR_VIEW = '[data-qa-id=calendar-view]';
+const CALENDAR_VIEW = '[data-qa-id=home-view]';
 const REMOTE_CONTROL_LINK = '[data-qa-id=remote-control-link]';
 
 /**
