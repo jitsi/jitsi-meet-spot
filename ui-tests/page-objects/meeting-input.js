@@ -43,7 +43,8 @@ class MeetingInput extends PageObject {
     /**
      * A convenience method for going to the passed-in meeting name.
      *
-     * @param {string} meetingName
+     * @param {string} meetingName - The name of the meeting to type into the
+     * form.
      * @returns {void}
      */
     submitMeetingName(meetingName) {

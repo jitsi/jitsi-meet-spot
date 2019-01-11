@@ -1,7 +1,8 @@
 {
     "extends": [
-        "plugin:react/recommended",
-        "eslint-config-jitsi"
+        "eslint-config-jitsi",
+        "eslint-config-jitsi/jsdoc",
+        "eslint-config-jitsi/react"
     ],
     "overrides": [
         {
@@ -13,14 +14,6 @@
             }
         }
     ],
-    "plugins": [
-        "react"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        }
-    },
     "rules": {
         "no-console": 1,
         "space-before-function-paren": ["error", {

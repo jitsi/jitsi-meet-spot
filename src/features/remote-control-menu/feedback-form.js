@@ -77,8 +77,10 @@ export default class FeedbackForm extends React.Component {
             stars.push(
                 <a
                     className = { `${starClass} ${styles.score}` }
-                    onClick = { () => this._onRatingChange(i) }
-                    key = { i } />
+                    key = { i }
+
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onClick = { () => this._onRatingChange(i) } />
             );
         }
 

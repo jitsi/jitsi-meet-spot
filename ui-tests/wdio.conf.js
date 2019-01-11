@@ -9,6 +9,8 @@ exports.config = {
      * Waits momentarily to give wdio-selenium-standalone time to close down
      * webdriver sessions. This is a workaround chromedriver instances not
      * being terminated.
+     *
+     * @returns {void}
      */
     after() {
         browser.pause(CHROMEDRIVER_SHUTDOWN_WAIT);
@@ -20,6 +22,8 @@ exports.config = {
      * but wdio-selenium-standalone  can fail to shut down chromedriver and
      * calling close again is a workaround. The async/await declaration is
      * necessary in the context of this method call.
+     *
+     * @returns {void}
      */
     async afterSession() {
         await browser.end().pause(CHROMEDRIVER_SHUTDOWN_WAIT);

@@ -10,6 +10,8 @@ module.exports = {
     /**
      * Returns an instance of {@code User} that can be used to interact with
      * an instance of Spot.
+     *
+     * @returns {User}
      */
     getUser() {
         return user;

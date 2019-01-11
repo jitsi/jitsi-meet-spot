@@ -79,7 +79,7 @@ export default {
 /**
  * Converts the passed in events into a standard format.
  *
- * @param {Array<Object>} events
+ * @param {Array<Object>} events - The calendar events from the GET for events.
  * @returns {Array<Object>}
  */
 function filterJoinableEvents(events) {
@@ -103,7 +103,7 @@ function filterJoinableEvents(events) {
 /**
  * Formats the attendees into a standard format.
  *
- * @param {Array<Object>} attendees
+ * @param {Array<Object>} attendees - All participants in the meeting.
  * @returns {Array<Object>}
  */
 function formatAttendees(attendees) {

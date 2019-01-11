@@ -29,7 +29,7 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this._nextStep = this._nextStep.bind(this);
+        this._onNextStep = this._onNextStep.bind(this);
 
         this.steps = [
             Welcome,
@@ -52,7 +52,7 @@ export class Setup extends React.Component {
 
         return (
             <div className = { styles.setup }>
-                <CurrentStep onSuccess = { this._nextStep } />
+                <CurrentStep onSuccess = { this._onNextStep } />
             </div>
         );
     }
@@ -89,7 +89,7 @@ export class Setup extends React.Component {
      * @private
      * @returns {void}
      */
-    _nextStep() {
+    _onNextStep() {
         if (this._isOnLastStep()) {
             this.props.dispatch(setSetupCompleted());
             this.props.onSuccess();

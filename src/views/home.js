@@ -56,7 +56,7 @@ export class Home extends React.Component {
 
         this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
-        this._openQRCodeUrl = this._openQRCodeUrl.bind(this);
+        this._onOpenQRCodeUrl = this._onOpenQRCodeUrl.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
@@ -122,7 +122,7 @@ export class Home extends React.Component {
                     <div
                         className = { styles.qrcode }
                         data-qa-id = 'remote-control-link'
-                        onClick = { this._openQRCodeUrl }>
+                        onClick = { this._onOpenQRCodeUrl }>
                         { remoteControlUrl
                             ? <QRCode text = { remoteControlUrl } />
                             : null }
@@ -143,7 +143,7 @@ export class Home extends React.Component {
      * Generates the full URL for opening a remote control for Spot.
      *
      * @private
-     * @returns void
+     * @returns {void}
      */
     _getRemoteControlUrl() {
         const { localRemoteControlId, lock } = this.props;
@@ -206,7 +206,7 @@ export class Home extends React.Component {
      * @private
      * @returns {void}
      */
-    _openQRCodeUrl() {
+    _onOpenQRCodeUrl() {
         windowHandler.openNewWindow(this._getRemoteControlUrl());
     }
 
@@ -243,8 +243,8 @@ export class Home extends React.Component {
      * Returns whether or not events have been loaded yet or attempted to be
      * loaded.
      *
-     * @boolean
      * @private
+     * @returns {boolean}
      */
     _showCalendarLoadingIcon() {
         if (!this.props.isSetupComplete) {

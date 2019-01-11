@@ -21,6 +21,7 @@ export default {
     /**
      * Triggers any loading necessary for a calendar integration to be usable.
      *
+     * @param {string} type - The calendar integration to initialize.
      * @returns {Promise} Resolves when the calendar integration has loaded.
      */
     initialize(type) {

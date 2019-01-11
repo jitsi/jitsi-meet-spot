@@ -1,8 +1,9 @@
 /**
  * Checks if a meeting name passes basic name validation.
  *
- * @param {string} meetingName
- * @return {boolean}
+ * @param {string} meetingName - The meeting name which may or may not be a
+ * meeting that can be opened.
+ * @returns {boolean}
  */
 export function isValidMeetingName(meetingName) {
     // TODO: add some validation of the meeting name.
@@ -13,8 +14,9 @@ export function isValidMeetingName(meetingName) {
 /**
  * Checks if a passed in url can be opened in Spot.
  *
- * @param {string} meetingUrl
- * @return {boolean}
+ * @param {string} meetingUrl - The url which may or may not be a url to a jitsi
+ * meeting.
+ * @returns {boolean}
  */
 export function isValidMeetingUrl(meetingUrl) {
     try {
@@ -33,10 +35,10 @@ export function isValidMeetingUrl(meetingUrl) {
  *     host: 'meet.jit.si',
  *     meetingName: 'meeting',
  *     path: '/path'
- * }
+ * }.
  *
- * @param {string} url
- * @return {Object} An object with details about the meeting location.
+ * @param {string} url - The meeting url to split into its parts.
+ * @returns {Object} An object with details about the meeting location.
  */
 export function parseMeetingUrl(url) {
     const { host, pathname } = new URL(url);

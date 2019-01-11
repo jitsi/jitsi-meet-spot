@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { remoteNotification } from 'actions';
+import { removeNotification } from 'actions';
 import { getAllNotifications } from 'reducers';
 
 import Notification from './notification';
@@ -68,24 +68,26 @@ export class Notifications extends React.PureComponent {
      * @returns {Array<ReactElement>}
      */
     _renderNotifications() {
-        return this.props.notifications.map(notification =>
+        return this.props.notifications.map(notification => (
             <Notification
                 key = { notification.id }
                 message = { notification.message }
-                type = { notification.type } />);
+                type = { notification.type } />
+        ));
     }
 
     /**
      * Creates a timeout to automatically hide passed-in notifications.
      *
-     * @param {Array<Object>} notifications
+     * @param {Array<Object>} notifications - The notification which should
+     * automatically be hidden after a timeout.
      * @private
      * @returns {void}
      */
     _setTimeoutForNewNotifications(notifications) {
         notifications.forEach(({ id }) => {
             setTimeout(() => {
-                this.props.dispatch(remoteNotification(id));
+                this.props.dispatch(removeNotification(id));
             }, 5000);
         });
     }

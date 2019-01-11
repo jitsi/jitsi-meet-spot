@@ -8,7 +8,7 @@ export default {
     /**
      * Logs an error level message.
      *
-     * @param  {...any} args
+     * @param {...any} args - The information to be logged as an error.
      * @returns {void}
      */
     error(...args) {
@@ -18,7 +18,7 @@ export default {
     /**
      * Logs a normal level message.
      *
-     * @param  {...any} args
+     * @param {...any} args - The information to be logged.
      * @returns {void}
      */
     log(...args) {

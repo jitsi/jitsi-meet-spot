@@ -71,16 +71,17 @@ export default class ScheduledMeeting extends React.Component {
      * Creates a React Element for each meeting participant for displaying that
      * participant's avatar.
      *
-     * @param {Array<Object>} participants
+     * @param {Array<Object>} participants - The event participants to display
+     * as avatars.
      * @private
      * @returns {Array<ReactElement>}
      */
     _generateAvatars(participants = []) {
-        return participants.map(participant =>
+        return participants.map(participant => (
             <Avatar
-                key = { participant.email }
-                email = { participant.email } />
-        );
+                email = { participant.email }
+                key = { participant.email } />
+        ));
     }
 
     /**

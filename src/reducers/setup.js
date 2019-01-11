@@ -10,6 +10,7 @@ export const SETUP_COMPLETED = 'SETUP_COMPLETED';
  *
  * @param {Object} state - The current Redux state for the 'setup' feature.
  * @param {Object} action - The Redux state update payload.
+ * @returns {Object}
  */
 const setup = (state = DEFAULT_STATE, action) => {
     switch (action.type) {

@@ -25,9 +25,9 @@ export default class ResetState extends React.Component {
     constructor(props) {
         super(props);
 
-        this._resetApp = this._resetApp.bind(this);
-        this._showResetButton = this._showResetButton.bind(this);
-        this._showResetConfirm = this._showResetConfirm.bind(this);
+        this._onResetApp = this._onResetApp.bind(this);
+        this._onShowResetButton = this._onShowResetButton.bind(this);
+        this._onShowResetConfirm = this._onShowResetConfirm.bind(this);
     }
 
     /**
@@ -61,7 +61,7 @@ export default class ResetState extends React.Component {
      */
     _renderResetButton() {
         return (
-            <Button onClick = { this._showResetConfirm }>
+            <Button onClick = { this._onShowResetConfirm }>
                 Reset app
             </Button>
         );
@@ -78,10 +78,10 @@ export default class ResetState extends React.Component {
         return (
             <div>
                 <div>Are you sure? The app will reload</div>
-                <Button onClick = { this._showResetButton }>
+                <Button onClick = { this._onShowResetButton }>
                     Cancel
                 </Button>
-                <Button onClick = { this._resetApp }>
+                <Button onClick = { this._onResetApp }>
                     Confirm
                 </Button>
             </div>
@@ -94,7 +94,7 @@ export default class ResetState extends React.Component {
      * @private
      * @returns {void}
      */
-    _resetApp() {
+    _onResetApp() {
         persistence.reset();
         windowHandler.reload();
     }
@@ -105,7 +105,7 @@ export default class ResetState extends React.Component {
      * @private
      * @returns {void}
      */
-    _showResetButton() {
+    _onShowResetButton() {
         this.setState({ showResetConfirm: false });
     }
 
@@ -115,7 +115,7 @@ export default class ResetState extends React.Component {
      * @private
      * @returns {void}
      */
-    _showResetConfirm() {
+    _onShowResetConfirm() {
         this.setState({ showResetConfirm: true });
     }
 }

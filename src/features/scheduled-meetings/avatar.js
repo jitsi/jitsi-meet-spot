@@ -22,8 +22,8 @@ export default function Avatar({ email }) {
     return (
         <img
             className = { styles.avatar }
-            title = { email }
-            src = { avatarUrl } />
+            src = { avatarUrl }
+            title = { email } />
     );
 }
 

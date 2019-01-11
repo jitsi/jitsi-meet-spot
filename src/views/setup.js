@@ -27,7 +27,7 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this._redirectHome = this._redirectHome.bind(this);
+        this._onRedirectHome = this._onRedirectHome.bind(this);
     }
 
     /**
@@ -39,7 +39,7 @@ export class Setup extends React.Component {
         return (
             <View name = 'setup'>
                 <div className = { styles.container }>
-                    <SetupSteps onSuccess = { this._redirectHome } />
+                    <SetupSteps onSuccess = { this._onRedirectHome } />
                 </div>
             </View>
         );
@@ -51,7 +51,7 @@ export class Setup extends React.Component {
      * @private
      * @returns {void}
      */
-    _redirectHome() {
+    _onRedirectHome() {
         this.props.history.push(ROUTES.HOME);
     }
 }

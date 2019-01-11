@@ -31,9 +31,9 @@ class CalendarPage extends PageObject {
     }
 
     /**
-     * Opens the remote control window for Spot. This method uses a development
-     * features of opening the remote control in the same browser as instance as
-     * Spot, but in a popup window.
+     * Opens the remote control window. This method uses a development feature
+     * of opening the remote control in the same browser instance as Spot, but
+     * in a popup window.
      *
      * @returns {string} The tabId of the newly opened window to display remote
      * control.
@@ -58,6 +58,8 @@ class CalendarPage extends PageObject {
 
     /**
      * Proceeds directly to the calendar view of Spot.
+     *
+     * @returns {void}
      */
     visit() {
         this.driver.url(constants.SPOT_URL);
@@ -68,7 +70,8 @@ class CalendarPage extends PageObject {
      * Compares the currently opened tab ids with an array of tab ids and
      * returns the difference.
      *
-     * @param {Array<string>} previousTabIds
+     * @param {Array<string>} previousTabIds - The old tab ids to compare
+     * against to calculate which of the current tabs are new.
      * @private
      * @returns {Array<string>}
      */

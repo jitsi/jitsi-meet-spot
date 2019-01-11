@@ -7,7 +7,7 @@ export default {
     /**
      * Converts the provided {@code Date} instance into a "hour:minute" format.
      *
-     * @param {Date} date
+     * @param {Date} date - An instance of {@code Date}.
      * @returns {string}
      */
     formatToTime(date) {
@@ -26,7 +26,7 @@ export default {
     /**
      * Calculates and returns the end time of the current day.
      *
-     * @param {Date} date
+     * @param {Date} date - An instance of {@code Date}.
      * @returns {Date}
      */
     getEndOfDate(date) {

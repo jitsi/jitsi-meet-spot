@@ -14,8 +14,8 @@ import styles from './view.css';
  */
 export default class View extends React.Component {
     static propTypes = {
-        hideBackground: PropTypes.bool,
         children: PropTypes.node,
+        hideBackground: PropTypes.bool,
         name: PropTypes.string
     };
 

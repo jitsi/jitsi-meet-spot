@@ -17,9 +17,10 @@ export default function VideoMuteButton({ isMuted, onClick }) {
             className = { styles.selection }
             onClick = { onClick }>
             <Button className = { styles.button }>
-                <div className = { isMuted
-                    ? 'icon-camera-disabled'
-                    : 'icon-camera' } />
+                <div
+                    className = { isMuted
+                        ? 'icon-camera-disabled'
+                        : 'icon-camera' } />
             </Button>
             <span>{ isMuted ? 'Video Unmute' : 'Video Mute'}</span>
         </div>
