@@ -89,7 +89,6 @@ class SettingsButton extends React.Component {
      */
     _onHoverDisplay() {
         this.setState({ hovered: true });
-        this._onMouseMoveDisplay();
     }
 
     /**
@@ -100,7 +99,6 @@ class SettingsButton extends React.Component {
      */
     _onHoverStop() {
         this.setState({ hovered: false });
-        this._onMouseMoveDisplay();
     }
 }
 
