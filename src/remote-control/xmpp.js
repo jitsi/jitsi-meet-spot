@@ -169,8 +169,14 @@ const xmppControl = {
      * @param {*} value - Additional information about the status update.
      * @returns {void}
      */
-    sendPresence(type, value) {
-        this.updatePresence(type, value);
+    updateStatus(type, value) {
+        let valueToSend = value;
+
+        if (typeof value !== 'string') {
+            valueToSend = JSON.stringify(value);
+        }
+
+        this.updatePresence(type, valueToSend);
         this.room.sendPresence();
     },
 
@@ -182,7 +188,7 @@ const xmppControl = {
      * another participant has updated its presence.
      * @returns {void}
      */
-    addPresenceListener(callback) {
+    addStatusListener(callback) {
         presenceListeners.push(callback);
     },
 

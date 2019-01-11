@@ -15,6 +15,7 @@ import styles from './view.css';
 const presenceToStoreAsState = new Set([
     'audioMuted',
     'isSpot',
+    'screensharing',
     'videoMuted',
     'view'
 ]);
@@ -43,13 +44,16 @@ export class RemoteControl extends React.Component {
         super(props);
 
         this.state = {
+            audioMuted: false,
             events: [],
-            view: ''
+            screensharing: false,
+            view: '',
+            videoMuted: false
         };
 
         this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
-        this._onPresence = this._onPresence.bind(this);
+        this._onStatusChange = this._onStatusChange.bind(this);
     }
 
     /**
@@ -69,7 +73,7 @@ export class RemoteControl extends React.Component {
             'requestCalendar'
         );
 
-        remoteControlService.addPresenceListener(this._onPresence);
+        remoteControlService.addStatusListener(this._onStatusChange);
     }
 
     /**
@@ -162,6 +166,7 @@ export class RemoteControl extends React.Component {
         return (
             <RemoteControlMenu
                 audioMuted = { this.state.audioMuted === 'true' }
+                screensharing = { this.state.screensharing === 'true' }
                 targetResource = { this._getSpotResource() }
                 videoMuted = { this.state.videoMuted === 'true' } />
         );
@@ -226,7 +231,7 @@ export class RemoteControl extends React.Component {
      * @private
      * @returns {void}
      */
-    _onPresence(data) {
+    _onStatusChange(data) {
         const { status } = data;
 
         if (status.isSpot !== 'true') {
