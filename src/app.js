@@ -71,8 +71,9 @@ export class App extends React.Component {
         return (
             <IdleCursorDetector
                 onCursorIdleChange = { this._onCursorIdleChange }>
-                <div className = {
-                    this.state.hideCursor ? styles.idleCursor : '' }>
+                <div
+                    className = {
+                        this.state.hideCursor ? styles.idleCursor : '' }>
                     <Notifications />
                     <ErrorBoundary errorComponent = { FatalError }>
                         <Switch>
