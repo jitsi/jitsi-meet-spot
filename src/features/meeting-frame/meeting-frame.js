@@ -32,6 +32,10 @@ export default class MeetingFrame extends React.Component {
     constructor(props) {
         super(props);
 
+        this._isAudioMuted = null;
+        this._isScreensharing = null;
+        this._isVideoMuted = null;
+
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
         this._onCommand = this._onCommand.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
@@ -151,6 +155,8 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onAudioMuteChange({ muted }) {
+        this._isAudioMuted = muted;
+
         remoteControlService.notifyAudioMuteStatus(muted);
     }
 
@@ -158,20 +164,44 @@ export default class MeetingFrame extends React.Component {
      * Callback invoked to execute a remote control command.
      *
      * @param {string} command - The type of the command.
+     * @param {string} from - The JID for the sender of the command.
      * @param {Object} options - Additional details on how to execute the
      * command.
      * @private
      * @returns {void}
      */
-    _onCommand(command, options) {
-        if (command === COMMANDS.HANG_UP) {
+    _onCommand(command, from, options) {
+        switch (command) {
+        case COMMANDS.HANG_UP:
             remoteControlService.notifyViewStatus('feedback');
             this._jitsiApi.executeCommand(command, options);
-        } else if (command === COMMANDS.SUBMIT_FEEDBACK) {
+            break;
+
+        case COMMANDS.SET_AUDIO_MUTE:
+            if (this._isAudioMuted !== options.mute) {
+                this._jitsiApi.executeCommand('toggleAudio', options);
+            }
+            break;
+
+        case COMMANDS.SET_SCREENSHARING:
+            if (options._isScreensharing !== options.on) {
+                this._jitsiApi.executeCommand('toggleShareScreen', options);
+            }
+            break;
+
+        case COMMANDS.SET_VIDEO_MUTE:
+            if (this._isVideoMuted !== options.mute) {
+                this._jitsiApi.executeCommand('toggleVideo', options);
+            }
+            break;
+
+        case COMMANDS.SUBMIT_FEEDBACK:
             this._jitsiApi.addListener(
                 'feedbackSubmitted', this.props.onMeetingLeave);
             this._jitsiApi.executeCommand(command, options);
-        } else {
+            break;
+
+        default:
             this._jitsiApi.executeCommand(command, options);
         }
     }
@@ -208,6 +238,8 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onScreenshareChange({ on }) {
+        this._isScreensharing = on;
+
         remoteControlService.notifyScreenshareStatus(on);
     }
 
@@ -219,6 +251,8 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onVideoMuteChange({ muted }) {
+        this._isVideoMuted = muted;
+
         remoteControlService.notifyVideoMuteStatus(muted);
     }
 

@@ -196,6 +196,17 @@ class RemoteControlService {
     }
 
     /**
+     * Requests a Spot to change its audio mute status.
+     *
+     * @param {boolean} mute - Whether or not Spot should be audio muted.
+     * @returns {void}
+     */
+    setAudioMute(mute) {
+        return this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.SET_AUDIO_MUTE, { mute });
+    }
+
+    /**
      * Requests change the password on a joined room.
      *
      * @param {string} lock - The new password.
@@ -203,6 +214,17 @@ class RemoteControlService {
      */
     setLock(lock) {
         this.xmppConnection.setLock(lock);
+    }
+
+    /**
+     * Requests a Spot to change its video mute status.
+     *
+     * @param {boolean} mute - Whether or not Spot should be video muted.
+     * @returns {void}
+     */
+    setVideoMute(mute) {
+        return this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.SET_VIDEO_MUTE, { mute });
     }
 
     /**
@@ -217,33 +239,15 @@ class RemoteControlService {
     }
 
     /**
-     * Requests a Spot to change its audio mute status.
-     *
-     * @returns {void}
-     */
-    toggleAudioMute() {
-        return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.TOGGLE_AUDIO_MUTE);
-    }
-
-    /**
      * Requests a Spot to change its screensharing status.
      *
+     * @param {boolean} screensharing - Whether or not Spot should start or stop
+     * screensharing.
      * @returns {void}
      */
-    toggleScreenshare() {
+    setScreensharing(screensharing) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.TOGGLE_SCREENSHARE);
-    }
-
-    /**
-     * Requests a Spot to change its video mute status.
-     *
-     * @returns {void}
-     */
-    toggleVideoMute() {
-        return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.TOGGLE_VIDEO_MUTE);
+            this._spotId, COMMANDS.SET_SCREENSHARING, { on: screensharing });
     }
 
     /**
