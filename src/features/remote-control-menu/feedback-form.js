@@ -121,6 +121,6 @@ export default class FeedbackForm extends React.Component {
     _onSubmit(event) {
         event.preventDefault();
 
-        remoteControlService.submitFeedback(this.props.remoteId, this.state);
+        remoteControlService.submitFeedback(this.state);
     }
 }

@@ -12,6 +12,8 @@ class RemoteControlService {
      * Initializes a new {@code RemoteControlService} instance.
      */
     constructor() {
+        this._spotId = null;
+
         this._commandListeners = new Set();
         this._statusUpdateListeners = new Set();
 
@@ -71,21 +73,20 @@ class RemoteControlService {
      * Requests a Spot to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
-     * @param {string} to - The JID of the Spot.
      * @returns {void}
      */
-    goToMeeting(meetingName, to) {
-        this.xmppConnection.sendCommand(to, 'goToMeeting', { meetingName });
+    goToMeeting(meetingName) {
+        this.xmppConnection.sendCommand(
+            this._spotId, 'goToMeeting', { meetingName });
     }
 
     /**
      * Requests a Spot to leave a meeting in progress.
      *
-     * @param {string} to - The JID of the Spot.
      * @returns {void}
      */
-    hangUp(to) {
-        this.xmppConnection.sendCommand(to, COMMANDS.HANG_UP);
+    hangUp() {
+        this.xmppConnection.sendCommand(this._spotId, COMMANDS.HANG_UP);
     }
 
     /**
@@ -146,11 +147,10 @@ class RemoteControlService {
     /**
      * Requests Spot to send out its latest calendar events.
      *
-     * @param {string} to - The jid of the Spot.
      * @returns {void}
      */
-    requestCalendarEvents(to) {
-        this.xmppConnection.sendCommand(to, 'requestCalendar');
+    requestCalendarEvents() {
+        this.xmppConnection.sendCommand(this._spotId, 'requestCalendar');
     }
 
     /**
@@ -187,54 +187,57 @@ class RemoteControlService {
     /**
      * Requests a Spot to change submit meeting feedback.
      *
-     * @param {string} to - The JID of the Spot.
      * @param {Object} feedback - The feedback to submit.
      * @returns {void}
      */
-    submitFeedback(to, feedback) {
-        this.xmppConnection.sendCommand(to, COMMANDS.SUBMIT_FEEDBACK, feedback);
+    submitFeedback(feedback) {
+        this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.SUBMIT_FEEDBACK, feedback);
     }
 
     /**
      * Requests a Spot to change its audio mute status.
      *
-     * @param {string} to - The JID of the Spot.
      * @returns {void}
      */
-    toggleAudioMute(to) {
-        this.xmppConnection.sendCommand(to, COMMANDS.TOGGLE_AUDIO_MUTE);
+    toggleAudioMute() {
+        this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.TOGGLE_AUDIO_MUTE);
     }
 
     /**
      * Requests a Spot to change its screensharing status.
      *
-     * @param {string} to - The JID of the Spot.
      * @returns {void}
      */
-    toggleScreenshare(to) {
-        this.xmppConnection.sendCommand(to, COMMANDS.TOGGLE_SCREENSHARE);
+    toggleScreenshare() {
+        this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.TOGGLE_SCREENSHARE);
     }
 
     /**
      * Requests a Spot to change its video mute status.
      *
-     * @param {string} to - The JID of the Spot.
      * @returns {void}
      */
-    toggleVideoMute(to) {
-        this.xmppConnection.sendCommand(to, COMMANDS.TOGGLE_VIDEO_MUTE);
+    toggleVideoMute() {
+        this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.TOGGLE_VIDEO_MUTE);
     }
 
     /**
      * Callback invoked when Spot has status update. Notifies registered
      * observers of the update.
      *
-     * @param {Object} status - The status update.
+     * @param {Object} update - The status update.
      * @private
      * @returns {void}
      */
-    _onSpotStatusUpdate(status) {
-        this._statusUpdateListeners.forEach(listener => listener(status));
+    _onSpotStatusUpdate(update) {
+        if (update.status.isSpot === 'true') {
+            this._spotId = update.from.split('/')[1];
+            this._statusUpdateListeners.forEach(listener => listener(update));
+        }
     }
 
     /**

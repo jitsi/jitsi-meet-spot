@@ -180,28 +180,6 @@ export default class XmppConnection {
     }
 
     /**
-     * Get the id of the XMPP connection so other participants can send direct
-     * messages or identify who sent the messages.
-     *
-     * @returns {string}
-     */
-    getJid() {
-        return this.xmppConnection.xmpp.connection.jid;
-    }
-
-    /**
-     * Returns the unique id of the XMPP participant, ignoring any domain
-     * information.
-     *
-     * @returns {string}
-     */
-    getNode() {
-        const jid = this.getJid();
-
-        return jid.split('@')[0];
-    }
-
-    /**
      * The identifier for the the muc. Returns the full jid, which has
      * user@domain.
      *

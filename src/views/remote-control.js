@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
-import { getLocalRemoteControlId } from 'reducers';
 
 import { withRemoteControl } from './loaders';
 import View from './view';
@@ -28,9 +26,6 @@ const presenceToStoreAsState = new Set([
  */
 export class RemoteControl extends React.Component {
     static propTypes = {
-        dispatch: PropTypes.func,
-        localRemoteControlId: PropTypes.string,
-        match: PropTypes.object,
         remoteControlService: PropTypes.object
     };
 
@@ -69,7 +64,7 @@ export class RemoteControl extends React.Component {
         remoteControlService.addRemoteCommandListener(this._onCommand);
         remoteControlService.addSpotStatusListener(this._onStatusChange);
 
-        remoteControlService.requestCalendarEvents(this._getSpotResource());
+        remoteControlService.requestCalendarEvents();
     }
 
     /**
@@ -109,7 +104,7 @@ export class RemoteControl extends React.Component {
         case 'admin':
             return <div>currently in admin tools</div>;
         case 'feedback':
-            return <FeedbackForm remoteId = { this._getSpotResource() } />;
+            return <FeedbackForm />;
         case 'home':
             return this._getWaitingForCallView();
         case 'meeting':
@@ -119,37 +114,6 @@ export class RemoteControl extends React.Component {
         default:
             return <LoadingIcon color = 'white' />;
         }
-    }
-
-    /**
-     * Returns the React Element for submitting meeting feedback.
-     *
-     * @private
-     * @returns {ReactElement}
-     */
-    _getFeedbackView() {
-        return <FeedbackForm remoteId = { this._getSpotFullJid() } />;
-    }
-
-    /**
-     * Parses url params to get the id of the targeted Spot instance, used
-     * for communicating back to the Spot instance.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSpotFullJid() {
-        return decodeURIComponent(this.props.match.params.remoteId);
-    }
-
-    /**
-     * Returns the resource from the full jid for the spot user in the MUC.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSpotResource() {
-        return this._getSpotFullJid().split('/')[1];
     }
 
     /**
@@ -164,7 +128,6 @@ export class RemoteControl extends React.Component {
             <RemoteControlMenu
                 audioMuted = { this.state.audioMuted === 'true' }
                 screensharing = { this.state.screensharing === 'true' }
-                targetResource = { this._getSpotResource() }
                 videoMuted = { this.state.videoMuted === 'true' } />
         );
     }
@@ -215,8 +178,7 @@ export class RemoteControl extends React.Component {
      * @returns {void}
      */
     _onGoToMeeting(meetingName) {
-        this.props.remoteControlService.goToMeeting(
-            meetingName, this._getSpotResource());
+        this.props.remoteControlService.goToMeeting(meetingName);
     }
 
     /**
@@ -247,18 +209,4 @@ export class RemoteControl extends React.Component {
     }
 }
 
-/**
- * Selects parts of the Redux state to pass in with the props of
- * {@code RemoteControl}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    return {
-        localRemoteControlId: getLocalRemoteControlId(state)
-    };
-}
-
-export default withRemoteControl(connect(mapStateToProps)(RemoteControl));
+export default withRemoteControl(RemoteControl);

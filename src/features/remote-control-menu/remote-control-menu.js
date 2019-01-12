@@ -19,7 +19,6 @@ export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
         screensharing: PropTypes.bool,
-        targetResource: PropTypes.string,
         videoMuted: PropTypes.bool
     };
 
@@ -69,7 +68,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onHangUp() {
-        remoteControlService.hangUp(this.props.targetResource);
+        remoteControlService.hangUp();
     }
 
     /**
@@ -79,7 +78,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleAudioMute() {
-        remoteControlService.toggleAudioMute(this.props.targetResource);
+        remoteControlService.toggleAudioMute();
     }
 
     /**
@@ -89,7 +88,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleScreenshare() {
-        remoteControlService.toggleScreenshare(this.props.targetResource);
+        remoteControlService.toggleScreenshare();
     }
 
     /**
@@ -99,6 +98,6 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleVideoMute() {
-        remoteControlService.toggleVideoMute(this.props.targetResource);
+        remoteControlService.toggleVideoMute();
     }
 }
