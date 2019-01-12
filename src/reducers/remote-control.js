@@ -4,7 +4,6 @@ const DEFAULT_STATE = {
     remoteId: null
 };
 
-export const REMOTE_CONTROL_SET_LOCAL_ID = 'REMOTE_CONTROL_SET_LOCAL_ID';
 export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
 
 /**
@@ -18,12 +17,6 @@ export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
  */
 const remoteControl = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case REMOTE_CONTROL_SET_LOCAL_ID:
-        return {
-            ...state,
-            localId: action.id
-        };
-
     case REMOTE_CONTROL_SET_LOCK:
         return {
             ...state,

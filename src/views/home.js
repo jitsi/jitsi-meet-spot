@@ -13,7 +13,6 @@ import {
     getCalendarEmail,
     getCalendarEvents,
     getCurrentLock,
-    getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
 import { windowHandler } from 'utils';
@@ -36,7 +35,6 @@ export class Home extends React.Component {
         events: PropTypes.array,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
-        localRemoteControlId: PropTypes.string,
         lock: PropTypes.string,
         remoteControlService: PropTypes.object
     };
@@ -126,8 +124,7 @@ export class Home extends React.Component {
                             : null }
                     </div>
                     <div className = { styles.joinInfo }>
-                        { `${this.props.localRemoteControlId} code: ${
-                            this.props.lock}` }
+                        { `code: ${this.props.lock}` }
                     </div>
                     <div className = { styles.settings_cog }>
                         <SettingsButton />
@@ -141,17 +138,10 @@ export class Home extends React.Component {
      * Generates the full URL for opening a remote control for Spot.
      *
      * @private
-     * @returns {void}
+     * @returns {string}
      */
     _getRemoteControlUrl() {
-        const { localRemoteControlId, lock } = this.props;
-
-        if (!localRemoteControlId) {
-            return '';
-        }
-
-        return `${windowHandler.getBaseUrl()}#/remote-control/${
-            window.encodeURIComponent(localRemoteControlId)}?lock=${lock}`;
+        return this.props.remoteControlService.getRemoteControlUrl();
     }
 
     /**
@@ -274,7 +264,6 @@ function mapStateToProps(state) {
         calendarEmail: getCalendarEmail(state),
         events: getCalendarEvents(state) || [],
         isSetupComplete: isSetupComplete(state),
-        localRemoteControlId: getLocalRemoteControlId(state),
         lock: getCurrentLock(state)
     };
 }

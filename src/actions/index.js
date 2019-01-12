@@ -3,7 +3,6 @@ import {
     CALENDAR_SET_EVENTS,
     NOTIFICATION_ADD,
     NOTIFICATION_REMOVE,
-    REMOTE_CONTROL_SET_LOCAL_ID,
     REMOTE_CONTROL_SET_LOCK,
     SETUP_COMPLETED
 } from 'reducers';
@@ -71,23 +70,6 @@ export function setCalendarEvents(events = []) {
     return {
         type: CALENDAR_SET_EVENTS,
         events
-    };
-}
-
-/**
- * Signals to update the known client id that has been assigned by connecting
- * to the remote control service. The id is used to allow Spot instances and
- * remoteController instances identify each other for sending messages and
- * commands.
- *
- * @param {string} id - The id (jid) of the client that has connected to the
- * remote control service.
- * @returns {Object}
- */
-export function setLocalRemoteControlID(id) {
-    return {
-        type: REMOTE_CONTROL_SET_LOCAL_ID,
-        id
     };
 }
 

@@ -200,6 +200,15 @@ export default class XmppConnection {
     }
 
     /**
+     * Returns the current known lock on the muc.
+     *
+     * @returns {string}
+     */
+    getLock() {
+        return this._lock;
+    }
+
+    /**
      * Sets a new lock code on the current MUC.
      *
      * @param {string} lock - The new code code to place on the MUC.

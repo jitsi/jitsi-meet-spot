@@ -1,3 +1,4 @@
+import { windowHandler } from 'utils';
 import { COMMANDS } from './constants';
 import XmppConnection from './xmpp-connection';
 
@@ -67,6 +68,24 @@ class RemoteControlService {
             = this.xmppConnection.joinMuc(roomName, lock);
 
         return this.xmppConnectionPromise;
+    }
+
+    /**
+     * Generates the full URL for opening a remote control for Spot.
+     *
+     * @returns {string}
+     */
+    getRemoteControlUrl() {
+        const fullJid = this.xmppConnection.getRoomFullJid();
+
+        if (!fullJid) {
+            return '';
+        }
+
+        const lock = this.xmppConnection.getLock();
+
+        return `${windowHandler.getBaseUrl()}#/remote-control/${
+            window.encodeURIComponent(fullJid)}?lock=${lock}`;
     }
 
     /**
@@ -251,18 +270,6 @@ class RemoteControlService {
      */
     _onRemoteCommand(type, from, data) {
         this._commandListeners.forEach(listener => listener(type, from, data));
-    }
-
-    // Methods below to be removed.
-
-    /**
-     * The identifier for the local user in the MUC. Returns the full jid, which
-     * has user@domain/resource.
-     *
-     * @returns {string}
-     */
-    getRoomFullJid() {
-        return this.xmppConnection.getRoomFullJid();
     }
 }
 
