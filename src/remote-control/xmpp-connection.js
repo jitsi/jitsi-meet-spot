@@ -1,3 +1,5 @@
+import { $iq } from 'strophe.js';
+
 import { XMPP_CONFIG } from 'config';
 import { logger } from 'utils';
 import { JitsiMeetJSProvider } from 'vendor';
@@ -69,6 +71,15 @@ export default class XmppConnection {
             this._onPresence,
             null,
             'presence',
+            null,
+            null
+        );
+
+        this.xmppConnection.xmpp.connection.addHandler(
+            this._onIq.bind(this),
+            'jitsi-meet-spot-command',
+            'iq',
+            'set',
             null,
             null
         );
@@ -164,19 +175,58 @@ export default class XmppConnection {
      * Send a direct message to another participant in the muc. This is a fire
      * and forget function with no ack.
      *
-     * @param {string} resource - The target of the command.
-     * @param {string} type - The command type to send.
+     * @param {string} to - The JID to send the command to.
+     * @param {string} command - The command type to send.
      * @param {Object} data - Additional information about how to execute the
      * command.
      * @returns {void}
      */
-    sendCommand(resource, type, data) {
-        const message = {
-            type,
-            data
-        };
+    sendCommand(to, command, data = {}) {
+        const iq = $iq({
+            to: `${this.getRoomBareJid()}/${to}`,
+            type: 'set'
+        })
+        .c('command', {
+            xmlns: 'jitsi-meet-spot-command',
+            jid: this.getRoomFullJid(),
+            type: command
+        })
+        .t(JSON.stringify(data))
+        .up();
 
-        this.room.sendPrivateMessage(resource, JSON.stringify(message), 'body');
+        return new Promise((resolve, reject) => {
+            this.room.connection.sendIQ(
+                iq,
+                resolve,
+                reject,
+                5000
+            );
+        });
+    }
+
+    /**
+     * Callback invoked to process and acknowledge and incoming IQ.
+     *
+     * @param {Object} iq - The iq.
+     * @private
+     * @returns {boolean}
+     */
+    _onIq(iq) {
+        const from = iq.getAttribute('from');
+        const command = iq.getElementsByTagName('command')[0];
+        const commandType = command.getAttribute('type');
+        const data = JSON.parse(command.textContent);
+
+        this.options.onRemoteCommand(commandType, from, data);
+
+        const ack = $iq({ type: 'result',
+            to: from,
+            id: iq.getAttribute('id')
+        });
+
+        this.room.connection.send(ack);
+
+        return true;
     }
 
     /**

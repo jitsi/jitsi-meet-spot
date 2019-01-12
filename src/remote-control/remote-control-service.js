@@ -95,7 +95,7 @@ class RemoteControlService {
      * @returns {void}
      */
     goToMeeting(meetingName) {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             this._spotId, 'goToMeeting', { meetingName });
     }
 
@@ -105,7 +105,8 @@ class RemoteControlService {
      * @returns {void}
      */
     hangUp() {
-        this.xmppConnection.sendCommand(this._spotId, COMMANDS.HANG_UP);
+        return this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.HANG_UP);
     }
 
     /**
@@ -126,7 +127,7 @@ class RemoteControlService {
      * @returns {void}
      */
     notifyCalendarEvents(to, data) {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             to,
             'calendarData',
             data
@@ -169,7 +170,8 @@ class RemoteControlService {
      * @returns {void}
      */
     requestCalendarEvents() {
-        this.xmppConnection.sendCommand(this._spotId, 'requestCalendar');
+        return this.xmppConnection.sendCommand(
+            this._spotId, 'requestCalendar');
     }
 
     /**
@@ -210,7 +212,7 @@ class RemoteControlService {
      * @returns {void}
      */
     submitFeedback(feedback) {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             this._spotId, COMMANDS.SUBMIT_FEEDBACK, feedback);
     }
 
@@ -220,7 +222,7 @@ class RemoteControlService {
      * @returns {void}
      */
     toggleAudioMute() {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             this._spotId, COMMANDS.TOGGLE_AUDIO_MUTE);
     }
 
@@ -230,7 +232,7 @@ class RemoteControlService {
      * @returns {void}
      */
     toggleScreenshare() {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             this._spotId, COMMANDS.TOGGLE_SCREENSHARE);
     }
 
@@ -240,7 +242,7 @@ class RemoteControlService {
      * @returns {void}
      */
     toggleVideoMute() {
-        this.xmppConnection.sendCommand(
+        return this.xmppConnection.sendCommand(
             this._spotId, COMMANDS.TOGGLE_VIDEO_MUTE);
     }
 
