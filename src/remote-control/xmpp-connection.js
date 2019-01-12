@@ -1,7 +1,6 @@
-/* global JitsiMeetJS */
-
-import { logger } from 'utils';
 import { XMPP_CONFIG } from 'config';
+import { logger } from 'utils';
+import { JitsiMeetJSProvider } from 'vendor';
 
 /**
  * Represents an XMPP connection to a prosody service.
@@ -39,8 +38,7 @@ export default class XmppConnection {
             return this.initPromise;
         }
 
-        JitsiMeetJS.init({});
-        JitsiMeetJS.setLogLevel('error');
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         this.xmppConnection
             = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
