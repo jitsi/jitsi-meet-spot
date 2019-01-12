@@ -45,7 +45,7 @@ export default class MeetingFrame extends React.Component {
         this._meetingLoaded = false;
         this._meetingJoined = false;
 
-        remoteControlService.addCommandListener(this._onCommand);
+        remoteControlService.addRemoteCommandListener(this._onCommand);
     }
 
     /**
@@ -93,7 +93,7 @@ export default class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
-        remoteControlService.removeCommandListener(this._onCommand);
+        remoteControlService.removeRemoteCommandListener(this._onCommand);
 
         this._jitsiApi.removeListener(
             'readyToClose', this.props.onMeetingLeave);
@@ -151,7 +151,7 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onAudioMuteChange({ muted }) {
-        remoteControlService.updateStatus('audioMuted', muted);
+        remoteControlService.notifyAudioMuteStatus(muted);
     }
 
     /**
@@ -165,7 +165,7 @@ export default class MeetingFrame extends React.Component {
      */
     _onCommand(command, options) {
         if (command === COMMANDS.HANG_UP) {
-            remoteControlService.updateStatus('view', 'feedback');
+            remoteControlService.notifyViewStatus('feedback');
             this._jitsiApi.executeCommand(command, options);
         } else if (command === COMMANDS.SUBMIT_FEEDBACK) {
             this._jitsiApi.addListener(
@@ -208,7 +208,7 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onScreenshareChange({ on }) {
-        remoteControlService.updateStatus('screensharing', on);
+        remoteControlService.notifyScreenshareStatus(on);
     }
 
     /**
@@ -219,7 +219,7 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onVideoMuteChange({ muted }) {
-        remoteControlService.updateStatus('videoMuted', muted);
+        remoteControlService.notifyVideoMuteStatus(muted);
     }
 
     /**

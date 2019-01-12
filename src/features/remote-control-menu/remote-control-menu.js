@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { COMMANDS, remoteControlService } from 'remote-control';
+import { remoteControlService } from 'remote-control';
 
 import AudioMuteButton from './buttons/audio-mute-button';
 import HangupButton from './buttons/hangup-button';
@@ -69,10 +69,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onHangUp() {
-        remoteControlService.sendCommand(
-            this.props.targetResource,
-            COMMANDS.HANG_UP
-        );
+        remoteControlService.hangUp(this.props.targetResource);
     }
 
     /**
@@ -82,10 +79,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleAudioMute() {
-        remoteControlService.sendCommand(
-            this.props.targetResource,
-            COMMANDS.TOGGLE_AUDIO_MUTE
-        );
+        remoteControlService.toggleAudioMute(this.props.targetResource);
     }
 
     /**
@@ -95,10 +89,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleScreenshare() {
-        remoteControlService.sendCommand(
-            this.props.targetResource,
-            COMMANDS.TOGGLE_SCREENSHARE
-        );
+        remoteControlService.toggleScreenshare(this.props.targetResource);
     }
 
     /**
@@ -108,9 +99,6 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleVideoMute() {
-        remoteControlService.sendCommand(
-            this.props.targetResource,
-            COMMANDS.TOGGLE_VIDEO_MUTE
-        );
+        remoteControlService.toggleVideoMute(this.props.targetResource);
     }
 }

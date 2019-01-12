@@ -1,2 +1,2 @@
 export * from './constants';
-export { default as remoteControlService } from './xmpp';
+export { default as remoteControlService } from './remote-control-service';

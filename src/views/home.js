@@ -76,7 +76,8 @@ export class Home extends React.Component {
                 = setInterval(this._pollForEvents, 30000);
         }
 
-        this.props.remoteControlService.addCommandListener(this._onCommand);
+        this.props.remoteControlService.addRemoteCommandListener(
+            this._onCommand);
     }
 
     /**
@@ -87,7 +88,8 @@ export class Home extends React.Component {
     componentWillUnmount() {
         this._isUnmounting = true;
 
-        this.props.remoteControlService.removeCommandListener(this._onCommand);
+        this.props.remoteControlService.removeRemoteCommandListener(
+            this._onCommand);
 
         clearInterval(this._updateEventsInterval);
     }
@@ -171,9 +173,8 @@ export class Home extends React.Component {
         case 'requestCalendar': {
             const resource = from.split('/')[1];
 
-            this.props.remoteControlService.sendCommand(
+            this.props.remoteControlService.notifyCalendarEvents(
                 resource,
-                'calendarData',
                 { events: this.props.events }
             );
             break;

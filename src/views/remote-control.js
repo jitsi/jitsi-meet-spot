@@ -66,14 +66,10 @@ export class RemoteControl extends React.Component {
     componentDidMount() {
         const { remoteControlService } = this.props;
 
-        remoteControlService.addCommandListener(this._onCommand);
+        remoteControlService.addRemoteCommandListener(this._onCommand);
+        remoteControlService.addSpotStatusListener(this._onStatusChange);
 
-        remoteControlService.sendCommand(
-            this._getSpotResource(),
-            'requestCalendar'
-        );
-
-        remoteControlService.addStatusListener(this._onStatusChange);
+        remoteControlService.requestCalendarEvents(this._getSpotResource());
     }
 
     /**
@@ -82,7 +78,8 @@ export class RemoteControl extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.removeCommandListener(this._onCommand);
+        this.props.remoteControlService.removeRemoteCommandListener(
+            this._onCommand);
     }
 
     /**
@@ -218,8 +215,8 @@ export class RemoteControl extends React.Component {
      * @returns {void}
      */
     _onGoToMeeting(meetingName) {
-        this.props.remoteControlService.sendCommand(
-            this._getSpotResource(), 'goToMeeting', { meetingName });
+        this.props.remoteControlService.goToMeeting(
+            meetingName, this._getSpotResource());
     }
 
     /**

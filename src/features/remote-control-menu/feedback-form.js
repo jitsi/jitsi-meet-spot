@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-import { COMMANDS, remoteControlService } from 'remote-control';
+import { remoteControlService } from 'remote-control';
 
 import styles from './remote-control-menu.css';
 
@@ -121,7 +121,6 @@ export default class FeedbackForm extends React.Component {
     _onSubmit(event) {
         event.preventDefault();
 
-        remoteControlService.sendCommand(
-            this.props.remoteId, COMMANDS.SUBMIT_FEEDBACK, this.state);
+        remoteControlService.submitFeedback(this.props.remoteId, this.state);
     }
 }

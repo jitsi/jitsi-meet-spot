@@ -77,7 +77,7 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        return remoteControlService.init(
+        return remoteControlService.connect(
             this._getRoomName(),
             this._getRoomLock())
             .then(() => {

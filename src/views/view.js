@@ -27,7 +27,7 @@ export default class View extends React.Component {
      */
     componentDidMount() {
         if (this.props.name) {
-            remoteControlService.updateStatus('view', this.props.name);
+            remoteControlService.notifyViewStatus(this.props.name);
         }
     }
 
