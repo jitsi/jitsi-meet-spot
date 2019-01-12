@@ -16,7 +16,7 @@ import {
     getLocalRemoteControlId,
     isSetupComplete
 } from 'reducers';
-import { keyboardNavigation, windowHandler } from 'utils';
+import { windowHandler } from 'utils';
 
 import View from './view';
 import styles from './view.css';
@@ -69,8 +69,6 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        keyboardNavigation.startListening('calendar');
-
         if (this.props.isSetupComplete) {
             this._pollForEvents();
 
@@ -90,8 +88,6 @@ export class Home extends React.Component {
         this._isUnmounting = true;
 
         this.props.remoteControlService.removeCommandListener(this._onCommand);
-
-        keyboardNavigation.stopListening();
 
         clearInterval(this._updateEventsInterval);
     }

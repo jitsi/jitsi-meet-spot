@@ -67,16 +67,3 @@ body > div {
     overflow: hidden;
     width: 100%;
 }
-
-:global #keyboard-handler {
-    border: 3px solid red;
-    display: none;
-    position: fixed;
-}
-:global #keyboard-handler-overlay {
-    display: none;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
