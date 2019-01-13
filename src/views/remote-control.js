@@ -6,19 +6,11 @@ import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
-import { getLocalRemoteControlId } from 'reducers';
+import { getInMeetingStatus, getCurrentView } from 'reducers';
 
 import { withRemoteControl } from './loaders';
 import View from './view';
 import styles from './view.css';
-
-const presenceToStoreAsState = new Set([
-    'audioMuted',
-    'isSpot',
-    'screensharing',
-    'videoMuted',
-    'view'
-]);
 
 /**
  * Displays the remote control view for controlling a Spot instance from another
@@ -28,10 +20,11 @@ const presenceToStoreAsState = new Set([
  */
 export class RemoteControl extends React.Component {
     static propTypes = {
-        dispatch: PropTypes.func,
-        localRemoteControlId: PropTypes.string,
-        match: PropTypes.object,
-        remoteControlService: PropTypes.object
+        audioMuted: PropTypes.bool,
+        remoteControlService: PropTypes.object,
+        screensharing: PropTypes.bool,
+        videoMuted: PropTypes.bool,
+        view: PropTypes.string
     };
 
     /**
@@ -44,16 +37,10 @@ export class RemoteControl extends React.Component {
         super(props);
 
         this.state = {
-            audioMuted: false,
-            events: [],
-            screensharing: false,
-            view: '',
-            videoMuted: false
+            events: []
         };
 
-        this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
-        this._onStatusChange = this._onStatusChange.bind(this);
     }
 
     /**
@@ -66,23 +53,12 @@ export class RemoteControl extends React.Component {
     componentDidMount() {
         const { remoteControlService } = this.props;
 
-        remoteControlService.addCommandListener(this._onCommand);
-
-        remoteControlService.sendCommand(
-            this._getSpotResource(),
-            'requestCalendar'
-        );
-
-        remoteControlService.addStatusListener(this._onStatusChange);
-    }
-
-    /**
-     * Cleans up listeners waiting for Spot state updates.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this.props.remoteControlService.removeCommandListener(this._onCommand);
+        remoteControlService.requestCalendarEvents()
+            .then(data => {
+                this.setState({
+                    events: data.events
+                });
+            });
     }
 
     /**
@@ -108,11 +84,11 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getView() {
-        switch (this.state.view) {
+        switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
         case 'feedback':
-            return <FeedbackForm remoteId = { this._getSpotResource() } />;
+            return <FeedbackForm />;
         case 'home':
             return this._getWaitingForCallView();
         case 'meeting':
@@ -125,37 +101,6 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Returns the React Element for submitting meeting feedback.
-     *
-     * @private
-     * @returns {ReactElement}
-     */
-    _getFeedbackView() {
-        return <FeedbackForm remoteId = { this._getSpotFullJid() } />;
-    }
-
-    /**
-     * Parses url params to get the id of the targeted Spot instance, used
-     * for communicating back to the Spot instance.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSpotFullJid() {
-        return decodeURIComponent(this.props.match.params.remoteId);
-    }
-
-    /**
-     * Returns the resource from the full jid for the spot user in the MUC.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSpotResource() {
-        return this._getSpotFullJid().split('/')[1];
-    }
-
-    /**
      * Returns the remote control view to display when the Spot instance is in a
      * meeting.
      *
@@ -165,10 +110,9 @@ export class RemoteControl extends React.Component {
     _getInCallView() {
         return (
             <RemoteControlMenu
-                audioMuted = { this.state.audioMuted === 'true' }
-                screensharing = { this.state.screensharing === 'true' }
-                targetResource = { this._getSpotResource() }
-                videoMuted = { this.state.videoMuted === 'true' } />
+                audioMuted = { this.props.audioMuted }
+                screensharing = { this.props.screensharing }
+                videoMuted = { this.props.videoMuted } />
         );
     }
 
@@ -193,23 +137,6 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Callback to parse direct updates received from the Spot instance.
-     *
-     * @param {string} command - The type of command received.
-     * @param {string} from - The MUC user that sent the command.
-     * @param {Object} data - Additional information passed with the command.
-     * @private
-     * @returns {void}
-     */
-    _onCommand(command, from, data) {
-        if (command === 'calendarData') {
-            this.setState({
-                events: data.events
-            });
-        }
-    }
-
-    /**
      * Callback invoked when a remote control needs to signal to a Spot to
      * join a specific meeting.
      *
@@ -218,41 +145,13 @@ export class RemoteControl extends React.Component {
      * @returns {void}
      */
     _onGoToMeeting(meetingName) {
-        this.props.remoteControlService.sendCommand(
-            this._getSpotResource(), 'goToMeeting', { meetingName });
-    }
-
-    /**
-     * Callback invoked when a client has published a status update through the
-     * {@code remoteControlService}.
-     *
-     * @param {Object} data - The status update broadcasted by a client
-     * connected to {@code remoteControlService}.
-     * @private
-     * @returns {void}
-     */
-    _onStatusChange(data) {
-        const { status } = data;
-
-        if (status.isSpot !== 'true') {
-            return;
-        }
-
-        const newState = {};
-
-        Object.keys(status).forEach(key => {
-            if (presenceToStoreAsState.has(key)) {
-                newState[key] = status[key];
-            }
-        });
-
-        this.setState(newState);
+        this.props.remoteControlService.goToMeeting(meetingName);
     }
 }
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code RemoteControl}.
+ * {@code RemoteControls}.
  *
  * @param {Object} state - The Redux state.
  * @private
@@ -260,8 +159,8 @@ export class RemoteControl extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        localRemoteControlId: getLocalRemoteControlId(state)
+        ...getInMeetingStatus(state),
+        view: getCurrentView(state)
     };
 }
-
 export default withRemoteControl(connect(mapStateToProps)(RemoteControl));

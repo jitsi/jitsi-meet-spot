@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setLocalRemoteControlID, setLock } from 'actions';
+import { setLock } from 'actions';
 import { remoteControlService } from 'remote-control';
 import { logger } from 'utils';
 
@@ -77,14 +77,10 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        return remoteControlService.init(
+        return remoteControlService.connect(
             this._getRoomName(),
             this._getRoomLock())
             .then(() => {
-                const roomFullJid = remoteControlService.getRoomFullJid();
-
-                this.props.dispatch(setLocalRemoteControlID(roomFullJid));
-
                 if (!this._getRoomName()) {
                     this._setLock();
                     this._startLockUpdate();

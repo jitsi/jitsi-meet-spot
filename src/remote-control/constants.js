@@ -3,28 +3,39 @@
  * events triggered by the jitsi meet iframe api.
  */
 export const COMMANDS = {
+
+    /**
+     * Proceed to a given meeting name or meeting URL.
+     */
+    GO_TO_MEETING: 'goToMeeting',
+
     /**
      * End the current meeting.
      */
     HANG_UP: 'hangup',
 
     /**
-     * Send the meeting rating and the entered feedback.
+     * Get the current calendar events.
      */
-    SUBMIT_FEEDBACK: 'submitFeedback',
+    REQUEST_CALENDAR: 'requestCalendar',
 
     /**
      * Set audio mute on or off.
      */
-    TOGGLE_AUDIO_MUTE: 'toggleAudio',
+    SET_AUDIO_MUTE: 'setAudioMute',
 
     /**
      * Start the screensharing flow or stop screensharing.
      */
-    TOGGLE_SCREENSHARE: 'toggleShareScreen',
+    SET_SCREENSHARING: 'setScreensharing',
 
     /**
      * Set video mute on or off.
      */
-    TOGGLE_VIDEO_MUTE: 'toggleVideo'
+    SET_VIDEO_MUTE: 'setVideoMute',
+
+    /**
+     * Send the meeting rating and the entered feedback.
+     */
+    SUBMIT_FEEDBACK: 'submitFeedback'
 };

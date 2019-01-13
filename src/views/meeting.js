@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification } from 'actions';
+import { addNotification, setMeetingApi } from 'actions';
 import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import { getDisplayName } from 'reducers';
@@ -36,6 +36,7 @@ export class Meeting extends React.Component {
         super(props);
 
         this._onMeetingLeave = this._onMeetingLeave.bind(this);
+        this._onMeetingStart = this._onMeetingStart.bind(this);
     }
 
     /**
@@ -70,7 +71,8 @@ export class Meeting extends React.Component {
                 <MeetingFrame
                     displayName = { this.props.displayName }
                     meetingUrl = { meetingUrl }
-                    onMeetingLeave = { this._onMeetingLeave } />
+                    onMeetingLeave = { this._onMeetingLeave }
+                    onMeetingStart = { this._onMeetingStart } />
             </View>
         );
     }
@@ -110,7 +112,20 @@ export class Meeting extends React.Component {
             this.props.dispatch(addNotification('error', leaveEvent.error));
         }
 
+        this.props.dispatch(setMeetingApi(null));
+
         this.props.history.push(ROUTES.HOME);
+    }
+
+    /**
+     * Callback invoked when the process of joining the meeting has started.
+     *
+     * @param {Object} meetingApi - An instance of {@code JitsiMeetExternalAPI}.
+     * @private
+     * @returns {void}
+     */
+    _onMeetingStart(meetingApi) {
+        this.props.dispatch(setMeetingApi(meetingApi));
     }
 }
 
