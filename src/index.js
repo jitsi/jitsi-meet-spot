@@ -3,9 +3,10 @@ import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { createHashHistory } from 'history';
 
 import { protoState } from 'reducers';
-import { remoteControlService } from 'remote-control';
+import { ProcessUpdateDelegate, remoteControlService } from 'remote-control';
 import { getPersistedState, setPersistedState } from 'utils';
 
 import App from './app';
@@ -29,6 +30,10 @@ if (process.env.NODE_ENV !== 'production') {
         store
     };
 }
+
+const history = createHashHistory();
+
+remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 
 render(
     <Provider store = { store }>

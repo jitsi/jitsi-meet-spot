@@ -3,10 +3,21 @@
  * events triggered by the jitsi meet iframe api.
  */
 export const COMMANDS = {
+
+    /**
+     * Proceed to a given meeting name or meeting URL.
+     */
+    GO_TO_MEETING: 'goToMeeting',
+
     /**
      * End the current meeting.
      */
     HANG_UP: 'hangup',
+
+    /**
+     * Get the current calendar events.
+     */
+    REQUEST_CALENDAR: 'requestCalendar',
 
     /**
      * Set audio mute on or off.

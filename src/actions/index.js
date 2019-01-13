@@ -4,6 +4,8 @@ import {
     NOTIFICATION_ADD,
     NOTIFICATION_REMOVE,
     REMOTE_CONTROL_SET_LOCK,
+    REMOTE_CONTROL_SET_MEETING,
+    REMOTE_CONTROL_SET_SPOT_STATE,
     SETUP_COMPLETED
 } from 'reducers';
 
@@ -88,6 +90,19 @@ export function setLock(lock) {
 }
 
 /**
+ * Sets a reference to the in-progress meeting so it can be used elsewhere.
+ *
+ * @param {Object} meetingApi - An instance of {@code JitsiMeetExternalAPI}.
+ * @returns {Object}
+ */
+export function setMeetingApi(meetingApi) {
+    return {
+        type: REMOTE_CONTROL_SET_MEETING,
+        meetingApi
+    };
+}
+
+/**
  * Signals that the Spot setup flow has been successfully completed and should
  * no longer be displayed.
  *
@@ -96,5 +111,20 @@ export function setLock(lock) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
+    };
+}
+
+/**
+ * Signals Spot has changed some part of its status that should be known to
+ * remote controls.
+ *
+ * @param {Object} state - The new state that should be mixed in with the stored
+ * state.
+ * @returns {Object}
+ */
+export function updateSpotState(state) {
+    return {
+        type: REMOTE_CONTROL_SET_SPOT_STATE,
+        state
     };
 }

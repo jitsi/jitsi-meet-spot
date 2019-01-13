@@ -1,10 +1,16 @@
 const DEFAULT_STATE = {
+    audioMuted: true,
     localId: null,
     lock: null,
-    remoteId: null
+    meetingApi: null,
+    remoteId: null,
+    screensharing: false,
+    videoMuted: true
 };
 
 export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
+export const REMOTE_CONTROL_SET_MEETING = 'REMOTE_CONTROL_SET_MEETING';
+export const REMOTE_CONTROL_SET_SPOT_STATE = 'REMOTE_CONTROL_SET_SPOT_STATE';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'remoteControl'
@@ -23,6 +29,26 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
             lock: action.lock
         };
 
+    case REMOTE_CONTROL_SET_MEETING: {
+        const inMeetingStateReset = action.meetingApi ? {} : {
+            audioMuted: true,
+            screensharing: false,
+            videoMuted: true
+        };
+
+        return {
+            ...state,
+            ...inMeetingStateReset,
+            meetingApi: action.meetingApi
+        };
+    }
+
+    case REMOTE_CONTROL_SET_SPOT_STATE:
+        return {
+            ...state,
+            ...action.state
+        };
+
     default:
         return state;
     }
@@ -33,10 +59,46 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
  * control connection.
  *
  * @param {Object} state - The Redux state.
- * @returns {string};
+ * @returns {string}
  */
 export function getCurrentLock(state) {
     return state.remoteControl.lock;
+}
+
+/**
+ * A selector which returns the current view that is being displayed on Spot.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getCurrentView(state) {
+    return state.remoteControl.view;
+}
+
+/**
+ * A selector which returns the current status of various meeting features.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getInMeetingStatus(state) {
+    return {
+        audioMuted: state.remoteControl.audioMuted,
+        screensharing: state.remoteControl.screensharing,
+        videoMuted: state.remoteControl.videoMuted
+    };
+}
+
+/**
+ * A selector which returns the api (a delegate which is an instance of
+ * {@code JitsiMeetExternalAPI}) that can be used to directly
+ * manipulate the meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object|null}
+ */
+export function getMeetingApi(state) {
+    return state.remoteControl.meetingApi;
 }
 
 /**

@@ -52,7 +52,6 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onCommand = this._onCommand.bind(this);
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
         this._onOpenQRCodeUrl = this._onOpenQRCodeUrl.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
@@ -73,9 +72,6 @@ export class Home extends React.Component {
             this._updateEventsInterval
                 = setInterval(this._pollForEvents, 30000);
         }
-
-        this.props.remoteControlService.addRemoteCommandListener(
-            this._onCommand);
     }
 
     /**
@@ -85,9 +81,6 @@ export class Home extends React.Component {
      */
     componentWillUnmount() {
         this._isUnmounting = true;
-
-        this.props.remoteControlService.removeRemoteCommandListener(
-            this._onCommand);
 
         clearInterval(this._updateEventsInterval);
     }
@@ -142,34 +135,6 @@ export class Home extends React.Component {
      */
     _getRemoteControlUrl() {
         return this.props.remoteControlService.getRemoteControlUrl();
-    }
-
-    /**
-     * Listens for and reacts to commands from remote controllers.
-     *
-     * @param {string} command - The type of the command.
-     * @param {string} from - The full jid of the sender of the command.
-     * @param {Object} data - Additional information about how to execute the
-     * command.
-     * @private
-     * @returns {void}
-     */
-    _onCommand(command, from, data) {
-        switch (command) {
-        case 'goToMeeting':
-            this._onGoToMeeting(data.meetingName);
-            break;
-
-        case 'requestCalendar': {
-            const resource = from.split('/')[1];
-
-            this.props.remoteControlService.notifyCalendarEvents(
-                resource,
-                { events: this.props.events }
-            );
-            break;
-        }
-        }
     }
 
     /**

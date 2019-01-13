@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { COMMANDS, remoteControlService } from 'remote-control';
+import { remoteControlService } from 'remote-control';
 import { logger, parseMeetingUrl } from 'utils';
 
 import styles from './meeting-frame.css';
@@ -16,7 +16,8 @@ export default class MeetingFrame extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,
         meetingUrl: PropTypes.string,
-        onMeetingLeave: PropTypes.func
+        onMeetingLeave: PropTypes.func,
+        onMeetingStart: PropTypes.func
     };
 
     static defaultProps = {
@@ -37,7 +38,6 @@ export default class MeetingFrame extends React.Component {
         this._isVideoMuted = null;
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
-        this._onCommand = this._onCommand.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
@@ -48,8 +48,6 @@ export default class MeetingFrame extends React.Component {
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
-
-        remoteControlService.addRemoteCommandListener(this._onCommand);
     }
 
     /**
@@ -74,15 +72,30 @@ export default class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.addListener(
+            'feedbackSubmitted', this.props.onMeetingLeave);
+        this._jitsiApi.addListener(
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
         this._jitsiApi.addListener(
             'videoConferenceJoined', this._onMeetingJoined);
         this._jitsiApi.addListener(
+            'videoConferenceLeft', () => {
+                // FIXME: the iframe api does not provide an event for when the
+                // (post-call) feedback dialog is displayed. Assume the feedback
+                // dialog has been displayed if the conference does not
+                // immediately fire the "readyToClose" event.
+                this._showingFeedbackTimeout = setTimeout(() => {
+                    remoteControlService.notifyViewStatus('feedback');
+                }, 500);
+            }
+        );
+        this._jitsiApi.addListener(
             'videoMuteStatusChanged', this._onVideoMuteChange);
 
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
+
+        this.props.onMeetingStart(this._jitsiApi);
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
@@ -96,13 +109,8 @@ export default class MeetingFrame extends React.Component {
      */
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
+        clearTimeout(this._showingFeedbackTimeout);
 
-        remoteControlService.removeRemoteCommandListener(this._onCommand);
-
-        this._jitsiApi.removeListener(
-            'readyToClose', this.props.onMeetingLeave);
-        this._jitsiApi.removeListener(
-            'feedbackSubmitted', this.props.onMeetingLeave);
         this._jitsiApi.dispose();
     }
 
@@ -158,52 +166,6 @@ export default class MeetingFrame extends React.Component {
         this._isAudioMuted = muted;
 
         remoteControlService.notifyAudioMuteStatus(muted);
-    }
-
-    /**
-     * Callback invoked to execute a remote control command.
-     *
-     * @param {string} command - The type of the command.
-     * @param {string} from - The JID for the sender of the command.
-     * @param {Object} options - Additional details on how to execute the
-     * command.
-     * @private
-     * @returns {void}
-     */
-    _onCommand(command, from, options) {
-        switch (command) {
-        case COMMANDS.HANG_UP:
-            remoteControlService.notifyViewStatus('feedback');
-            this._jitsiApi.executeCommand(command, options);
-            break;
-
-        case COMMANDS.SET_AUDIO_MUTE:
-            if (this._isAudioMuted !== options.mute) {
-                this._jitsiApi.executeCommand('toggleAudio', options);
-            }
-            break;
-
-        case COMMANDS.SET_SCREENSHARING:
-            if (options._isScreensharing !== options.on) {
-                this._jitsiApi.executeCommand('toggleShareScreen', options);
-            }
-            break;
-
-        case COMMANDS.SET_VIDEO_MUTE:
-            if (this._isVideoMuted !== options.mute) {
-                this._jitsiApi.executeCommand('toggleVideo', options);
-            }
-            break;
-
-        case COMMANDS.SUBMIT_FEEDBACK:
-            this._jitsiApi.addListener(
-                'feedbackSubmitted', this.props.onMeetingLeave);
-            this._jitsiApi.executeCommand(command, options);
-            break;
-
-        default:
-            this._jitsiApi.executeCommand(command, options);
-        }
     }
 
     /**

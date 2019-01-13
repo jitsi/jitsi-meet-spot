@@ -179,11 +179,11 @@ export default class XmppConnection {
      * @param {string} command - The command type to send.
      * @param {Object} data - Additional information about how to execute the
      * command.
-     * @returns {void}
+     * @returns {Promise}
      */
     sendCommand(to, command, data = {}) {
         const iq = $iq({
-            to: `${this.getRoomBareJid()}/${to}`,
+            to,
             type: 'set'
         })
         .c('command', {
@@ -197,7 +197,11 @@ export default class XmppConnection {
         return new Promise((resolve, reject) => {
             this.room.connection.sendIQ(
                 iq,
-                resolve,
+                responseIq => {
+                    const response = responseIq.getElementsByTagName('data')[0];
+
+                    resolve(JSON.parse(response.textContent));
+                },
                 reject,
                 5000
             );
@@ -207,24 +211,15 @@ export default class XmppConnection {
     /**
      * Callback invoked to process and acknowledge and incoming IQ.
      *
-     * @param {Object} iq - The iq.
+     * @param {Object} iq - The iq containing the response from a command.
      * @private
      * @returns {boolean}
      */
     _onIq(iq) {
-        const from = iq.getAttribute('from');
-        const command = iq.getElementsByTagName('command')[0];
-        const commandType = command.getAttribute('type');
-        const data = JSON.parse(command.textContent);
-
-        this.options.onRemoteCommand(commandType, from, data);
-
-        const ack = $iq({ type: 'result',
-            to: from,
-            id: iq.getAttribute('id')
-        });
-
-        this.room.connection.send(ack);
+        this.options.onRemoteCommand(iq)
+            .then(ack => {
+                this.room.connection.send(ack);
+            });
 
         return true;
     }
@@ -308,6 +303,8 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onPresence(presence) {
+        // FIXME: xmpp connection does not need to be in charge of creating
+        // a json formatted presence.
         const status = Array.from(presence.children).map(child =>
             [ child.tagName, child.textContent ])
             .reduce((acc, current) => {

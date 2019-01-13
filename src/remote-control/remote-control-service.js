@@ -13,37 +13,11 @@ class RemoteControlService {
      * Initializes a new {@code RemoteControlService} instance.
      */
     constructor() {
+        this._delegate = null;
         this._spotId = null;
-
-        this._commandListeners = new Set();
-        this._statusUpdateListeners = new Set();
 
         this._onRemoteCommand = this._onRemoteCommand.bind(this);
         this._onSpotStatusUpdate = this._onSpotStatusUpdate.bind(this);
-    }
-
-    /**
-     * Add an observers which should be notified when a command is received
-     * through the muc.
-     *
-     * @param {Function} listener - The callback to invoke when a command is
-     * received from a remote.
-     * @returns {void}
-     */
-    addRemoteCommandListener(listener) {
-        this._commandListeners.add(listener);
-    }
-
-    /**
-     * Subscribes an observers for status updates from other participants in the
-     * muc.
-     *
-     * @param {Function} listener - The callback which should be invoked when
-     * another participant has updated its presence.
-     * @returns {void}
-     */
-    addSpotStatusListener(listener) {
-        this._statusUpdateListeners.add(listener);
     }
 
     /**
@@ -92,17 +66,17 @@ class RemoteControlService {
      * Requests a Spot to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
-     * @returns {void}
+     * @returns {Promise} Resolves if the command has been acknowledged.
      */
     goToMeeting(meetingName) {
         return this.xmppConnection.sendCommand(
-            this._spotId, 'goToMeeting', { meetingName });
+            this._spotId, COMMANDS.GO_TO_MEETING, { meetingName });
     }
 
     /**
      * Requests a Spot to leave a meeting in progress.
      *
-     * @returns {void}
+     * @returns {Promise} Resolves if the command has been acknowledged.
      */
     hangUp() {
         return this.xmppConnection.sendCommand(
@@ -117,31 +91,6 @@ class RemoteControlService {
      */
     notifyAudioMuteStatus(audioMuted) {
         this.xmppConnection.updateStatus('audioMuted', audioMuted);
-    }
-
-    /**
-     * Notifies a controller about the latest calendar data.
-     *
-     * @param {string} to - The controller to notify.
-     * @param {Object} data - The calendar events.
-     * @returns {void}
-     */
-    notifyCalendarEvents(to, data) {
-        return this.xmppConnection.sendCommand(
-            to,
-            'calendarData',
-            data
-        );
-    }
-
-    /**
-     * Notifies all controllers about the current view Spot is on.
-     *
-     * @param {string} viewName - The currently displayed view.
-     * @returns {void}
-     */
-    notifyViewStatus(viewName) {
-        this.xmppConnection.updateStatus('view', viewName);
     }
 
     /**
@@ -165,45 +114,45 @@ class RemoteControlService {
     }
 
     /**
+     * Notifies all controllers about the current view Spot is on.
+     *
+     * @param {string} viewName - The currently displayed view.
+     * @returns {void}
+     */
+    notifyViewStatus(viewName) {
+        this.xmppConnection.updateStatus('view', viewName);
+    }
+
+    /**
      * Requests Spot to send out its latest calendar events.
      *
-     * @returns {void}
+     * @returns {Promise} Resolves with calendar data.
      */
     requestCalendarEvents() {
         return this.xmppConnection.sendCommand(
-            this._spotId, 'requestCalendar');
-    }
-
-    /**
-     * Unsubscribes an observer from commands received through XMPP channels.
-     *
-     * @param {Function} listener - The observer to unsubscribe.
-     * @returns {void}
-     */
-    removeRemoteCommandListener(listener) {
-        this._commandListeners.delete(listener);
-    }
-
-    /**
-     * Unsubscribes an observer from status updates from other participants in
-     * the muc.
-     *
-     * @param {Function} listener - The listener to be removed.
-     * @returns {void}
-     */
-    removeSpotStatusListener(listener) {
-        this._statusListeners.delete(listener);
+            this._spotId, COMMANDS.REQUEST_CALENDAR);
     }
 
     /**
      * Requests a Spot to change its audio mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be audio muted.
-     * @returns {void}
+     * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setAudioMute(mute) {
         return this.xmppConnection.sendCommand(
             this._spotId, COMMANDS.SET_AUDIO_MUTE, { mute });
+    }
+
+    /**
+     * Stores a reference to a delegate for which hand over acting upon presence
+     * updates and command iqs.
+     *
+     * @param {Object} delegate - An instance of {@code ProcessUpdateDelegate}.
+     * @returns {void}
+     */
+    setDelegate(delegate) {
+        this._delegate = delegate;
     }
 
     /**
@@ -217,10 +166,22 @@ class RemoteControlService {
     }
 
     /**
+     * Requests a Spot to change its screensharing status.
+     *
+     * @param {boolean} screensharing - Whether or not Spot should start or stop
+     * screensharing.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    setScreensharing(screensharing) {
+        return this.xmppConnection.sendCommand(
+            this._spotId, COMMANDS.SET_SCREENSHARING, { on: screensharing });
+    }
+
+    /**
      * Requests a Spot to change its video mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be video muted.
-     * @returns {void}
+     * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setVideoMute(mute) {
         return this.xmppConnection.sendCommand(
@@ -231,7 +192,7 @@ class RemoteControlService {
      * Requests a Spot to change submit meeting feedback.
      *
      * @param {Object} feedback - The feedback to submit.
-     * @returns {void}
+     * @returns {Promise} Resolves if the command has been acknowledged.
      */
     submitFeedback(feedback) {
         return this.xmppConnection.sendCommand(
@@ -239,15 +200,18 @@ class RemoteControlService {
     }
 
     /**
-     * Requests a Spot to change its screensharing status.
+     * Callback invoked when a command has been received.
      *
-     * @param {boolean} screensharing - Whether or not Spot should start or stop
-     * screensharing.
-     * @returns {void}
+     * @param {Object} iq - The command iq.
+     * @private
+     * @returns {Promise}
      */
-    setScreensharing(screensharing) {
-        return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.SET_SCREENSHARING, { on: screensharing });
+    _onRemoteCommand(iq) {
+        if (!this._delegate) {
+            return Promise.reject('No delegate set');
+        }
+
+        return this._delegate.onCommand(iq);
     }
 
     /**
@@ -256,26 +220,18 @@ class RemoteControlService {
      *
      * @param {Object} update - The status update.
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _onSpotStatusUpdate(update) {
         if (update.status.isSpot === 'true') {
-            this._spotId = update.from.split('/')[1];
-            this._statusUpdateListeners.forEach(listener => listener(update));
-        }
-    }
+            this._spotId = update.from;
 
-    /**
-     * Callback invoked when a command has been received.
-     *
-     * @param {string} type - The constant for the command.
-     * @param {string} from - The JID of the sender of the command.
-     * @param {Object} data - Additional details for fulfilling the command.
-     * @private
-     * @returns {void}
-     */
-    _onRemoteCommand(type, from, data) {
-        this._commandListeners.forEach(listener => listener(type, from, data));
+            if (!this._delegate) {
+                return Promise.reject('No delegate set');
+            }
+
+            return this._delegate.onStatus(update);
+        }
     }
 }
 
