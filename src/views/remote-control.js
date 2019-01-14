@@ -21,6 +21,7 @@ import styles from './view.css';
 export class RemoteControl extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        isConnectedToSpot: PropTypes.bool,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool,
@@ -84,6 +85,10 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getView() {
+        if (!this.props.isConnectedToSpot) {
+            return <div>not connected to spot</div>;
+        }
+
         switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
@@ -160,6 +165,7 @@ export class RemoteControl extends React.Component {
 function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
+        isConnectedToSpot: state.remoteControl.spotId,
         view: getCurrentView(state)
     };
 }

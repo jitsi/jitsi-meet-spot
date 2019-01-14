@@ -5,12 +5,14 @@ const DEFAULT_STATE = {
     meetingApi: null,
     remoteId: null,
     screensharing: false,
+    spotId: null,
     videoMuted: true
 };
 
 export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
 export const REMOTE_CONTROL_SET_MEETING = 'REMOTE_CONTROL_SET_MEETING';
 export const REMOTE_CONTROL_SET_SPOT_STATE = 'REMOTE_CONTROL_SET_SPOT_STATE';
+export const REMOTE_CONTROL_SPOT_LEFT = 'REMOTE_CONTROL_SPOT_LEFT';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'remoteControl'
@@ -48,6 +50,9 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
             ...state,
             ...action.state
         };
+
+    case REMOTE_CONTROL_SPOT_LEFT:
+        return DEFAULT_STATE;
 
     default:
         return state;
@@ -99,6 +104,16 @@ export function getInMeetingStatus(state) {
  */
 export function getMeetingApi(state) {
     return state.remoteControl.meetingApi;
+}
+
+/**
+ * A selector which returns the JID of the Spot to remotely control.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string|null}
+ */
+export function getSpotId(state) {
+    return state.remoteControl.spotId;
 }
 
 /**

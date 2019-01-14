@@ -6,6 +6,7 @@ import {
     REMOTE_CONTROL_SET_LOCK,
     REMOTE_CONTROL_SET_MEETING,
     REMOTE_CONTROL_SET_SPOT_STATE,
+    REMOTE_CONTROL_SPOT_LEFT,
     SETUP_COMPLETED
 } from 'reducers';
 
@@ -111,6 +112,17 @@ export function setMeetingApi(meetingApi) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
+    };
+}
+
+/**
+ * Signals a Spot has become no longer available to control.
+ *
+ * @returns {Object}
+ */
+export function setSpotLeft() {
+    return {
+        type: REMOTE_CONTROL_SPOT_LEFT
     };
 }
 

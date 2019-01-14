@@ -14,7 +14,6 @@ class RemoteControlService {
      */
     constructor() {
         this._delegate = null;
-        this._spotId = null;
 
         this._onRemoteCommand = this._onRemoteCommand.bind(this);
         this._onSpotStatusUpdate = this._onSpotStatusUpdate.bind(this);
@@ -70,7 +69,7 @@ class RemoteControlService {
      */
     goToMeeting(meetingName) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.GO_TO_MEETING, { meetingName });
+            this._getSpotId(), COMMANDS.GO_TO_MEETING, { meetingName });
     }
 
     /**
@@ -80,7 +79,7 @@ class RemoteControlService {
      */
     hangUp() {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.HANG_UP);
+            this._getSpotId(), COMMANDS.HANG_UP);
     }
 
     /**
@@ -130,7 +129,7 @@ class RemoteControlService {
      */
     requestCalendarEvents() {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.REQUEST_CALENDAR);
+            this._getSpotId(), COMMANDS.REQUEST_CALENDAR);
     }
 
     /**
@@ -141,7 +140,7 @@ class RemoteControlService {
      */
     setAudioMute(mute) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.SET_AUDIO_MUTE, { mute });
+            this._getSpotId(), COMMANDS.SET_AUDIO_MUTE, { mute });
     }
 
     /**
@@ -174,7 +173,10 @@ class RemoteControlService {
      */
     setScreensharing(screensharing) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.SET_SCREENSHARING, { on: screensharing });
+            this._getSpotId(),
+            COMMANDS.SET_SCREENSHARING,
+            { on: screensharing }
+        );
     }
 
     /**
@@ -185,7 +187,7 @@ class RemoteControlService {
      */
     setVideoMute(mute) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.SET_VIDEO_MUTE, { mute });
+            this._getSpotId(), COMMANDS.SET_VIDEO_MUTE, { mute });
     }
 
     /**
@@ -196,7 +198,17 @@ class RemoteControlService {
      */
     submitFeedback(feedback) {
         return this.xmppConnection.sendCommand(
-            this._spotId, COMMANDS.SUBMIT_FEEDBACK, feedback);
+            this._getSpotId(), COMMANDS.SUBMIT_FEEDBACK, feedback);
+    }
+
+    /**
+     * Gets the Spot for which to send commands.
+     *
+     * @private
+     * @returns {string|null}
+     */
+    _getSpotId() {
+        return this._delegate.getSpotId();
     }
 
     /**
@@ -223,15 +235,7 @@ class RemoteControlService {
      * @returns {Promise}
      */
     _onSpotStatusUpdate(update) {
-        if (update.status.isSpot === 'true') {
-            this._spotId = update.from;
-
-            if (!this._delegate) {
-                return Promise.reject('No delegate set');
-            }
-
-            return this._delegate.onStatus(update);
-        }
+        return this._delegate.onStatus(update);
     }
 }
 
