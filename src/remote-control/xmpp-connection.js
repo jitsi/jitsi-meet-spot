@@ -22,7 +22,7 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
-        this._onMessage = this._onMessage.bind(this);
+        this._onIq = this._onIq.bind(this);
         this._onPresence = this._onPresence.bind(this);
     }
 
@@ -60,14 +60,6 @@ export default class XmppConnection {
             logger.error);
 
         this.xmppConnection.xmpp.connection.addHandler(
-            this._onMessage,
-            null,
-            'message',
-            null,
-            null
-        );
-
-        this.xmppConnection.xmpp.connection.addHandler(
             this._onPresence,
             null,
             'presence',
@@ -76,7 +68,15 @@ export default class XmppConnection {
         );
 
         this.xmppConnection.xmpp.connection.addHandler(
-            this._onIq.bind(this),
+            this._onPresence,
+            null,
+            'presence',
+            'unavailable',
+            null
+        );
+
+        this.xmppConnection.xmpp.connection.addHandler(
+            this._onIq,
             'jitsi-meet-spot-command',
             'iq',
             'set',
@@ -268,33 +268,6 @@ export default class XmppConnection {
     }
 
     /**
-     * Callback invoked to respond to private messages.
-     *
-     * @param {XML} message - A potential private message.
-     * @private
-     * @returns {boolean}
-     */
-    _onMessage(message) {
-        const from = message.getAttribute('from');
-
-        // Exit if not a private message from the current MUC.
-        if (from.split('/')[0] !== this.getRoomBareJid()
-            || message.getAttribute('type') !== 'chat') {
-
-            return true;
-        }
-
-        const body = message.getElementsByTagName('body')[0];
-        const { type, data } = JSON.parse(body.textContent) || {};
-
-        if (type) {
-            this.options.onRemoteCommand(type, from, data);
-        }
-
-        return true;
-    }
-
-    /**
      * Callback invoked when the status of another participant in the muc has
      * changed.
      *
@@ -303,22 +276,7 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onPresence(presence) {
-        // FIXME: xmpp connection does not need to be in charge of creating
-        // a json formatted presence.
-        const status = Array.from(presence.children).map(child =>
-            [ child.tagName, child.textContent ])
-            .reduce((acc, current) => {
-                acc[current[0]] = current[1];
-
-                return acc;
-            }, {});
-
-        const formattedPresence = {
-            from: presence.getAttribute('from'),
-            status
-        };
-
-        this.options.onSpotStatusUpdate(formattedPresence);
+        this.options.onSpotStatusUpdate(presence);
 
         return true;
     }

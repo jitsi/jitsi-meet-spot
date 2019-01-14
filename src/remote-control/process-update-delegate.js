@@ -1,6 +1,11 @@
 import { $iq } from 'strophe.js';
-import { updateSpotState } from 'actions';
-import { getCalendarEvents, getInMeetingStatus, getMeetingApi } from 'reducers';
+import { setSpotLeft, updateSpotState } from 'actions';
+import {
+    getCalendarEvents,
+    getInMeetingStatus,
+    getMeetingApi,
+    getSpotId
+} from 'reducers';
 
 import { COMMANDS } from './constants';
 
@@ -28,6 +33,15 @@ export default class ProcessUpdateDelegate {
     constructor(store, history) {
         this._store = store;
         this._history = history;
+    }
+
+    /**
+     * Returns the Spot of the current muc.
+     *
+     * @returns {string|null}
+     */
+    getSpotId() {
+        return getSpotId(this._store.getState());
     }
 
     /**
@@ -111,11 +125,38 @@ export default class ProcessUpdateDelegate {
      * Callback to invoke when Spot has a presence update so the app state
      * can be synced with Spot's current presence.
      *
-     * @param {Object} update - The status update object.
+     * @param {Object} presence - The presence update in XML format.
      * @returns {Promise}
      */
-    onStatus({ status }) {
-        const newState = {};
+    onStatus(presence) {
+        const updateType = presence.getAttribute('type');
+
+        if (updateType === 'unavailable') {
+            const from = presence.getAttribute('from');
+
+            if (from === this.getSpotId()) {
+                this._store.dispatch(setSpotLeft());
+            }
+
+            return Promise.resolve();
+        }
+
+        const status = Array.from(presence.children).map(child =>
+            [ child.tagName, child.textContent ])
+            .reduce((acc, current) => {
+                acc[current[0]] = current[1];
+
+                return acc;
+            }, {});
+
+        if (status.isSpot !== 'true') {
+            return Promise.resolve();
+        }
+
+        const from = presence.getAttribute('from');
+        const newState = {
+            spotId: from
+        };
 
         Object.keys(status).forEach(key => {
             if (presenceToStoreAsBoolean.has(key)) {
