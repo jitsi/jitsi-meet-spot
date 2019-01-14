@@ -2,6 +2,8 @@ import { $iq } from 'strophe.js';
 
 import { JitsiMeetJSProvider } from 'vendor';
 
+import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
+
 /**
  * Represents an XMPP connection to a prosody service.
  */
@@ -20,7 +22,8 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
-        this._onIq = this._onIq.bind(this);
+        this._onCommand = this._onCommand.bind(this);
+        this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
     }
 
@@ -74,8 +77,17 @@ export default class XmppConnection {
         );
 
         this.xmppConnection.xmpp.connection.addHandler(
-            this._onIq,
-            'jitsi-meet-spot-command',
+            this._onCommand,
+            IQ_NAMESPACES.COMMAND,
+            'iq',
+            'set',
+            null,
+            null
+        );
+
+        this.xmppConnection.xmpp.connection.addHandler(
+            this._onMessage,
+            IQ_NAMESPACES.MESSAGE,
             'iq',
             'set',
             null,
@@ -217,8 +229,7 @@ export default class XmppConnection {
     }
 
     /**
-     * Send a direct message to another participant in the muc. This is a fire
-     * and forget function with no ack.
+     * Send a direct message to another participant in the muc.
      *
      * @param {string} to - The JID to send the command to.
      * @param {string} command - The command type to send.
@@ -232,8 +243,7 @@ export default class XmppConnection {
             type: 'set'
         })
         .c('command', {
-            xmlns: 'jitsi-meet-spot-command',
-            jid: this.getRoomFullJid(),
+            xmlns: IQ_NAMESPACES.COMMAND,
             type: command
         })
         .t(JSON.stringify(data))
@@ -248,7 +258,38 @@ export default class XmppConnection {
                     resolve(response ? JSON.parse(response.textContent) : {});
                 },
                 reject,
-                5000
+                IQ_TIMEOUT
+            );
+        });
+    }
+
+    /**
+     * Send a message iq to another participant in the muc. A message expects
+     * no immediate action taken in response.
+     *
+     * @param {string} to - The jid to send the message to.
+     * @param {string} type - The message type to send.
+     * @param {Object} data - Additional details to send.
+     * @returns {Promise}
+     */
+    sendMessage(to, type, data) {
+        const iq = $iq({
+            to,
+            type: 'set'
+        })
+        .c('message', {
+            type,
+            xmlns: IQ_NAMESPACES.MESSAGE
+        })
+        .t(JSON.stringify(data))
+        .up();
+
+        return new Promise((resolve, reject) => {
+            this.room.connection.sendIQ(
+                iq,
+                resolve,
+                reject,
+                IQ_TIMEOUT
             );
         });
     }
@@ -260,11 +301,25 @@ export default class XmppConnection {
      * @private
      * @returns {boolean}
      */
-    _onIq(iq) {
+    _onCommand(iq) {
         this.options.onRemoteCommand(iq)
             .then(ack => {
                 this.room.connection.send(ack);
             });
+
+        return true;
+    }
+
+    /**
+     * Callback invoked to process and acknowledge and incoming iq.
+     *
+     * @param {Object} iq - The iq containing a message.
+     * @private
+     * @returns {boolean}
+     */
+    _onMessage(iq) {
+        this.options.onRemoteMessage(iq)
+            .then(ack => this.room.connection.send(ack));
 
         return true;
     }

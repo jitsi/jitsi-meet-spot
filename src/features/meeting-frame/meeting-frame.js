@@ -85,6 +85,8 @@ export default class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'feedbackSubmitted', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
+            'proxyConnectionEvent', this._onSendMessageToRemoteControl);
+        this._jitsiApi.addListener(
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
@@ -229,6 +231,22 @@ export default class MeetingFrame extends React.Component {
         this._isScreensharing = on;
 
         remoteControlService.notifyScreenshareStatus(on);
+    }
+
+    /**
+     * Passes a message from {@code JitsiMeetExternalAPI} to a specified
+     * remote control.
+     *
+     * @param {Object} event - The object holding information on what and how to
+     * send the message.
+     * @param {string} event.to - The jid of the remote control which should
+     * receive the message.
+     * @param {Object} event.data - Details of the message.
+     * @private
+     * @returns {void}
+     */
+    _onSendMessageToRemoteControl({ to, data }) {
+        remoteControlService.sendMessageToRemoteControl(to, data);
     }
 
     /**

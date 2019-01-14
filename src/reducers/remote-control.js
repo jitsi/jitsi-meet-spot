@@ -1,6 +1,7 @@
 const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: false,
+    isWirelessScreenshareConnectionActive: false,
     localId: null,
     lock: null,
     meetingApi: null,
@@ -108,6 +109,8 @@ export function getInMeetingStatus(state) {
     return {
         audioMuted: state.remoteControl.audioMuted,
         inMeeting: state.remoteControl.inMeeting,
+        isWirelessScreenshareConnectionActive:
+            state.remoteControl.isWirelessScreenshareConnectionActive,
         screensharing: state.remoteControl.screensharing,
         videoMuted: state.remoteControl.videoMuted
     };

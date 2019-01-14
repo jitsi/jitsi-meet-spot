@@ -1,4 +1,7 @@
-import { COMMANDS } from './constants';
+import { logger } from 'utils';
+
+import { COMMANDS, MESSAGES } from './constants';
+import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
 /**
@@ -15,6 +18,7 @@ class RemoteControlService {
         this._delegate = null;
 
         this._onRemoteCommand = this._onRemoteCommand.bind(this);
+        this._onRemoteMessage = this._onRemoteMessage.bind(this);
         this._onSpotStatusUpdate = this._onSpotStatusUpdate.bind(this);
 
         window.addEventListener('beforeunload', () => this.disconnect());
@@ -41,6 +45,7 @@ class RemoteControlService {
         this.xmppConnection = new XmppConnection({
             configuration: serverConfig,
             onRemoteCommand: this._onRemoteCommand,
+            onRemoteMessage: this._onRemoteMessage,
             onSpotStatusUpdate: this._onSpotStatusUpdate
         });
 
@@ -188,6 +193,19 @@ class RemoteControlService {
     }
 
     /**
+     * Sends a message to a remote control.
+     *
+     * @param {string} jid - The jid of the remote control which should receive
+     * the message.
+     * @param {Object} data - Information to pass to the remote control.
+     * @returns {Promise}
+     */
+    sendMessageToRemoteControl(jid, data) {
+        return this.xmppConnection.sendMessage(
+            jid, MESSAGES.JITSI_MEET_UPDATE, data);
+    }
+
+    /**
      * Requests a Spot to change its audio mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be audio muted.
@@ -246,6 +264,56 @@ class RemoteControlService {
     }
 
     /**
+     * Begins the process for establishing a connection to the meeting in order
+     * to share a local screen to a remote spot.
+     *
+     * @param {boolean} enable - Whether to start ot stop screensharing.
+     * @returns {Promise}
+     */
+    setWirelessScreensharing(enable) {
+        if (enable) {
+            const connection = new ScreenshareService({
+
+                /**
+                 * Callback invoked when the connection has been closed
+                 * automatically. Triggers cleanup of
+                 * {@code ScreenshareService}.
+                 *
+                 * @returns {void}
+                 */
+                onConnectionClosed: () => this._delegate.stopScreenshare(),
+
+                /**
+                 * Callback invoked by {@code ScreenshareService} in order to
+                 * communicate out to a Spot.
+                 *
+                 * @param {string} to - The participant to send the message to.
+                 * This is normally the Spot jid.
+                 * @param {Object} data - A payload to send along with the
+                 * message.
+                 * @returns {Promise}
+                 */
+                sendMessage: (to, data) =>
+                    this.xmppConnection.sendMessage(
+                        to,
+                        MESSAGES.REMOTE_CONTROL_UPDATE,
+                        data
+                    ).catch(error => logger.error(error))
+            });
+
+            return this._delegate.startScreenshare(
+                this._getSpotId(),
+                this.xmppConnection.getRoomFullJid(),
+                connection
+            );
+        }
+
+        this.setScreensharing(false);
+
+        return this._delegate.stopScreenshare();
+    }
+
+    /**
      * Requests a Spot to change submit meeting feedback.
      *
      * @param {Object} feedback - The feedback to submit.
@@ -279,6 +347,23 @@ class RemoteControlService {
         }
 
         return this._delegate.onCommand(iq);
+    }
+
+    /**
+     * Callback invoked when {@code XmppConnection} connection receives a
+     * message iq that needs processing.
+     *
+     * @param {Object} iq - The XML document representing the iq with the
+     * message.
+     * @private
+     * @returns {Promise}
+     */
+    _onRemoteMessage(iq) {
+        if (!this._delegate) {
+            return Promise.reject('No delegate set');
+        }
+
+        return this._delegate.onMessage(iq);
     }
 
     /**

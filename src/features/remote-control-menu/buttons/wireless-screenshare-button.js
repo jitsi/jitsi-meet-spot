@@ -14,10 +14,14 @@ import styles from '../remote-control-menu.css';
  * @returns {ReactElement}
  */
 export default function WirelessScreenshareButton(props) {
-    const { isProxyConnectionActive, isScreensharing, onClick } = props;
+    const {
+        isScreensharing,
+        isWirelessScreenshareConnectionActive,
+        onClick
+    } = props;
     let buttonText;
 
-    if (isProxyConnectionActive && !isScreensharing) {
+    if (isWirelessScreenshareConnectionActive && !isScreensharing) {
         buttonText = 'Cancel screensharing';
     } else if (isScreensharing) {
         buttonText = 'Stop screensharing';
@@ -38,7 +42,7 @@ export default function WirelessScreenshareButton(props) {
 }
 
 WirelessScreenshareButton.propTypes = {
-    isProxyConnectionActive: PropTypes.bool,
     isScreensharing: PropTypes.bool,
+    isWirelessScreenshareConnectionActive: PropTypes.bool,
     onClick: PropTypes.func.isRequired
 };

@@ -8,6 +8,7 @@ import AudioMuteButton from './buttons/audio-mute-button';
 import HangupButton from './buttons/hangup-button';
 import ScreenshareButton from './buttons/screenshare-button';
 import VideoMuteButton from './buttons/video-mute-button';
+import WirelessScreenshareButton from './buttons/wireless-screenshare-button';
 
 import styles from './remote-control-menu.css';
 
@@ -20,6 +21,7 @@ export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
         inMeeting: PropTypes.bool,
+        isWirelessScreenshareConnectionActive: PropTypes.bool,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool
     };
@@ -37,6 +39,8 @@ export default class RemoteControlMenu extends React.Component {
         this._onSetAudioMute = this._onSetAudioMute.bind(this);
         this._onSetScreensharing = this._onSetScreensharing.bind(this);
         this._onSetVideoMute = this._onSetVideoMute.bind(this);
+        this._onSetWirelessScreensharing
+            = this._onSetWirelessScreensharing.bind(this);
     }
 
     /**
@@ -45,7 +49,13 @@ export default class RemoteControlMenu extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { audioMuted, inMeeting, screensharing, videoMuted } = this.props;
+        const {
+            audioMuted,
+            inMeeting,
+            isWirelessScreenshareConnectionActive,
+            screensharing,
+            videoMuted
+        } = this.props;
 
         if (!inMeeting) {
             return <LoadingIcon color = 'white' />;
@@ -62,6 +72,11 @@ export default class RemoteControlMenu extends React.Component {
                 <ScreenshareButton
                     isScreensharing = { screensharing }
                     onClick = { this._onSetScreensharing } />
+                <WirelessScreenshareButton
+                    isWirelessScreenshareConnectionActive
+                        = { isWirelessScreenshareConnectionActive }
+                    isScreensharing = { screensharing }
+                    onClick = { this._onSetWirelessScreensharing } />
                 <HangupButton onClick = { this._onHangUp } />
             </div>
         );
@@ -105,5 +120,25 @@ export default class RemoteControlMenu extends React.Component {
      */
     _onSetVideoMute() {
         remoteControlService.setVideoMute(!this.props.videoMuted);
+    }
+
+    /**
+     * Changes the current wireless screensharing state.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onSetWirelessScreensharing() {
+        const {
+            isWirelessScreenshareConnectionActive,
+            screensharing
+        } = this.props;
+
+        // No-op if a proxy connection to set up screensharing is in progress.
+        if (isWirelessScreenshareConnectionActive && !screensharing) {
+            return;
+        }
+
+        remoteControlService.setWirelessScreensharing(!screensharing);
     }
 }

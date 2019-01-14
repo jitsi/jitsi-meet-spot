@@ -32,6 +32,7 @@ export class RemoteControl extends React.Component {
         history: PropTypes.object,
         inMeeting: PropTypes.bool,
         isConnectedToSpot: PropTypes.bool,
+        isWirelessScreenshareConnectionActive: PropTypes.bool,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool,
@@ -126,12 +127,22 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getInCallView() {
+        const {
+            audioMuted,
+            inMeeting,
+            isWirelessScreenshareConnectionActive,
+            screensharing,
+            videoMuted
+        } = this.props;
+
         return (
             <RemoteControlMenu
-                audioMuted = { this.props.audioMuted }
-                inMeeting = { this.props.inMeeting }
-                screensharing = { this.props.screensharing }
-                videoMuted = { this.props.videoMuted } />
+                audioMuted = { audioMuted }
+                inMeeting = { inMeeting }
+                isWirelessScreenshareConnectionActive
+                    = { isWirelessScreenshareConnectionActive }
+                screensharing = { screensharing }
+                videoMuted = { videoMuted } />
         );
     }
 
