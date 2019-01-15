@@ -39,6 +39,7 @@ export default class MeetingFrame extends React.Component {
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
+        this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
@@ -80,22 +81,11 @@ export default class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'videoConferenceJoined', this._onMeetingJoined);
         this._jitsiApi.addListener(
-            'videoConferenceLeft', () => {
-                // FIXME: the iframe api does not provide an event for when the
-                // (post-call) feedback dialog is displayed. Assume the feedback
-                // dialog has been displayed if the conference does not
-                // immediately fire the "readyToClose" event.
-                this._showingFeedbackTimeout = setTimeout(() => {
-                    remoteControlService.notifyViewStatus('feedback');
-                }, 500);
-            }
-        );
+            'videoConferenceLeft', this._onMeetingLeft);
         this._jitsiApi.addListener(
             'videoMuteStatusChanged', this._onVideoMuteChange);
 
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
-
-        this.props.onMeetingStart(this._jitsiApi);
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
@@ -177,6 +167,27 @@ export default class MeetingFrame extends React.Component {
      */
     _onMeetingJoined() {
         this._meetingJoined = true;
+
+        this.props.onMeetingStart(this._jitsiApi);
+        remoteControlService.notifyMeetingJoinStatus(true);
+    }
+
+    /**
+     * Updates the known status of Spot to remote controllers.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onMeetingLeft() {
+        remoteControlService.notifyMeetingJoinStatus(false);
+
+        // FIXME: the iframe api does not provide an event for when the
+        // (post-call) feedback dialog is displayed. Assume the feedback
+        // dialog has been displayed if the conference does not
+        // immediately fire the "readyToClose" event.
+        this._showingFeedbackTimeout = setTimeout(() => {
+            remoteControlService.notifyViewStatus('feedback');
+        }, 500);
     }
 
     /**

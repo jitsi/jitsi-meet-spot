@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { LoadingIcon } from 'features/loading-icon';
 import { remoteControlService } from 'remote-control';
 
 import AudioMuteButton from './buttons/audio-mute-button';
@@ -18,6 +19,7 @@ import styles from './remote-control-menu.css';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        inMeeting: PropTypes.bool,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool
     };
@@ -43,7 +45,11 @@ export default class RemoteControlMenu extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { audioMuted, screensharing, videoMuted } = this.props;
+        const { audioMuted, inMeeting, screensharing, videoMuted } = this.props;
+
+        if (!inMeeting) {
+            return <LoadingIcon color = 'white' />;
+        }
 
         return (
             <div className = { styles.menu }>
