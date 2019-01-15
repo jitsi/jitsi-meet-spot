@@ -11,6 +11,7 @@ import { COMMANDS } from './constants';
 
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
+    'inMeeting',
     'screensharing',
     'videoMuted'
 ]);

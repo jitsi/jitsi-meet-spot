@@ -1,5 +1,6 @@
 const DEFAULT_STATE = {
     audioMuted: true,
+    inMeeting: false,
     localId: null,
     lock: null,
     meetingApi: null,
@@ -89,6 +90,7 @@ export function getCurrentView(state) {
 export function getInMeetingStatus(state) {
     return {
         audioMuted: state.remoteControl.audioMuted,
+        inMeeting: state.remoteControl.inMeeting,
         screensharing: state.remoteControl.screensharing,
         videoMuted: state.remoteControl.videoMuted
     };

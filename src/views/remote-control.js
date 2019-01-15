@@ -21,6 +21,7 @@ import styles from './view.css';
 export class RemoteControl extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        inMeeting: PropTypes.bool,
         isConnectedToSpot: PropTypes.bool,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
@@ -116,6 +117,7 @@ export class RemoteControl extends React.Component {
         return (
             <RemoteControlMenu
                 audioMuted = { this.props.audioMuted }
+                inMeeting = { this.props.inMeeting }
                 screensharing = { this.props.screensharing }
                 videoMuted = { this.props.videoMuted } />
         );
