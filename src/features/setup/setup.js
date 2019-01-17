@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { setSetupCompleted } from 'actions';
 import CalendarAuth from './calendar-auth';
+import ScreenshareInput from './screenshare-input';
 import SelectRoom from './select-room';
 import Welcome from './welcome';
 
@@ -34,7 +35,8 @@ export class Setup extends React.Component {
         this.steps = [
             Welcome,
             CalendarAuth,
-            SelectRoom
+            SelectRoom,
+            ScreenshareInput
         ];
 
         this.state = {

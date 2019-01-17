@@ -2,6 +2,7 @@ const DEFAULT_STATE = {
     completed: false
 };
 
+export const SETUP_SET_SCREENSHARE_DEVICE = 'SETUP_SET_SCREENSHARE_DEVICE';
 export const SETUP_COMPLETED = 'SETUP_COMPLETED';
 
 /**
@@ -20,6 +21,12 @@ const setup = (state = DEFAULT_STATE, action) => {
             completed: true
         };
 
+    case SETUP_SET_SCREENSHARE_DEVICE:
+        return {
+            ...state,
+            screenshareDevice: action.label
+        };
+
     default:
         return state;
     }
@@ -33,6 +40,17 @@ const setup = (state = DEFAULT_STATE, action) => {
  */
 export function isSetupComplete(state) {
     return state.setup.completed;
+}
+
+/**
+ * A selector which returns the video input device to use when screensharing
+ * through a physical connection.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getScreenshareDevice(state) {
+    return state.setup.screenshareDevice;
 }
 
 export default setup;

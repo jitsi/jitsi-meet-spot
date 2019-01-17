@@ -17,7 +17,8 @@ export default class MeetingFrame extends React.Component {
         displayName: PropTypes.string,
         meetingUrl: PropTypes.string,
         onMeetingLeave: PropTypes.func,
-        onMeetingStart: PropTypes.func
+        onMeetingStart: PropTypes.func,
+        screenshareDevice: PropTypes.string
     };
 
     static defaultProps = {
@@ -65,9 +66,12 @@ export default class MeetingFrame extends React.Component {
         } = parseMeetingUrl(this.props.meetingUrl);
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
-            roomName: meetingName,
+            configOverwrite: {
+                _desktopSharingSourceDevice: this.props.screenshareDevice
+            },
             onload: this._onMeetingLoaded,
-            parentNode: this._meetingContainer
+            parentNode: this._meetingContainer,
+            roomName: meetingName
         });
 
         this._jitsiApi.addListener(
