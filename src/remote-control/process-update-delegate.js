@@ -7,6 +7,8 @@ import {
     getSpotId
 } from 'reducers';
 
+import { logger } from 'utils';
+
 import { COMMANDS } from './constants';
 
 const presenceToStoreAsBoolean = new Set([
@@ -110,9 +112,17 @@ export default class ProcessUpdateDelegate {
             break;
         }
 
-        case COMMANDS.SUBMIT_FEEDBACK:
-            this._executeIfInMeeting('submitFeedback', data);
+        case COMMANDS.SUBMIT_FEEDBACK: {
+            const meetingApi = getMeetingApi(this._store.getState());
+
+            // Check against the meeting api existence because feedback can be
+            // submitted after the meeting has ended.
+            if (meetingApi) {
+                meetingApi.executeCommand('submitFeedback', data);
+            }
+
             break;
+        }
         }
 
         ack.c('data', { type: 'json' })
@@ -184,10 +194,23 @@ export default class ProcessUpdateDelegate {
      * @returns {void}
      */
     _executeIfInMeeting(command, data) {
-        const meetingApi = getMeetingApi(this._store.getState());
+        const state = this._store.getState();
+        const meetingApi = getMeetingApi(state);
 
-        if (meetingApi) {
-            meetingApi.executeCommand(command, data);
+        if (!meetingApi) {
+            logger.error('Tried to execute command without meeting api.');
+
+            return;
         }
+
+        const { inMeeting } = getInMeetingStatus(state);
+
+        if (!inMeeting) {
+            logger.error('Tried to execute command while not in a meeting.');
+
+            return;
+        }
+
+        meetingApi.executeCommand(command, data);
     }
 }
