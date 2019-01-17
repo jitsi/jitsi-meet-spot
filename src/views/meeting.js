@@ -56,6 +56,15 @@ export class Meeting extends React.Component {
     }
 
     /**
+     * Cleans up the redux store of all reference to the meeting.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.dispatch(setMeetingApi(null));
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -113,8 +122,6 @@ export class Meeting extends React.Component {
         if (leaveEvent.error) {
             this.props.dispatch(addNotification('error', leaveEvent.error));
         }
-
-        this.props.dispatch(setMeetingApi(null));
 
         this.props.history.push(ROUTES.HOME);
     }

@@ -105,6 +105,11 @@ export default class MeetingFrame extends React.Component {
         clearTimeout(this._assumeMeetingFailedTimeout);
         clearTimeout(this._showingFeedbackTimeout);
 
+        // Reset now-stale in-meeting status.
+        remoteControlService.notifyAudioMuteStatus(true);
+        remoteControlService.notifyScreenshareStatus(false);
+        remoteControlService.notifyVideoMuteStatus(true);
+
         this._jitsiApi.dispose();
     }
 

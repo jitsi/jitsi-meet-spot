@@ -33,15 +33,8 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
         };
 
     case REMOTE_CONTROL_SET_MEETING: {
-        const inMeetingStateReset = action.meetingApi ? {} : {
-            audioMuted: true,
-            screensharing: false,
-            videoMuted: true
-        };
-
         return {
             ...state,
-            ...inMeetingStateReset,
             meetingApi: action.meetingApi
         };
     }
