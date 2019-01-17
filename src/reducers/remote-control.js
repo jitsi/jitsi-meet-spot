@@ -122,4 +122,15 @@ export function getLocalRemoteControlId(state) {
     return state.remoteControl.localId;
 }
 
+/**
+ * A selector which returns whether or not there the application is able to
+ * send and receive messages from a Spot.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isConnectedToSpot(state) {
+    return Boolean(state.remoteControl.spotId);
+}
+
 export default remoteControl;
