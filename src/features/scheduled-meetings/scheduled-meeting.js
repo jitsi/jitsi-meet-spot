@@ -36,7 +36,6 @@ export default class ScheduledMeeting extends React.Component {
     render() {
         const {
             meetingUrl,
-            participants,
             start,
             title
         } = this.props.event;
@@ -58,9 +57,6 @@ export default class ScheduledMeeting extends React.Component {
                     </div>
                     <div className = { styles.url }>
                         { meetingUrl }
-                    </div>
-                    <div className = { styles.participants }>
-                        { this._generateAvatars(participants) }
                     </div>
                 </div>
             </div>

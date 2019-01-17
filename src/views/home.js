@@ -6,7 +6,6 @@ import { setCalendarEvents } from 'actions';
 import { SettingsButton } from 'features/admin';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
-import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
@@ -95,10 +94,10 @@ export class Home extends React.Component {
 
         return (
             <View name = 'home'>
-                <div className = { styles.container }>
-                    <Clock />
-                    <MeetingNameEntry
-                        onSubmit = { this._onGoToMeeting } />
+                <div className = { styles.homeContainer }>
+                    <div className = { styles.clockContainer }>
+                        <Clock />
+                    </div>
                     <div className = { styles.meetings }>
                         {
                             this._showCalendarLoadingIcon()
@@ -108,20 +107,20 @@ export class Home extends React.Component {
                                     onMeetingClick = { this._onGoToMeeting } />
                         }
                     </div>
-                    <div
-                        className = { styles.qrcode }
-                        data-qa-id = 'remote-control-link'
-                        onClick = { this._onOpenQRCodeUrl }>
-                        { remoteControlUrl
-                            ? <QRCode text = { remoteControlUrl } />
-                            : null }
-                    </div>
-                    <div className = { styles.joinInfo }>
-                        { `code: ${this.props.lock}` }
-                    </div>
-                    <div className = { styles.settings_cog }>
-                        <SettingsButton />
-                    </div>
+                </div>
+                <div
+                    className = { styles.qrcode }
+                    data-qa-id = 'remote-control-link'
+                    onClick = { this._onOpenQRCodeUrl }>
+                    { remoteControlUrl
+                        ? <QRCode text = { remoteControlUrl } />
+                        : null }
+                </div>
+                <div className = { styles.joinInfo }>
+                    { `code: ${this.props.lock}` }
+                </div>
+                <div className = { styles.settings_cog }>
+                    <SettingsButton />
                 </div>
             </View>
         );

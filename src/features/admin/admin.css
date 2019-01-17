@@ -3,7 +3,6 @@
  * Those stylings are being used right now to override jitsi-meet icon styling.
  */
 .cog {
-    background: gray;
     border-radius: 50%;
     height: 1.4em;
     opacity: 1;
@@ -17,8 +16,8 @@
     cursor: pointer !important;
     text-decoration: none !important;
 }
-.cog:hover {
-    background: lightgray;
+.cog:hover * {
+    color: lightgray;
 }
 
 .container {
