@@ -6,7 +6,11 @@ import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
-import { getInMeetingStatus, getCurrentView } from 'reducers';
+import {
+    getInMeetingStatus,
+    getCurrentView,
+    isConnectedToSpot
+} from 'reducers';
 
 import { withRemoteControl } from './loaders';
 import View from './view';
@@ -167,7 +171,7 @@ export class RemoteControl extends React.Component {
 function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
-        isConnectedToSpot: state.remoteControl.spotId,
+        isConnectedToSpot: isConnectedToSpot(state),
         view: getCurrentView(state)
     };
 }

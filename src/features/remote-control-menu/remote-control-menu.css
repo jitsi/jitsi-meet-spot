@@ -1,6 +1,8 @@
 .menu {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    width: 100%;
 }
 .button {
     margin-right: 20px;
@@ -33,6 +35,7 @@
     border: 1px solid black;
     cursor: pointer;
     display: flex;
+    flex: 1;
     padding: 10px 10px;
     margin-bottom: 10px
 }
