@@ -23,6 +23,19 @@
     width: 50%;
 }
 
+.homeContainer {
+    align-items: center;
+    background-color: rgba(229, 232, 236, 0.7);
+    display: flex;
+    flex-direction: row;
+    height: 33vh;
+    width: 46vw;
+}
+.clockContainer {
+    padding: 30px;
+    text-align: center;
+}
+
 .joinInfo {
     position: absolute;
     bottom: 20;
@@ -49,10 +62,10 @@
 }
 
 .settings_cog {
-    bottom: 20;
-    font-size: 1.4em;
+    top: 41px;
+    font-size: 1.7em;
     position: absolute;
-    right: 20;
+    right: 32px;
 }
 
 .subcontent {
