@@ -73,9 +73,9 @@ export default class RemoteControlMenu extends React.Component {
                     isScreensharing = { screensharing }
                     onClick = { this._onSetScreensharing } />
                 <WirelessScreenshareButton
+                    isScreensharing = { screensharing }
                     isWirelessScreenshareConnectionActive
                         = { isWirelessScreenshareConnectionActive }
-                    isScreensharing = { screensharing }
                     onClick = { this._onSetWirelessScreensharing } />
                 <HangupButton onClick = { this._onHangUp } />
             </div>
