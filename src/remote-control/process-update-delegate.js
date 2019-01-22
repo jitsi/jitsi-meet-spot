@@ -68,7 +68,7 @@ export default class ProcessUpdateDelegate {
      * Callback to invoke when receiving a remote control command as an iq.
      *
      * @param {Object} iq - The iq representing the command to take an action.
-     * @returns {Promise} Resolves with an ack as an iq.
+     * @returns {Object} An ack as an iq.
      */
     onCommand(iq) {
         const from = iq.getAttribute('from');
@@ -132,14 +132,14 @@ export default class ProcessUpdateDelegate {
         }
         }
 
-        return Promise.resolve(ack);
+        return ack;
     }
 
     /**
      * Callback to invoke when receiving a message as an iq.
      *
      * @param {Object} iq - The iq representing the message.
-     * @returns {Promise} Resolves with an ack as an iq.
+     * @returns {Object} A ack as an iq.
      */
     onMessage(iq) {
         const from = iq.getAttribute('from');
@@ -176,7 +176,7 @@ export default class ProcessUpdateDelegate {
             break;
         }
 
-        return Promise.resolve(ack);
+        return ack;
     }
 
     /**
@@ -184,7 +184,7 @@ export default class ProcessUpdateDelegate {
      * can be synced with Spot's current presence.
      *
      * @param {Object} presence - The presence update in XML format.
-     * @returns {Promise}
+     * @returns {void}
      */
     onStatus(presence) {
         const localIsSpot = isSpot(this._store.getState());
@@ -221,7 +221,7 @@ export default class ProcessUpdateDelegate {
                 });
             }
 
-            return Promise.resolve();
+            return;
         }
 
         if (updateType === 'error') {
@@ -241,7 +241,7 @@ export default class ProcessUpdateDelegate {
             }, {});
 
         if (status.isSpot !== 'true') {
-            return Promise.resolve();
+            return;
         }
 
         const from = presence.getAttribute('from');
@@ -277,7 +277,7 @@ export default class ProcessUpdateDelegate {
             }
         }
 
-        return Promise.resolve();
+        return;
     }
 
     /**

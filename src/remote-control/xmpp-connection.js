@@ -302,10 +302,9 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onCommand(iq) {
-        this.options.onRemoteCommand(iq)
-            .then(ack => {
-                this.room.connection.send(ack);
-            });
+        const ack = this.options.onRemoteCommand(iq);
+
+        this.room.connection.send(ack);
 
         return true;
     }
@@ -318,8 +317,9 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onMessage(iq) {
-        this.options.onRemoteMessage(iq)
-            .then(ack => this.room.connection.send(ack));
+        const ack = this.options.onRemoteMessage(iq);
+
+        this.room.connection.send(ack);
 
         return true;
     }
