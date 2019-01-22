@@ -31,14 +31,10 @@
     height: 33vh;
     width: 46vw;
 }
+
 .clockContainer {
     padding: 30px;
     text-align: center;
-}
-
-.joinInfo {
-    position: absolute;
-    bottom: 20;
 }
 
 .loading {

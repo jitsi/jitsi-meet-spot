@@ -4,7 +4,8 @@ import {
     getCalendarEvents,
     getInMeetingStatus,
     getMeetingApi,
-    getSpotId
+    getSpotId,
+    isSpot
 } from 'reducers';
 
 import { logger } from 'utils';
@@ -150,6 +151,14 @@ export default class ProcessUpdateDelegate {
             }
 
             return Promise.resolve();
+        }
+
+        if (updateType === 'error') {
+            if (!isSpot(this._store.getState())) {
+                this._store.dispatch(setSpotLeft());
+
+                return Promise.resolve();
+            }
         }
 
         const status = Array.from(presence.children).map(child =>

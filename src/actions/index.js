@@ -5,10 +5,12 @@ import {
     NOTIFICATION_REMOVE,
     REMOTE_CONTROL_SET_LOCK,
     REMOTE_CONTROL_SET_MEETING,
+    REMOTE_CONTROL_SET_ROOM_NAME,
     REMOTE_CONTROL_SET_SPOT_STATE,
     REMOTE_CONTROL_SPOT_LEFT,
     SETUP_COMPLETED,
-    SETUP_SET_SCREENSHARE_DEVICE
+    SETUP_SET_SCREENSHARE_DEVICE,
+    SET_IS_SPOT
 } from 'reducers';
 
 let notificationId = 0;
@@ -78,17 +80,16 @@ export function setCalendarEvents(events = []) {
 }
 
 /**
- * Signals to store the preferred video input source for screensharing with
- * a physical connector.
+ * Sets whether or not the current client is acting as a Spot.
  *
- * @param {string} label - The label value set to the video input device as
- * listed by Webrtc (enumerateDevices).
+ * @param {boolean} isSpot - Whether or not the current client is a Spot
+ * instance.
  * @returns {Object}
  */
-export function setScreenshareDevice(label) {
+export function setIsSpot(isSpot) {
     return {
-        type: SETUP_SET_SCREENSHARE_DEVICE,
-        label
+        type: SET_IS_SPOT,
+        isSpot
     };
 }
 
@@ -116,6 +117,35 @@ export function setMeetingApi(meetingApi) {
     return {
         type: REMOTE_CONTROL_SET_MEETING,
         meetingApi
+    };
+}
+
+/**
+ * Updates the known muc room name being joined in order to communicate between
+ * remote and a Spot instance.
+ *
+ * @param {string} roomName - The latest room name.
+ * @returns {Object}
+ */
+export function setRoomName(roomName) {
+    return {
+        type: REMOTE_CONTROL_SET_ROOM_NAME,
+        roomName
+    };
+}
+
+/**
+ * Signals to store the preferred video input source for screensharing with
+ * a physical connector.
+ *
+ * @param {string} label - The label value set to the video input device as
+ * listed by Webrtc (enumerateDevices).
+ * @returns {Object}
+ */
+export function setScreenshareDevice(label) {
+    return {
+        type: SETUP_SET_SCREENSHARE_DEVICE,
+        label
     };
 }
 

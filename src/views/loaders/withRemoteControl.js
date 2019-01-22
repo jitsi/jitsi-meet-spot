@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setLock } from 'actions';
+import { getCurrentLock, getCurrentRoomName } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { logger } from 'utils';
 
@@ -21,15 +21,6 @@ export class RemoteControlLoader extends AbstractLoader {
     };
 
     /**
-     * Clears the interval to update the remote control lock.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        clearInterval(this._lockUpdateInterval);
-    }
-
-    /**
      * Returns the name of the muc to join. The name is taken from the query
      * params, if set, or taken from the jid created by the remote control
      * service during initialization.
@@ -38,12 +29,14 @@ export class RemoteControlLoader extends AbstractLoader {
      * @returns {string}
      */
     _getRoomName() {
-        const remoteIdParam = this.props.match
-            && this.props.match.params
-            && this.props.match.params.remoteId;
-        const remoteId = remoteIdParam && decodeURIComponent(remoteIdParam);
+        if (this.props.roomName) {
+            return this.props.roomName;
+        }
 
-        return remoteId && remoteId.split('@')[0];
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const remoteId = queryParams.get('remoteId');
+
+        return remoteId ? decodeURIComponent(remoteId) : undefined;
     }
 
     /**
@@ -53,10 +46,14 @@ export class RemoteControlLoader extends AbstractLoader {
      * @returns {string}
      */
     _getRoomLock() {
+        if (this.props.lock) {
+            return this.props.lock;
+        }
+
         const queryParams = new URLSearchParams(this.props.location.search);
         const lock = queryParams.get('lock');
 
-        return lock && decodeURIComponent(lock);
+        return lock ? decodeURIComponent(lock) : undefined;
     }
 
     /**
@@ -77,49 +74,38 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
+        const roomName = this._getRoomName();
+        const roomLock = this._getRoomLock();
+
+        if (!roomName || !roomLock) {
+            this.props.history.push('/');
+
+            return Promise.reject();
+        }
+
         return remoteControlService.connect(
             this._getRoomName(),
             this._getRoomLock())
-            .then(() => {
-                if (!this._getRoomName()) {
-                    this._setLock();
-                    this._startLockUpdate();
-                }
-            })
             .catch(error => logger.error(error));
-    }
-
-    /**
-     * Places a new password on the current remote control connection.
-     *
-     * @private
-     * @returns {void}
-     */
-    _setLock() {
-        const currentTime = `${Date.now()}`;
-        const lock = currentTime.substring(
-            currentTime.length - 4, currentTime.length);
-
-        remoteControlService.setLock(currentTime.substring(
-            currentTime.length - 4, currentTime.length));
-
-        this.props.dispatch(setLock(lock));
-    }
-
-    /**
-     * Starts an update loop to change the password of the current remote
-     * control connection.
-     *
-     * @private
-     * @returns {void}
-     */
-    _startLockUpdate() {
-        this._lockUpdateInterval = setInterval(() => {
-            this._setLock();
-        }, 300000);
     }
 }
 
-const ConnectedRemoteControlLoader = withRouter(connect()(RemoteControlLoader));
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code RemoteControlLoader}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        lock: getCurrentLock(state),
+        roomName: getCurrentRoomName(state)
+    };
+}
+
+const ConnectedRemoteControlLoader
+    = withRouter(connect(mapStateToProps)(RemoteControlLoader));
 
 export default generateWrapper(ConnectedRemoteControlLoader);

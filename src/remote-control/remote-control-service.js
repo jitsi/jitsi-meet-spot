@@ -17,6 +17,8 @@ class RemoteControlService {
 
         this._onRemoteCommand = this._onRemoteCommand.bind(this);
         this._onSpotStatusUpdate = this._onSpotStatusUpdate.bind(this);
+
+        window.addEventListener('beforeunload', () => this.disconnect());
     }
 
     /**
@@ -25,9 +27,11 @@ class RemoteControlService {
      * @param {string} roomName - The name of the MUC to join. A MUC will be
      * created if a name is not provided.
      * @param {string} lock - The lock code needed to join an existing MUC.
+     * @param {boolean} joinAsSpot -  Whether or not this connection is being
+     * made by a Spot client.
      * @returns {Promise<string>}
      */
-    connect(roomName, lock) {
+    connect(roomName, lock, joinAsSpot) {
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
@@ -38,9 +42,40 @@ class RemoteControlService {
         });
 
         this.xmppConnectionPromise
-            = this.xmppConnection.joinMuc(roomName, lock);
+            = this.xmppConnection.joinMuc(roomName, lock, joinAsSpot);
 
         return this.xmppConnectionPromise;
+    }
+
+    /**
+     * Stops the XMPP connection.
+     *
+     * @returns {void}
+     */
+    disconnect() {
+        if (this.xmppConnection) {
+            this.xmppConnection.destroy();
+            this.xmppConnection = null;
+            this.xmppConnectionPromise = null;
+        }
+    }
+
+    /**
+     * Converts a join code to Spot instance information so it can be connected
+     * to.
+     *
+     * @param {string} code - The join code to exchange for connection
+     * information.
+     * @returns {Promise<string>} Resolve with join information or an error.
+     */
+    exchangeCode(code) {
+        return new Promise((resolve, reject) => {
+            if (code.length === 4) {
+                resolve({});
+            } else {
+                reject('invalid code');
+            }
+        });
     }
 
     /**
@@ -49,16 +84,27 @@ class RemoteControlService {
      * @returns {string}
      */
     getRemoteControlUrl() {
+        const roomName = this.getRoomName();
+        const lock = this.xmppConnection.getLock();
+
+        return `${windowHandler.getBaseUrl()}#/remote-control?remoteId=${
+            roomName}&lock=${lock}`;
+    }
+
+    /**
+     * Returns the current MUC that is joined to use as signaling between a Spot
+     * and remote controls.
+     *
+     * @returns {string}
+     */
+    getRoomName() {
         const fullJid = this.xmppConnection.getRoomFullJid();
 
         if (!fullJid) {
             return '';
         }
 
-        const lock = this.xmppConnection.getLock();
-
-        return `${windowHandler.getBaseUrl()}#/remote-control/${
-            window.encodeURIComponent(fullJid)}?lock=${lock}`;
+        return fullJid.split('@')[0];
     }
 
     /**
@@ -130,7 +176,9 @@ class RemoteControlService {
      * @returns {void}
      */
     notifyViewStatus(viewName) {
-        this.xmppConnection.updateStatus('view', viewName);
+        if (this.xmppConnection) {
+            this.xmppConnection.updateStatus('view', viewName);
+        }
     }
 
     /**

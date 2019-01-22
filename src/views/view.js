@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { JoinInfo } from 'features/join-info';
 import { remoteControlService } from 'remote-control';
 import { backgroundService } from 'utils';
 
@@ -55,6 +56,7 @@ export default class View extends React.Component {
                 data-qa-id = { `${this.props.name}-view` }
                 style = { backgroundStyles }>
                 { this.props.children }
+                <JoinInfo />
             </div>
         );
     }

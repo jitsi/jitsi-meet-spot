@@ -8,9 +8,9 @@ import Loading from './loading';
  * for child components to use.
  *
  * @abstract
- * @extends React.Component
+ * @extends React.PureComponent
  */
-export class AbstractLoader extends React.Component {
+export class AbstractLoader extends React.PureComponent {
     /**
      * Initializes a new {@code ResetState} instance.
      *
@@ -91,7 +91,7 @@ AbstractLoader.propTypes = {
  */
 export function generateWrapper(LoaderImpl) {
     return function withLoader(WrappedComponent) {
-        return class ComponentWrappedWithService extends React.Component {
+        return class ComponentWrappedWithService extends React.PureComponent {
             /**
              * Implements React's {@link Component#render()}.
              *
