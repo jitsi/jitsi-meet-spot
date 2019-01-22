@@ -29,17 +29,24 @@ exports.config = {
         await browser.end().pause(CHROMEDRIVER_SHUTDOWN_WAIT);
     },
 
-    capabilities: [
-        {
-            browserName: 'chrome',
-            chromeOptions: {
-                args: [
-                    'use-fake-device-for-media-stream',
-                    'use-fake-ui-for-media-stream'
-                ]
+    capabilities: {
+        spotBrowser: {
+            desiredCapabilities: {
+                browserName: 'chrome',
+                chromeOptions: {
+                    args: [
+                        'use-fake-device-for-media-stream',
+                        'use-fake-ui-for-media-stream'
+                    ]
+                }
+            }
+        },
+        remoteControlBrowser: {
+            desiredCapabilities: {
+                browserName: 'chrome'
             }
         }
-    ],
+    },
 
     framework: 'jasmine',
 

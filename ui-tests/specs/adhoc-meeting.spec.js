@@ -1,38 +1,16 @@
+const remoteControlConnect = require('../flow-utils/remote-control-connect');
+
 describe('Can start a meeting of any name', () => {
     const userFactory = require('../user/user-factory');
-    const user = userFactory.getUser();
+    const spotUser = userFactory.getSpotUser();
+    const remoteControlUser = userFactory.getRemoteControlUser();
 
     beforeEach(() => {
-        const calendarPage = user.getCalendarPage();
-
-        calendarPage.visit();
-    });
-
-    afterEach(() => {
-        user.closeAnyRemoteControls();
-    });
-
-    it('from calendar view', () => {
-        const calendarPage = user.getCalendarPage();
-        const meetingInput = calendarPage.getMeetingInput();
-        const testMeetingName = `ui-test-${Date.now()}`;
-
-        meetingInput.submitMeetingName(testMeetingName);
-
-        const meetingPage = user.getMeetingPage();
-
-        meetingPage.waitForVisible();
-
-        expect(meetingPage.getMeetingName()).toBe(testMeetingName);
+        remoteControlConnect(spotUser, remoteControlUser);
     });
 
     it('from the remote control', () => {
-        const calendarPage = user.getCalendarPage();
-        const remoteControlId = calendarPage.openRemoteControl();
-
-        user.focusOnTabWithId(remoteControlId);
-
-        const remoteControlPage = user.getRemoteControlPage();
+        const remoteControlPage = remoteControlUser.getRemoteControlPage();
 
         remoteControlPage.waitForVisible();
 
@@ -41,9 +19,7 @@ describe('Can start a meeting of any name', () => {
 
         meetingInput.submitMeetingName(testMeetingName);
 
-        user.focusOnStartingTab();
-
-        const meetingPage = user.getMeetingPage();
+        const meetingPage = spotUser.getMeetingPage();
 
         meetingPage.waitForVisible();
 

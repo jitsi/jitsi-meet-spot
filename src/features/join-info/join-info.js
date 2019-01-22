@@ -35,9 +35,21 @@ class JoinInfo extends React.Component {
         }
 
         return (
-            <div className = { styles.joinInfo }>
-                <div>{ `name: ${this.props.roomName}` }</div>
-                <div>{ `code: ${this.props.lock}` }</div>
+            <div
+                className = { styles.joinInfo }
+                data-qa-id = { 'join-info' }>
+                <div>
+                    <span>name:</span>
+                    <span data-qa-id = 'room-name'>
+                        { roomName }
+                    </span>
+                </div>
+                <div>
+                    <span>code:</span>
+                    <span data-qa-id = 'room-lock'>
+                        { lock }
+                    </span>
+                </div>
             </div>
         );
     }

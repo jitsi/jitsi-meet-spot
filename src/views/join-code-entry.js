@@ -77,13 +77,14 @@ export class JoinCodeEntry extends React.Component {
     render() {
         return (
             <View
-                hideBackground = { true }>
+                hideBackground = { true }
+                name = 'join-code'>
                 <div className = { styles.container }>
                     {
                         this.state.validating
                             ? 'Connecting'
                             : <div>
-                                <div>
+                                <div data-qa-id = { 'join-code-input' }>
                                     <ReactCodeInput
                                         fields = { this.props.entryLength }
                                         onChange = { this._onCodeChange }
@@ -91,6 +92,7 @@ export class JoinCodeEntry extends React.Component {
                                         value = { this.state.enteredCode } />
                                 </div>
                                 <Button
+                                    data-qa-id = 'join-code-submit'
                                     onClick = { this._onSubmit }>
                                     Submit
                                 </Button>
