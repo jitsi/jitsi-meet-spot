@@ -29,7 +29,7 @@ export class IdleCursorDetector extends React.Component {
         super(props);
 
         this._hideTimeout = null;
-        this._mouseIsIdle = false;
+        this._mouseIsIdle = true;
 
         this._onCursorMove = throttle(
             this._onCursorMove.bind(this),
