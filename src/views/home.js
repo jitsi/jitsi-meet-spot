@@ -18,7 +18,7 @@ import { windowHandler } from 'utils';
 
 import View from './view';
 import styles from './view.css';
-import { withCalendar, withRemoteControl } from './loaders';
+import { withCalendar, asSpotLoader } from './loaders';
 
 /**
  * A view of all known meetings in the calendar connected with Spot. Provides
@@ -90,8 +90,6 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     render() {
-        const remoteControlUrl = this._getRemoteControlUrl();
-
         return (
             <View name = 'home'>
                 <div className = { styles.homeContainer }>
@@ -112,12 +110,12 @@ export class Home extends React.Component {
                     className = { styles.qrcode }
                     data-qa-id = 'remote-control-link'
                     onClick = { this._onOpenQRCodeUrl }>
-                    { remoteControlUrl
-                        ? <QRCode text = { remoteControlUrl } />
-                        : null }
-                </div>
-                <div className = { styles.joinInfo }>
-                    { `code: ${this.props.lock}` }
+                    {
+                        // eslint-disable-next-line no-undef
+                        process.env.NODE_ENV === 'production'
+                            ? null
+                            : <QRCode text = { this._getRemoteControlUrl() } />
+                    }
                 </div>
                 <div className = { styles.settings_cog }>
                     <SettingsButton />
@@ -232,5 +230,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRemoteControl(withCalendar(
-    connect(mapStateToProps)(Home)));
+export default asSpotLoader(withCalendar(connect(mapStateToProps)(Home)));

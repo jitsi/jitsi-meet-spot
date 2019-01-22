@@ -13,7 +13,7 @@ import styles from '../view.css';
  */
 export default function Loading() {
     return (
-        <View>
+        <View hideBackground = { true }>
             <div className = { styles.loading }>
                 <LoadingIcon color = 'white' />
             </div>

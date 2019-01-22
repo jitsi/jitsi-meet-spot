@@ -1,7 +1,6 @@
 import { $iq } from 'strophe.js';
 
 import { XMPP_CONFIG } from 'config';
-import { logger } from 'utils';
 import { JitsiMeetJSProvider } from 'vendor';
 
 /**
@@ -32,10 +31,12 @@ export default class XmppConnection {
      * @param {string} roomName - The name of the MUC to join. A MUC will be
      * created if a name is not provided.
      * @param {string} lock - The lock code needed to join an existing MUC.
+     * @param {boolean} joinAsSpot -  Whether or not this connection is being
+     * made by a Spot client.
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    joinMuc(roomName, lock) {
+    joinMuc(roomName, lock, joinAsSpot) {
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -45,27 +46,22 @@ export default class XmppConnection {
         this.xmppConnection
             = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
 
-        const connectionPromise = new Promise(resolve => {
+        const connectionPromise = new Promise((resolve, reject) => {
             this.xmppConnection.addEventListener(
                 JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-                () => resolve());
+                resolve
+            );
+
+            this.xmppConnection.addEventListener(
+                JitsiMeetJS.events.connection.CONNECTION_FAILED,
+                reject
+            );
         });
 
-        this.xmppConnection.addEventListener(
-            JitsiMeetJS.events.connection.CONNECTION_FAILED,
-            logger.error);
-
-        this.xmppConnection.addEventListener(
-            JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-            logger.error);
-
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onPresence,
-            null,
-            'presence',
-            null,
-            null
-        );
+        // TODO: add proper handling for CONNECTION_DISCONNECTED
+        // this.xmppConnection.addEventListener(
+        //     JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
+        //     logger.error);
 
         this.xmppConnection.xmpp.connection.addHandler(
             this._onPresence,
@@ -84,25 +80,72 @@ export default class XmppConnection {
             null
         );
 
-        this.xmppConnection.connect();
+        const joinPromise = new Promise((resolve, reject) => {
+            this.xmppConnection.xmpp.connection.addHandler(
+                () => {
+                    reject();
 
-        // FIXME: the existence of room name is being used to add spot identity
-        // to presence for now.
+                    return true;
+                },
+                null,
+                'presence',
+                'error',
+                null
+            );
+
+            // This is a generic presence handler that gets all presence,
+            // including error and unavailable.
+            this.xmppConnection.xmpp.connection.addHandler(
+                presence => {
+                    if (presence.getElementsByTagName('error').length) {
+                        reject();
+
+                        return true;
+                    }
+
+                    resolve();
+
+                    return this._onPresence(presence);
+                },
+                null,
+                'presence',
+                null, // null to get passed all presence types into callback
+                null
+            );
+        });
+
+        this.xmppConnection.connect();
 
         let mucJoinedPromise;
 
         this.initPromise = connectionPromise
-            .then(() => this._createMuc(roomName || `${Date.now()}-spot`))
+            .then(() => this._createMuc(roomName))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
                     room.addEventListener('xmpp.muc_joined', resolve);
                 });
             })
-            .then(() => this.updatePresence('isSpot', !roomName))
+            .then(() => {
+                if (joinAsSpot) {
+                    this.updatePresence('isSpot', true);
+                }
+            })
             .then(() => this._joinMuc(lock))
-            .then(() => mucJoinedPromise);
+            .then(() => Promise.all([ joinPromise, mucJoinedPromise ]));
 
         return this.initPromise;
+    }
+
+    /**
+     * Disconnects from any joined MUC and disconnects the XMPP connection.
+     *
+     * @returns {void}
+     */
+    destroy() {
+        // Call doLeave instead of leave to avoid an unhandled promise
+        // rejection.
+        this.room && this.room.doLeave();
+        this.xmppConnection.disconnect();
     }
 
     /**
@@ -241,7 +284,7 @@ export default class XmppConnection {
      * @returns {string}
      */
     getRoomFullJid() {
-        return this.room.myroomjid;
+        return this.room && this.room.myroomjid;
     }
 
     /**

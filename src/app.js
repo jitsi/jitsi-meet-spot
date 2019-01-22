@@ -10,7 +10,7 @@ import {
     Admin,
     FatalError,
     Home,
-    Loading,
+    JoinCodeEntry,
     Meeting,
     RemoteControl,
     Setup
@@ -54,18 +54,13 @@ export class App extends React.Component {
         // Outlook auth redirect URL cannot be a direct hash route. The
         // workaround implemented is redirecting to the home route but detecting
         // when it might be a oauth redirect.
-        if (window.opener
-            && this.props.location.pathname.includes('access_token')) {
+        if (this._isOauthRedirect()) {
             window.opener.postMessage({
                 type: 'ms-login',
                 url: window.location.href
             }, window.location.origin);
 
-            return (
-                <div>
-                    Auth successful!
-                </div>
-            );
+            return <div> Auth successful! </div>;
         }
 
         return (
@@ -77,6 +72,12 @@ export class App extends React.Component {
                     <Notifications />
                     <ErrorBoundary errorComponent = { FatalError }>
                         <Switch>
+                            {
+
+                                /**
+                                 * Spot instance specific routes.
+                                 */
+                            }
                             <Route
                                 component = { Admin }
                                 path = { ROUTES.ADMIN } />
@@ -87,17 +88,40 @@ export class App extends React.Component {
                                 component = { Setup }
                                 path = { ROUTES.SETUP } />
                             <Route
-                                component = { Loading }
-                                path = { ROUTES.LOADING } />
+                                component = { Home }
+                                path = { ROUTES.HOME } />
+                            {
+
+                                /**
+                                 * Remote control specific routes.
+                                 */
+                            }
                             <Route
                                 component = { RemoteControl }
                                 path = { ROUTES.REMOTE_CONTROL } />
-                            <Route component = { Home } />
+                            <Route component = { JoinCodeEntry } />
                         </Switch>
                     </ErrorBoundary>
                 </div>
             </IdleCursorDetector>
         );
+    }
+
+    /**
+     * The hack used to detect when the page is being loaded as a result of an
+     * oath flow redirect from a third-party calendar service. This hack is
+     * implemented during the time when no deployment strategy is known and no
+     * server-side routing is set up to handle a proper oauth landing page.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isOauthRedirect() {
+        // Outlook auth redirect URL cannot be a direct hash route. The
+        // workaround implemented is redirecting to the home route but detecting
+        // when it might be a oauth redirect.
+        return Boolean(window.opener
+            && this.props.location.pathname.includes('access_token'));
     }
 
     /**

@@ -12,6 +12,7 @@ const DEFAULT_STATE = {
 
 export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
 export const REMOTE_CONTROL_SET_MEETING = 'REMOTE_CONTROL_SET_MEETING';
+export const REMOTE_CONTROL_SET_ROOM_NAME = 'REMOTE_CONTROL_SET_ROOM_NAME';
 export const REMOTE_CONTROL_SET_SPOT_STATE = 'REMOTE_CONTROL_SET_SPOT_STATE';
 export const REMOTE_CONTROL_SPOT_LEFT = 'REMOTE_CONTROL_SPOT_LEFT';
 
@@ -32,12 +33,17 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
             lock: action.lock
         };
 
-    case REMOTE_CONTROL_SET_MEETING: {
+    case REMOTE_CONTROL_SET_MEETING:
         return {
             ...state,
             meetingApi: action.meetingApi
         };
-    }
+
+    case REMOTE_CONTROL_SET_ROOM_NAME:
+        return {
+            ...state,
+            roomName: action.roomName
+        };
 
     case REMOTE_CONTROL_SET_SPOT_STATE:
         return {
@@ -62,6 +68,17 @@ const remoteControl = (state = DEFAULT_STATE, action) => {
  */
 export function getCurrentLock(state) {
     return state.remoteControl.lock;
+}
+
+/**
+ * A selector which returns the last known room name for establishing a remote
+ * control connection.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getCurrentRoomName(state) {
+    return state.remoteControl.roomName;
 }
 
 /**

@@ -6,10 +6,6 @@
     font-size: 17pt;
 }
 
-.button:focus {
-    outline: none;
-}
-
 .button:hover {
     background: teal;
 };

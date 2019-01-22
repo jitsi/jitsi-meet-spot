@@ -3,9 +3,10 @@
  */
 export const ROUTES = {
     ADMIN: '/admin',
-    HOME: '/',
+    CODE: '/',
+    HOME: '/spot',
     LOADING: '/loading',
     MEETING: '/meeting',
-    REMOTE_CONTROL: '/remote-control/:remoteId',
+    REMOTE_CONTROL: '/remote-control',
     SETUP: '/setup'
 };

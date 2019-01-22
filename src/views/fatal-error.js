@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { ResetState } from 'features/admin';
 import { Button } from 'features/button';
+import { isSpot } from 'reducers';
+import { ROUTES } from 'routing';
 
 import View from './view';
 import styles from './view.css';
@@ -13,35 +16,72 @@ import styles from './view.css';
  *
  * @returns {ReactElement}
  */
-export default function FatalError() {
-    return (
-        <View
-            hideBackground = { true }
-            name = 'error'>
-            <div className = { styles.container }>
-                <div className = { styles.admin }>
-                    <div>Whoops, something went wrong.</div>
-                    <Button onClick = { reloadToHome }>
-                        Reload
-                    </Button>
-                    <ResetState />
-                </div>
-            </div>
-        </View>
-    );
-}
+export class FatalError extends React.Component {
+    static propTypes = {
+        error: PropTypes.string,
+        info: PropTypes.string,
+        isSpot: PropTypes.bool
+    };
 
-FatalError.propTypes = {
-    error: PropTypes.string,
-    info: PropTypes.string
-};
+    /**
+     * Initializes a new {@code App} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._onReloadToHome = this._onReloadToHome.bind(this);
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        return (
+            <View
+                hideBackground = { true }
+                name = 'error'>
+                <div className = { styles.container }>
+                    <div className = { styles.admin }>
+                        <div>Whoops, something went wrong.</div>
+                        <Button onClick = { this._onReloadToHome }>
+                            Reload
+                        </Button>
+                        <ResetState />
+                    </div>
+                </div>
+            </View>
+        );
+    }
+
+    /**
+     * Forces a reload of the window by redirecting to the root path.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onReloadToHome() {
+        window.location.href = this.props.isSpot ? ROUTES.HOME : ROUTES.CODE;
+    }
+}
 
 /**
- * Forces a reload of the window by redirecting to the root path.
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code FatalError}.
  *
+ * @param {Object} state - The Redux state.
  * @private
- * @returns {void}
+ * @returns {Object}
  */
-function reloadToHome() {
-    window.location.href = '/';
+function mapStateToProps(state) {
+    return {
+        isSpot: isSpot(state)
+    };
 }
+
+export default connect(mapStateToProps)(FatalError);

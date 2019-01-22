@@ -1,4 +1,5 @@
 const CalendarPage = require('../page-objects/calendar-page');
+const JoinCodePage = require('../page-objects/join-code-page');
 const MeetingPage = require('../page-objects/meeting-page');
 const RemoteControlPage = require('../page-objects/remote-control-page');
 
@@ -16,6 +17,7 @@ class User {
         this.driver = driver;
 
         this.calendarPage = new CalendarPage(this.driver);
+        this.joinCodePage = new JoinCodePage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
 
@@ -76,6 +78,16 @@ class User {
      */
     getCalendarPage() {
         return this.calendarPage;
+    }
+
+    /**
+     * Returns an instance of {@code JoinCodePage} which wraps interactions with
+     * the join code view in the remote control.
+     *
+     * @returns {JoinCodePage}
+     */
+    getJoinCodePage() {
+        return this.joinCodePage;
     }
 
     /**

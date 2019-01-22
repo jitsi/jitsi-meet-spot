@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { addNotification } from 'actions';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
@@ -25,6 +26,8 @@ import styles from './view.css';
 export class RemoteControl extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        dispatch: PropTypes.func,
+        history: PropTypes.object,
         inMeeting: PropTypes.bool,
         isConnectedToSpot: PropTypes.bool,
         remoteControlService: PropTypes.object,
@@ -68,13 +71,28 @@ export class RemoteControl extends React.Component {
     }
 
     /**
+     * Navigates away from the view {@code RemoteControl} when no longer
+     * connected to a Spot.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate() {
+        if (!this.props.isConnectedToSpot) {
+            this.props.dispatch(addNotification('error', 'Disconnected'));
+            this.props.history.push('/');
+        }
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
      */
     render() {
         return (
-            <View name = 'remoteControl'>
+            <View
+                hideBackground = { true }
+                name = 'remoteControl'>
                 <div className = { styles.container }>
                     { this._getView() }
                 </div>
@@ -90,10 +108,6 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getView() {
-        if (!this.props.isConnectedToSpot) {
-            return <div>not connected to spot</div>;
-        }
-
         switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
