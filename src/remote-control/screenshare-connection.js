@@ -24,7 +24,7 @@ export default class ScreenshareConnection {
          *
          * @type {boolean}
          */
-        this._isStopped = true;
+        this._isActive = false;
 
         /**
          * Holds a reference to created desktop streams so that they may be
@@ -71,7 +71,7 @@ export default class ScreenshareConnection {
      * @returns {Promise}
      */
     startScreenshare(spotJid) {
-        this._isStopped = false;
+        this._isActive = true;
 
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
@@ -84,7 +84,7 @@ export default class ScreenshareConnection {
                  * case the connection was lost while selecting a screenshare
                  * source.
                  */
-                if (this._isStopped) {
+                if (!this._isActive) {
                     this.stop();
 
                     return;
@@ -98,7 +98,7 @@ export default class ScreenshareConnection {
                          * Assume the connection was lost if LOCAL_TRACK_STOPPED
                          * fires but stop() was not explicitly called.
                          */
-                        if (!this._isStopped) {
+                        if (this._isActive) {
                             this.options.onConnectionClosed();
                         }
                     }
@@ -118,7 +118,7 @@ export default class ScreenshareConnection {
      * @returns {void}
      */
     stop() {
-        this._isStopped = true;
+        this._isActive = false;
         this._proxyConnectionService.stop();
 
         this._tracks.forEach(track => track.dispose());

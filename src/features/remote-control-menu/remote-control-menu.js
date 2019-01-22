@@ -39,8 +39,8 @@ export default class RemoteControlMenu extends React.Component {
         this._onSetAudioMute = this._onSetAudioMute.bind(this);
         this._onSetScreensharing = this._onSetScreensharing.bind(this);
         this._onSetVideoMute = this._onSetVideoMute.bind(this);
-        this._onSetWirelessScreensharing
-            = this._onSetWirelessScreensharing.bind(this);
+        this._onToggleWirelessScreensharing
+            = this._onToggleWirelessScreensharing.bind(this);
     }
 
     /**
@@ -76,7 +76,7 @@ export default class RemoteControlMenu extends React.Component {
                     isScreensharing = { screensharing }
                     isWirelessScreenshareConnectionActive
                         = { isWirelessScreenshareConnectionActive }
-                    onClick = { this._onSetWirelessScreensharing } />
+                    onClick = { this._onToggleWirelessScreensharing } />
                 <HangupButton onClick = { this._onHangUp } />
             </div>
         );
@@ -128,7 +128,7 @@ export default class RemoteControlMenu extends React.Component {
      * @private
      * @returns {void}
      */
-    _onSetWirelessScreensharing() {
+    _onToggleWirelessScreensharing() {
         const {
             isWirelessScreenshareConnectionActive,
             screensharing

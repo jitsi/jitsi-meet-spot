@@ -213,8 +213,7 @@ export default class ProcessUpdateDelegate {
                     .c('details')
                     .t('unavailable')
                     .up();
-                const stringifiedIq
-                    = new XMLSerializer().serializeToString(iq.nodeTree);
+                const stringifiedIq = iq.toString();
 
                 this._sendEventIfInMeeting({
                     from,
@@ -292,7 +291,12 @@ export default class ProcessUpdateDelegate {
      * to establish a {@code ScreenshareConnection}.
      * @param {Object} screenshareConnection - The instance of
      * {@code ScreenshareConnection} to be used.
-     * @returns {Promise}
+     * @returns {Promise<string|void>} Resolves with void when void the
+     * screensharing process has been started successfully. This resolution does
+     * not denote a screensharing connection has been successful and media is
+     * flowing. Rejects with the rejection reason string if an error occurred
+     * while starting the screensharing process, such as screenshare source
+     * being cancelled.
      */
     startScreenshare(spotId, roomFullJId, screenshareConnection) {
         const { screensharing } = getInMeetingStatus(this._store.getState());
@@ -320,6 +324,8 @@ export default class ProcessUpdateDelegate {
             this._store.dispatch(updateSpotState({
                 isWirelessScreenshareConnectionActive: false
             }));
+
+            return Promise.reject(error);
         });
     }
 
@@ -353,13 +359,13 @@ export default class ProcessUpdateDelegate {
     _executeIfInMeeting(command, data) {
         const meetingApi = this._getMeetingApiIfInMeeting();
 
-        if (meetingApi) {
-            meetingApi.executeCommand(command, data);
+        if (!meetingApi) {
+            logger.error('Failed to execute command.');
 
             return;
         }
 
-        logger.error('Failed to execute command.');
+        meetingApi.executeCommand(command, data);
     }
 
     /**
@@ -397,12 +403,12 @@ export default class ProcessUpdateDelegate {
     _sendEventIfInMeeting(event) {
         const meetingApi = this._getMeetingApiIfInMeeting();
 
-        if (meetingApi) {
-            meetingApi.sendProxyConnectionEvent(event);
+        if (!meetingApi) {
+            logger.error('Failed to send proxy event.');
 
             return;
         }
 
-        logger.error('Failed to send proxy event.');
+        meetingApi.sendProxyConnectionEvent(event);
     }
 }

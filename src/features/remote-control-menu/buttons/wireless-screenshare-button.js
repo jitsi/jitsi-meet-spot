@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-
+import { LoadingIcon } from 'features/loading-icon';
 import styles from '../remote-control-menu.css';
 
 /**
@@ -19,14 +19,14 @@ export default function WirelessScreenshareButton(props) {
         isWirelessScreenshareConnectionActive,
         onClick
     } = props;
-    let buttonText;
+    let buttonContent;
 
     if (isWirelessScreenshareConnectionActive && !isScreensharing) {
-        buttonText = 'Cancel screensharing';
+        buttonContent = <LoadingIcon color = 'black' />;
     } else if (isScreensharing) {
-        buttonText = 'Stop screensharing';
+        buttonContent = 'Stop screensharing';
     } else {
-        buttonText = 'Start wireless screensharing';
+        buttonContent = 'Start wireless screensharing';
     }
 
     return (
@@ -36,7 +36,7 @@ export default function WirelessScreenshareButton(props) {
             <Button className = { styles.button }>
                 <div className = 'icon-share-desktop' />
             </Button>
-            <span>{ buttonText }</span>
+            <span>{ buttonContent }</span>
         </div>
     );
 }
