@@ -24,7 +24,7 @@ class SettingsButton extends React.Component {
 
     state = {
         hovered: false,
-        isCursorIdle: false
+        isCursorIdle: true
     };
 
     /**
