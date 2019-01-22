@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendarEvents } from 'actions';
+import { hasUpdatedEvents } from 'calendars';
 import { SettingsButton } from 'features/admin';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
@@ -190,7 +191,16 @@ export class Home extends React.Component {
                     return;
                 }
 
-                this.props.dispatch(setCalendarEvents(events));
+                const {
+                    dispatch,
+                    events: previousEvents,
+                    remoteControlService
+                } = this.props;
+
+                if (hasUpdatedEvents(previousEvents, events)) {
+                    dispatch(setCalendarEvents(events));
+                    remoteControlService.notifyCalendarStatus(events);
+                }
             });
     }
 }

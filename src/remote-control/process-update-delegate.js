@@ -1,7 +1,6 @@
 import { $iq } from 'strophe.js';
-import { setSpotLeft, updateSpotState } from 'actions';
+import { setCalendarEvents, setSpotLeft, updateSpotState } from 'actions';
 import {
-    getCalendarEvents,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
@@ -64,8 +63,6 @@ export default class ProcessUpdateDelegate {
             id: iq.getAttribute('id')
         });
 
-        let askResponseData = {};
-
         switch (commandType) {
         case COMMANDS.GO_TO_MEETING:
             this._history.push(`/meeting?location=${data.meetingName}`);
@@ -74,14 +71,6 @@ export default class ProcessUpdateDelegate {
         case COMMANDS.HANG_UP:
             this._executeIfInMeeting('hangup');
             break;
-
-        case COMMANDS.REQUEST_CALENDAR: {
-            askResponseData = {
-                events: getCalendarEvents(this._store.getState())
-            };
-
-            break;
-        }
 
         case COMMANDS.SET_AUDIO_MUTE: {
             const { audioMuted } = getInMeetingStatus(this._store.getState());
@@ -126,10 +115,6 @@ export default class ProcessUpdateDelegate {
         }
         }
 
-        ack.c('data', { type: 'json' })
-            .t(JSON.stringify(askResponseData))
-            .up();
-
         return Promise.resolve(ack);
     }
 
@@ -141,6 +126,7 @@ export default class ProcessUpdateDelegate {
      * @returns {Promise}
      */
     onStatus(presence) {
+        const localIsSpot = isSpot(this._store.getState());
         const updateType = presence.getAttribute('type');
 
         if (updateType === 'unavailable') {
@@ -154,7 +140,7 @@ export default class ProcessUpdateDelegate {
         }
 
         if (updateType === 'error') {
-            if (!isSpot(this._store.getState())) {
+            if (!localIsSpot) {
                 this._store.dispatch(setSpotLeft());
 
                 return Promise.resolve();
@@ -187,6 +173,18 @@ export default class ProcessUpdateDelegate {
         });
 
         this._store.dispatch(updateSpotState(newState));
+
+        // For remote controls and for consistent implementation, update the
+        // redux store through the calendar event flow that a Spot would use.
+        if (status.calendar && !localIsSpot) {
+            try {
+                const events = JSON.parse(status.calendar);
+
+                this._store.dispatch(setCalendarEvents(events));
+            } catch (e) {
+                logger.error('Error while parsing Spot calendar events:', e);
+            }
+        }
 
         return Promise.resolve();
     }

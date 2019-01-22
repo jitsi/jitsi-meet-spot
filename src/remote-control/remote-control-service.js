@@ -139,6 +139,16 @@ class RemoteControlService {
     }
 
     /**
+     * Notifies all controllers about a change in known calendar events.
+     *
+     * @param {Array<Object>} events - The calendar events for Spot.
+     * @returns {void}
+     */
+    notifyCalendarStatus(events) {
+        this.xmppConnection.updateStatus('calendar', events);
+    }
+
+    /**
      * Notifies all controllers about whether or not spot is currently connected
      * to a meeting.
      *
@@ -179,16 +189,6 @@ class RemoteControlService {
         if (this.xmppConnection) {
             this.xmppConnection.updateStatus('view', viewName);
         }
-    }
-
-    /**
-     * Requests Spot to send out its latest calendar events.
-     *
-     * @returns {Promise} Resolves with calendar data.
-     */
-    requestCalendarEvents() {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.REQUEST_CALENDAR);
     }
 
     /**
