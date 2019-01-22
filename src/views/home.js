@@ -12,6 +12,7 @@ import {
     getCalendarEmail,
     getCalendarEvents,
     getCurrentLock,
+    hasCalendarBeenFetched,
     isSetupComplete
 } from 'reducers';
 import { windowHandler } from 'utils';
@@ -32,14 +33,11 @@ export class Home extends React.Component {
         calendarService: PropTypes.object,
         dispatch: PropTypes.func,
         events: PropTypes.array,
+        hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         lock: PropTypes.string,
         remoteControlService: PropTypes.object
-    };
-
-    state = {
-        hasCompletedInitialCalendarFetch: false
     };
 
     /**
@@ -97,13 +95,7 @@ export class Home extends React.Component {
                         <Clock />
                     </div>
                     <div className = { styles.meetings }>
-                        {
-                            this._showCalendarLoadingIcon()
-                                ? <LoadingIcon color = 'white' />
-                                : <ScheduledMeetings
-                                    events = { this.props.events }
-                                    onMeetingClick = { this._onGoToMeeting } />
-                        }
+                        { this._getCalendarEventsView() }
                     </div>
                 </div>
                 <div
@@ -122,6 +114,24 @@ export class Home extends React.Component {
                 </div>
             </View>
         );
+    }
+
+    /**
+     * Returns the React Component which should be dislayed for the list of
+     * calendars.
+     *
+     * @returns {ReactComponent|null}
+     */
+    _getCalendarEventsView() {
+        if (this.props.isSetupComplete) {
+            return this.props.hasFetchedEvents
+                ? <ScheduledMeetings
+                    events = { this.props.events }
+                    onMeetingClick = { this._onGoToMeeting } />
+                : <LoadingIcon color = 'black' />;
+        }
+
+        return null;
     }
 
     /**
@@ -181,35 +191,7 @@ export class Home extends React.Component {
                 }
 
                 this.props.dispatch(setCalendarEvents(events));
-
-                if (!this.state.hasCompletedInitialCalendarFetch) {
-                    this.setState({ hasCompletedInitialCalendarFetch: true });
-                }
             });
-    }
-
-    /**
-     * Returns whether or not events have been loaded yet or attempted to be
-     * loaded.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _showCalendarLoadingIcon() {
-        if (!this.props.isSetupComplete) {
-            // Only when setup is complete is there calendar data to load.
-            return false;
-        }
-
-        // If there is data already cached, then it should be shown instead of
-        // the loading icon.
-        if (this.props.events.length) {
-            return false;
-        }
-
-        // If there is no cache, show the icon based on the state of initial
-        // calendar fetch request since mount.
-        return !this.state.hasCompletedInitialCalendarFetch;
     }
 }
 
@@ -224,7 +206,8 @@ export class Home extends React.Component {
 function mapStateToProps(state) {
     return {
         calendarEmail: getCalendarEmail(state),
-        events: getCalendarEvents(state) || [],
+        events: getCalendarEvents(state),
+        hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
         lock: getCurrentLock(state)
     };
