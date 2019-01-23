@@ -24,7 +24,7 @@ export default {
                 'Calendars.Read',
                 'Calendars.Read.Shared'
             ].join(' '),
-            redirectUri: window.location.origin
+            redirectUri: `${window.location.origin}${window.location.pathname}`
         });
     },
 
