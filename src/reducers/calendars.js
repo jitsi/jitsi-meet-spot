@@ -1,7 +1,8 @@
 const DEFAULT_STATE = {
     name: undefined,
     displayName: undefined,
-    events: []
+    events: [],
+    hasCalendarBeenFetch: false
 };
 
 export const CALENDAR_SET_ACCOUNT = 'CALENDAR_SET_ACCOUNT';
@@ -30,7 +31,8 @@ const calendar = (state = DEFAULT_STATE, action) => {
     case CALENDAR_SET_EVENTS:
         return {
             ...state,
-            events: action.events
+            events: action.events,
+            hasSetEvents: true
         };
 
     default:
@@ -69,6 +71,17 @@ export function getCalendarEvents(state) {
  */
 export function getDisplayName(state) {
     return state.calendars.displayName;
+}
+
+/**
+ * A selector which returns whether or not calendar events have ever been
+ * updated during this session.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function hasCalendarBeenFetched(state) {
+    return state.calendars.hasSetEvents;
 }
 
 export default calendar;

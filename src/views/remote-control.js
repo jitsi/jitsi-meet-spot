@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { addNotification } from 'actions';
+import { addNotification, setCalendarEvents } from 'actions';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
+    getCalendarEvents,
     getInMeetingStatus,
     getCurrentView,
     isConnectedToSpot
@@ -27,6 +28,7 @@ export class RemoteControl extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
         dispatch: PropTypes.func,
+        events: PropTypes.array,
         history: PropTypes.object,
         inMeeting: PropTypes.bool,
         isConnectedToSpot: PropTypes.bool,
@@ -53,24 +55,6 @@ export class RemoteControl extends React.Component {
     }
 
     /**
-     * Connects to the remote control service so it can send commands back to
-     * the Spot instance and starts listening for that Spot instance's state
-     * updates.
-     *
-     * @inheritdoc
-     */
-    componentDidMount() {
-        const { remoteControlService } = this.props;
-
-        remoteControlService.requestCalendarEvents()
-            .then(data => {
-                this.setState({
-                    events: data.events
-                });
-            });
-    }
-
-    /**
      * Navigates away from the view {@code RemoteControl} when no longer
      * connected to a Spot.
      *
@@ -81,6 +65,16 @@ export class RemoteControl extends React.Component {
             this.props.dispatch(addNotification('error', 'Disconnected'));
             this.props.history.push('/');
         }
+    }
+
+    /**
+     * Clean up Spot and connection related state.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.remoteControlService.disconnect();
+        this.props.dispatch(setCalendarEvents([]));
     }
 
     /**
@@ -154,7 +148,7 @@ export class RemoteControl extends React.Component {
                 <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
                 <div className = { styles.meetings }>
                     <ScheduledMeetings
-                        events = { this.state.events }
+                        events = { this.props.events }
                         onMeetingClick = { this._onGoToMeeting } />
                 </div>
             </div>
@@ -185,6 +179,7 @@ export class RemoteControl extends React.Component {
 function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
+        events: getCalendarEvents(state),
         isConnectedToSpot: isConnectedToSpot(state),
         view: getCurrentView(state)
     };

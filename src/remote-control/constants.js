@@ -15,11 +15,6 @@ export const COMMANDS = {
     HANG_UP: 'hangup',
 
     /**
-     * Get the current calendar events.
-     */
-    REQUEST_CALENDAR: 'requestCalendar',
-
-    /**
      * Set audio mute on or off.
      */
     SET_AUDIO_MUTE: 'setAudioMute',
