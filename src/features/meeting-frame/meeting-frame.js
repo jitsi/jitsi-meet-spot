@@ -18,7 +18,8 @@ export default class MeetingFrame extends React.Component {
         meetingUrl: PropTypes.string,
         onMeetingLeave: PropTypes.func,
         onMeetingStart: PropTypes.func,
-        screenshareDevice: PropTypes.string
+        screenshareDevice: PropTypes.string,
+        showMeetingToolbar: PropTypes.bool
     };
 
     static defaultProps = {
@@ -71,7 +72,7 @@ export default class MeetingFrame extends React.Component {
                 desktopSharingChromeDisabled: !this.props.screenshareDevice
             },
             interfaceConfigOverwrite: {
-                TOOLBAR_BUTTONS: []
+                TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
             onload: this._onMeetingLoaded,
             parentNode: this._meetingContainer,

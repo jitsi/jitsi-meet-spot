@@ -10,7 +10,8 @@ import {
     REMOTE_CONTROL_SPOT_LEFT,
     SETUP_COMPLETED,
     SETUP_SET_SCREENSHARE_DEVICE,
-    SET_IS_SPOT
+    SET_IS_SPOT,
+    SET_SHOW_MEETING_TOOLBAR
 } from 'reducers';
 
 let notificationId = 0;
@@ -76,6 +77,20 @@ export function setCalendarEvents(events = []) {
     return {
         type: CALENDAR_SET_EVENTS,
         events
+    };
+}
+
+/**
+ * Updates the setting for whether or not the Jitsi-Meeting should show a
+ * toolbar. The toolbar may be useful to show for debugging the meeting.
+ *
+ * @param {boolean} visible - Whether or not the toolbar should be displayed.
+ * @returns {Object}
+ */
+export function setMeetingToolbarVisible(visible) {
+    return {
+        type: SET_SHOW_MEETING_TOOLBAR,
+        visible
     };
 }
 

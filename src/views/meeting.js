@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { addNotification, setMeetingApi } from 'actions';
 import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
-import { getDisplayName, getScreenshareDevice } from 'reducers';
+import {
+    getDisplayName,
+    getMeetingOptions,
+    getScreenshareDevice
+} from 'reducers';
 import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 import { ROUTES } from 'routing';
 
@@ -24,7 +28,8 @@ export class Meeting extends React.Component {
         history: PropTypes.object,
         location: PropTypes.object,
         match: PropTypes.object,
-        screenshareDevice: PropTypes.string
+        screenshareDevice: PropTypes.string,
+        showMeetingToolbar: PropTypes.bool
     };
 
     /**
@@ -83,7 +88,8 @@ export class Meeting extends React.Component {
                     meetingUrl = { meetingUrl }
                     onMeetingLeave = { this._onMeetingLeave }
                     onMeetingStart = { this._onMeetingStart }
-                    screenshareDevice = { this.props.screenshareDevice } />
+                    screenshareDevice = { this.props.screenshareDevice }
+                    showMeetingToolbar = { this.props.showMeetingToolbar } />
             </View>
         );
     }
@@ -149,7 +155,8 @@ export class Meeting extends React.Component {
 function mapStateToProps(state) {
     return {
         displayName: getDisplayName(state),
-        screenshareDevice: getScreenshareDevice(state) || ''
+        screenshareDevice: getScreenshareDevice(state),
+        showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar
     };
 }
 

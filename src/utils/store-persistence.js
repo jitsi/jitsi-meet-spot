@@ -14,9 +14,9 @@ const STORE_PERSISTENCE_KEY = 'spot';
  * bootstrapping and subsequent updates.
  *
  * @private
- * @type {Object|null}
+ * @type {Object}
  */
-let cachedState = null;
+let cachedState;
 
 /**
  * A list of store values that should trigger persistance updating if the value
@@ -30,7 +30,8 @@ const keysToStore = [
     'calendars.email',
     'calendars.displayName',
     'setup.completed',
-    'setup.screenshareDevice'
+    'setup.screenshareDevice',
+    'setup.showMeetingToolbar'
 ];
 
 /**
@@ -46,7 +47,7 @@ const keysToStore = [
 function hasUpdateOfInterest(oldState, newState) {
     return keysToStore.some(key => {
         const statePath = key.split('.');
-        const oldValue = statePath.reduce((a, b) => a[b], oldState);
+        const oldValue = statePath.reduce((a = {}, b) => a[b], oldState);
         const newValue = statePath.reduce((a, b) => a[b], newState);
 
         return oldValue !== newValue;
@@ -69,7 +70,8 @@ function parsePersistedState(state) {
         },
         setup: {
             completed: state.setup.completed,
-            screenshareDevice: state.setup.screenshareDevice
+            screenshareDevice: state.setup.screenshareDevice,
+            showMeetingToolbar: state.setup.showMeetingToolbar
         }
     };
 }
