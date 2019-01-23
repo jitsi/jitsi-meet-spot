@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { CalendarStatus, ResetState, ScreenshareStatus } from 'features/admin';
+import {
+    CalendarStatus,
+    InMeetingConfig,
+    ResetState,
+    ScreenshareStatus
+} from 'features/admin';
 import { Button } from 'features/button';
 import { ROUTES } from 'routing';
 
@@ -21,6 +26,7 @@ export default function AdminView() {
                     <CalendarStatus />
                     <ScreenshareStatus />
                     <ResetState />
+                    <InMeetingConfig />
                     <div>
                         <Link to = { ROUTES.SETUP }>
                             <Button>Setup</Button>

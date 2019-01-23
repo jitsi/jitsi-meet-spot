@@ -1,11 +1,13 @@
 const DEFAULT_STATE = {
     completed: false,
-    isSpot: false
+    isSpot: false,
+    showMeetingToolbar: false
 };
 
 export const SETUP_COMPLETED = 'SETUP_COMPLETED';
 export const SETUP_SET_SCREENSHARE_DEVICE = 'SETUP_SET_SCREENSHARE_DEVICE';
 export const SET_IS_SPOT = 'SET_IS_SPOT';
+export const SET_SHOW_MEETING_TOOLBAR = 'SET_SHOW_MEETING_TOOLBAR';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'setup' feature.
@@ -35,6 +37,12 @@ const setup = (state = DEFAULT_STATE, action) => {
             screenshareDevice: action.label
         };
 
+    case SET_SHOW_MEETING_TOOLBAR:
+        return {
+            ...state,
+            showMeetingToolbar: action.visible
+        };
+
     default:
         return state;
     }
@@ -59,6 +67,18 @@ export function isSetupComplete(state) {
  */
 export function isSpot(state) {
     return state.setup.isSpot;
+}
+
+/**
+ * A selector which returns the UI configuration for the Jitsi-Meet meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function getMeetingOptions(state) {
+    return {
+        showMeetingToolbar: state.setup.showMeetingToolbar
+    };
 }
 
 /**
