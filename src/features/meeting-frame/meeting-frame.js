@@ -69,6 +69,9 @@ export default class MeetingFrame extends React.Component {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice
             },
+            interfaceConfigOverwrite: {
+                TOOLBAR_BUTTONS: []
+            },
             onload: this._onMeetingLoaded,
             parentNode: this._meetingContainer,
             roomName: meetingName
