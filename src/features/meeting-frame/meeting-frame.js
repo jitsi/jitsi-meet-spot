@@ -67,7 +67,8 @@ export default class MeetingFrame extends React.Component {
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             configOverwrite: {
-                _desktopSharingSourceDevice: this.props.screenshareDevice
+                _desktopSharingSourceDevice: this.props.screenshareDevice,
+                desktopSharingChromeDisabled: !this.props.screenshareDevice
             },
             interfaceConfigOverwrite: {
                 TOOLBAR_BUTTONS: []
