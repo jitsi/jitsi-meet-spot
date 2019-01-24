@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from 'features/button';
-import { persistence, windowHandler } from 'utils';
+import { persistence } from 'utils';
 
 import styles from './admin.css';
 
@@ -96,7 +96,7 @@ export default class ResetState extends React.Component {
      */
     _onResetApp() {
         persistence.reset();
-        windowHandler.reload();
+        window.location.reload();
     }
 
     /**

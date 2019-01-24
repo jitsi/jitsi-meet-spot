@@ -1,6 +1,5 @@
 import { $iq } from 'strophe.js';
 
-import { XMPP_CONFIG } from 'config';
 import { JitsiMeetJSProvider } from 'vendor';
 
 /**
@@ -43,8 +42,11 @@ export default class XmppConnection {
 
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
-        this.xmppConnection
-            = new JitsiMeetJS.JitsiConnection(null, null, XMPP_CONFIG);
+        this.xmppConnection = new JitsiMeetJS.JitsiConnection(
+            null,
+            null,
+            this.options.configuration
+        );
 
         const connectionPromise = new Promise((resolve, reject) => {
             this.xmppConnection.addEventListener(
@@ -243,7 +245,7 @@ export default class XmppConnection {
                 responseIq => {
                     const response = responseIq.getElementsByTagName('data')[0];
 
-                    resolve(JSON.parse(response.textContent));
+                    resolve(response ? JSON.parse(response.textContent) : {});
                 },
                 reject,
                 5000

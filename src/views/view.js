@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { JoinInfo } from 'features/join-info';
+import { getBackgroundUrl } from 'reducers';
 import { remoteControlService } from 'remote-control';
-import { backgroundService } from 'utils';
 
 import styles from './view.css';
 
@@ -13,8 +14,9 @@ import styles from './view.css';
  *
  * @extends React.Component
  */
-export default class View extends React.Component {
+class View extends React.Component {
     static propTypes = {
+        backgroundUrl: PropTypes.string,
         children: PropTypes.node,
         hideBackground: PropTypes.bool,
         name: PropTypes.string
@@ -41,7 +43,7 @@ export default class View extends React.Component {
         let backgroundStyles;
 
         if (!this.props.hideBackground) {
-            const backgroundUrl = backgroundService.getBackgroundUrl();
+            const backgroundUrl = this.props.backgroundUrl;
 
             if (backgroundUrl) {
                 backgroundStyles = {
@@ -61,3 +63,18 @@ export default class View extends React.Component {
         );
     }
 }
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code View}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        backgroundUrl: getBackgroundUrl(state)
+    };
+}
+
+export default connect(mapStateToProps)(View);

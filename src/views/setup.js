@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Setup as SetupSteps } from 'features/setup';
 import { ROUTES } from 'routing';
 
+import { withCalendar } from './loaders';
 import View from './view';
 import styles from './view.css';
 
@@ -56,4 +57,4 @@ export class Setup extends React.Component {
     }
 }
 
-export default connect()(Setup);
+export default withCalendar(connect()(Setup));

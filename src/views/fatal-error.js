@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { ResetState } from 'features/admin';
 import { Button } from 'features/button';
 import { isSpot } from 'reducers';
-import { ROUTES } from 'routing';
 
 import View from './view';
 import styles from './view.css';
@@ -66,7 +65,7 @@ export class FatalError extends React.Component {
      * @returns {void}
      */
     _onReloadToHome() {
-        window.location.href = this.props.isSpot ? ROUTES.HOME : ROUTES.CODE;
+        window.location.reload();
     }
 }
 

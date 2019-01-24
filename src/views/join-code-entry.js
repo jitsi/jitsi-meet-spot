@@ -5,7 +5,7 @@ import ReactCodeInput from 'react-code-input';
 
 import { addNotification, setLock, setRoomName } from 'actions';
 import { Button } from 'features/button';
-import { isConnectedToSpot } from 'reducers';
+import { getRemoteControlServerConfig, isConnectedToSpot } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
 import { logger } from 'utils';
@@ -27,7 +27,8 @@ export class JoinCodeEntry extends React.Component {
         dispatch: PropTypes.func,
         entryLength: PropTypes.number,
         history: PropTypes.object,
-        isConnectedToSpot: PropTypes.bool
+        isConnectedToSpot: PropTypes.bool,
+        remoteControlConfiguration: PropTypes.object
     };
 
     /**
@@ -136,10 +137,11 @@ export class JoinCodeEntry extends React.Component {
                 this.props.dispatch(setRoomName(roomName));
                 this.props.dispatch(setLock(password));
 
-                return remoteControlService.connect(
+                return remoteControlService.connect({
+                    lock: password,
                     roomName,
-                    password
-                );
+                    serverConfig: this.props.remoteControlConfiguration
+                });
             })
             .catch(error => {
                 logger.error('Error while connecting to spot:', error);
@@ -167,7 +169,8 @@ export class JoinCodeEntry extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        isConnectedToSpot: isConnectedToSpot(state)
+        isConnectedToSpot: isConnectedToSpot(state),
+        remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }
 

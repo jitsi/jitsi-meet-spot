@@ -1,4 +1,3 @@
-import { MICROSOFT_CLIENT_ID } from 'config';
 import { isValidMeetingUrl } from 'utils';
 
 import { integrationTypes } from './constants';
@@ -12,11 +11,14 @@ export default {
     /**
      * Sets a previously loaded access token if available.
      *
+     * @param {Object} config - Values needed to properly initialize the API.
+     * @param {string} config.CLIENT_ID - The Outlook application client ID used
+     * to make API requests.
      * @returns {Promise}
      */
-    initialize() {
+    initialize(config) {
         return microsoftClientApi.initialize({
-            clientId: MICROSOFT_CLIENT_ID,
+            clientId: config.CLIENT_ID,
             scopes: [
                 'openid',
                 'profile',

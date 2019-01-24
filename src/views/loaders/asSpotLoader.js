@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { setLock, setRoomName, setIsSpot } from 'actions';
-import { getCurrentLock, getCurrentRoomName } from 'reducers';
+import {
+    getCurrentLock,
+    getCurrentRoomName,
+    getRemoteControlServerConfig
+} from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { logger } from 'utils';
 
@@ -53,11 +57,11 @@ export class AsSpotLoader extends AbstractLoader {
         const roomName
             = String(Math.floor(Math.random() * 9999) + 1).padStart(4, 0);
 
-        return remoteControlService.connect(
-            roomName, // will create a room
-            undefined, // will create a lock
-            true // joining as spot
-        )
+        return remoteControlService.connect({
+            joinAsSpot: true,
+            roomName,
+            serverConfig: this.props.remoteControlConfiguration
+        })
             .then(() => {
                 this.props.dispatch(setRoomName(
                     remoteControlService.getRoomName()));
@@ -107,6 +111,7 @@ export class AsSpotLoader extends AbstractLoader {
 function mapStateToProps(state) {
     return {
         lock: getCurrentLock(state),
+        remoteControlConfiguration: getRemoteControlServerConfig(state),
         roomName: getCurrentRoomName(state)
     };
 }

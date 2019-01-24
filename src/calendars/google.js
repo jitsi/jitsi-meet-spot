@@ -1,6 +1,5 @@
 /* global gapi */
 
-import { CLIENT_ID } from 'config';
 import { date, isValidMeetingUrl } from 'utils';
 
 import { integrationTypes } from './constants';
@@ -15,9 +14,12 @@ export default {
     /**
      * Loads the external script for accessing the Google API.
      *
+     * @param {Object} config - Values needed to properly initialize the API.
+     * @param {string} config.CLIENT_ID - The Google application client ID used
+     * to make API requests.
      * @returns {Promise} Resolves when the Google API javascript has loaded.
      */
-    initialize() {
+    initialize(config) {
         if (initPromise) {
             return initPromise;
         }
@@ -27,7 +29,7 @@ export default {
 
         return initPromise
             .then(() => gapi.client.init({
-                clientId: CLIENT_ID,
+                clientId: config.CLIENT_ID,
                 scope: [
                     'https://www.googleapis.com/auth/'
                         + 'admin.directory.resource.calendar.readonly',
