@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import { createHashHistory } from 'history';
 
+import { NoSleep } from 'no-sleep';
 import { protoState } from 'reducers';
 import { ProcessUpdateDelegate, remoteControlService } from 'remote-control';
 import { getPersistedState, setPersistedState } from 'utils';
@@ -48,7 +49,9 @@ remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 render(
     <Provider store = { store }>
         <HashRouter>
-            <App />
+            <NoSleep>
+                <App />
+            </NoSleep>
         </HashRouter>
     </Provider>,
     document.getElementById('root')
