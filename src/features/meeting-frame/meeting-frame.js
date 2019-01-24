@@ -13,6 +13,10 @@ import styles from './meeting-frame.css';
  * @extends React.Component
  */
 export default class MeetingFrame extends React.Component {
+    static defaultProps = {
+        displayName: 'Meeting Room'
+    };
+
     static propTypes = {
         displayName: PropTypes.string,
         meetingUrl: PropTypes.string,
@@ -20,10 +24,6 @@ export default class MeetingFrame extends React.Component {
         onMeetingStart: PropTypes.func,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
-    };
-
-    static defaultProps = {
-        displayName: ''
     };
 
     /**
@@ -72,6 +72,7 @@ export default class MeetingFrame extends React.Component {
                 desktopSharingChromeDisabled: !this.props.screenshareDevice
             },
             interfaceConfigOverwrite: {
+                DEFAULT_LOCAL_DISPLAY_NAME: '',
                 TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
             onload: this._onMeetingLoaded,
