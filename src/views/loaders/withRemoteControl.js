@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { getCurrentLock, getCurrentRoomName } from 'reducers';
+import {
+    getCurrentLock,
+    getCurrentRoomName,
+    getRemoteControlServerConfig
+} from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { logger } from 'utils';
 
@@ -83,10 +87,11 @@ export class RemoteControlLoader extends AbstractLoader {
             return Promise.reject();
         }
 
-        return remoteControlService.connect(
-            this._getRoomName(),
-            this._getRoomLock())
-            .catch(error => logger.error(error));
+        return remoteControlService.connect({
+            roomName,
+            lock: roomLock,
+            serverConfig: this.props.remoteControlConfiguration
+        }).catch(error => logger.error(error));
     }
 }
 
@@ -101,6 +106,7 @@ export class RemoteControlLoader extends AbstractLoader {
 function mapStateToProps(state) {
     return {
         lock: getCurrentLock(state),
+        remoteControlConfiguration: getRemoteControlServerConfig(state),
         roomName: getCurrentRoomName(state)
     };
 }

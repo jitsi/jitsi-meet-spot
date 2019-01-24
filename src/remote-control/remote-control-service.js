@@ -24,19 +24,23 @@ class RemoteControlService {
     /**
      * Creates a connection to the remote control service.
      *
-     * @param {string} roomName - The name of the MUC to join. A MUC will be
-     * created if a name is not provided.
-     * @param {string} lock - The lock code needed to join an existing MUC.
-     * @param {boolean} joinAsSpot -  Whether or not this connection is being
-     * made by a Spot client.
+     * @param {Object} options - Information necessary for creating the MUC.
+     * @param {boolean} options.joinAsSpot - Whether or not this connection is
+     * being made by a Spot client.
+     * @param {string} options.lock - The lock code to use when joining or
+     * to set when creating a new MUC.
+     * @param {string} options.roomName - The name of the MUC to join or create.
+     * @param {Object} options.serverConfig - Details on how the XMPP connection
+     * should be made.
      * @returns {Promise<string>}
      */
-    connect(roomName, lock, joinAsSpot) {
+    connect({ joinAsSpot, lock, roomName, serverConfig }) {
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
 
         this.xmppConnection = new XmppConnection({
+            configuration: serverConfig,
             onRemoteCommand: this._onRemoteCommand,
             onSpotStatusUpdate: this._onSpotStatusUpdate
         });
@@ -98,7 +102,8 @@ class RemoteControlService {
      * @returns {string}
      */
     getRoomName() {
-        const fullJid = this.xmppConnection.getRoomFullJid();
+        const fullJid
+            = this.xmppConnection && this.xmppConnection.getRoomFullJid();
 
         if (!fullJid) {
             return '';

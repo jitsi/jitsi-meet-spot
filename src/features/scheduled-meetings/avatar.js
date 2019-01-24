@@ -1,6 +1,9 @@
-import React from 'react';
+
 import PropTypes from 'prop-types';
-import { DEFAULT_AVATAR_URL } from 'config';
+import React from 'react';
+import { connect } from 'react-redux';
+
+import { getDefaultAvatarConfig } from 'reducers';
 import { hash } from 'utils';
 
 import styles from './scheduled-meeting.css';
@@ -9,28 +12,52 @@ import styles from './scheduled-meeting.css';
  * A component that displays the gravatar of a provided email or a configured
  * default avatar.
  *
- * @param {Object} props - The read-only properties with which the new
- * instance is to be initialized.
- * @returns {ReactElement}
+ * @extends React.Component
  */
-export default function Avatar({ email }) {
-    const avatarUrl = email
-        ? `https://www.gravatar.com/avatar/${
-            hash(email.trim().toLowerCase())}?d=wavatar`
-        : DEFAULT_AVATAR_URL;
+export class Avatar extends React.Component {
+    static defaultProps = {
+        email: ''
+    };
 
-    return (
-        <img
-            className = { styles.avatar }
-            src = { avatarUrl }
-            title = { email } />
-    );
+    static propTypes = {
+        defaultAvatarUrl: PropTypes.string,
+        email: PropTypes.string
+    };
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        const { defaultAvatarUrl, email } = this.props;
+
+        const avatarUrl = email
+            ? `https://www.gravatar.com/avatar/${
+                hash(email.trim().toLowerCase())}?d=wavatar`
+            : defaultAvatarUrl;
+
+        return (
+            <img
+                className = { styles.avatar }
+                src = { avatarUrl }
+                title = { email } />
+        );
+    }
 }
 
-Avatar.defaultProps = {
-    email: ''
-};
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code Avatar}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        defaultAvatarUrl: getDefaultAvatarConfig(state)
+    };
+}
 
-Avatar.propTypes = {
-    email: PropTypes.string
-};
+export default connect(mapStateToProps)(Avatar);

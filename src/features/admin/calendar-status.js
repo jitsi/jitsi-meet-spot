@@ -30,7 +30,7 @@ export function CalendarStatus(props) {
 }
 
 CalendarStatus.propTypes = {
-    calendarEmail: PropTypes.string.isRequired
+    calendarEmail: PropTypes.string
 };
 
 /**

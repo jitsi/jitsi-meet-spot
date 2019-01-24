@@ -31,7 +31,7 @@ export default {
 
         this._calendarIntegration = calendarIntegrations[type];
 
-        return this._calendarIntegration.initialize();
+        return this._calendarIntegration.initialize(this.config[type]);
     },
 
     /**
@@ -63,6 +63,17 @@ export default {
      */
     getRooms() {
         return this._calendarIntegration.getRooms();
+    },
+
+    /**
+     * Sets a reference to all configuration objects necessary to initialize
+     * calendar integrations.
+     *
+     * @param {Object} config - The calendar configuration objects.
+     * @returns {void}
+     */
+    setConfig(config) {
+        this.config = config;
     },
 
     /**

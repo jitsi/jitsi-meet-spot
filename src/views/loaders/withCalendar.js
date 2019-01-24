@@ -1,6 +1,8 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { calendarService } from 'calendars';
+import { getCalendarConfig } from 'reducers';
 
 import { AbstractLoader, generateWrapper } from './abstract-loader';
 
@@ -11,7 +13,11 @@ import { AbstractLoader, generateWrapper } from './abstract-loader';
  * @extends React.Component
  */
 export class CalendarLoader extends AbstractLoader {
-    static propTypes = AbstractLoader.propTypes;
+    static propTypes = {
+        ...AbstractLoader.propTypes,
+        calendarConfig: PropTypes.object,
+        calendarType: PropTypes.string
+    };
 
     /**
      * Returns the props that should be passed into this loader's child
@@ -31,6 +37,8 @@ export class CalendarLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
+        calendarService.setConfig(this.props.calendarConfig);
+
         return calendarService.initialize(this.props.calendarType);
     }
 }
@@ -45,6 +53,7 @@ export class CalendarLoader extends AbstractLoader {
  */
 function mapStateToProps(state) {
     return {
+        calendarConfig: getCalendarConfig(state),
         calendarType: state.calendars.calendarType
     };
 }

@@ -3,9 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { addNotification, setMeetingApi } from 'actions';
-import { DEFAULT_MEETING_DOMAIN } from 'config';
 import { MeetingFrame } from 'features/meeting-frame';
 import {
+    getDefaultMeetingDomain,
     getDisplayName,
     getMeetingOptions,
     getScreenshareDevice
@@ -23,6 +23,7 @@ import { withRemoteControl } from './loaders';
  */
 export class Meeting extends React.Component {
     static propTypes = {
+        defaultMeetingDomain: PropTypes.string,
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
@@ -108,7 +109,7 @@ export class Meeting extends React.Component {
         if (isValidMeetingUrl(location)) {
             return location;
         } else if (isValidMeetingName(location)) {
-            return `https://${DEFAULT_MEETING_DOMAIN}/${location}`;
+            return `https://${this.props.defaultMeetingDomain}/${location}`;
         }
 
         return null;
@@ -154,6 +155,7 @@ export class Meeting extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
         screenshareDevice: getScreenshareDevice(state),
         showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar

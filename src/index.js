@@ -16,7 +16,16 @@ import './reset.css';
 // I copied from https://github.com/css-modules/css-modules/issues/164
 import '!style-loader!css-loader!fonts/fonts.css';
 
-const store = createStore(protoState, getPersistedState());
+const store = createStore(
+    protoState,
+    {
+        config: {
+            ...window.JitsiMeetSpotConfig
+        },
+        ...getPersistedState()
+
+    }
+);
 
 store.subscribe(() => {
     setPersistedState(store);
