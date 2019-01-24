@@ -1,7 +1,10 @@
-/**
- * TODO: remove !important usage and setting height/width larger than parent.
- * Those stylings are being used right now to override jitsi-meet icon styling.
- */
+:global(.idleCursor) .cog {
+    display: none;
+}
+:global(.idleCursor) .cog:hover {
+    display: block;
+}
+
 .cog {
     border-radius: 50%;
     height: 1.4em;
@@ -13,6 +16,12 @@
 .cog,
 .cog * {
     color: white;
+
+    /**
+    * TODO: remove !important usage and setting height/width larger than
+    * parent. Those stylings are being used right now to override jitsi-meet
+    * icon styling.
+    */
     cursor: pointer !important;
     text-decoration: none !important;
 }

@@ -16,8 +16,6 @@ import {
     Setup
 } from 'views';
 
-import styles from './app.css';
-
 /**
  * The root of the application which determines what view should be displayed.
  *
@@ -38,7 +36,7 @@ export class App extends React.Component {
         super(props);
 
         this.state = {
-            hideCursor: false
+            hideCursor: true
         };
 
         this._onCursorIdleChange = this._onCursorIdleChange.bind(this);
@@ -66,9 +64,7 @@ export class App extends React.Component {
         return (
             <IdleCursorDetector
                 onCursorIdleChange = { this._onCursorIdleChange }>
-                <div
-                    className = {
-                        this.state.hideCursor ? styles.idleCursor : '' }>
+                <div className = { this.state.hideCursor ? 'idleCursor' : '' }>
                     <Notifications />
                     <ErrorBoundary errorComponent = { FatalError }>
                         <Switch>
