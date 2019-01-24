@@ -10,6 +10,7 @@ import { ProcessUpdateDelegate, remoteControlService } from 'remote-control';
 import { getPersistedState, setPersistedState } from 'utils';
 
 import App from './app';
+import './app.css';
 import './reset.css';
 
 // FIXME: I honestly don't know how to load this font through css-modules so
