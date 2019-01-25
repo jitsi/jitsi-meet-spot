@@ -35,6 +35,19 @@ export class AsSpotLoader extends AbstractLoader {
     }
 
     /**
+     * Temporary method to generate a random string, intended to be used to
+     * create a random join code.
+     *
+     * @param {number} length - The desired length of the random string.
+     * @returns {string}
+     */
+    _generateRandomString(length) {
+        return Math.random()
+            .toString(36)
+            .substr(2, length);
+    }
+
+    /**
      * Returns the props that should be passed into this loader's child
      * elements.
      *
@@ -52,10 +65,10 @@ export class AsSpotLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
+        this._generateRandomString(3);
         this.props.dispatch(setIsSpot(true));
 
-        const roomName
-            = String(Math.floor(Math.random() * 9999) + 1).padStart(4, 0);
+        const roomName = this._generateRandomString(3);
 
         return remoteControlService.connect({
             joinAsSpot: true,
@@ -78,8 +91,7 @@ export class AsSpotLoader extends AbstractLoader {
      * @returns {void}
      */
     _setLock() {
-        const lock
-            = String(Math.floor(Math.random() * 9999) + 1).padStart(4, 0);
+        const lock = this._generateRandomString(3);
 
         remoteControlService.setLock(lock);
 

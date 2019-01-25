@@ -20,7 +20,7 @@ import styles from './view.css';
  */
 export class JoinCodeEntry extends React.Component {
     static defaultProps = {
-        entryLength: 8
+        entryLength: 6
     };
 
     static propTypes = {
@@ -88,6 +88,7 @@ export class JoinCodeEntry extends React.Component {
                                 <div data-qa-id = { 'join-code-input' }>
                                     <ReactCodeInput
                                         fields = { this.props.entryLength }
+                                        forceUppercase = { true }
                                         onChange = { this._onCodeChange }
                                         type = 'text'
                                         value = { this.state.enteredCode } />
@@ -127,9 +128,9 @@ export class JoinCodeEntry extends React.Component {
         });
 
         // FIXME: There is no proper join code service so the code is a
-        // combination of a 4 digit room name and a 4 digit room password.
-        const roomName = this.state.enteredCode.substring(0, 4);
-        const password = this.state.enteredCode.substring(4, 8);
+        // combination of a 3 digit room name and a 3 digit room password.
+        const roomName = this.state.enteredCode.substring(0, 3).toLowerCase();
+        const password = this.state.enteredCode.substring(3, 6).toLowerCase();
 
         submitPromise
             .then(() => remoteControlService.exchangeCode(password))

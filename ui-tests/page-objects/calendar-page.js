@@ -4,8 +4,7 @@ const PageObject = require('./page-object');
 
 const CALENDAR_VIEW = '[data-qa-id=home-view]';
 const JOIN_CODE_INFO = '[data-qa-id=join-info]';
-const JOIN_CODE_ROOM_LOCK = '[data-qa-id=room-lock]';
-const JOIN_CODE_ROOM_NAME = '[data-qa-id=room-name]';
+const JOIN_CODE = '[data-qa-id=join-code]';
 const REMOTE_CONTROL_LINK = '[data-qa-id=remote-control-link]';
 
 /**
@@ -35,10 +34,7 @@ class CalendarPage extends PageObject {
             constants.VISIBILITY_WAIT
         );
 
-        const roomName = this.driver.getText(JOIN_CODE_ROOM_NAME);
-        const roomLock = this.driver.getText(JOIN_CODE_ROOM_LOCK);
-
-        return roomName + roomLock;
+        return this.driver.getText(JOIN_CODE);
     }
 
     /**
