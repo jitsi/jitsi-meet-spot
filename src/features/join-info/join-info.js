@@ -39,15 +39,9 @@ class JoinInfo extends React.Component {
                 className = { styles.joinInfo }
                 data-qa-id = { 'join-info' }>
                 <div>
-                    <span>name:</span>
-                    <span data-qa-id = 'room-name'>
-                        { roomName }
-                    </span>
-                </div>
-                <div>
                     <span>code:</span>
-                    <span data-qa-id = 'room-lock'>
-                        { lock }
+                    <span data-qa-id = 'join-code'>
+                        { `${roomName.toUpperCase()}${lock.toUpperCase()}` }
                     </span>
                 </div>
             </div>
