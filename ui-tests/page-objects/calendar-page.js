@@ -5,7 +5,6 @@ const PageObject = require('./page-object');
 const CALENDAR_VIEW = '[data-qa-id=home-view]';
 const JOIN_CODE_INFO = '[data-qa-id=join-info]';
 const JOIN_CODE = '[data-qa-id=join-code]';
-const REMOTE_CONTROL_LINK = '[data-qa-id=remote-control-link]';
 
 /**
  * A page object for interacting with the calendar view of Spot.
@@ -35,32 +34,6 @@ class CalendarPage extends PageObject {
         );
 
         return this.driver.getText(JOIN_CODE);
-    }
-
-    /**
-     * Opens the remote control window. This method uses a development feature
-     * of opening the remote control in the same browser instance as Spot, but
-     * in a popup window.
-     *
-     * @returns {string} The tabId of the newly opened window to display remote
-     * control.
-     */
-    openRemoteControl() {
-        this.driver.waitForVisible(
-            REMOTE_CONTROL_LINK,
-            constants.VISIBILITY_WAIT
-        );
-
-        const tabsIdsBeforeClick = this.driver.getTabIds();
-
-        this.driver.click(REMOTE_CONTROL_LINK);
-        this.driver.waitUntil(
-            () => this._getNewTabIds(tabsIdsBeforeClick).length === 1,
-            constants.VISIBILITY_WAIT,
-            'Failed to detect a newly opened tab'
-        );
-
-        return this._getNewTabIds(tabsIdsBeforeClick)[0];
     }
 
     /**
