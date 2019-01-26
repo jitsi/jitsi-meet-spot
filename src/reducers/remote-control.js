@@ -10,6 +10,7 @@ const DEFAULT_STATE = {
     videoMuted: true
 };
 
+export const REMOTE_CONTROL_SET_JOIN_CODE = 'REMOTE_CONTROL_SET_JOIN_CODE';
 export const REMOTE_CONTROL_SET_LOCK = 'REMOTE_CONTROL_SET_LOCK';
 export const REMOTE_CONTROL_SET_MEETING = 'REMOTE_CONTROL_SET_MEETING';
 export const REMOTE_CONTROL_SET_ROOM_NAME = 'REMOTE_CONTROL_SET_ROOM_NAME';
@@ -27,6 +28,12 @@ export const REMOTE_CONTROL_SPOT_LEFT = 'REMOTE_CONTROL_SPOT_LEFT';
  */
 const remoteControl = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
+    case REMOTE_CONTROL_SET_JOIN_CODE:
+        return {
+            ...state,
+            joinCode: action.joinCode
+        };
+
     case REMOTE_CONTROL_SET_LOCK:
         return {
             ...state,
@@ -104,6 +111,16 @@ export function getInMeetingStatus(state) {
         screensharing: state.remoteControl.screensharing,
         videoMuted: state.remoteControl.videoMuted
     };
+}
+
+/**
+ * A selector which returns the known join code needed for pairing to a Spot.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getJoinCode(state) {
+    return state.remoteControl.joinCode;
 }
 
 /**

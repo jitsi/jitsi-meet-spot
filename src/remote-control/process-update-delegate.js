@@ -19,6 +19,7 @@ const presenceToStoreAsBoolean = new Set([
 ]);
 
 const presenceToStoreAsString = new Set([
+    'joinCode',
     'view'
 ]);
 

@@ -7,7 +7,6 @@ import { hasUpdatedEvents } from 'calendars';
 import { SettingsButton } from 'features/admin';
 import { Clock } from 'features/clock';
 import { LoadingIcon } from 'features/loading-icon';
-import { QRCode } from 'features/qr-code';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
     getCalendarEmail,
@@ -16,7 +15,6 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'reducers';
-import { windowHandler } from 'utils';
 
 import View from './view';
 import styles from './view.css';
@@ -51,7 +49,6 @@ export class Home extends React.Component {
         super(props);
 
         this._onGoToMeeting = this._onGoToMeeting.bind(this);
-        this._onOpenQRCodeUrl = this._onOpenQRCodeUrl.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
@@ -99,17 +96,6 @@ export class Home extends React.Component {
                         { this._getCalendarEventsView() }
                     </div>
                 </div>
-                <div
-                    className = { styles.qrcode }
-                    data-qa-id = 'remote-control-link'
-                    onClick = { this._onOpenQRCodeUrl }>
-                    {
-                        // eslint-disable-next-line no-undef
-                        process.env.NODE_ENV === 'production'
-                            ? null
-                            : <QRCode text = { this._getRemoteControlUrl() } />
-                    }
-                </div>
                 <div className = { styles.settings_cog }>
                     <SettingsButton />
                 </div>
@@ -136,16 +122,6 @@ export class Home extends React.Component {
     }
 
     /**
-     * Generates the full URL for opening a remote control for Spot.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getRemoteControlUrl() {
-        return this.props.remoteControlService.getRemoteControlUrl();
-    }
-
-    /**
      * Callback invoked to join a meeting. Only if a meeting url is passed in
      * will join be attempted.
      *
@@ -157,17 +133,6 @@ export class Home extends React.Component {
         if (meetingUrl) {
             this.props.history.push(`/meeting?location=${meetingUrl}`);
         }
-    }
-
-    /**
-     * Callback invoked to open a window for controlling a Spot instance. This
-     * is intended for now to be a debugging and development feature.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onOpenQRCodeUrl() {
-        windowHandler.openNewWindow(this._getRemoteControlUrl());
     }
 
     /**

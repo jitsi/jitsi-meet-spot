@@ -51,23 +51,6 @@
     width: 100%;
 }
 
-:global(.idleCursor) .qrcode {
-    display: none;
-}
-
-:global(.idleCursor) .qrcode:hover {
-    display: block;
-}
-
-.qrcode {
-    bottom: 20;
-    left: 20;
-    position: absolute;
-}
-.qrcode:hover {
-    cursor: pointer;
-}
-
 .settings_cog {
     top: 41px;
     font-size: 1.7em;

@@ -1,4 +1,3 @@
-import { windowHandler } from 'utils';
 import { COMMANDS } from './constants';
 import XmppConnection from './xmpp-connection';
 
@@ -77,19 +76,6 @@ class RemoteControlService {
     }
 
     /**
-     * Generates the full URL for opening a remote control for Spot.
-     *
-     * @returns {string}
-     */
-    getRemoteControlUrl() {
-        const roomName = this.getRoomName();
-        const lock = this.xmppConnection.getLock();
-
-        return `${windowHandler.getBaseUrl()}#/remote-control?remoteId=${
-            roomName}&lock=${lock}`;
-    }
-
-    /**
      * Returns the current MUC that is joined to use as signaling between a Spot
      * and remote controls.
      *
@@ -145,6 +131,17 @@ class RemoteControlService {
      */
     notifyCalendarStatus(events) {
         this.xmppConnection.updateStatus('calendar', events);
+    }
+
+    /**
+     * Notifies all controllers of the current join code for Spot.
+     *
+     * @param {string} joinCode - The join code necessary for a user to connect
+     * to Spot as a remote control.
+     * @returns {void}
+     */
+    notifyJoinCodeUpdate(joinCode) {
+        this.xmppConnection.updateStatus('joinCode', joinCode);
     }
 
     /**
