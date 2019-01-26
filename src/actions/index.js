@@ -3,6 +3,7 @@ import {
     CALENDAR_SET_EVENTS,
     NOTIFICATION_ADD,
     NOTIFICATION_REMOVE,
+    REMOTE_CONTROL_SET_JOIN_CODE,
     REMOTE_CONTROL_SET_LOCK,
     REMOTE_CONTROL_SET_MEETING,
     REMOTE_CONTROL_SET_ROOM_NAME,
@@ -105,6 +106,20 @@ export function setIsSpot(isSpot) {
     return {
         type: SET_IS_SPOT,
         isSpot
+    };
+}
+
+/**
+ * Updates the known join code for connecting a remote to a Spot.
+ *
+ * @param {string} joinCode - The string necessary for a remote control to
+ * connect to a spot.
+ * @returns {Object}
+ */
+export function setJoinCode(joinCode) {
+    return {
+        type: REMOTE_CONTROL_SET_JOIN_CODE,
+        joinCode
     };
 }
 

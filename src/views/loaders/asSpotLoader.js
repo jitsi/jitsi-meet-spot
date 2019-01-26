@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setLock, setRoomName, setIsSpot } from 'actions';
+import { setJoinCode, setLock, setRoomName, setIsSpot } from 'actions';
 import {
     getCurrentLock,
     getCurrentRoomName,
@@ -96,6 +96,11 @@ export class AsSpotLoader extends AbstractLoader {
         remoteControlService.setLock(lock);
 
         this.props.dispatch(setLock(lock));
+
+        const joinCode = `${this.props.roomName}${lock}`;
+
+        remoteControlService.notifyJoinCodeUpdate(joinCode);
+        this.props.dispatch(setJoinCode(joinCode));
     }
 
     /**

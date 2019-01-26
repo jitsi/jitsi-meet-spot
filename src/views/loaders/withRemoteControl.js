@@ -27,7 +27,9 @@ export class RemoteControlLoader extends AbstractLoader {
     /**
      * Returns the name of the muc to join. The name is taken from the query
      * params, if set, or taken from the jid created by the remote control
-     * service during initialization.
+     * service during initialization. The query param feature is for generally
+     * for debugging, to quickly access the remote without having to enter a
+     * join code.
      *
      * @private
      * @returns {string}
@@ -44,7 +46,9 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Returns the lock code for the room to be joined, if any.
+     * Returns the lock code for the room to be joined, if any. The query param
+     * feature is for generally for debugging, to quickly access the remote
+     * without having to enter a join code.
      *
      * @private
      * @returns {string}
