@@ -14,7 +14,6 @@
 .meeting {
     background: white;
     cursor: pointer;
-    height: 33%;
     padding: 20px;
     display: flex;
     margin-top: 2px;
@@ -49,4 +48,9 @@
     margin: 10px 0;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.url:empty:before {
+    content: '.';
+    visibility: hidden;
 }
