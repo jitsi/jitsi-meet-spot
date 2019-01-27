@@ -56,7 +56,7 @@ export default class ScheduledMeeting extends React.Component {
                         { title }
                     </div>
                     <div className = { styles.url }>
-                        { meetingUrl }
+                        { this._removeProtocolFromUrl(meetingUrl) }
                     </div>
                 </div>
             </div>
@@ -90,5 +90,15 @@ export default class ScheduledMeeting extends React.Component {
         if (this.props.event.meetingUrl) {
             this.props.onMeetingClick(this.props.event.meetingUrl);
         }
+    }
+
+    /**
+     * Helper to remove the protocol from a url.
+     *
+     * @param {string} url - The URL which should have its protocol removed.
+     * @returns {string}
+     */
+    _removeProtocolFromUrl(url) {
+        return (url || '').replace(/(^\w+:|^)\/\//, '');
     }
 }
