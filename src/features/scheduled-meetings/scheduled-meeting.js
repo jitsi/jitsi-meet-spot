@@ -51,13 +51,12 @@ export default class ScheduledMeeting extends React.Component {
                 <div className = { styles.time }>
                     { date.formatToTime(startTime) }
                 </div>
-                <div className = { styles.details }>
-                    <div className = { styles.name }>
-                        { title }
-                    </div>
-                    <div className = { styles.url }>
-                        { this._removeProtocolFromUrl(meetingUrl) }
-                    </div>
+                <div className = { styles.name }>
+                    { title }
+                </div>
+                <div />
+                <div className = { styles.url }>
+                    { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
             </div>
         );

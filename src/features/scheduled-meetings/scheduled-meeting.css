@@ -5,19 +5,27 @@
 }
 
 .details {
-    margin-left: 20px;
-    overflow: hidden;
+    overflow-x: hidden;
     text-overflow: ellipsis;
     width: 100%;
 }
 
 .meeting {
+    align-items: baseline;
     background: white;
     cursor: pointer;
     padding: 20px;
-    display: flex;
-    margin-top: 2px;
-    overflow: hidden;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 50% 50%;
+    min-height: 33%;
+    overflow-x: hidden;
+}
+
+.meeting:not(:last-child) {
+    margin-bottom: 10px;
 }
 
 .meeting:hover {
@@ -38,14 +46,11 @@
 
 .time {
     font-size: 1.5vw;
-    white-space: nowrap;
-    width: 30%;
 }
 
 .url {
     font-size: 1.5vw;
     overflow: hidden;
-    margin: 10px 0;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
