@@ -13,8 +13,9 @@ import {
 import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 import { ROUTES } from 'routing';
 
-import View from './view';
 import { withRemoteControl } from './loaders';
+import View from './view';
+import styles from './view.css';
 
 /**
  * Displays the meeting url specified in the url.
@@ -91,6 +92,17 @@ export class Meeting extends React.Component {
                     onMeetingStart = { this._onMeetingStart }
                     screenshareDevice = { this.props.screenshareDevice }
                     showMeetingToolbar = { this.props.showMeetingToolbar } />
+                {
+
+                    /**
+                     * The browser gives mouse cursor styling priority to the
+                     * MeetingFrame (iframe) contents. To hide the cursor,
+                     * blanket the MeetingFrame with a div controlled by Spot to
+                     * prevent the browser from detecting the mouse cursor being
+                     * over an iframe.
+                     */
+                }
+                <div className = { styles.meetingMouseHider } />
             </View>
         );
     }

@@ -13,6 +13,17 @@
     position: fixed;
 }
 
+.meetingMouseHider {
+    pointer-events: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+:global(.idleCursor) .meetingMouseHider {
+    pointer-events: all;
+}
+
 .container {
     align-items: center;
     border-radius: 5%;
