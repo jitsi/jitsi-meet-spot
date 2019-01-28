@@ -9,8 +9,13 @@ import {
 
 import { logger } from 'utils';
 
-import { COMMANDS } from './constants';
+import { COMMANDS, MESSAGES } from './constants';
 
+/**
+ * Presence attributes from Spot convert to boolean and store in redux.
+ *
+ * @type {Set}
+ */
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
     'inMeeting',
@@ -18,6 +23,11 @@ const presenceToStoreAsBoolean = new Set([
     'videoMuted'
 ]);
 
+/**
+ * Presence attributes from Spot convert to store as strings in redux.
+ *
+ * @type {Set}
+ */
 const presenceToStoreAsString = new Set([
     'joinCode',
     'view'
@@ -37,6 +47,12 @@ export default class ProcessUpdateDelegate {
     constructor(store, history) {
         this._store = store;
         this._history = history;
+
+        /**
+         * Send a dying request to close any active ScreenShare connection so
+         * the Jitsi-Meet meeting knows to stop showing a screenshare.
+         */
+        window.addEventListener('beforeunload', () => this.stopScreenshare());
     }
 
     /**
@@ -52,7 +68,7 @@ export default class ProcessUpdateDelegate {
      * Callback to invoke when receiving a remote control command as an iq.
      *
      * @param {Object} iq - The iq representing the command to take an action.
-     * @returns {Promise} Resolves with an ack as an iq.
+     * @returns {Object} An ack as an iq.
      */
     onCommand(iq) {
         const from = iq.getAttribute('from');
@@ -116,7 +132,51 @@ export default class ProcessUpdateDelegate {
         }
         }
 
-        return Promise.resolve(ack);
+        return ack;
+    }
+
+    /**
+     * Callback to invoke when receiving a message as an iq.
+     *
+     * @param {Object} iq - The iq representing the message.
+     * @returns {Object} A ack as an iq.
+     */
+    onMessage(iq) {
+        const from = iq.getAttribute('from');
+        const message = iq.getElementsByTagName('message')[0];
+        const messageType = message.getAttribute('type');
+        const data = JSON.parse(message.textContent);
+        const ack = $iq({
+            id: iq.getAttribute('id'),
+            to: from,
+            type: 'result'
+        });
+
+        switch (messageType) {
+        case MESSAGES.JITSI_MEET_UPDATE:
+            // It is currently assumed all messages received here are for the
+            // remote control, are from the Jitsi-Meet participant, and are all
+            // related to screensharing.
+            this._screenshareConnection
+                && this._screenshareConnection.processMessage({
+                    data,
+                    from
+                });
+
+            break;
+
+        case MESSAGES.REMOTE_CONTROL_UPDATE:
+            // Spot receives messages from remote controls to pass to
+            // Jitsi-Meet.
+            this._sendEventIfInMeeting({
+                data,
+                from
+            });
+
+            break;
+        }
+
+        return ack;
     }
 
     /**
@@ -124,7 +184,7 @@ export default class ProcessUpdateDelegate {
      * can be synced with Spot's current presence.
      *
      * @param {Object} presence - The presence update in XML format.
-     * @returns {Promise}
+     * @returns {void}
      */
     onStatus(presence) {
         const localIsSpot = isSpot(this._store.getState());
@@ -134,10 +194,34 @@ export default class ProcessUpdateDelegate {
             const from = presence.getAttribute('from');
 
             if (from === this.getSpotId()) {
+                // When Spot has left, trigger screenshare cleanup to stop any
+                // active {@code ScreenshareConnection} and its associated
+                // media.
+                this.stopScreenshare();
+
                 this._store.dispatch(setSpotLeft());
+            } else {
+
+                // When a remote leaves, notify the Jitsi-Meet meeting so that
+                // it can trigger any cleanup of active direct connections to a
+                // remote control.
+                const iq = $iq({ type: 'set' })
+                    .c('jingle', {
+                        xmlns: 'urn:xmpp:jingle:1',
+                        action: 'unavailable'
+                    })
+                    .c('details')
+                    .t('unavailable')
+                    .up();
+                const stringifiedIq = iq.toString();
+
+                this._sendEventIfInMeeting({
+                    from,
+                    data: { iq: stringifiedIq }
+                });
             }
 
-            return Promise.resolve();
+            return;
         }
 
         if (updateType === 'error') {
@@ -157,7 +241,7 @@ export default class ProcessUpdateDelegate {
             }, {});
 
         if (status.isSpot !== 'true') {
-            return Promise.resolve();
+            return;
         }
 
         const from = presence.getAttribute('from');
@@ -173,6 +257,12 @@ export default class ProcessUpdateDelegate {
             }
         });
 
+        const { inMeeting } = getInMeetingStatus(this._store.getState());
+
+        if (inMeeting && !newState.inMeeting) {
+            this.stopScreenshare();
+        }
+
         this._store.dispatch(updateSpotState(newState));
 
         // For remote controls and for consistent implementation, update the
@@ -187,7 +277,72 @@ export default class ProcessUpdateDelegate {
             }
         }
 
-        return Promise.resolve();
+        return;
+    }
+
+    /**
+     * Begins the screensharing connection establishment processes between a
+     * remote control and a Jitsi-Meet meeting.
+     *
+     * @param {string} spotId - The jid of the Spot to use as a signaling layer
+     * for establishing a screenshare connection. Messages go to Spot for it
+     * to pass into the meeting.
+     * @param {string} roomFullJId - The jid of the remote control that wants
+     * to establish a {@code ScreenshareConnection}.
+     * @param {Object} screenshareConnection - The instance of
+     * {@code ScreenshareConnection} to be used.
+     * @returns {Promise<string|void>} Resolves with void when void the
+     * screensharing process has been started successfully. This resolution does
+     * not denote a screensharing connection has been successful and media is
+     * flowing. Rejects with the rejection reason string if an error occurred
+     * while starting the screensharing process, such as screenshare source
+     * being cancelled.
+     */
+    startScreenshare(spotId, roomFullJId, screenshareConnection) {
+        const { screensharing } = getInMeetingStatus(this._store.getState());
+
+        if (screensharing) {
+            logger.error('Tried to start screenshare while already started.');
+
+            return Promise.reject();
+        }
+
+        this._screenshareConnection = screenshareConnection;
+
+        this._store.dispatch(updateSpotState({
+            isWirelessScreenshareConnectionActive: true
+        }));
+
+        return screenshareConnection.startScreenshare(
+            spotId,
+            roomFullJId
+        ).catch(error => {
+            logger.error('Could not establish screenshare connection:', error);
+
+            screenshareConnection.stop();
+
+            this._store.dispatch(updateSpotState({
+                isWirelessScreenshareConnectionActive: false
+            }));
+
+            return Promise.reject(error);
+        });
+    }
+
+    /**
+     * Stops any active {@code ScreenshareConnection}.
+     *
+     * @returns {void}
+     */
+    stopScreenshare() {
+        if (this._screenshareConnection) {
+            this._screenshareConnection.stop();
+            this._screenshareConnection = null;
+        }
+
+        this._store.dispatch(updateSpotState({
+            isWirelessScreenshareConnectionActive: false
+        }));
     }
 
     /**
@@ -202,23 +357,58 @@ export default class ProcessUpdateDelegate {
      * @returns {void}
      */
     _executeIfInMeeting(command, data) {
-        const state = this._store.getState();
-        const meetingApi = getMeetingApi(state);
+        const meetingApi = this._getMeetingApiIfInMeeting();
 
         if (!meetingApi) {
-            logger.error('Tried to execute command without meeting api.');
-
-            return;
-        }
-
-        const { inMeeting } = getInMeetingStatus(state);
-
-        if (!inMeeting) {
-            logger.error('Tried to execute command while not in a meeting.');
+            logger.error('Failed to execute command.');
 
             return;
         }
 
         meetingApi.executeCommand(command, data);
+    }
+
+    /**
+     * Returns the instance of {@code JitsiMeetExternalApi} for an active
+     * meeting.
+     *
+     * @private
+     * @returns {JitsiMeetExternalApi|null}
+     */
+    _getMeetingApiIfInMeeting() {
+        const state = this._store.getState();
+        const meetingApi = getMeetingApi(state);
+
+        if (!meetingApi) {
+            return null;
+        }
+
+        const { inMeeting } = getInMeetingStatus(state);
+
+        if (!inMeeting) {
+            return null;
+        }
+
+        return meetingApi;
+    }
+
+    /**
+     * Invokes the {@code sendProxyConnectionEvent} method on the
+     * {@code JitsiMeetExternalApi} if it exists.
+     *
+     * @param {Object} event - The event to pass into the api.
+     * @private
+     * @returns {void}
+     */
+    _sendEventIfInMeeting(event) {
+        const meetingApi = this._getMeetingApiIfInMeeting();
+
+        if (!meetingApi) {
+            logger.error('Failed to send proxy event.');
+
+            return;
+        }
+
+        meetingApi.sendProxyConnectionEvent(event);
     }
 }

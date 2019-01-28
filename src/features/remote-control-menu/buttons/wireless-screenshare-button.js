@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-
+import { LoadingIcon } from 'features/loading-icon';
 import styles from '../remote-control-menu.css';
 
 /**
@@ -14,15 +14,19 @@ import styles from '../remote-control-menu.css';
  * @returns {ReactElement}
  */
 export default function WirelessScreenshareButton(props) {
-    const { isProxyConnectionActive, isScreensharing, onClick } = props;
-    let buttonText;
+    const {
+        isScreensharing,
+        isWirelessScreenshareConnectionActive,
+        onClick
+    } = props;
+    let buttonContent;
 
-    if (isProxyConnectionActive && !isScreensharing) {
-        buttonText = 'Cancel screensharing';
+    if (isWirelessScreenshareConnectionActive && !isScreensharing) {
+        buttonContent = <LoadingIcon color = 'black' />;
     } else if (isScreensharing) {
-        buttonText = 'Stop screensharing';
+        buttonContent = 'Stop screensharing';
     } else {
-        buttonText = 'Start wireless screensharing';
+        buttonContent = 'Start wireless screensharing';
     }
 
     return (
@@ -32,13 +36,13 @@ export default function WirelessScreenshareButton(props) {
             <Button className = { styles.button }>
                 <div className = 'icon-share-desktop' />
             </Button>
-            <span>{ buttonText }</span>
+            <span>{ buttonContent }</span>
         </div>
     );
 }
 
 WirelessScreenshareButton.propTypes = {
-    isProxyConnectionActive: PropTypes.bool,
     isScreensharing: PropTypes.bool,
+    isWirelessScreenshareConnectionActive: PropTypes.bool,
     onClick: PropTypes.func.isRequired
 };
