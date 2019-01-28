@@ -19,7 +19,7 @@
     grid-column-gap: 20px;
     grid-row-gap: 10px;
     grid-template-columns: auto 1fr;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 1fr 1fr;
     min-height: 33%;
     overflow-x: hidden;
 }
