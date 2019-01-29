@@ -17,7 +17,8 @@ import styles from './setup.css';
 class ScreenshareInput extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        remoteControlService: PropTypes.object
     };
 
     /**

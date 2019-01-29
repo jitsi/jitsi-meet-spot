@@ -193,6 +193,17 @@ class RemoteControlService {
     }
 
     /**
+     * Notifies all controllers the current availability of wired screensharing.
+     *
+     * @param {boolean} isEnabled - Whether or not screensharing is possible.
+     * @returns {void}
+     */
+    notifyWiredScreenshareEnabled(isEnabled) {
+        this.xmppConnection.updateStatus(
+            'wiredScreensharingEnabled', isEnabled);
+    }
+
+    /**
      * Sends a message to a remote control.
      *
      * @param {string} jid - The jid of the remote control which should receive

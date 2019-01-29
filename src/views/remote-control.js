@@ -36,7 +36,8 @@ export class RemoteControl extends React.Component {
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool,
-        view: PropTypes.string
+        view: PropTypes.string,
+        wiredScreensharingEnabled: PropTypes.bool
     };
 
     /**
@@ -132,7 +133,8 @@ export class RemoteControl extends React.Component {
             inMeeting,
             isWirelessScreenshareConnectionActive,
             screensharing,
-            videoMuted
+            videoMuted,
+            wiredScreensharingEnabled
         } = this.props;
 
         return (
@@ -142,6 +144,7 @@ export class RemoteControl extends React.Component {
                 isWirelessScreenshareConnectionActive
                     = { isWirelessScreenshareConnectionActive }
                 screensharing = { screensharing }
+                screensharingEnabled = { wiredScreensharingEnabled }
                 videoMuted = { videoMuted } />
         );
     }

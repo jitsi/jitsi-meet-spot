@@ -23,6 +23,7 @@ export default class RemoteControlMenu extends React.Component {
         inMeeting: PropTypes.bool,
         isWirelessScreenshareConnectionActive: PropTypes.bool,
         screensharing: PropTypes.bool,
+        screensharingEnabled: PropTypes.bool,
         videoMuted: PropTypes.bool
     };
 
@@ -54,6 +55,7 @@ export default class RemoteControlMenu extends React.Component {
             inMeeting,
             isWirelessScreenshareConnectionActive,
             screensharing,
+            screensharingEnabled,
             videoMuted
         } = this.props;
 
@@ -69,9 +71,10 @@ export default class RemoteControlMenu extends React.Component {
                 <VideoMuteButton
                     isMuted = { videoMuted }
                     onClick = { this._onToggleVideoMute } />
-                <ScreenshareButton
-                    isScreensharing = { screensharing }
-                    onClick = { this._onToggleScreensharing } />
+                { screensharingEnabled
+                    && <ScreenshareButton
+                        isScreensharing = { screensharing }
+                        onClick = { this._onToggleScreensharing } /> }
                 <WirelessScreenshareButton
                     isScreensharing = { screensharing }
                     isWirelessScreenshareConnectionActive
