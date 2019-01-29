@@ -20,7 +20,8 @@ const presenceToStoreAsBoolean = new Set([
     'audioMuted',
     'inMeeting',
     'screensharing',
-    'videoMuted'
+    'videoMuted',
+    'wiredScreensharingEnabled'
 ]);
 
 /**

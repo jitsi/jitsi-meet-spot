@@ -112,7 +112,9 @@ export function getInMeetingStatus(state) {
         isWirelessScreenshareConnectionActive:
             state.remoteControl.isWirelessScreenshareConnectionActive,
         screensharing: state.remoteControl.screensharing,
-        videoMuted: state.remoteControl.videoMuted
+        videoMuted: state.remoteControl.videoMuted,
+        wiredScreensharingEnabled:
+            state.remoteControl.wiredScreensharingEnabled
     };
 }
 

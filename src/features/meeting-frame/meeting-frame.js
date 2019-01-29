@@ -65,11 +65,12 @@ export default class MeetingFrame extends React.Component {
             meetingName,
             path
         } = parseMeetingUrl(this.props.meetingUrl);
+        const screensharingEnabled = Boolean(this.props.screenshareDevice);
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice,
-                desktopSharingChromeDisabled: !this.props.screenshareDevice
+                desktopSharingChromeDisabled: !screensharingEnabled
             },
             interfaceConfigOverwrite: {
                 DEFAULT_LOCAL_DISPLAY_NAME: '',
@@ -79,6 +80,9 @@ export default class MeetingFrame extends React.Component {
             parentNode: this._meetingContainer,
             roomName: meetingName
         });
+
+        remoteControlService
+            .notifyWiredScreenshareEnabled(screensharingEnabled);
 
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
@@ -101,7 +105,7 @@ export default class MeetingFrame extends React.Component {
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
-        }, 10000);
+        }, 15000);
     }
 
     /**
