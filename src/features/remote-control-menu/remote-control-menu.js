@@ -36,9 +36,9 @@ export default class RemoteControlMenu extends React.Component {
         super(props);
 
         this._onHangUp = this._onHangUp.bind(this);
-        this._onSetAudioMute = this._onSetAudioMute.bind(this);
-        this._onSetScreensharing = this._onSetScreensharing.bind(this);
-        this._onSetVideoMute = this._onSetVideoMute.bind(this);
+        this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
+        this._onToggleScreensharing = this._onToggleScreensharing.bind(this);
+        this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
         this._onToggleWirelessScreensharing
             = this._onToggleWirelessScreensharing.bind(this);
     }
@@ -65,13 +65,13 @@ export default class RemoteControlMenu extends React.Component {
             <div className = { styles.menu }>
                 <AudioMuteButton
                     isMuted = { audioMuted }
-                    onClick = { this._onSetAudioMute } />
+                    onClick = { this._onToggleAudioMute } />
                 <VideoMuteButton
                     isMuted = { videoMuted }
-                    onClick = { this._onSetVideoMute } />
+                    onClick = { this._onToggleVideoMute } />
                 <ScreenshareButton
                     isScreensharing = { screensharing }
-                    onClick = { this._onSetScreensharing } />
+                    onClick = { this._onToggleScreensharing } />
                 <WirelessScreenshareButton
                     isScreensharing = { screensharing }
                     isWirelessScreenshareConnectionActive
@@ -98,7 +98,7 @@ export default class RemoteControlMenu extends React.Component {
      * @private
      * @returns {void}
      */
-    _onSetAudioMute() {
+    _onToggleAudioMute() {
         remoteControlService.setAudioMute(!this.props.audioMuted);
     }
 
@@ -108,7 +108,7 @@ export default class RemoteControlMenu extends React.Component {
      * @private
      * @returns {void}
      */
-    _onSetScreensharing() {
+    _onToggleScreensharing() {
         remoteControlService.setScreensharing(!this.props.screensharing);
     }
 
@@ -118,7 +118,7 @@ export default class RemoteControlMenu extends React.Component {
      * @private
      * @returns {void}
      */
-    _onSetVideoMute() {
+    _onToggleVideoMute() {
         remoteControlService.setVideoMute(!this.props.videoMuted);
     }
 
