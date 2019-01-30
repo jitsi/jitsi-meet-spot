@@ -1,0 +1,16 @@
+PODS:
+  - QuietModemKit (0.0.2)
+
+DEPENDENCIES:
+  - QuietModemKit (from `../vendor/QuietModemKit`)
+
+EXTERNAL SOURCES:
+  QuietModemKit:
+    :path: "../vendor/QuietModemKit"
+
+SPEC CHECKSUMS:
+  QuietModemKit: 13e5166e29e6d8a216b0acb765638ec7b6a58bed
+
+PODFILE CHECKSUM: 4e5e4536c57838a0c820b0e0a8780f997d9741b0
+
+COCOAPODS: 1.5.3

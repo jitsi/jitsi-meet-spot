@@ -1,0 +1,6 @@
+framework module QuietModemKit {
+  umbrella header "QuietModemKit.h"
+
+  export *
+  module * { export * }
+}

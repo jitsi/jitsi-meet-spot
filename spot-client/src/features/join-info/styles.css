@@ -1,0 +1,7 @@
+.joinInfo {
+    background: rgba(255, 255, 255, 0.7);
+    bottom: 20;
+    font-size: 2rem;
+    padding: 10px;
+    position: absolute;
+}
