@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "eslint-config-jitsi",
+        "eslint-config-jitsi/jsdoc"
+    ],
+    "globals": {
+        "browser": true,
+        "process": true
+    },
+    "rules": {
+        "no-console": 1,
+        "space-before-function-paren": ["error", {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+        }]
+    }
+}

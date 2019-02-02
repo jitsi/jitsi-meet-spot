@@ -2,6 +2,7 @@
 
 pid=""
 
+cd spot-client
 npm install
 npm run lint
 npm run test
@@ -9,18 +10,21 @@ npm run test
 if [ -z "$TEST_SERVER_URL" ]; then
     npm run build:prod
 
-    port=TEST_PORT
-    export TEST_SERVER_URL="http://localhost:$TEST_PORT"
+    # port=TEST_PORT
+    # export TEST_SERVER_URL="http://localhost:$TEST_PORT"
 
-    python -m SimpleHTTPServer $TEST_PORT &
-    pid=$!
+    # python -m SimpleHTTPServer $TEST_PORT &
+    # pid=$!
 
-    sleep 1
+    # sleep 1
 
-    ps aux | grep "$pid" | grep -v "grep"
-    [ $? -eq 0 ] || exit $?;
+    # ps aux | grep "$pid" | grep -v "grep"
+    # [ $? -eq 0 ] || exit $?;
 fi
 
-npm run test:webdriver
+# cd ../spot-webdriver
 
-kill $pid
+# npm install
+# npm run start
+
+# kill $pid
