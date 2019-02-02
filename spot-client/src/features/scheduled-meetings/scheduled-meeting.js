@@ -50,12 +50,16 @@ export default class ScheduledMeeting extends React.Component {
                 <div className = 'meeting-name'>
                     { title }
                 </div>
+                <div>
+                    { this.props.onMeetingClick ? 'Join Now' : '' }
+                </div>
                 <div className = 'meeting-time'>
                     { this._getFormattedTimes(startTime) }
                 </div>
                 <div className = 'meeting-url'>
                     { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
+                <div />
             </div>
         );
     }
@@ -110,9 +114,7 @@ export default class ScheduledMeeting extends React.Component {
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.event.meetingUrl && this.props.onMeetingClick) {
-            this.props.onMeetingClick(this.props.event.meetingUrl);
-        }
+        this.props.onMeetingClick(this.props.event.meetingUrl);
     }
 
     /**

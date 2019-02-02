@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { addNotification, setCalendarEvents } from 'actions';
 
 import { LoadingIcon } from 'features/loading-icon';
-import { MeetingNameEntry } from 'features/meeting-name-entry';
 import { FeedbackForm, RemoteControlMenu } from 'features/remote-control-menu';
-import { ScheduledMeetings } from 'features/scheduled-meetings';
 import {
     getCalendarEvents,
     getInMeetingStatus,
@@ -16,6 +14,8 @@ import {
 
 import { withRemoteControl, withUltrasound } from './loaders';
 import View from './view';
+
+import WaitingForCallView from './remote-views/waiting-for-call';
 
 /**
  * Displays the remote control view for controlling a Spot instance from another
@@ -85,12 +85,8 @@ export class RemoteControl extends React.Component {
      */
     render() {
         return (
-            <View
-                hideBackground = { true }
-                name = 'remoteControl'>
-                <div className = 'container'>
-                    { this._getView() }
-                </div>
+            <View name = 'remoteControl'>
+                { this._getView() }
             </View>
         );
     }
@@ -109,7 +105,11 @@ export class RemoteControl extends React.Component {
         case 'feedback':
             return <FeedbackForm />;
         case 'home':
-            return this._getWaitingForCallView();
+            return (
+                <WaitingForCallView
+                    events = { this.props.events }
+                    onGoToMeeting = { this._onGoToMeeting } />
+            );
         case 'meeting':
             return this._getInCallView();
         case 'setup':
@@ -145,26 +145,6 @@ export class RemoteControl extends React.Component {
                 screensharing = { screensharing }
                 screensharingEnabled = { wiredScreensharingEnabled }
                 videoMuted = { videoMuted } />
-        );
-    }
-
-    /**
-     * Returns the React Element to display while the Spot instance is not in a
-     * meeting.
-     *
-     * @private
-     * @returns {ReactElement}
-     */
-    _getWaitingForCallView() {
-        return (
-            <div className = 'subcontent'>
-                <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
-                <div className = 'meetings'>
-                    <ScheduledMeetings
-                        events = { this.props.events }
-                        onMeetingClick = { this._onGoToMeeting } />
-                </div>
-            </div>
         );
     }
 

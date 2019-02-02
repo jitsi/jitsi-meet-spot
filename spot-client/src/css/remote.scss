@@ -1,5 +1,8 @@
-.spot-home {
-    background-color: var(--container-bg-color);
+.waiting {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    width: 100vw;
 
     .clock {
         text-align: center;
@@ -13,10 +16,6 @@
         }
     }
 
-    .join-info {
-        text-align: center;
-    }
-
     .meetings {
         .meeting {
             align-items: baseline;
@@ -26,6 +25,7 @@
             grid-row-gap: 10px;
             grid-template-columns: .20fr 1fr auto;
             grid-template-rows: 1fr 1fr;
+            padding: 15px;
         }
 
         .meeting:not(:last-child) {
@@ -47,6 +47,37 @@
         .meeting-url {
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+    }
+
+    .nav {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+
+        .nav-button {
+            &.active {
+                color: var(--active);
+
+                .nav-icon {
+                    border-color: var(--active);
+                }
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+  
+        .nav-icon {
+            border: 1px solid;
+            border-radius: 50%;
+            padding: 25px;
+
+            * {
+                font-size: var(--font-size-x-large);
+            }
         }
     }
 }
