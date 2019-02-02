@@ -70,15 +70,17 @@ export default class FeedbackForm extends React.Component {
         const stars = [];
 
         for (let i = 1; i <= 5; i++) {
-            const starClass = i <= score ? 'icon-star-full' : 'icon-star';
+            const starIcon = i <= score ? 'star' : 'star_border';
 
             stars.push(
                 <a
-                    className = { `${starClass} remote-score` }
+                    className = 'material-icons remote-score'
                     key = { i }
 
                     // eslint-disable-next-line react/jsx-no-bind
-                    onClick = { () => this._onRatingChange(i) } />
+                    onClick = { () => this._onRatingChange(i) }>
+                    { starIcon }
+                </a>
             );
         }
 

@@ -16,10 +16,9 @@ export default function AudioMuteButton({ isMuted, onClick }) {
             className = 'remote-selection'
             onClick = { onClick }>
             <Button className = 'remote-button'>
-                <div
-                    className = { isMuted
-                        ? 'icon-mic-disabled'
-                        : 'icon-microphone' } />
+                <i className = 'material-icons'>
+                    { isMuted ? 'mic_off' : 'mic' }
+                </i>
             </Button>
             <span>{ isMuted ? 'Mic Unmute' : 'Mic Mute' }</span>
         </div>

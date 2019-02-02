@@ -17,11 +17,13 @@ export default function ScreenshareButton({ isScreensharing, onClick }) {
             className = 'remote-selection'
             onClick = { onClick }>
             <Button className = 'remote-button'>
-                <div className = 'icon-share-desktop' />
+                <i className = 'material-icons'>
+                    { isScreensharing ? 'stop_screen_share' : 'screen_share' }
+                </i>
             </Button>
-            <span>{ isScreensharing
-                ? 'Stop screensharing'
-                : 'Start screensharing' }</span>
+            <span>
+                { isScreensharing ? 'Stop Screenshare' : 'Wired Screenshare' }
+            </span>
         </div>
     );
 }

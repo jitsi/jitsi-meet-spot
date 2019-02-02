@@ -19,13 +19,17 @@ export default function WirelessScreenshareButton(props) {
         onClick
     } = props;
     let buttonContent;
+    let icon;
 
     if (isWirelessScreenshareConnectionActive && !isScreensharing) {
         buttonContent = <LoadingIcon color = 'black' />;
+        icon = 'screen_share';
     } else if (isScreensharing) {
         buttonContent = 'Stop screensharing';
+        icon = 'stop_screen_share';
     } else {
         buttonContent = 'Start wireless screensharing';
+        icon = 'screen_share';
     }
 
     return (
@@ -33,7 +37,7 @@ export default function WirelessScreenshareButton(props) {
             className = 'remote-selection'
             onClick = { onClick } >
             <Button className = 'remote-button'>
-                <div className = 'icon-share-desktop' />
+                <i className = 'material-icons'>{ icon }</i>
             </Button>
             <span>{ buttonContent }</span>
         </div>

@@ -16,10 +16,9 @@ export default function VideoMuteButton({ isMuted, onClick }) {
             className = 'remote-selection'
             onClick = { onClick }>
             <Button className = 'remote-button'>
-                <div
-                    className = { isMuted
-                        ? 'icon-camera-disabled'
-                        : 'icon-camera' } />
+                <i className = 'material-icons'>
+                    { isMuted ? 'videocam_off' : 'videocam' }
+                </i>
             </Button>
             <span>{ isMuted ? 'Video Unmute' : 'Video Mute'}</span>
         </div>

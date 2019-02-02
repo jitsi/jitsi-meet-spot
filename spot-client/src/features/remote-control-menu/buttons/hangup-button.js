@@ -16,7 +16,7 @@ export default function HangupButton({ onClick }) {
             className = 'remote-selection'
             onClick = { onClick }>
             <Button className = 'remote-hangup remote-button'>
-                <div className = 'icon-hangup' />
+                <i className = 'material-icons'>call_end</i>
             </Button>
             <span>Hang up</span>
         </div>
