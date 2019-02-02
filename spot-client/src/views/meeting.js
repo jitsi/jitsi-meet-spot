@@ -15,7 +15,6 @@ import { ROUTES } from 'routing';
 
 import { withRemoteControl } from './loaders';
 import View from './view';
-import styles from './view.css';
 
 /**
  * Displays the meeting url specified in the url.
@@ -102,7 +101,7 @@ export class Meeting extends React.Component {
                      * over an iframe.
                      */
                 }
-                <div className = { styles.meetingMouseHider } />
+                <div className = 'meetingMouseHider' />
             </View>
         );
     }

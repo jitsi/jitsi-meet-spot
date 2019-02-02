@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-import styles from '../remote-control-menu.css';
 
 /**
  * A component for a button that displays whether or not screensharing is
@@ -15,9 +14,9 @@ import styles from '../remote-control-menu.css';
 export default function ScreenshareButton({ isScreensharing, onClick }) {
     return (
         <div
-            className = { styles.selection }
+            className = 'remote-selection'
             onClick = { onClick }>
-            <Button className = { styles.button }>
+            <Button className = 'remote-button'>
                 <div className = 'icon-share-desktop' />
             </Button>
             <span>{ isScreensharing

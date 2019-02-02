@@ -6,8 +6,6 @@ import { setScreenshareDevice } from 'actions';
 import { Button } from 'features/button';
 import JitsiMeetJS from 'jitsi-meet-js';
 
-import styles from './setup.css';
-
 /**
  * Displays a picker for selecting a video input device to use while
  * performing a wired screenshare.
@@ -65,14 +63,14 @@ class ScreenshareInput extends React.Component {
      */
     render() {
         return (
-            <div className = { `${styles.step}` }>
-                <div className = { styles.title }>
+            <div className = 'setup-step'>
+                <div className = 'setup-title'>
                     Select screenshare input
                 </div>
-                <div className = { styles.content }>
+                <div className = 'setup-content'>
                     { this._renderDeviceList() }
                 </div>
-                <div className = { styles.buttons }>
+                <div className = 'setup-buttons'>
                     <Button onClick = { this._onSkip }>
                         Skip
                     </Button>

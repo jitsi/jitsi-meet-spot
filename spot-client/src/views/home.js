@@ -17,7 +17,6 @@ import {
 } from 'reducers';
 
 import View from './view';
-import styles from './view.css';
 import { withCalendar, asSpotLoader } from './loaders';
 
 /**
@@ -88,15 +87,15 @@ export class Home extends React.Component {
     render() {
         return (
             <View name = 'home'>
-                <div className = { styles.homeContainer }>
-                    <div className = { styles.clockContainer }>
+                <div className = 'homeContainer'>
+                    <div className = 'clockContainer'>
                         <Clock />
                     </div>
-                    <div className = { styles.meetings }>
+                    <div className = 'meetings'>
                         { this._getCalendarEventsView() }
                     </div>
                 </div>
-                <div className = { styles.settings_cog }>
+                <div className = 'settings_cog'>
                     <SettingsButton />
                 </div>
             </View>

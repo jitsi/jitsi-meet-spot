@@ -3,7 +3,6 @@ import React from 'react';
 
 import { Button } from 'features/button';
 import { LoadingIcon } from 'features/loading-icon';
-import styles from '../remote-control-menu.css';
 
 /**
  * A component for a button that displays a toggle for starting a wireless
@@ -31,9 +30,9 @@ export default function WirelessScreenshareButton(props) {
 
     return (
         <div
-            className = { styles.selection }
+            className = 'remote-selection'
             onClick = { onClick } >
-            <Button className = { styles.button }>
+            <Button className = 'remote-button'>
                 <div className = 'icon-share-desktop' />
             </Button>
             <span>{ buttonContent }</span>

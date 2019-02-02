@@ -10,8 +10,6 @@ import ScreenshareButton from './buttons/screenshare-button';
 import VideoMuteButton from './buttons/video-mute-button';
 import WirelessScreenshareButton from './buttons/wireless-screenshare-button';
 
-import styles from './remote-control-menu.css';
-
 /**
  * Displays buttons used for remotely controlling a Spot instance.
  *
@@ -64,7 +62,7 @@ export default class RemoteControlMenu extends React.Component {
         }
 
         return (
-            <div className = { styles.menu }>
+            <div className = 'remote-menu'>
                 <AudioMuteButton
                     isMuted = { audioMuted }
                     onClick = { this._onToggleAudioMute } />

@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './input.css';
-
 /**
  * A component for a configured and styled {@code HTMLInputElement}.
  *
@@ -15,7 +13,7 @@ export default function Input(props) {
         <input
             autoComplete = 'off'
             autoCorrect = 'off'
-            className = { styles.input }
+            className = 'base-input'
             data-qa-id = { props['data-qa-id'] }
             id = { props.id }
             onChange = { props.onChange }

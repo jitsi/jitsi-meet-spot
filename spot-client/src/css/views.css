@@ -20,7 +20,7 @@
     width: 100%;
 }
 
-:global(.idleCursor) .meetingMouseHider {
+.idleCursor .meetingMouseHider {
     pointer-events: all;
 }
 

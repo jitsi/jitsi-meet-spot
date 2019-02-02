@@ -7,7 +7,6 @@ import { Button } from 'features/button';
 import { isSpot } from 'reducers';
 
 import View from './view';
-import styles from './view.css';
 
 /**
  * A component for showing a potentially fatal error has occurred and providing
@@ -45,8 +44,8 @@ export class FatalError extends React.Component {
             <View
                 hideBackground = { true }
                 name = 'error'>
-                <div className = { styles.container }>
-                    <div className = { styles.admin }>
+                <div className = 'container'>
+                    <div className = 'admin'>
                         <div>Whoops, something went wrong.</div>
                         <Button onClick = { this._onReloadToHome }>
                             Reload

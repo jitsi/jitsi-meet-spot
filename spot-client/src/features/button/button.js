@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './button.css';
-
 /**
  * A component for a styled {@code HTMLButtonElement}.
  *
@@ -14,7 +12,7 @@ export default function Button(props) {
     return (
         <button
             { ...props }
-            className = { `${styles.button} ${props.className}` }>
+            className = { `button ${props.className}` }>
             { props.children }
         </button>
     );

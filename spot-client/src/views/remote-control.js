@@ -16,7 +16,6 @@ import {
 
 import { withRemoteControl, withUltrasound } from './loaders';
 import View from './view';
-import styles from './view.css';
 
 /**
  * Displays the remote control view for controlling a Spot instance from another
@@ -89,7 +88,7 @@ export class RemoteControl extends React.Component {
             <View
                 hideBackground = { true }
                 name = 'remoteControl'>
-                <div className = { styles.container }>
+                <div className = 'container'>
                     { this._getView() }
                 </div>
             </View>
@@ -158,9 +157,9 @@ export class RemoteControl extends React.Component {
      */
     _getWaitingForCallView() {
         return (
-            <div className = { styles.subcontent }>
+            <div className = 'subcontent'>
                 <MeetingNameEntry onSubmit = { this._onGoToMeeting } />
-                <div className = { styles.meetings }>
+                <div className = 'meetings'>
                     <ScheduledMeetings
                         events = { this.props.events }
                         onMeetingClick = { this._onGoToMeeting } />

@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import { getDefaultAvatarConfig } from 'reducers';
 import { hash } from 'utils';
 
-import styles from './scheduled-meeting.css';
-
 /**
  * A component that displays the gravatar of a provided email or a configured
  * default avatar.
@@ -40,7 +38,7 @@ export class Avatar extends React.Component {
 
         return (
             <img
-                className = { styles.avatar }
+                className = 'meeting-avatar'
                 src = { avatarUrl }
                 title = { email } />
         );

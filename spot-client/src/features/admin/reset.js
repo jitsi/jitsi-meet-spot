@@ -3,8 +3,6 @@ import React from 'react';
 import { Button } from 'features/button';
 import { persistence } from 'utils';
 
-import styles from './admin.css';
-
 /**
  * Displays a menu option, with confirmation, to clear all saved Spot state,
  * including its setup.
@@ -37,11 +35,11 @@ export default class ResetState extends React.Component {
      */
     render() {
         return (
-            <div className = { styles.container }>
-                <div className = { styles.title }>
+            <div className = 'admin-container'>
+                <div className = 'admin-title'>
                     Reset
                 </div>
-                <div className = { styles.content }>
+                <div className = 'admin-content'>
                     {
                         this.state.showResetConfirm
                             ? this._renderResetConfirm()

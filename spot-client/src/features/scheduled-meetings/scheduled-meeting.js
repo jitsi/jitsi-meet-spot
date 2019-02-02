@@ -3,7 +3,6 @@ import React from 'react';
 import { date } from 'utils';
 
 import Avatar from './avatar';
-import styles from './scheduled-meeting.css';
 
 /**
  * Displays details about a meeting and response to clicks.
@@ -40,22 +39,19 @@ export default class ScheduledMeeting extends React.Component {
             title
         } = this.props.event;
         const startTime = new Date(start);
-        const className = startTime.getTime() <= Date.now()
-            ? `meeting ${styles.meeting} ${styles.ongoing}`
-            : `meeting ${styles.meeting}`;
 
         return (
             <div
-                className = { className }
+                className = 'meeting'
                 onClick = { this._onMeetingClick }>
-                <div className = { styles.time }>
+                <div className = 'meeting-time'>
                     { date.formatToTime(startTime) }
                 </div>
-                <div className = { styles.name }>
+                <div className = 'meeting-name'>
                     { title }
                 </div>
                 <div />
-                <div className = { styles.url }>
+                <div className = 'meeting-url'>
                     { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
             </div>

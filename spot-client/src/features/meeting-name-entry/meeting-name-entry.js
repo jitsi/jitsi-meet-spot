@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Button } from 'features/button';
 import { Input } from 'features/input';
-import styles from './meeting-name-entry.css';
 
 /**
  * Displays an input for entering the name of a meeting.
@@ -39,7 +38,7 @@ export class MeetingNameEntry extends React.Component {
     render() {
         return (
             <form
-                className = { styles.wrapper }
+                className = 'name-entry-wrapper'
                 onSubmit = { this._onSubmit } >
                 <Input
                     data-qa-id = 'meeting-name-input'

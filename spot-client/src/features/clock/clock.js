@@ -2,8 +2,6 @@ import React from 'react';
 
 import { date } from 'utils';
 
-import styles from './clock.css';
-
 /**
  * Displays the current time and updates itself at an interval.
  *
@@ -53,7 +51,7 @@ export default class Clock extends React.Component {
      */
     render() {
         return (
-            <div className = { styles.clock }>
+            <div className = 'clock'>
                 { this.state.time }
             </div>
         );

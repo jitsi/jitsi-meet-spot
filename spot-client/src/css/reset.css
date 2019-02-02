@@ -54,17 +54,3 @@ html {
 *, *:before, *:after {
     box-sizing: inherit;
 }
-
-/** custom resets **/
-
-body {
-    font-family: 'Nunito', sans-serif;
-    color: #2d2d2d;
-}
-
-body,
-body > div {
-    height: 100%;
-    overflow: hidden;
-    width: 100%;
-}

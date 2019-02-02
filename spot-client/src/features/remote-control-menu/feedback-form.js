@@ -4,8 +4,6 @@ import React from 'react';
 import { Button } from 'features/button';
 import { remoteControlService } from 'remote-control';
 
-import styles from './remote-control-menu.css';
-
 /**
  * A React Component for inputting and submitting post-call feedback by leaving
  * a rating and a
@@ -45,12 +43,12 @@ export default class FeedbackForm extends React.Component {
     render() {
         return (
             <form
-                className = { styles.feedback }
+                className = 'remote-feedback'
                 onSubmit = { this._onSubmit }>
                 { this._renderStars() }
                 <textarea
                     autoFocus = { true }
-                    className = { styles.comment }
+                    className = 'remote-comment'
                     onChange = { this._onMessageChange }
                     value = { this.state.message } />
                 <Button type = 'submit'>Submit</Button>
@@ -76,7 +74,7 @@ export default class FeedbackForm extends React.Component {
 
             stars.push(
                 <a
-                    className = { `${starClass} ${styles.score}` }
+                    className = { `${starClass} remote-score` }
                     key = { i }
 
                     // eslint-disable-next-line react/jsx-no-bind

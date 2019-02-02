@@ -11,7 +11,6 @@ import { ROUTES } from 'routing';
 import { logger } from 'utils';
 
 import View from './view';
-import styles from './view.css';
 
 /**
  * Displays a view to enter a join code for connecting with a Spot instance.
@@ -80,7 +79,7 @@ export class JoinCodeEntry extends React.Component {
             <View
                 hideBackground = { true }
                 name = 'join-code'>
-                <div className = { styles.container }>
+                <div className = 'container'>
                     {
                         this.state.validating
                             ? 'Connecting'

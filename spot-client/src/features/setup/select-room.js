@@ -9,8 +9,6 @@ import { Input } from 'features/input';
 import { LoadingIcon } from 'features/loading-icon';
 import { logger } from 'utils';
 
-import styles from './setup.css';
-
 /**
  * Prompts to select which calender to synchronize with Spot. Either a room can
  * be selected or a calendar email manually entered.
@@ -85,11 +83,11 @@ export class SelectRoom extends React.Component {
         }
 
         return (
-            <div className = { `${styles.step} ${styles.roomList}` }>
-                <div className = { styles.title }>
+            <div className = 'setup-step setup-roomList'>
+                <div className = 'setup-title'>
                     Select A Room
                 </div>
-                <div className = { styles.content }>
+                <div className = 'setup-content'>
                     <div>
                         <h1>Enter an email:</h1>
                         <form onSubmit = { this._onEmailSubmit }>
@@ -107,7 +105,7 @@ export class SelectRoom extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className = { styles.buttons }>
+                <div className = 'setup-buttons'>
                     { continueButton }
                 </div>
             </div>

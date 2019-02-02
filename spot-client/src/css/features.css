@@ -1,0 +1,318 @@
+:global(.idleCursor) .cog {
+  display: none;
+}
+:global(.idleCursor) .cog:hover {
+  display: block;
+}
+
+.cog {
+  border-radius: 50%;
+  height: 1.4em;
+  opacity: 1;
+  text-align: center;
+  transition: opacity 0.5s;
+  width: 1.4em;
+}
+.cog,
+.cog * {
+  color: white;
+
+  /**
+  * TODO: remove !important usage and setting height/width larger than
+  * parent. Those stylings are being used right now to override jitsi-meet
+  * icon styling.
+  */
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+.cog:hover * {
+  color: lightgray;
+}
+
+.admin-container {
+  margin: 20px 0;
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+.admin-detail {
+  margin-bottom: 5px;
+}
+
+.admin-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.admin-title {
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+
+.base-input {
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  font-size: 17pt;
+}
+
+.base-input:focus {
+  outline: none;
+}
+
+.button {
+  background: steelblue;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 17pt;
+}
+
+.button:hover {
+  background: teal;
+}
+
+.clock {
+  font-size: 5vw;
+}
+
+.joinInfo {
+  background: rgba(255, 255, 255, 0.7);
+  bottom: 20;
+  font-size: 2rem;
+  padding: 10px;
+  position: absolute;
+}
+
+@keyframes animateDots {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.loading-icon {
+    text-align: center;
+}
+
+.loading-icon > div {
+    animation: animateDots 2.5s ease-in-out infinite;
+    display: inline-block;
+    font-size: 3.5em;
+    opacity: 0;
+}
+
+.loading-icon > div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-icon > div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.loading-icon > div:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+.setup-content {
+  flex: 1;
+}
+
+.setup-roomList {
+  overflow: auto;
+}
+
+.setup {
+  background-color: white;
+  border-radius: 25px;
+  height: 100%;
+  padding: 40px;
+  width: 100%;
+}
+
+.setup-step {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.setup-title {
+  font-size: 2em;
+}
+
+
+.meeting-avatar {
+  border-radius: 50%;
+  height: 100%;
+  margin-right: 5px;
+}
+
+.meeting-details {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.meeting {
+  align-items: baseline;
+  background: white;
+  cursor: pointer;
+  padding: 20px;
+  display: grid;
+  grid-column-gap: 20px;
+  grid-row-gap: 10px;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr 1fr;
+  min-height: 33%;
+  overflow-x: hidden;
+}
+
+.meeting:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.meeting:hover {
+  background: rgb(250, 251, 252);
+}
+
+.meeting-frame {
+  /**
+   * The background color matching jitsi-meet is used to intentionally hide 
+   * rendering issues of the meeting's large video disappearing and thereby
+   * flashing the Spot background.
+   */
+  background: rgb(27, 38, 56);
+  height: 100%;
+  width: 100%;
+}
+
+.meeting-name {
+  font-size: 2vw;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-participants {
+  height: 50px;
+}
+
+.meeting-time {
+  font-size: 1.5vw;
+}
+
+.meeting-url {
+  font-size: 1.5vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-url:empty:before {
+  content: '.';
+  visibility: hidden;
+}
+
+.name-entry-input {
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  font-size: 17pt;
+}
+
+.name-entry-input:focus {
+  outline: none;
+}
+
+.name-entry-button {
+  background: steelblue;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 17pt;
+}
+
+.name-entry-button:hover {
+  background: teal;
+}
+
+.name-entry-button:focus {
+  outline: none;
+}
+
+.name-entry-wrapper {
+  background: white;
+  display: flex;
+  flex-shrink: 0;
+  padding: 10px 20px;
+  width: 100%;
+}
+
+.notification-default {
+  background: white;
+}
+
+.notification-error {
+  background: red;
+}
+
+.notifications {
+  opacity: 0.5;
+  overflow: hidden;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+}
+
+.notification {
+  padding: 5px;
+}
+
+.remote-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.remote-button {
+  margin-right: 20px;
+}
+.remote-comment {
+  font-size: 1.5em;
+  height: 50%;
+  margin: 20px 0;
+  resize: none;
+  width: 100%;
+}
+.remote-feedback {
+  text-align: center;
+  width: 100%;
+}
+.remote-hangup {
+  background: crimson;
+}
+/**
+* TODO: remove !important usage. It is being used right now to override
+* jitsi-meet icon styling.
+*/
+.remote-score {
+  color: white;
+  font-size: 2.5em !important;
+}
+.remote-selection {
+  align-items: center;
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  padding: 10px 10px;
+  margin-bottom: 10px
+}
+.remote-selection:active {
+  background: rgb(250, 251, 252);
+}
+

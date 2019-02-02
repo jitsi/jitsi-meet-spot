@@ -8,8 +8,6 @@ import ScreenshareInput from './screenshare-input';
 import SelectRoom from './select-room';
 import Welcome from './welcome';
 
-import styles from './setup.css';
-
 /**
  * Displays the Spot setup flow by handling display of each setup step.
  *
@@ -53,7 +51,7 @@ export class Setup extends React.Component {
         const CurrentStep = this.state.currentStep;
 
         return (
-            <div className = { styles.setup }>
+            <div className = 'setup'>
                 <CurrentStep onSuccess = { this._onNextStep } />
             </div>
         );

@@ -3,8 +3,6 @@ import React from 'react';
 
 import { Button } from 'features/button';
 
-import styles from '../remote-control-menu.css';
-
 /**
  * A component for a button intended for leaving a meeting in progress.
  *
@@ -15,9 +13,9 @@ import styles from '../remote-control-menu.css';
 export default function HangupButton({ onClick }) {
     return (
         <div
-            className = { styles.selection }
+            className = 'remote-selection'
             onClick = { onClick }>
-            <Button className = { `${styles.hangup} ${styles.button}` }>
+            <Button className = 'remote-hangup remote-button'>
                 <div className = 'icon-hangup' />
             </Button>
             <span>Hang up</span>
