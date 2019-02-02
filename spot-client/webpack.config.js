@@ -27,31 +27,20 @@ module.exports = {
                 test: /\.js$/
             },
             {
-                test: /\.css$/,
+                test: /\.(css|scss)$/,
                 use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader'
-                    }
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
                 ]
             },
             {
                 test: /\.(jpg|gif)$/,
-                use: [
-                    {
-                        loader: 'file-loader'
-                    }
-                ]
+                loader: 'file-loader'
             },
             {
                 test: /\.(svg|ttf|eot|woff)$/,
-                use: [
-                    {
-                        loader: 'url-loader'
-                    }
-                ]
+                loader: 'url-loader'
             },
             {
                 exclude: /(node_modules)/,

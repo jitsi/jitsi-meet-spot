@@ -1,0 +1,52 @@
+.spot-home {
+    background-color: var(--container-bg-color);
+
+    .clock {
+        text-align: center;
+
+        .date {
+            font-size: var(--font-size-medium-plus);
+        }
+
+        .time {
+            font-size: var(--font-size-x-large);
+        }
+    }
+
+    .join-info {
+        text-align: center;
+    }
+
+    .meetings {
+        .meeting {
+            align-items: baseline;
+            background-color: var(--container-content-bg-color);
+            display: grid;
+            grid-column-gap: 20px;
+            grid-row-gap: 10px;
+            grid-template-columns: .20fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .meeting:not(:last-child) {
+            margin-bottom: 5px;
+        }
+
+        .meeting-date,
+        .meeting-time,
+        .meeting-url {
+            font-size: var(--font-size-small);
+        }
+
+        .meeting-date,
+        .meeting-name {
+            font-weight: bold;
+        }
+
+        .meeting-name,
+        .meeting-url {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

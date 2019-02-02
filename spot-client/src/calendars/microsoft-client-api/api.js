@@ -62,6 +62,10 @@ export default {
                 apiRequest.version(options.version);
             }
 
+            if (options.orderBy) {
+                apiRequest.orderby(options.orderBy);
+            }
+
             return apiRequest.get();
         });
     },

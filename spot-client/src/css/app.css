@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    color: #2d2d2d;
+    color: var(--container-content-font-color);
 }
 
 body,

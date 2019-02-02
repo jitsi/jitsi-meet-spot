@@ -44,13 +44,15 @@ export default class ScheduledMeeting extends React.Component {
             <div
                 className = 'meeting'
                 onClick = { this._onMeetingClick }>
-                <div className = 'meeting-time'>
-                    { date.formatToTime(startTime) }
+                <div className = 'meeting-date'>
+                    { this._getFormattedDate(startTime) }
                 </div>
                 <div className = 'meeting-name'>
                     { title }
                 </div>
-                <div />
+                <div className = 'meeting-time'>
+                    { this._getFormattedTimes(startTime) }
+                </div>
                 <div className = 'meeting-url'>
                     { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
@@ -76,13 +78,39 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     /**
+     * Returns the calendar date for the meeting.
+     *
+     * @param {Date} startTime - An instance of {@code Date}.
+     * @private
+     * @returns {string}
+     */
+    _getFormattedDate(startTime) {
+        if (date.isDateForToday(startTime)) {
+            return 'Today';
+        }
+
+        return date.formatToCalendarDate(startTime);
+    }
+
+    /**
+     * Returns the start time of the meeting.
+     *
+     * @param {Date} startTime - An instance of {@code Date}.
+     * @private
+     * @returns {string}
+     */
+    _getFormattedTimes(startTime) {
+        return date.formatToTime(startTime);
+    }
+
+    /**
      * Invoke the {@code onMeetingClick} callback if a meeting name exists.
      *
      * @private
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.event.meetingUrl) {
+        if (this.props.event.meetingUrl && this.props.onMeetingClick) {
             this.props.onMeetingClick(this.props.event.meetingUrl);
         }
     }

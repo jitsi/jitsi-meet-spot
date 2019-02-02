@@ -1,7 +1,7 @@
-:global(.idleCursor) .cog {
+.idleCursor .cog {
   display: none;
 }
-:global(.idleCursor) .cog:hover {
+.idleCursor .cog:hover {
   display: block;
 }
 
@@ -73,10 +73,6 @@
   background: teal;
 }
 
-.clock {
-  font-size: 5vw;
-}
-
 .joinInfo {
   background: rgba(255, 255, 255, 0.7);
   bottom: 20;
@@ -141,41 +137,6 @@
   font-size: 2em;
 }
 
-
-.meeting-avatar {
-  border-radius: 50%;
-  height: 100%;
-  margin-right: 5px;
-}
-
-.meeting-details {
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.meeting {
-  align-items: baseline;
-  background: white;
-  cursor: pointer;
-  padding: 20px;
-  display: grid;
-  grid-column-gap: 20px;
-  grid-row-gap: 10px;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: 1fr 1fr;
-  min-height: 33%;
-  overflow-x: hidden;
-}
-
-.meeting:not(:last-child) {
-  margin-bottom: 10px;
-}
-
-.meeting:hover {
-  background: rgb(250, 251, 252);
-}
-
 .meeting-frame {
   /**
    * The background color matching jitsi-meet is used to intentionally hide 
@@ -185,34 +146,6 @@
   background: rgb(27, 38, 56);
   height: 100%;
   width: 100%;
-}
-
-.meeting-name {
-  font-size: 2vw;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.meeting-participants {
-  height: 50px;
-}
-
-.meeting-time {
-  font-size: 1.5vw;
-}
-
-.meeting-url {
-  font-size: 1.5vw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.meeting-url:empty:before {
-  content: '.';
-  visibility: hidden;
 }
 
 .name-entry-input {

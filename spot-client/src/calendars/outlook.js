@@ -38,7 +38,12 @@ export default {
      * @returns {Promise<Array<Object>>}
      */
     getCalendar(email) {
-        return microsoftClientApi.request(`/users/${email}/calendar/events`)
+        const now = new Date();
+        const filter = `Start/DateTime ge '${now.toISOString()}'`;
+        const url = `/users/${email}/calendar/events?$filter=${filter}&$top=3`;
+        const orderBy = 'createdDateTime ASC';
+
+        return microsoftClientApi.request(url, { orderBy })
             .then(response => response.value)
             .then(events => filterJoinableEvents(events, email));
     },

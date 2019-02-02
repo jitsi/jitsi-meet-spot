@@ -49,9 +49,9 @@ export default {
     getCalendar(email) {
         const params = [
             'alwaysIncludeEmail=true',
+            'maxResults=3',
             'orderBy=starttime',
             'singleEvents=true',
-            `timeMax=${date.getEndOfDate(date.getCurrentDate()).toISOString()}`,
             `timeMin=${date.getCurrentDate().toISOString()}`
         ].join('&');
 

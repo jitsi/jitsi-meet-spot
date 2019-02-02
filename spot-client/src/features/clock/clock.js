@@ -19,9 +19,7 @@ export default class Clock extends React.Component {
 
         this._dateUpdateInterval = null;
 
-        this.state = {
-            time: this._getTime()
-        };
+        this.state = this._getClockValues();
     }
 
     /**
@@ -31,8 +29,8 @@ export default class Clock extends React.Component {
      */
     componentDidMount() {
         this._dateUpdateInterval = setInterval(() => {
-            this.setState({ time: this._getTime() });
-        }, 500);
+            this.setState(this._getClockValues());
+        }, 1000);
     }
 
     /**
@@ -52,13 +50,37 @@ export default class Clock extends React.Component {
     render() {
         return (
             <div className = 'clock'>
-                { this.state.time }
+                <div className = 'time'>{ this.state.time }</div>
+                <div className = 'date'>{ this.state.calendarDate }</div>
             </div>
         );
     }
 
     /**
-     * Returns the current time in HH:MM format.
+     * Returns a new object with values to describing the current time and date.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getClockValues() {
+        return {
+            calendarDate: this._getCalendarDate(),
+            time: this._getTime()
+        };
+    }
+
+    /**
+     * Returns the current date in "d, M D" format.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getCalendarDate() {
+        return date.formatToCalendarDateWithDay(date.getCurrentDate());
+    }
+
+    /**
+     * Returns the current time in "H:MMA" format.
      *
      * @private
      * @returns {string}

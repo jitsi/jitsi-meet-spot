@@ -12,9 +12,12 @@ import {
     getCalendarEmail,
     getCalendarEvents,
     getCurrentLock,
+    getCurrentRoomName,
+    getJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'reducers';
+import { windowHandler } from 'utils';
 
 import View from './view';
 import { withCalendar, asSpotLoader } from './loaders';
@@ -34,8 +37,10 @@ export class Home extends React.Component {
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
+        joinCode: PropTypes.string,
         lock: PropTypes.string,
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        roomName: PropTypes.string
     };
 
     /**
@@ -47,7 +52,7 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onGoToMeeting = this._onGoToMeeting.bind(this);
+        this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
@@ -87,12 +92,13 @@ export class Home extends React.Component {
     render() {
         return (
             <View name = 'home'>
-                <div className = 'homeContainer'>
-                    <div className = 'clockContainer'>
-                        <Clock />
-                    </div>
-                    <div className = 'meetings'>
-                        { this._getCalendarEventsView() }
+                <div className = 'spot-home'>
+                    <Clock />
+                    { this._getCalendarEventsView() }
+                    <div
+                        className = 'join-info'
+                        onClick = { this._onOpenRemote }>
+                        Sharing key { this.props.joinCode.toUpperCase() }
                     </div>
                 </div>
                 <div className = 'settings_cog'>
@@ -111,9 +117,7 @@ export class Home extends React.Component {
     _getCalendarEventsView() {
         if (this.props.isSetupComplete) {
             return this.props.hasFetchedEvents
-                ? <ScheduledMeetings
-                    events = { this.props.events }
-                    onMeetingClick = { this._onGoToMeeting } />
+                ? <ScheduledMeetings events = { this.props.events } />
                 : <LoadingIcon color = 'black' />;
         }
 
@@ -121,17 +125,19 @@ export class Home extends React.Component {
     }
 
     /**
-     * Callback invoked to join a meeting. Only if a meeting url is passed in
-     * will join be attempted.
+     * Opens an instance of a remote control for the Spot in a new window. This
+     * is a debug feature to immediately open the remote without entering a join
+     * code.
      *
-     * @param {string} meetingUrl - The meeting url to join.
      * @private
      * @returns {void}
      */
-    _onGoToMeeting(meetingUrl) {
-        if (meetingUrl) {
-            this.props.history.push(`/meeting?location=${meetingUrl}`);
-        }
+    _onOpenRemote() {
+        const baseUrl = windowHandler.getBaseUrl();
+        const { roomName: room, lock } = this.props;
+        const url = `${baseUrl}#/remote-control?remoteId=${room}&lock=${lock}`;
+
+        windowHandler.openNewWindow(url);
     }
 
     /**
@@ -185,7 +191,9 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        lock: getCurrentLock(state)
+        joinCode: getJoinCode(state),
+        lock: getCurrentLock(state),
+        roomName: getCurrentRoomName(state)
     };
 }
 

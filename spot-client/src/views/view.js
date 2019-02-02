@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { JoinInfo } from 'features/join-info';
 import { getBackgroundUrl } from 'reducers';
 import { remoteControlService } from 'remote-control';
 
@@ -56,7 +55,6 @@ class View extends React.Component {
                 data-qa-id = { `${this.props.name}-view` }
                 style = { backgroundStyles }>
                 { this.props.children }
-                <JoinInfo />
             </div>
         );
     }
