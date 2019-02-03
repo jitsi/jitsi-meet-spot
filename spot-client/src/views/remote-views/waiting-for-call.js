@@ -96,8 +96,10 @@ export default class WaitingForCallView extends React.Component {
             );
         case 'input':
             return (
-                <SelfFillingNameEntry
-                    onSubmit = { this.props.onGoToMeeting } />
+                <div className = 'input-sub-view'>
+                    <SelfFillingNameEntry
+                        onSubmit = { this.props.onGoToMeeting } />
+                </div>
             );
         case 'dial':
         case 'share':

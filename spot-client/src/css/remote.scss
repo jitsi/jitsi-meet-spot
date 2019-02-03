@@ -122,10 +122,17 @@
         }
     }
 
+    .input-sub-view {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .name-entry-wrapper {
         background-color: var(--container-content-bg-color);
         display: flex;
-        padding: 20px;
+        padding: 1.2em 2.5em;
+        width: 80%;
 
         .input-container {
             flex: 1;
@@ -136,7 +143,7 @@
                 border-bottom: 1px solid black;
                 color: var(--container-content-font-color);
                 font-family: 'Nunito', sans-serif;
-                font-size: 1em;
+                font-size: var(--font-size-medium);
                 width: 100%;
 
                 &:focus {
@@ -146,6 +153,21 @@
 
             label {
                 display: block;
+            }
+        }
+
+        .name-entry-submit-wrapper {
+            align-items: center;
+            display: flex;
+            margin-left: 2em;
+
+            .name-entry-submit {
+                background-color: #0074e0;
+                border: 0;
+                border-radius: 5px;
+                color: var(--container-content-font-color);
+                font-size: var(--font-size-medium);
+                padding: 0.5em 1em;
             }
         }
     }

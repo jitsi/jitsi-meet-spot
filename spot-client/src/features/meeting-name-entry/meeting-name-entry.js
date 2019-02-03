@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button } from 'features/button';
 import { Input } from 'features/input';
 
 /**
@@ -56,11 +55,14 @@ export class MeetingNameEntry extends React.Component {
                             || 'Enter a meeting name' }
                         value = { this.props.meetingName } />
                 </div>
-                <Button
-                    data-qa-id = 'meeting-name-submit'
-                    type = 'submit'>
-                    GO
-                </Button>
+                <div className = 'name-entry-submit-wrapper'>
+                    <button
+                        className = 'name-entry-submit'
+                        data-qa-id = 'meeting-name-submit'
+                        type = 'submit'>
+                        GO
+                    </button>
+                </div>
             </form>
         );
     }
