@@ -49,18 +49,6 @@
   margin-bottom: 5px;
 }
 
-
-.base-input {
-  border: none;
-  cursor: pointer;
-  flex: 1;
-  font-size: 17pt;
-}
-
-.base-input:focus {
-  outline: none;
-}
-
 .button {
   background: steelblue;
   border: none;
@@ -145,41 +133,6 @@
    */
   background: rgb(27, 38, 56);
   height: 100%;
-  width: 100%;
-}
-
-.name-entry-input {
-  border: none;
-  cursor: pointer;
-  flex: 1;
-  font-size: 17pt;
-}
-
-.name-entry-input:focus {
-  outline: none;
-}
-
-.name-entry-button {
-  background: steelblue;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 17pt;
-}
-
-.name-entry-button:hover {
-  background: teal;
-}
-
-.name-entry-button:focus {
-  outline: none;
-}
-
-.name-entry-wrapper {
-  background: white;
-  display: flex;
-  flex-shrink: 0;
-  padding: 10px 20px;
   width: 100%;
 }
 

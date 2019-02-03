@@ -1,8 +1,9 @@
 .waiting {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
 
     .clock {
         text-align: center;
@@ -77,6 +78,34 @@
 
             * {
                 font-size: var(--font-size-x-large);
+            }
+        }
+    }
+
+    .name-entry-wrapper {
+        background-color: var(--container-content-bg-color);
+        display: flex;
+        padding: 20px;
+
+        .input-container {
+            flex: 1;
+
+            input {
+                background-color: transparent;
+                border: none;
+                border-bottom: 1px solid black;
+                color: var(--container-content-font-color);
+                font-family: 'Nunito', sans-serif;
+                font-size: 1em;
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            label {
+                display: block;
             }
         }
     }

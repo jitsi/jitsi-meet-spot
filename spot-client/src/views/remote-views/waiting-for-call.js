@@ -50,7 +50,9 @@ export default class WaitingForCallView extends React.Component {
         return (
             <div className = 'waiting'>
                 <Clock />
-                { this._getSubView() }
+                <div>
+                    { this._getSubView() }
+                </div>
                 <div className = 'nav'>
                     <NavButton
                         active = { activeTab === 'calendar' }

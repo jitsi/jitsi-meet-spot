@@ -116,13 +116,18 @@ export class Home extends React.Component {
      * @returns {ReactComponent|null}
      */
     _getCalendarEventsView() {
-        if (this.props.isSetupComplete) {
-            return this.props.hasFetchedEvents
-                ? <ScheduledMeetings events = { this.props.events } />
-                : <LoadingIcon color = 'black' />;
+        if (!this.props.isSetupComplete) {
+            // TODO change with a setup message
+            return this._renderNoEventsMessage();
         }
 
-        return null;
+        if (this.props.hasFetchedEvents) {
+            return this.props.events.length
+                ? <ScheduledMeetings events = { this.props.events } />
+                : this._renderNoEventsMessage();
+        }
+
+        return <LoadingIcon color = 'black' />;
     }
 
     /**
@@ -175,6 +180,25 @@ export class Home extends React.Component {
                     remoteControlService.notifyCalendarStatus(events);
                 }
             });
+    }
+
+    /**
+     * Instantiates a ReactElement with a message stating there are no scheduled
+     * meetings on the calendar associated with the Spot.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderNoEventsMessage() {
+        return (
+            <div>
+                <div>There are no scheduled meetings.</div>
+                <div>
+                    Invite this room to your calendar event
+                    and you'll be set
+                </div>
+            </div>
+        );
     }
 }
 
