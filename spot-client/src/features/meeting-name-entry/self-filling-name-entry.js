@@ -58,7 +58,6 @@ class SelfFillingNameEntry extends React.Component {
 
         this._onBlur = this._onBlur.bind(this);
         this._onChange = this._onChange.bind(this);
-        this._onFocus = this._onFocus.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
 
@@ -94,7 +93,6 @@ class SelfFillingNameEntry extends React.Component {
                 meetingName = { this.state.enteredMeetingName }
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }
-                onFocus = { this._onFocus }
                 onSubmit = { this._onSubmit }
                 placeholder = { this.state.animatingPlaceholder } />
         );
@@ -187,21 +185,14 @@ class SelfFillingNameEntry extends React.Component {
      * @returns {void}
      */
     _onChange(enteredMeetingName) {
+        if (enteredMeetingName) {
+            this._clearRandomMeetingNameProcess();
+        }
+
         this.setState({
             animatingPlaceholder: '',
             enteredMeetingName
         });
-    }
-
-    /**
-     * Callback invoked when the meeting name input becomes focused. Resets any
-     * random meeting name animation in progress.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onFocus() {
-        this._clearRandomMeetingNameProcess();
     }
 
     /**
