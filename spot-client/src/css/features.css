@@ -29,6 +29,12 @@
   color: lightgray;
 }
 
+.admin,
+.remote-menu,
+.setup {
+  color: black;
+}
+
 .admin-container {
   margin: 20px 0;
   padding: 10px;
