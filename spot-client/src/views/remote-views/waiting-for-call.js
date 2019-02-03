@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Clock } from 'features/clock';
-import { MeetingNameEntry } from 'features/meeting-name-entry';
+import { SelfFillingNameEntry } from 'features/meeting-name-entry';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
 import NavButton from './nav-buttons/nav-button';
 
@@ -95,7 +95,10 @@ export default class WaitingForCallView extends React.Component {
                     onMeetingClick = { this.props.onGoToMeeting } />
             );
         case 'input':
-            return <MeetingNameEntry onSubmit = { this.props.onGoToMeeting } />;
+            return (
+                <SelfFillingNameEntry
+                    onSubmit = { this.props.onGoToMeeting } />
+            );
         case 'dial':
         case 'share':
             return <div>in progress</div>;

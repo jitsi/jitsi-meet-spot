@@ -16,7 +16,9 @@ export default function Input(props) {
             className = 'base-input'
             data-qa-id = { props['data-qa-id'] }
             id = { props.id }
+            onBlur = { props.onBlur }
             onChange = { props.onChange }
+            onFocus = { props.onFocus }
             placeholder = { props.placeholder }
             spellCheck = 'false'
             value = { props.value } />
@@ -26,7 +28,9 @@ export default function Input(props) {
 Input.propTypes = {
     'data-qa-id': PropTypes.string,
     id: PropTypes.string,
+    onBlur: PropTypes.func,
     onChange: PropTypes.func,
+    onFocus: PropTypes.func,
     placeholder: PropTypes.string,
     value: PropTypes.string
 };

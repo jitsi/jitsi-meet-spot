@@ -10,7 +10,13 @@ import { Input } from 'features/input';
  */
 export class MeetingNameEntry extends React.Component {
     static propTypes = {
-        onSubmit: PropTypes.func
+        meetingName: PropTypes.string,
+        onBlur: PropTypes.func,
+        onChange: PropTypes.func,
+        onFocus: PropTypes.func,
+        onNameChange: PropTypes.func,
+        onSubmit: PropTypes.func,
+        placeholder: PropTypes.string
     };
 
     /**
@@ -24,10 +30,6 @@ export class MeetingNameEntry extends React.Component {
 
         this._onMeetingNameChange = this._onMeetingNameChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
-
-        this.state = {
-            meetingName: ''
-        };
     }
 
     /**
@@ -47,9 +49,12 @@ export class MeetingNameEntry extends React.Component {
                     <Input
                         data-qa-id = 'meeting-name-input'
                         id = 'meeting-name-input'
+                        onBlur = { this.props.onBlur }
                         onChange = { this._onMeetingNameChange }
-                        placeholder = 'Enter a meeting name'
-                        value = { this.state.meetingName } />
+                        onFocus = { this.props.onFocus }
+                        placeholder = { this.props.placeholder
+                            || 'Enter a meeting name' }
+                        value = { this.props.meetingName } />
                 </div>
                 <Button
                     data-qa-id = 'meeting-name-submit'
@@ -69,9 +74,7 @@ export class MeetingNameEntry extends React.Component {
      * @returns {void}
      */
     _onMeetingNameChange(event) {
-        this.setState({
-            meetingName: event.target.value
-        });
+        this.props.onChange(event.target.value);
     }
 
     /**
@@ -85,11 +88,7 @@ export class MeetingNameEntry extends React.Component {
     _onSubmit(event) {
         event.preventDefault();
 
-        const meetingName = this.state.meetingName.trim();
-
-        if (meetingName) {
-            this.props.onSubmit(meetingName);
-        }
+        this.props.onSubmit();
     }
 }
 
