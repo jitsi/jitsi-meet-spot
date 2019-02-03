@@ -72,6 +72,13 @@
         .meeting-url {
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .meeting-join {
+            grid-column-start: 3;
+            grid-row-start: 1;
+            grid-row-end: 2;
         }
     }
 }
