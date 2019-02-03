@@ -12,7 +12,8 @@ export default class NavButton extends React.Component {
         active: PropTypes.bool,
         iconName: PropTypes.string,
         label: PropTypes.string,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        qaId: PropTypes.string
     };
 
     /**
@@ -22,11 +23,12 @@ export default class NavButton extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { active, iconName, label, onClick } = this.props;
+        const { active, iconName, label, onClick, qaId } = this.props;
 
         return (
             <div
                 className = { `nav-button ${active ? 'active' : ''}` }
+                data-qa-id = { qaId }
                 onClick = { onClick }>
                 <div className = 'nav-icon'>
                     <i className = 'material-icons'>{ iconName }</i>

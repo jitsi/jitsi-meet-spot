@@ -61,7 +61,8 @@ export default class WaitingForCallView extends React.Component {
                         active = { activeTab === 'input' }
                         iconName = 'videocam'
                         label = 'Meet Now'
-                        onClick = { this._onSetInputActive } />
+                        onClick = { this._onSetInputActive }
+                        qaId = 'meet-now' />
                     <NavButton
                         active = { activeTab === 'share' }
                         iconName = 'screen_share'

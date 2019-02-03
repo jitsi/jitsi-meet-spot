@@ -3,8 +3,7 @@ const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
 const CALENDAR_VIEW = '[data-qa-id=home-view]';
-const JOIN_CODE_INFO = '[data-qa-id=join-info]';
-const JOIN_CODE = '[data-qa-id=join-code]';
+const JOIN_CODE = '[data-qa-id=join-infoss]';
 
 /**
  * A page object for interacting with the calendar view of Spot.
@@ -29,11 +28,14 @@ class CalendarPage extends PageObject {
      */
     getJoinCode() {
         this.driver.waitForVisible(
-            JOIN_CODE_INFO,
+            JOIN_CODE,
             constants.VISIBILITY_WAIT
         );
 
-        return this.driver.getText(JOIN_CODE);
+        const fullText = this.driver.getText(JOIN_CODE);
+        const parts = fullText.split(' ');
+
+        return parts[parts.length - 1];
     }
 
     /**

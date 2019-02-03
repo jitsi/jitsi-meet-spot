@@ -97,6 +97,7 @@ export class Home extends React.Component {
                     { this._getCalendarEventsView() }
                     <div
                         className = 'join-info'
+                        data-qa-id = 'join-info'
                         onClick = { this._onOpenRemote }>
                         Sharing key { this.props.joinCode.toUpperCase() }
                     </div>
