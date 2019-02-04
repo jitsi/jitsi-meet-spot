@@ -104,7 +104,7 @@
             
             &:not(:last-child) {
                 @media #{$mq-xsmall} {
-                    margin-right: 3em;
+                    margin-right: 1em;
                 }
             
                 @media #{$mq-small} {
