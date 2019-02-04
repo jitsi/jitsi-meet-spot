@@ -33,7 +33,7 @@ export default class NavButton extends React.Component {
                 <div className = 'nav-icon'>
                     <i className = 'material-icons'>{ iconName }</i>
                 </div>
-                <div>
+                <div className = 'nav-label'>
                     { label }
                 </div>
             </div>

@@ -1,3 +1,5 @@
+@import "./media-queries";
+
 .waiting {
     display: grid;
     grid-template-rows: auto 1fr auto;
@@ -98,6 +100,29 @@
         width: 100%;
 
         .nav-button {
+            
+            &:not(:last-child) {
+                @media #{$mq-xsmall} {
+                    margin-right: 1em;
+                }
+            
+                @media #{$mq-small} {
+                    margin-right: 2em;
+                }
+            
+                @media #{$mq-medium} {
+                    margin-right: 4em;
+                }
+            
+                @media #{$mq-large} {
+                    margin-right: 5em;
+                }
+            
+                @media #{$mq-xlarge} {
+                    margin-right: 6em;
+                }
+            }
+
             &.active {
                 color: var(--active);
 
@@ -114,11 +139,16 @@
         .nav-icon {
             border: 1px solid;
             border-radius: 50%;
-            padding: 25px;
+            margin-bottom: 1em;
+            padding: 1.5em;
 
             * {
                 font-size: var(--font-size-x-large);
             }
+        }
+
+        .nav-label {
+            margin-bottom: 2.5em;
         }
     }
 
