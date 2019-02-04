@@ -7,6 +7,7 @@
 body {
     font-family: 'Nunito', sans-serif;
     color: var(--container-content-font-color);
+    user-select: none;
 }
 
 body,
