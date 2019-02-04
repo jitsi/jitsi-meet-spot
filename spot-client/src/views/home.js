@@ -95,12 +95,13 @@ export class Home extends React.Component {
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
-                    <div
-                        className = 'join-info'
-                        data-qa-id = 'join-info'
-                        onClick = { this._onOpenRemote }>
-                        Sharing key { this.props.joinCode.toUpperCase() }
-                    </div>
+                    { this.props.isSetupComplete
+                        && <div
+                            className = 'join-info'
+                            data-qa-id = 'join-info'
+                            onClick = { this._onOpenRemote }>
+                            Sharing key { this.props.joinCode.toUpperCase() }
+                        </div> }
                 </div>
                 <div className = 'settings_cog'>
                     <SettingsButton />
@@ -117,8 +118,7 @@ export class Home extends React.Component {
      */
     _getCalendarEventsView() {
         if (!this.props.isSetupComplete) {
-            // TODO change with a setup message
-            return this._renderNoEventsMessage();
+            return this._renderSetupMessage();
         }
 
         if (this.props.hasFetchedEvents) {
@@ -191,11 +191,35 @@ export class Home extends React.Component {
      */
     _renderNoEventsMessage() {
         return (
-            <div>
+            <div className = 'no-events-message'>
                 <div>There are no scheduled meetings.</div>
                 <div>
                     Invite this room to your calendar event
                     and you'll be set
+                </div>
+            </div>
+        );
+    }
+
+    /**
+     * Instantiates a ReactElement with a message stating Spot should have a
+     * calendar connected.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderSetupMessage() {
+        return (
+            <div className = 'no-events-message'>
+                <h1>Welcome to Spot!</h1>
+                <div className = 'setup-instructions'>
+                    <div>You're almost set</div>
+                    <div>Pair your remote and connect your calendar.</div>
+                </div>
+                <div
+                    className = 'setup-join-code'
+                    data-qa-id = 'join-info'>
+                    { this.props.joinCode.toUpperCase() }
                 </div>
             </div>
         );

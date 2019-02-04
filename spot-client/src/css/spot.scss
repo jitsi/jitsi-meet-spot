@@ -39,6 +39,7 @@
     }
 
     .join-info {
+        color: var(--container-sub-content-font-color);
         text-align: center;
         padding: 0.5em 0;
     }
@@ -81,6 +82,27 @@
             grid-column-start: 3;
             grid-row-start: 1;
             grid-row-end: 2;
+        }
+    }
+
+    .no-events-message {
+        background-color: var(--container-content-bg-color);
+        color: var(--container-sub-content-font-color);
+        padding: 3em;
+        text-align: center;
+
+        h1 {
+            font-size: var(--font-size-medium-plus);
+        }
+
+        .setup-instructions {
+            color: var(--container-sub-content-font-color);
+            margin: 15px 0;
+        }
+
+        .setup-join-code {
+            color: #6aafeb;
+            font-size: var(--font-size-large);
         }
     }
 }
