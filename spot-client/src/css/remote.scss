@@ -12,6 +12,7 @@
         padding: 2.6em;
 
         .date {
+            color: var(--container-sub-content-font-color);
             font-size: var(--font-size-medium-plus);
         }
 
@@ -200,6 +201,14 @@
         padding: 1.2em 2.5em;
         width: 80%;
 
+        @media #{$mq-medium} {
+            width: 70%;
+        }
+
+        @media #{$mq-large} {
+            width: 60%;
+        }
+
         .input-container {
             flex: 1;
 
@@ -219,8 +228,8 @@
                 border-image: linear-gradient(to right, black, rgba(0, 0, 0, 0)) 1 stretch;
                 color: var(--container-content-font-color);
                 font-family: 'Nunito', sans-serif;
-                font-size: var(--font-size-medium);
-                padding-bottom: 10px;
+                font-size: var(--font-size-small);
+                padding-bottom: 16px;
                 width: 100%;
 
                 &:focus {
@@ -234,6 +243,7 @@
 
             label {
                 display: block;
+                margin-bottom: 10px;
             }
         }
 
