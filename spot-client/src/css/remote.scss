@@ -205,8 +205,17 @@
 
             input {
                 background-color: transparent;
-                border: none;
-                border-bottom: 2px solid;
+
+                /**
+                 * Set each border attribute separately for mobile safari to
+                 * support border-image.
+                 */
+                border-bottom: 2px;
+                border-left: 0;
+                border-right: 0;
+                border-style: solid;
+                border-top: 0;
+
                 border-image: linear-gradient(to right, black, rgba(0, 0, 0, 0)) 1 stretch;
                 color: var(--container-content-font-color);
                 font-family: 'Nunito', sans-serif;
