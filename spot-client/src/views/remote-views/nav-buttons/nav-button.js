@@ -30,11 +30,23 @@ export default class NavButton extends React.Component {
                 className = { `nav-button ${active ? 'active' : ''}` }
                 data-qa-id = { qaId }
                 onClick = { onClick }>
-                <div className = 'nav-icon'>
-                    <i className = 'material-icons'>{ iconName }</i>
+
+                {
+
+                    /**
+                     * But the icon in a container to prevent resizing with
+                     * the label.
+                     */
+                }
+                <div className = 'navi-icon-container'>
+                    <div className = 'nav-icon'>
+                        <i className = 'material-icons'>{ iconName }</i>
+                    </div>
                 </div>
-                <div className = 'nav-label'>
-                    { label }
+                <div className = 'nav-label-container'>
+                    <div className = 'nav-label'>
+                        { label }
+                    </div>
                 </div>
             </div>
         );

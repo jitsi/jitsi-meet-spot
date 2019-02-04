@@ -2,6 +2,7 @@
 
 .spot-home {
     background-color: var(--container-bg-color);
+    border-radius: 5px;
 
     @media #{$mq-xsmall} {
         width: 80%;

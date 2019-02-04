@@ -49,12 +49,17 @@ class View extends React.Component {
             }
         }
 
+        const gradientStyle
+            = `view-gradient ${backgroundStyles ? 'visible' : ''}`;
+
         return (
             <div
                 className = 'view'
                 data-qa-id = { `${this.props.name}-view` }
                 style = { backgroundStyles }>
-                { this.props.children }
+                <div className = { gradientStyle }>
+                    { this.props.children }
+                </div>
             </div>
         );
     }
