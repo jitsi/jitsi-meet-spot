@@ -43,9 +43,10 @@
 }
 
 .settings_cog {
-    top: 41px;
-    position: absolute;
+    position: fixed;
     right: 32px;
+    top: 41px;
+
 }
 
 .subcontent {
