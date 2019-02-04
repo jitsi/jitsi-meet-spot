@@ -3,9 +3,8 @@
 .waiting {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    max-width: 100%;
 
     .clock {
         text-align: center;
@@ -97,6 +96,7 @@
     .nav {
         display: flex;
         justify-content: center;
+        margin-top: 10px;
         text-align: center;
         width: 100%;
 
