@@ -1,0 +1,24 @@
+.idleCursor {
+    cursor: none;
+}
+
+/** custom resets **/
+
+body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--container-content-font-color);
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body,
+body > div {
+    height: 100%;
+    width: 100%;
+}

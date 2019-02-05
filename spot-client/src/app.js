@@ -61,10 +61,13 @@ export class App extends React.Component {
             return <div> Auth successful! </div>;
         }
 
+        const rootClassName
+            = `app ${this.state.hideCursor ? 'idleCursor' : ''}`;
+
         return (
             <IdleCursorDetector
                 onCursorIdleChange = { this._onCursorIdleChange }>
-                <div className = { this.state.hideCursor ? 'idleCursor' : '' }>
+                <div className = { rootClassName }>
                     <Notifications />
                     <ErrorBoundary errorComponent = { FatalError }>
                         <Switch>

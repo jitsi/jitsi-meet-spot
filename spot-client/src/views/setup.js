@@ -7,7 +7,6 @@ import { ROUTES } from 'routing';
 
 import { withCalendar } from './loaders';
 import View from './view';
-import styles from './view.css';
 
 /**
  * Displays the Spot setup flow.
@@ -39,7 +38,7 @@ export class Setup extends React.Component {
     render() {
         return (
             <View name = 'setup'>
-                <div className = { styles.container }>
+                <div className = 'container'>
                     <SetupSteps onSuccess = { this._onRedirectHome } />
                 </div>
             </View>

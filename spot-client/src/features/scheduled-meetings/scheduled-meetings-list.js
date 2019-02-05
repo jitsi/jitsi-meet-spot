@@ -11,7 +11,7 @@ import ScheduledMeeting from './scheduled-meeting';
  */
 export default function ScheduledMeetings({ events, onMeetingClick }) {
     return (
-        <div id = 'meeting-list'>
+        <div className = 'meetings'>
             {
                 events.map(event => (
                     <ScheduledMeeting

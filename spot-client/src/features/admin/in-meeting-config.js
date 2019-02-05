@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { setMeetingToolbarVisible } from 'actions';
 import { getMeetingOptions } from 'reducers';
 
-import styles from './admin.css';
-
 /**
  * Changes some settings that determines he behavior of the Jitsi-Meet meeting.
  *
@@ -37,8 +35,8 @@ export class InMeetingConfig extends React.Component {
      */
     render() {
         return (
-            <div className = { styles.container }>
-                <div className = { styles.title }>
+            <div className = 'admin-container'>
+                <div className = 'admin-title'>
                     Meeting toggles
                 </div>
                 <div>

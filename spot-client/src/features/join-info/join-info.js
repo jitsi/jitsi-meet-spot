@@ -9,8 +9,6 @@ import {
 } from 'reducers';
 import { windowHandler } from 'utils';
 
-import styles from './styles.css';
-
 /**
  * Displays information necessary to input a join code to become a remote
  * control for a Spot.
@@ -51,7 +49,7 @@ class JoinInfo extends React.Component {
 
         return (
             <div
-                className = { styles.joinInfo }
+                className = 'joinInfo'
                 data-qa-id = { 'join-info' }>
                 <div onClick = { this._onOpenRemote }>
                     <span>code:</span>

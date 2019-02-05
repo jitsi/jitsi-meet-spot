@@ -1,0 +1,15 @@
+:root {
+    --active: rgba(37, 138, 255, 0.9);
+    --container-bg-color: rgba(42, 58, 75, 0.7);
+    --container-content-bg-color: rgba(42, 58, 75, 0.9);
+    --container-content-font-color: #ffffff;
+    --container-sub-content-font-color: #d1dbe8;
+    --container-content-highlight-bg-color: rgba(94, 109, 122, 0.9);
+
+    --font-size-xx-large: 4em;
+    --font-size-x-large: 3em;
+    --font-size-large: 2em;
+    --font-size-medium-plus: 1.5em;
+    --font-size-medium: 1em;
+    --font-size-small: 0.8em;
+}

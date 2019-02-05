@@ -11,7 +11,6 @@ import { Button } from 'features/button';
 import { ROUTES } from 'routing';
 
 import View from './view';
-import styles from './view.css';
 
 /**
  * A component for providing post-setup Spot configuration.
@@ -21,8 +20,8 @@ import styles from './view.css';
 export default function AdminView() {
     return (
         <View name = 'admin'>
-            <div className = { styles.container }>
-                <div className = { styles.admin }>
+            <div className = 'container'>
+                <div className = 'admin'>
                     <CalendarStatus />
                     <ScreenshareStatus />
                     <ResetState />

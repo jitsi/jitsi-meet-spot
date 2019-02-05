@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 
 import { setScreenshareDevice } from 'actions';
 import { Button } from 'features/button';
-import JitsiMeetJS from 'jitsi-meet-js';
-
-import styles from './setup.css';
+import { JitsiMeetJSProvider } from 'vendor';
 
 /**
  * Displays a picker for selecting a video input device to use while
@@ -44,6 +42,8 @@ class ScreenshareInput extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
         // First call gUM in order to populate labels from enumerateDevices.
         JitsiMeetJS.createLocalTracks({ devices: [ 'video' ] })
             .then(tracks => tracks.forEach(track => track.dispose()))
@@ -65,14 +65,14 @@ class ScreenshareInput extends React.Component {
      */
     render() {
         return (
-            <div className = { `${styles.step}` }>
-                <div className = { styles.title }>
+            <div className = 'setup-step'>
+                <div className = 'setup-title'>
                     Select screenshare input
                 </div>
-                <div className = { styles.content }>
+                <div className = 'setup-content'>
                     { this._renderDeviceList() }
                 </div>
-                <div className = { styles.buttons }>
+                <div className = 'setup-buttons'>
                     <Button onClick = { this._onSkip }>
                         Skip
                     </Button>

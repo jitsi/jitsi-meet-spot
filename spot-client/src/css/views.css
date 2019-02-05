@@ -20,7 +20,7 @@
     width: 100%;
 }
 
-:global(.idleCursor) .meetingMouseHider {
+.idleCursor .meetingMouseHider {
     pointer-events: all;
 }
 
@@ -34,20 +34,6 @@
     width: 50%;
 }
 
-.homeContainer {
-    align-items: center;
-    background-color: rgba(229, 232, 236, 0.7);
-    display: flex;
-    flex-direction: row;
-    height: 33vh;
-    width: 46vw;
-}
-
-.clockContainer {
-    padding: 30px;
-    text-align: center;
-}
-
 .loading {
     align-items: center;
     display: flex;
@@ -56,30 +42,37 @@
     width: 100%;
 }
 
-.meetings {
-    flex-grow: 1;
-    overflow: auto;
-    width: 100%;
-}
-
 .settings_cog {
-    top: 41px;
-    font-size: 1.7em;
-    position: absolute;
+    position: fixed;
     right: 32px;
+    top: 41px;
+
 }
 
 .subcontent {
     width: 100%;
 }
 
-.view {
+/**
+ * view acts as the main wrapper each individual route. By default put the
+ * content of view in the center of the screen.
+ */
+.view,
+.view-gradient {
     align-items: center;
     background-size: cover;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100%;
     justify-content: center;
-    overflow: hidden;
-    width: 100%;
+    width: 100vw;
+}
+
+.view-gradient.visible {
+    background-image: linear-gradient(to bottom, #020f1b, rgba(0, 0, 0, 0) 30%), linear-gradient(to bottom, rgba(2, 15, 27, 0) 50%, #020f1b);
+    flex: 1;
+}
+
+.app {
+    height: 100%;
 }

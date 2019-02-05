@@ -1,0 +1,109 @@
+@import "./media-queries";
+
+.spot-home {
+    background-color: var(--container-bg-color);
+    border-radius: 5px;
+
+    @media #{$mq-xsmall} {
+        width: 80%;
+    }
+
+    @media #{$mq-small} {
+        width: 50%;
+    }
+
+    @media #{$mq-medium} {
+        width: 50%;
+    }
+
+    @media #{$mq-large} {
+        width: 47%;
+    }
+
+    @media #{$mq-xlarge} {
+        width: 47%;
+    }
+
+    .clock {
+        padding: 1.2em 0;
+        text-align: center;
+
+        .date {
+            color: var(--container-sub-content-font-color);
+            font-size: var(--font-size-medium-plus);
+        }
+
+        .time {
+            font-size: var(--font-size-x-large);
+        }
+    }
+
+    .join-info {
+        color: var(--container-sub-content-font-color);
+        text-align: center;
+        padding: 0.5em 0;
+    }
+
+    .meetings {
+        .meeting {
+            align-items: baseline;
+            background-color: var(--container-content-bg-color);
+            display: grid;
+            grid-column-gap: 20px;
+            grid-row-gap: 10px;
+            grid-template-columns: .20fr 1fr auto;
+            grid-template-rows: 1fr 1fr;
+            padding: 1em 1.6em;
+        }
+
+
+        .meeting:not(:last-child) {
+            margin-bottom: 5px;
+        }
+
+        .meeting-date,
+        .meeting-time,
+        .meeting-url {
+            font-size: var(--font-size-small);
+        }
+
+        .meeting-date,
+        .meeting-name {
+            font-weight: bold;
+        }
+
+        .meeting-name,
+        .meeting-url {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .meeting-join {
+            grid-column-start: 3;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+    }
+
+    .no-events-message {
+        background-color: var(--container-content-bg-color);
+        color: var(--container-sub-content-font-color);
+        padding: 3em;
+        text-align: center;
+
+        h1 {
+            font-size: var(--font-size-medium-plus);
+        }
+
+        .setup-instructions {
+            color: var(--container-sub-content-font-color);
+            margin: 15px 0;
+        }
+
+        .setup-join-code {
+            color: #6aafeb;
+            font-size: var(--font-size-large);
+        }
+    }
+}

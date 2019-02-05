@@ -5,8 +5,6 @@ import React from 'react';
 import { remoteControlService } from 'remote-control';
 import { logger, parseMeetingUrl } from 'utils';
 
-import styles from './meeting-frame.css';
-
 /**
  * The iFrame used to to display a meeting hosted on a jitsi instance.
  *
@@ -133,7 +131,7 @@ export default class MeetingFrame extends React.Component {
     render() {
         return (
             <div
-                className = { styles.frame }
+                className = 'meeting-frame'
                 ref = { this._setMeetingContainerRef } />
         );
     }

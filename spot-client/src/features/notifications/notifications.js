@@ -6,7 +6,6 @@ import { removeNotification } from 'actions';
 import { getAllNotifications } from 'reducers';
 
 import Notification from './notification';
-import styles from './notifications.css';
 
 /**
  * The container for handling showing and dismissing notifications.
@@ -50,12 +49,8 @@ export class Notifications extends React.PureComponent {
      * @inheritdoc
      */
     render() {
-        const hasNotificationsClass = this.props.notifications.length
-            ? styles.with_notifications : styles.without_notifications;
-        const className = `${styles.notifications} ${hasNotificationsClass}`;
-
         return (
-            <div className = { className }>
+            <div className = 'notifications'>
                 { this._renderNotifications() }
             </div>
         );

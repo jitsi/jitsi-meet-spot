@@ -2,11 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { JoinInfo } from 'features/join-info';
 import { getBackgroundUrl } from 'reducers';
 import { remoteControlService } from 'remote-control';
-
-import styles from './view.css';
 
 /**
  * A React Component representing a single screen in the single-page application
@@ -52,13 +49,17 @@ class View extends React.Component {
             }
         }
 
+        const gradientStyle
+            = `view-gradient ${backgroundStyles ? 'visible' : ''}`;
+
         return (
             <div
-                className = { styles.view }
+                className = 'view'
                 data-qa-id = { `${this.props.name}-view` }
                 style = { backgroundStyles }>
-                { this.props.children }
-                <JoinInfo />
+                <div className = { gradientStyle }>
+                    { this.props.children }
+                </div>
             </div>
         );
     }

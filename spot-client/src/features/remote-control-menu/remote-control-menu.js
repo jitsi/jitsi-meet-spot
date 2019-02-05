@@ -3,14 +3,13 @@ import React from 'react';
 
 import { LoadingIcon } from 'features/loading-icon';
 import { remoteControlService } from 'remote-control';
+import { JitsiMeetJSProvider } from 'vendor';
 
 import AudioMuteButton from './buttons/audio-mute-button';
 import HangupButton from './buttons/hangup-button';
 import ScreenshareButton from './buttons/screenshare-button';
 import VideoMuteButton from './buttons/video-mute-button';
 import WirelessScreenshareButton from './buttons/wireless-screenshare-button';
-
-import styles from './remote-control-menu.css';
 
 /**
  * Displays buttons used for remotely controlling a Spot instance.
@@ -64,7 +63,7 @@ export default class RemoteControlMenu extends React.Component {
         }
 
         return (
-            <div className = { styles.menu }>
+            <div className = 'remote-menu'>
                 <AudioMuteButton
                     isMuted = { audioMuted }
                     onClick = { this._onToggleAudioMute } />
@@ -75,14 +74,30 @@ export default class RemoteControlMenu extends React.Component {
                     && <ScreenshareButton
                         isScreensharing = { screensharing }
                         onClick = { this._onToggleScreensharing } /> }
-                <WirelessScreenshareButton
-                    isScreensharing = { screensharing }
-                    isWirelessScreenshareConnectionActive
-                        = { isWirelessScreenshareConnectionActive }
-                    onClick = { this._onToggleWirelessScreensharing } />
+                { this._isWirelessScreenshareSupported()
+                    && <WirelessScreenshareButton
+                        isScreensharing = { screensharing }
+                        isWirelessScreenshareConnectionActive
+                            = { isWirelessScreenshareConnectionActive }
+                        onClick = { this._onToggleWirelessScreensharing } /> }
                 <HangupButton onClick = { this._onHangUp } />
             </div>
         );
+    }
+
+    /**
+     * Returns whether or not the current environment supports wirelessly
+     * screensharing into a Spot. Currently only Chrome works and the underlying
+     * implementation assumes getDisplayMedia is available.
+     *
+     * @private
+     * @returns {void}
+     */
+    _isWirelessScreenshareSupported() {
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
+        return JitsiMeetJS.util.browser.isChrome()
+            && JitsiMeetJS.util.browser.supportsGetDisplayMedia();
     }
 
     /**

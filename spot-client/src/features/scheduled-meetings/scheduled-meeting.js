@@ -3,7 +3,6 @@ import React from 'react';
 import { date } from 'utils';
 
 import Avatar from './avatar';
-import styles from './scheduled-meeting.css';
 
 /**
  * Displays details about a meeting and response to clicks.
@@ -40,22 +39,24 @@ export default class ScheduledMeeting extends React.Component {
             title
         } = this.props.event;
         const startTime = new Date(start);
-        const className = startTime.getTime() <= Date.now()
-            ? `meeting ${styles.meeting} ${styles.ongoing}`
-            : `meeting ${styles.meeting}`;
 
         return (
             <div
-                className = { className }
+                className = 'meeting'
                 onClick = { this._onMeetingClick }>
-                <div className = { styles.time }>
-                    { date.formatToTime(startTime) }
+                <div className = 'meeting-date'>
+                    { this._getFormattedDate(startTime) }
                 </div>
-                <div className = { styles.name }>
+                <div className = 'meeting-name'>
                     { title }
                 </div>
-                <div />
-                <div className = { styles.url }>
+                <div className = 'meeting-join'>
+                    { this.props.onMeetingClick ? <div>Join Now</div> : '' }
+                </div>
+                <div className = 'meeting-time'>
+                    { this._getFormattedTimes(startTime) }
+                </div>
+                <div className = 'meeting-url'>
                     { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
             </div>
@@ -80,13 +81,39 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     /**
+     * Returns the calendar date for the meeting.
+     *
+     * @param {Date} startTime - An instance of {@code Date}.
+     * @private
+     * @returns {string}
+     */
+    _getFormattedDate(startTime) {
+        if (date.isDateForToday(startTime)) {
+            return 'Today';
+        }
+
+        return date.formatToCalendarDate(startTime);
+    }
+
+    /**
+     * Returns the start time of the meeting.
+     *
+     * @param {Date} startTime - An instance of {@code Date}.
+     * @private
+     * @returns {string}
+     */
+    _getFormattedTimes(startTime) {
+        return date.formatToTime(startTime);
+    }
+
+    /**
      * Invoke the {@code onMeetingClick} callback if a meeting name exists.
      *
      * @private
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.event.meetingUrl) {
+        if (this.props.onMeetingClick && this.props.event.meetingUrl) {
             this.props.onMeetingClick(this.props.event.meetingUrl);
         }
     }

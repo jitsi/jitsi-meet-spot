@@ -12,12 +12,14 @@ import {
     getCalendarEmail,
     getCalendarEvents,
     getCurrentLock,
+    getCurrentRoomName,
+    getJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'reducers';
+import { windowHandler } from 'utils';
 
 import View from './view';
-import styles from './view.css';
 import { withCalendar, asSpotLoader } from './loaders';
 
 /**
@@ -35,8 +37,10 @@ export class Home extends React.Component {
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
+        joinCode: PropTypes.string,
         lock: PropTypes.string,
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        roomName: PropTypes.string
     };
 
     /**
@@ -48,7 +52,7 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onGoToMeeting = this._onGoToMeeting.bind(this);
+        this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
 
         this._isUnmounting = false;
@@ -88,15 +92,18 @@ export class Home extends React.Component {
     render() {
         return (
             <View name = 'home'>
-                <div className = { styles.homeContainer }>
-                    <div className = { styles.clockContainer }>
-                        <Clock />
-                    </div>
-                    <div className = { styles.meetings }>
-                        { this._getCalendarEventsView() }
-                    </div>
+                <div className = 'spot-home'>
+                    <Clock />
+                    { this._getCalendarEventsView() }
+                    { this.props.isSetupComplete
+                        && <div
+                            className = 'join-info'
+                            data-qa-id = 'join-info'
+                            onClick = { this._onOpenRemote }>
+                            Sharing key { this.props.joinCode.toUpperCase() }
+                        </div> }
                 </div>
-                <div className = { styles.settings_cog }>
+                <div className = 'settings_cog'>
                     <SettingsButton />
                 </div>
             </View>
@@ -110,29 +117,33 @@ export class Home extends React.Component {
      * @returns {ReactComponent|null}
      */
     _getCalendarEventsView() {
-        if (this.props.isSetupComplete) {
-            return this.props.hasFetchedEvents
-                ? <ScheduledMeetings
-                    events = { this.props.events }
-                    onMeetingClick = { this._onGoToMeeting } />
-                : <LoadingIcon color = 'black' />;
+        if (!this.props.isSetupComplete) {
+            return this._renderSetupMessage();
         }
 
-        return null;
+        if (this.props.hasFetchedEvents) {
+            return this.props.events.length
+                ? <ScheduledMeetings events = { this.props.events } />
+                : this._renderNoEventsMessage();
+        }
+
+        return <LoadingIcon color = 'black' />;
     }
 
     /**
-     * Callback invoked to join a meeting. Only if a meeting url is passed in
-     * will join be attempted.
+     * Opens an instance of a remote control for the Spot in a new window. This
+     * is a debug feature to immediately open the remote without entering a join
+     * code.
      *
-     * @param {string} meetingUrl - The meeting url to join.
      * @private
      * @returns {void}
      */
-    _onGoToMeeting(meetingUrl) {
-        if (meetingUrl) {
-            this.props.history.push(`/meeting?location=${meetingUrl}`);
-        }
+    _onOpenRemote() {
+        const baseUrl = windowHandler.getBaseUrl();
+        const { roomName: room, lock } = this.props;
+        const url = `${baseUrl}#/remote-control?remoteId=${room}&lock=${lock}`;
+
+        windowHandler.openNewWindow(url);
     }
 
     /**
@@ -170,6 +181,49 @@ export class Home extends React.Component {
                 }
             });
     }
+
+    /**
+     * Instantiates a ReactElement with a message stating there are no scheduled
+     * meetings on the calendar associated with the Spot.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderNoEventsMessage() {
+        return (
+            <div className = 'no-events-message'>
+                <div>There are no scheduled meetings.</div>
+                <div>
+                    Invite this room to your calendar event
+                    and you'll be set
+                </div>
+            </div>
+        );
+    }
+
+    /**
+     * Instantiates a ReactElement with a message stating Spot should have a
+     * calendar connected.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderSetupMessage() {
+        return (
+            <div className = 'no-events-message'>
+                <h1>Welcome to Spot!</h1>
+                <div className = 'setup-instructions'>
+                    <div>You're almost set</div>
+                    <div>Pair your remote and connect your calendar.</div>
+                </div>
+                <div
+                    className = 'setup-join-code'
+                    data-qa-id = 'join-info'>
+                    { this.props.joinCode.toUpperCase() }
+                </div>
+            </div>
+        );
+    }
 }
 
 /**
@@ -186,7 +240,9 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        lock: getCurrentLock(state)
+        joinCode: getJoinCode(state),
+        lock: getCurrentLock(state),
+        roomName: getCurrentRoomName(state)
     };
 }
 

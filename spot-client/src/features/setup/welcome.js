@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-import styles from './setup.css';
 
 /**
  * A component for display a welcome message during setup.
@@ -13,12 +12,12 @@ import styles from './setup.css';
  */
 export default function Welcome({ onSuccess }) {
     return (
-        <div className = { styles.step }>
-            <h2 className = { styles.title }>
+        <div className = 'setup-step'>
+            <h2 className = 'setup-title'>
                 Welcome To Spot
             </h2>
-            <div className = { styles.content } />
-            <div className = { styles.buttons }>
+            <div className = 'setup-content' />
+            <div className = 'setup-buttons'>
                 <Button onClick = { onSuccess }>
                     Next
                 </Button>

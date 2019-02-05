@@ -33,6 +33,7 @@ export default class RemoteControl extends React.PureComponent {
         this._playUltrasoundInterval = null;
 
         this._onWebViewMessage = this._onWebViewMessage.bind(this);
+        this._playUltrasound = this._playUltrasound.bind(this);
     }
 
     /**

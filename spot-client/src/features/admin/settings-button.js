@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { ROUTES } from 'routing/constants';
 
-import styles from './admin.css';
-
 /**
  * A cog that directs to the settings view on click.
  */
@@ -16,9 +14,9 @@ class SettingsButton extends React.Component {
      */
     render() {
         return (
-            <div className = { styles.cog }>
+            <div className = 'cog'>
                 <Link to = { ROUTES.ADMIN } >
-                    <i className = 'icon-settings' />
+                    <i className = 'material-icons'>settings</i>
                 </Link>
             </div>
         );

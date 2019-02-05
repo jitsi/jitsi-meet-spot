@@ -19,7 +19,7 @@ function createTestDate() {
 
 describe('formatToTime', () => {
     test('returns the time in hh:mm format', () => {
-        expect(date.formatToTime(createTestDate())).toBe('07:17');
+        expect(date.formatToTime(createTestDate())).toBe('07:17PM');
     });
 });
 

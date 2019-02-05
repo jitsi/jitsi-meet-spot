@@ -3,7 +3,6 @@ import React from 'react';
 import { LoadingIcon } from 'features/loading-icon';
 
 import View from '../view';
-import styles from '../view.css';
 
 /**
  * The initial view of the application which displays a loading indicator while
@@ -14,7 +13,7 @@ import styles from '../view.css';
 export default function Loading() {
     return (
         <View hideBackground = { true }>
-            <div className = { styles.loading }>
+            <div className = 'loading'>
                 <LoadingIcon color = 'white' />
             </div>
         </View>

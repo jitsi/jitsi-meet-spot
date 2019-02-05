@@ -5,8 +5,6 @@ import { calendarService, integrationTypes } from 'calendars';
 import { Button } from 'features/button';
 import { logger } from 'utils';
 
-import styles from './setup.css';
-
 /**
  * Prompts to sign in to the calendar service and allow Spot to access calendar
  * events.
@@ -39,19 +37,19 @@ export class CalendarAuth extends React.Component {
      */
     render() {
         return (
-            <div className = { styles.step }>
-                <div className = { styles.title }>
+            <div className = 'setup-step'>
+                <div className = 'setup-title'>
                     Authenticate With Google
                 </div>
-                <div className = { styles.buttons }>
+                <div className = 'setup-buttons'>
                     <Button onClick = { this._onAuthEnterGoogle }>
                         Submit
                     </Button>
                 </div>
-                <div className = { styles.title }>
+                <div className = 'setup-title'>
                     Authenticate With Outlook
                 </div>
-                <div className = { styles.buttons }>
+                <div className = 'setup-buttons'>
                     <Button onClick = { this._onAuthEnterOutlook }>
                         Submit
                     </Button>

@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button } from 'features/button';
 import { Input } from 'features/input';
-import styles from './meeting-name-entry.css';
 
 /**
  * Displays an input for entering the name of a meeting.
@@ -11,7 +9,13 @@ import styles from './meeting-name-entry.css';
  */
 export class MeetingNameEntry extends React.Component {
     static propTypes = {
-        onSubmit: PropTypes.func
+        meetingName: PropTypes.string,
+        onBlur: PropTypes.func,
+        onChange: PropTypes.func,
+        onFocus: PropTypes.func,
+        onNameChange: PropTypes.func,
+        onSubmit: PropTypes.func,
+        placeholder: PropTypes.string
     };
 
     /**
@@ -25,10 +29,6 @@ export class MeetingNameEntry extends React.Component {
 
         this._onMeetingNameChange = this._onMeetingNameChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
-
-        this.state = {
-            meetingName: ''
-        };
     }
 
     /**
@@ -39,19 +39,30 @@ export class MeetingNameEntry extends React.Component {
     render() {
         return (
             <form
-                className = { styles.wrapper }
+                className = 'name-entry-wrapper'
                 onSubmit = { this._onSubmit } >
-                <Input
-                    data-qa-id = 'meeting-name-input'
-                    id = 'meeting-name-input'
-                    onChange = { this._onMeetingNameChange }
-                    placeholder = 'Enter a meeting name'
-                    value = { this.state.meetingName } />
-                <Button
-                    data-qa-id = 'meeting-name-submit'
-                    type = 'submit'>
-                    GO
-                </Button>
+                <div className = 'input-container'>
+                    <label>
+                        Start a new meeting
+                    </label>
+                    <Input
+                        data-qa-id = 'meeting-name-input'
+                        id = 'meeting-name-input'
+                        onBlur = { this.props.onBlur }
+                        onChange = { this._onMeetingNameChange }
+                        onFocus = { this.props.onFocus }
+                        placeholder = { this.props.placeholder
+                            || 'Enter a meeting name' }
+                        value = { this.props.meetingName } />
+                </div>
+                <div className = 'name-entry-submit-wrapper'>
+                    <button
+                        className = 'name-entry-submit'
+                        data-qa-id = 'meeting-name-submit'
+                        type = 'submit'>
+                        GO
+                    </button>
+                </div>
             </form>
         );
     }
@@ -65,9 +76,7 @@ export class MeetingNameEntry extends React.Component {
      * @returns {void}
      */
     _onMeetingNameChange(event) {
-        this.setState({
-            meetingName: event.target.value
-        });
+        this.props.onChange(event.target.value);
     }
 
     /**
@@ -81,11 +90,7 @@ export class MeetingNameEntry extends React.Component {
     _onSubmit(event) {
         event.preventDefault();
 
-        const meetingName = this.state.meetingName.trim();
-
-        if (meetingName) {
-            this.props.onSubmit(meetingName);
-        }
+        this.props.onSubmit();
     }
 }
 

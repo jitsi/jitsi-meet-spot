@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 
 import { getCalendarEmail } from 'reducers';
 
-import styles from './admin.css';
-
 /**
  * A component intended for displaying information about the calendar currently
  * configured for Spot.
@@ -16,12 +14,12 @@ import styles from './admin.css';
  */
 export function CalendarStatus(props) {
     return (
-        <div className = { styles.container }>
-            <div className = { styles.title }>
+        <div className = 'admin-container'>
+            <div className = 'admin-title'>
                 Calendar Status
             </div>
-            <div className = { styles.content }>
-                <div className = { styles.detail }>
+            <div className = 'admin-content'>
+                <div className = 'admin-detail'>
                     Current Calendar: { props.calendarEmail }
                 </div>
             </div>
