@@ -41,6 +41,11 @@ const history = createHashHistory();
 
 remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 
+/**
+ * Defer touch actions to web to handle.
+ */
+document.addEventListener('touchstart', () => { /** no op */ }, true);
+
 render(
     <Provider store = { store }>
         <HashRouter>
