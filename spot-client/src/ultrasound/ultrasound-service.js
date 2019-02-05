@@ -1,9 +1,10 @@
 /**
- * Whatever the ever.
+ * Hides the implementation details of transmitting ultrasound messages.
  */
 class UltrasoundService {
     /**
-     * Whatever the ever.
+     * Sets the message to be transmitted. Transmission happens automatically
+     * as long as a message is set.
      *
      * @param {string} message - Things yo.
      * @returns {void}
@@ -13,6 +14,9 @@ class UltrasoundService {
             return;
         }
 
+        // FIXME: think about the security implications here with sending the
+        // message out to the parent. This might be okay for demo purposes but
+        // not any further.
         window.parent.postMessage(
             JSON.stringify({
                 type: 'ultrasound-message-set',
