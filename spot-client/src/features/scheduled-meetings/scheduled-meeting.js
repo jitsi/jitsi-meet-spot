@@ -51,7 +51,7 @@ export default class ScheduledMeeting extends React.Component {
                     { title }
                 </div>
                 <div className = 'meeting-join'>
-                    { this.props.onMeetingClick ? <div>Join Now</div> : '' }
+                    { this._hasMeetingToJoin() && <div>Join Now</div> }
                 </div>
                 <div className = 'meeting-time'>
                     { this._getFormattedTimes(startTime) }
@@ -107,13 +107,27 @@ export default class ScheduledMeeting extends React.Component {
     }
 
     /**
+     * Returns whether or not the meeting item has a meeting url which can be
+     * joined.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasMeetingToJoin() {
+        return Boolean(
+            this.props.onMeetingClick
+                && this.props.event.meetingUrl
+        );
+    }
+
+    /**
      * Invoke the {@code onMeetingClick} callback if a meeting name exists.
      *
      * @private
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this.props.onMeetingClick && this.props.event.meetingUrl) {
+        if (this._hasMeetingToJoin()) {
             this.props.onMeetingClick(this.props.event.meetingUrl);
         }
     }
