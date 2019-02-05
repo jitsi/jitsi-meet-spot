@@ -6,5 +6,5 @@ import './app.scss';
 
 import './spot.scss';
 import './views.css';
-import './features.css';
+import './features.scss';
 import './remote.scss';
