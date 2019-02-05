@@ -1,3 +1,5 @@
+@import "./media-queries";
+
 .idleCursor .cog {
   display: none;
 }
@@ -66,6 +68,75 @@
 .button:hover {
   background: teal;
 }
+
+.connecting {
+    font-size: var(--font-size-large);
+}
+
+.join-code-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+
+    .cta {
+        font-size: var(--font-size-large);
+    }
+
+    .nav-button {
+        margin-top: 20px;
+        &.active,
+        &:active {
+            color: var(--active);
+
+            .nav-icon {
+                border-color: var(--active);
+            }
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .navi-icon-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-icon {
+        border: 1px solid;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 1em;
+        height: calc(var(--font-size-large) * 2);
+        width: calc(var(--font-size-large) * 2);
+
+        * {
+            font-size: var(--font-size-x-large);
+        }
+    }
+
+    .nav-label-container {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        white-space: nowrap;
+
+    }
+
+    .nav-label {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2.5em;
+        width: 0;
+    }
+}
+
 
 .joinInfo {
   background: rgba(255, 255, 255, 0.7);

@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 import ReactCodeInput from 'react-code-input';
 
 import { addNotification, setLock, setRoomName } from 'actions';
-import { Button } from 'features/button';
 import { getRemoteControlServerConfig, isConnectedToSpot } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
 import { logger } from 'utils';
+
+// FIXME: temporary button for submitting while waiting for designs
+import NavButton from 'views/remote-views/nav-buttons/nav-button';
 
 import View from './view';
 
@@ -82,8 +84,9 @@ export class JoinCodeEntry extends React.Component {
                 <div className = 'container'>
                     {
                         this.state.validating
-                            ? 'Connecting'
-                            : <div>
+                            ? <div className = 'connecting'>Connecting...</div>
+                            : <div className = 'join-code-view'>
+                                <div className = 'cta'>Enter a share key</div>
                                 <div data-qa-id = { 'join-code-input' }>
                                     <ReactCodeInput
                                         fields = { this.props.entryLength }
@@ -92,11 +95,10 @@ export class JoinCodeEntry extends React.Component {
                                         type = 'text'
                                         value = { this.state.enteredCode } />
                                 </div>
-                                <Button
-                                    data-qa-id = 'join-code-submit'
-                                    onClick = { this._onSubmit }>
-                                    Submit
-                                </Button>
+                                <NavButton
+                                    iconName = 'arrow_forward'
+                                    onClick = { this._onSubmit }
+                                    qaId = 'join-code-submit' />
                             </div>
                     }
                 </div>
