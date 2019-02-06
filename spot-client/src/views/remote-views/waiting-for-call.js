@@ -3,8 +3,8 @@ import React from 'react';
 
 import { Clock } from 'features/clock';
 import { SelfFillingNameEntry } from 'features/meeting-name-entry';
+import { NavButton } from 'features/nav-button';
 import { ScheduledMeetings } from 'features/scheduled-meetings';
-import NavButton from './nav-buttons/nav-button';
 
 /**
  * Returns the React Element to display while the Spot instance is not in a

@@ -150,14 +150,14 @@ class RemoteControlService {
     }
 
     /**
-     * Notifies all controllers about whether or not spot is currently connected
+     * Notifies all controllers about whether or not Spot is currently connected
      * to a meeting.
      *
-     * @param {boolean} isJoined - Whether or not Spot is in a meeting.
+     * @param {boolean} meetingUrl - The meeting url the Spot is currently in.
      * @returns {void}
      */
-    notifyMeetingJoinStatus(isJoined) {
-        this.xmppConnection.updateStatus('inMeeting', isJoined);
+    notifyMeetingJoinStatus(meetingUrl) {
+        this.xmppConnection.updateStatus('inMeeting', meetingUrl);
     }
 
     /**
