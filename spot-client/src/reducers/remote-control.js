@@ -1,6 +1,6 @@
 const DEFAULT_STATE = {
     audioMuted: true,
-    inMeeting: false,
+    inMeeting: '',
     isWirelessScreenshareConnectionActive: false,
     localId: null,
     lock: null,

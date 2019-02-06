@@ -8,8 +8,13 @@ import React from 'react';
  * @extends React.Component
  */
 export default class NavButton extends React.Component {
+    static defaultProps = {
+        className: ''
+    };
+
     static propTypes = {
         active: PropTypes.bool,
+        className: PropTypes.string,
         iconName: PropTypes.string,
         label: PropTypes.string,
         onClick: PropTypes.func,
@@ -23,11 +28,19 @@ export default class NavButton extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { active, iconName, label, onClick, qaId } = this.props;
+        const {
+            active,
+            className,
+            iconName,
+            label,
+            onClick,
+            qaId
+        } = this.props;
 
         return (
             <div
-                className = { `nav-button ${active ? 'active' : ''}` }
+                className
+                    = { `nav-button ${active ? 'active' : ''} ${className}` }
                 data-qa-id = { qaId }
                 onClick = { onClick }>
 

@@ -188,7 +188,7 @@ export default class MeetingFrame extends React.Component {
         this._meetingJoined = true;
 
         this.props.onMeetingStart(this._jitsiApi);
-        remoteControlService.notifyMeetingJoinStatus(true);
+        remoteControlService.notifyMeetingJoinStatus(this.props.meetingUrl);
     }
 
     /**
@@ -198,7 +198,7 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLeft() {
-        remoteControlService.notifyMeetingJoinStatus(false);
+        remoteControlService.notifyMeetingJoinStatus('');
 
         // FIXME: the iframe api does not provide an event for when the
         // (post-call) feedback dialog is displayed. Assume the feedback

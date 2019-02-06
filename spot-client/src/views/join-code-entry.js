@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import ReactCodeInput from 'react-code-input';
 
 import { addNotification, setLock, setRoomName } from 'actions';
+
+// FIXME: temporary button for submitting while waiting for designs
+import { NavButton } from 'features/nav-button';
+
 import { getRemoteControlServerConfig, isConnectedToSpot } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
 import { logger } from 'utils';
 
-// FIXME: temporary button for submitting while waiting for designs
-import NavButton from 'views/remote-views/nav-buttons/nav-button';
 
 import View from './view';
 

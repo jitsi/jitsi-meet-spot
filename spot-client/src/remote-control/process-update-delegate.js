@@ -18,7 +18,6 @@ import { COMMANDS, MESSAGES } from './constants';
  */
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
-    'inMeeting',
     'screensharing',
     'videoMuted',
     'wiredScreensharingEnabled'
@@ -30,6 +29,7 @@ const presenceToStoreAsBoolean = new Set([
  * @type {Set}
  */
 const presenceToStoreAsString = new Set([
+    'inMeeting',
     'joinCode',
     'view'
 ]);

@@ -98,6 +98,128 @@
         }
     }
 
+    .input-sub-view {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .name-entry-wrapper {
+        background-color: var(--container-content-bg-color);
+        border-radius: 5px;
+        display: flex;
+        padding: 1.2em 2.5em;
+        width: 80%;
+
+        @media #{$mq-medium} {
+            width: 70%;
+        }
+
+        @media #{$mq-large} {
+            width: 60%;
+        }
+
+        .input-container {
+            flex: 1;
+
+            input {
+                background-color: transparent;
+
+                /**
+                 * Set each border attribute separately for mobile safari to
+                 * support border-image.
+                 */
+                border-bottom: 2px;
+                border-left: 0;
+                border-right: 0;
+                border-style: solid;
+                border-top: 0;
+
+                border-image: linear-gradient(to right, black, rgba(0, 0, 0, 0)) 1 stretch;
+                color: var(--container-content-font-color);
+                font-family: 'Nunito', sans-serif;
+                font-size: var(--font-size-small);
+                padding-bottom: 16px;
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &::placeholder {
+                    color: var(--container-sub-content-font-color);
+                }
+            }
+
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+
+        .name-entry-submit-wrapper {
+            align-items: center;
+            display: flex;
+            margin-left: 2em;
+
+            .name-entry-submit {
+                background-color: #0074e0;
+                border: 0;
+                border-radius: 5px;
+                color: var(--container-content-font-color);
+                cursor: pointer;
+                font-size: var(--font-size-medium);
+                padding: 0.5em 1em;
+
+                &:active {
+                    background-color: #6aafeb;
+                }
+            }
+        }
+    }
+}
+
+.in-call {
+    display: grid;
+    grid-template-rows:  1fr auto;
+    min-height: 100%;
+    width: 100%;
+
+    .nav {
+        flex-wrap: wrap;
+    }
+
+    .nav .hangup.nav-button {
+        .navi-icon-container .nav-icon {
+            background-color: red;
+            border-color: red;
+
+            &:active {
+                color: lightcoral;
+
+                .nav-icon {
+                    border-color: lightcoral;
+                }
+            }
+        }
+
+        &:active {
+            .nav-icon {
+                border-color: red;
+            }
+
+            color: lightcoral;
+        }
+    }
+
+    .in-call-name {
+        margin-top: 5em;
+        text-align: center;
+    }
+}
+
+.waiting,
+.in-call {
     .nav {
         display: flex;
         justify-content: center;
@@ -190,86 +312,16 @@
             display: flex;
             justify-content: center;
             margin-bottom: 2.5em;
-            width: 0;
-        }
-    }
+            width: calc(var(--font-size-x-large) * 2);
 
-    .input-sub-view {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .name-entry-wrapper {
-        background-color: var(--container-content-bg-color);
-        border-radius: 5px;
-        display: flex;
-        padding: 1.2em 2.5em;
-        width: 80%;
-
-        @media #{$mq-medium} {
-            width: 70%;
-        }
-
-        @media #{$mq-large} {
-            width: 60%;
-        }
-
-        .input-container {
-            flex: 1;
-
-            input {
-                background-color: transparent;
-
-                /**
-                 * Set each border attribute separately for mobile safari to
-                 * support border-image.
-                 */
-                border-bottom: 2px;
-                border-left: 0;
-                border-right: 0;
-                border-style: solid;
-                border-top: 0;
-
-                border-image: linear-gradient(to right, black, rgba(0, 0, 0, 0)) 1 stretch;
-                color: var(--container-content-font-color);
-                font-family: 'Nunito', sans-serif;
-                font-size: var(--font-size-small);
-                padding-bottom: 16px;
-                width: 100%;
-
-                &:focus {
-                    outline: none;
-                }
-
-                &::placeholder {
-                    color: var(--container-sub-content-font-color);
-                }
+            @media #{$mq-large} {
+                height: calc(var(--font-size-large) * 2.5;
+                width: calc(var(--font-size-large) * 2.5);
             }
 
-            label {
-                display: block;
-                margin-bottom: 10px;
-            }
-        }
-
-        .name-entry-submit-wrapper {
-            align-items: center;
-            display: flex;
-            margin-left: 2em;
-
-            .name-entry-submit {
-                background-color: #0074e0;
-                border: 0;
-                border-radius: 5px;
-                color: var(--container-content-font-color);
-                cursor: pointer;
-                font-size: var(--font-size-medium);
-                padding: 0.5em 1em;
-
-                &:active {
-                    background-color: #6aafeb;
-                }
+            @media #{$mq-xlarge} {
+                height: calc(var(--font-size-large) * 2.5);
+                width: calc(var(--font-size-large) * 2.5);
             }
         }
     }

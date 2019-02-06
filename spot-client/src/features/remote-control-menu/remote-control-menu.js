@@ -1,15 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { LoadingIcon } from 'features/loading-icon';
+import { NavButton } from 'features/nav-button';
 import { remoteControlService } from 'remote-control';
 import { JitsiMeetJSProvider } from 'vendor';
-
-import AudioMuteButton from './buttons/audio-mute-button';
-import HangupButton from './buttons/hangup-button';
-import ScreenshareButton from './buttons/screenshare-button';
-import VideoMuteButton from './buttons/video-mute-button';
-import WirelessScreenshareButton from './buttons/wireless-screenshare-button';
 
 /**
  * Displays buttons used for remotely controlling a Spot instance.
@@ -19,7 +13,6 @@ import WirelessScreenshareButton from './buttons/wireless-screenshare-button';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
-        inMeeting: PropTypes.bool,
         isWirelessScreenshareConnectionActive: PropTypes.bool,
         screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool,
@@ -51,36 +44,54 @@ export default class RemoteControlMenu extends React.Component {
     render() {
         const {
             audioMuted,
-            inMeeting,
             isWirelessScreenshareConnectionActive,
             screensharing,
             screensharingEnabled,
             videoMuted
         } = this.props;
 
-        if (!inMeeting) {
-            return <LoadingIcon color = 'white' />;
+
+        let wirelessScreensharingLabel;
+        let wirelessScrensharingIcon;
+
+        if (isWirelessScreenshareConnectionActive && !screensharing) {
+            wirelessScreensharingLabel = 'Connecting...';
+            wirelessScrensharingIcon = 'screen_share';
+        } else if (screensharing) {
+            wirelessScreensharingLabel = 'Stop Sharing';
+            wirelessScrensharingIcon = 'stop_screen_share';
+        } else {
+            wirelessScreensharingLabel = 'Share Wirelessly';
+            wirelessScrensharingIcon = 'screen_share';
         }
 
         return (
-            <div className = 'remote-menu'>
-                <AudioMuteButton
-                    isMuted = { audioMuted }
+            <div className = 'nav'>
+                <NavButton
+                    iconName = { audioMuted ? 'mic_off' : 'mic' }
+                    label = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
                     onClick = { this._onToggleAudioMute } />
-                <VideoMuteButton
-                    isMuted = { videoMuted }
+                <NavButton
+                    iconName = { videoMuted ? 'videocam_off' : 'videocam' }
+                    label = { videoMuted ? 'Unmute Video' : 'Mute Video' }
                     onClick = { this._onToggleVideoMute } />
                 { screensharingEnabled
-                    && <ScreenshareButton
-                        isScreensharing = { screensharing }
+                    && <NavButton
+                        iconName = { screensharing
+                            ? 'stop_screen_share' : 'screen_share' }
+                        label = { screensharing
+                            ? 'Stop Sharing' : 'Share Content' }
                         onClick = { this._onToggleScreensharing } /> }
                 { this._isWirelessScreenshareSupported()
-                    && <WirelessScreenshareButton
-                        isScreensharing = { screensharing }
-                        isWirelessScreenshareConnectionActive
-                            = { isWirelessScreenshareConnectionActive }
+                    && <NavButton
+                        iconName = { wirelessScrensharingIcon }
+                        label = { wirelessScreensharingLabel }
                         onClick = { this._onToggleWirelessScreensharing } /> }
-                <HangupButton onClick = { this._onHangUp } />
+                <NavButton
+                    className = 'hangup'
+                    iconName = 'call_end'
+                    label = 'Leave'
+                    onClick = { this._onHangUp } />
             </div>
         );
     }
