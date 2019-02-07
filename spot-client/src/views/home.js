@@ -140,8 +140,7 @@ export class Home extends React.Component {
      */
     _onOpenRemote() {
         const baseUrl = windowHandler.getBaseUrl();
-        const { roomName: room, lock } = this.props;
-        const url = `${baseUrl}#/remote-control?remoteId=${room}&lock=${lock}`;
+        const url = `${baseUrl}#/?code=${this.props.joinCode.toUpperCase()}`;
 
         windowHandler.openNewWindow(url);
     }

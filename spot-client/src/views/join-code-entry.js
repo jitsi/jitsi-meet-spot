@@ -31,6 +31,7 @@ export class JoinCodeEntry extends React.Component {
         entryLength: PropTypes.number,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
+        location: PropTypes.object,
         remoteControlConfiguration: PropTypes.object
     };
 
@@ -59,6 +60,17 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidMount() {
         remoteControlService.disconnect();
+
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const code = queryParams.get('code');
+
+        // Hide the code and other params for visual clarity only, no practical
+        // purpose.
+        this.props.history.replace(this.props.location.pathname);
+
+        if (code) {
+            this._connectToSpot(code);
+        }
     }
 
     /**
@@ -126,17 +138,28 @@ export class JoinCodeEntry extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        this._connectToSpot(this.state.enteredCode);
+    }
+
+    /**
+     * Validates the passed in code and starts the connection to the Spot.
+     *
+     * @param {string} code - The code for becoming a remote control to a Spot.
+     * @private
+     * @returns {void}
+     */
+    _connectToSpot(code) {
         const submitPromise = new Promise(resolve => {
             this.setState({ validating: true }, resolve);
         });
 
         // FIXME: There is no proper join code service so the code is a
         // combination of a 3 digit room name and a 3 digit room password.
-        const roomName = this.state.enteredCode.substring(0, 3).toLowerCase();
-        const password = this.state.enteredCode.substring(3, 6).toLowerCase();
+        const roomName = code.substring(0, 3).toLowerCase();
+        const password = code.substring(3, 6).toLowerCase();
 
         submitPromise
-            .then(() => remoteControlService.exchangeCode(password))
+            .then(() => remoteControlService.exchangeCode(code))
             .then(() => {
                 this.props.dispatch(setRoomName(roomName));
                 this.props.dispatch(setLock(password));
