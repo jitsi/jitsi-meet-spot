@@ -1,5 +1,12 @@
-@import "./media-queries";
+/**
+ * In this file is placeholder CSS, used until designs are received. No CSS to
+ * be used on the final product should be included here.
+ */
+@import './media-queries';
 
+.idleCursor {
+  cursor: none;
+}
 .idleCursor .cog {
   display: none;
 }
@@ -83,57 +90,6 @@
 
     .cta {
         font-size: var(--font-size-large);
-    }
-
-    .nav-button {
-        margin-top: 20px;
-        &.active,
-        &:active {
-            color: var(--active);
-
-            .nav-icon {
-                border-color: var(--active);
-            }
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    .navi-icon-container {
-        display: flex;
-        justify-content: center;
-    }
-
-    .nav-icon {
-        border: 1px solid;
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-bottom: 1em;
-        height: calc(var(--font-size-large) * 2);
-        width: calc(var(--font-size-large) * 2);
-
-        * {
-            font-size: var(--font-size-x-large);
-        }
-    }
-
-    .nav-label-container {
-        display: flex;
-        flex-grow: 1;
-        justify-content: center;
-        white-space: nowrap;
-
-    }
-
-    .nav-label {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2.5em;
-        width: 0;
     }
 }
 
@@ -278,3 +234,81 @@
   background: rgb(250, 251, 252);
 }
 
+.admin {
+  background-color: white;
+  border-radius: 25px;
+  height: 100%;
+  overflow: hidden;
+  padding: 40px;
+  width: 100%;
+}
+
+.code {
+  bottom: 25;
+  left: 25;
+  position: fixed;
+}
+
+.meetingMouseHider {
+  pointer-events: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.idleCursor .meetingMouseHider {
+  pointer-events: all;
+}
+
+.container {
+  align-items: center;
+  border-radius: 5%;
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  padding: 25px;
+  width: 50%;
+}
+
+.loading {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.settings_cog {
+  position: fixed;
+  right: 32px;
+  top: 41px;
+
+}
+
+.subcontent {
+  width: 100%;
+}
+
+/**
+* view acts as the main wrapper each individual route. By default put the
+* content of view in the center of the screen.
+*/
+.view,
+.view-gradient {
+  align-items: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  width: 100vw;
+}
+
+.view-gradient.visible {
+  background-image: linear-gradient(to bottom, #020f1b, rgba(0, 0, 0, 0) 30%), linear-gradient(to bottom, rgba(2, 15, 27, 0) 50%, #020f1b);
+  flex: 1;
+}
+
+.app {
+  height: 100%;
+}

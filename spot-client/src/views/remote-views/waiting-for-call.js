@@ -48,7 +48,7 @@ export default class WaitingForCallView extends React.Component {
         const { activeTab } = this.state;
 
         return (
-            <div className = 'waiting'>
+            <div className = 'waiting-view'>
                 <Clock />
                 <div>
                     { this._getSubView() }
@@ -96,7 +96,7 @@ export default class WaitingForCallView extends React.Component {
             );
         case 'input':
             return (
-                <div className = 'input-sub-view'>
+                <div className = 'meeting-name-entry-view'>
                     <SelfFillingNameEntry
                         onSubmit = { this.props.onGoToMeeting } />
                 </div>

@@ -1,10 +1,12 @@
-import './media-queries.scss';
-import './variables.css';
+import './variables.scss';
 
-import './reset.css';
-import './app.scss';
+import './reset.scss';
 
-import './spot.scss';
-import './views.css';
-import './features.scss';
-import './remote.scss';
+import './clock.scss';
+import './home-view.scss';
+import './meeting.scss';
+import './meeting-name-entry.scss';
+import './nav.scss';
+import './remote-control-views.scss';
+
+import './temp.scss';

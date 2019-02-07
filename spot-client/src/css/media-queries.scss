@@ -1,27 +1,25 @@
-// Breakpoints
-$bp-xxsmall: 0em; // everything else
-$bp-xsmall: 2em; // 320px
-$bp-small: 48em; // 768px
-$bp-medium: 64em; // 1024px
-$bp-large: 85.375em; // 1366px
-$bp-xlarge: 120em; // 1920px
-$bp-xxlarge: 160em; // 2560px
+/**
+ * The various screen-width breakpoints to use to determine when styles should
+ * adjust.
+ */
+$mq-xxsmall: '(min-width: 0em)'; // catch-all
+$mq-xsmall: '(min-width: 2em)'; // 320px
+$mq-small: '(min-width: 48em)'; // 768px
+$mq-medium: '(min-width: 64em)'; // 1024px
+$mq-large: '(min-width: 85.375em)'; // 1366px
+$mq-xlarge: '(min-width: 120em)'; // 1920px
+$mq-xxlarge: '(min-width: 160em)'; // 2560px
+$mq-retina: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)';
 
-// Media Queries
-$mq-xsmall: "(min-width: #{$bp-xsmall})";
-$mq-small: "(min-width: #{$bp-small})";
-$mq-medium: "(min-width: #{$bp-medium})";
-$mq-large: "(min-width: #{$bp-large})";
-$mq-xlarge: "(min-width: #{$bp-xlarge})";
-$mq-xxlarge: "(min-width: #{$bp-xxlarge})";
-$mq-retina: "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
-
-// Font-Size
+/**
+ * The font size from which all other font sizes should inherit.
+ */
 $base-font-size: 1em;
 
-// Line-Height
+/**
+ * The line height from which all other line heights should inherit.
+ */
 $base-line-height: 1.5;
-$header-line-height: 1.25;
 
 body {
     font-size: $base-font-size;
