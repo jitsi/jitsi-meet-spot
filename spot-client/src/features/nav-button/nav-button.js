@@ -51,7 +51,7 @@ export default class NavButton extends React.Component {
                      * the label.
                      */
                 }
-                <div className = 'navi-icon-container'>
+                <div className = 'nav-icon-container'>
                     <div className = 'nav-icon'>
                         <i className = 'material-icons'>{ iconName }</i>
                     </div>

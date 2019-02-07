@@ -109,10 +109,12 @@ export class JoinCodeEntry extends React.Component {
                                         type = 'text'
                                         value = { this.state.enteredCode } />
                                 </div>
-                                <NavButton
-                                    iconName = 'arrow_forward'
-                                    onClick = { this._onSubmit }
-                                    qaId = 'join-code-submit' />
+                                <div className = 'nav'>
+                                    <NavButton
+                                        iconName = 'arrow_forward'
+                                        onClick = { this._onSubmit }
+                                        qaId = 'join-code-submit' />
+                                </div>
                             </div>
                     }
                 </div>
