@@ -7,17 +7,7 @@
     width: 100%;
 
     .clock {
-        text-align: center;
         padding: 2.6em;
-
-        .date {
-            color: var(--container-sub-content-font-color);
-            font-size: var(--font-size-medium-plus);
-        }
-
-        .time {
-            font-size: var(--font-size-x-large);
-        }
     }
 
     .meetings {
