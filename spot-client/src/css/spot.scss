@@ -36,47 +36,7 @@
 
     .meetings {
         .meeting {
-            align-items: baseline;
-            background-color: var(--container-content-bg-color);
-            display: grid;
-            grid-column-gap: 20px;
-            grid-row-gap: 10px;
-            grid-template-columns: .20fr 1fr auto;
-            grid-template-rows: 1fr 1fr;
             padding: 1em 1.6em;
-        }
-
-
-        .meeting:not(:last-child) {
-            margin-bottom: 5px;
-        }
-
-        .meeting-date,
-        .meeting-time,
-        .meeting-url {
-            font-size: var(--font-size-small);
-        }
-
-        .meeting-date,
-        .meeting-name {
-            font-weight: bold;
-        }
-
-        .meeting-name,
-        .meeting-url {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .meeting-join {
-            grid-column-start: 3;
-            grid-row-start: 1;
-            grid-row-end: 2;
-
-            &.hidden {
-                visibility: hidden;
-            }
         }
     }
 
