@@ -8,6 +8,5 @@ import './meeting.scss';
 import './nav.scss';
 
 import './spot.scss';
-import './views.scss';
 import './temp.scss';
 import './remote.scss';
