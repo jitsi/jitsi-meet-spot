@@ -57,7 +57,7 @@
         width: calc(var(--font-size-x-large) * 2);
 
         @media #{$mq-large} {
-            height: calc(var(--font-size-large) * 2.5;
+            height: calc(var(--font-size-large) * 2.5);
             width: calc(var(--font-size-large) * 2.5);
         }
 
@@ -85,7 +85,6 @@
         flex-grow: 1;
         justify-content: center;
         white-space: nowrap;
-
     }
 
     .nav-label {
@@ -95,7 +94,7 @@
         width: calc(var(--font-size-x-large) * 2);
 
         @media #{$mq-large} {
-            height: calc(var(--font-size-large) * 2.5;
+            height: calc(var(--font-size-large) * 2.5);
             width: calc(var(--font-size-large) * 2.5);
         }
 
@@ -130,6 +129,6 @@
             }
 
             color: var(--hangup-active-color);
-      }
+        }
     }
 }
