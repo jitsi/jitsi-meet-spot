@@ -56,6 +56,7 @@ export default class RemoteControl extends React.PureComponent {
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
                 <WebView
                     bounces = { false }
+                    mediaPlaybackRequiresUserAction = { false }
                     onMessage = { this._onWebViewMessage }
                     scalesPageToFit = { false }
                     scrollEnabled = { false }
