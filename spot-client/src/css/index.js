@@ -7,5 +7,5 @@ import './nav.scss';
 
 import './spot.scss';
 import './views.scss';
-import './features.scss';
+import './temp.scss';
 import './remote.scss';
