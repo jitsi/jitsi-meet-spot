@@ -25,46 +25,6 @@ export class RemoteControlLoader extends AbstractLoader {
     };
 
     /**
-     * Returns the name of the muc to join. The name is taken from the query
-     * params, if set, or taken from the jid created by the remote control
-     * service during initialization. The query param feature is for generally
-     * for debugging, to quickly access the remote without having to enter a
-     * join code.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getRoomName() {
-        if (this.props.roomName) {
-            return this.props.roomName;
-        }
-
-        const queryParams = new URLSearchParams(this.props.location.search);
-        const remoteId = queryParams.get('remoteId');
-
-        return remoteId ? decodeURIComponent(remoteId) : undefined;
-    }
-
-    /**
-     * Returns the lock code for the room to be joined, if any. The query param
-     * feature is for generally for debugging, to quickly access the remote
-     * without having to enter a join code.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getRoomLock() {
-        if (this.props.lock) {
-            return this.props.lock;
-        }
-
-        const queryParams = new URLSearchParams(this.props.location.search);
-        const lock = queryParams.get('lock');
-
-        return lock ? decodeURIComponent(lock) : undefined;
-    }
-
-    /**
      * Returns the props that should be passed into this loader's child
      * elements.
      *
@@ -82,10 +42,9 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        const roomName = this._getRoomName();
-        const roomLock = this._getRoomLock();
+        const { lock, roomName } = this.props;
 
-        if (!roomName || !roomLock) {
+        if (!lock || !roomName) {
             this.props.history.push('/');
 
             return Promise.reject();
@@ -93,7 +52,7 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect({
             roomName,
-            lock: roomLock,
+            lock,
             serverConfig: this.props.remoteControlConfiguration
         }).catch(error => logger.error(error));
     }
