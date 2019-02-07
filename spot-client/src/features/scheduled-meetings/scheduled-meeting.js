@@ -39,6 +39,8 @@ export default class ScheduledMeeting extends React.Component {
             title
         } = this.props.event;
         const startTime = new Date(start);
+        const joinNowClasses
+            = `meeting-join ${this._hasMeetingToJoin() ? '' : 'hidden'}`;
 
         return (
             <div
@@ -50,8 +52,8 @@ export default class ScheduledMeeting extends React.Component {
                 <div className = 'meeting-name'>
                     { title }
                 </div>
-                <div className = 'meeting-join'>
-                    { this._hasMeetingToJoin() && <div>Join Now</div> }
+                <div className = { joinNowClasses }>
+                    <div>Join Now</div>
                 </div>
                 <div className = 'meeting-time'>
                     { this._getFormattedTimes(startTime) }
