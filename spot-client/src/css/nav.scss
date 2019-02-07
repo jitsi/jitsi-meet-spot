@@ -1,4 +1,4 @@
-@import "./media-queries";
+@import './media-queries';
 
 .nav {
     display: flex;
@@ -10,8 +10,12 @@
 
     .nav-button {
         &:not(:last-child) {
+            @media #{$mq-xxsmall} {
+                margin-right: 0.3em;
+            }
+
             @media #{$mq-xsmall} {
-                margin-right: 1em;
+                margin-right: 0.8em;
             }
         
             @media #{$mq-small} {
