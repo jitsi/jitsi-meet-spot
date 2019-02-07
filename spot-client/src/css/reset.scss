@@ -53,3 +53,25 @@ html {
 *, *:before, *:after {
     box-sizing: inherit;
 }
+
+/** custom resets **/
+body,
+input {
+    font-family: var(--font);
+}
+body {
+    color: var(--container-content-font-color);
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body,
+body > div {
+    height: 100%;
+    width: 100%;
+}
