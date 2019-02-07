@@ -1,5 +1,9 @@
 :root {
     --active: rgba(37, 138, 255, 0.9);
+
+    --button-color: #0074e0;
+    --button-active-color: #6aafeb;
+
     --container-bg-color: rgba(42, 58, 75, 0.7);
     --container-content-bg-color: rgba(42, 58, 75, 0.9);
     --container-content-font-color: #ffffff;
@@ -15,4 +19,7 @@
 
     --hangup-active-color: lightcoral;
     --hangup-bg-color: red;
+
+    --name-entry-gradient-start: black;
+    --name-entry-gradient-end: rgba(0, 0, 0, 0);
 }

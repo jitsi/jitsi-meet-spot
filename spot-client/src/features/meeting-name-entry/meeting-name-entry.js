@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Input } from 'features/input';
 
 /**
  * Displays an input for entering the name of a meeting.
@@ -39,13 +38,14 @@ export class MeetingNameEntry extends React.Component {
     render() {
         return (
             <form
-                className = 'name-entry-wrapper'
+                className = 'meeting-name-entry'
                 onSubmit = { this._onSubmit } >
                 <div className = 'input-container'>
-                    <label>
+                    <label className = 'input-label'>
                         Start a new meeting
                     </label>
-                    <Input
+                    <input
+                        className = 'input'
                         data-qa-id = 'meeting-name-input'
                         id = 'meeting-name-input'
                         onBlur = { this.props.onBlur }
@@ -55,9 +55,9 @@ export class MeetingNameEntry extends React.Component {
                             || 'Enter a meeting name' }
                         value = { this.props.meetingName } />
                 </div>
-                <div className = 'name-entry-submit-wrapper'>
+                <div className = 'submit-wrapper'>
                     <button
-                        className = 'name-entry-submit'
+                        className = 'submit-button'
                         data-qa-id = 'meeting-name-submit'
                         type = 'submit'>
                         GO
