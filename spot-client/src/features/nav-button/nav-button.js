@@ -38,11 +38,12 @@ export default class NavButton extends React.Component {
         } = this.props;
 
         return (
-            <div
+            <button
                 className
                     = { `nav-button ${active ? 'active' : ''} ${className}` }
                 data-qa-id = { qaId }
-                onClick = { onClick }>
+                onClick = { onClick }
+                tabIndex = { 0 }>
 
                 {
 
@@ -61,7 +62,7 @@ export default class NavButton extends React.Component {
                         { label }
                     </div>
                 </div>
-            </div>
+            </button>
         );
     }
 }

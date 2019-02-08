@@ -53,7 +53,7 @@ export default class ScheduledMeeting extends React.Component {
                     { title }
                 </div>
                 <div className = { joinNowClasses }>
-                    <div>Join Now</div>
+                    <button className = 'join-cta'>Join Now</button>
                 </div>
                 <div className = 'meeting-time'>
                     { this._getFormattedTimes(startTime) }

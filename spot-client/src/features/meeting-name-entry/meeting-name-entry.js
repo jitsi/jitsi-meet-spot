@@ -45,6 +45,7 @@ export class MeetingNameEntry extends React.Component {
                         Start a new meeting
                     </label>
                     <input
+                        autoComplete = { 'off' }
                         className = 'input'
                         data-qa-id = 'meeting-name-input'
                         id = 'meeting-name-input'
@@ -53,6 +54,7 @@ export class MeetingNameEntry extends React.Component {
                         onFocus = { this.props.onFocus }
                         placeholder = { this.props.placeholder
                             || 'Enter a meeting name' }
+                        spellCheck = { false }
                         value = { this.props.meetingName } />
                 </div>
                 <div className = 'submit-wrapper'>
