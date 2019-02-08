@@ -42,8 +42,7 @@ export default class NavButton extends React.Component {
                 className
                     = { `nav-button ${active ? 'active' : ''} ${className}` }
                 data-qa-id = { qaId }
-                onClick = { onClick }
-                tabIndex = { 0 }>
+                onClick = { onClick }>
 
                 {
 
