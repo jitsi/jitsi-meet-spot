@@ -33,10 +33,7 @@ class JoinCodePage extends PageObject {
         );
 
         Array.prototype.forEach.call(code, (character, index) => {
-            const selector
-                = `${JOIN_CODE_INPUT} input:nth-of-type(${index + 1})`;
-
-            this.driver.setValue(selector, character);
+            this.driver.keys(character);
         });
 
         this.driver.click(SUBMIT_BUTTON);

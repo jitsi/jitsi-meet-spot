@@ -1,5 +1,6 @@
 export { default as backgroundService } from './background';
 export { default as date } from './date';
+export * from './detection';
 export * from './hash';
 export { default as logger } from './logger';
 export * from './meeting';
