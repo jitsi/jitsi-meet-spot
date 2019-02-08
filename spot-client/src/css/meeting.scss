@@ -31,6 +31,17 @@
         &.hidden {
             visibility: hidden;
         }
+
+        .join-cta  {
+            background-color: inherit;
+            border: 1px solid var(--container-content-font-color);
+            border-radius: 5px;
+            color: inherit;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0.3em 1em;
+        }
     }
 
     .meeting-date,
@@ -56,13 +67,6 @@
     .meeting-join {
         grid-column: 3;
         grid-row: 1 / span 2;
-
-        div {
-            border: 1px solid var(--container-content-font-color);
-            border-radius: 5px;
-            cursor: pointer;
-            padding: 0.3em 1em;
-        }
     }
 
     .meeting-time {

@@ -40,6 +40,48 @@ export class App extends React.Component {
         };
 
         this._onCursorIdleChange = this._onCursorIdleChange.bind(this);
+        this._onKeyDown = this._onKeyDown.bind(this);
+        this._onMouseDown = this._onMouseDown.bind(this);
+        this._onTouchStart = this._onTouchStart.bind(this);
+    }
+
+    /**
+     * Adds event listeners that modify app behavior or appearance.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        /**
+         * Defer touch actions to web to handle instead of the mobile device.
+         */
+        document.addEventListener('touchstart', this._onTouchStart, true);
+
+        /**
+         * First half of the hack to prevent outline styles from displaying
+         * while using a mouse to navigate but show them when using a keyboard.
+         * Hide outlines when the mouse is being used so clicking does not
+         * outline anything.
+         */
+        document.body.addEventListener('mousedown', this._onMouseDown);
+
+        /**
+         * Second half of the hack to prevent outline styles from displaying
+         * while using a mouse to navigate but show them when using a keyboard.
+         * Show outlines when the keyboard is being used so tabbing does
+         * outline the focused element.
+         */
+        document.body.addEventListener('keydown', this._onKeyDown);
+    }
+
+    /**
+     * Removes event listeners that modify app behavior or appearance.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        document.removeEventListener('touchstart', this._onTouchStart);
+        document.removeEventListener('mousedown', this._onMouseDown);
+        document.removeEventListener('keydown', this._onKeyDown);
     }
 
     /**
@@ -132,6 +174,37 @@ export class App extends React.Component {
      */
     _onCursorIdleChange(cursorIsIdle) {
         this.setState({ hideCursor: cursorIsIdle });
+    }
+
+    /**
+     * Callback invoked when keyboard event occurs so outline styles can be
+     * shown.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onKeyDown() {
+        document.body.classList.remove('using-mouse');
+    }
+
+    /**
+     * Callback invoked when a click occurs so outline styles can be hidden.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onMouseDown() {
+        document.body.classList.add('using-mouse');
+    }
+
+    /**
+     * Callback invoked on touch event.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onTouchStart() {
+        /** no-op */
     }
 }
 
