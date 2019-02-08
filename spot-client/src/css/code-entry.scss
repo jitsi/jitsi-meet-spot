@@ -1,0 +1,43 @@
+.code-entry {
+    display: flex;
+    justify-content: center;
+    outline: none;
+    position: relative;
+
+    .box {
+        align-items: center;
+        background-color: var(--container-content-font-color);
+        border-radius: 5px;
+        color: var(--container-bg-color);
+        display: flex;
+        font-size: var(--font-size-x-large);
+        height: calc(var(--font-size-x-large) * 0.7);
+        justify-content: center;
+        line-height:  var(--font-size-x-large);
+        text-transform: uppercase;
+        width: calc(var(--font-size-x-large) * 0.7);
+
+        &.active {
+            border: 5px solid var(--active);
+        }
+        &:hover {
+            cursor: pointer;
+        }
+        &:not(:last-child) {
+            margin-right: 0.2em;
+        }
+    }
+
+    .hidden-input {
+        background: transparent;
+        border: none;
+        height: 1;
+        left: 50%;
+        outline: none;
+        pointer-events: none;
+        position: absolute;
+        right: 50%;
+        top: 0;
+        width: 1;
+    }
+}

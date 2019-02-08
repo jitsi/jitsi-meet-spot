@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import ReactCodeInput from 'react-code-input';
 
 import { addNotification, setLock, setRoomName } from 'actions';
+import { CodeInput } from 'features/code-input';
 
 // FIXME: temporary button for submitting while waiting for designs
 import { NavButton } from 'features/nav-button';
@@ -11,7 +11,7 @@ import { NavButton } from 'features/nav-button';
 import { getRemoteControlServerConfig, isConnectedToSpot } from 'reducers';
 import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
-import { logger } from 'utils';
+import { isAutoFocusSupported, logger } from 'utils';
 
 
 import View from './view';
@@ -95,29 +95,27 @@ export class JoinCodeEntry extends React.Component {
             <View
                 hideBackground = { true }
                 name = 'join-code'>
-                <div className = 'container'>
-                    {
-                        this.state.validating
-                            ? <div className = 'connecting'>Connecting...</div>
-                            : <div className = 'join-code-view'>
-                                <div className = 'cta'>Enter a share key</div>
-                                <div data-qa-id = { 'join-code-input' }>
-                                    <ReactCodeInput
-                                        fields = { this.props.entryLength }
-                                        forceUppercase = { true }
-                                        onChange = { this._onCodeChange }
-                                        type = 'text'
-                                        value = { this.state.enteredCode } />
-                                </div>
-                                <div className = 'nav'>
-                                    <NavButton
-                                        iconName = 'arrow_forward'
-                                        onClick = { this._onSubmit }
-                                        qaId = 'join-code-submit' />
-                                </div>
+                {
+                    this.state.validating
+                        ? <div className = 'connecting'>Connecting...</div>
+                        : <div className = 'join-code-view'>
+                            <div className = 'cta'>Enter a share key</div>
+                            <div data-qa-id = { 'join-code-input' }>
+                                <CodeInput
+                                    autoFocus = { isAutoFocusSupported() }
+                                    forceUppercase = { true }
+                                    onChange = { this._onCodeChange }
+                                    value = { this.state.enteredCode } />
                             </div>
-                    }
-                </div>
+                            <div className = 'nav'>
+                                <NavButton
+                                    iconName = 'arrow_forward'
+                                    onClick = { this._onSubmit }
+                                    qaId = 'join-code-submit'
+                                    tabIndex = { 0 } />
+                            </div>
+                        </div>
+                }
             </View>
         );
     }
