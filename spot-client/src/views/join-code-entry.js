@@ -13,7 +13,7 @@ import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
 import { isAutoFocusSupported, logger } from 'utils';
 
-
+import { withUltrasound } from './loaders';
 import View from './view';
 
 /**
@@ -32,7 +32,8 @@ export class JoinCodeEntry extends React.Component {
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
         location: PropTypes.object,
-        remoteControlConfiguration: PropTypes.object
+        remoteControlConfiguration: PropTypes.object,
+        ultrasoundService: PropTypes.object
     };
 
     /**
@@ -158,6 +159,10 @@ export class JoinCodeEntry extends React.Component {
         const roomName = code.substring(0, 3).toLowerCase();
         const password = code.substring(3, 6).toLowerCase();
 
+        // Piggyback on the connect button tap as workaround for mobile Safari
+        // requiring a user action to autoplay any sound.
+        this.props.ultrasoundService.setMessage(this.state.enteredCode);
+
         submitPromise
             .then(() => remoteControlService.exchangeCode(code))
             .then(() => {
@@ -201,4 +206,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(JoinCodeEntry);
+export default withUltrasound(connect(mapStateToProps)(JoinCodeEntry));

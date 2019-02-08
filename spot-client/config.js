@@ -57,6 +57,40 @@ window.JitsiMeetSpotConfig = {
     },
 
     /**
+     * Configuration object for loading the ultrasound library.
+     */
+    ULTRASOUND: {
+
+        /**
+         * The location of the quiet-emscripten.js file necessary for
+         * lib-quiet-js to process ultrasound.
+         */
+        EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH || '/dist/',
+
+        /**
+         * The location of the quiet-emscriptem.js.mem file used by
+         * lib-quiet-js's emscripten.
+         */
+        MEM_INITIALIZER_PATH:
+            process.env.ULTRASOUND_MEM_INITIALIZER_PATH || '/dist/',
+
+        /**
+         * A string to convert to regex which will be run against the user
+         * agent to determine if a remote control should play ultrasound.
+         */
+        SUPPORTED_ENV_REGEX:
+            typeof process.env.ULTRASOUND_SUPPORT_ENV === 'undefined'
+                ? 'ipad'
+                : process.env.ULTRASOUND_SUPPORT_ENV,
+
+        /**
+         * The amount of time in milliseconds to wait until playing an
+         * ultrasound message after a message has finished playing.
+         */
+        TRANSMISSION_DELAY: undefined
+    },
+
+    /**
      * This configuration is used to establish a connection with the XMPP
      * service used for jitsi deployments. The service is re-used to support
      * communication between remote controlllers and Spot instances. More
