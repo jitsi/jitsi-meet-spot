@@ -207,14 +207,14 @@ export default class CodeInput extends React.Component {
      * @returns {void}
      */
     _onKeyPress(event) {
-        event.preventDefault();
-
         const characterCode = event.keyCode || event.which;
         const characterString = String.fromCharCode(characterCode);
 
         if (!characterString || !characterString.trim()) {
             return;
         }
+
+        event.preventDefault();
 
         this.props.onChange(
             this._changeCharacterAtCurrentIndex(characterString));

@@ -56,6 +56,7 @@ export class JoinCodeEntry extends React.Component {
         };
 
         this._onCodeChange = this._onCodeChange.bind(this);
+        this._onFormSubmit = this._onFormSubmit.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
 
@@ -105,7 +106,9 @@ export class JoinCodeEntry extends React.Component {
                 {
                     this.state.validating
                         ? <div className = 'connecting'>Connecting...</div>
-                        : <div className = 'join-code-view'>
+                        : <form
+                            className = 'join-code-view'
+                            onSubmit = { this._onSubmit }>
                             <div className = 'cta'>Enter a share key</div>
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
@@ -121,7 +124,7 @@ export class JoinCodeEntry extends React.Component {
                                     qaId = 'join-code-submit'
                                     tabIndex = { 0 } />
                             </div>
-                        </div>
+                        </form>
                 }
             </View>
         );
@@ -136,6 +139,21 @@ export class JoinCodeEntry extends React.Component {
      */
     _onCodeChange(enteredCode) {
         this.setState({ enteredCode });
+    }
+
+    /**
+     * Callback invoked when the join code form has been submitted through the
+     * enter key.
+     *
+     * @param {FocusEvent} event - The React synthetic event from a form
+     * submission.
+     * @private
+     * @returns {void}
+     */
+    _onFormSubmit(event) {
+        event.preventDefault();
+
+        this._onSubmit();
     }
 
     /**
@@ -193,6 +211,8 @@ export class JoinCodeEntry extends React.Component {
                 this.props.dispatch(setLock(''));
 
                 this.setState({ validating: false });
+
+                this.props.ultrasoundService.setMessage('');
             });
     }
 }

@@ -76,8 +76,16 @@ class RemoteControlService {
      * information.
      * @returns {Promise<string>} Resolve with join information or an error.
      */
-    exchangeCode(code) {
-        return new Promise(resolve => resolve(code));
+    exchangeCode(code = '') {
+        return new Promise((resolve, reject) => {
+            const enteredCode = code.trim();
+
+            if (enteredCode.length === 6) {
+                resolve(code.trim());
+            } else {
+                reject('Error with code.');
+            }
+        });
     }
 
     /**
