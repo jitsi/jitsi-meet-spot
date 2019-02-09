@@ -16,8 +16,8 @@ export default class CodeInput extends React.Component {
     };
 
     static propTypes = {
-        autoFocus: PropTypes.boolean,
-        forceUppercase: PropTypes.boolean,
+        autoFocus: PropTypes.bool,
+        forceUppercase: PropTypes.bool,
         length: PropTypes.number,
         onChange: PropTypes.func,
         onSubmit: PropTypes.func,

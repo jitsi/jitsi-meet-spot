@@ -1,6 +1,7 @@
 /* global __dirname, process */
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -54,17 +55,28 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     plugins: [
-        new WriteFilePlugin(),
         new CircularDependencyPlugin({
             exclude: /node_modules/,
             failOnError: true
         }),
+        new CopyWebpackPlugin([
+            {
+                from: './node_modules/lib-quiet-js/dist/quiet-emscripten.js',
+                to: '.'
+            },
+            {
+                from:
+                    './node_modules/lib-quiet-js/dist/quiet-emscripten.js.mem',
+                to: '.'
+            }
+        ]),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
         new Dotenv({
             systemvars: true // Respect existing environment variables
-        })
+        }),
+        new WriteFilePlugin()
     ],
     resolve: {
         modules: [

@@ -61,4 +61,15 @@ export function getRemoteControlServerConfig(state) {
     return state.config.XMPP_CONFIG;
 }
 
+/**
+ * A selector which returns ultrasound configuration for creating loading
+ * dependencies required by the ultrasound service.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getUltrasoundConfig(state) {
+    return state.config.ULTRASOUND;
+}
+
 export default config;
