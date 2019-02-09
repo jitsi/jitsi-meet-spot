@@ -19,8 +19,8 @@ import {
 } from 'reducers';
 import { windowHandler } from 'utils';
 
-import View from './view';
 import { withCalendar, asSpotLoader } from './loaders';
+import SpotView from './spot-view';
 
 /**
  * A view of all known meetings in the calendar connected with Spot. Provides
@@ -91,7 +91,7 @@ export class Home extends React.Component {
      */
     render() {
         return (
-            <View name = 'home'>
+            <SpotView name = 'home'>
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
@@ -106,7 +106,7 @@ export class Home extends React.Component {
                 <div className = 'settings_cog'>
                     <SettingsButton />
                 </div>
-            </View>
+            </SpotView>
         );
     }
 

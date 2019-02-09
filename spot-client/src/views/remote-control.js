@@ -92,11 +92,16 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getView() {
+        const { remoteControlService } = this.props;
+
         switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
         case 'feedback':
-            return <FeedbackForm />;
+            return (
+                <FeedbackForm
+                    remoteControlService = { remoteControlService } />
+            );
         case 'home':
             return (
                 <WaitingForCall
@@ -104,7 +109,7 @@ export class RemoteControl extends React.Component {
                     onGoToMeeting = { this._onGoToMeeting } />
             );
         case 'meeting':
-            return <InCall />;
+            return <InCall remoteControlService = { remoteControlService } />;
         case 'setup':
             return <div>currently in setup</div>;
         default:

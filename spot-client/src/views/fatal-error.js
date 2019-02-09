@@ -6,7 +6,7 @@ import { ResetState } from 'features/admin';
 import { Button } from 'features/button';
 import { isSpot } from 'reducers';
 
-import View from './view';
+import SpotView from './spot-view';
 
 /**
  * A component for showing a potentially fatal error has occurred and providing
@@ -41,7 +41,7 @@ export class FatalError extends React.Component {
      */
     render() {
         return (
-            <View
+            <SpotView
                 hideBackground = { true }
                 name = 'error'>
                 <div className = 'container'>
@@ -53,7 +53,7 @@ export class FatalError extends React.Component {
                         <ResetState />
                     </div>
                 </div>
-            </View>
+            </SpotView>
         );
     }
 

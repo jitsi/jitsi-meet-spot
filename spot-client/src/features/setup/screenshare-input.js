@@ -15,8 +15,7 @@ import { JitsiMeetJSProvider } from 'vendor';
 class ScreenshareInput extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        onSuccess: PropTypes.func,
-        remoteControlService: PropTypes.object
+        onSuccess: PropTypes.func
     };
 
     /**

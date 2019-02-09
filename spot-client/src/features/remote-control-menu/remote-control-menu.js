@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { NavButton } from 'features/nav-button';
-import { remoteControlService } from 'remote-control';
 import { JitsiMeetJSProvider } from 'vendor';
 
 /**
@@ -14,6 +13,7 @@ export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
         isWirelessScreenshareConnectionActive: PropTypes.bool,
+        remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool,
         videoMuted: PropTypes.bool
@@ -118,7 +118,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onHangUp() {
-        remoteControlService.hangUp();
+        this.props.remoteControlService.hangUp();
     }
 
     /**
@@ -128,7 +128,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleAudioMute() {
-        remoteControlService.setAudioMute(!this.props.audioMuted);
+        this.props.remoteControlService.setAudioMute(!this.props.audioMuted);
     }
 
     /**
@@ -138,7 +138,8 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleScreensharing() {
-        remoteControlService.setScreensharing(!this.props.screensharing);
+        this.props.remoteControlService.setScreensharing(
+            !this.props.screensharing);
     }
 
     /**
@@ -148,7 +149,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleVideoMute() {
-        remoteControlService.setVideoMute(!this.props.videoMuted);
+        this.props.remoteControlService.setVideoMute(!this.props.videoMuted);
     }
 
     /**
@@ -160,6 +161,7 @@ export default class RemoteControlMenu extends React.Component {
     _onToggleWirelessScreensharing() {
         const {
             isWirelessScreenshareConnectionActive,
+            remoteControlService,
             screensharing
         } = this.props;
 

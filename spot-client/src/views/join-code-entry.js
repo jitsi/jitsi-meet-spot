@@ -9,6 +9,12 @@ import { CodeInput } from 'features/code-input';
 import { NavButton } from 'features/nav-button';
 
 import { getRemoteControlServerConfig, isConnectedToSpot } from 'reducers';
+
+// FIXME: During initial development the join-code-entry view did not exist and
+// so other pages use the withRemoteControl HOC. Because this join-code-entry
+// will actually initialize the remote control connection, other views needing
+// to load the remote control may be unnecessary and instead could drop back
+// to this join-code-entry.
 import { remoteControlService } from 'remote-control';
 import { ROUTES } from 'routing';
 import { isAutoFocusSupported, logger } from 'utils';
