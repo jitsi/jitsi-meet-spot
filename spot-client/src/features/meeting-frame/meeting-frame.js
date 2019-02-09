@@ -2,7 +2,6 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { remoteControlService } from 'remote-control';
 import { logger, parseMeetingUrl } from 'utils';
 
 /**
@@ -20,6 +19,7 @@ export default class MeetingFrame extends React.Component {
         meetingUrl: PropTypes.string,
         onMeetingLeave: PropTypes.func,
         onMeetingStart: PropTypes.func,
+        remoteControlService: PropTypes.func,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
     };
@@ -42,6 +42,8 @@ export default class MeetingFrame extends React.Component {
         this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
+        this._onSendMessageToRemoteControl
+            = this._onSendMessageToRemoteControl.bind(this);
         this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
 
@@ -79,7 +81,7 @@ export default class MeetingFrame extends React.Component {
             roomName: meetingName
         });
 
-        remoteControlService
+        this.props.remoteControlService
             .notifyWiredScreenshareEnabled(screensharingEnabled);
 
         this._jitsiApi.addListener(
@@ -114,6 +116,8 @@ export default class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
         clearTimeout(this._showingFeedbackTimeout);
+
+        const { remoteControlService } = this.props;
 
         // Reset now-stale in-meeting status.
         remoteControlService.notifyAudioMuteStatus(true);
@@ -174,7 +178,7 @@ export default class MeetingFrame extends React.Component {
     _onAudioMuteChange({ muted }) {
         this._isAudioMuted = muted;
 
-        remoteControlService.notifyAudioMuteStatus(muted);
+        this.props.remoteControlService.notifyAudioMuteStatus(muted);
     }
 
     /**
@@ -188,7 +192,8 @@ export default class MeetingFrame extends React.Component {
         this._meetingJoined = true;
 
         this.props.onMeetingStart(this._jitsiApi);
-        remoteControlService.notifyMeetingJoinStatus(this.props.meetingUrl);
+        this.props.remoteControlService.notifyMeetingJoinStatus(
+            this.props.meetingUrl);
     }
 
     /**
@@ -198,14 +203,14 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLeft() {
-        remoteControlService.notifyMeetingJoinStatus('');
+        this.props.remoteControlService.notifyMeetingJoinStatus('');
 
         // FIXME: the iframe api does not provide an event for when the
         // (post-call) feedback dialog is displayed. Assume the feedback
         // dialog has been displayed if the conference does not
         // immediately fire the "readyToClose" event.
         this._showingFeedbackTimeout = setTimeout(() => {
-            remoteControlService.notifyViewStatus('feedback');
+            this.props.remoteControlService.notifyViewStatus('feedback');
         }, 500);
     }
 
@@ -232,7 +237,7 @@ export default class MeetingFrame extends React.Component {
     _onScreenshareChange({ on }) {
         this._isScreensharing = on;
 
-        remoteControlService.notifyScreenshareStatus(on);
+        this.props.remoteControlService.notifyScreenshareStatus(on);
     }
 
     /**
@@ -248,7 +253,7 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onSendMessageToRemoteControl({ to, data }) {
-        remoteControlService.sendMessageToRemoteControl(to, data);
+        this.props.remoteControlService.sendMessageToRemoteControl(to, data);
     }
 
     /**
@@ -261,7 +266,7 @@ export default class MeetingFrame extends React.Component {
     _onVideoMuteChange({ muted }) {
         this._isVideoMuted = muted;
 
-        remoteControlService.notifyVideoMuteStatus(muted);
+        this.props.remoteControlService.notifyVideoMuteStatus(muted);
     }
 
     /**

@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Button } from 'features/button';
-import { remoteControlService } from 'remote-control';
 
 /**
  * A React Component for inputting and submitting post-call feedback by leaving
@@ -12,6 +11,7 @@ import { remoteControlService } from 'remote-control';
  */
 export default class FeedbackForm extends React.Component {
     static propTypes = {
+        remoteControlService: PropTypes.object,
         remoteId: PropTypes.string
     };
 
@@ -121,6 +121,6 @@ export default class FeedbackForm extends React.Component {
     _onSubmit(event) {
         event.preventDefault();
 
-        remoteControlService.submitFeedback(this.state);
+        this.props.remoteControlService.submitFeedback(this.state);
     }
 }

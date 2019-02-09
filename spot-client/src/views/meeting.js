@@ -14,7 +14,7 @@ import { isValidMeetingName, isValidMeetingUrl, logger } from 'utils';
 import { ROUTES } from 'routing';
 
 import { withRemoteControl } from './loaders';
-import View from './view';
+import SpotView from './view';
 
 /**
  * Displays the meeting url specified in the url.
@@ -29,6 +29,7 @@ export class Meeting extends React.Component {
         history: PropTypes.object,
         location: PropTypes.object,
         match: PropTypes.object,
+        remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
     };
@@ -83,12 +84,13 @@ export class Meeting extends React.Component {
         }
 
         return (
-            <View name = 'meeting'>
+            <SpotView name = 'meeting'>
                 <MeetingFrame
                     displayName = { this.props.displayName }
                     meetingUrl = { meetingUrl }
                     onMeetingLeave = { this._onMeetingLeave }
                     onMeetingStart = { this._onMeetingStart }
+                    remoteControlService = { this.props.remoteControlService }
                     screenshareDevice = { this.props.screenshareDevice }
                     showMeetingToolbar = { this.props.showMeetingToolbar } />
                 {
@@ -102,7 +104,7 @@ export class Meeting extends React.Component {
                      */
                 }
                 <div className = 'meetingMouseHider' />
-            </View>
+            </SpotView>
         );
     }
 

@@ -10,7 +10,7 @@ import {
 import { Button } from 'features/button';
 import { ROUTES } from 'routing';
 
-import View from './view';
+import SpotView from './spot-view';
 
 /**
  * A component for providing post-setup Spot configuration.
@@ -19,7 +19,7 @@ import View from './view';
  */
 export default function AdminView() {
     return (
-        <View name = 'admin'>
+        <SpotView name = 'admin'>
             <div className = 'container'>
                 <div className = 'admin'>
                     <CalendarStatus />
@@ -38,6 +38,6 @@ export default function AdminView() {
                     </div>
                 </div>
             </div>
-        </View>
+        </SpotView>
     );
 }

@@ -20,6 +20,7 @@ export class InCall extends React.Component {
         dispatch: PropTypes.func,
         inMeeting: PropTypes.string,
         isWirelessScreenshareConnectionActive: PropTypes.bool,
+        remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
@@ -36,6 +37,7 @@ export class InCall extends React.Component {
             audioMuted,
             inMeeting,
             isWirelessScreenshareConnectionActive,
+            remoteControlService,
             screensharing,
             videoMuted,
             wiredScreensharingEnabled
@@ -54,6 +56,7 @@ export class InCall extends React.Component {
                     audioMuted = { audioMuted }
                     isWirelessScreenshareConnectionActive
                         = { isWirelessScreenshareConnectionActive }
+                    remoteControlService = { remoteControlService }
                     screensharing = { screensharing }
                     screensharingEnabled = { wiredScreensharingEnabled }
                     videoMuted = { videoMuted } />
