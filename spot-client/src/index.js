@@ -5,13 +5,15 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import { createHashHistory } from 'history';
 
-import { NoSleep } from 'no-sleep';
-import { protoState } from 'reducers';
-import { ProcessUpdateDelegate, remoteControlService } from 'remote-control';
-import { getPersistedState, setPersistedState } from 'utils';
+import 'common/css';
+import { protoState } from 'common/reducers';
+import {
+    ProcessUpdateDelegate,
+    remoteControlService
+} from 'common/remote-control';
+import { getPersistedState, setPersistedState } from 'common/utils';
 
 import App from './app';
-import './css';
 
 const store = createStore(
     protoState,
@@ -44,9 +46,7 @@ remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 render(
     <Provider store = { store }>
         <HashRouter>
-            <NoSleep>
-                <App />
-            </NoSleep>
+            <App />
         </HashRouter>
     </Provider>,
     document.getElementById('root')
