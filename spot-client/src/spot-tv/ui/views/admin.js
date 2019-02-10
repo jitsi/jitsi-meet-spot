@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from 'common/ui';
+import { Button, ResetState } from 'common/ui';
 import { ROUTES } from 'common/routing';
 
 import {
     CalendarStatus,
     InMeetingConfig,
-    ResetState,
     ScreenshareStatus
 } from './../components';
 

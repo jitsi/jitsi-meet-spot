@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Button } from 'common/ui';
+import { Button } from './../button';
 import { persistence } from 'common/utils';
 
 /**
  * Displays a menu option, with confirmation, to clear all saved Spot state,
- * including its setup.
+ * including any spot-tv setup.
  *
  * @extends React.Component
  */

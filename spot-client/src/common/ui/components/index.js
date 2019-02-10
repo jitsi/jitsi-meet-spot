@@ -5,4 +5,5 @@ export * from './idle-cursor-detector';
 export * from './input';
 export * from './loading-icon';
 export * from './notifications';
+export * from './reset';
 export * from './scheduled-meetings';
