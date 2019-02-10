@@ -2,19 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { Notifications } from 'features/notifications';
-import { ErrorBoundary } from 'features/error-boundary';
-import { IdleCursorDetector } from 'features/idle-cursor-detector';
-import { ROUTES } from 'routing';
+import { ROUTES } from 'common/routing';
 import {
-    Admin,
+    ErrorBoundary,
     FatalError,
-    Home,
-    JoinCodeEntry,
-    Meeting,
-    RemoteControl,
-    Setup
-} from 'views';
+    IdleCursorDetector,
+    Notifications
+} from 'common/ui';
+import { JoinCodeEntry, RemoteControl } from 'spot-remote/ui';
+import { Admin, Home, Meeting, Setup } from 'spot-tv/ui';
 
 /**
  * The root of the application which determines what view should be displayed.
