@@ -1,11 +1,7 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
-import { isSpot } from './../../reducers';
-import { Button } from './../components';
+import { Button, ResetState } from './../components';
 
-// TODO: Add back reset state feature.
 import View from './view';
 
 /**
@@ -14,13 +10,7 @@ import View from './view';
  *
  * @returns {ReactElement}
  */
-export class FatalError extends React.Component {
-    static propTypes = {
-        error: PropTypes.string,
-        info: PropTypes.string,
-        isSpot: PropTypes.bool
-    };
-
+export default class FatalError extends React.Component {
     /**
      * Initializes a new {@code App} instance.
      *
@@ -50,6 +40,7 @@ export class FatalError extends React.Component {
                         <Button onClick = { this._onReloadToHome }>
                             Reload
                         </Button>
+                        <ResetState />
                     </div>
                 </div>
             </View>
@@ -66,19 +57,3 @@ export class FatalError extends React.Component {
         window.location.reload();
     }
 }
-
-/**
- * Selects parts of the Redux state to pass in with the props of
- * {@code FatalError}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    return {
-        isSpot: isSpot(state)
-    };
-}
-
-export default connect(mapStateToProps)(FatalError);

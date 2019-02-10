@@ -40,8 +40,16 @@ export default class ErrorBoundary extends React.Component {
      * @inheritdoc
      */
     render() {
-        return this.state.error
-            ? this.props.errorComponent(this.state.error, this.state.info)
-            : this.props.children;
+        if (!this.state.error) {
+            return this.props.children;
+        }
+
+        const ErrorComponent = this.props.errorComponent;
+
+        return (
+            <ErrorComponent
+                error = { this.state.error }
+                info = { this.state.info } />
+        );
     }
 }

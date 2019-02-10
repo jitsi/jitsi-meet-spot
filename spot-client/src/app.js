@@ -103,11 +103,12 @@ export class App extends React.Component {
             = `app ${this.state.hideCursor ? 'idleCursor' : ''}`;
 
         return (
-            <IdleCursorDetector
-                onCursorIdleChange = { this._onCursorIdleChange }>
-                <div className = { rootClassName }>
-                    <Notifications />
-                    <ErrorBoundary errorComponent = { FatalError }>
+            <ErrorBoundary errorComponent = { FatalError }>
+                <IdleCursorDetector
+                    onCursorIdleChange = { this._onCursorIdleChange }>
+                    <div className = { rootClassName }>
+
+                        <Notifications />
                         <Switch>
                             {
 
@@ -138,9 +139,9 @@ export class App extends React.Component {
                                 path = { ROUTES.REMOTE_CONTROL } />
                             <Route component = { JoinCodeEntry } />
                         </Switch>
-                    </ErrorBoundary>
-                </div>
-            </IdleCursorDetector>
+                    </div>
+                </IdleCursorDetector>
+            </ErrorBoundary>
         );
     }
 
