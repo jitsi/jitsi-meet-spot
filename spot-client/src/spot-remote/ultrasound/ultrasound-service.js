@@ -5,6 +5,8 @@ import {
     str2ab
 } from 'lib-quiet-js';
 
+import { logger } from 'common/logger';
+
 /**
  * Hides the implementation details of transmitting ultrasound messages.
  */
@@ -84,10 +86,14 @@ class UltrasoundService {
             memoryInitializerPath
         })
         .then(() => {
+            logger.log('ultrasound initialized successfully');
+
             this._isInitialized = true;
             this._transmissionDelay = transmissionDelay;
         })
         .catch(error => {
+            logger.error(`ultrasound failed to initialize ${error}`);
+
             this._initializationPromise = null;
 
             return Promise.reject(error);
@@ -115,6 +121,8 @@ class UltrasoundService {
                 onFinish: this._enqueueNextTransmission,
                 profile: profiles['ultrasonic-experimental']
             });
+
+            logger.log('ultrasound starting transmit process');
 
             this._transmit();
         }

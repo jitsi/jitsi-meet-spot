@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { setMeetingToolbarVisible } from 'common/actions';
 import { getMeetingOptions } from 'common/reducers';
+import { logger } from '../../../../common/logger';
 
 /**
  * Changes some settings that determines he behavior of the Jitsi-Meet meeting.
@@ -62,6 +63,8 @@ export class InMeetingConfig extends React.Component {
      * @returns {void}
      */
     _onShowToolbarChange({ target: { checked } }) {
+        logger.log(`inMeetingConfig changed toolbar ${checked}`);
+
         this.props.dispatch(setMeetingToolbarVisible(checked));
     }
 }

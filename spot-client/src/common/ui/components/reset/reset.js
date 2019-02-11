@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { logger } from './../../../logger';
+import { persistence } from './../../../utils';
+
 import { Button } from './../button';
-import { persistence } from 'common/utils';
 
 /**
  * Displays a menu option, with confirmation, to clear all saved Spot state,
@@ -11,6 +13,7 @@ import { persistence } from 'common/utils';
  */
 export default class ResetState extends React.Component {
     state = {
+        resetting: false,
         showResetConfirm: false
     };
 
@@ -34,17 +37,23 @@ export default class ResetState extends React.Component {
      * @inheritdoc
      */
     render() {
+        let child;
+
+        if (this.state.resetting) {
+            child = 'Resetting';
+        } else {
+            child = this.state.showResetConfirm
+                ? this._renderResetConfirm()
+                : this._renderResetButton();
+        }
+
         return (
             <div className = 'admin-container'>
                 <div className = 'admin-title'>
                     Reset
                 </div>
                 <div className = 'admin-content'>
-                    {
-                        this.state.showResetConfirm
-                            ? this._renderResetConfirm()
-                            : this._renderResetButton()
-                    }
+                    { child }
                 </div>
             </div>
         );
@@ -93,8 +102,21 @@ export default class ResetState extends React.Component {
      * @returns {void}
      */
     _onResetApp() {
-        persistence.reset();
-        window.location.reload();
+        logger.log('reset confirmed reset of application');
+
+        this.setState({
+            resetting: true
+        }, () => {
+            logger.log('reset clearing application state');
+
+            persistence.reset();
+
+            setTimeout(() => {
+                logger.log('reset reloading application');
+
+                window.location.reload();
+            }, 2000);
+        });
     }
 
     /**

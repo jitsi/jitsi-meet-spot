@@ -19,9 +19,9 @@ import { InCall, WaitingForCall } from './remote-views';
  * Displays the remote control view for controlling a Spot instance from another
  * browser window.
  *
- * @extends React.Component
+ * @extends React.PureComponent
  */
-export class RemoteControl extends React.Component {
+export class RemoteControl extends React.PureComponent {
     static propTypes = {
         dispatch: PropTypes.func,
         events: PropTypes.array,
@@ -91,9 +91,9 @@ export class RemoteControl extends React.Component {
      * @returns {ReactElement}
      */
     _getView() {
-        const { remoteControlService } = this.props;
+        const { remoteControlService, view } = this.props;
 
-        switch (this.props.view) {
+        switch (view) {
         case 'admin':
             return <div>currently in admin tools</div>;
         case 'feedback':

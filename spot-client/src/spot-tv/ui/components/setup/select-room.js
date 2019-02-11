@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendar } from 'common/actions';
+import { logger } from 'common/logger';
 import { Button, Input, LoadingIcon } from 'common/ui';
-import { logger } from 'common/utils';
 
 import { calendarService } from './../../../calendars';
 
@@ -78,7 +78,6 @@ export class SelectRoom extends React.Component {
 
             continueButton
                 = <Button onClick = { this.props.onSuccess }>Continue</Button>;
-
         }
 
         return (
@@ -120,13 +119,17 @@ export class SelectRoom extends React.Component {
     _fetchRooms() {
         return calendarService.getRooms()
             .then(rooms => {
+                logger.log(
+                    `selectRoom got room list of ${rooms.length}`);
+
                 this.setState({
                     loading: false,
                     rooms
                 });
             })
             .catch(error => {
-                logger.error('Error occurred while fetching rooms', error);
+                logger.error(
+                    `selectRoom could not fetch rooms ${error}`);
 
                 this.setState({
                     loading: false,
@@ -155,11 +158,14 @@ export class SelectRoom extends React.Component {
      * @returns {void}
      */
     _onEmailSubmit() {
+        logger.log('selectRoom email submitted');
+
         this.props.dispatch(setCalendar(
             this.state.email,
             '',
             calendarService.getType()
         ));
+
         this.props.onSuccess();
     }
 
@@ -171,11 +177,14 @@ export class SelectRoom extends React.Component {
      * @returns {void}
      */
     _onRoomClick(room) {
+        logger.log('selectRoom room selected');
+
         this.props.dispatch(setCalendar(
             room.resourceEmail,
             room.resourceName,
             calendarService.getType()
         ));
+
         this.props.onSuccess();
     }
 }

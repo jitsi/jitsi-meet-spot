@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from './../../../logger';
 import { date } from './../../../utils';
 
 import Avatar from './avatar';
@@ -130,9 +131,15 @@ export default class ScheduledMeeting extends React.Component {
      * @returns {void}
      */
     _onMeetingClick() {
-        if (this._hasMeetingToJoin()) {
-            this.props.onMeetingClick(this.props.event.meetingUrl);
+        if (!this._hasMeetingToJoin()) {
+            logger.log('scheduledMeeting clicked on meeting without url');
+
+            return;
         }
+
+        logger.log('scheduledMeeting clicked on meeting with url');
+
+        this.props.onMeetingClick(this.props.event.meetingUrl);
     }
 
     /**

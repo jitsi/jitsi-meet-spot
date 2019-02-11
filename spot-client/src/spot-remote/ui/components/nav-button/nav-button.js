@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
+
 /**
  * Displays a button to navigate through the different views of the waiting
  * view.
@@ -22,6 +24,18 @@ export default class NavButton extends React.Component {
     };
 
     /**
+     * Initializes a new {@code NavButton} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._onClick = this._onClick.bind(this);
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -33,7 +47,6 @@ export default class NavButton extends React.Component {
             className,
             iconName,
             label,
-            onClick,
             qaId
         } = this.props;
 
@@ -42,7 +55,7 @@ export default class NavButton extends React.Component {
                 className
                     = { `nav-button ${active ? 'active' : ''} ${className}` }
                 data-qa-id = { qaId }
-                onClick = { onClick }
+                onClick = { this._onClick }
                 tabIndex = { 0 }>
 
                 {
@@ -64,5 +77,19 @@ export default class NavButton extends React.Component {
                 </div>
             </button>
         );
+    }
+
+    /**
+     * Callback invokvd when the component is clicked.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onClick() {
+        logger.log(`NavButton clicked ${this.props.label}`);
+
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
     }
 }

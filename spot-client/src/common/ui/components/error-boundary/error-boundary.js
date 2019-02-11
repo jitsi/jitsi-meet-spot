@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from './../../../utils';
+import { logger } from './../../../logger';
 
 /**
  * A component for catching uncaught errors and displaying an error message.
@@ -25,8 +25,8 @@ export default class ErrorBoundary extends React.Component {
      * @inheritdoc
      */
     componentDidCatch(error, info) {
-        logger.error('Error boundary caught an error:', error);
-        logger.error('Component statck for above error:', info);
+        logger.error(`errorBoundary triggered: ${error.toString()}, Info: ${
+            JSON.stringify(info)}`);
 
         this.setState({
             error,

@@ -13,9 +13,8 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/reducers';
-import { windowHandler } from 'common/utils';
+import { hasUpdatedEvents, windowHandler } from 'common/utils';
 
-import { hasUpdatedEvents } from './../../calendars';
 import { SettingsButton } from './../components';
 import { withCalendar, asSpotLoader } from './../loaders';
 
@@ -214,11 +213,16 @@ export class Home extends React.Component {
                     <div>You're almost set</div>
                     <div>Pair your remote and connect your calendar.</div>
                 </div>
-                <div
-                    className = 'setup-join-code'
-                    data-qa-id = 'join-info'>
-                    { this.props.joinCode.toUpperCase() }
-                </div>
+                {
+                    this.props.joinCode
+                        && (
+                            <div
+                                className = 'setup-join-code'
+                                data-qa-id = 'join-info'>
+                                { this.props.joinCode.toUpperCase() }
+                            </div>
+                        )
+                }
             </div>
         );
     }

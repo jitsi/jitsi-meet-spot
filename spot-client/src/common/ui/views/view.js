@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { logger } from './../../logger';
 import { getBackgroundUrl } from './../../reducers';
 
 /**
@@ -17,6 +18,15 @@ class View extends React.Component {
         hideBackground: PropTypes.bool,
         name: PropTypes.string
     };
+
+    /**
+     * Logs the display of the view.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        logger.log(`View mounted: ${this.props.name}`);
+    }
 
     /**
      * Implements React's {@link Component#render()}.

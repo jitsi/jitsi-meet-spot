@@ -3,7 +3,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger, parseMeetingUrl } from 'common/utils';
+import { logger } from 'common/logger';
+import { parseMeetingUrl } from 'common/utils';
 
 /**
  * The iFrame used to to display a meeting hosted on a jitsi instance.
@@ -158,9 +159,8 @@ export default class MeetingFrame extends React.Component {
         }
 
         logger.error(
-            'Assuming an error occured while joining the meeting',
-            'iFrame loaded:', this._meetingLoaded,
-            'meeting join:', this._meetingJoined
+            `meetingFrame error while loading meeting, iframe loaded ${
+                this._meetingLoaded} joined ${this._meetingJoined}`
         );
 
         this.props.onMeetingLeave({
@@ -176,6 +176,9 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onAudioMuteChange({ muted }) {
+        logger.log(`meetingFrame audio mute changed from ${
+            this._isVideoMuted} to ${muted}`);
+
         this._isAudioMuted = muted;
 
         this.props.remoteControlService.notifyAudioMuteStatus(muted);
@@ -203,6 +206,8 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLeft() {
+        logger.log('meetingFrame meeting left');
+
         this.props.remoteControlService.notifyMeetingJoinStatus('');
 
         // FIXME: the iframe api does not provide an event for when the
@@ -235,6 +240,9 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onScreenshareChange({ on }) {
+        logger.log(`meetingFrame screenshare changed from ${
+            this._isScreensharing} to ${on}`);
+
         this._isScreensharing = on;
 
         this.props.remoteControlService.notifyScreenshareStatus(on);
@@ -253,6 +261,9 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onSendMessageToRemoteControl({ to, data }) {
+        logger.log(`meetingFrame got proxy message from iframe ${to} ${
+            JSON.stringify(data)}`);
+
         this.props.remoteControlService.sendMessageToRemoteControl(to, data);
     }
 
@@ -264,6 +275,9 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onVideoMuteChange({ muted }) {
+        logger.log(`meetingFrame video mute changed from ${
+            this._isVideoMuted} to ${muted}`);
+
         this._isVideoMuted = muted;
 
         this.props.remoteControlService.notifyVideoMuteStatus(muted);

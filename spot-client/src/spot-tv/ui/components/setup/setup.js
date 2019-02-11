@@ -8,6 +8,7 @@ import CalendarAuth from './calendar-auth';
 import ScreenshareInput from './screenshare-input';
 import SelectRoom from './select-room';
 import Welcome from './welcome';
+import { logger } from '../../../../common/logger';
 
 /**
  * Displays the Spot setup flow by handling display of each setup step.
@@ -92,11 +93,18 @@ export class Setup extends React.Component {
      */
     _onNextStep() {
         if (this._isOnLastStep()) {
+            logger.log('setup completed');
+
             this.props.dispatch(setSetupCompleted());
             this.props.onSuccess();
         } else {
+            const nextStep = this._getNextStep();
+
+            logger.log(`setup going to next step ${
+                nextStep.displayName || nextStep.name}`);
+
             this.setState({
-                currentStep: this._getNextStep()
+                currentStep: nextStep
             });
         }
     }

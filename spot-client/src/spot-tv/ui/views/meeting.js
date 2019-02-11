@@ -3,13 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { addNotification, setMeetingApi } from 'common/actions';
+import { logger } from 'common/logger';
 import {
     getDefaultMeetingDomain,
     getDisplayName,
     getMeetingOptions,
     getScreenshareDevice
 } from 'common/reducers';
-import { isValidMeetingName, isValidMeetingUrl, logger } from 'common/utils';
+import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 
 import { MeetingFrame } from './../components';
