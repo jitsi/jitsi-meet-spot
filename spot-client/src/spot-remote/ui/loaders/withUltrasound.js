@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { AbstractLoader, generateWrapper } from 'common/ui';
+import { logger } from 'common/logger';
 import { getJoinCode, getUltrasoundConfig } from 'common/reducers';
+import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { ultrasoundService } from './../../ultrasound';
 
@@ -77,6 +78,8 @@ class WithUltrasound extends AbstractLoader {
         if (!this._shouldPlayUltrasound()) {
             return;
         }
+
+        logger.log('withUltrasound updating message');
 
         ultrasoundService.setMessage(message);
     }

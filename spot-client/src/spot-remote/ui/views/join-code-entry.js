@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { addNotification, setLock, setRoomName } from 'common/actions';
+import { logger } from 'common/logger';
 import {
     getRemoteControlServerConfig,
     isConnectedToSpot
@@ -10,7 +11,7 @@ import {
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { View } from 'common/ui';
-import { isAutoFocusSupported, logger } from 'common/utils';
+import { isAutoFocusSupported } from 'common/utils';
 
 import { CodeInput, NavButton } from './../components';
 import { withUltrasound } from './../loaders';
@@ -70,6 +71,8 @@ export class JoinCodeEntry extends React.Component {
         this.props.history.replace(this.props.location.pathname);
 
         if (code) {
+            logger.log('joinCodeEntry detect query param code');
+
             this._connectToSpot(code);
         }
     }
@@ -82,6 +85,8 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidUpdate(prevProps) {
         if (!prevProps.isConnectedToSpot && this.props.isConnectedToSpot) {
+            logger.log('joinCodeEntry connection to spot established');
+
             this.props.history.push(ROUTES.REMOTE_CONTROL);
         }
     }
@@ -113,7 +118,6 @@ export class JoinCodeEntry extends React.Component {
                             <div className = 'nav'>
                                 <NavButton
                                     iconName = 'arrow_forward'
-                                    onClick = { this._onSubmit }
                                     qaId = 'join-code-submit'
                                     tabIndex = { 0 } />
                             </div>
@@ -183,6 +187,8 @@ export class JoinCodeEntry extends React.Component {
         submitPromise
             .then(() => remoteControlService.exchangeCode(code))
             .then(() => {
+                logger.log('joinCodeEntry code is valid');
+
                 this.props.dispatch(setRoomName(roomName));
                 this.props.dispatch(setLock(password));
 

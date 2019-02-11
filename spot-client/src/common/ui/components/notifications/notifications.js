@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { removeNotification } from './../../../actions';
+import { logger } from './../../../logger';
 import { getAllNotifications } from './../../../reducers';
 
 import Notification from './notification';
@@ -80,8 +81,13 @@ export class Notifications extends React.PureComponent {
      * @returns {void}
      */
     _setTimeoutForNewNotifications(notifications) {
+        logger.log(`notifications setting timeout for ${
+            JSON.stringify(notifications)}`);
+
         notifications.forEach(({ id }) => {
             setTimeout(() => {
+                logger.log(`notifications dismissing ${id}`);
+
                 this.props.dispatch(removeNotification(id));
             }, 5000);
         });

@@ -6,14 +6,16 @@ import {
     updateSpotState
 } from './../actions';
 import {
+    getCalendarEvents,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
     isSpot
 } from './../reducers';
-import { logger } from './../utils';
+import { logger } from './../logger';
 
 import { COMMANDS, MESSAGES } from './constants';
+import { hasUpdatedEvents } from '../utils/hasUpdatedEvents';
 
 /**
  * Presence attributes from Spot convert to boolean and store in redux.
@@ -79,14 +81,27 @@ export default class ProcessUpdateDelegate {
         const from = iq.getAttribute('from');
         const command = iq.getElementsByTagName('command')[0];
         const commandType = command.getAttribute('type');
-        const data = JSON.parse(command.textContent);
         const ack = $iq({ type: 'result',
             to: from,
             id: iq.getAttribute('id')
         });
 
+        let data;
+
+        try {
+            data = JSON.parse(command.textContent);
+        } catch (e) {
+            logger.error('processUpdateDelegate failed to parse command data');
+
+            return ack;
+        }
+
+        logger.log(`processUpdateDelegate received command: ${commandType}`);
+
         switch (commandType) {
         case COMMANDS.GO_TO_MEETING:
+            logger.log('processUpdateDelegate going to meeting');
+
             this._history.push(`/meeting?location=${data.meetingName}`);
             break;
 
@@ -130,6 +145,8 @@ export default class ProcessUpdateDelegate {
             // Check against the meeting api existence because feedback can be
             // submitted after the meeting has ended.
             if (meetingApi) {
+                logger.log('processUpdateDelegate submitting feedback');
+
                 meetingApi.executeCommand('submitFeedback', data);
             }
 
@@ -156,6 +173,8 @@ export default class ProcessUpdateDelegate {
             to: from,
             type: 'result'
         });
+
+        logger.log(`processUpdateDelegate received message: ${messageType}`);
 
         switch (messageType) {
         case MESSAGES.JITSI_MEET_UPDATE:
@@ -196,9 +215,13 @@ export default class ProcessUpdateDelegate {
         const updateType = presence.getAttribute('type');
 
         if (updateType === 'unavailable') {
+            logger.log('processUpdateDelegate presence update of a leave');
+
             const from = presence.getAttribute('from');
 
             if (from === this.getSpotId()) {
+                logger.log(`processUpdateDelegate spot left ${from}`);
+
                 // When Spot has left, trigger screenshare cleanup to stop any
                 // active {@code ScreenshareConnection} and its associated
                 // media.
@@ -206,6 +229,7 @@ export default class ProcessUpdateDelegate {
 
                 this._store.dispatch(setSpotLeft());
             } else {
+                logger.log(`processUpdateDelegate remote left ${from}`);
 
                 // When a remote leaves, notify the Jitsi-Meet meeting so that
                 // it can trigger any cleanup of active direct connections to a
@@ -230,7 +254,11 @@ export default class ProcessUpdateDelegate {
         }
 
         if (updateType === 'error') {
+            logger.log('processUpdateDelegate presence error');
+
             if (!localIsSpot) {
+                logger.log('processUpdateDelegate triggering disconnect');
+
                 this._store.dispatch(setSpotLeft());
 
                 return Promise.resolve();
@@ -268,6 +296,9 @@ export default class ProcessUpdateDelegate {
             this.stopScreenshare();
         }
 
+        logger.log(`processUpdateDelegate new spot state
+            ${JSON.stringify(newState)}`);
+
         this._store.dispatch(updateSpotState(newState));
 
         // For remote controls and for consistent implementation, update the
@@ -275,8 +306,14 @@ export default class ProcessUpdateDelegate {
         if (status.calendar && !localIsSpot) {
             try {
                 const events = JSON.parse(status.calendar);
+                const hasUpdate = hasUpdatedEvents(
+                    getCalendarEvents(this._store.getState()),
+                    events
+                );
 
-                this._store.dispatch(setCalendarEvents(events));
+                if (hasUpdate) {
+                    this._store.dispatch(setCalendarEvents(events));
+                }
             } catch (e) {
                 logger.error('Error while parsing Spot calendar events:', e);
             }
@@ -369,6 +406,9 @@ export default class ProcessUpdateDelegate {
 
             return;
         }
+
+        logger.log(
+            `processUpdateDelegate executing command ${command}, ${data}`);
 
         meetingApi.executeCommand(command, data);
     }

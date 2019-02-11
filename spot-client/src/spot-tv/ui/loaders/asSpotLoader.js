@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { setJoinCode, setLock, setRoomName, setIsSpot } from 'common/actions';
+import { logger } from 'common/logger';
 import {
     getCurrentLock,
     getCurrentRoomName,
@@ -10,7 +11,6 @@ import {
 } from 'common/reducers';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
-import { logger } from 'common/utils';
 
 /**
  * Loads application services while displaying a loading icon. Will display

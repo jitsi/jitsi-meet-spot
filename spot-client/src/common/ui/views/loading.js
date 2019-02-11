@@ -12,7 +12,9 @@ import View from './view';
  */
 export default function Loading() {
     return (
-        <View hideBackground = { true }>
+        <View
+            hideBackground = { true }
+            name = 'loading'>
             <div className = 'loading'>
                 <LoadingIcon color = 'white' />
             </div>

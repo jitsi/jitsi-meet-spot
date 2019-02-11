@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setScreenshareDevice } from 'common/actions';
+import { logger } from 'common/logger';
 import { Button } from 'common/ui';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
@@ -50,11 +51,18 @@ class ScreenshareInput extends React.Component {
                 resolve => JitsiMeetJS.mediaDevices.enumerateDevices(resolve)
             ))
             .then(devices => {
+                const cameras
+                    = devices.filter(device => device.kind === 'videoinput');
+
+                logger.log(`screenshareInput got ${cameras.length} devices`);
+
                 this.setState({
-                    devices:
-                        devices.filter(device => device.kind === 'videoinput')
+                    devices: cameras
                 });
-            });
+            })
+            .catch(error =>
+                logger.error(`screenshareInput failed gUM ${
+                    JSON.stringify(error)}`));
     }
 
     /**
@@ -87,6 +95,8 @@ class ScreenshareInput extends React.Component {
      * @returns {void}
      */
     _onSkip() {
+        logger.log('screenshareInput skipping device selection');
+
         this._selectDevice();
     }
 
@@ -118,6 +128,8 @@ class ScreenshareInput extends React.Component {
      * @returns {void}
      */
     _selectDevice(label = '') {
+        logger.log('screenshareInput selected a device');
+
         this.props.dispatch(setScreenshareDevice(label));
         this.props.onSuccess();
     }

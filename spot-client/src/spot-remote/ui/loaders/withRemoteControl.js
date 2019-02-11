@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { AbstractLoader, generateWrapper } from 'common/ui';
+import { logger } from 'common/logger';
 import {
     getCurrentLock,
     getCurrentRoomName,
     getRemoteControlServerConfig
 } from 'common/reducers';
 import { remoteControlService } from 'common/remote-control';
-import { logger } from 'common/utils';
+import { AbstractLoader, generateWrapper } from 'common/ui';
 
 /**
  * Loads application services while displaying a loading icon. Will display

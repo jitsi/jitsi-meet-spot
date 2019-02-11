@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
 import { Button } from 'common/ui';
-import { logger } from 'common/utils';
 
 import { calendarService, integrationTypes } from './../../../calendars';
 
@@ -69,10 +69,17 @@ export class CalendarAuth extends React.Component {
      * @returns {Promise}
      */
     _onAuthEnter(type) {
+        logger.log(`calendarAuth selected ${type}`);
+
         return calendarService.initialize(type)
             .then(() => calendarService.triggerSignIn())
-            .then(() => this.props.onSuccess())
-            .catch(error => logger.error(error));
+            .then(() => {
+                logger.log('calendarAuth successfully authorized');
+
+                this.props.onSuccess();
+            })
+            .catch(error => logger.error(
+                `calendarAuth failed ${JSON.stringify(error)}`));
     }
 
     /**

@@ -1,3 +1,4 @@
+import { logger } from './../logger';
 import { JitsiMeetJSProvider } from './../vendor';
 
 /**
@@ -58,6 +59,9 @@ export default class ScreenshareConnection {
      * @returns {void}
      */
     processMessage(message) {
+        logger.log(
+            `screenshareConnection got message ${JSON.stringify(message)}`);
+
         this._proxyConnectionService.processMessage(message);
     }
 
@@ -71,12 +75,16 @@ export default class ScreenshareConnection {
      * @returns {Promise}
      */
     startScreenshare(spotJid) {
+        logger.log(`screenshareConnection started ${spotJid}`);
+
         this._isActive = true;
 
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         return JitsiMeetJS.createLocalTracks({ devices: [ 'desktop' ] })
             .then(jitsiLocalTracks => {
+                logger.log('screenshareConnection created desktop track');
+
                 this._tracks = this._tracks.concat(jitsiLocalTracks);
 
                 /**
@@ -85,6 +93,9 @@ export default class ScreenshareConnection {
                  * source.
                  */
                 if (!this._isActive) {
+                    logger.log(
+                        'screenshareConnection got track in inactive state');
+
                     this.stop();
 
                     return;
@@ -93,6 +104,7 @@ export default class ScreenshareConnection {
                 jitsiLocalTracks[0].on(
                     JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
                     () => {
+                        logger.log('screenshareConnection desktop stopped');
 
                         /**
                          * Assume the connection was lost if LOCAL_TRACK_STOPPED
@@ -118,6 +130,8 @@ export default class ScreenshareConnection {
      * @returns {void}
      */
     stop() {
+        logger.log('screenshareConnection stopping');
+
         this._isActive = false;
         this._proxyConnectionService.stop();
 

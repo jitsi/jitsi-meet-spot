@@ -4,14 +4,15 @@ import React from 'react';
 import { Clock, ScheduledMeetings } from 'common/ui';
 
 import { NavButton, SelfFillingNameEntry } from './../../components';
+import { logger } from '../../../../common/logger';
 
 /**
  * Returns the React Element to display while the Spot instance is not in a
  * meeting. Displays controls for starting a meeting.
  *
- * @extends React.Component
+ * @extends React.PureComponent
  */
-export default class WaitingForCallView extends React.Component {
+export default class WaitingForCallView extends React.PureComponent {
     static propTypes = {
         events: PropTypes.array,
         onGoToMeeting: PropTypes.func
@@ -86,7 +87,11 @@ export default class WaitingForCallView extends React.Component {
      * @returns {ReactComponent}
      */
     _getSubView() {
-        switch (this.state.activeTab) {
+        const { activeTab } = this.state;
+
+        logger.log(`waitingForCall showing ${activeTab}`);
+
+        switch (activeTab) {
         case 'calendar':
             return (
                 <ScheduledMeetings
