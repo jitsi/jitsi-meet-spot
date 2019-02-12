@@ -27,6 +27,10 @@ import SpotView from './spot-view';
  * @extends React.Component
  */
 export class Home extends React.Component {
+    static defaultProps = {
+        joinCode: ''
+    };
+
     static propTypes = {
         calendarEmail: PropTypes.string,
         calendarService: PropTypes.object,

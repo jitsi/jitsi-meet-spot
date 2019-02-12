@@ -6,6 +6,7 @@ import { HashRouter } from 'react-router-dom';
 import { createHashHistory } from 'history';
 
 import 'common/css';
+import { LoggingService } from 'common/logger';
 import { protoState } from 'common/reducers';
 import {
     ProcessUpdateDelegate,
@@ -14,6 +15,10 @@ import {
 import { getPersistedState, setPersistedState } from 'common/utils';
 
 import App from './app';
+
+const loggingService = new LoggingService();
+
+loggingService.start();
 
 const store = createStore(
     protoState,
