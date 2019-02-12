@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification, setLock, setRoomName } from 'common/actions';
+import { setLock, setRoomName } from 'common/actions';
 import { logger } from 'common/logger';
 import {
     getRemoteControlServerConfig,
@@ -61,6 +61,9 @@ export class JoinCodeEntry extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        this.props.ultrasoundService.setMessage('');
+        this.props.dispatch(setRoomName(''));
+        this.props.dispatch(setLock(''));
         remoteControlService.disconnect();
 
         const queryParams = new URLSearchParams(this.props.location.search);
@@ -192,26 +195,7 @@ export class JoinCodeEntry extends React.Component {
                 this.props.dispatch(setRoomName(roomName));
                 this.props.dispatch(setLock(password));
 
-                return remoteControlService.connect({
-                    lock: password,
-                    roomName,
-                    serverConfig: this.props.remoteControlConfiguration
-                });
-            })
-            .catch(error => {
-                logger.error('Error while connecting to spot:', error);
-
-                this.props.dispatch(
-                    addNotification('error', 'Something went wrong'));
-
-                remoteControlService.disconnect();
-
-                this.props.dispatch(setRoomName(''));
-                this.props.dispatch(setLock(''));
-
-                this.setState({ validating: false });
-
-                this.props.ultrasoundService.setMessage('');
+                this.props.history.push(ROUTES.REMOTE_CONTROL);
             });
     }
 }

@@ -32,12 +32,14 @@ class RemoteControlService {
      * being made by a Spot client.
      * @param {string} options.lock - The lock code to use when joining or
      * to set when creating a new MUC.
+     * @param {Function} options.onDisconnect - Callback to invoke when the
+     * connection has been terminated without an explicit disconnect.
      * @param {string} options.roomName - The name of the MUC to join or create.
      * @param {Object} options.serverConfig - Details on how the XMPP connection
      * should be made.
      * @returns {Promise<string>}
      */
-    connect({ joinAsSpot, lock, roomName, serverConfig }) {
+    connect({ joinAsSpot, lock, onDisconnect, roomName, serverConfig }) {
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
@@ -49,8 +51,12 @@ class RemoteControlService {
             onSpotStatusUpdate: this._onSpotStatusUpdate
         });
 
-        this.xmppConnectionPromise
-            = this.xmppConnection.joinMuc(roomName, lock, joinAsSpot);
+        this.xmppConnectionPromise = this.xmppConnection.joinMuc({
+            joinAsSpot,
+            lock,
+            roomName,
+            onDisconnect
+        });
 
         return this.xmppConnectionPromise;
     }

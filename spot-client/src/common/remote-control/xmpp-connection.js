@@ -30,15 +30,18 @@ export default class XmppConnection {
     /**
      * Establishes the XMPP connection with a jitsi deployment.
      *
-     * @param {string} roomName - The name of the MUC to join. A MUC will be
-     * created if a name is not provided.
-     * @param {string} lock - The lock code needed to join an existing MUC.
-     * @param {boolean} joinAsSpot -  Whether or not this connection is being
-     * made by a Spot client.
+     * @param {Object} options - Information necessary for creating the MUC.
+     * @param {boolean} options.joinAsSpot - Whether or not this connection is
+     * being made by a Spot client.
+     * @param {string} options.lock - The lock code to use when joining or
+     * to set when creating a new MUC.
+     * @param {Function} options.onDisconnect - Callback to invoke when the
+     * connection has been terminated without an explicit disconnect.
+     * @param {string} options.roomName - The name of the MUC to join or create.
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    joinMuc(roomName, lock, joinAsSpot) {
+    joinMuc({ joinAsSpot, lock, onDisconnect, roomName }) {
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -54,7 +57,13 @@ export default class XmppConnection {
         const connectionPromise = new Promise((resolve, reject) => {
             this.xmppConnection.addEventListener(
                 JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-                resolve
+                () => {
+                    this.xmppConnection.addEventListener(
+                        JitsiMeetJS.events.connection.CONNECTION_FAILED,
+                        onDisconnect);
+
+                    resolve();
+                }
             );
 
             this.xmppConnection.addEventListener(
@@ -62,11 +71,6 @@ export default class XmppConnection {
                 reject
             );
         });
-
-        // TODO: add proper handling for CONNECTION_DISCONNECTED
-        // this.xmppConnection.addEventListener(
-        //     JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-        //     logger.error);
 
         this.xmppConnection.xmpp.connection.addHandler(
             this._onPresence,

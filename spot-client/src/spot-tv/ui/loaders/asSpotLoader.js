@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -10,7 +11,13 @@ import {
     getRemoteControlServerConfig
 } from 'common/reducers';
 import { remoteControlService } from 'common/remote-control';
-import { AbstractLoader, generateWrapper } from 'common/ui';
+import {
+    AbstractLoader,
+    Loading,
+    ServiceMessage,
+    generateWrapper
+} from 'common/ui';
+import persistence from '../../../common/utils/persistence';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -31,7 +38,34 @@ export class AsSpotLoader extends AbstractLoader {
      */
     componentWillUnmount() {
         clearInterval(this._lockUpdateInterval);
+        clearTimeout(this._reconnectTimeout);
     }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        if (this.state.showReconnecting) {
+            const message = 'A connection error has occurred.'
+                + 'Reconnection will automatically be attempted';
+
+            return <ServiceMessage message = { message } />;
+        }
+
+        if (this.state.loaded) {
+            const { children } = this.props;
+            const childProps = this._getPropsForChildren();
+
+            return React.Children.map(children, child =>
+                React.cloneElement(child, childProps));
+        }
+
+        return <Loading />;
+    }
+
 
     /**
      * Temporary method to generate a random string, intended to be used to
@@ -59,28 +93,99 @@ export class AsSpotLoader extends AbstractLoader {
     }
 
     /**
+     * Returns stored reconnection information, if any.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getCachedState() {
+        const reconnectInformation = persistence.get('spot-reconnect');
+
+        persistence.remove('spot-reconnect');
+
+        if (!reconnectInformation) {
+            return {};
+        }
+
+        const obj = JSON.parse(reconnectInformation);
+
+        if (Date.now() - obj.timestamp > 30000
+            || !obj.roomName
+            || !obj.lock) {
+            return {};
+        }
+
+        return obj;
+    }
+
+    /**
      * Establishes the connection to the remote control service.
      *
      * @override
      */
     _loadService() {
-        this._generateRandomString(3);
         this.props.dispatch(setIsSpot(true));
 
-        const roomName = this._generateRandomString(3);
+        const cachedState = this._getCachedState();
 
         return remoteControlService.connect({
+            onDisconnect: () => {
+                this._reconnect();
+            },
+            lock: cachedState.lock,
             joinAsSpot: true,
-            roomName,
+            roomName: cachedState.roomName || this._generateRandomString(3),
             serverConfig: this.props.remoteControlConfiguration
         })
             .then(() => {
+                this.setState({ showReconnecting: false });
+
                 this.props.dispatch(setRoomName(
                     remoteControlService.getRoomName()));
                 this._setLock();
                 this._startLockUpdate();
             })
-            .catch(error => logger.error(error));
+            .catch(error => {
+                logger.error(error);
+
+                this._reconnect();
+            });
+    }
+
+    /**
+     * Attempts to re-establish a previous connection to the remote control
+     * service. Triggers display of a service message while reconnection is in
+     * progress.
+     *
+     * @private
+     * @returns {void}
+     */
+    _reconnect() {
+        if (this.state.showReconnecting) {
+            return;
+        }
+
+        this.setState({
+            showReconnecting: true
+        }, () => {
+            const jitter = Math.floor(Math.random() * 20000) + 1500;
+
+            this._reconnectTimeout = setTimeout(() => {
+                const reconnectData = {
+                    lock: this.props.lock,
+                    roomName: this.props.roomName,
+                    timestamp: Date.now()
+                };
+
+                persistence.set(
+                    'spot-reconnect', JSON.stringify(reconnectData));
+
+                remoteControlService.disconnect();
+
+                this._loadService();
+            }, jitter);
+
+        });
     }
 
     /**

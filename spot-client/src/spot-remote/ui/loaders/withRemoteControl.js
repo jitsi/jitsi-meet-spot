@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { addNotification } from 'common/actions';
 import { logger } from 'common/logger';
 import {
     getCurrentLock,
@@ -44,16 +45,45 @@ export class RemoteControlLoader extends AbstractLoader {
         const { lock, roomName } = this.props;
 
         if (!lock || !roomName) {
-            this.props.history.push('/');
+            logger.error('Missing required field for login');
+
+            this._redirectBackToLogin();
 
             return Promise.reject();
         }
 
         return remoteControlService.connect({
+            onDisconnect: () => {
+                logger.error('Disconnected');
+
+                this._redirectBackToLogin();
+            },
             roomName,
             lock,
             serverConfig: this.props.remoteControlConfiguration
-        }).catch(error => logger.error(error));
+        }).catch(error => {
+            logger.error(`Error while connecting to spot: ${error}`);
+
+            this.props.dispatch(
+                addNotification('error', 'Something went wrong'));
+
+            remoteControlService.disconnect();
+
+            this._redirectBackToLogin();
+        });
+    }
+
+    /**
+     * Changes routes to the join code entry view.
+     *
+     * @private
+     * @returns {void}
+     */
+    _redirectBackToLogin() {
+        this.props.dispatch(
+            addNotification('error', 'A connection error occurred'));
+
+        this.props.history.push('/');
     }
 }
 
