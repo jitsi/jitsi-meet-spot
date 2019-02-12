@@ -31,7 +31,7 @@ export default {
      * @returns {void}
      */
     error(message) {
-        jitsiLogger.error(formatMessage(message));
+        jitsiLogger.error(formatMessage('error', message));
     },
 
     /**
@@ -41,6 +41,6 @@ export default {
      * @returns {void}
      */
     log(message) {
-        jitsiLogger.log(formatMessage(message));
+        jitsiLogger.log(formatMessage('log', message));
     }
 };
