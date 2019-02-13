@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setLock, setRoomName } from 'common/actions';
+import { addNotification, setLock, setRoomName } from 'common/actions';
 import { logger } from 'common/logger';
 import {
     getRemoteControlServerConfig,
@@ -100,17 +100,28 @@ export class JoinCodeEntry extends React.Component {
      * @inheritdoc
      */
     render() {
+        if (this.state.validating) {
+            return (
+                <View name = 'join-code-validating'>
+                    <div className = 'connecting'>Connecting...</div>
+                </View>
+            );
+        }
+
         return (
-            <View
-                hideBackground = { true }
-                name = 'join-code'>
-                {
-                    this.state.validating
-                        ? <div className = 'connecting'>Connecting...</div>
-                        : <form
-                            className = 'join-code-view'
+            <View name = 'join-code'>
+                <div className = 'join-code-view'>
+                    <div className = 'cta'>
+                        <div className = 'title'>
+                            Enter a share key
+                        </div>
+                        <div className = 'help'>
+                            Your key is visible on the Spot TV
+                        </div>
+                    </div>
+                    <div className = 'code-entry-wrapper'>
+                        <form
                             onSubmit = { this._onSubmit }>
-                            <div className = 'cta'>Enter a share key</div>
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
                                     autoFocus = { isAutoFocusSupported() }
@@ -118,14 +129,17 @@ export class JoinCodeEntry extends React.Component {
                                     onChange = { this._onCodeChange }
                                     value = { this.state.enteredCode } />
                             </div>
-                            <div className = 'nav'>
-                                <NavButton
-                                    iconName = 'arrow_forward'
-                                    qaId = 'join-code-submit'
-                                    tabIndex = { 0 } />
-                            </div>
                         </form>
-                }
+                    </div>
+                    <div className = 'nav'>
+                        <NavButton
+                            iconName = 'arrow_forward'
+                            label = 'Continue'
+                            onClick = { this._onSubmit }
+                            qaId = 'join-code-submit'
+                            tabIndex = { 0 } />
+                    </div>
+                </div>
             </View>
         );
     }
@@ -177,18 +191,19 @@ export class JoinCodeEntry extends React.Component {
         const submitPromise = new Promise(resolve => {
             this.setState({ validating: true }, resolve);
         });
+        const trimmedCode = code.trim();
 
         // FIXME: There is no proper join code service so the code is a
         // combination of a 3 digit room name and a 3 digit room password.
-        const roomName = code.substring(0, 3).toLowerCase();
-        const password = code.substring(3, 6).toLowerCase();
+        const roomName = trimmedCode.substring(0, 3).toLowerCase();
+        const password = trimmedCode.substring(3, 6).toLowerCase();
 
         // Piggyback on the connect button tap as workaround for mobile Safari
         // requiring a user action to autoplay any sound.
         this.props.ultrasoundService.setMessage(this.state.enteredCode);
 
         submitPromise
-            .then(() => remoteControlService.exchangeCode(code))
+            .then(() => remoteControlService.exchangeCode(trimmedCode))
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
@@ -196,6 +211,12 @@ export class JoinCodeEntry extends React.Component {
                 this.props.dispatch(setLock(password));
 
                 this.props.history.push(ROUTES.REMOTE_CONTROL);
+            })
+            .catch(() => {
+                this.setState({ validating: false });
+
+                this.props.dispatch(
+                    addNotification('error', 'Something went wrong'));
             });
     }
 }

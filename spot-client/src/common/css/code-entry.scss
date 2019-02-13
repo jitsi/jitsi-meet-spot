@@ -1,21 +1,21 @@
 .code-entry {
-    display: flex;
-    justify-content: center;
     outline: none;
     position: relative;
 
     .box {
         align-items: center;
-        background-color: var(--container-content-font-color);
+        background-color: var(--container-bg-color);
+        border: 1px solid var(--container-sub-content-font-color);
         border-radius: 5px;
-        color: var(--container-bg-color);
+        color: var(--container-content-font-color);
         display: flex;
         font-size: var(--font-size-x-large);
         height: calc(var(--font-size-x-large) * 0.7);
         justify-content: center;
         line-height:  var(--font-size-x-large);
+        margin-top: 10px;
         text-transform: uppercase;
-        width: calc(var(--font-size-x-large) * 0.7);
+        width: calc(var(--font-size-x-large) * 0.5);
 
         &.active {
             border: 5px solid var(--active);
@@ -24,13 +24,18 @@
             cursor: pointer;
         }
         &:not(:last-child) {
-            margin-right: 0.2em;
+            margin-right: 0.5em;
         }
     }
 
     .hidden-input {
         background: transparent;
         border: none;
+        /**
+         * Prevent auto-zooming of mobile browser by setting a font-size of
+         * at least 16px.
+         */
+        font-size: 16px;
         height: 1;
         left: 50%;
         outline: none;

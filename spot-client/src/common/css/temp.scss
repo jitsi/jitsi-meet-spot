@@ -80,20 +80,6 @@
     font-size: var(--font-size-large);
 }
 
-.join-code-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding-top: 30px;
-  text-align: center;
-  width: 100%;
-
-    .cta {
-        font-size: var(--font-size-large);
-    }
-}
-
-
 .joinInfo {
   background: rgba(255, 255, 255, 0.7);
   bottom: 20;

@@ -1,0 +1,39 @@
+@import './media-queries';
+
+.join-code-view {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100%;
+    width: 100%;
+
+    .cta {
+        padding: 2.5em;
+        text-align: center;
+
+        .title {
+            font-size: var(--font-size-x-large);
+        }
+
+        .help {
+            font-size: var(--font-size-large);
+        }
+    }
+
+    .code-entry-wrapper {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+
+        .code-entry {
+            @media #{$mq-xsmall} {
+                display: grid;
+
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            @media #{$mq-small} {
+                display: flex;
+            }
+        }
+    }
+}

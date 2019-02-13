@@ -5,6 +5,7 @@ import './reset.scss';
 import './clock.scss';
 import './code-entry.scss';
 import './home-view.scss';
+import './join-code-view.scss';
 import './meeting.scss';
 import './meeting-name-entry.scss';
 import './nav.scss';
