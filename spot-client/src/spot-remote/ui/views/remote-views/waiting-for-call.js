@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
 import { Clock, ScheduledMeetings } from 'common/ui';
 
 import { NavButton, SelfFillingNameEntry } from './../../components';
-import { logger } from '../../../../common/logger';
 
 /**
  * Returns the React Element to display while the Spot instance is not in a

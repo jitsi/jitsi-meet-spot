@@ -10,10 +10,9 @@ import {
 } from 'common/reducers';
 import { LoadingIcon, View } from 'common/ui';
 
-import { FeedbackForm } from './../components';
 import { withRemoteControl, withUltrasound } from './../loaders';
 
-import { InCall, WaitingForCall } from './remote-views';
+import { Feedback, InCall, WaitingForCall } from './remote-views';
 
 /**
  * Displays the remote control view for controlling a Spot instance from another
@@ -98,7 +97,7 @@ export class RemoteControl extends React.PureComponent {
             return <div>currently in admin tools</div>;
         case 'feedback':
             return (
-                <FeedbackForm
+                <Feedback
                     remoteControlService = { remoteControlService } />
             );
         case 'home':
