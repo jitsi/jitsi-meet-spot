@@ -3,13 +3,13 @@
  * adjust.
  */
 $mq-xxsmall: '(min-width: 0em)'; // catch-all
-$mq-xsmall: '(min-width: 2em)'; // 320px
-$mq-small: '(min-width: 48em)'; // 768px
-$mq-medium: '(min-width: 64em)'; // 1024px
-$mq-large: '(min-width: 85.375em)'; // 1366px
-$mq-xlarge: '(min-width: 120em)'; // 1920px
-$mq-xxlarge: '(min-width: 160em)'; // 2560px
-$mq-retina: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)';
+$mq-mobile-s: '(min-width: 320px)';
+$mq-mobile-l: '(min-width: 425px)';
+$mq-tablet: '(min-width: 768px)';
+$mq-laptop: '(min-width: 1024px)';
+$mq-laptop-l: '(min-width: 1440px)';
+$mq-4k: '(min-width: 2460px)';
+
 
 /**
  * The font size from which all other font sizes should inherit.
@@ -25,30 +25,26 @@ body {
     font-size: $base-font-size;
     line-height: $base-line-height;
 
-    @media #{$mq-xsmall} {
+    @media #{$mq-mobile-s} {
       font-size: $base-font-size * 0.7;
       line-height: $base-line-height * 0.7;
     }
 
-    @media #{$mq-small} {
+    @media #{$mq-tablet} {
         font-size: $base-font-size * 0.9;
         line-height: $base-line-height * 0.9;
     }
 
-    @media #{$mq-medium} {
+    @media #{$mq-laptop} {
         font-size: $base-font-size;
         line-height: $base-line-height;
     }
 
-    @media #{$mq-large} {
+    @media #{$mq-laptop-l} {
         font-size: $base-font-size * 1.3;
     }
 
-    @media #{$mq-xlarge} {
+    @media #{$mq-4k} {
         font-size: $base-font-size * 1.5;
-    }
-
-    @media #{$mq-xxlarge} {
-        font-size: $base-font-size * 1.7;
     }
 }

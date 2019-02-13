@@ -4,23 +4,23 @@
     background-color: var(--container-bg-color);
     border-radius: 5px;
 
-    @media #{$mq-xsmall} {
+    @media #{$mq-mobile-s} {
         width: 80%;
     }
 
-    @media #{$mq-small} {
+    @media #{$mq-tablet} {
         width: 50%;
     }
 
-    @media #{$mq-medium} {
+    @media #{$mq-laptop} {
         width: 50%;
     }
 
-    @media #{$mq-large} {
+    @media #{$mq-laptop-l} {
         width: 47%;
     }
 
-    @media #{$mq-xlarge} {
+    @media #{$mq-4k} {
         width: 47%;
     }
 
