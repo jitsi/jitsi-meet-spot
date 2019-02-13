@@ -25,13 +25,13 @@
         justify-content: center;
 
         .code-entry {
-            @media #{$mq-xsmall} {
+            @media #{$mq-mobile-s} {
                 display: grid;
 
                 grid-template-columns: 1fr 1fr 1fr;
             }
 
-            @media #{$mq-small} {
+            @media #{$mq-tablet} {
                 display: flex;
             }
         }
