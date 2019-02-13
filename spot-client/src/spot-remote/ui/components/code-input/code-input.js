@@ -148,7 +148,7 @@ export default class CodeInput extends React.Component {
             if (!currentIndexHasCharacter || !currentIndexHasCharacter.trim()) {
                 this.setState({
                     currentIndex: Math.max(0, this.state.currentIndex - 1)
-                }, () => this._onBlur());
+                });
             } else {
                 this.props.onChange(this._changeCharacterAtCurrentIndex(' '));
             }
