@@ -39,7 +39,6 @@
 }
 
 .admin,
-.remote-menu,
 .setup {
   color: black;
 }
@@ -176,51 +175,8 @@
   padding: 5px;
 }
 
-.remote-menu {
-  display: flex;
-  flex-direction: column;
-  font-size: 2em;
-}
-.remote-button {
-  margin-right: 20px;
-}
-.remote-comment {
-  font-size: 1.5em;
-  height: 50%;
-  margin: 20px 0;
-  resize: none;
-  width: 100%;
-}
-.remote-feedback {
-  text-align: center;
-  width: 100%;
-}
-.remote-hangup {
-  background: crimson;
-}
-/**
-* TODO: remove !important usage. It is being used right now to override
-* jitsi-meet icon styling.
-*/
-.remote-score {
-  color: white;
-  font-size: 2.5em !important;
-}
 body.using-mouse :focus {
   outline: none;
-}
-.remote-selection {
-  align-items: center;
-  background-color: white;
-  border: 1px solid black;
-  cursor: pointer;
-  display: flex;
-  flex: 1;
-  padding: 10px 10px;
-  margin-bottom: 10px
-}
-.remote-selection:active {
-  background: rgb(250, 251, 252);
 }
 
 .admin {
@@ -230,12 +186,6 @@ body.using-mouse :focus {
   overflow: hidden;
   padding: 40px;
   width: 100%;
-}
-
-.code {
-  bottom: 25;
-  left: 25;
-  position: fixed;
 }
 
 .meetingMouseHider {

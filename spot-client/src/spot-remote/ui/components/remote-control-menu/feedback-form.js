@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button } from 'common/ui';
-
 /**
  * A React Component for inputting and submitting post-call feedback by leaving
  * a rating and a
@@ -11,8 +9,7 @@ import { Button } from 'common/ui';
  */
 export default class FeedbackForm extends React.Component {
     static propTypes = {
-        remoteControlService: PropTypes.object,
-        remoteId: PropTypes.string
+        remoteControlService: PropTypes.object
     };
 
     /**
@@ -25,11 +22,9 @@ export default class FeedbackForm extends React.Component {
         super(props);
 
         this.state = {
-            message: '',
             score: -1
         };
 
-        this._onMessageChange = this._onMessageChange.bind(this);
         this._onRatingChange = this._onRatingChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -45,13 +40,15 @@ export default class FeedbackForm extends React.Component {
             <form
                 className = 'remote-feedback'
                 onSubmit = { this._onSubmit }>
-                { this._renderStars() }
-                <textarea
-                    autoFocus = { true }
-                    className = 'remote-comment'
-                    onChange = { this._onMessageChange }
-                    value = { this.state.message } />
-                <Button type = 'submit'>Submit</Button>
+                <div className = 'cta'>Rate your experience</div>
+                <div className = 'stars'>
+                    { this._renderStars() }
+                </div>
+                <button
+                    className = 'submit-button'
+                    type = 'submit'>
+                    Send
+                </button>
             </form>
         );
     }
@@ -73,30 +70,19 @@ export default class FeedbackForm extends React.Component {
             const starIcon = i <= score ? 'star' : 'star_border';
 
             stars.push(
-                <a
+                <button
                     className = 'material-icons remote-score'
                     key = { i }
 
                     // eslint-disable-next-line react/jsx-no-bind
-                    onClick = { () => this._onRatingChange(i) }>
+                    onClick = { () => this._onRatingChange(i) }
+                    type = 'button'>
                     { starIcon }
-                </a>
+                </button>
             );
         }
 
         return stars;
-    }
-
-    /**
-     * Updates the known feedback description that has been entered.
-     *
-     * @param {Event} event - The change event triggered when entered feedback
-     * text has been updated.
-     * @private
-     * @returns {void}
-     */
-    _onMessageChange(event) {
-        this.setState({ message: event.target.value });
     }
 
     /**
