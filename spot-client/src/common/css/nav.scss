@@ -6,11 +6,29 @@
     text-align: center;
     width: 100%;
 
+    @media #{$mq-xxsmall} {
+        padding: 0 60px;
+    }
+
+    @media #{$mq-xsmall} {
+        padding: 0 55px;
+    }
+
+    @media #{$mq-mobile-l} {
+        padding: 0 35px;
+    }
+
+    @media #{$mq-small} {
+        padding: 0;
+    }
+
+
     .nav-button {
         background-color: transparent;
         border: 0;
         color: inherit;
         font-size: inherit;
+        margin-top: 10px;
 
         &:not(:last-child) {
             @media #{$mq-xxsmall} {
