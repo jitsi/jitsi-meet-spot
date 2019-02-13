@@ -1,10 +1,8 @@
 @import './media-queries';
 
 .nav {
-    display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 10px;
+    margin: 20px 0;
     text-align: center;
     width: 100%;
 
@@ -97,24 +95,9 @@
         display: flex;
         flex-grow: 1;
         justify-content: center;
+        margin: auto;
         white-space: nowrap;
-    }
-
-    .nav-label {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2.5em;
-        width: calc(var(--font-size-x-large) * 2);
-
-        @media #{$mq-large} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
-        }
-
-        @media #{$mq-xlarge} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
-        }
+        width: calc(var(--font-size-large) * 2.5);
     }
 }
 
