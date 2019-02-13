@@ -57,6 +57,7 @@ export default class CodeInput extends React.Component {
             <div className = 'code-entry'>
                 { this._renderBoxes() }
                 <input
+                    aria-hidden = { true }
                     autoFocus = { this.props.autoFocus }
                     className = 'hidden-input'
                     onBlur = { this._onBlur }
@@ -147,7 +148,7 @@ export default class CodeInput extends React.Component {
             if (!currentIndexHasCharacter || !currentIndexHasCharacter.trim()) {
                 this.setState({
                     currentIndex: Math.max(0, this.state.currentIndex - 1)
-                });
+                }, () => this._onBlur());
             } else {
                 this.props.onChange(this._changeCharacterAtCurrentIndex(' '));
             }
@@ -158,10 +159,24 @@ export default class CodeInput extends React.Component {
         // Tab should proceed to the next box or allow tab focus to continue
         // forward in the dom.
         case 9: {
-            const isOnLastIndex
-                = this.state.currentIndex === (this.props.length - 1);
+            if (event.shiftKey) {
+                if (this.state.currentIndex === 0) {
+                    return;
+                }
 
-            if (!isOnLastIndex) {
+                event.preventDefault();
+
+                this.setState({
+                    currentIndex: Math.max(0, this.state.currentIndex - 1)
+                });
+            } else {
+                const isOnLastIndex
+                    = this.state.currentIndex === (this.props.length - 1);
+
+                if (isOnLastIndex) {
+                    return;
+                }
+
                 event.preventDefault();
 
                 this.setState({
@@ -234,7 +249,7 @@ export default class CodeInput extends React.Component {
      */
     _onTabFocus() {
         if (!this.state.hasFocus) {
-            this._onBoxClick(0);
+            this._onBoxClick(this.state.currentIndex);
         }
     }
 
