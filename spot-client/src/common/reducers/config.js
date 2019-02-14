@@ -51,6 +51,17 @@ export function getDefaultMeetingDomain(state) {
 }
 
 /**
+ * A selector which returns a unique id used for identifying the current client
+ * in logs aggregations.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string|undefined}
+ */
+export function getLoggingEndpoint(state) {
+    return state.config.LOGGING.ENDPOINT;
+}
+
+/**
  * A selector which returns XMPP configuration information for creating XMPP
  * connections and joining MUCs.
  *

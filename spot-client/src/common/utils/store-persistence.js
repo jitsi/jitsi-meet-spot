@@ -77,7 +77,16 @@ function parsePersistedState(state) {
 }
 
 /**
- * Returns the application state that has been stored in through the persistence
+ * Removes the saved application state.
+ *
+ * @returns {void}
+ */
+export function clearPersistedState() {
+    persistence.remove(STORE_PERSISTENCE_KEY);
+}
+
+/**
+ * Returns the application state that has been stored through the persistence
  * service.
  *
  * @returns {Object}

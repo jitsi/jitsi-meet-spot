@@ -7,18 +7,20 @@ import { createHashHistory } from 'history';
 
 import 'common/css';
 import { LoggingService } from 'common/logger';
-import { protoState } from 'common/reducers';
+import { protoState, getLoggingEndpoint } from 'common/reducers';
 import {
     ProcessUpdateDelegate,
     remoteControlService
 } from 'common/remote-control';
-import { getPersistedState, setPersistedState } from 'common/utils';
+import {
+    generateGuid,
+    getPersistedState,
+    persistence,
+    setPersistedState
+} from 'common/utils';
 
 import App from './app';
-
-const loggingService = new LoggingService();
-
-loggingService.start();
+import PostToEndpoint from './common/logger/post-to-endpoint';
 
 const store = createStore(
     protoState,
@@ -35,6 +37,25 @@ store.subscribe(() => {
     setPersistedState(store);
 });
 
+const reduxState = store.getState();
+const loggingEndpoint = getLoggingEndpoint(reduxState);
+
+if (loggingEndpoint) {
+    const deviceId = persistence.get('deviceId') || generateGuid();
+
+    persistence.set('deviceId', deviceId);
+
+    const loggingService = new LoggingService(loggingEndpoint);
+
+    loggingService.addHandler(
+        new PostToEndpoint({
+            deviceId,
+            endpointUrl: loggingEndpoint
+        })
+    );
+
+    loggingService.start();
+}
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== 'production') {

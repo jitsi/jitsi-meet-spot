@@ -1,6 +1,7 @@
 
 import Logger from 'jitsi-meet-logger';
 
+
 /**
  * A class responsible for aggregating logs and sending them to a third party
  * for recording. Leverages jitsi-meet-logger, which automatically records all
@@ -12,6 +13,8 @@ export default class LoggingService {
      * to receive logs.
      */
     constructor() {
+        this._handlers = new Set();
+
         this._logCollector = new Logger.LogCollector(
             {
                 isReady: this.isReady.bind(this),
@@ -26,6 +29,16 @@ export default class LoggingService {
     }
 
     /**
+     * Registers a callback which should receive logs from jitsi-meet-logger.
+     *
+     * @param {Function} handler - The callback which should receive logs.
+     * @returns {void}
+     */
+    addHandler(handler) {
+        this._handlers.add(handler);
+    }
+
+    /**
      * Callback invoked by jitsi-meet-logger to detect if cached logs should be
      * passed into the storeLogs callback.
      *
@@ -33,6 +46,16 @@ export default class LoggingService {
      */
     isReady() {
         return true;
+    }
+
+    /**
+     * Removes a callback from known handlers so it no longer gets events.
+     *
+     * @param {Function} handler - The callback to be de-registered.
+     * @returns {void}
+     */
+    removeHandler(handler) {
+        this._handlers.delete(handler);
     }
 
     /**
@@ -57,9 +80,11 @@ export default class LoggingService {
      * Callback invoked by jitsi-meet-logger when it has batched logs for a
      * given storeInterval.
      *
+     * @param {Array<string>} logs - The log statements with meta data. The
+     * jitsi-meet-logger stores the objects as strings.
      * @returns {void}
      */
-    storeLogs() {
-        /** TODO: implementing sending the logs to a service */
+    storeLogs(logs) {
+        this._handlers.forEach(handler => handler.send(logs));
     }
 }

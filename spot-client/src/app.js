@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
     ErrorBoundary,
@@ -47,6 +48,9 @@ export class App extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        logger.log(`App mounted in ${window.performance.now()} on ${
+            window.navigator.userAgent}`);
+
         /**
          * Defer touch actions to web to handle instead of the mobile device.
          */

@@ -81,6 +81,10 @@ export class Notifications extends React.PureComponent {
      * @returns {void}
      */
     _setTimeoutForNewNotifications(notifications) {
+        if (!notifications.length) {
+            return;
+        }
+
         logger.log(`notifications setting timeout for ${
             JSON.stringify(notifications)}`);
 
