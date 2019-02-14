@@ -22,12 +22,12 @@
         }
 
         @media #{$mq-tablet} {
-            padding: 2em;
+            padding: 2em 1em;
             width: 50%;
         }
 
         @media #{$mq-laptop} {
-            padding: 2em;
+            padding: 2em 1em;
             width: 40%;
         }
 
@@ -35,15 +35,32 @@
             font-size: var(--font-size-medium-plus);
         }
 
+        .message-help {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
         .stars {
             margin: 3em 0;
+        }
+
+        .remote-message {
+            background-color: var(--feedback-background);
+            border-radius: 5px;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            margin: 10px 0px 20px;
+            resize: none;
+            width: 100%;
         }
 
         .remote-score {
             background: inherit;
             border: none;
             color: white;
-            font-size: 2.5em;
+            font-size: 3em;
+            padding: 0 10px;
 
             &:hover {
                 color: whitesmoke;
