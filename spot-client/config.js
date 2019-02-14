@@ -7,26 +7,6 @@
  */
 window.JitsiMeetSpotConfig = {
     /**
-     * The avatar image to display in the meetings list when a participant of
-     * the meeting has no gravatar configured.
-     */
-    DEFAULT_AVATAR_URL: process.env.DEFAULT_AVATAR_URL
-        || 'https://meet.jit.si/images/avatar.png',
-
-    /**
-     * The app background image to display. An empty string will load no
-     * background image and instead display a solid color.
-     */
-    DEFAULT_BACKGROUND_IMAGE_URL: process.env.DEFAULT_BACKGROUND_IMAGE_URL
-        || '',
-
-    /**
-     * The domain to proceed to when a meeting name is submitted with a base
-     * url.
-     */
-    DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
-
-    /**
      * Configuration objects necessary for client-side calendar integration.
      */
     CALENDARS: {
@@ -54,6 +34,38 @@ window.JitsiMeetSpotConfig = {
              */
             CLIENT_ID: process.env.OUTLOOK_CLIENT_ID || ''
         }
+    },
+
+    /**
+     * The avatar image to display in the meetings list when a participant of
+     * the meeting has no gravatar configured.
+     */
+    DEFAULT_AVATAR_URL: process.env.DEFAULT_AVATAR_URL
+        || 'https://meet.jit.si/images/avatar.png',
+
+    /**
+     * The app background image to display. An empty string will load no
+     * background image and instead display a solid color.
+     */
+    DEFAULT_BACKGROUND_IMAGE_URL: process.env.DEFAULT_BACKGROUND_IMAGE_URL
+        || '',
+
+    /**
+     * The domain to proceed to when a meeting name is submitted with a base
+     * url.
+     */
+    DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
+
+    /**
+     * Configuration object related to printing, collecting, and reporting of
+     * event logs and errors.
+     */
+    LOGGING: {
+
+        /**
+         * Currently logging is implemented to send logs to an endpoint.
+         */
+        ENDPOINT: process.env.LOGGING_ENDPOINT || ''
     },
 
     /**

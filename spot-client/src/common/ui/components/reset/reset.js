@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { logger } from './../../../logger';
-import { persistence } from './../../../utils';
+import { logger } from 'common/logger';
+import { clearPersistedState } from 'common/utils';
 
 import { Button } from './../button';
 
@@ -109,7 +109,7 @@ export default class ResetState extends React.Component {
         }, () => {
             logger.log('reset clearing application state');
 
-            persistence.reset();
+            clearPersistedState();
 
             setTimeout(() => {
                 logger.log('reset reloading application');
