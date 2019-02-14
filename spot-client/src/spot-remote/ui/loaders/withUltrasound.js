@@ -63,7 +63,9 @@ class WithUltrasound extends AbstractLoader {
         return ultrasoundService.initialize(
             this.props.emscriptenPath,
             this.props.memoryInitializerPath)
-            .then(() => this._setUltrasoundMessage(this.props.joinCode));
+            .then(() => this._setUltrasoundMessage(this.props.joinCode))
+            .catch(() => logger.error(
+                'Failed to initialize ultrasound. Continuing without.'));
     }
 
     /**

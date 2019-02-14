@@ -1,12 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    getCurrentLock,
-    getCurrentRoomName,
-    getJoinCode,
-    isSpot
-} from 'common/reducers';
+import { getJoinCode } from 'common/reducers';
 import { windowHandler } from 'common/utils';
 
 /**
@@ -17,23 +12,8 @@ import { windowHandler } from 'common/utils';
  */
 class JoinInfo extends React.Component {
     static propTypes = {
-        isSpot: PropTypes.bool,
-        joinCode: PropTypes.string,
-        lock: PropTypes.string,
-        roomName: PropTypes.string
+        joinCode: PropTypes.string
     };
-
-    /**
-     * Initializes a new {@code JoinInfo} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onOpenRemote = this._onOpenRemote.bind(this);
-    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -41,9 +21,9 @@ class JoinInfo extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { isSpot: isSpotClient, joinCode } = this.props;
+        const { joinCode } = this.props;
 
-        if (!isSpotClient || !joinCode) {
+        if (!joinCode) {
             return null;
         }
 
@@ -51,30 +31,20 @@ class JoinInfo extends React.Component {
             <div
                 className = 'joinInfo'
                 data-qa-id = { 'join-info' }>
-                <div onClick = { this._onOpenRemote }>
-                    <span>code:</span>
+                <div>
+                    <span>connect at: </span>
+                    <span>
+                        { windowHandler.getBaseUrl() }
+                    </span>
+                </div>
+                <div>
+                    <span>sharing key: </span>
                     <span data-qa-id = 'join-code'>
                         { joinCode }
                     </span>
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Opens an instance of a remote control for the Spot in a new window. This
-     * is a debug feature to immediately open the remote without entering a join
-     * code.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onOpenRemote() {
-        const baseUrl = windowHandler.getBaseUrl();
-        const { roomName: room, lock } = this.props;
-        const url = `${baseUrl}#/remote-control?remoteId=${room}&lock=${lock}`;
-
-        windowHandler.openNewWindow(url);
     }
 }
 
@@ -88,10 +58,7 @@ class JoinInfo extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        isSpot: isSpot(state),
-        joinCode: getJoinCode(state),
-        lock: getCurrentLock(state),
-        roomName: getCurrentRoomName(state)
+        joinCode: getJoinCode(state)
     };
 }
 
