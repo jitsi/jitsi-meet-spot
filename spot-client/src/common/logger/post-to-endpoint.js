@@ -23,11 +23,42 @@ export default class PostToEndpoint {
      * @returns {void}
      */
     send(events) {
+        // The endpoint likely expects the events to be an array of objects,
+        // whereas the jitsi-meet-logger returns an array of strings.
+        const jsonEvents = events.reduce((accumulator, event) => {
+            try {
+                // For duplicate events jitsi-meet-logger will batch them
+                // and put them into an object instead of leaving each event
+                // as a string. So re-dupe them to get accurate logs.
+                if (event.text) {
+                    // eslint-disable-next-line no-console
+                    console.warn('re-duping events', event);
+
+                    const jsonEvent = JSON.parse(event.text);
+
+                    for (let i = 0; i < event.count; i++) {
+                        accumulator.push(jsonEvent);
+                    }
+
+                    return accumulator;
+                }
+
+                accumulator.push(JSON.parse(event));
+
+                return accumulator;
+            } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to parse event', e);
+
+                return accumulator;
+            }
+        }, []);
+
         return fetch(
             this._endpointUrl,
             {
                 body: JSON.stringify({
-                    events: events.map(event => JSON.parse(event)),
+                    events: jsonEvents,
                     'device_id': this._deviceId
                 }),
                 headers: {
