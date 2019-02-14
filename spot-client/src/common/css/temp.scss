@@ -80,11 +80,14 @@
 }
 
 .joinInfo {
-  background: rgba(255, 255, 255, 0.7);
-  bottom: 20;
-  font-size: 2rem;
-  padding: 10px;
-  position: absolute;
+    background: rgba(0, 0, 0, 0.3);
+    bottom: 0;
+    display: flex;
+    font-size: 1rem;
+    justify-content: space-between;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
 }
 
 @keyframes animateDots {

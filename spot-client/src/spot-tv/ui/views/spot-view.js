@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { View } from 'common/ui';
+
+import { JoinInfo } from './../components';
 import { asSpotLoader } from './../loaders';
 
 /**
@@ -32,7 +34,12 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     render() {
-        return <View { ...this.props } />;
+        return (
+            <View { ...this.props }>
+                { this.props.children }
+                <JoinInfo />
+            </View>
+        );
     }
 }
 

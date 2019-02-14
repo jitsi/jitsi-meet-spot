@@ -65,16 +65,22 @@ export default class WaitingForCallView extends React.PureComponent {
                         label = 'Meet Now'
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now' />
-                    <NavButton
-                        active = { activeTab === 'share' }
-                        iconName = 'screen_share'
-                        label = 'Share content'
-                        onClick = { this._onSetShareContentActive } />
-                    <NavButton
-                        active = { activeTab === 'dial' }
-                        iconName = 'call'
-                        label = 'Dial a number'
-                        onClick = { this._onSetDialActive } />
+                    {
+
+                        /**
+                        Below are not implemented and may be confusing to see.
+                        <NavButton
+                            active = { activeTab === 'share' }
+                            iconName = 'screen_share'
+                            label = 'Share content'
+                            onClick = { this._onSetShareContentActive } />
+                        <NavButton
+                            active = { activeTab === 'dial' }
+                            iconName = 'call'
+                            label = 'Dial a number'
+                            onClick = { this._onSetDialActive } />
+                        **/
+                    }
                 </div>
             </div>
         );

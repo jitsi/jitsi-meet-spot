@@ -222,7 +222,8 @@ export class Home extends React.Component {
                         && (
                             <div
                                 className = 'setup-join-code'
-                                data-qa-id = 'join-info'>
+                                data-qa-id = 'join-info'
+                                onClick = { this._onOpenRemote }>
                                 { this.props.joinCode.toUpperCase() }
                             </div>
                         )
