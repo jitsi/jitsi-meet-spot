@@ -28,7 +28,19 @@ export default class RemoteControlMenu extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showScreensharePicker: false
+        };
+
+        this._screensharePickerRef = React.createRef();
+
+        this._onClickOutsideScreensharePicker
+            = this._onClickOutsideScreensharePicker.bind(this);
         this._onHangUp = this._onHangUp.bind(this);
+        this._onHideSelectScreenshare
+            = this._onHideSelectScreenshare.bind(this);
+        this._onShowSelectScreenshare
+            = this._onShowSelectScreenshare.bind(this);
         this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
         this._onToggleScreensharing = this._onToggleScreensharing.bind(this);
         this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
@@ -37,33 +49,33 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     /**
+     * Adds a global event listener to automatically close the screenshare
+     * picker.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        document.addEventListener(
+            'mousedown', this._onClickOutsideScreensharePicker);
+    }
+
+    /**
+     * Removes global event listeners.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        document.removeEventListener(
+            'mousedown', this._onClickOutsideScreensharePicker);
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
      */
     render() {
-        const {
-            audioMuted,
-            isWirelessScreenshareConnectionActive,
-            screensharing,
-            screensharingEnabled,
-            videoMuted
-        } = this.props;
-
-
-        let wirelessScreensharingLabel;
-        let wirelessScrensharingIcon;
-
-        if (isWirelessScreenshareConnectionActive && !screensharing) {
-            wirelessScreensharingLabel = 'Connecting...';
-            wirelessScrensharingIcon = 'screen_share';
-        } else if (screensharing) {
-            wirelessScreensharingLabel = 'Stop Sharing';
-            wirelessScrensharingIcon = 'stop_screen_share';
-        } else {
-            wirelessScreensharingLabel = 'Share Wirelessly';
-            wirelessScrensharingIcon = 'screen_share';
-        }
+        const { audioMuted, videoMuted } = this.props;
 
         return (
             <div className = 'nav'>
@@ -75,18 +87,7 @@ export default class RemoteControlMenu extends React.Component {
                     iconName = { videoMuted ? 'videocam_off' : 'videocam' }
                     label = { videoMuted ? 'Unmute Video' : 'Mute Video' }
                     onClick = { this._onToggleVideoMute } />
-                { screensharingEnabled
-                    && <NavButton
-                        iconName = { screensharing
-                            ? 'stop_screen_share' : 'screen_share' }
-                        label = { screensharing
-                            ? 'Stop Sharing' : 'Share Content' }
-                        onClick = { this._onToggleScreensharing } /> }
-                { this._isWirelessScreenshareSupported()
-                    && <NavButton
-                        iconName = { wirelessScrensharingIcon }
-                        label = { wirelessScreensharingLabel }
-                        onClick = { this._onToggleWirelessScreensharing } /> }
+                { this._renderScreensharingButton() }
                 <NavButton
                     className = 'hangup'
                     iconName = 'call_end'
@@ -138,6 +139,8 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleScreensharing() {
+        this._onHideSelectScreenshare();
+
         this.props.remoteControlService.setScreensharing(
             !this.props.screensharing);
     }
@@ -159,6 +162,8 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleWirelessScreensharing() {
+        this._onHideSelectScreenshare();
+
         const {
             isWirelessScreenshareConnectionActive,
             remoteControlService,
@@ -171,5 +176,132 @@ export default class RemoteControlMenu extends React.Component {
         }
 
         remoteControlService.setWirelessScreensharing(!screensharing);
+    }
+
+    /**
+     * Returns the screenshare button that should be displayed, if any.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderScreensharingButton() {
+        const {
+            screensharing,
+            screensharingEnabled
+        } = this.props;
+        const canWirelessScreenshare = this._isWirelessScreenshareSupported();
+
+        // If neither screensharing mode is allowed then show nothing.
+        if (screensharingEnabled && !canWirelessScreenshare) {
+            return null;
+        }
+
+        // If screensharing is active and at least one mode is allowed then show
+        // a stop button.
+        if (screensharing) {
+            return (
+                <NavButton
+                    iconName = 'stop_screen_share'
+                    label = 'Stop Sharing'
+                    onClick = { this._onToggleScreensharing } />
+            );
+        }
+
+        // If only wired screensharing is enabled show only its button.
+        if (screensharingEnabled && !canWirelessScreenshare) {
+            return (
+                <NavButton
+                    className = 'screenshare'
+                    iconName = 'screen_share'
+                    label = 'Share Content'
+                    onClick = { this._onToggleScreensharing } />
+            );
+        }
+
+        // If only wireless screensharing is enabled show only its button.
+        // if (true) {
+        if (canWirelessScreenshare && !screensharingEnabled) {
+            return (
+                <NavButton
+                    className = 'screenshare'
+                    iconName = 'screen_share'
+                    label = 'Share Content'
+                    onClick = { this._onToggleWirelessScreensharing } />
+            );
+        }
+
+        // If both screensharings are allowed but neither is active then show
+        // a screenshare picker.
+        const { showScreensharePicker } = this.state;
+        const className
+            = `with-popup ${showScreensharePicker ? '' : 'hide-popup'}`;
+
+        return (
+            <div
+                className = { className }
+                ref = { this._screensharePickerRef }>
+                <NavButton
+                    iconName = 'screen_share'
+                    label = 'Share Content'
+                    onClick = { showScreensharePicker
+                        ? this._onHideSelectScreenshare
+                        : this._onShowSelectScreenshare } />
+                <div className = 'popup' >
+                    <div className = 'title'>
+                        How would you like to screenshare?
+                    </div>
+                    <div className = 'options'>
+                        <NavButton
+                            className = 'screenshare'
+                            iconName = 'screen_share'
+                            label = 'Wireless Screensharing'
+                            onClick = { this._onToggleWirelessScreensharing } />
+                        <NavButton
+                            className = 'screenshare'
+                            iconName = 'screen_share'
+                            label = 'HDMI Screensharing'
+                            onClick = { this._onToggleScreensharing } />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    /**
+     * Shoes the screenshare picker.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShowSelectScreenshare() {
+        this.setState({
+            showScreensharePicker: true
+        });
+    }
+
+    /**
+     * Hides the screenshare picker.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHideSelectScreenshare() {
+        this.setState({
+            showScreensharePicker: false
+        });
+    }
+
+    /**
+     * Closes the screenshare picker a click has occurred outside of it.
+     *
+     * @param {MouseEvent} event - Mousedown event triggered anywhere on the
+     * current document.
+     * @private
+     * @returns {void}
+     */
+    _onClickOutsideScreensharePicker(event) {
+        if (!this._screensharePickerRef.current.contains(event.target)) {
+            this._onHideSelectScreenshare();
+        }
     }
 }
