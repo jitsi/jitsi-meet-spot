@@ -69,7 +69,40 @@
             cursor: pointer;
         }
     }
+    .with-popup {
+        display: inline-block;
+        position: relative;
 
+        &.hide-popup {
+            .popup {
+                display: none;
+            }
+        }
+
+        .popup {
+            background-color: var(--container-content-bg-color);
+            border-radius: 5px;
+            color: var(--container-content-font-color);
+            padding: 30px;
+            position: absolute;
+            top: -20px;
+            transform: translate(-33%, -100%);
+
+            .title {
+                margin-bottom: 30px;
+                white-space: nowrap;
+            }
+
+            .options {
+                display: flex;
+                justify-content: center;
+
+                .nav-label-container {
+                    white-space: initial;
+                }
+            }
+        }
+    }
     .nav-icon-container {
         display: flex;
         justify-content: center;
@@ -143,6 +176,12 @@
             }
 
             color: var(--hangup-active-color);
+        }
+    }
+
+    .screenshare.nav-button {
+        .nav-label-container {
+            white-space: pre-wrap;
         }
     }
 }
