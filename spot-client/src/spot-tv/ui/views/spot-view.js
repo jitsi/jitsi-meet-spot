@@ -14,6 +14,7 @@ import { asSpotLoader } from './../loaders';
  */
 class SpotView extends React.Component {
     static propTypes = {
+        children: PropTypes.any,
         name: PropTypes.string,
         remoteControlService: PropTypes.object
     };

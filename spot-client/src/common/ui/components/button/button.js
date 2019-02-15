@@ -23,8 +23,8 @@ Button.defaultProps = {
 };
 
 Button.propTypes = {
-    'data-qa-id': PropTypes.string,
     children: PropTypes.any,
     className: PropTypes.string,
+    'data-qa-id': PropTypes.string,
     onClick: PropTypes.func
 };
