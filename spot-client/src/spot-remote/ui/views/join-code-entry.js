@@ -191,16 +191,16 @@ export class JoinCodeEntry extends React.Component {
         const submitPromise = new Promise(resolve => {
             this.setState({ validating: true }, resolve);
         });
-        const trimmedCode = code.trim();
+        const trimmedCode = code.trim().toLowerCase();
 
         // FIXME: There is no proper join code service so the code is a
         // combination of a 3 digit room name and a 3 digit room password.
-        const roomName = trimmedCode.substring(0, 3).toLowerCase();
-        const password = trimmedCode.substring(3, 6).toLowerCase();
+        const roomName = trimmedCode.substring(0, 3);
+        const password = trimmedCode.substring(3, 6);
 
         // Piggyback on the connect button tap as workaround for mobile Safari
         // requiring a user action to autoplay any sound.
-        this.props.ultrasoundService.setMessage(this.state.enteredCode);
+        this.props.ultrasoundService.setMessage(trimmedCode);
 
         submitPromise
             .then(() => remoteControlService.exchangeCode(trimmedCode))
