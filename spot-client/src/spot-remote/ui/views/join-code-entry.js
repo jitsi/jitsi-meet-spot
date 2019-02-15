@@ -121,7 +121,7 @@ export class JoinCodeEntry extends React.Component {
                     </div>
                     <div className = 'code-entry-wrapper'>
                         <form
-                            onSubmit = { this._onSubmit }>
+                            onSubmit = { this._onFormSubmit }>
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
                                     autoFocus = { isAutoFocusSupported() }
