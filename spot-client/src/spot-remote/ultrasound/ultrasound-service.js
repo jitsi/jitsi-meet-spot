@@ -81,7 +81,7 @@ class UltrasoundService {
             return this._initializationPromise;
         }
 
-        return loadDependencies({
+        this._initializationPromise = loadDependencies({
             emscriptenPath,
             memoryInitializerPath
         })
@@ -98,6 +98,8 @@ class UltrasoundService {
 
             return Promise.reject(error);
         });
+
+        return this._initializationPromise;
     }
 
     /**
@@ -148,11 +150,7 @@ class UltrasoundService {
      * @returns {void}
      */
     _transmit() {
-        if (!this._transmitter) {
-            return;
-        }
-
-        if (this._text) {
+        if (this._transmitter && this._text) {
             this._transmitter.transmit(this._text);
         } else {
             this._enqueueNextTransmission();
