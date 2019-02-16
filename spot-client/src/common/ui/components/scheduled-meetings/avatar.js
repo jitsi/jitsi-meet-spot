@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getDefaultAvatarConfig } from './../../../reducers';
-import { hash } from './../../../utils';
+import { getDefaultAvatarUrl } from 'common/reducers';
+import { hash } from 'common/utils';
 
 /**
  * A component that displays the gravatar of a provided email or a configured
@@ -54,7 +54,7 @@ export class Avatar extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        defaultAvatarUrl: getDefaultAvatarConfig(state)
+        defaultAvatarUrl: getDefaultAvatarUrl(state)
     };
 }
 
