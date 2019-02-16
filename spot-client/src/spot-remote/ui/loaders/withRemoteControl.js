@@ -25,6 +25,19 @@ export class RemoteControlLoader extends AbstractLoader {
     };
 
     /**
+     * Initializes a new {@code RemoteControlLoader} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._reconnecting = false;
+        this._reconnectCount = 0;
+    }
+
+    /**
      * Returns the props that should be passed into this loader's child
      * elements.
      *
@@ -53,29 +66,94 @@ export class RemoteControlLoader extends AbstractLoader {
             return Promise.reject();
         }
 
-        return remoteControlService.connect({
+        const connectionConfig = {
             onDisconnect: () => {
-                logger.error('Disconnected from the remote control service');
+                logger.error('Disconnected from the remote control service. '
+                    + 'Will attempt reconnect');
 
-                this.props.dispatch(
-                    addNotification('error', 'A connection error occurred'));
-
-                this._redirectBackToLogin();
+                this._reconnect();
             },
             roomName,
             lock,
             serverConfig: this.props.remoteControlConfiguration
-        }).catch(error => {
-            logger.error(`Error connecting to remote control service: ${
-                error.toString()}`);
+        };
 
-            this.props.dispatch(
-                addNotification('error', 'Something went wrong'));
+        return remoteControlService.connect(connectionConfig)
+            .catch(error => {
+                logger.error(`Error connecting to remote control service: ${
+                    error.toString()}. Will retry.`);
+
+                remoteControlService.disconnect();
+
+                return remoteControlService.connect(connectionConfig)
+                    .catch(retryError => {
+
+                        // Retry one time if an error occurs.
+                        logger.error('Error retrying connection to remote'
+                            + `control service: ${retryError.toString()}`);
+
+                        this.props.dispatch(
+                            addNotification('error', 'Something went wrong'));
+
+                        this._redirectBackToLogin();
+
+                        return Promise.reject(retryError);
+                    });
+            });
+    }
+
+    /**
+     * Attempts to re-establish a previous connection to the remote control
+     * service.
+     *
+     * @private
+     * @returns {void}
+     */
+    _reconnect() {
+        if (this._reconnecting) {
+            logger.warn('Reconnect called while already reconnecting');
+
+            return;
+        }
+
+        if (this._reconnectCount > 3) {
+            logger.warn(`Reconnect limit hit at ${this._reconnectCount}.`);
+
+            this._redirectBackToLogin();
+
+            return;
+        }
+
+        this._reconnecting = true;
+        this._reconnectCount += 1;
+
+        // wait a little bit to retry to avoid a stampeding herd
+        const jitter = Math.floor(Math.random() * 1500) + 500;
+
+        logger.log(`Reconnect attempt number ${this._reconnectCount} in ${
+            jitter}ms`);
+
+        this._reconnectTimeout = setTimeout(() => {
+            logger.log('Attempting reconnect');
 
             remoteControlService.disconnect();
 
-            this._redirectBackToLogin();
-        });
+            this._loadService()
+                .then(() => {
+                    logger.log(
+                        `Reconnected after ${this.__reconnectCount} tries`);
+
+                    this._reconnecting = false;
+                    this._reconnectCount = 0;
+                })
+                .catch(error => {
+                    this._reconnecting = false;
+
+                    logger.error(`Reconnect failed ${error}`);
+
+                    this._reconnect();
+                });
+        }, jitter);
     }
 
     /**

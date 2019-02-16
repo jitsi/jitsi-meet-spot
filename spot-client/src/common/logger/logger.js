@@ -25,7 +25,7 @@ function formatMessage(level, message) {
  */
 export default {
     /**
-     * Logs an error level message.
+     * Logs an error level message. Should be used for critical errors.
      *
      * @param {string} message - The information to be logged as an error.
      * @returns {void}
@@ -35,12 +35,24 @@ export default {
     },
 
     /**
-     * Logs a normal level message.
+     * Logs a normal level message. Should be used for recording normal app
+     * behavior.
      *
      * @param {string} message - The information to be logged.
      * @returns {void}
      */
     log(message) {
         jitsiLogger.log(formatMessage('log', message));
+    },
+
+    /**
+     * Logs a warning message. Should be used for recoverable errors or to
+     * indicate recovery from errors.
+     *
+     * @param {string} message - The information to be logged.
+     * @returns {void}
+     */
+    warn(message) {
+        jitsiLogger.warn(formatMessage('warn', message));
     }
 };
