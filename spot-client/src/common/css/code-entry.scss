@@ -31,6 +31,7 @@
     .hidden-input {
         background: transparent;
         border: none;
+        bottom: 0;
         /**
          * Prevent auto-zooming of mobile browser by setting a font-size of
          * at least 16px.
@@ -42,7 +43,6 @@
         pointer-events: none;
         position: absolute;
         right: 50%;
-        top: 0;
         width: 1;
     }
 }

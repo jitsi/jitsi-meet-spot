@@ -10,6 +10,7 @@ target 'mobile' do
   target 'mobile-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
+
   end
 
   target 'mobileTests' do
