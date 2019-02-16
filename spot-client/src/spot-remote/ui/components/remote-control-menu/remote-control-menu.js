@@ -194,7 +194,7 @@ export default class RemoteControlMenu extends React.Component {
         const canWirelessScreenshare = this._isWirelessScreenshareSupported();
 
         // If neither screensharing mode is allowed then show nothing.
-        if (screensharingEnabled && !canWirelessScreenshare) {
+        if (!screensharingEnabled && !canWirelessScreenshare) {
             return null;
         }
 
