@@ -79,7 +79,7 @@
     font-size: var(--font-size-large);
 }
 
-.joinInfo {
+.info-footer {
     background: rgba(0, 0, 0, 0.3);
     bottom: 0;
     display: flex;
@@ -88,6 +88,10 @@
     padding: 10px;
     position: fixed;
     width: 100%;
+
+    .info-code {
+        text-transform: uppercase;
+    }
 }
 
 @keyframes animateDots {
