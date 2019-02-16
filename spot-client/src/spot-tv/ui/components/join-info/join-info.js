@@ -28,9 +28,7 @@ class JoinInfo extends React.Component {
         }
 
         return (
-            <div
-                className = 'joinInfo'
-                data-qa-id = { 'join-info' }>
+            <div className = 'joinInfo'>
                 <div>
                     <span>connect at: </span>
                     <span>
