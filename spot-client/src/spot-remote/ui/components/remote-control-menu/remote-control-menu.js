@@ -4,6 +4,8 @@ import React from 'react';
 import { JitsiMeetJSProvider } from 'common/vendor';
 import { NavButton } from './../nav-button';
 
+import ScreensharePicker from './screenshare-picker';
+
 /**
  * Displays buttons used for remotely controlling a Spot instance.
  *
@@ -247,21 +249,11 @@ export default class RemoteControlMenu extends React.Component {
                         ? this._onHideSelectScreenshare
                         : this._onShowSelectScreenshare } />
                 <div className = 'popup' >
-                    <div className = 'title'>
-                        How would you like to screenshare?
-                    </div>
-                    <div className = 'options'>
-                        <NavButton
-                            className = 'screenshare'
-                            iconName = 'screen_share'
-                            label = 'Wireless Screensharing'
-                            onClick = { this._onToggleWirelessScreensharing } />
-                        <NavButton
-                            className = 'screenshare'
-                            iconName = 'screen_share'
-                            label = 'HDMI Screensharing'
-                            onClick = { this._onToggleScreensharing } />
-                    </div>
+                    <ScreensharePicker
+                        onStartWiredScreenshare
+                            = { this._onToggleScreensharing }
+                        onStartWirelessScreenshare
+                            = { this._onToggleWirelessScreensharing } />
                 </div>
             </div>
         );
