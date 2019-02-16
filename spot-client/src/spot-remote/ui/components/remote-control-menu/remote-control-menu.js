@@ -4,6 +4,9 @@ import React from 'react';
 import { JitsiMeetJSProvider } from 'common/vendor';
 import { NavButton } from './../nav-button';
 
+import Popover from './popover';
+import ScreensharePicker from './screenshare-picker';
+
 /**
  * Displays buttons used for remotely controlling a Spot instance.
  *
@@ -32,41 +35,16 @@ export default class RemoteControlMenu extends React.Component {
             showScreensharePicker: false
         };
 
-        this._screensharePickerRef = React.createRef();
-
-        this._onClickOutsideScreensharePicker
-            = this._onClickOutsideScreensharePicker.bind(this);
         this._onHangUp = this._onHangUp.bind(this);
-        this._onHideSelectScreenshare
-            = this._onHideSelectScreenshare.bind(this);
-        this._onShowSelectScreenshare
-            = this._onShowSelectScreenshare.bind(this);
+        this._onHideScreensharePicker
+            = this._onHideScreensharePicker.bind(this);
+        this._onToggleScreensharePicker
+            = this._onToggleScreensharePicker.bind(this);
         this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
         this._onToggleScreensharing = this._onToggleScreensharing.bind(this);
         this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
         this._onToggleWirelessScreensharing
             = this._onToggleWirelessScreensharing.bind(this);
-    }
-
-    /**
-     * Adds a global event listener to automatically close the screenshare
-     * picker.
-     *
-     * @inheritdoc
-     */
-    componentDidMount() {
-        document.addEventListener(
-            'mousedown', this._onClickOutsideScreensharePicker);
-    }
-
-    /**
-     * Removes global event listeners.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        document.removeEventListener(
-            'mousedown', this._onClickOutsideScreensharePicker);
     }
 
     /**
@@ -123,6 +101,18 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     /**
+     * Hides the screenshare picker.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHideScreensharePicker() {
+        this.setState({
+            showScreensharePicker: false
+        });
+    }
+
+    /**
      * Changes the current local audio mute state.
      *
      * @private
@@ -139,7 +129,7 @@ export default class RemoteControlMenu extends React.Component {
      * @returns {void}
      */
     _onToggleScreensharing() {
-        this._onHideSelectScreenshare();
+        this._onHideScreensharePicker();
 
         this.props.remoteControlService.setScreensharing(
             !this.props.screensharing);
@@ -156,13 +146,25 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     /**
+     * Changes whether the screenshare picker is displayed or not.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToggleScreensharePicker() {
+        this.setState({
+            showScreensharePicker: !this.state.showScreensharePicker
+        });
+    }
+
+    /**
      * Changes the current wireless screensharing state.
      *
      * @private
      * @returns {void}
      */
     _onToggleWirelessScreensharing() {
-        this._onHideSelectScreenshare();
+        this._onHideScreensharePicker();
 
         const {
             isWirelessScreenshareConnectionActive,
@@ -192,7 +194,7 @@ export default class RemoteControlMenu extends React.Component {
         const canWirelessScreenshare = this._isWirelessScreenshareSupported();
 
         // If neither screensharing mode is allowed then show nothing.
-        if (screensharingEnabled && !canWirelessScreenshare) {
+        if (!screensharingEnabled && !canWirelessScreenshare) {
             return null;
         }
 
@@ -232,76 +234,23 @@ export default class RemoteControlMenu extends React.Component {
 
         // If both screensharings are allowed but neither is active then show
         // a screenshare picker.
-        const { showScreensharePicker } = this.state;
-        const className
-            = `with-popup ${showScreensharePicker ? '' : 'hide-popup'}`;
-
         return (
-            <div
-                className = { className }
-                ref = { this._screensharePickerRef }>
+            <Popover
+                onOutsideClick = { this._onHideScreensharePicker }
+                popoverContent = {
+                    <ScreensharePicker
+                        onStartWiredScreenshare
+                            = { this._onToggleScreensharing }
+                        onStartWirelessScreenshare
+                            = { this._onToggleWirelessScreensharing } />
+                }
+                ref = { this._screensharePickerRef }
+                showPopover = { this.state.showScreensharePicker }>
                 <NavButton
                     iconName = 'screen_share'
                     label = 'Share Content'
-                    onClick = { showScreensharePicker
-                        ? this._onHideSelectScreenshare
-                        : this._onShowSelectScreenshare } />
-                <div className = 'popup' >
-                    <div className = 'title'>
-                        How would you like to screenshare?
-                    </div>
-                    <div className = 'options'>
-                        <NavButton
-                            className = 'screenshare'
-                            iconName = 'screen_share'
-                            label = 'Wireless Screensharing'
-                            onClick = { this._onToggleWirelessScreensharing } />
-                        <NavButton
-                            className = 'screenshare'
-                            iconName = 'screen_share'
-                            label = 'HDMI Screensharing'
-                            onClick = { this._onToggleScreensharing } />
-                    </div>
-                </div>
-            </div>
+                    onClick = { this._onToggleScreensharePicker } />
+            </Popover>
         );
-    }
-
-    /**
-     * Shoes the screenshare picker.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onShowSelectScreenshare() {
-        this.setState({
-            showScreensharePicker: true
-        });
-    }
-
-    /**
-     * Hides the screenshare picker.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onHideSelectScreenshare() {
-        this.setState({
-            showScreensharePicker: false
-        });
-    }
-
-    /**
-     * Closes the screenshare picker a click has occurred outside of it.
-     *
-     * @param {MouseEvent} event - Mousedown event triggered anywhere on the
-     * current document.
-     * @private
-     * @returns {void}
-     */
-    _onClickOutsideScreensharePicker(event) {
-        if (!this._screensharePickerRef.current.contains(event.target)) {
-            this._onHideSelectScreenshare();
-        }
     }
 }

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from './../../../logger';
-import { date } from './../../../utils';
+import { logger } from 'common/logger';
+import { date } from 'common/utils';
 
 import Avatar from './avatar';
 

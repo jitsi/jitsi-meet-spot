@@ -3,12 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setSetupCompleted } from 'common/actions';
+import { logger } from 'common/logger';
 
 import CalendarAuth from './calendar-auth';
 import ScreenshareInput from './screenshare-input';
 import SelectRoom from './select-room';
 import Welcome from './welcome';
-import { logger } from '../../../../common/logger';
 
 /**
  * Displays the Spot setup flow by handling display of each setup step.

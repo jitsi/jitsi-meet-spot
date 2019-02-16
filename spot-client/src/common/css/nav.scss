@@ -128,7 +128,6 @@
             width: calc(var(--font-size-large) * 2.5);
         }
 
-
         * {
             font-size: var(--font-size-x-large);
 
@@ -181,7 +180,7 @@
 
     .screenshare.nav-button {
         .nav-label-container {
-            white-space: pre-wrap;
+            white-space: pre;
         }
     }
 }

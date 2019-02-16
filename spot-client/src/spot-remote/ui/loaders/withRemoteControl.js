@@ -45,7 +45,8 @@ export class RemoteControlLoader extends AbstractLoader {
         const { lock, roomName } = this.props;
 
         if (!lock || !roomName) {
-            logger.error('Missing required field for login');
+            logger.error(
+                `Missing required field for login ${lock} ${roomName}`);
 
             this._redirectBackToLogin();
 
@@ -54,7 +55,10 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect({
             onDisconnect: () => {
-                logger.error('Disconnected');
+                logger.error('Disconnected from the remote control service');
+
+                this.props.dispatch(
+                    addNotification('error', 'A connection error occurred'));
 
                 this._redirectBackToLogin();
             },
@@ -62,7 +66,8 @@ export class RemoteControlLoader extends AbstractLoader {
             lock,
             serverConfig: this.props.remoteControlConfiguration
         }).catch(error => {
-            logger.error(`Error while connecting to spot: ${error}`);
+            logger.error(`Error connecting to remote control service: ${
+                error.toString()}`);
 
             this.props.dispatch(
                 addNotification('error', 'Something went wrong'));
@@ -80,9 +85,6 @@ export class RemoteControlLoader extends AbstractLoader {
      * @returns {void}
      */
     _redirectBackToLogin() {
-        this.props.dispatch(
-            addNotification('error', 'A connection error occurred'));
-
         this.props.history.push('/');
     }
 }

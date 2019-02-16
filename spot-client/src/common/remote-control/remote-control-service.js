@@ -1,4 +1,4 @@
-import { logger } from '../logger';
+import { logger } from 'common/logger';
 
 import { COMMANDS, MESSAGES } from './constants';
 import ScreenshareService from './screenshare-connection';

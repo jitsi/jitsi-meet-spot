@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from './../../../logger';
+import { logger } from 'common/logger';
 
 /**
  * A component for catching uncaught errors and displaying an error message.
