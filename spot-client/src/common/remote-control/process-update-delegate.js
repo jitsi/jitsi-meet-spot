@@ -4,15 +4,15 @@ import {
     setCalendarEvents,
     setSpotLeft,
     updateSpotState
-} from './../actions';
+} from 'common/actions';
+import { logger } from 'common/logger';
 import {
     getCalendarEvents,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
     isSpot
-} from './../reducers';
-import { logger } from './../logger';
+} from 'common/reducers';
 
 import { COMMANDS, MESSAGES } from './constants';
 import { hasUpdatedEvents } from '../utils/hasUpdatedEvents';

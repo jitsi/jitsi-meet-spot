@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { logger } from './../../logger';
-import { getBackgroundUrl } from './../../reducers';
+import { logger } from 'common/logger';
+import { getBackgroundUrl } from 'common/reducers';
 
 /**
  * A React Component representing a single screen in the single-page application

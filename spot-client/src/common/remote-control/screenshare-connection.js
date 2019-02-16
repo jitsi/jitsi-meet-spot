@@ -1,5 +1,5 @@
-import { logger } from './../logger';
-import { JitsiMeetJSProvider } from './../vendor';
+import { logger } from 'common/logger';
+import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
  * Manages the ProxyConnectionService between between a remote control and a

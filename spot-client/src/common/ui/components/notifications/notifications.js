@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { removeNotification } from './../../../actions';
-import { logger } from './../../../logger';
-import { getAllNotifications } from './../../../reducers';
+import { removeNotification } from 'common/actions';
+import { logger } from 'common/logger';
+import { getAllNotifications } from 'common/reducers';
 
 import Notification from './notification';
 
