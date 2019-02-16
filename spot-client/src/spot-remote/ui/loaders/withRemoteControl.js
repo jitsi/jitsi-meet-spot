@@ -35,6 +35,20 @@ export class RemoteControlLoader extends AbstractLoader {
 
         this._reconnecting = false;
         this._reconnectCount = 0;
+        this._unmounted = false;
+
+    }
+
+    /**
+     * Clears any reconnect in progress.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._unmounted = true;
+
+        clearInterval(this._lockUpdateInterval);
+        clearTimeout(this._reconnectTimeout);
     }
 
     /**
@@ -78,12 +92,20 @@ export class RemoteControlLoader extends AbstractLoader {
             serverConfig: this.props.remoteControlConfiguration
         };
 
+        if (this._unmounted) {
+            return Promise.reject();
+        }
+
         return remoteControlService.connect(connectionConfig)
             .catch(error => {
                 logger.error(`Error connecting to remote control service: ${
                     error.toString()}. Will retry.`);
 
                 remoteControlService.disconnect();
+
+                if (this._unmounted) {
+                    return Promise.reject();
+                }
 
                 return remoteControlService.connect(connectionConfig)
                     .catch(retryError => {
@@ -116,6 +138,12 @@ export class RemoteControlLoader extends AbstractLoader {
             return;
         }
 
+        if (this._unmounted) {
+            logger.warn('Cancelling reconnect due to unmount');
+
+            return;
+        }
+
         if (this._reconnectCount > 3) {
             logger.warn(`Reconnect limit hit at ${this._reconnectCount}.`);
 
@@ -141,7 +169,7 @@ export class RemoteControlLoader extends AbstractLoader {
             this._loadService()
                 .then(() => {
                     logger.log(
-                        `Reconnected after ${this.__reconnectCount} tries`);
+                        `Reconnected after ${this._reconnectCount} tries`);
 
                     this._reconnecting = false;
                     this._reconnectCount = 0;
