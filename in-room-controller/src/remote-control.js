@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-    NativeModules,
     StyleSheet,
     View,
-    WebView
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 /**
  * A view for showing the spot remote control page within a WebView.
@@ -29,8 +28,7 @@ export default class RemoteControl extends React.PureComponent {
                 <WebView
                     bounces = { false }
                     mediaPlaybackRequiresUserAction = { false }
-                    scalesPageToFit = { false }
-                    scrollEnabled = { false }
+                    scrollEnabled = { true }
                     source = {{ uri: this.props.url }}
                     style = {{
                         ...StyleSheet.absoluteFillObject
