@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -13,8 +12,6 @@ import {
 import { remoteControlService } from 'common/remote-control';
 import {
     AbstractLoader,
-    Loading,
-    ServiceMessage,
     generateWrapper
 } from 'common/ui';
 import persistence from '../../../common/utils/persistence';
@@ -40,32 +37,6 @@ export class AsSpotLoader extends AbstractLoader {
         clearInterval(this._lockUpdateInterval);
         clearTimeout(this._reconnectTimeout);
     }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     * @returns {ReactElement}
-     */
-    render() {
-        if (this.state.showReconnecting) {
-            const message = 'A connection error has occurred.'
-                + 'Reconnection will automatically be attempted';
-
-            return <ServiceMessage message = { message } />;
-        }
-
-        if (this.state.loaded) {
-            const { children } = this.props;
-            const childProps = this._getPropsForChildren();
-
-            return React.Children.map(children, child =>
-                React.cloneElement(child, childProps));
-        }
-
-        return <Loading />;
-    }
-
 
     /**
      * Temporary method to generate a random string, intended to be used to
@@ -184,7 +155,6 @@ export class AsSpotLoader extends AbstractLoader {
 
                 this._loadService();
             }, jitter);
-
         });
     }
 
