@@ -39,7 +39,7 @@
         "md5": "2.2.1",
         "moment": "2.24.0",
         "node-sass": "4.11.0",
-        "nosleep.js": "0.9.0",
+        "nosleep.js": "github:virtuacoplenny/NoSleep.js#304185436a04deb3ed3ef91e67820ed28fd352d6",
         "prop-types": "15.7.2",
         "react": "16.8.2",
         "react-dom": "16.8.2",

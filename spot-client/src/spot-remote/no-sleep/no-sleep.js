@@ -56,6 +56,6 @@ export default class NoSleep extends React.Component {
     _enableNoSleep() {
         document.removeEventListener('click', this._enableNoSleep, false);
 
-        // this._noSleepJS.enable();
+        this._noSleepJS.enable();
     }
 }
