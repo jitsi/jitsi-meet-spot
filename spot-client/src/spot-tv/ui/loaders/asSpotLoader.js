@@ -14,7 +14,6 @@ import {
     AbstractLoader,
     generateWrapper
 } from 'common/ui';
-import persistence from '../../../common/utils/persistence';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -29,12 +28,25 @@ export class AsSpotLoader extends AbstractLoader {
     };
 
     /**
+     * Initializes a new {@code AsSpotLoader} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._isReconnecting = false;
+    }
+
+    /**
      * Clears the interval to update the remote control lock.
      *
      * @inheritdoc
      */
     componentWillUnmount() {
-        clearInterval(this._lockUpdateInterval);
+        this._stopLockUpdate();
+
         clearTimeout(this._reconnectTimeout);
     }
 
@@ -64,32 +76,6 @@ export class AsSpotLoader extends AbstractLoader {
     }
 
     /**
-     * Returns stored reconnection information, if any.
-     *
-     * @private
-     * @returns {Object}
-     */
-    _getCachedState() {
-        const reconnectInformation = persistence.get('spot-reconnect');
-
-        persistence.remove('spot-reconnect');
-
-        if (!reconnectInformation) {
-            return {};
-        }
-
-        const obj = JSON.parse(reconnectInformation);
-
-        if (Date.now() - obj.timestamp > 30000
-            || !obj.roomName
-            || !obj.lock) {
-            return {};
-        }
-
-        return obj;
-    }
-
-    /**
      * Establishes the connection to the remote control service.
      *
      * @override
@@ -97,19 +83,23 @@ export class AsSpotLoader extends AbstractLoader {
     _loadService() {
         this.props.dispatch(setIsSpot(true));
 
-        const cachedState = this._getCachedState();
-
         return remoteControlService.connect({
             onDisconnect: () => {
+                logger.error('Spot disconnected from the remote control '
+                    + 'service. Will attempt reconnect');
+
+                this._stopLockUpdate();
+
                 this._reconnect();
             },
-            lock: cachedState.lock,
+            lock: this.props.lock,
             joinAsSpot: true,
-            roomName: cachedState.roomName || this._generateRandomString(3),
+            roomName: this.props.roomName || this._generateRandomString(3),
             serverConfig: this.props.remoteControlConfiguration
         })
             .then(() => {
-                this.setState({ showReconnecting: false });
+                logger.log('Spot connected to remote control service');
+                this._isReconnecting = false;
 
                 this.props.dispatch(setRoomName(
                     remoteControlService.getRoomName()));
@@ -117,7 +107,12 @@ export class AsSpotLoader extends AbstractLoader {
                 this._startLockUpdate();
             })
             .catch(error => {
-                logger.error(error);
+                // TODO: handle the case where spot's password no longer works.
+
+                logger.error('Error connecting as spot to remote control '
+                    + `remote control service: ${error.toString()}`);
+
+                this._isReconnecting = false;
 
                 this._reconnect();
             });
@@ -132,30 +127,24 @@ export class AsSpotLoader extends AbstractLoader {
      * @returns {void}
      */
     _reconnect() {
-        if (this.state.showReconnecting) {
+        if (this._isReconnecting) {
+            logger.warn('Spot reconnect called while already reconnecting');
+
             return;
         }
 
-        this.setState({
-            showReconnecting: true
-        }, () => {
-            const jitter = Math.floor(Math.random() * 20000) + 1500;
+        this._isReconnecting = true;
 
-            this._reconnectTimeout = setTimeout(() => {
-                const reconnectData = {
-                    lock: this.props.lock,
-                    roomName: this.props.roomName,
-                    timestamp: Date.now()
-                };
+        // wait a little bit to retry to avoid a stampeding herd
+        const jitter = Math.floor(Math.random() * 1500) + 500;
 
-                persistence.set(
-                    'spot-reconnect', JSON.stringify(reconnectData));
+        this._reconnectTimeout = setTimeout(() => {
+            logger.log('Spot is attempting remote control reconnect');
 
-                remoteControlService.disconnect();
+            remoteControlService.disconnect();
 
-                this._loadService();
-            }, jitter);
-        });
+            this._loadService();
+        }, jitter);
     }
 
     /**
@@ -188,6 +177,16 @@ export class AsSpotLoader extends AbstractLoader {
         this._lockUpdateInterval = setInterval(() => {
             this._setLock();
         }, 300000);
+    }
+
+    /**
+     * Helper to stop the loop of changing the MUC password.
+     *
+     * @private
+     * @returns {void}
+     */
+    _stopLockUpdate() {
+        clearInterval(this._lockUpdateInterval);
     }
 }
 

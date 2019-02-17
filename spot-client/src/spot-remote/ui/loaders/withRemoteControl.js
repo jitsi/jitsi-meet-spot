@@ -98,8 +98,10 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect(connectionConfig)
             .catch(error => {
+                // TODO: handle the case of an incorrect password.
+
                 logger.error(`Error connecting to remote control service: ${
-                    error.toString()}. Will retry.`);
+                    error}. Will retry.`);
 
                 remoteControlService.disconnect();
 
