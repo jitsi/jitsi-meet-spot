@@ -10,6 +10,8 @@ import {
 } from 'common/reducers';
 import { LoadingIcon, View } from 'common/ui';
 
+import { NoSleep } from './../../no-sleep';
+
 import { withRemoteControl, withUltrasound } from './../loaders';
 
 import { Feedback, InCall, WaitingForCall } from './remote-views';
@@ -76,9 +78,11 @@ export class RemoteControl extends React.PureComponent {
      */
     render() {
         return (
-            <View name = 'remoteControl'>
-                { this._getView() }
-            </View>
+            <NoSleep>
+                <View name = 'remoteControl'>
+                    { this._getView() }
+                </View>
+            </NoSleep>
         );
     }
 
