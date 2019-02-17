@@ -98,19 +98,33 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect(connectionConfig)
             .catch(error => {
-                // TODO: handle the case of an incorrect password.
-
                 logger.error(`Error connecting to remote control service: ${
-                    error}. Will retry.`);
+                    error}`);
 
                 remoteControlService.disconnect();
+
+                if (error === 'not-authorized') {
+                    this.props.dispatch(
+                        addNotification('error', 'Something went wrong'));
+
+                    this._redirectBackToLogin();
+
+                    return Promise.reject();
+                }
 
                 if (this._unmounted) {
                     return Promise.reject();
                 }
 
+                logger.error('Will retry connection to remote control service');
+
                 return remoteControlService.connect(connectionConfig)
                     .catch(retryError => {
+                        const errorPromise = Promise.reject(retryError);
+
+                        if (this._unmounted) {
+                            return errorPromise;
+                        }
 
                         // Retry one time if an error occurs.
                         logger.error('Error retrying connection to remote'
@@ -121,7 +135,7 @@ export class RemoteControlLoader extends AbstractLoader {
 
                         this._redirectBackToLogin();
 
-                        return Promise.reject(retryError);
+                        return errorPromise;
                     });
             });
     }

@@ -115,8 +115,12 @@ export default class XmppConnection {
             // including error and unavailable.
             this.xmppConnection.xmpp.connection.addHandler(
                 presence => {
-                    if (presence.getElementsByTagName('error').length) {
-                        reject();
+                    const errors = presence.getElementsByTagName('error');
+
+                    if (errors.length) {
+                        const error = errors[0].children[0].tagName;
+
+                        reject(error);
 
                         return true;
                     }

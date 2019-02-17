@@ -107,10 +107,15 @@ export class AsSpotLoader extends AbstractLoader {
                 this._startLockUpdate();
             })
             .catch(error => {
-                // TODO: handle the case where spot's password no longer works.
-
                 logger.error('Error connecting as spot to remote control '
-                    + `remote control service: ${error.toString()}`);
+                    + `remote control service: ${error}`);
+
+                // The case of an incorrect password generally should not
+                // happen, but if it does then try to join a new room instead.
+                if (error === 'not-authorized') {
+                    this.props.dispatch(setRoomName(''));
+                    this.props.dispatch(setLock(''));
+                }
 
                 this._isReconnecting = false;
 
