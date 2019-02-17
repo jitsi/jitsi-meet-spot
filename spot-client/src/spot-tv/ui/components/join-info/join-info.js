@@ -28,7 +28,7 @@ class JoinInfo extends React.Component {
         }
 
         return (
-            <div className = 'joinInfo'>
+            <div className = 'info-footer'>
                 <div>
                     <span>connect at: </span>
                     <span>
@@ -37,7 +37,7 @@ class JoinInfo extends React.Component {
                 </div>
                 <div>
                     <span>sharing key: </span>
-                    <span data-qa-id = 'join-code'>
+                    <span className = 'info-code'>
                         { joinCode }
                     </span>
                 </div>
