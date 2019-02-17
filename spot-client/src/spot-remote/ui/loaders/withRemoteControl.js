@@ -33,10 +33,31 @@ export class RemoteControlLoader extends AbstractLoader {
     constructor(props) {
         super(props);
 
-        this._reconnecting = false;
-        this._reconnectCount = 0;
-        this._unmounted = false;
+        /**
+         * Whether or not a reconnect attempt is in progress. Used to prevent
+         * multiple reconnects from being in flight at the same time.
+         *
+         * @type {boolean}
+         */
+        this._isReconnectQueued = false;
 
+        /**
+         * The number of successive reconnect attempt made. After the limit of
+         * three attempts is reached, reconnects will be aborted and the login
+         * page will be displayed.
+         *
+         * @type {number}
+         */
+        this._reconnectCount = 0;
+
+        /**
+         * Whether or not the current instance of {@code RemoteControlLoader} is
+         * mounted. Used to prevent the various async remote control service
+         * connection flows from firing.
+         *
+         * @type {boolean}
+         */
+        this._unmounted = false;
     }
 
     /**
@@ -96,13 +117,13 @@ export class RemoteControlLoader extends AbstractLoader {
             serverConfig: this.props.remoteControlConfiguration
         })
         .then(() => {
-            this._isConnectingQueued = false;
+            this._isReconnectQueued = false;
         })
         .catch(error => {
             logger.error(`Error connecting to remote control service: ${
                 error}`);
 
-            this._isConnectingQueued = false;
+            this._isReconnectQueued = false;
 
             remoteControlService.disconnect();
 
@@ -130,7 +151,7 @@ export class RemoteControlLoader extends AbstractLoader {
     _reconnect() {
         // Underneath remoteControlService, strophe can end up disconnecting
         // twice, and having two reconnects should be avoided.
-        if (this._isConnectingQueued) {
+        if (this._isReconnectQueued) {
             logger.warn('Reconnect called while already reconnecting');
 
             return Promise.reject();
@@ -151,7 +172,7 @@ export class RemoteControlLoader extends AbstractLoader {
         }
 
         this._reconnectCount += 1;
-        this._isConnectingQueued = true;
+        this._isReconnectQueued = true;
 
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = Math.floor(Math.random() * 1500) + 500;
