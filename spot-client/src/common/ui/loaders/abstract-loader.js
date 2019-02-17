@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
+
 import { Loading } from './../views';
 
 /**
@@ -32,7 +34,8 @@ export class AbstractLoader extends React.PureComponent {
      */
     componentDidMount() {
         this._loadService()
-            .then(() => this.setState({ loaded: true }));
+            .then(() => this.setState({ loaded: true }))
+            .catch(() => logger.warn('abstract loader failed to load service'));
     }
 
     /**
