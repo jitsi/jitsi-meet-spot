@@ -28,3 +28,7 @@ fi
 # npm run start
 
 # kill $pid
+
+cd ../in-room-controller
+npm install
+npm run lint
