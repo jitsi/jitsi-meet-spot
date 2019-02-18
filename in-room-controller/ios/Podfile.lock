@@ -1,3 +1,25 @@
-PODFILE CHECKSUM: e107e2f4b605feaf204b8f3fe59c64d28cc6db0b
+PODS:
+  - React (0.11.0):
+    - React/Core (= 0.11.0)
+  - react-native-webview (5.2.1):
+    - React
+  - React/Core (0.11.0)
+
+DEPENDENCIES:
+  - react-native-webview (from `../node_modules/react-native-webview`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - React
+
+EXTERNAL SOURCES:
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
+
+SPEC CHECKSUMS:
+  React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
+  react-native-webview: a42108b827082f8f0333529b0772102031d5960d
+
+PODFILE CHECKSUM: 21b7eb08b67436ee5706220c5814e3985ea64e1f
 
 COCOAPODS: 1.5.3
