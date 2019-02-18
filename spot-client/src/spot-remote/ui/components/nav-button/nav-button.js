@@ -11,7 +11,8 @@ import { logger } from 'common/logger';
  */
 export default class NavButton extends React.Component {
     static defaultProps = {
-        className: ''
+        className: '',
+        type: 'button'
     };
 
     static propTypes = {
@@ -20,7 +21,8 @@ export default class NavButton extends React.Component {
         iconName: PropTypes.string,
         label: PropTypes.string,
         onClick: PropTypes.func,
-        qaId: PropTypes.string
+        qaId: PropTypes.string,
+        type: PropTypes.string
     };
 
     /**
@@ -47,7 +49,8 @@ export default class NavButton extends React.Component {
             className,
             iconName,
             label,
-            qaId
+            qaId,
+            type
         } = this.props;
 
         return (
@@ -56,7 +59,8 @@ export default class NavButton extends React.Component {
                     = { `nav-button ${active ? 'active' : ''} ${className}` }
                 data-qa-id = { qaId }
                 onClick = { this._onClick }
-                tabIndex = { 0 }>
+                tabIndex = { 0 }
+                type = { type }>
 
                 {
 

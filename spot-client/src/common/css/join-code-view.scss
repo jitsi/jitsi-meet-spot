@@ -25,15 +25,23 @@
         justify-content: center;
 
         .code-entry {
+            // Usage of !important is needed to override the inline style
+            // set by react-code-input.
             @media #{$mq-mobile-s} {
-                display: grid;
+                display: grid !important;
 
                 grid-template-columns: 1fr 1fr 1fr;
             }
 
             @media #{$mq-tablet} {
-                display: flex;
+                display: flex !important;
             }
         }
+    }
+
+    .hidden-submit {
+        position: absolute;
+        pointer-events: none;
+        visibility: hidden;
     }
 }

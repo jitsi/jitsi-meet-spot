@@ -11,7 +11,6 @@ import {
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { View } from 'common/ui';
-import { isAutoFocusSupported } from 'common/utils';
 
 import { CodeInput, NavButton } from './../components';
 import { withUltrasound } from './../loaders';
@@ -124,10 +123,12 @@ export class JoinCodeEntry extends React.Component {
                             onSubmit = { this._onFormSubmit }>
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
-                                    autoFocus = { isAutoFocusSupported() }
-                                    forceUppercase = { true }
                                     onChange = { this._onCodeChange }
                                     value = { this.state.enteredCode } />
+                                <input
+                                    className = 'hidden-submit'
+                                    tabIndex = { -1 }
+                                    type = 'submit' />
                             </div>
                         </form>
                     </div>
