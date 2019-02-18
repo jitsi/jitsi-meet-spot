@@ -32,7 +32,7 @@ class JoinCodePage extends PageObject {
             constants.VISIBILITY_WAIT
         );
 
-        Array.prototype.forEach.call(code, (character, index) => {
+        Array.prototype.forEach.call(code, character => {
             this.driver.keys(character);
         });
 
