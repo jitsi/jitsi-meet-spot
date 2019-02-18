@@ -3,5 +3,10 @@
         "eslint-config-jitsi",
         "eslint-config-jitsi/jsdoc",
         "eslint-config-jitsi/react"
-    ]
+    ],
+    "settings": {
+        "react": {
+            "version": "16.8.2"
+        }
+    }
 }

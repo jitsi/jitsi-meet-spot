@@ -1,15 +1,22 @@
 #!/bin/bash
 
-pid=""
-
 cd spot-client
 npm install
 npm run lint
 npm run test
+npm run build:prod
 
-if [ -z "$TEST_SERVER_URL" ]; then
-    npm run build:prod
+cd ../in-room-controller
+npm install
+npm run lint
 
+cd ../spot-webdriver
+npm install
+npm run lint
+
+pid=""
+
+# if [ -z "$TEST_SERVER_URL" ]; then
     # port=TEST_PORT
     # export TEST_SERVER_URL="http://localhost:$TEST_PORT"
 
@@ -20,15 +27,8 @@ if [ -z "$TEST_SERVER_URL" ]; then
 
     # ps aux | grep "$pid" | grep -v "grep"
     # [ $? -eq 0 ] || exit $?;
-fi
+# fi
 
-# cd ../spot-webdriver
-
-# npm install
 # npm run start
 
 # kill $pid
-
-cd ../in-room-controller
-npm install
-npm run lint
