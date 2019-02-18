@@ -2,22 +2,24 @@
     outline: none;
     position: relative;
 
-    .box {
+    input {
         align-items: center;
         background-color: var(--container-bg-color);
         border: 1px solid var(--container-sub-content-font-color);
         border-radius: 5px;
         color: var(--container-content-font-color);
-        display: flex;
+        display: inline-block;
         font-size: var(--font-size-x-large);
         height: calc(var(--font-size-x-large) * 0.7);
         justify-content: center;
-        line-height:  var(--font-size-x-large);
+        line-height: normal;
         margin-top: 10px;
+        padding: 0;
+        text-align: center;
         text-transform: uppercase;
         width: calc(var(--font-size-x-large) * 0.5);
 
-        &.active {
+        &:focus {
             border: 5px solid var(--active);
         }
         &:hover {
@@ -26,23 +28,5 @@
         &:not(:last-child) {
             margin-right: 0.5em;
         }
-    }
-
-    .hidden-input {
-        background: transparent;
-        border: none;
-        bottom: 0;
-        /**
-         * Prevent auto-zooming of mobile browser by setting a font-size of
-         * at least 16px.
-         */
-        font-size: 16px;
-        height: 1;
-        left: 50%;
-        outline: none;
-        pointer-events: none;
-        position: absolute;
-        right: 50%;
-        width: 1;
     }
 }
