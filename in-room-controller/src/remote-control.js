@@ -26,6 +26,7 @@ export default class RemoteControl extends React.PureComponent {
         return (
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
                 <WebView
+                    allowsInlineMediaPlayback = { true }
                     bounces = { false }
                     mediaPlaybackRequiresUserAction = { false }
                     scrollEnabled = { true }
