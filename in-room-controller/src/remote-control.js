@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {
     StyleSheet,
-    View,
+    View
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 
@@ -26,6 +26,7 @@ export default class RemoteControl extends React.PureComponent {
         return (
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
                 <WebView
+                    allowsInlineMediaPlayback = { true }
                     bounces = { false }
                     mediaPlaybackRequiresUserAction = { false }
                     scrollEnabled = { true }

@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "acorn": "6.1.0",
         "babel-core": "7.0.0-bridge.0",
         "babel-eslint": "10.0.1",
         "eslint": "5.14.0",
