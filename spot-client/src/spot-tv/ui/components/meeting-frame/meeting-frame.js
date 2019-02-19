@@ -40,6 +40,8 @@ export default class MeetingFrame extends React.Component {
         this._isVideoMuted = null;
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
+        this._onFeedbackPromptDisplayed
+            = this._onFeedbackPromptDisplayed.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
         this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
@@ -89,6 +91,8 @@ export default class MeetingFrame extends React.Component {
             'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.addListener(
             'feedbackSubmitted', this.props.onMeetingLeave);
+        this._jitsiApi.addListener(
+            'feedbackPromptDisplayed', this._onFeedbackPromptDisplayed);
         this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
         this._jitsiApi.addListener(
@@ -209,14 +213,18 @@ export default class MeetingFrame extends React.Component {
         logger.log('meetingFrame meeting left');
 
         this.props.remoteControlService.notifyMeetingJoinStatus('');
+    }
 
-        // FIXME: the iframe api does not provide an event for when the
-        // (post-call) feedback dialog is displayed. Assume the feedback
-        // dialog has been displayed if the conference does not
-        // immediately fire the "readyToClose" event.
-        this._showingFeedbackTimeout = setTimeout(() => {
-            this.props.remoteControlService.notifyViewStatus('feedback');
-        }, 500);
+    /**
+     * Called when Jitsi Meet displays the feedback prompt.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onFeedbackPromptDisplayed() {
+        logger.log('feedback prompt displayed');
+
+        this.props.remoteControlService.notifyViewStatus('feedback');
     }
 
     /**
