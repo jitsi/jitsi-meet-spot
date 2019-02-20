@@ -21,7 +21,7 @@ export default class MeetingFrame extends React.Component {
         meetingUrl: PropTypes.string,
         onMeetingLeave: PropTypes.func,
         onMeetingStart: PropTypes.func,
-        remoteControlService: PropTypes.func,
+        remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
     };
