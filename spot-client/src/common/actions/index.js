@@ -11,7 +11,9 @@ import {
     REMOTE_CONTROL_SPOT_LEFT,
     SETUP_COMPLETED,
     SETUP_SET_SCREENSHARE_DEVICE,
+    SETUP_SET_SCREENSHARE_IDLE_VALUE,
     SET_IS_SPOT,
+    SET_SCREENSHARE_DEVICE_CONNECTED,
     SET_SHOW_MEETING_TOOLBAR
 } from './../reducers';
 
@@ -176,6 +178,37 @@ export function setScreenshareDevice(label) {
     return {
         type: SETUP_SET_SCREENSHARE_DEVICE,
         label
+    };
+}
+
+/**
+ * Signals a device has connected or disconnected from wired screensharing.
+ *
+ * @param {boolean} connected - Whether or not a device is connected to wired
+ * screensharing.
+ * @returns {Object}
+ */
+export function setScreenshareDeviceConnected(connected) {
+    return {
+        type: SET_SCREENSHARE_DEVICE_CONNECTED,
+        connected
+    };
+}
+
+/**
+ * Signals to store the initial rgba sum for the screensharing video input
+ * source while it is idle. When the rgba sum for the input changes, compared
+ * to the stored initial value, then it is assumed a device has been plugged
+ * in.
+ *
+ * @param {string} value - The rgba sum of all pixels form the source while
+ * idle.
+ * @returns {Object}
+ */
+export function setScreenshareIdleValue(value) {
+    return {
+        type: SETUP_SET_SCREENSHARE_IDLE_VALUE,
+        value
     };
 }
 

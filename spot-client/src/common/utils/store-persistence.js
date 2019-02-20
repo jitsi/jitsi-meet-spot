@@ -31,6 +31,7 @@ const keysToStore = [
     'calendars.displayName',
     'setup.completed',
     'setup.screenshareDevice',
+    'setup.screenshareDeviceIdleValue',
     'setup.showMeetingToolbar'
 ];
 
@@ -71,6 +72,8 @@ function parsePersistedState(state) {
         setup: {
             completed: state.setup.completed,
             screenshareDevice: state.setup.screenshareDevice,
+            screenshareDeviceIdleValue:
+                state.setup.screenshareDeviceIdleValue,
             showMeetingToolbar: state.setup.showMeetingToolbar
         }
     };

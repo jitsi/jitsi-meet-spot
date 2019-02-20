@@ -35,7 +35,7 @@ const suffixCount = suffixes.length;
  *
  * @returns {string}
  */
-export default function getRandomMeetingName() {
+export function getRandomMeetingName() {
     const randomPrefix = prefixes[Math.floor(Math.random() * prefixCount)];
     const randomSuffix = suffixes[Math.floor(Math.random() * suffixCount)];
 

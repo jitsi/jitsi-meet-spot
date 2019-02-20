@@ -6,7 +6,11 @@ const DEFAULT_STATE = {
 
 export const SETUP_COMPLETED = 'SETUP_COMPLETED';
 export const SETUP_SET_SCREENSHARE_DEVICE = 'SETUP_SET_SCREENSHARE_DEVICE';
+export const SETUP_SET_SCREENSHARE_IDLE_VALUE
+    = 'SETUP_SET_SCREENSHARE_IDLE_VALUE';
 export const SET_IS_SPOT = 'SET_IS_SPOT';
+export const SET_SCREENSHARE_DEVICE_CONNECTED
+    = 'SET_SCREENSHARE_DEVICE_CONNECTED';
 export const SET_SHOW_MEETING_TOOLBAR = 'SET_SHOW_MEETING_TOOLBAR';
 
 /**
@@ -35,6 +39,18 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             screenshareDevice: action.label
+        };
+
+    case SETUP_SET_SCREENSHARE_IDLE_VALUE:
+        return {
+            ...state,
+            screenshareDeviceIdleValue: action.value
+        };
+
+    case SET_SCREENSHARE_DEVICE_CONNECTED:
+        return {
+            ...state,
+            screenshareDeviceConnected: action.connected
         };
 
     case SET_SHOW_MEETING_TOOLBAR:
@@ -90,6 +106,28 @@ export function getMeetingOptions(state) {
  */
 export function getScreenshareDevice(state) {
     return state.setup.screenshareDevice;
+}
+
+/**
+ * A selector which returns the idle state of the video input device to use
+ * when screensharing.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getScreenshareDeviceIdleValue(state) {
+    return state.setup.screenshareDeviceIdleValue;
+}
+
+/**
+ * A selector which returns whether or not a device has been detected to be
+ * connected with the wired screensharing input.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isScreenShareDeviceConnect(state) {
+    return Boolean(state.setup.screenshareDeviceConnected);
 }
 
 export default setup;
