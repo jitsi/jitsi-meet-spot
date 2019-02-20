@@ -1,6 +1,7 @@
 import './variables.scss';
 
 import './reset.scss';
+import './material-icons/icon-font.scss';
 
 import './clock.scss';
 import './code-entry.scss';

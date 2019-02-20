@@ -28,12 +28,12 @@ export default class ScreensharePicker extends React.Component {
                 <div className = 'options'>
                     <NavButton
                         className = 'screenshare'
-                        iconName = 'wifi'
+                        iconName = 'wireless_screen_share'
                         label = 'Wireless Screensharing'
                         onClick = { this.props.onStartWirelessScreenshare } />
                     <NavButton
                         className = 'screenshare'
-                        iconName = 'settings_input_hdmi'
+                        iconName = 'wired_screen_share'
                         label = 'HDMI Screensharing'
                         onClick = { this.props.onStartWiredScreenshare } />
                 </div>
