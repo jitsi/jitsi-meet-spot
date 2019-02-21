@@ -105,7 +105,7 @@ export class Home extends React.Component {
                                 className = 'join-info'
                                 data-qa-id = 'join-info'
                                 onClick = { this._onOpenRemote }>
-                                Sharing key { joinCode }
+                                Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
                             </div> }
                     </div>
                     <div className = 'settings_cog'>
@@ -219,7 +219,10 @@ export class Home extends React.Component {
                 <h1>Welcome to Spot!</h1>
                 <div className = 'setup-instructions'>
                     <div>You're almost set</div>
-                    <div>Pair your remote and connect your calendar.</div>
+                    <div>
+                        Pair your remote and connect your calendar at
+                        <div>{ windowHandler.getBaseUrl() }</div>
+                    </div>
                 </div>
                 {
                     this.props.joinCode
