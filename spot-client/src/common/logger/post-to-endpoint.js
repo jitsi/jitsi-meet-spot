@@ -118,61 +118,63 @@ export default class PostToEndpoint {
     _sendLogs() {
         const request = this._requestsQueue.length && this._requestsQueue[0];
 
-        if (request) {
-            const { retry, events } = request;
-
-            fetch(
-                this._endpointUrl,
-                {
-                    body: JSON.stringify({
-                        events,
-                        'device_id': this._deviceId
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    method: 'POST',
-                    mode: 'cors'
-                }
-            ).then(response => {
-                const { ok, status } = response;
-
-                if (!ok) {
-                    // Throwing will cause a retry on server errors
-                    if (status >= 500 && status < 600) {
-                        throw new Error(`Request error - status: ${status}`);
-                    }
-                    // eslint-disable-next-line no-console
-                    console.warn(`Dropping log request, status: ${status}`);
-                }
-
-                return true;
-            })
-            .catch(error => {
-                // eslint-disable-next-line no-console
-                console.error(`Log request error, attempt: ${retry + 1}`, error);
-
-                if (retry < PostToEndpoint.MAX_RETRIES) {
-                    request.retry += 1;
-                    window.setTimeout(
-                        () => this._sendLogs(),
-                        PostToEndpoint._getNextTimeout(request.retry));
-
-                    return false;
-                }
-
-                // eslint-disable-next-line no-console
-                console.warn('Dropped log request - retry limit exceeded');
-
-                return true;
-            })
-            .then(proceedWithNext => {
-                if (proceedWithNext) {
-                    // Remove the request from the queue and try the next one
-                    this._requestsQueue.shift();
-                    this._sendLogs();
-                }
-            });
+        if (!request) {
+            return;
         }
+
+        const { retry, events } = request;
+
+        fetch(
+            this._endpointUrl,
+            {
+                body: JSON.stringify({
+                    events,
+                    'device_id': this._deviceId
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                mode: 'cors'
+            }
+        ).then(response => {
+            const { ok, status } = response;
+
+            if (!ok) {
+                // Throwing will cause a retry on server errors
+                if (status >= 500 && status < 600) {
+                    throw new Error(`Request error - status: ${status}`);
+                }
+                // eslint-disable-next-line no-console
+                console.warn(`Dropping log request, status: ${status}`);
+            }
+
+            return true;
+        })
+        .catch(error => {
+            // eslint-disable-next-line no-console
+            console.error(`Log request error, attempt: ${retry + 1}`, error);
+
+            if (retry < PostToEndpoint.MAX_RETRIES) {
+                request.retry += 1;
+                window.setTimeout(
+                    () => this._sendLogs(),
+                    PostToEndpoint._getNextTimeout(request.retry));
+
+                return false;
+            }
+
+            // eslint-disable-next-line no-console
+            console.warn('Dropped log request - retry limit exceeded');
+
+            return true;
+        })
+        .then(proceedWithNext => {
+            if (proceedWithNext) {
+                // Remove the request from the queue and try the next one
+                this._requestsQueue.shift();
+                this._sendLogs();
+            }
+        });
     }
 }
