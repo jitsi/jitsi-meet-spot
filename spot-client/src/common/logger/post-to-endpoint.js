@@ -7,12 +7,13 @@ class PostLogsRequest {
     /**
      * Creates new {@code PostLogsRequest}.
      *
-     * @param {number} attempt - The send attempt starting from 1.
+     * @param {number} retry - Tracks the retry attempts starting from 0 which
+     * is not a retry yet.
      * @param {Array<string>} events - The JSON events as formatted in
      * {@link PostToEndpoint#send}.
      */
-    constructor(attempt, events) {
-        this.attempt = attempt;
+    constructor(retry, events) {
+        this.retry = retry;
         this.events = events;
     }
 }
@@ -22,25 +23,24 @@ class PostLogsRequest {
  */
 export default class PostToEndpoint {
     /**
-     * How many times it'll try to send a log batch.
+     * How many times it'll retry to send a log batch.
      * @type {number}
      */
-    static MAX_ATTEMPTS = 4;
+    static MAX_RETRIES = 3;
 
     /**
      * Gets next timeout using the full jitter pattern.
      *
-     * @param {number} attempt - The attempt number. On the first retry
-     * the value is 2.
+     * @param {number} retry - The retry number. It's 1 on the first retry.
      * @returns {number} - The amount of waiting before trying another time
      * given in milliseconds.
      * @private
      */
-    static _getNextTimeout(attempt) {
+    static _getNextTimeout(retry) {
         // 1st retry 0 - 3 seconds
         // 2nd retry 0 - 9 seconds
         // 3rd retry 0 - 27 seconds
-        return Math.floor(Math.random() * Math.pow(3, attempt) * 1000);
+        return Math.floor(Math.random() * Math.pow(3, retry) * 1000);
     }
 
     /**
@@ -96,8 +96,7 @@ export default class PostToEndpoint {
             }
         }, []);
 
-        this._requestsQueue.push(
-            new PostLogsRequest(/* attempt */ 1, jsonEvents));
+        this._requestsQueue.push(new PostLogsRequest(/* retry # */ 0, jsonEvents));
 
         // Make sure that there's only 1 request on the flight by starting
         // the reaction chain only if there's 1 request in the queue (the one
@@ -111,16 +110,16 @@ export default class PostToEndpoint {
      * Tries to send first log request from the requests queue. In case of
      * success it will keep taking requests of the queue until it's empty.
      * On failure it will retry the request with a delay until
-     * the {@link PostToEndpoint#MAX_ATTEMPTS} is reached.
+     * the {@link PostToEndpoint#MAX_RETRIES} is reached.
      *
      * @returns {void}
      * @private
      */
     _sendLogs() {
-        const request = this._requestsQueue.shift();
+        const request = this._requestsQueue.length && this._requestsQueue[0];
 
         if (request) {
-            const { attempt, events } = request;
+            const { retry, events } = request;
 
             fetch(
                 this._endpointUrl,
@@ -138,29 +137,28 @@ export default class PostToEndpoint {
             ).then(response => {
                 const { ok, status } = response;
 
-                if (!ok && status >= 500 && status < 600) {
-                    // Retry on server errors and network failures which
-                    // is a regular fetch reject case.
-                    throw new Error(`Request error - status: ${status}`);
-                } else if (ok) {
-                    // Try sending the next request from the queue
-                    this._sendLogs();
-                } else {
+                if (!ok) {
+                    // Throwing will cause a retry on server errors
+                    if (status >= 500 && status < 600) {
+                        throw new Error(`Request error - status: ${status}`);
+                    }
                     // eslint-disable-next-line no-console
                     console.warn(`Dropping log request, status: ${status}`);
                 }
+
+                // Remove the request from the queue and try the next one
+                this._requestsQueue.shift();
+                this._sendLogs();
             })
             .catch(error => {
                 // eslint-disable-next-line no-console
-                console.error(`Log request error, attempt: ${attempt}`, error);
+                console.error(`Log request error, attempt: ${retry + 1}`, error);
 
-                if (attempt < PostToEndpoint.MAX_ATTEMPTS) {
-                    // Put the current request back at the front of the queue
-                    this._requestsQueue.unshift(
-                        new PostLogsRequest(attempt + 1, events));
+                if (retry < PostToEndpoint.MAX_RETRIES) {
+                    request.retry += 1;
                     window.setTimeout(
                         () => this._sendLogs(),
-                        PostToEndpoint._getNextTimeout(attempt));
+                        PostToEndpoint._getNextTimeout(request.retry));
                 } else {
                     // eslint-disable-next-line no-console
                     console.warn('Dropped log request - retry limit exceeded');
