@@ -69,6 +69,18 @@ window.JitsiMeetSpotConfig = {
     },
 
     /**
+     * Configuration related to audio/video capturing and playback.
+     */
+    MEDIA: {
+
+        /**
+         * The maximum frames per second the browser should be allowed to
+         * capture during wireless screensharing.
+         */
+        WIRELESS_SS_MAX_FPS: process.env.WIRELESS_SS_MAX_FPS || 60
+    },
+
+    /**
      * Configuration object for loading the ultrasound library.
      */
     ULTRASOUND: {

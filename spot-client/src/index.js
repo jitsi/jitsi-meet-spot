@@ -67,6 +67,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 const history = createHashHistory();
 
+remoteControlService.configureWirelessScreensharing({
+    desktopSharingFrameRate: {
+        max: window.JitsiMeetSpotConfig.MEDIA.WIRELESS_SS_MAX_FPS
+    }
+});
 remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 
 render(

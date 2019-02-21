@@ -25,6 +25,20 @@ class RemoteControlService {
     }
 
     /**
+     * Configures the wireless screensharing service with options for
+     * screenshare source capturing.
+     *
+     * @param {Object} configuration - A configuration file for how the wireless
+     * screensharing should be captured.
+     * @param {Object} configuration.maxFps - The maximum number of frame per
+     * second which should be captured from the sharer's device.
+     * @returns {void}
+     */
+    configureWirelessScreensharing(configuration = {}) {
+        this._wirelessScreensharingConfiguration = configuration;
+    }
+
+    /**
      * Creates a connection to the remote control service.
      *
      * @param {Object} options - Information necessary for creating the MUC.
@@ -298,6 +312,8 @@ class RemoteControlService {
     setWirelessScreensharing(enable) {
         if (enable) {
             const connection = new ScreenshareService({
+                mediaConfiguration:
+                    this._wirelessScreensharingConfiguration || {},
 
                 /**
                  * Callback invoked when the connection has been closed
