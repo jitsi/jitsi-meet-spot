@@ -146,9 +146,7 @@ export default class PostToEndpoint {
                     console.warn(`Dropping log request, status: ${status}`);
                 }
 
-                // Remove the request from the queue and try the next one
-                this._requestsQueue.shift();
-                this._sendLogs();
+                return true;
             })
             .catch(error => {
                 // eslint-disable-next-line no-console
@@ -159,9 +157,20 @@ export default class PostToEndpoint {
                     window.setTimeout(
                         () => this._sendLogs(),
                         PostToEndpoint._getNextTimeout(request.retry));
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.warn('Dropped log request - retry limit exceeded');
+
+                    return false;
+                }
+
+                // eslint-disable-next-line no-console
+                console.warn('Dropped log request - retry limit exceeded');
+
+                return true;
+            })
+            .then(proceedWithNext => {
+                if (proceedWithNext) {
+                    // Remove the request from the queue and try the next one
+                    this._requestsQueue.shift();
+                    this._sendLogs();
                 }
             });
         }
