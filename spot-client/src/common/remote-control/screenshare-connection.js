@@ -10,6 +10,11 @@ export default class ScreenshareConnection {
      * Initializes a new {@code ScreenshareConnection} instance.
      *
      * @param {Object} options - Configuration to initialize with.
+     * @param {Object} options.mediaConfiguration - Describes how the desktop
+     * sharing source should be captured.
+     * @param {Object} options.mediaConfiguration.desktopSharingFrameRate - The
+     * frames per second which should be captured from the desktop sharing
+     * source. Can include a "max" and "min" key, both being numbers.
      * @param {Function} options.sendMessage - Callback invoked when the
      * {@code ProxyConnectionService} needs to send a message out to Jitsi-Meet.
      * @param {Function} options.onConnectionClosed - Callback to invoke when a
@@ -81,7 +86,10 @@ export default class ScreenshareConnection {
 
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
-        return JitsiMeetJS.createLocalTracks({ devices: [ 'desktop' ] })
+        return JitsiMeetJS.createLocalTracks({
+            ...this.options.mediaConfiguration,
+            devices: [ 'desktop' ]
+        })
             .then(jitsiLocalTracks => {
                 logger.log('screenshareConnection created desktop track');
 
