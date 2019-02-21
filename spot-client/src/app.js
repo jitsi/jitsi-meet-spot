@@ -11,7 +11,13 @@ import {
     Notifications
 } from 'common/ui';
 import { JoinCodeEntry, RemoteControl } from 'spot-remote/ui';
-import { Admin, Home, Meeting, Setup } from 'spot-tv/ui';
+import {
+    Admin,
+    Home,
+    Meeting,
+    Setup,
+    WiredScreenshareDetector
+} from 'spot-tv/ui';
 
 /**
  * The root of the application which determines what view should be displayed.
@@ -108,6 +114,7 @@ export class App extends React.Component {
 
         return (
             <ErrorBoundary errorComponent = { FatalError }>
+                <WiredScreenshareDetector />
                 <IdleCursorDetector
                     onCursorIdleChange = { this._onCursorIdleChange }>
                     <div className = { rootClassName }>

@@ -15,7 +15,7 @@ import {
 } from 'common/reducers';
 import { hasUpdatedEvents, windowHandler } from 'common/utils';
 
-import { SettingsButton } from './../components';
+import { SettingsButton, WiredScreenshareRedirector } from './../components';
 import { withCalendar, asSpotLoader } from './../loaders';
 
 import SpotView from './spot-view';
@@ -92,22 +92,26 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     render() {
+        const joinCode = this.props.joinCode.toUpperCase();
+
         return (
             <SpotView name = 'home'>
-                <div className = 'spot-home'>
-                    <Clock />
-                    { this._getCalendarEventsView() }
-                    { this.props.isSetupComplete
-                        && <div
-                            className = 'join-info'
-                            data-qa-id = 'join-info'
-                            onClick = { this._onOpenRemote }>
-                            Sharing key { this.props.joinCode.toUpperCase() }
-                        </div> }
-                </div>
-                <div className = 'settings_cog'>
-                    <SettingsButton />
-                </div>
+                <WiredScreenshareRedirector>
+                    <div className = 'spot-home'>
+                        <Clock />
+                        { this._getCalendarEventsView() }
+                        { this.props.isSetupComplete
+                            && <div
+                                className = 'join-info'
+                                data-qa-id = 'join-info'
+                                onClick = { this._onOpenRemote }>
+                                Sharing key { joinCode }
+                            </div> }
+                    </div>
+                    <div className = 'settings_cog'>
+                        <SettingsButton />
+                    </div>
+                </WiredScreenshareRedirector>
             </SpotView>
         );
     }

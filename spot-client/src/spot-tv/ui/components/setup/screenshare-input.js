@@ -2,10 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setScreenshareDevice } from 'common/actions';
+import { wiredScreenshareService } from './../../../wired-screenshare-service';
+import {
+    setScreenshareDevice,
+    setScreenshareIdleValue
+} from 'common/actions';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
-import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
  * Displays a picker for selecting a video input device to use while
@@ -42,18 +45,8 @@ class ScreenshareInput extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        // First call gUM in order to populate labels from enumerateDevices.
-        JitsiMeetJS.createLocalTracks({ devices: [ 'video' ] })
-            .then(tracks => tracks.forEach(track => track.dispose()))
-            .then(() => new Promise(
-                resolve => JitsiMeetJS.mediaDevices.enumerateDevices(resolve)
-            ))
-            .then(devices => {
-                const cameras
-                    = devices.filter(device => device.kind === 'videoinput');
-
+        wiredScreenshareService.getVideoInputDevices()
+            .then(cameras => {
                 logger.log(`screenshareInput got ${cameras.length} devices`);
 
                 this.setState({
@@ -76,6 +69,7 @@ class ScreenshareInput extends React.Component {
                 <div className = 'setup-title'>
                     Select screenshare input
                 </div>
+                <div>Please ensure no device is connected to the input</div>
                 <div className = 'setup-content'>
                     { this._renderDeviceList() }
                 </div>
@@ -97,7 +91,10 @@ class ScreenshareInput extends React.Component {
     _onSkip() {
         logger.log('screenshareInput skipping device selection');
 
-        this._selectDevice();
+        this.props.dispatch(setScreenshareDevice());
+        this.props.dispatch(setScreenshareIdleValue());
+
+        this.props.onSuccess();
     }
 
     /**
@@ -127,11 +124,23 @@ class ScreenshareInput extends React.Component {
      * @private
      * @returns {void}
      */
-    _selectDevice(label = '') {
+    _selectDevice(label) {
         logger.log('screenshareInput selected a device');
 
-        this.props.dispatch(setScreenshareDevice(label));
-        this.props.onSuccess();
+        const changeListener
+            = wiredScreenshareService.getVideoChangeListener(label);
+
+        changeListener.start()
+            .then(() => {
+                const value = changeListener.getCurrentValue();
+
+                changeListener.destroy();
+
+                this.props.dispatch(setScreenshareDevice(label));
+                this.props.dispatch(setScreenshareIdleValue(value));
+
+                this.props.onSuccess();
+            });
     }
 }
 

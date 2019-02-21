@@ -94,7 +94,8 @@ export class Meeting extends React.Component {
                     onMeetingStart = { this._onMeetingStart }
                     remoteControlService = { this.props.remoteControlService }
                     screenshareDevice = { this.props.screenshareDevice }
-                    showMeetingToolbar = { this.props.showMeetingToolbar } />
+                    showMeetingToolbar = { this.props.showMeetingToolbar }
+                    startWithScreenshare = { this._startWithScreensharing() } />
                 {
 
                     /**
@@ -157,6 +158,19 @@ export class Meeting extends React.Component {
      */
     _onMeetingStart(meetingApi) {
         this.props.dispatch(setMeetingApi(meetingApi));
+    }
+
+    /**
+     * Parses query params to determine if the meeting should be started with
+     * wired screensharing.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _startWithScreensharing() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+
+        return queryParams.get('screenshare') === 'true';
     }
 }
 

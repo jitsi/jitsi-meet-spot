@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { logger } from 'common/logger';
-
-import getRandomMeetingName from './get-random-meeting-name';
+import { getRandomMeetingName } from 'common/utils';
 import MeetingNameEntry from './meeting-name-entry';
 
 /**
