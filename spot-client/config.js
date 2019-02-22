@@ -127,7 +127,6 @@ window.JitsiMeetSpotConfig = {
         bosh: process.env.XMPP_BOSH || '',
         hosts: {
             domain: process.env.XMPP_HOSTS_DOMAIN || '',
-            focus: process.env.XMPP_HOSTS_FOCUS || '',
             muc: process.env.XMPP_HOSTS_MUC_URL || ''
         }
     }
