@@ -15,8 +15,6 @@ import { ROUTES } from 'common/routing';
 
 import { MeetingFrame } from './../components';
 
-import SpotView from './spot-view';
-
 /**
  * Displays the meeting url specified in the url.
  *
@@ -85,9 +83,7 @@ export class Meeting extends React.Component {
         }
 
         return (
-            <SpotView
-                name = 'meeting'
-                remoteControlService = { this.props.remoteControlService }>
+            <div className = 'view'>
                 <MeetingFrame
                     displayName = { this.props.displayName }
                     meetingUrl = { meetingUrl }
@@ -108,7 +104,7 @@ export class Meeting extends React.Component {
                      */
                 }
                 <div className = 'meetingMouseHider' />
-            </SpotView>
+            </div>
         );
     }
 

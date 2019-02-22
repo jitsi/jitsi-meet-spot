@@ -8,8 +8,6 @@ import { ROUTES } from 'common/routing';
 import { Setup as SetupSteps } from './../components';
 import { withCalendar } from './../loaders';
 
-import SpotView from './spot-view';
-
 /**
  * Displays the Spot setup flow.
  *
@@ -40,13 +38,9 @@ export class Setup extends React.Component {
      */
     render() {
         return (
-            <SpotView
-                name = 'setup'
-                remoteControlService = { this.props.remoteControlService }>
-                <div className = 'container'>
-                    <SetupSteps onSuccess = { this._onRedirectHome } />
-                </div>
-            </SpotView>
+            <div className = 'container'>
+                <SetupSteps onSuccess = { this._onRedirectHome } />
+            </div>
         );
     }
 

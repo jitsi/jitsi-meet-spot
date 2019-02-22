@@ -16,6 +16,7 @@ import {
     Home,
     Meeting,
     Setup,
+    SpotView,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
@@ -229,7 +230,7 @@ export class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderAdminView() {
-        return this._renderSpotViewWithRemoteControl(Admin);
+        return this._renderSpotViewWithRemoteControl(Admin, 'admin');
     }
 
     /**
@@ -239,7 +240,7 @@ export class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderHomeView() {
-        return this._renderSpotViewWithRemoteControl(Home);
+        return this._renderSpotViewWithRemoteControl(Home, 'home');
     }
 
     /**
@@ -249,7 +250,7 @@ export class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderMeetingView() {
-        return this._renderSpotViewWithRemoteControl(Meeting);
+        return this._renderSpotViewWithRemoteControl(Meeting, 'meeting');
     }
 
     /**
@@ -259,7 +260,7 @@ export class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderSetupView() {
-        return this._renderSpotViewWithRemoteControl(Setup);
+        return this._renderSpotViewWithRemoteControl(Setup, 'setup');
     }
 
     /**
@@ -268,13 +269,17 @@ export class App extends React.Component {
      *
      * @param {ReactComponent} View - The child to display within the remote
      * control service loader.
+     * @param {string} name - The name associate with the view. Used for remotes
+     * to identify what view the spot is showing.
      * @private
      * @returns {ReactComponent}
      */
-    _renderSpotViewWithRemoteControl(View) {
+    _renderSpotViewWithRemoteControl(View, name) {
         return (
             <SpotTVRemoteControlLoader>
-                <View />
+                <SpotView name = { name }>
+                    <View />
+                </SpotView>
             </SpotTVRemoteControlLoader>
         );
     }

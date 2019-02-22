@@ -18,8 +18,6 @@ import { hasUpdatedEvents, windowHandler } from 'common/utils';
 import { SettingsButton, WiredScreenshareRedirector } from './../components';
 import { withCalendar } from './../loaders';
 
-import SpotView from './spot-view';
-
 /**
  * A view of all known meetings in the calendar connected with Spot. Provides
  * the ability to join those meetings and open a remote control instance.
@@ -95,26 +93,22 @@ export class Home extends React.Component {
         const joinCode = this.props.joinCode.toUpperCase();
 
         return (
-            <SpotView
-                name = 'home'
-                remoteControlService = { this.props.remoteControlService }>
-                <WiredScreenshareRedirector>
-                    <div className = 'spot-home'>
-                        <Clock />
-                        { this._getCalendarEventsView() }
-                        { this.props.isSetupComplete
-                            && <div
-                                className = 'join-info'
-                                data-qa-id = 'join-info'
-                                onClick = { this._onOpenRemote }>
-                                Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
-                            </div> }
-                    </div>
-                    <div className = 'settings_cog'>
-                        <SettingsButton />
-                    </div>
-                </WiredScreenshareRedirector>
-            </SpotView>
+            <WiredScreenshareRedirector>
+                <div className = 'spot-home'>
+                    <Clock />
+                    { this._getCalendarEventsView() }
+                    { this.props.isSetupComplete
+                        && <div
+                            className = 'join-info'
+                            data-qa-id = 'join-info'
+                            onClick = { this._onOpenRemote }>
+                            Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
+                        </div> }
+                </div>
+                <div className = 'settings_cog'>
+                    <SettingsButton />
+                </div>
+            </WiredScreenshareRedirector>
         );
     }
 
