@@ -16,9 +16,7 @@ import {
 import { hasUpdatedEvents, windowHandler } from 'common/utils';
 
 import { SettingsButton, WiredScreenshareRedirector } from './../components';
-import { withCalendar, asSpotLoader } from './../loaders';
-
-import SpotView from './spot-view';
+import { withCalendar } from './../loaders';
 
 /**
  * A view of all known meetings in the calendar connected with Spot. Provides
@@ -95,24 +93,22 @@ export class Home extends React.Component {
         const joinCode = this.props.joinCode.toUpperCase();
 
         return (
-            <SpotView name = 'home'>
-                <WiredScreenshareRedirector>
-                    <div className = 'spot-home'>
-                        <Clock />
-                        { this._getCalendarEventsView() }
-                        { this.props.isSetupComplete
-                            && <div
-                                className = 'join-info'
-                                data-qa-id = 'join-info'
-                                onClick = { this._onOpenRemote }>
-                                Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
-                            </div> }
-                    </div>
-                    <div className = 'settings_cog'>
-                        <SettingsButton />
-                    </div>
-                </WiredScreenshareRedirector>
-            </SpotView>
+            <WiredScreenshareRedirector>
+                <div className = 'spot-home'>
+                    <Clock />
+                    { this._getCalendarEventsView() }
+                    { this.props.isSetupComplete
+                        && <div
+                            className = 'join-info'
+                            data-qa-id = 'join-info'
+                            onClick = { this._onOpenRemote }>
+                            Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
+                        </div> }
+                </div>
+                <div className = 'settings_cog'>
+                    <SettingsButton />
+                </div>
+            </WiredScreenshareRedirector>
         );
     }
 
@@ -260,4 +256,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default asSpotLoader(withCalendar(connect(mapStateToProps)(Home)));
+export default withCalendar(connect(mapStateToProps)(Home));

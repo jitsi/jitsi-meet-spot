@@ -10,8 +10,6 @@ import {
     ScreenshareStatus
 } from './../components';
 
-import SpotView from './spot-view';
-
 /**
  * A component for providing post-setup Spot configuration.
  *
@@ -19,25 +17,23 @@ import SpotView from './spot-view';
  */
 export default function AdminView() {
     return (
-        <SpotView name = 'admin'>
-            <div className = 'container'>
-                <div className = 'admin'>
-                    <CalendarStatus />
-                    <ScreenshareStatus />
-                    <ResetState />
-                    <InMeetingConfig />
-                    <div>
-                        <Link to = { ROUTES.SETUP }>
-                            <Button>Setup</Button>
-                        </Link>
-                    </div>
-                    <div>
-                        <Link to = { ROUTES.HOME }>
-                            <Button>Done</Button>
-                        </Link>
-                    </div>
+        <div className = 'container'>
+            <div className = 'admin'>
+                <CalendarStatus />
+                <ScreenshareStatus />
+                <ResetState />
+                <InMeetingConfig />
+                <div>
+                    <Link to = { ROUTES.SETUP }>
+                        <Button>Setup</Button>
+                    </Link>
+                </div>
+                <div>
+                    <Link to = { ROUTES.HOME }>
+                        <Button>Done</Button>
+                    </Link>
                 </div>
             </div>
-        </SpotView>
+        </div>
     );
 }

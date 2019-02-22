@@ -10,10 +10,7 @@ import {
     getRemoteControlServerConfig
 } from 'common/reducers';
 import { remoteControlService } from 'common/remote-control';
-import {
-    AbstractLoader,
-    generateWrapper
-} from 'common/ui';
+import { AbstractLoader } from 'common/ui';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -21,14 +18,14 @@ import {
  *
  * @extends React.Component
  */
-export class AsSpotLoader extends AbstractLoader {
+export class SpotTVRemoteControlLoader extends AbstractLoader {
     static propTypes = {
         ...AbstractLoader.propTypes,
         dispatch: PropTypes.func
     };
 
     /**
-     * Initializes a new {@code AsSpotLoader} instance.
+     * Initializes a new {@code SpotTVRemoteControlLoader} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -203,7 +200,7 @@ export class AsSpotLoader extends AbstractLoader {
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code AsSpotLoader}.
+ * {@code SpotTVRemoteControlLoader}.
  *
  * @param {Object} state - The Redux state.
  * @private
@@ -217,7 +214,4 @@ function mapStateToProps(state) {
     };
 }
 
-const ConnectedAsSpotLoader
-    = withRouter(connect(mapStateToProps)(AsSpotLoader));
-
-export default generateWrapper(ConnectedAsSpotLoader);
+export default withRouter(connect(mapStateToProps)(SpotTVRemoteControlLoader));

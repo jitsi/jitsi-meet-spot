@@ -1,2 +1,3 @@
-export { default as asSpotLoader } from './asSpotLoader';
+export { default as SpotTVRemoteControlLoader }
+    from './SpotTVRemoteControlLoader';
 export { default as withCalendar } from './withCalendar';

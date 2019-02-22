@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { ROUTES } from 'common/routing';
 
 import { Setup as SetupSteps } from './../components';
 import { withCalendar } from './../loaders';
-
-import SpotView from './spot-view';
 
 /**
  * Displays the Spot setup flow.
@@ -16,7 +15,8 @@ import SpotView from './spot-view';
  */
 export class Setup extends React.Component {
     static propTypes = {
-        history: PropTypes.object
+        history: PropTypes.object,
+        remoteControlService: PropTypes.object
     };
 
     /**
@@ -38,11 +38,9 @@ export class Setup extends React.Component {
      */
     render() {
         return (
-            <SpotView name = 'setup'>
-                <div className = 'container'>
-                    <SetupSteps onSuccess = { this._onRedirectHome } />
-                </div>
-            </SpotView>
+            <div className = 'container'>
+                <SetupSteps onSuccess = { this._onRedirectHome } />
+            </div>
         );
     }
 
@@ -57,4 +55,4 @@ export class Setup extends React.Component {
     }
 }
 
-export default withCalendar(connect()(Setup));
+export default withRouter(withCalendar(connect()(Setup)));

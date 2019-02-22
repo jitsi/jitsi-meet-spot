@@ -4,7 +4,6 @@ import React from 'react';
 import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
-import { asSpotLoader } from './../loaders';
 
 /**
  * A React Component representing a single screen in the Spot client. Wraps
@@ -26,7 +25,19 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        this.props.remoteControlService.notifyViewStatus(this.props.name);
+        this._updateCurrentViewStatus(this.props.name);
+    }
+
+    /**
+     * Updates the {@code remoteControlService} with the currently displayed
+     * viewed name.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        if (prevProps.name !== this.props.name) {
+            this._updateCurrentViewStatus(this.props.name);
+        }
     }
 
     /**
@@ -35,13 +46,32 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     render() {
+        const { children } = this.props;
+        const childComponents = React.Children.map(children, child =>
+            React.cloneElement(
+                child,
+                { remoteControlService: this.props.remoteControlService }
+            ));
+
         return (
             <View { ...this.props }>
-                { this.props.children }
+                { childComponents }
                 <JoinInfo />
             </View>
         );
     }
+
+    /**
+     * Helper for informing remote controls of the current view displays on
+     * the Spot-TV.
+     *
+     * @param {string} name - The name of the current view.
+     * @private
+     * @returns {void}
+     */
+    _updateCurrentViewStatus(name) {
+        this.props.remoteControlService.notifyViewStatus(name);
+    }
 }
 
-export default asSpotLoader(SpotView);
+export default SpotView;
