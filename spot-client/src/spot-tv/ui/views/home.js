@@ -16,7 +16,7 @@ import {
 import { hasUpdatedEvents, windowHandler } from 'common/utils';
 
 import { SettingsButton, WiredScreenshareRedirector } from './../components';
-import { withCalendar, asSpotLoader } from './../loaders';
+import { withCalendar } from './../loaders';
 
 import SpotView from './spot-view';
 
@@ -95,7 +95,9 @@ export class Home extends React.Component {
         const joinCode = this.props.joinCode.toUpperCase();
 
         return (
-            <SpotView name = 'home'>
+            <SpotView
+                name = 'home'
+                remoteControlService = { this.props.remoteControlService }>
                 <WiredScreenshareRedirector>
                     <div className = 'spot-home'>
                         <Clock />
@@ -260,4 +262,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default asSpotLoader(withCalendar(connect(mapStateToProps)(Home)));
+export default withCalendar(connect(mapStateToProps)(Home));

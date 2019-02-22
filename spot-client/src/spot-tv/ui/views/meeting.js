@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router-dom';
 import { addNotification, setMeetingApi } from 'common/actions';
 import { logger } from 'common/logger';
 import {
@@ -14,7 +14,6 @@ import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 
 import { MeetingFrame } from './../components';
-import { asSpotLoader } from './../loaders';
 
 import SpotView from './spot-view';
 
@@ -86,7 +85,9 @@ export class Meeting extends React.Component {
         }
 
         return (
-            <SpotView name = 'meeting'>
+            <SpotView
+                name = 'meeting'
+                remoteControlService = { this.props.remoteControlService }>
                 <MeetingFrame
                     displayName = { this.props.displayName }
                     meetingUrl = { meetingUrl }
@@ -191,4 +192,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default asSpotLoader(connect(mapStateToProps)(Meeting));
+export default withRouter(connect(mapStateToProps)(Meeting));

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,11 +16,15 @@ import SpotView from './spot-view';
 /**
  * A component for providing post-setup Spot configuration.
  *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function AdminView() {
+export default function AdminView(props) {
     return (
-        <SpotView name = 'admin'>
+        <SpotView
+            name = 'admin'
+            remoteControlService = { props.remoteControlService }>
             <div className = 'container'>
                 <div className = 'admin'>
                     <CalendarStatus />
@@ -41,3 +46,7 @@ export default function AdminView() {
         </SpotView>
     );
 }
+
+AdminView.propTypes = {
+    remoteControlService: PropTypes.object
+};

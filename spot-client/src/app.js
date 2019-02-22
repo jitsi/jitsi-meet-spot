@@ -18,6 +18,7 @@ import {
     Setup,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
+import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
 
 /**
  * The root of the application which determines what view should be displayed.
@@ -46,6 +47,11 @@ export class App extends React.Component {
         this._onKeyDown = this._onKeyDown.bind(this);
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onTouchStart = this._onTouchStart.bind(this);
+
+        this._renderAdminView = this._renderAdminView.bind(this);
+        this._renderHomeView = this._renderHomeView.bind(this);
+        this._renderMeetingView = this._renderMeetingView.bind(this);
+        this._renderSetupView = this._renderSetupView.bind(this);
     }
 
     /**
@@ -128,17 +134,18 @@ export class App extends React.Component {
                                  */
                             }
                             <Route
-                                component = { Admin }
-                                path = { ROUTES.ADMIN } />
+                                path = { ROUTES.ADMIN }
+                                render = { this._renderAdminView } />
                             <Route
-                                component = { Meeting }
-                                path = { ROUTES.MEETING } />
+                                path = { ROUTES.MEETING }
+                                render = { this._renderMeetingView } />
                             <Route
-                                component = { Setup }
-                                path = { ROUTES.SETUP } />
+                                path = { ROUTES.SETUP }
+                                render = { this._renderSetupView } />
                             <Route
-                                component = { Home }
-                                path = { ROUTES.HOME } />
+                                path = { ROUTES.HOME }
+                                render = { this._renderHomeView } />
+
                             {
 
                                 /**
@@ -213,6 +220,63 @@ export class App extends React.Component {
      */
     _onTouchStart() {
         /** no-op */
+    }
+
+    /**
+     * Returns the Spot TV admin view.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderAdminView() {
+        return this._renderSpotViewWithRemoteControl(Admin);
+    }
+
+    /**
+     * Returns the Spot TV home (calendar) view.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderHomeView() {
+        return this._renderSpotViewWithRemoteControl(Home);
+    }
+
+    /**
+     * Returns the Spot TV in-meeting view.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderMeetingView() {
+        return this._renderSpotViewWithRemoteControl(Meeting);
+    }
+
+    /**
+     * Returns the Spot TV setup view.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderSetupView() {
+        return this._renderSpotViewWithRemoteControl(Setup);
+    }
+
+    /**
+     * Helper to ensure all Spot TV views share the same wrapper responsible
+     * for maintaining the remote control service.
+     *
+     * @param {ReactComponent} View - The child to display within the remote
+     * control service loader.
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderSpotViewWithRemoteControl(View) {
+        return (
+            <SpotTVRemoteControlLoader>
+                <View />
+            </SpotTVRemoteControlLoader>
+        );
     }
 }
 

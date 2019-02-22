@@ -4,7 +4,6 @@ import React from 'react';
 import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
-import { asSpotLoader } from './../loaders';
 
 /**
  * A React Component representing a single screen in the Spot client. Wraps
@@ -44,4 +43,4 @@ class SpotView extends React.Component {
     }
 }
 
-export default asSpotLoader(SpotView);
+export default SpotView;
