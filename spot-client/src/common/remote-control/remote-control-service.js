@@ -81,11 +81,15 @@ class RemoteControlService {
      * @returns {void}
      */
     disconnect() {
-        if (this.xmppConnection) {
-            this.xmppConnection.destroy();
-            this.xmppConnection = null;
-            this.xmppConnectionPromise = null;
-        }
+        const destroyPromise = this.xmppConnection
+            ? this.xmppConnection.destroy()
+            : Promise.resolve();
+
+        return destroyPromise
+            .then(() => {
+                this.xmppConnection = null;
+                this.xmppConnectionPromise = null;
+            });
     }
 
     /**

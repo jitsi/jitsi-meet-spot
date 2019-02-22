@@ -130,7 +130,7 @@ export class AsSpotLoader extends AbstractLoader {
      * progress.
      *
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _reconnect() {
         if (this._isReconnecting) {
@@ -144,13 +144,14 @@ export class AsSpotLoader extends AbstractLoader {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = Math.floor(Math.random() * 1500) + 500;
 
-        this._reconnectTimeout = setTimeout(() => {
-            logger.log('Spot is attempting remote control reconnect');
+        return remoteControlService.disconnect()
+            .then(() => {
+                this._reconnectTimeout = setTimeout(() => {
+                    logger.log('Spot is attempting remote control reconnect');
 
-            remoteControlService.disconnect();
-
-            this._loadService();
-        }, jitter);
+                    this._loadService();
+                }, jitter);
+            });
     }
 
     /**
