@@ -56,6 +56,9 @@ export default class MeetingFrame extends React.Component {
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
+        this.state = {
+            feedbackDisplayed: false
+        };
     }
 
     /**
@@ -142,9 +145,12 @@ export default class MeetingFrame extends React.Component {
      */
     render() {
         return (
-            <div
-                className = 'meeting-frame'
-                ref = { this._setMeetingContainerRef } />
+            <>
+                { this.state.feedbackDisplayed && this._renderFeedbackHider() }
+                <div
+                    className = 'meeting-frame'
+                    ref = { this._setMeetingContainerRef } />
+            </>
         );
     }
 
@@ -227,6 +233,9 @@ export default class MeetingFrame extends React.Component {
     _onFeedbackPromptDisplayed() {
         logger.log('feedback prompt displayed');
 
+        this.setState({
+            feedbackDisplayed: true
+        });
         this.props.remoteControlService.notifyViewStatus('feedback');
     }
 
@@ -240,6 +249,9 @@ export default class MeetingFrame extends React.Component {
      */
     _onMeetingLoaded() {
         this._meetingLoaded = true;
+        this.setState({
+            feedbackDisplayed: false
+        });
     }
 
     /**
@@ -292,6 +304,25 @@ export default class MeetingFrame extends React.Component {
         this._isVideoMuted = muted;
 
         this.props.remoteControlService.notifyVideoMuteStatus(muted);
+    }
+
+    /**
+     * Renders a text overlay which hides Jitsi Meet iFrame when it's asking for feedback.
+     *
+     * @returns {ReactNode}
+     * @private
+     */
+    _renderFeedbackHider() {
+        return (
+            <div className = 'feedback-hider-overlay'>
+                <div className = 'feedback-hider-text-frame'>
+                    <h1>Thanks for using Spot!</h1>
+                    <div className = 'feedback-hider-text'>
+                        <div>You can use the remote control device to submit feedback now.</div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     /**
