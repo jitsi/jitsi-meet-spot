@@ -370,8 +370,8 @@ export default class XmppConnection {
     setLock(lock) {
         this._lock = lock;
 
-        return new Promise(resolve => {
-            this.room.lockRoom(this._lock, resolve);
+        return new Promise((resolve, reject) => {
+            this.room.lockRoom(this._lock, resolve, reject, reject);
         });
     }
 

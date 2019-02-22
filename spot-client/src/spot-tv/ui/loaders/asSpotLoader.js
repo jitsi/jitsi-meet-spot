@@ -103,9 +103,10 @@ export class AsSpotLoader extends AbstractLoader {
 
                 this.props.dispatch(setRoomName(
                     remoteControlService.getRoomName()));
-                this._setLock();
-                this._startLockUpdate();
+
+                return this._setLock();
             })
+            .then(() => this._startLockUpdate())
             .catch(error => {
                 logger.error('Error connecting as spot to remote control '
                     + `remote control service: ${error}`);
@@ -161,14 +162,18 @@ export class AsSpotLoader extends AbstractLoader {
     _setLock() {
         const lock = this._generateRandomString(3);
 
-        remoteControlService.setLock(lock);
+        return remoteControlService.setLock(lock)
+            .then(() => {
+                logger.log(`New lock set ${lock}`);
 
-        this.props.dispatch(setLock(lock));
+                this.props.dispatch(setLock(lock));
 
-        const joinCode = `${this.props.roomName}${lock}`;
+                const joinCode = `${this.props.roomName}${lock}`;
 
-        remoteControlService.notifyJoinCodeUpdate(joinCode);
-        this.props.dispatch(setJoinCode(joinCode));
+                remoteControlService.notifyJoinCodeUpdate(joinCode);
+
+                this.props.dispatch(setJoinCode(joinCode));
+            });
     }
 
     /**
