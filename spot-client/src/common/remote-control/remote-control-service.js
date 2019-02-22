@@ -81,11 +81,15 @@ class RemoteControlService {
      * @returns {void}
      */
     disconnect() {
-        if (this.xmppConnection) {
-            this.xmppConnection.destroy();
-            this.xmppConnection = null;
-            this.xmppConnectionPromise = null;
-        }
+        const destroyPromise = this.xmppConnection
+            ? this.xmppConnection.destroy()
+            : Promise.resolve();
+
+        return destroyPromise
+            .then(() => {
+                this.xmppConnection = null;
+                this.xmppConnectionPromise = null;
+            });
     }
 
     /**
@@ -270,10 +274,10 @@ class RemoteControlService {
      * Requests change the password on a joined room.
      *
      * @param {string} lock - The new password.
-     * @returns {void}
+     * @returns {Promise}
      */
     setLock(lock) {
-        this.xmppConnection.setLock(lock);
+        return this.xmppConnection.setLock(lock);
     }
 
     /**

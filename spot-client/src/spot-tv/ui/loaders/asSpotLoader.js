@@ -103,9 +103,10 @@ export class AsSpotLoader extends AbstractLoader {
 
                 this.props.dispatch(setRoomName(
                     remoteControlService.getRoomName()));
-                this._setLock();
-                this._startLockUpdate();
+
+                return this._setLock();
             })
+            .then(() => this._startLockUpdate())
             .catch(error => {
                 logger.error('Error connecting as spot to remote control '
                     + `remote control service: ${error}`);
@@ -129,7 +130,7 @@ export class AsSpotLoader extends AbstractLoader {
      * progress.
      *
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _reconnect() {
         if (this._isReconnecting) {
@@ -143,13 +144,14 @@ export class AsSpotLoader extends AbstractLoader {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = Math.floor(Math.random() * 1500) + 500;
 
-        this._reconnectTimeout = setTimeout(() => {
-            logger.log('Spot is attempting remote control reconnect');
+        return remoteControlService.disconnect()
+            .then(() => {
+                this._reconnectTimeout = setTimeout(() => {
+                    logger.log('Spot is attempting remote control reconnect');
 
-            remoteControlService.disconnect();
-
-            this._loadService();
-        }, jitter);
+                    this._loadService();
+                }, jitter);
+            });
     }
 
     /**
@@ -161,14 +163,18 @@ export class AsSpotLoader extends AbstractLoader {
     _setLock() {
         const lock = this._generateRandomString(3);
 
-        remoteControlService.setLock(lock);
+        return remoteControlService.setLock(lock)
+            .then(() => {
+                logger.log(`New lock set ${lock}`);
 
-        this.props.dispatch(setLock(lock));
+                this.props.dispatch(setLock(lock));
 
-        const joinCode = `${this.props.roomName}${lock}`;
+                const joinCode = `${this.props.roomName}${lock}`;
 
-        remoteControlService.notifyJoinCodeUpdate(joinCode);
-        this.props.dispatch(setJoinCode(joinCode));
+                remoteControlService.notifyJoinCodeUpdate(joinCode);
+
+                this.props.dispatch(setJoinCode(joinCode));
+            });
     }
 
     /**

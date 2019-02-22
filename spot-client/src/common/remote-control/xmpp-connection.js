@@ -1,6 +1,7 @@
 import { $iq } from 'strophe.js';
 
-import { JitsiMeetJSProvider } from './../vendor';
+import { logger } from 'common/logger';
+import { JitsiMeetJSProvider } from 'common/vendor';
 
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
@@ -161,13 +162,16 @@ export default class XmppConnection {
     /**
      * Disconnects from any joined MUC and disconnects the XMPP connection.
      *
-     * @returns {void}
+     * @returns {Promise}
      */
     destroy() {
-        // Call doLeave instead of leave to avoid an unhandled promise
-        // rejection.
-        this.room && this.room.doLeave();
-        this.xmppConnection.disconnect();
+        const leavePromise = this.room ? this.room.leave() : Promise.resolve();
+
+        // FIXME: The leave promise always times out.
+        return leavePromise
+            .catch(error =>
+                logger.error(`XmppConnection error on disconnect ${error}`))
+            .then(() => this.xmppConnection.disconnect());
     }
 
     /**
@@ -370,8 +374,8 @@ export default class XmppConnection {
     setLock(lock) {
         this._lock = lock;
 
-        return new Promise(resolve => {
-            this.room.lockRoom(this._lock, resolve);
+        return new Promise((resolve, reject) => {
+            this.room.lockRoom(this._lock, resolve, reject, reject);
         });
     }
 
