@@ -182,7 +182,7 @@ export default class XmppConnection {
             return this.room;
         }
 
-        this.room = this.xmppConnection.xmpp.createRoom(roomName, {});
+        this.room = this.xmppConnection.xmpp.createRoom(roomName, { disableFocus: true });
 
         return this.room;
     }
@@ -193,16 +193,16 @@ export default class XmppConnection {
      *
      * @param {string} lock - A lock code, if any, to set in order to join the
      * muc.
-     * @returns {void}
+     * @returns {Promise} - A Promise resolved when libjitsi-meet's ChatRoom.join method is resolved
+     * which is not exactly equal with being in the muc already.
      */
     _joinMuc(lock) {
-        if (lock) {
-            this.room.join(lock);
-        }
-
-        // send presence manually to avoid focus joining
-        this.room.sendPresence(true);
-        this.attemptedJoin = true;
+        // NOTE At the time of this writing lib-jitsi-meet resolves this promise without
+        // waiting for the actually confirmation that the muc room has been joined.
+        //
+        // The 'lock' argument is optional on the lib-jitsi-meet side and it's fine to pass
+        // undefined.
+        return this.room.join(lock);
     }
 
     /**
