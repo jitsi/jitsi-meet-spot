@@ -75,9 +75,15 @@ window.JitsiMeetSpotConfig = {
 
         /**
          * The maximum frames per second the browser should be allowed to
-         * capture during wireless screensharing.
+         * capture during wired and wireless screensharing.
          */
-        WIRELESS_SS_MAX_FPS: process.env.WIRELESS_SS_MAX_FPS || 60
+        SS_MAX_FPS: process.env.SS_MAX_FPS,
+
+        /**
+         * The minumum frames per second the browser should capture during
+         * wired and wireless screensharing.
+         */
+        SS_MIN_FPS: process.env.SS_MIN_FPS
     },
 
     /**

@@ -24,7 +24,9 @@ export class MeetingFrame extends React.Component {
     static propTypes = {
         displayName: PropTypes.string,
         invites: PropTypes.array,
+        maxDesktopSharingFramerate: PropTypes.number,
         meetingUrl: PropTypes.string,
+        minDesktopSharingFramerate: PropTypes.number,
         onMeetingLeave: PropTypes.func,
         onMeetingStart: PropTypes.func,
         remoteControlService: PropTypes.object,
@@ -90,6 +92,10 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice,
+                desktopSharingFrameRate: {
+                    max: this.props.maxDesktopSharingFramerate,
+                    min: this.props.minDesktopSharingFramerate
+                },
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
                 startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
