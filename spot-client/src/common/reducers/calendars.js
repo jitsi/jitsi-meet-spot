@@ -22,10 +22,11 @@ const calendar = (state = DEFAULT_STATE, action) => {
     case CALENDAR_SET_ACCOUNT:
         return {
             ...state,
+            calendarType: action.calendarType,
             displayName: action.displayName,
             email: action.email,
             events: [],
-            calendarType: action.calendarType
+            hasSetEvents: false
         };
 
     case CALENDAR_SET_EVENTS:

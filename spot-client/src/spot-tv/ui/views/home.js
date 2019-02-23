@@ -176,7 +176,7 @@ export class Home extends React.Component {
                 } = this.props;
 
                 if (!hasFetchedEvents
-                        || hasUpdatedEvents(previousEvents, events)) {
+                    || hasUpdatedEvents(previousEvents, events)) {
                     dispatch(setCalendarEvents(events));
                     remoteControlService.notifyCalendarStatus(events);
                 }
