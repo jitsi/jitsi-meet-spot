@@ -99,11 +99,20 @@ export default class ProcessUpdateDelegate {
         logger.log(`processUpdateDelegate received command: ${commandType}`);
 
         switch (commandType) {
-        case COMMANDS.GO_TO_MEETING:
+        case COMMANDS.GO_TO_MEETING: {
             logger.log('processUpdateDelegate going to meeting');
 
-            this._history.push(`/meeting?location=${data.meetingName}`);
+            let path = `/meeting?location=${data.meetingName}`;
+
+            if (data.invites) {
+                logger.log('has invites for the meeting');
+
+                path += `&invites=${JSON.stringify(data.invites)}`;
+            }
+
+            this._history.push(path);
             break;
+        }
 
         case COMMANDS.HANG_UP:
             this._executeIfInMeeting('hangup');

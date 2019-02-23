@@ -133,11 +133,18 @@ class RemoteControlService {
      * Requests a Spot to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
+     * @param {Object} options - Additional details about how to join the
+     * meeting.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
-    goToMeeting(meetingName) {
+    goToMeeting(meetingName, options = {}) {
         return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.GO_TO_MEETING, { meetingName });
+            this._getSpotId(),
+            COMMANDS.GO_TO_MEETING,
+            {
+                ...options,
+                meetingName
+            });
     }
 
     /**

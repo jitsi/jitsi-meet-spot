@@ -124,11 +124,12 @@ export class RemoteControl extends React.PureComponent {
      * join a specific meeting.
      *
      * @param {string} meetingName - The name of the jitsi meeting to join.
+     * @param {Object} options - Additional details of how to join the meeting.
      * @private
      * @returns {void}
      */
-    _onGoToMeeting(meetingName) {
-        this.props.remoteControlService.goToMeeting(meetingName);
+    _onGoToMeeting(meetingName, options = {}) {
+        this.props.remoteControlService.goToMeeting(meetingName, options);
     }
 }
 

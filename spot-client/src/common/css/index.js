@@ -5,6 +5,7 @@ import './material-icons/icon-font.scss';
 
 import './clock.scss';
 import './code-entry.scss';
+import './dial-pad.scss';
 import './home-view.scss';
 import './join-code-view.scss';
 import './meeting.scss';
