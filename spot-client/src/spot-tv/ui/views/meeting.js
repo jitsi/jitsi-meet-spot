@@ -6,6 +6,7 @@ import { addNotification, setMeetingApi } from 'common/actions';
 import { logger } from 'common/logger';
 import {
     getDefaultMeetingDomain,
+    getDesktopSharingFramerate,
     getDisplayName,
     getMeetingOptions,
     getScreenshareDevice
@@ -23,6 +24,7 @@ import { MeetingFrame } from './../components';
 export class Meeting extends React.Component {
     static propTypes = {
         defaultMeetingDomain: PropTypes.string,
+        desktopSharingFrameRate: PropTypes.object,
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
@@ -85,6 +87,8 @@ export class Meeting extends React.Component {
         return (
             <div className = 'view'>
                 <MeetingFrame
+                    desktopSharingFrameRate
+                        = { this.props.desktopSharingFrameRate }
                     displayName = { this.props.displayName }
                     meetingUrl = { meetingUrl }
                     onMeetingLeave = { this._onMeetingLeave }
@@ -182,6 +186,7 @@ export class Meeting extends React.Component {
 function mapStateToProps(state) {
     return {
         defaultMeetingDomain: getDefaultMeetingDomain(state),
+        desktopSharingFrameRate: getDesktopSharingFramerate(state),
         displayName: getDisplayName(state),
         screenshareDevice: getScreenshareDevice(state),
         showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar

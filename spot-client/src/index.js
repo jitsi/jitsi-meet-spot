@@ -69,6 +69,7 @@ const history = createHashHistory();
 
 remoteControlService.configureWirelessScreensharing({
     desktopSharingFrameRate: {
+        min: window.JitsiMeetSpotConfig.MEDIA.WIRELESS_SS_MIN_FPS,
         max: window.JitsiMeetSpotConfig.MEDIA.WIRELESS_SS_MAX_FPS
     }
 });

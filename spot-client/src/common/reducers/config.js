@@ -51,6 +51,20 @@ export function getDefaultMeetingDomain(state) {
 }
 
 /**
+ * A selector which returns the configuration object for the minimum and
+ * maximum framerate to capture for screensharing.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getDesktopSharingFramerate(state) {
+    return {
+        min: state.config.MEDIA.WIRELESS_SS_MIN_FPS,
+        max: state.config.MEDIA.WIRELESS_SS_MAX_FPS
+    }
+}
+
+/**
  * A selector which returns a unique id used for identifying the current client
  * in logs aggregations.
  *
