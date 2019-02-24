@@ -30,9 +30,9 @@ const keysToStore = [
     'calendars.email',
     'calendars.displayName',
     'setup.completed',
-    'setup.screenshareDevice',
-    'setup.screenshareDeviceIdleValue',
-    'setup.showMeetingToolbar'
+    'setup.showMeetingToolbar',
+    'wiredScreenshare.deviceLabel',
+    'wiredScreenshare.idleValue'
 ];
 
 /**
@@ -75,6 +75,10 @@ function parsePersistedState(state) {
             screenshareDeviceIdleValue:
                 state.setup.screenshareDeviceIdleValue,
             showMeetingToolbar: state.setup.showMeetingToolbar
+        },
+        wiredScreenshare: {
+            deviceLabel: state.wiredScreenshare.deviceLabel,
+            idleValue: state.wiredScreenshare.idleValue
         }
     };
 }
