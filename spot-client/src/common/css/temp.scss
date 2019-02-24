@@ -3,6 +3,7 @@
  * be used on the final product should be included here.
  */
 @import './media-queries';
+@import './mixins';
 
 .idleCursor {
   cursor: none;
@@ -246,11 +247,10 @@ body.using-mouse :focus {
 }
 
 .loading {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  width: 100%;
+    @include centered-content;
+
+    height: 100%;
+    width: 100%;
 }
 
 .settings_cog {

@@ -1,4 +1,5 @@
 @import './media-queries';
+@import './mixins';
 
 .join-code-view {
     display: grid;
@@ -20,9 +21,7 @@
     }
 
     .code-entry-wrapper {
-        align-items: center;
-        display: flex;
-        justify-content: center;
+        @include centered-content;
 
         .code-entry {
             // Usage of !important is needed to override the inline style
