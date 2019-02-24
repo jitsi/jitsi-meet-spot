@@ -1,15 +1,15 @@
+@import './mixins';
+
 .number-entry-view {
-    display: flex;
-    justify-content: center;
+    @include centered-content;
 }
 
 .dial-pad {
-    align-items: center;
+    @include centered-content;
+
     background-color: var(--container-bg-color);
     border-radius: 4px;
-    display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 20px;
 
     .dial-pad-buttons {
@@ -42,21 +42,19 @@
                 content: '.';
                 visibility: hidden;
             }
+
+            &.active,
+            &:active,
+            &:active .sub {
+                @include active;
+            }
         }
     }
 
     .call-button {
-        background-color: var(--button-color);
-        border: 0;
-        border-radius: 5px;
-        color: var(--container-content-font-color);
-        cursor: pointer;
-        font-size: var(--font-size-small);
-        padding: 0.5em 1em;
+        @include styled-button;
 
-        &:active {
-            background-color: var(--button-active-color);
-        }
+        font-size: var(--font-size-small);
     }
 
     .input-container,
@@ -69,30 +67,11 @@
     }
 
     .number-input {
-        /**
-        * Explicitly override default input element styles.
-        */
-        &:focus {
-            outline: none;
-        }
-        &::placeholder {
-            color: var(--container-sub-content-font-color);
-        }
-        background-color: transparent;
-        color: var(--container-content-font-color);
+        @include styled-input;
+
         font: inherit;
         text-align: center;
-        width: 100%;
 
-        /**
-        * Set each border attribute separately for mobile safari to
-        * support border-image.
-        */
-        border-bottom: 2px;
-        border-left: 0;
-        border-right: 0;
-        border-style: solid;
-        border-top: 0;
         border-image:
             linear-gradient(
                 to right,

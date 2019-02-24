@@ -1,9 +1,12 @@
+@import './mixins.scss';
+
 .code-entry {
     outline: none;
     position: relative;
 
     input {
-        align-items: center;
+        @include  centered-content;
+
         background-color: var(--container-bg-color);
         border: 1px solid var(--container-sub-content-font-color);
         border-radius: 5px;
@@ -11,7 +14,6 @@
         display: inline-block;
         font-size: var(--font-size-x-large);
         height: calc(var(--font-size-x-large) * 0.7);
-        justify-content: center;
         line-height: normal;
         margin-top: 10px;
         padding: 0;

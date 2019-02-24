@@ -1,4 +1,5 @@
 @import './media-queries';
+@import './mixins';
 
 .nav {
     flex-wrap: wrap;
@@ -57,12 +58,9 @@
         }
 
         &.active,
-        &:active {
-            color: var(--active);
-
-            .nav-icon {
-                border-color: var(--active);
-            }
+        &:active,
+        &:active .nav-icon {
+            @include active;
         }
 
         &:hover:not(.active) {
