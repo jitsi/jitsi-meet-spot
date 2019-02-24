@@ -128,10 +128,10 @@ export class Meeting extends React.Component {
         try {
             invites = JSON.parse(invitesParam);
         } catch (error) {
-            invites = null;
+            /** no op */
         }
 
-        let location = null;
+        let location;
 
         if (isValidMeetingUrl(locationParam)) {
             location = locationParam;
