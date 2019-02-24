@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getScreenshareDevice } from 'common/reducers';
+import { getScreenshareDevice } from 'common/app-state';
 
 /**
  * A component to display the current video input device that should be used

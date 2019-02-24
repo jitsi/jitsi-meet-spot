@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setCalendarEvents } from 'common/actions';
-import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import {
     getCalendarEmail,
     getCalendarEvents,
@@ -11,8 +9,10 @@ import {
     getCurrentRoomName,
     getJoinCode,
     hasCalendarBeenFetched,
-    isSetupComplete
-} from 'common/reducers';
+    isSetupComplete,
+    setCalendarEvents
+} from 'common/app-state';
+import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { hasUpdatedEvents, windowHandler } from 'common/utils';
 
 import { SettingsButton, WiredScreenshareRedirector } from './../components';

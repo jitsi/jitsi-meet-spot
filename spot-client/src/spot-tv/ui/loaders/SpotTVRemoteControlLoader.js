@@ -2,13 +2,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setJoinCode, setLock, setRoomName, setIsSpot } from 'common/actions';
-import { logger } from 'common/logger';
 import {
     getCurrentLock,
     getCurrentRoomName,
-    getRemoteControlServerConfig
-} from 'common/reducers';
+    getRemoteControlServerConfig,
+    setJoinCode,
+    setLock,
+    setRoomName,
+    setIsSpot
+} from 'common/app-state';
+import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader } from 'common/ui';
 

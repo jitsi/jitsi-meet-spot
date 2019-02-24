@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setCalendar } from 'common/actions';
+import { setCalendar } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button, Input, LoadingIcon } from 'common/ui';
 

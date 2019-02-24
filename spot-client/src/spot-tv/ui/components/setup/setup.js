@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSetupCompleted } from 'common/actions';
+import { setSetupCompleted } from 'common/app-state';
 import { logger } from 'common/logger';
 
 import CalendarAuth from './calendar-auth';

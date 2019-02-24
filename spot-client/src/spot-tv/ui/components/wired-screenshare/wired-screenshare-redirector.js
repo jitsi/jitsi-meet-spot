@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { isScreenShareDeviceConnect } from 'common/reducers';
+import { isScreenShareDeviceConnect } from 'common/app-state';
 import { getRandomMeetingName } from 'common/utils';
 
 /**

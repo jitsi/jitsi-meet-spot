@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { getJoinCode, getUltrasoundConfig } from 'common/app-state';
 import { logger } from 'common/logger';
-import { getJoinCode, getUltrasoundConfig } from 'common/reducers';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { ultrasoundService } from './../../ultrasound';

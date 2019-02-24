@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { addNotification } from 'common/actions';
-import { logger } from 'common/logger';
 import {
+    addNotification,
     getCurrentLock,
     getCurrentRoomName,
     getRemoteControlServerConfig
-} from 'common/reducers';
+} from 'common/app-state';
+import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 

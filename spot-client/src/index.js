@@ -7,7 +7,7 @@ import { createHashHistory } from 'history';
 
 import 'common/css';
 import { LoggingService } from 'common/logger';
-import { protoState, getLoggingEndpoint } from 'common/reducers';
+import reducers, { getLoggingEndpoint } from 'common/app-state';
 import {
     ProcessUpdateDelegate,
     remoteControlService
@@ -23,7 +23,7 @@ import App from './app';
 import PostToEndpoint from './common/logger/post-to-endpoint';
 
 const store = createStore(
-    protoState,
+    reducers,
     {
         config: {
             ...window.JitsiMeetSpotConfig

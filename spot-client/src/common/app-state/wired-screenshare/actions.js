@@ -2,7 +2,7 @@ import {
     WIRED_SCREENSHARE_SET_DEVICE_LABEL,
     WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
     WIRED_SCREENSHARE_SET_IDLE_VALUE
-} from './../reducers';
+} from './action-types';
 
 /**
  * Signals to store the preferred video input source for screensharing with
