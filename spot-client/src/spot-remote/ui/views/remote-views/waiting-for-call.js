@@ -4,7 +4,7 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { Clock, ScheduledMeetings } from 'common/ui';
 
-import { NavButton, SelfFillingNameEntry } from './../../components';
+import { NavButton, DialPad, SelfFillingNameEntry } from './../../components';
 
 /**
  * Returns the React Element to display while the Spot instance is not in a
@@ -65,6 +65,11 @@ export default class WaitingForCallView extends React.PureComponent {
                         label = 'Meet Now'
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now' />
+                    <NavButton
+                        active = { activeTab === 'dial' }
+                        iconName = 'call'
+                        label = 'Dial a Number'
+                        onClick = { this._onSetDialActive } />
                     {
 
                         /**
@@ -74,11 +79,6 @@ export default class WaitingForCallView extends React.PureComponent {
                             iconName = 'screen_share'
                             label = 'Share content'
                             onClick = { this._onSetShareContentActive } />
-                        <NavButton
-                            active = { activeTab === 'dial' }
-                            iconName = 'call'
-                            label = 'Dial a number'
-                            onClick = { this._onSetDialActive } />
                         **/
                     }
                 </div>
@@ -112,6 +112,11 @@ export default class WaitingForCallView extends React.PureComponent {
                 </div>
             );
         case 'dial':
+            return (
+                <div className = 'number-entry-view'>
+                    <DialPad onSubmit = { this.props.onGoToMeeting } />
+                </div>
+            );
         case 'share':
             return <div>in progress</div>;
         }

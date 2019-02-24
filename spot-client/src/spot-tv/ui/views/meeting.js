@@ -42,6 +42,8 @@ export class Meeting extends React.Component {
     constructor(props) {
         super(props);
 
+        this._queryParams = this._getQueryParams();
+
         this._onMeetingLeave = this._onMeetingLeave.bind(this);
         this._onMeetingStart = this._onMeetingStart.bind(this);
     }
@@ -52,7 +54,7 @@ export class Meeting extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        if (!this._getMeetingUrl()) {
+        if (!this._queryParams.location) {
             logger.error(
                 'No valid meeting url detected. Params are: ',
                 this.props.location.search
@@ -76,9 +78,9 @@ export class Meeting extends React.Component {
      * @inheritdoc
      */
     render() {
-        const meetingUrl = this._getMeetingUrl();
+        const { invites, location, screenshare } = this._queryParams;
 
-        if (!meetingUrl) {
+        if (!location) {
             return null;
         }
 
@@ -86,13 +88,14 @@ export class Meeting extends React.Component {
             <div className = 'view'>
                 <MeetingFrame
                     displayName = { this.props.displayName }
-                    meetingUrl = { meetingUrl }
+                    invites = { invites }
+                    meetingUrl = { location }
                     onMeetingLeave = { this._onMeetingLeave }
                     onMeetingStart = { this._onMeetingStart }
                     remoteControlService = { this.props.remoteControlService }
                     screenshareDevice = { this.props.screenshareDevice }
                     showMeetingToolbar = { this.props.showMeetingToolbar }
-                    startWithScreenshare = { this._startWithScreensharing() } />
+                    startWithScreenshare = { screenshare } />
                 {
 
                     /**
@@ -109,23 +112,39 @@ export class Meeting extends React.Component {
     }
 
     /**
-     * Parses the current window location for a valid meeting url. The value
-     * {@code null} will be returned if no valid meeting url is found.
+     * Parses the current window location for any relevant query params.
      *
      * @private
-     * @returns {string|null}
+     * @returns {Object}
      */
-    _getMeetingUrl() {
+    _getQueryParams() {
         const queryParams = new URLSearchParams(this.props.location.search);
-        const location = queryParams.get('location');
+        const invitesParam = queryParams.get('invites');
+        const locationParam = queryParams.get('location');
+        const screenshareParam = queryParams.get('screenshare');
 
-        if (isValidMeetingUrl(location)) {
-            return location;
-        } else if (isValidMeetingName(location)) {
-            return `https://${this.props.defaultMeetingDomain}/${location}`;
+        let invites;
+
+        try {
+            invites = JSON.parse(invitesParam);
+        } catch (error) {
+            invites = null;
         }
 
-        return null;
+        let location = null;
+
+        if (isValidMeetingUrl(locationParam)) {
+            location = locationParam;
+        } else if (isValidMeetingName(locationParam)) {
+            location
+                = `https://${this.props.defaultMeetingDomain}/${locationParam}`;
+        }
+
+        return {
+            invites,
+            location,
+            screenshare: screenshareParam === 'true'
+        };
     }
 
     /**
@@ -155,19 +174,6 @@ export class Meeting extends React.Component {
      */
     _onMeetingStart(meetingApi) {
         this.props.dispatch(setMeetingApi(meetingApi));
-    }
-
-    /**
-     * Parses query params to determine if the meeting should be started with
-     * wired screensharing.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _startWithScreensharing() {
-        const queryParams = new URLSearchParams(this.props.location.search);
-
-        return queryParams.get('screenshare') === 'true';
     }
 }
 
