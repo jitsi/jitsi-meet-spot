@@ -2,14 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { addNotification, setMeetingApi } from 'common/actions';
-import { logger } from 'common/logger';
 import {
+    addNotification,
     getDefaultMeetingDomain,
     getDisplayName,
     getMeetingOptions,
-    getScreenshareDevice
-} from 'common/reducers';
+    getScreenshareDevice,
+    setMeetingApi
+} from 'common/app-state';
+import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 
@@ -128,10 +129,10 @@ export class Meeting extends React.Component {
         try {
             invites = JSON.parse(invitesParam);
         } catch (error) {
-            invites = null;
+            /** no op */
         }
 
-        let location = null;
+        let location;
 
         if (isValidMeetingUrl(locationParam)) {
             location = locationParam;

@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification, setCalendarEvents } from 'common/actions';
 import {
+    addNotification,
     getCalendarEvents,
     getCurrentView,
-    isConnectedToSpot
-} from 'common/reducers';
+    isConnectedToSpot,
+    setCalendarEvents
+} from 'common/app-state';
 import { LoadingIcon, View } from 'common/ui';
 
 import { NoSleep } from './../../no-sleep';

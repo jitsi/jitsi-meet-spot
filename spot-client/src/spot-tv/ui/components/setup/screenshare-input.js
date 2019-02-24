@@ -6,7 +6,7 @@ import { wiredScreenshareService } from './../../../wired-screenshare-service';
 import {
     setScreenshareDevice,
     setScreenshareIdleValue
-} from 'common/actions';
+} from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
 

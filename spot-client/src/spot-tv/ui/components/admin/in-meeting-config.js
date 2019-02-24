@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setMeetingToolbarVisible } from 'common/actions';
+import { getMeetingOptions, setMeetingToolbarVisible } from 'common/app-state';
 import { logger } from 'common/logger';
-import { getMeetingOptions } from 'common/reducers';
 
 /**
  * Changes some settings that determines he behavior of the Jitsi-Meet meeting.

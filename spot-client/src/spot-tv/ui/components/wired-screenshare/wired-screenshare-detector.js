@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setScreenshareDeviceConnected } from 'common/actions';
-import { logger } from 'common/logger';
 import {
     getScreenshareDevice,
     getScreenshareDeviceIdleValue,
-    isScreenShareDeviceConnect
-} from 'common/reducers';
+    isScreenShareDeviceConnect,
+    setScreenshareDeviceConnected
+} from 'common/app-state';
+import { logger } from 'common/logger';
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**

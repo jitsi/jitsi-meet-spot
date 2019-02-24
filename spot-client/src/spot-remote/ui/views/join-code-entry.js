@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification, setLock, setRoomName } from 'common/actions';
-import { logger } from 'common/logger';
 import {
+    addNotification,
     getRemoteControlServerConfig,
-    isConnectedToSpot
-} from 'common/reducers';
+    isConnectedToSpot,
+    setLock,
+    setRoomName
+} from 'common/app-state';
+import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { View } from 'common/ui';

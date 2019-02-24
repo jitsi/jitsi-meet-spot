@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getInMeetingStatus } from 'common/reducers';
+import { getInMeetingStatus } from 'common/app-state';
 import { LoadingIcon } from 'common/ui';
 import { parseMeetingUrl } from 'common/utils';
 

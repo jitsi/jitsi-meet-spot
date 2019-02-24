@@ -1,9 +1,11 @@
+import {
+    NOTIFICATION_ADD,
+    NOTIFICATION_REMOVE
+} from './action-types';
+
 const DEFAULT_STATE = {
     notifications: []
 };
-
-export const NOTIFICATION_ADD = 'NOTIFICATION_ADD';
-export const NOTIFICATION_REMOVE = 'NOTIFICATION_REMOVE';
 
 /**
  * A {@code Reducer} to update the current Redux state for the 'notifications'
@@ -33,15 +35,5 @@ const notifications = (state = DEFAULT_STATE, action) => {
         return state;
     }
 };
-
-/**
- * A selector which returns all notifications that should be displayed.
- *
- * @param {Object} state - The Redux state.
- * @returns {Array<Object>}
- */
-export function getAllNotifications(state) {
-    return state.notifications.notifications;
-}
 
 export default notifications;

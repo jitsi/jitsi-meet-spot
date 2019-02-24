@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getJoinCode } from 'common/reducers';
+
+import { getJoinCode } from 'common/app-state';
 import { windowHandler } from 'common/utils';
 
 /**

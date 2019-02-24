@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getCalendarConfig } from 'common/reducers';
+import { getCalendarConfig } from 'common/app-state';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { calendarService } from './../../calendars';

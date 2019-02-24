@@ -1,7 +1,9 @@
-import notifications, {
+
+import {
     NOTIFICATION_ADD,
     NOTIFICATION_REMOVE
-} from './notifications';
+} from './action-types';
+import notifications from './reducer';
 
 describe('reducer', () => {
     test('has empty notifications by default', () => {

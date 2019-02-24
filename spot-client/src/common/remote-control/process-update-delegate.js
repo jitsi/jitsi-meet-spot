@@ -1,18 +1,16 @@
 import { $iq } from 'strophe.js';
 
 import {
-    setCalendarEvents,
-    setSpotLeft,
-    updateSpotState
-} from 'common/actions';
-import { logger } from 'common/logger';
-import {
     getCalendarEvents,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
-    isSpot
-} from 'common/reducers';
+    isSpot,
+    setCalendarEvents,
+    setSpotLeft,
+    updateSpotState
+} from 'common/app-state';
+import { logger } from 'common/logger';
 
 import { COMMANDS, MESSAGES } from './constants';
 import { hasUpdatedEvents } from '../utils/hasUpdatedEvents';

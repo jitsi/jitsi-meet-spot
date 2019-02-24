@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getCalendarEmail } from 'common/reducers';
+import { getCalendarEmail } from 'common/app-state';
 
 /**
  * A component intended for displaying information about the calendar currently

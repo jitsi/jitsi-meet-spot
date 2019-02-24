@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getDefaultAvatarUrl } from 'common/reducers';
+import { getDefaultAvatarUrl } from 'common/app-state';
 import { hash } from 'common/utils';
 
 /**
