@@ -123,7 +123,6 @@ export default class MeetingFrame extends React.Component {
      */
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
-        clearTimeout(this._showingFeedbackTimeout);
 
         const { remoteControlService } = this.props;
 
