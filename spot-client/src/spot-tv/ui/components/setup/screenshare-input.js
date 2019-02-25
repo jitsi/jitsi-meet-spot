@@ -35,6 +35,7 @@ class ScreenshareInput extends React.Component {
             devices: []
         };
 
+        this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onSkip = this._onSkip.bind(this);
         this._selectDevice = this._selectDevice.bind(this);
     }
@@ -49,13 +50,24 @@ class ScreenshareInput extends React.Component {
             .then(cameras => {
                 logger.log(`screenshareInput got ${cameras.length} devices`);
 
-                this.setState({
-                    devices: cameras
-                });
+                this._onDeviceListChange(cameras);
+
+                wiredScreenshareService.startListeningForDeviceChange(
+                    this._onDeviceListChange);
             })
             .catch(error =>
                 logger.error(`screenshareInput failed gUM ${
                     JSON.stringify(error)}`));
+    }
+
+    /**
+     * Removes listeners for camera list updates.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        wiredScreenshareService.stopListeningForDeviceChange(
+            this._onDeviceListChange);
     }
 
     /**
@@ -80,6 +92,17 @@ class ScreenshareInput extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    /**
+     * Updates the known values of cameras available for wired screensharing.
+     *
+     * @param {Array<Object>} cameras - Device information for the cameras.
+     * @private
+     * @returns {void}
+     */
+    _onDeviceListChange(cameras) {
+        this.setState({ devices: cameras });
     }
 
     /**

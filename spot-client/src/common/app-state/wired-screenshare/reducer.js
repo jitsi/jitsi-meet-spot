@@ -1,10 +1,12 @@
 import {
-    WIRED_SCREENSHARE_SET_DEVICE_LABEL,
+    WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY,
     WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
+    WIRED_SCREENSHARE_SET_DEVICE_LABEL,
     WIRED_SCREENSHARE_SET_IDLE_VALUE
 } from './action-types';
 
 const DEFAULT_STATE = {
+    available: false,
     deviceLabel: undefined,
     idleValue: undefined,
     isDeviceConnected: false
@@ -22,6 +24,12 @@ const DEFAULT_STATE = {
  */
 const wiredScreenshare = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
+    case WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY:
+        return {
+            ...state,
+            isWiredScreenshareAvailable: action.available
+        };
+
     case WIRED_SCREENSHARE_SET_DEVICE_CONNECTED:
         return {
             ...state,

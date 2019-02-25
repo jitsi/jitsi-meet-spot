@@ -1,8 +1,25 @@
 import {
-    WIRED_SCREENSHARE_SET_DEVICE_LABEL,
+    WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY,
     WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
+    WIRED_SCREENSHARE_SET_DEVICE_LABEL,
     WIRED_SCREENSHARE_SET_IDLE_VALUE
 } from './action-types';
+
+/**
+ * Signals the preferred screensharing input is now available or unavailable
+ * to be used.
+ *
+ * @param {boolean} available - Whether or not the screensharing input can or
+ * cannot be used.
+ * @private
+ * @returns {Object}
+ */
+export function setScreenshareDeviceAvailable(available) {
+    return {
+        type: WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY,
+        available
+    };
+}
 
 /**
  * Signals to store the preferred video input source for screensharing with
@@ -22,14 +39,14 @@ export function setScreenshareDevice(deviceLabel) {
 /**
  * Signals a device has connected or disconnected from wired screensharing.
  *
- * @param {boolean} isConnected - Whether or not a device is connected to wired
+ * @param {boolean} connected - Whether or not a device is connected to wired
  * screensharing.
  * @returns {Object}
  */
-export function setScreenshareDeviceConnected(isConnected) {
+export function setScreenshareDeviceConnected(connected) {
     return {
         type: WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
-        isConnected
+        connected
     };
 }
 

@@ -75,7 +75,6 @@ export default class MeetingFrame extends React.Component {
             meetingName,
             path
         } = parseMeetingUrl(this.props.meetingUrl);
-        const screensharingEnabled = Boolean(this.props.screenshareDevice);
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             configOverwrite: {
@@ -91,9 +90,6 @@ export default class MeetingFrame extends React.Component {
             parentNode: this._meetingContainer,
             roomName: meetingName
         });
-
-        this.props.remoteControlService
-            .notifyWiredScreenshareEnabled(screensharingEnabled);
 
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
