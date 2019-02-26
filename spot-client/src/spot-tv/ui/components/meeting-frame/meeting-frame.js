@@ -13,8 +13,7 @@ import { parseMeetingUrl } from 'common/utils';
  */
 export default class MeetingFrame extends React.Component {
     static defaultProps = {
-        displayName: 'Meeting Room',
-        invites: []
+        displayName: 'Meeting Room'
     };
 
     static propTypes = {
@@ -75,7 +74,6 @@ export default class MeetingFrame extends React.Component {
             meetingName,
             path
         } = parseMeetingUrl(this.props.meetingUrl);
-        const screensharingEnabled = Boolean(this.props.screenshareDevice);
 
         this._jitsiApi = new JitsiMeetExternalAPI(`${host}${path}`, {
             configOverwrite: {
@@ -91,9 +89,6 @@ export default class MeetingFrame extends React.Component {
             parentNode: this._meetingContainer,
             roomName: meetingName
         });
-
-        this.props.remoteControlService
-            .notifyWiredScreenshareEnabled(screensharingEnabled);
 
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
@@ -213,7 +208,7 @@ export default class MeetingFrame extends React.Component {
         this.props.remoteControlService.notifyMeetingJoinStatus(
             this.props.meetingUrl);
 
-        if (this.props.invites.length) {
+        if (this.props.invites && this.props.invites.length) {
             this._jitsiApi.invite(this.props.invites);
         }
     }

@@ -121,7 +121,6 @@ export class App extends React.Component {
 
         return (
             <ErrorBoundary errorComponent = { FatalError }>
-                <WiredScreenshareDetector />
                 <IdleCursorDetector
                     onCursorIdleChange = { this._onCursorIdleChange }>
                     <div className = { rootClassName }>
@@ -277,6 +276,7 @@ export class App extends React.Component {
     _renderSpotViewWithRemoteControl(View, name) {
         return (
             <SpotTVRemoteControlLoader>
+                <WiredScreenshareDetector />
                 <SpotView name = { name }>
                     <View />
                 </SpotView>

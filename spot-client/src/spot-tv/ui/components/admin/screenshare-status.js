@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getScreenshareDevice } from 'common/app-state';
+import { getWiredScreenshareInputLabel } from 'common/app-state';
 
 /**
  * A component to display the current video input device that should be used
@@ -42,7 +42,7 @@ export class ScreenshareStatus extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        device: getScreenshareDevice(state)
+        device: getWiredScreenshareInputLabel(state)
     };
 }
 export default connect(mapStateToProps)(ScreenshareStatus);

@@ -3,12 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    getScreenshareDevice,
-    getScreenshareDeviceIdleValue,
-    isScreenShareDeviceConnect,
-    setScreenshareDeviceConnected
+    getWiredScreenshareInputIdleValue,
+    getWiredScreenshareInputLabel,
+    isDeviceConnectedForWiredScreensharing,
+    setWiredScreenshareDeviceConnected,
+    setWiredScreenshareInputAvailable
 } from 'common/app-state';
 import { logger } from 'common/logger';
+
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
@@ -21,6 +23,7 @@ class WiredScreenshareDetector extends React.PureComponent {
     static propTypes = {
         dispatch: PropTypes.func,
         hasScreenshareDevice: PropTypes.bool,
+        remoteControlService: PropTypes.object,
         wiredScreenshareDevice: PropTypes.string,
         wiredScreenshareDeviceIdleValue: PropTypes.number
     };
@@ -34,6 +37,7 @@ class WiredScreenshareDetector extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onWiredScreenshareChange
             = this._onWiredScreenshareChange.bind(this);
     }
@@ -45,11 +49,21 @@ class WiredScreenshareDetector extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
-        wiredScreenshareService.startListeningForConnection(
-            this.props.wiredScreenshareDevice,
-            this._onWiredScreenshareChange,
-            this.props.wiredScreenshareDeviceIdleValue
-        );
+        if (this.props.wiredScreenshareDevice) {
+            wiredScreenshareService.getVideoInputDevices()
+                .then(deviceList => this._onDeviceListChange(deviceList))
+                .catch(() => logger.error(
+                    'Screenshare detector failed to obtain device list'))
+                .then(() =>
+                    wiredScreenshareService.startListeningForDeviceChange(
+                        this._onDeviceListChange));
+
+            wiredScreenshareService.startListeningForConnection(
+                this.props.wiredScreenshareDevice,
+                this._onWiredScreenshareChange,
+                this.props.wiredScreenshareDeviceIdleValue
+            );
+        }
     }
 
     /**
@@ -60,7 +74,7 @@ class WiredScreenshareDetector extends React.PureComponent {
     componentDidUpdate(prevProps) {
         if (prevProps.wiredScreenshareDevice
             !== this.props.wiredScreenshareDevice) {
-            logger.log('Screensharing input changed. Updating listener.');
+            logger.log('Screensharing input changed.');
 
             wiredScreenshareService.stopListeningForConnection(
                 prevProps.wiredScreenshareDevice,
@@ -72,6 +86,9 @@ class WiredScreenshareDetector extends React.PureComponent {
                 this._onWiredScreenshareChange,
                 this.props.wiredScreenshareDeviceIdleValue
             );
+
+            wiredScreenshareService.getVideoInputDevices()
+                .then(deviceList => this._onDeviceListChange(deviceList));
         }
     }
 
@@ -86,6 +103,9 @@ class WiredScreenshareDetector extends React.PureComponent {
             this.props.wiredScreenshareDevice,
             this._onWiredScreenshareChange
         );
+
+        wiredScreenshareService.stopListeningForDeviceChange(
+            this._onDeviceListChange);
     }
 
     /**
@@ -96,6 +116,30 @@ class WiredScreenshareDetector extends React.PureComponent {
      */
     render() {
         return null;
+    }
+
+    /**
+     * Callback invoked when the list of connected camera devices has changed.
+     * Updates known state of whether or not the selected screensharing device,
+     * if any, is connected.
+     *
+     * @param {Array<Object>} deviceList - Eats honey.
+     * @private
+     * @returns {void}
+     */
+    _onDeviceListChange(deviceList) {
+        if (!this.props.wiredScreenshareDevice) {
+            return;
+        }
+
+        const listHasSelectedScreenshareDevice = Boolean(deviceList.find(
+            device => device.label === this.props.wiredScreenshareDevice));
+
+        this.props.remoteControlService.notifyWiredScreenshareEnabled(
+            listHasSelectedScreenshareDevice);
+
+        this.props.dispatch(setWiredScreenshareInputAvailable(
+            listHasSelectedScreenshareDevice));
     }
 
     /**
@@ -113,7 +157,7 @@ class WiredScreenshareDetector extends React.PureComponent {
                 isDeviceConnected}`);
 
             this.props.dispatch(
-                setScreenshareDeviceConnected(isDeviceConnected));
+                setWiredScreenshareDeviceConnected(isDeviceConnected));
         }
     }
 }
@@ -128,10 +172,10 @@ class WiredScreenshareDetector extends React.PureComponent {
  */
 function mapStateToProps(state) {
     return {
-        hasScreenshareDevice: isScreenShareDeviceConnect(state),
-        wiredScreenshareDevice: getScreenshareDevice(state),
+        hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state),
+        wiredScreenshareDevice: getWiredScreenshareInputLabel(state),
         wiredScreenshareDeviceIdleValue:
-            getScreenshareDeviceIdleValue(state)
+            getWiredScreenshareInputIdleValue(state)
     };
 }
 

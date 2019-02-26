@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
@@ -16,6 +17,21 @@ export class WiredScreenshareService {
          * A mapping of device labels to VideoChangeLister instances.
          */
         this._videoChangeListeners = new Map();
+
+        this._deviceListChangeListeners = new Set();
+
+        this._videoInputDevices = null;
+
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
+        this._onDeviceListChange = debounce(
+            this._onDeviceListChange.bind(this),
+            500
+        );
+
+        JitsiMeetJS.mediaDevices.addEventListener(
+            JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
+           this._onDeviceListChange);
     }
 
     /**
@@ -39,6 +55,10 @@ export class WiredScreenshareService {
     getVideoInputDevices() {
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
+        if (this._videoInputDevices) {
+            return Promise.resolve(this._videoInputDevices);
+        }
+
         // TODO: check if permission is already provided and avoid calling gum
         // if possible.
         return JitsiMeetJS.createLocalTracks({ devices: [ 'video' ] })
@@ -46,11 +66,13 @@ export class WiredScreenshareService {
             .then(() => new Promise(
                 resolve => JitsiMeetJS.mediaDevices.enumerateDevices(resolve)
             ))
-            .then(devices => {
-                const cameras
-                    = devices.filter(device => device.kind === 'videoinput');
+            .then(deviceList => {
+                const videoInputDevices
+                    = this._filterForVideoInputs(deviceList);
 
-                return cameras;
+                this._videoChangeListeners = videoInputDevices;
+
+                return videoInputDevices;
             });
     }
 
@@ -115,6 +137,74 @@ export class WiredScreenshareService {
             videoChangeListener.destroy();
             this._videoChangeListeners.delete(deviceLabel);
         }
+    }
+
+    /**
+     * Be notified when a new camera device has been connected or disconnected.
+     *
+     * @param {Function} callback - The function to invoke on camera change.
+     * @private
+     * @returns {void}
+     */
+    startListeningForDeviceChange(callback) {
+        this._deviceListChangeListeners.add(callback);
+    }
+
+    /**
+     * Stop being notified when a new camera device has been connected or
+     * disconnected.
+     *
+     * @param {Function} callback - The function which should not longer be
+     * called.
+     * @private
+     * @returns {void}
+     */
+    stopListeningForDeviceChange(callback) {
+        this._deviceListChangeListeners.delete(callback);
+    }
+
+    /**
+     * Gets all camera sources from the return value of enumerateDevices.
+     *
+     * @param {Array<Object>} deviceList - All camera, mic, and speaker devices
+     * accessible through WebRTC.
+     * @private
+     * @returns {Array<Object>} The deviecs with everything but cameras filtered
+     * out.
+     */
+    _filterForVideoInputs(deviceList) {
+        return deviceList.filter(device => device.kind === 'videoinput');
+    }
+
+    /**
+     * Callback invoked when the list of known media devices has changed.
+     * Notifies any registered listeners of the change.
+     *
+     * @param {Array<Object>} deviceList - Descriptions of the media devices,
+     * as provided by WebRTC.
+     * @private
+     * @returns {void}
+     */
+    _onDeviceListChange(deviceList) {
+        const videoInputDevices = this._filterForVideoInputs(deviceList);
+
+        if (!videoInputDevices.length) {
+            logger.warn('Received device list change with no cameras');
+
+            return;
+        }
+
+        if (!videoInputDevices.some(device => Boolean(device.label))) {
+            logger.warn(
+                'Received device list change but maybe no video permission');
+
+            return;
+        }
+
+        this._videoInputDevices = videoInputDevices;
+
+        this._deviceListChangeListeners.forEach(
+            callback => callback(this._videoInputDevices));
     }
 }
 

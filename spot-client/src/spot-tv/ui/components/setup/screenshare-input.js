@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { wiredScreenshareService } from './../../../wired-screenshare-service';
 import {
-    setScreenshareDevice,
-    setScreenshareIdleValue
+    setWiredScreenshareInputIdleValue,
+    setWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
+
+import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
  * Displays a picker for selecting a video input device to use while
@@ -35,6 +36,7 @@ class ScreenshareInput extends React.Component {
             devices: []
         };
 
+        this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onSkip = this._onSkip.bind(this);
         this._selectDevice = this._selectDevice.bind(this);
     }
@@ -49,13 +51,24 @@ class ScreenshareInput extends React.Component {
             .then(cameras => {
                 logger.log(`screenshareInput got ${cameras.length} devices`);
 
-                this.setState({
-                    devices: cameras
-                });
+                this._onDeviceListChange(cameras);
+
+                wiredScreenshareService.startListeningForDeviceChange(
+                    this._onDeviceListChange);
             })
             .catch(error =>
                 logger.error(`screenshareInput failed gUM ${
                     JSON.stringify(error)}`));
+    }
+
+    /**
+     * Removes listeners for camera list updates.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        wiredScreenshareService.stopListeningForDeviceChange(
+            this._onDeviceListChange);
     }
 
     /**
@@ -83,6 +96,17 @@ class ScreenshareInput extends React.Component {
     }
 
     /**
+     * Updates the known values of cameras available for wired screensharing.
+     *
+     * @param {Array<Object>} cameras - Device information for the cameras.
+     * @private
+     * @returns {void}
+     */
+    _onDeviceListChange(cameras) {
+        this.setState({ devices: cameras });
+    }
+
+    /**
      * Callback invoked to select no device for wired screensharing.
      *
      * @private
@@ -91,8 +115,8 @@ class ScreenshareInput extends React.Component {
     _onSkip() {
         logger.log('screenshareInput skipping device selection');
 
-        this.props.dispatch(setScreenshareDevice());
-        this.props.dispatch(setScreenshareIdleValue());
+        this.props.dispatch(setWiredScreenshareInputLabel());
+        this.props.dispatch(setWiredScreenshareInputIdleValue());
 
         this.props.onSuccess();
     }
@@ -136,8 +160,8 @@ class ScreenshareInput extends React.Component {
 
                 changeListener.destroy();
 
-                this.props.dispatch(setScreenshareDevice(label));
-                this.props.dispatch(setScreenshareIdleValue(value));
+                this.props.dispatch(setWiredScreenshareInputLabel(label));
+                this.props.dispatch(setWiredScreenshareInputIdleValue(value));
 
                 this.props.onSuccess();
             });
