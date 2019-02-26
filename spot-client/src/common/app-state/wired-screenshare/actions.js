@@ -1,9 +1,23 @@
 import {
-    WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY,
     WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
-    WIRED_SCREENSHARE_SET_DEVICE_LABEL,
-    WIRED_SCREENSHARE_SET_IDLE_VALUE
+    WIRED_SCREENSHARE_SET_INPUT_AVAILABILITY,
+    WIRED_SCREENSHARE_SET_INPUT_IDLE_VALUE,
+    WIRED_SCREENSHARE_SET_INPUT_LABEL
 } from './action-types';
+
+/**
+ * Signals a device has connected or disconnected from wired screensharing.
+ *
+ * @param {boolean} connected - Whether or not a device is connected to wired
+ * screensharing.
+ * @returns {Object}
+ */
+export function setWiredScreenshareDeviceConnected(connected) {
+    return {
+        type: WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
+        connected
+    };
+}
 
 /**
  * Signals the preferred screensharing input is now available or unavailable
@@ -14,39 +28,10 @@ import {
  * @private
  * @returns {Object}
  */
-export function setScreenshareDeviceAvailable(available) {
+export function setWiredScreenshareInputAvailable(available) {
     return {
-        type: WIRED_SCREENSHARE_SET_DEVICE_AVAILABILITY,
+        type: WIRED_SCREENSHARE_SET_INPUT_AVAILABILITY,
         available
-    };
-}
-
-/**
- * Signals to store the preferred video input source for screensharing with
- * a physical connector.
- *
- * @param {string} deviceLabel - The label value set to the video input device
- * as listed by Webrtc (enumerateDevices).
- * @returns {Object}
- */
-export function setScreenshareDevice(deviceLabel) {
-    return {
-        type: WIRED_SCREENSHARE_SET_DEVICE_LABEL,
-        deviceLabel
-    };
-}
-
-/**
- * Signals a device has connected or disconnected from wired screensharing.
- *
- * @param {boolean} connected - Whether or not a device is connected to wired
- * screensharing.
- * @returns {Object}
- */
-export function setScreenshareDeviceConnected(connected) {
-    return {
-        type: WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
-        connected
     };
 }
 
@@ -60,9 +45,24 @@ export function setScreenshareDeviceConnected(connected) {
  * idle.
  * @returns {Object}
  */
-export function setScreenshareIdleValue(value) {
+export function setWiredScreenshareInputIdleValue(value) {
     return {
-        type: WIRED_SCREENSHARE_SET_IDLE_VALUE,
+        type: WIRED_SCREENSHARE_SET_INPUT_IDLE_VALUE,
         value
+    };
+}
+
+/**
+ * Signals to store the preferred video input source for screensharing with
+ * a physical connector.
+ *
+ * @param {string} deviceLabel - The label value set to the video input device
+ * as listed by WebRTC (enumerateDevices).
+ * @returns {Object}
+ */
+export function setWiredScreenshareInputLabel(deviceLabel) {
+    return {
+        type: WIRED_SCREENSHARE_SET_INPUT_LABEL,
+        deviceLabel
     };
 }

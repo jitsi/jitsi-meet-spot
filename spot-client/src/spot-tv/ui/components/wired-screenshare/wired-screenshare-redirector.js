@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { isScreenShareDeviceConnect } from 'common/app-state';
+import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
 import { getRandomMeetingName } from 'common/utils';
 
 /**
@@ -55,7 +55,7 @@ export class WiredScreenshareRedirector extends React.PureComponent {
  */
 function mapStateToProps(state) {
     return {
-        hasScreenshareDevice: isScreenShareDeviceConnect(state)
+        hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state)
     };
 }
 

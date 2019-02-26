@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { wiredScreenshareService } from './../../../wired-screenshare-service';
 import {
-    setScreenshareDevice,
-    setScreenshareIdleValue
+    setWiredScreenshareInputIdleValue,
+    setWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
+
+import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
  * Displays a picker for selecting a video input device to use while
@@ -114,8 +115,8 @@ class ScreenshareInput extends React.Component {
     _onSkip() {
         logger.log('screenshareInput skipping device selection');
 
-        this.props.dispatch(setScreenshareDevice());
-        this.props.dispatch(setScreenshareIdleValue());
+        this.props.dispatch(setWiredScreenshareInputLabel());
+        this.props.dispatch(setWiredScreenshareInputIdleValue());
 
         this.props.onSuccess();
     }
@@ -159,8 +160,8 @@ class ScreenshareInput extends React.Component {
 
                 changeListener.destroy();
 
-                this.props.dispatch(setScreenshareDevice(label));
-                this.props.dispatch(setScreenshareIdleValue(value));
+                this.props.dispatch(setWiredScreenshareInputLabel(label));
+                this.props.dispatch(setWiredScreenshareInputIdleValue(value));
 
                 this.props.onSuccess();
             });

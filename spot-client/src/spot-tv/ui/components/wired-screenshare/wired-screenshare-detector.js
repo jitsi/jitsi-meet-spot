@@ -3,13 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    getScreenshareDevice,
-    getScreenshareDeviceIdleValue,
-    isScreenShareDeviceConnect,
-    setScreenshareDeviceAvailable,
-    setScreenshareDeviceConnected
+    getWiredScreenshareInputIdleValue,
+    getWiredScreenshareInputLabel,
+    isDeviceConnectedForWiredScreensharing,
+    setWiredScreenshareDeviceConnected,
+    setWiredScreenshareInputAvailable
 } from 'common/app-state';
 import { logger } from 'common/logger';
+
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
@@ -137,8 +138,8 @@ class WiredScreenshareDetector extends React.PureComponent {
         this.props.remoteControlService.notifyWiredScreenshareEnabled(
             listHasSelectedScreenshareDevice);
 
-        this.props.dispatch(
-            setScreenshareDeviceAvailable(listHasSelectedScreenshareDevice));
+        this.props.dispatch(setWiredScreenshareInputAvailable(
+            listHasSelectedScreenshareDevice));
     }
 
     /**
@@ -156,7 +157,7 @@ class WiredScreenshareDetector extends React.PureComponent {
                 isDeviceConnected}`);
 
             this.props.dispatch(
-                setScreenshareDeviceConnected(isDeviceConnected));
+                setWiredScreenshareDeviceConnected(isDeviceConnected));
         }
     }
 }
@@ -171,10 +172,10 @@ class WiredScreenshareDetector extends React.PureComponent {
  */
 function mapStateToProps(state) {
     return {
-        hasScreenshareDevice: isScreenShareDeviceConnect(state),
-        wiredScreenshareDevice: getScreenshareDevice(state),
+        hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state),
+        wiredScreenshareDevice: getWiredScreenshareInputLabel(state),
         wiredScreenshareDeviceIdleValue:
-            getScreenshareDeviceIdleValue(state)
+            getWiredScreenshareInputIdleValue(state)
     };
 }
 

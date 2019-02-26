@@ -6,7 +6,7 @@
  * @param {Object} state - The Redux state.
  * @returns {string}
  */
-export function getScreenshareDevice(state) {
+export function getWiredScreenshareInputLabel(state) {
     return state.wiredScreenshare.deviceLabel;
 }
 
@@ -17,19 +17,8 @@ export function getScreenshareDevice(state) {
 * @param {Object} state - The Redux state.
 * @returns {string}
 */
-export function getScreenshareDeviceIdleValue(state) {
+export function getWiredScreenshareInputIdleValue(state) {
     return state.wiredScreenshare.idleValue;
-}
-
-/**
-* A selector which returns whether or not the configued screensharing input
-* device is plugged in.
-*
-* @param {Object} state - The Redux state.
-* @returns {boolean}
-*/
-export function isScreenshareDeviceAvailable(state) {
-    return Boolean(state.wiredScreenshare.available);
 }
 
 /**
@@ -39,6 +28,17 @@ export function isScreenshareDeviceAvailable(state) {
 * @param {Object} state - The Redux state.
 * @returns {boolean}
 */
-export function isScreenShareDeviceConnect(state) {
+export function isDeviceConnectedForWiredScreensharing(state) {
     return Boolean(state.wiredScreenshare.isDeviceConnected);
+}
+
+/**
+* A selector which returns whether or not the configured screensharing input
+* device is plugged in.
+*
+* @param {Object} state - The Redux state.
+* @returns {boolean}
+*/
+export function isWiredScreenshareInputAvailable(state) {
+    return Boolean(state.wiredScreenshare.available);
 }

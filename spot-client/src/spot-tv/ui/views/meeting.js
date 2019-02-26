@@ -7,7 +7,7 @@ import {
     getDefaultMeetingDomain,
     getDisplayName,
     getMeetingOptions,
-    getScreenshareDevice,
+    getWiredScreenshareInputLabel,
     setMeetingApi
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -190,7 +190,7 @@ function mapStateToProps(state) {
     return {
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
-        screenshareDevice: getScreenshareDevice(state),
+        screenshareDevice: getWiredScreenshareInputLabel(state),
         showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar
     };
 }
