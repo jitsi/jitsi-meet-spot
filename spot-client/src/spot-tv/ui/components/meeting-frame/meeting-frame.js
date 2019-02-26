@@ -13,8 +13,7 @@ import { parseMeetingUrl } from 'common/utils';
  */
 export default class MeetingFrame extends React.Component {
     static defaultProps = {
-        displayName: 'Meeting Room',
-        invites: []
+        displayName: 'Meeting Room'
     };
 
     static propTypes = {
@@ -209,7 +208,7 @@ export default class MeetingFrame extends React.Component {
         this.props.remoteControlService.notifyMeetingJoinStatus(
             this.props.meetingUrl);
 
-        if (this.props.invites.length) {
+        if (this.props.invites && this.props.invites.length) {
             this._jitsiApi.invite(this.props.invites);
         }
     }
