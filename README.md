@@ -20,3 +20,12 @@ Contributions are definitely welcome! If reporting an issue or suggesting featur
 ## Versioning
 
 Currently there is no versioning as the app is in early alpha.
+
+## Docker
+
+To do a docker build, be in the root directory /
+Decide on the next tag name, current tags are 0.0.1, 0.0.2, etc.
+Then run:
+```scripts/docker-build <TAG>```
+
+This will build and push a new image
