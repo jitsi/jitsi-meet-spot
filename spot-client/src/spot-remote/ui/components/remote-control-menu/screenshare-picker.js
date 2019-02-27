@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { NavButton } from './../nav-button';
+import { NavButton } from './../nav';
 
 /**
  * Displays an option to start wireless and wired screensharing.

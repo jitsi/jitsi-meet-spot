@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { JitsiMeetJSProvider } from 'common/vendor';
-import { NavButton } from './../nav-button';
+import { NavButton, NavContainer } from '../nav';
 
 import Popover from './popover';
 import ScreensharePicker from './screenshare-picker';
@@ -56,14 +56,17 @@ export default class RemoteControlMenu extends React.Component {
         const { audioMuted, videoMuted } = this.props;
 
         return (
-            <div className = 'nav'>
+            <NavContainer>
                 <NavButton
                     iconName = { audioMuted ? 'mic_off' : 'mic' }
-                    label = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
+                    label
+                        = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
                     onClick = { this._onToggleAudioMute } />
                 <NavButton
-                    iconName = { videoMuted ? 'videocam_off' : 'videocam' }
-                    label = { videoMuted ? 'Unmute Video' : 'Mute Video' }
+                    iconName
+                        = { videoMuted ? 'videocam_off' : 'videocam' }
+                    label
+                        = { videoMuted ? 'Unmute Video' : 'Mute Video' }
                     onClick = { this._onToggleVideoMute } />
                 { this._renderScreensharingButton() }
                 <NavButton
@@ -71,7 +74,7 @@ export default class RemoteControlMenu extends React.Component {
                     iconName = 'call_end'
                     label = 'Leave'
                     onClick = { this._onHangUp } />
-            </div>
+            </NavContainer>
         );
     }
 

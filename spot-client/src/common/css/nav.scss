@@ -1,45 +1,59 @@
 @import './media-queries';
 @import './mixins';
 
-.nav {
-    flex-wrap: wrap;
-    margin: 20px 0;
+/**
+ * nav is generally placed within a grid cell. That would cause the nav to
+ * take up all available space in the cell. To prevent that, let nav-section
+ * take up all the space, and wrap nav with inline-block so nav only takes up
+ * the space it needs.
+ */
+.nav-section {
+    padding: 0 0 20px;
     text-align: center;
-    width: 100%;
+
+    .nav-container {
+        display: inline-block;
+    }
+}
+
+.nav {
+    display: grid;
+    margin-bottom: 20px;
+    text-align: center;
 
     @media #{$mq-xxsmall} {
-        padding: 0 60px;
-    }
-
-    @media #{$mq-mobile-s} {
-        padding: 0 55px;
-    }
-
-    @media #{$mq-mobile-l} {
-        padding: 0 35px;
+        grid-template-columns: auto auto;
+        grid-column-gap: 40px;
+        grid-row-gap: 30px;
     }
 
     @media #{$mq-tablet} {
-        padding: 0;
+        grid-column-gap: 0;
+        grid-row-gap: 0;
+        grid-template-columns: auto auto auto auto;
     }
 
 
     .nav-button {
+        align-self: start;
         background-color: transparent;
         border: 0;
         color: inherit;
         font-size: inherit;
         margin-top: 10px;
 
-        &:not(:last-child) {
-            @media #{$mq-xxsmall} {
-                margin-right: 0.3em;
+        @media #{$mq-tablet} {
+            &:nth-child(odd) {
+                margin: 10px 0;
             }
 
-            @media #{$mq-mobile-s} {
-                margin-right: 0.8em;
+            &:nth-child(even) {
+                margin: 10px 0;
             }
-        
+        }
+
+
+        &:not(:last-child) {
             @media #{$mq-tablet} {
                 margin-right: 4em;
             }

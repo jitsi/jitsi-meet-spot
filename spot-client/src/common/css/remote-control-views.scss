@@ -119,7 +119,8 @@
     width: 100%;
 
     .in-call-name {
-        margin-top: 5em;
+        font-size: var(--font-size-medium-plus);
+        margin-top: 100px;
         text-align: center;
     }
 }
