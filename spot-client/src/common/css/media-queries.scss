@@ -25,6 +25,11 @@ body {
     font-size: $base-font-size;
     line-height: $base-line-height;
 
+    @media #{$mq-xxsmall} {
+        font-size: $base-font-size * 0.7;
+        line-height: $base-line-height * 0.7;
+    }
+
     @media #{$mq-mobile-s} {
       font-size: $base-font-size * 0.7;
       line-height: $base-line-height * 0.7;

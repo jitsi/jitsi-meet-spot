@@ -4,7 +4,12 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { Clock, ScheduledMeetings } from 'common/ui';
 
-import { NavButton, DialPad, SelfFillingNameEntry } from './../../components';
+import {
+    DialPad,
+    NavButton,
+    NavContainer,
+    SelfFillingNameEntry
+} from './../../components';
 
 /**
  * Returns the React Element to display while the Spot instance is not in a
@@ -53,7 +58,7 @@ export default class WaitingForCallView extends React.PureComponent {
                 <div>
                     { this._getSubView() }
                 </div>
-                <div className = 'nav'>
+                <NavContainer>
                     <NavButton
                         active = { activeTab === 'calendar' }
                         iconName = 'calendar_today'
@@ -81,7 +86,7 @@ export default class WaitingForCallView extends React.PureComponent {
                             onClick = { this._onSetShareContentActive } />
                         **/
                     }
-                </div>
+                </NavContainer>
             </div>
         );
     }

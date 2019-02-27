@@ -14,7 +14,7 @@ import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { View } from 'common/ui';
 
-import { CodeInput, NavButton } from './../components';
+import { CodeInput, NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
 /**
@@ -134,14 +134,14 @@ export class JoinCodeEntry extends React.Component {
                             </div>
                         </form>
                     </div>
-                    <div className = 'nav'>
+                    <NavContainer>
                         <NavButton
                             iconName = 'arrow_forward'
                             label = 'Continue'
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
                             tabIndex = { 0 } />
-                    </div>
+                    </NavContainer>
                 </div>
             </View>
         );
