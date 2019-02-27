@@ -3,6 +3,7 @@ import React from 'react';
 
 import { logger } from 'common/logger';
 import { Clock, ScheduledMeetings } from 'common/ui';
+import { getRandomMeetingName } from 'common/utils';
 
 import {
     DialPad,
@@ -21,7 +22,7 @@ export default class WaitingForCallView extends React.PureComponent {
     static propTypes = {
         events: PropTypes.array,
         onGoToMeeting: PropTypes.func
-    }
+    };
 
     /**
      * Initializes a new {@code App} instance.
@@ -75,17 +76,11 @@ export default class WaitingForCallView extends React.PureComponent {
                         iconName = 'call'
                         label = 'Dial a Number'
                         onClick = { this._onSetDialActive } />
-                    {
-
-                        /**
-                        Below are not implemented and may be confusing to see.
-                        <NavButton
-                            active = { activeTab === 'share' }
-                            iconName = 'screen_share'
-                            label = 'Share content'
-                            onClick = { this._onSetShareContentActive } />
-                        **/
-                    }
+                    <NavButton
+                        active = { activeTab === 'share' }
+                        iconName = 'screen_share'
+                        label = 'Share content'
+                        onClick = { this._onSetShareContentActive } />
                 </NavContainer>
             </div>
         );
@@ -164,6 +159,16 @@ export default class WaitingForCallView extends React.PureComponent {
      * @returns {void}
      */
     _onSetShareContentActive() {
+        // FIXME UI on the share tab displays "in progress" on the left side of the screen
         this.setState({ activeTab: 'share' });
+
+        this.props.onGoToMeeting(getRandomMeetingName(), {
+            startWithScreensharing: true
+        }).catch(error => {
+            // FIXME do not log an error if user cancelled the desktop picker dialog
+            logger.error(`onGoToMeeting rejected with ${error}`);
+            // FIXME this should not be executed if the component is unmounted
+            this.setState({ activeTab: '' });
+        });
     }
 }

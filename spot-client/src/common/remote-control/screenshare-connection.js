@@ -71,15 +71,28 @@ export default class ScreenshareConnection {
     }
 
     /**
+     * See the description of {@link _createTracks}.
+     *
+     * @public
+     * @returns {Promise} - See the return description of {@link _createTracks}.
+     */
+    createTracks() {
+        return this._createTracks(/* deferred start */ true);
+    }
+
+    /**
      * Asks the user to select the desktop to be used for screensharing and creates the tracks.
      * The tracks are stored in this connection instance and will be used when
      * the {@code startScreenshare} method is called.
      *
+     * @param {boolean} deferredStart - Whether or not this call is made in the deferred start
+     * scenario where the tracks are created, before the connection gets established.
+     * @private
      * @returns {Promise} - Resolved when user selects the desktop and the tracks are created
      * successfully. The promise is rejected if user cancels the desktop picker or something goes
      * wrong on the lib-jitsi-meet side with creating the tracks.
      */
-    createTracks() {
+    _createTracks(deferredStart) {
         if (this._tracks.length) {
             return Promise.resolve();
         }
@@ -99,7 +112,7 @@ export default class ScreenshareConnection {
              * case the connection was lost while selecting a screenshare
              * source.
              */
-            if (!this._isActive) {
+            if (!this._isActive && !deferredStart) {
                 logger.log('screenshareConnection got track in inactive state');
 
                 this.stop();
@@ -118,6 +131,12 @@ export default class ScreenshareConnection {
                      */
                     if (this._isActive) {
                         this.options.onConnectionClosed();
+                    } else if (this.deferredStart) {
+                        // The track can be stopped using Chrome's "Stop sharing" button.
+                        // The screensharing needs to be aborted in that case which is done be
+                        // rejecting the deferred start promise.
+                        this.deferredStart.cancel();
+                        this.deferredStart = undefined;
                     }
                 }
             );
@@ -142,7 +161,7 @@ export default class ScreenshareConnection {
             const preStart
                 = this._tracks.length
                     ? Promise.resolve()
-                    : this.createTracks();
+                    : this._createTracks(/* deferred start */ false);
 
             preStart.then(
                 () => {
@@ -161,6 +180,33 @@ export default class ScreenshareConnection {
     }
 
     /**
+     * Creates a deferred start Promise which is resolved when screensharing is started or rejected
+     * if the process fails or is aborted for other reasons.
+     * Stores locally a deferred start object with {@code resume} and {@code cancel} methods.
+     * The resume method is used to resume the screensharing initialization when the meeting is
+     * joined on the remote side and the external API is ready to accept the screensharing stream.
+     * When {@code cancel} method is called it will reject the Promise returned by this method.
+     *
+     * @param {string} spotId - See the description at {@link startScreenshare}.
+     * @returns {Promise} - A Promise resolved when the screensharing is started or reject if fails
+     * or if the process is aborted.
+     */
+    createDeferredStart(spotId) {
+        const self = this;
+
+        return new Promise((resolve, reject) => {
+            this.deferredStart = {
+                resume() {
+                    self.startScreenshare(spotId).then(resolve, reject);
+                },
+                cancel() {
+                    reject('Pending screenshare has been canceled');
+                }
+            };
+        });
+    }
+
+    /**
      * Cleans up the state of this {@code ScreenshareConnection} instance by
      * stopping all known media tracks and stopping any active proxy connection.
      *
@@ -171,6 +217,9 @@ export default class ScreenshareConnection {
 
         this._isActive = false;
         this._proxyConnectionService.stop();
+
+        this.deferredStart && this.deferredStart.cancel();
+        this.deferredStart = undefined;
 
         this._tracks.forEach(track => track.dispose());
         this._tracks = [];

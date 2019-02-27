@@ -5,6 +5,12 @@ import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
 /**
+ * @typedef {Object} GoToMeetingOptions
+ * @property {boolean} startWithScreensharing - if {@code true} the meeting will be joined with
+ * the screensharing turned on.
+ */
+
+/**
  * The interface for interacting with the XMPP service which powers the
  * communication between a Spot instance and remote control instances. Both the
  * Spot instance and remote controls join the same MUC and can get messages to
@@ -133,16 +139,34 @@ class RemoteControlService {
      * Requests a Spot to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
-     * @param {Object} options - Additional details about how to join the
+     * @param {GoToMeetingOptions} options - Additional details about how to join the
      * meeting.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     goToMeeting(meetingName, options = {}) {
+        const { startWithScreensharing, ...otherOptions } = options;
+
+        if (startWithScreensharing) {
+            const connection = this._createScreensharingService();
+
+            return connection
+                .createTracks()
+                .then(() => this.xmppConnection.sendCommand(
+                        this._getSpotId(),
+                        COMMANDS.GO_TO_MEETING,
+                        {
+                            ...otherOptions,
+                            meetingName
+                        })
+                )
+                .then(() => this._delegate.startScreenshare(this._getSpotId(), connection));
+        }
+
         return this.xmppConnection.sendCommand(
             this._getSpotId(),
             COMMANDS.GO_TO_MEETING,
             {
-                ...options,
+                ...otherOptions,
                 meetingName
             });
     }
