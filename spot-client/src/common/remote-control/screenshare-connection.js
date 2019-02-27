@@ -71,6 +71,60 @@ export default class ScreenshareConnection {
     }
 
     /**
+     * Asks the user to select the desktop to be used for screensharing and creates the tracks.
+     * The tracks are stored in this connection instance and will be used when
+     * the {@code startScreenshare} method is called.
+     *
+     * @returns {Promise} - Resolved when user selects the desktop and the tracks are created
+     * successfully. The promise is rejected if user cancels the desktop picker or something goes
+     * wrong on the lib-jitsi-meet side with creating the tracks.
+     */
+    createTracks() {
+        if (this._tracks.length) {
+            return Promise.resolve();
+        }
+
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
+        return JitsiMeetJS.createLocalTracks({
+            ...this.options.mediaConfiguration,
+            devices: [ 'desktop' ]
+        }).then(jitsiLocalTracks => {
+            logger.log('screenshareConnection created desktop track');
+
+            this._tracks = this._tracks.concat(jitsiLocalTracks);
+
+            /**
+             * Clean up the tracks and {@code ProxyConnectionService} in
+             * case the connection was lost while selecting a screenshare
+             * source.
+             */
+            if (!this._isActive) {
+                logger.log('screenshareConnection got track in inactive state');
+
+                this.stop();
+
+                return;
+            }
+
+            jitsiLocalTracks[0].on(
+                JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
+                () => {
+                    logger.log('screenshareConnection desktop stopped');
+
+                    /**
+                     * Assume the connection was lost if LOCAL_TRACK_STOPPED
+                     * fires but stop() was not explicitly called.
+                     */
+                    if (this._isActive) {
+                        this.options.onConnectionClosed();
+                    }
+                }
+            );
+        });
+    }
+
+    /**
      * Begins the process of establishing a direct connection with a participant
      * in a Jitsi-Meet meeting.
      *
@@ -84,51 +138,26 @@ export default class ScreenshareConnection {
 
         this._isActive = true;
 
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
+        return new Promise((resolve, reject) => {
+            const preStart
+                = this._tracks.length
+                    ? Promise.resolve()
+                    : this.createTracks();
 
-        return JitsiMeetJS.createLocalTracks({
-            ...this.options.mediaConfiguration,
-            devices: [ 'desktop' ]
-        })
-            .then(jitsiLocalTracks => {
-                logger.log('screenshareConnection created desktop track');
-
-                this._tracks = this._tracks.concat(jitsiLocalTracks);
-
-                /**
-                 * Clean up the tracks and {@code ProxyConnectionService} in
-                 * case the connection was lost while selecting a screenshare
-                 * source.
-                 */
-                if (!this._isActive) {
-                    logger.log(
-                        'screenshareConnection got track in inactive state');
-
-                    this.stop();
-
-                    return;
-                }
-
-                jitsiLocalTracks[0].on(
-                    JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
-                    () => {
-                        logger.log('screenshareConnection desktop stopped');
-
-                        /**
-                         * Assume the connection was lost if LOCAL_TRACK_STOPPED
-                         * fires but stop() was not explicitly called.
-                         */
-                        if (this._isActive) {
-                            this.options.onConnectionClosed();
-                        }
-                    }
-                );
-
-                this._proxyConnectionService.start(
-                    spotJid,
-                    jitsiLocalTracks
-                );
-            });
+            preStart.then(
+                () => {
+                    this._proxyConnectionService.start(
+                        spotJid,
+                        this._tracks
+                    );
+                    resolve();
+                },
+                error => {
+                    // FIXME the tracks are not disposed, maybe consider calling stop() ?
+                    this._isActive = false;
+                    reject(error);
+                });
+        });
     }
 
     /**
