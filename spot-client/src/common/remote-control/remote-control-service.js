@@ -314,6 +314,45 @@ class RemoteControlService {
     }
 
     /**
+     * Initializes new {@link ScreenshareService} instance.
+     *
+     * @returns {ScreenshareService}
+     * @private
+     */
+    _createScreensharingService() {
+        return new ScreenshareService({
+            mediaConfiguration:
+                this._wirelessScreensharingConfiguration || {},
+
+            /**
+             * Callback invoked when the connection has been closed
+             * automatically. Triggers cleanup of
+             * {@code ScreenshareService}.
+             *
+             * @returns {void}
+             */
+            onConnectionClosed: () => this._delegate.stopScreenshare(),
+
+            /**
+             * Callback invoked by {@code ScreenshareService} in order to
+             * communicate out to a Spot.
+             *
+             * @param {string} to - The participant to send the message to.
+             * This is normally the Spot jid.
+             * @param {Object} data - A payload to send along with the
+             * message.
+             * @returns {Promise}
+             */
+            sendMessage: (to, data) =>
+                this.xmppConnection.sendMessage(
+                    to,
+                    MESSAGES.REMOTE_CONTROL_UPDATE,
+                    data
+                ).catch(error => logger.error(error))
+        });
+    }
+
+    /**
      * Begins the process for establishing a connection to the meeting in order
      * to share a local screen to a remote spot.
      *
@@ -322,36 +361,7 @@ class RemoteControlService {
      */
     setWirelessScreensharing(enable) {
         if (enable) {
-            const connection = new ScreenshareService({
-                mediaConfiguration:
-                    this._wirelessScreensharingConfiguration || {},
-
-                /**
-                 * Callback invoked when the connection has been closed
-                 * automatically. Triggers cleanup of
-                 * {@code ScreenshareService}.
-                 *
-                 * @returns {void}
-                 */
-                onConnectionClosed: () => this._delegate.stopScreenshare(),
-
-                /**
-                 * Callback invoked by {@code ScreenshareService} in order to
-                 * communicate out to a Spot.
-                 *
-                 * @param {string} to - The participant to send the message to.
-                 * This is normally the Spot jid.
-                 * @param {Object} data - A payload to send along with the
-                 * message.
-                 * @returns {Promise}
-                 */
-                sendMessage: (to, data) =>
-                    this.xmppConnection.sendMessage(
-                        to,
-                        MESSAGES.REMOTE_CONTROL_UPDATE,
-                        data
-                    ).catch(error => logger.error(error))
-            });
+            const connection = this._createScreensharingService();
 
             return this._delegate.startScreenshare(
                 this._getSpotId(),
