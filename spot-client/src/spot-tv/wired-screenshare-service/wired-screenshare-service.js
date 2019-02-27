@@ -70,7 +70,7 @@ export class WiredScreenshareService {
                 const videoInputDevices
                     = this._filterForVideoInputs(deviceList);
 
-                this._videoChangeListeners = videoInputDevices;
+                this._videoInputDevices = videoInputDevices;
 
                 return videoInputDevices;
             });
