@@ -355,7 +355,6 @@ class RemoteControlService {
 
             return this._delegate.startScreenshare(
                 this._getSpotId(),
-                this.xmppConnection.getRoomFullJid(),
                 connection
             );
         }
