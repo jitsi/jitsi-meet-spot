@@ -336,8 +336,6 @@ export default class ProcessUpdateDelegate {
      * @param {string} spotId - The jid of the Spot to use as a signaling layer
      * for establishing a screenshare connection. Messages go to Spot for it
      * to pass into the meeting.
-     * @param {string} roomFullJId - The jid of the remote control that wants
-     * to establish a {@code ScreenshareConnection}.
      * @param {Object} screenshareConnection - The instance of
      * {@code ScreenshareConnection} to be used.
      * @returns {Promise<string|void>} Resolves with void when void the
@@ -347,7 +345,7 @@ export default class ProcessUpdateDelegate {
      * while starting the screensharing process, such as screenshare source
      * being cancelled.
      */
-    startScreenshare(spotId, roomFullJId, screenshareConnection) {
+    startScreenshare(spotId, screenshareConnection) {
         const { screensharing } = getInMeetingStatus(this._store.getState());
 
         if (screensharing) {
@@ -362,10 +360,7 @@ export default class ProcessUpdateDelegate {
             isWirelessScreenshareConnectionActive: true
         }));
 
-        return screenshareConnection.startScreenshare(
-            spotId,
-            roomFullJId
-        ).catch(error => {
+        return screenshareConnection.startScreenshare(spotId).catch(error => {
             logger.error('Could not establish screenshare connection:', error);
 
             screenshareConnection.stop();
