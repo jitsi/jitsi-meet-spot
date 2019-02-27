@@ -2,6 +2,7 @@ import { $iq } from 'strophe.js';
 
 import {
     getCalendarEvents,
+    getCurrentView,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
@@ -297,11 +298,15 @@ export default class ProcessUpdateDelegate {
             }
         });
 
+        // In order to catch early join failures the view state needs to be tracked, because
+        // the 'inMeeting' flag may never be set to true if the meeting fails to join initially.
+        if (getCurrentView(this._store.getState()) === 'meeting' && newState.view !== 'meeting') {
+            this.stopScreenshare();
+        }
+
         const { inMeeting } = getInMeetingStatus(this._store.getState());
 
-        if (inMeeting && !newState.inMeeting) {
-            this.stopScreenshare();
-        } else if (!inMeeting && newState.inMeeting) {
+        if (!inMeeting && newState.inMeeting) {
             this._maybeResumeDeferredScreenshare();
         }
 
