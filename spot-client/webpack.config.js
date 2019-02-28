@@ -7,18 +7,18 @@ const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = {
+const mode = process.env.NODE_ENV === 'production'
+    ? 'production' : 'development';
+
+const app = {
     devServer: {
         compress: true,
         contentBase: path.join(__dirname, '/'),
         port: 8000,
         publicPath: '/dist/'
     },
-    entry: {
-        app: './src/index.js',
-        config: './config'
-    },
-    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    entry: './src/index.js',
+    mode,
     module: {
         rules: [
             {
@@ -50,10 +50,6 @@ module.exports = {
             }
         ]
     },
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
-    },
     plugins: [
         new CircularDependencyPlugin({
             exclude: /node_modules/,
@@ -73,11 +69,12 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
-        new Dotenv({
-            systemvars: true // Respect existing environment variables
-        }),
         new WriteFilePlugin()
     ],
+    output: {
+        filename: 'app.js',
+        path: path.resolve(__dirname, 'dist')
+    },
     resolve: {
         modules: [
             path.resolve('./src'),
@@ -85,3 +82,20 @@ module.exports = {
         ]
     }
 };
+
+const config = {
+    entry: './config',
+    mode,
+    output: {
+        filename: 'config.js',
+        path: path.resolve(__dirname, 'dist/config')
+    },
+    plugins: [
+        new Dotenv({
+            systemvars: true // Respect existing environment variables
+        }),
+        new WriteFilePlugin()
+    ]
+}
+
+module.exports = [ app, config ];
