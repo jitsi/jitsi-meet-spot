@@ -79,21 +79,6 @@ export default class RemoteControlMenu extends React.Component {
     }
 
     /**
-     * Returns whether or not the current environment supports wirelessly
-     * screensharing into a Spot. Currently only Chrome works and the underlying
-     * implementation assumes getDisplayMedia is available.
-     *
-     * @private
-     * @returns {void}
-     */
-    _isWirelessScreenshareSupported() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        return JitsiMeetJS.util.browser.isChrome()
-            && JitsiMeetJS.util.browser.supportsGetDisplayMedia();
-    }
-
-    /**
      * Leaves the currently joined meeting.
      *
      * @private
@@ -194,7 +179,7 @@ export default class RemoteControlMenu extends React.Component {
             screensharing,
             screensharingEnabled
         } = this.props;
-        const canWirelessScreenshare = this._isWirelessScreenshareSupported();
+        const canWirelessScreenshare = JitsiMeetJSProvider.isWirelessScreenshareSupported();
 
         // If neither screensharing mode is allowed then show nothing.
         if (!screensharingEnabled && !canWirelessScreenshare) {

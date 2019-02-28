@@ -72,6 +72,7 @@ export default class WaitingForCallView extends React.PureComponent {
      */
     render() {
         const { activeTab } = this.state;
+        const canWirelessScreenshare = JitsiMeetJSProvider.isWirelessScreenshareSupported();
 
         return (
             <div className = 'waiting-view'>
@@ -96,11 +97,13 @@ export default class WaitingForCallView extends React.PureComponent {
                         iconName = 'call'
                         label = 'Dial a Number'
                         onClick = { this._onSetDialActive } />
-                    <NavButton
-                        active = { activeTab === 'share' }
-                        iconName = 'screen_share'
-                        label = 'Share content'
-                        onClick = { this._onSetShareContentActive } />
+                    { canWirelessScreenshare
+                        && <NavButton
+                            active = { activeTab === 'share' }
+                            iconName = 'screen_share'
+                            label = 'Share content'
+                            onClick = { this._onSetShareContentActive } />
+                    }
                 </NavContainer>
             </div>
         );
