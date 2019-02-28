@@ -4,6 +4,7 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
+import { JitsiMeetJSProvider } from 'common/vendor';
 
 import {
     DialPad,
@@ -11,6 +12,8 @@ import {
     NavContainer,
     SelfFillingNameEntry
 } from './../../components';
+
+const JitsiTrackErrors = JitsiMeetJSProvider.get().errors.track;
 
 /**
  * Returns the React Element to display while the Spot instance is not in a
@@ -164,8 +167,10 @@ export default class WaitingForCallView extends React.PureComponent {
         this.props.onGoToMeeting(getRandomMeetingName(), {
             startWithScreensharing: true
         }).catch(error => {
-            // FIXME do not log an error if user cancelled the desktop picker dialog
-            logger.error(`onGoToMeeting rejected with ${error}`);
+            if (error.name !== JitsiTrackErrors.CHROME_EXTENSION_USER_CANCELED) {
+                logger.error(`onGoToMeeting rejected with ${error}`);
+            }
+
             // FIXME this should not be executed if the component is unmounted
             this.setState({ activeTab: '' });
         });
