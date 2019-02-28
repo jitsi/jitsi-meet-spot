@@ -124,10 +124,11 @@ window.JitsiMeetSpotConfig = {
      * the jitsi UI.
      */
     XMPP_CONFIG: {
-        bosh: process.env.XMPP_BOSH || '',
+        bosh: process.env.XMPP_BOSH || 'https://meet.jit.si/http-bind',
         hosts: {
-            domain: process.env.XMPP_HOSTS_DOMAIN || '',
-            muc: process.env.XMPP_HOSTS_MUC_URL || ''
+            domain: process.env.XMPP_HOSTS_DOMAIN || 'meet.jit.si',
+            muc: process.env.XMPP_HOSTS_MUC_URL
+                || 'conference.meet.jit.si'
         }
     }
 };
