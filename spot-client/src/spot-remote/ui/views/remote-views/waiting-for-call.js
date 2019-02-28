@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { logger } from 'common/logger';
-import { Clock, ScheduledMeetings } from 'common/ui';
+import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import {
@@ -118,7 +118,7 @@ export default class WaitingForCallView extends React.PureComponent {
                 </div>
             );
         case 'share':
-            return <div>in progress</div>;
+            return <LoadingIcon color = 'white' />;
         }
     }
 
@@ -159,7 +159,6 @@ export default class WaitingForCallView extends React.PureComponent {
      * @returns {void}
      */
     _onSetShareContentActive() {
-        // FIXME UI on the share tab displays "in progress" on the left side of the screen
         this.setState({ activeTab: 'share' });
 
         this.props.onGoToMeeting(getRandomMeetingName(), {
