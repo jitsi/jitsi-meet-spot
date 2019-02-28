@@ -28,6 +28,14 @@ export default class WaitingForCallView extends React.PureComponent {
     };
 
     /**
+     * This field is used to keep tracks of the long, asynchronous process of joining the meeting
+     * with the screensharing turned on.
+     *
+     * @type {Promise|undefined}
+     */
+    _goToMeetingPromise = undefined;
+
+    /**
      * Initializes a new {@code App} instance.
      *
      * @param {Object} props - The read-only properties with which the new
@@ -45,6 +53,15 @@ export default class WaitingForCallView extends React.PureComponent {
         this._onSetInputActive = this._onSetInputActive.bind(this);
         this._onSetShareContentActive
             = this._onSetShareContentActive.bind(this);
+    }
+
+    /**
+     * Reset some fields when the component is being unmounted.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._goToMeetingPromise = undefined;
     }
 
     /**
@@ -162,17 +179,33 @@ export default class WaitingForCallView extends React.PureComponent {
      * @returns {void}
      */
     _onSetShareContentActive() {
+        // This prevents from triggering the action twice
+        if (this._goToMeetingPromise) {
+            return;
+        }
+
         this.setState({ activeTab: 'share' });
 
-        this.props.onGoToMeeting(getRandomMeetingName(), {
-            startWithScreensharing: true
-        }).catch(error => {
+        const goToMeetingPromise = this.props.onGoToMeeting(
+            getRandomMeetingName(),
+            {
+                startWithScreensharing: true
+            }
+        )
+        .catch(error => {
             if (error.name !== JitsiTrackErrors.CHROME_EXTENSION_USER_CANCELED) {
                 logger.error(`onGoToMeeting rejected with ${error}`);
             }
 
-            // FIXME this should not be executed if the component is unmounted
-            this.setState({ activeTab: '' });
+            // Prevents calling setState when the component has been unmounted
+            if (this._goToMeetingPromise === goToMeetingPromise) {
+                this.setState({ activeTab: '' });
+            }
+        })
+        .then(() => {
+            this._goToMeetingPromise = undefined;
         });
+
+        this._goToMeetingPromise = goToMeetingPromise;
     }
 }
