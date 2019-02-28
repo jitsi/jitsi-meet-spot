@@ -96,6 +96,6 @@ const config = {
         }),
         new WriteFilePlugin()
     ]
-}
+};
 
 module.exports = [ app, config ];

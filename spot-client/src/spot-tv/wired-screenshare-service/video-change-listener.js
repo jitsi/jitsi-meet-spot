@@ -229,8 +229,9 @@ export default class VideoChangeListener {
         let desiredDeviceId;
 
         return enumerateDevicesPromise
-            .then(devices =>
-                devices.find(device => device.label === this._deviceLabel))
+            .then(devices => devices.find(
+                device => device.label === this._deviceLabel
+                    && device.kind === 'videoinput'))
             .then((deviceInfo = {}) => {
                 const { deviceId } = deviceInfo;
 
