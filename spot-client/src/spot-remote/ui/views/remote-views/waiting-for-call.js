@@ -193,8 +193,10 @@ export default class WaitingForCallView extends React.PureComponent {
             }
         )
         .catch(error => {
-            if (error.name !== JitsiTrackErrors.CHROME_EXTENSION_USER_CANCELED) {
-                logger.error(`onGoToMeeting rejected with ${error}`);
+            if (error.name === JitsiTrackErrors.CHROME_EXTENSION_USER_CANCELED) {
+                logger.log('onGoToMeeting with screensharing canceled by the user');
+            } else {
+                logger.error(`onGoToMeeting with screensharin rejected: ${error}`);
             }
 
             // Prevents calling setState when the component has been unmounted
