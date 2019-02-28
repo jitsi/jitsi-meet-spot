@@ -225,6 +225,12 @@ body.using-mouse :focus {
   }
 }
 
+.loading-curtain {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
 .meetingMouseHider {
   pointer-events: none;
   position: absolute;

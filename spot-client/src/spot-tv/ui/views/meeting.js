@@ -13,6 +13,7 @@ import {
 import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
+import { Loading } from 'common/ui';
 
 import { MeetingFrame } from './../components';
 
@@ -44,6 +45,10 @@ export class Meeting extends React.Component {
         super(props);
 
         this._queryParams = this._getQueryParams();
+
+        this.state = {
+            meetingLoaded: false
+        };
 
         this._onMeetingLeave = this._onMeetingLeave.bind(this);
         this._onMeetingStart = this._onMeetingStart.bind(this);
@@ -97,6 +102,12 @@ export class Meeting extends React.Component {
                     screenshareDevice = { this.props.screenshareDevice }
                     showMeetingToolbar = { this.props.showMeetingToolbar }
                     startWithScreenshare = { screenshare } />
+                {
+                    !this.state.meetingLoaded
+                        && <div className = 'loading-curtain'>
+                            <Loading />
+                        </div>
+                }
                 {
 
                     /**
@@ -175,6 +186,10 @@ export class Meeting extends React.Component {
      */
     _onMeetingStart(meetingApi) {
         this.props.dispatch(setMeetingApi(meetingApi));
+
+        this.setState({
+            meetingLoaded: true
+        });
     }
 }
 
