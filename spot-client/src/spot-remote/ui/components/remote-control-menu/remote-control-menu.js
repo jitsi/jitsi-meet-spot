@@ -232,7 +232,6 @@ export default class RemoteControlMenu extends React.Component {
                         onStartWirelessScreenshare
                             = { this._onToggleWirelessScreensharing } />
                 }
-                ref = { this._screensharePickerRef }
                 showPopover = { this.state.showScreensharePicker }>
                 <NavButton
                     iconName = 'screen_share'
