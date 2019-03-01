@@ -113,6 +113,10 @@ export default class ProcessUpdateDelegate {
                 path += '&screenshare=true';
             }
 
+            if (data.startWithVideoMuted === true) {
+                path += '&startWithVideoMuted=true';
+            }
+
             this._history.push(path);
             break;
         }

@@ -157,7 +157,8 @@ class RemoteControlService {
                         COMMANDS.GO_TO_MEETING,
                         {
                             ...otherOptions,
-                            meetingName
+                            meetingName,
+                            startWithVideoMuted: true
                         })
                 )
                 .then(() => this._delegate.startScreenshare(this._getSpotId(), connection));

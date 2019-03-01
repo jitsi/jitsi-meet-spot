@@ -84,7 +84,7 @@ export class Meeting extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { invites, location, screenshare } = this._queryParams;
+        const { invites, location, screenshare, startWithVideoMuted } = this._queryParams;
 
         if (!location) {
             return null;
@@ -101,7 +101,8 @@ export class Meeting extends React.Component {
                     remoteControlService = { this.props.remoteControlService }
                     screenshareDevice = { this.props.screenshareDevice }
                     showMeetingToolbar = { this.props.showMeetingToolbar }
-                    startWithScreenshare = { screenshare } />
+                    startWithScreenshare = { screenshare }
+                    startWithVideoMuted = { startWithVideoMuted } />
                 {
                     !this.state.meetingLoaded
                         && <div className = 'loading-curtain'>
@@ -134,6 +135,7 @@ export class Meeting extends React.Component {
         const invitesParam = queryParams.get('invites');
         const locationParam = queryParams.get('location');
         const screenshareParam = queryParams.get('screenshare');
+        const startWithVideoMutedParam = queryParams.get('startWithVideoMuted');
 
         let invites;
 
@@ -155,7 +157,8 @@ export class Meeting extends React.Component {
         return {
             invites,
             location,
-            screenshare: screenshareParam === 'true'
+            screenshare: screenshareParam === 'true',
+            startWithVideoMuted: startWithVideoMutedParam === 'true'
         };
     }
 
