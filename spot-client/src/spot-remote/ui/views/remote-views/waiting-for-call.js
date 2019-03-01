@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { getInMeetingStatus } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
@@ -10,6 +12,7 @@ import {
     DialPad,
     NavButton,
     NavContainer,
+    ScreenshareButton,
     SelfFillingNameEntry
 } from './../../components';
 
@@ -21,10 +24,14 @@ const JitsiTrackErrors = JitsiMeetJSProvider.get().errors.track;
  *
  * @extends React.PureComponent
  */
-export default class WaitingForCallView extends React.PureComponent {
+class WaitingForCallView extends React.Component {
     static propTypes = {
         events: PropTypes.array,
-        onGoToMeeting: PropTypes.func
+        isWirelessScreenshareConnectionActive: PropTypes.bool,
+        onGoToMeeting: PropTypes.func,
+        remoteControlService: PropTypes.object,
+        screensharing: PropTypes.bool,
+        wiredScreensharingEnabled: PropTypes.bool
     };
 
     /**
@@ -48,11 +55,13 @@ export default class WaitingForCallView extends React.PureComponent {
             activeTab: 'calendar'
         };
 
+        this._onJoinWithWiredScreensharing
+            = this._onJoinWithScreensharing.bind(this, /* wired */ false);
+        this._onJoinWithWirelessScreensharing
+            = this._onJoinWithScreensharing.bind(this, /* wireless */ true);
         this._onSetCalendarActive = this._onSetCalendarActive.bind(this);
         this._onSetDialActive = this._onSetDialActive.bind(this);
         this._onSetInputActive = this._onSetInputActive.bind(this);
-        this._onSetShareContentActive
-            = this._onSetShareContentActive.bind(this);
     }
 
     /**
@@ -72,7 +81,6 @@ export default class WaitingForCallView extends React.PureComponent {
      */
     render() {
         const { activeTab } = this.state;
-        const canWirelessScreenshare = JitsiMeetJSProvider.isWirelessScreenshareSupported();
 
         return (
             <div className = 'waiting-view'>
@@ -97,13 +105,14 @@ export default class WaitingForCallView extends React.PureComponent {
                         iconName = 'call'
                         label = 'Dial a Number'
                         onClick = { this._onSetDialActive } />
-                    { canWirelessScreenshare
-                        && <NavButton
-                            active = { activeTab === 'share' }
-                            iconName = 'screen_share'
-                            label = 'Share content'
-                            onClick = { this._onSetShareContentActive } />
-                    }
+                    <ScreenshareButton
+                        isWirelessScreenshareConnectionActive
+                            = { this.props.isWirelessScreenshareConnectionActive }
+                        onStartWiredScreenshare = { this._onJoinWithWiredScreensharing }
+                        onStartWirelessScreenshare = { this._onJoinWithWirelessScreensharing }
+                        remoteControlService = { this.props.remoteControlService }
+                        screensharing = { this.props.screensharing }
+                        screensharingEnabled = { this.props.wiredScreensharingEnabled } />
                 </NavContainer>
             </div>
         );
@@ -178,10 +187,11 @@ export default class WaitingForCallView extends React.PureComponent {
     /**
      * Updates the state to display screen share.
      *
+     * @param {boolean} wireless - True for wireless or false for wired.
      * @private
      * @returns {void}
      */
-    _onSetShareContentActive() {
+    _onJoinWithScreensharing(wireless) {
         // This prevents from triggering the action twice
         if (this._goToMeetingPromise) {
             return;
@@ -192,7 +202,7 @@ export default class WaitingForCallView extends React.PureComponent {
         const goToMeetingPromise = this.props.onGoToMeeting(
             getRandomMeetingName(),
             {
-                startWithScreensharing: true
+                startWithScreensharing: wireless ? 'wireless' : 'wired'
             }
         )
         .catch(error => {
@@ -214,3 +224,18 @@ export default class WaitingForCallView extends React.PureComponent {
         this._goToMeetingPromise = goToMeetingPromise;
     }
 }
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code WaitingForCallView}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        ...getInMeetingStatus(state)
+    };
+}
+
+export default connect(mapStateToProps)(WaitingForCallView);

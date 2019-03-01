@@ -109,6 +109,10 @@ export default class ProcessUpdateDelegate {
                 path += `&invites=${JSON.stringify(data.invites)}`;
             }
 
+            if (data.startWithScreensharing) {
+                path += '&screenshare=true';
+            }
+
             this._history.push(path);
             break;
         }

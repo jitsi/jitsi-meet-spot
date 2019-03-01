@@ -6,8 +6,9 @@ import XmppConnection from './xmpp-connection';
 
 /**
  * @typedef {Object} GoToMeetingOptions
- * @property {boolean} startWithScreensharing - if {@code true} the meeting will be joined with
- * the screensharing turned on.
+ * @property {string} startWithScreensharing - if 'wireless' the meeting will be joined with
+ * the wireless screensharing turned on. If 'wired' will be joined with wired. The meeting will be
+ * joined without screensharing for any other value or lack of thereof.
  */
 
 /**
@@ -146,7 +147,7 @@ class RemoteControlService {
     goToMeeting(meetingName, options = {}) {
         const { startWithScreensharing, ...otherOptions } = options;
 
-        if (startWithScreensharing) {
+        if (startWithScreensharing === 'wireless') {
             const connection = this._createScreensharingService();
 
             return connection
@@ -166,6 +167,7 @@ class RemoteControlService {
             this._getSpotId(),
             COMMANDS.GO_TO_MEETING,
             {
+                startWithScreensharing: startWithScreensharing === 'wired',
                 ...otherOptions,
                 meetingName
             });

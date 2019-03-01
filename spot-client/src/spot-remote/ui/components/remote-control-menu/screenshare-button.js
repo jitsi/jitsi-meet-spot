@@ -16,6 +16,8 @@ import ScreensharePicker from './screenshare-picker';
 export default class ScreenshareButton extends React.Component {
     static propTypes = {
         isWirelessScreenshareConnectionActive: PropTypes.bool,
+        onStartWiredScreenshare: PropTypes.func,
+        onStartWirelessScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool
@@ -133,7 +135,11 @@ export default class ScreenshareButton extends React.Component {
     _onToggleScreensharing() {
         this._onHideScreensharePicker();
 
-        this.props.remoteControlService.setScreensharing(!this.props.screensharing);
+        if (this.props.onStartWiredScreenshare) {
+            this.props.onStartWiredScreenshare();
+        } else {
+            this.props.remoteControlService.setScreensharing(!this.props.screensharing);
+        }
     }
 
     /**
@@ -168,6 +174,10 @@ export default class ScreenshareButton extends React.Component {
             return;
         }
 
-        remoteControlService.setWirelessScreensharing(!screensharing);
+        if (this.props.onStartWirelessScreenshare) {
+            this.props.onStartWirelessScreenshare();
+        } else {
+            remoteControlService.setWirelessScreensharing(!screensharing);
+        }
     }
 }
