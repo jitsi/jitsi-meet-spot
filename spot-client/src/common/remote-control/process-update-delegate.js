@@ -314,8 +314,14 @@ export default class ProcessUpdateDelegate {
 
         const { inMeeting } = getInMeetingStatus(this._store.getState());
 
-        if (!inMeeting && newState.inMeeting) {
-            this._maybeResumeDeferredScreenshare();
+        if (!inMeeting && newState.inMeeting && this._startWithScreenshare) {
+            this.startScreenshare(this.getSpotId(), this._startWithScreenshare)
+                .then(() => {
+                    logger.log('Start with screensharing successful');
+                }, error => {
+                    logger.error('Failed to start with screensharing', error);
+                });
+            this._startWithScreenshare = null;
         }
 
         logger.log(`processUpdateDelegate new spot state ${
@@ -361,7 +367,7 @@ export default class ProcessUpdateDelegate {
      * being cancelled.
      */
     startScreenshare(spotId, screenshareConnection) {
-        const { inMeeting, screensharing } = getInMeetingStatus(this._store.getState());
+        const { screensharing } = getInMeetingStatus(this._store.getState());
 
         if (screensharing) {
             logger.error('Tried to start screenshare while already started.');
@@ -375,12 +381,7 @@ export default class ProcessUpdateDelegate {
             isWirelessScreenshareConnectionActive: true
         }));
 
-        const startPromise
-            = inMeeting
-                ? screenshareConnection.startScreenshare(spotId)
-                : screenshareConnection.createDeferredStart(spotId);
-
-        return startPromise.catch(error => {
+        return screenshareConnection.startScreenshare(spotId).catch(error => {
             logger.error('Could not establish screenshare connection:', error);
 
             screenshareConnection.stop();
@@ -394,6 +395,21 @@ export default class ProcessUpdateDelegate {
     }
 
     /**
+     * Stores the screensharing connection that will be used to "start with wireless screensharing"
+     * as soon as the meeting is joined.
+     *
+     * @param {ScreenshareConnection} screenshareConnection - The screensharing connection instance.
+     * @returns {void}
+     */
+    setStartWithScreenshare(screenshareConnection) {
+        this._startWithScreenshare = screenshareConnection;
+
+        this._store.dispatch(updateSpotState({
+            isWirelessScreenshareConnectionActive: true
+        }));
+    }
+
+    /**
      * Stops any active {@code ScreenshareConnection}.
      *
      * @returns {void}
@@ -404,22 +420,14 @@ export default class ProcessUpdateDelegate {
             this._screenshareConnection = null;
         }
 
+        if (this._startWithScreenshare) {
+            this._startWithScreenshare.stop();
+            this._startWithScreenshare = null;
+        }
+
         this._store.dispatch(updateSpotState({
             isWirelessScreenshareConnectionActive: false
         }));
-    }
-
-    /**
-     * Resumes the screensharing initialization process if there's an exisiting reference to
-     * a deferred start object.
-     *
-     * @private
-     * @returns {void}
-     */
-    _maybeResumeDeferredScreenshare() {
-        this._screenshareConnection
-            && this._screenshareConnection.deferredStart
-            && this._screenshareConnection.deferredStart.resume();
     }
 
     /**

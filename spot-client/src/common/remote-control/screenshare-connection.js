@@ -129,14 +129,8 @@ export default class ScreenshareConnection {
                      * Assume the connection was lost if LOCAL_TRACK_STOPPED
                      * fires but stop() was not explicitly called.
                      */
-                    if (this._isActive) {
+                    if (this._isActive || deferredStart) {
                         this.options.onConnectionClosed();
-                    } else if (this.deferredStart) {
-                        // The track can be stopped using Chrome's "Stop sharing" button.
-                        // The screensharing needs to be aborted in that case which is done be
-                        // rejecting the deferred start promise.
-                        this.deferredStart.cancel();
-                        this.deferredStart = undefined;
                     }
                 }
             );
@@ -180,33 +174,6 @@ export default class ScreenshareConnection {
     }
 
     /**
-     * Creates a deferred start Promise which is resolved when screensharing is started or rejected
-     * if the process fails or is aborted for other reasons.
-     * Stores locally a deferred start object with {@code resume} and {@code cancel} methods.
-     * The resume method is used to resume the screensharing initialization when the meeting is
-     * joined on the remote side and the external API is ready to accept the screensharing stream.
-     * When {@code cancel} method is called it will reject the Promise returned by this method.
-     *
-     * @param {string} spotId - See the description at {@link startScreenshare}.
-     * @returns {Promise} - A Promise resolved when the screensharing is started or reject if fails
-     * or if the process is aborted.
-     */
-    createDeferredStart(spotId) {
-        const self = this;
-
-        return new Promise((resolve, reject) => {
-            this.deferredStart = {
-                resume() {
-                    self.startScreenshare(spotId).then(resolve, reject);
-                },
-                cancel() {
-                    reject('Pending screenshare has been canceled');
-                }
-            };
-        });
-    }
-
-    /**
      * Cleans up the state of this {@code ScreenshareConnection} instance by
      * stopping all known media tracks and stopping any active proxy connection.
      *
@@ -217,9 +184,6 @@ export default class ScreenshareConnection {
 
         this._isActive = false;
         this._proxyConnectionService.stop();
-
-        this.deferredStart && this.deferredStart.cancel();
-        this.deferredStart = undefined;
 
         this._tracks.forEach(track => track.dispose());
         this._tracks = [];

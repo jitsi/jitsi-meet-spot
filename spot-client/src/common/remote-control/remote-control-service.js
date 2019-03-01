@@ -146,32 +146,28 @@ class RemoteControlService {
      */
     goToMeeting(meetingName, options = {}) {
         const { startWithScreensharing, ...otherOptions } = options;
+        let preGoToMeeting = Promise.resolve();
 
         if (startWithScreensharing === 'wireless') {
             const connection = this._createScreensharingService();
 
-            return connection
-                .createTracks()
-                .then(() => this.xmppConnection.sendCommand(
-                        this._getSpotId(),
-                        COMMANDS.GO_TO_MEETING,
-                        {
-                            ...otherOptions,
-                            meetingName,
-                            startWithVideoMuted: true
-                        })
-                )
-                .then(() => this._delegate.startScreenshare(this._getSpotId(), connection));
+            preGoToMeeting
+                = connection
+                    .createTracks()
+                    .then(() => this._delegate.setStartWithScreenshare(connection));
         }
 
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
-            COMMANDS.GO_TO_MEETING,
-            {
-                startWithScreensharing: startWithScreensharing === 'wired',
-                ...otherOptions,
-                meetingName
-            });
+        return preGoToMeeting
+            .then(() => this.xmppConnection.sendCommand(
+                    this._getSpotId(),
+                    COMMANDS.GO_TO_MEETING,
+                    {
+                        startWithScreensharing: startWithScreensharing === 'wired',
+                        startWithVideoMuted: startWithScreensharing === 'wireless',
+                        ...otherOptions,
+                        meetingName
+                    })
+            );
     }
 
     /**
