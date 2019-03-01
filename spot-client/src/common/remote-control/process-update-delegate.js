@@ -303,8 +303,7 @@ export default class ProcessUpdateDelegate {
             this.stopScreenshare();
         }
 
-        logger.log(`processUpdateDelegate new spot state ${
-            JSON.stringify(newState)}`);
+        logger.log('processUpdateDelegate new spot state', { ...newState });
 
         this._store.dispatch(updateSpotState(newState));
 

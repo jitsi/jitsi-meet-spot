@@ -21,7 +21,8 @@ export default class LoggingService {
                 storeLogs: this.storeLogs.bind(this)
             },
             {
-                storeInterval: 1000
+                storeInterval: 1000,
+                stringifyObjects: true
             }
         );
 
