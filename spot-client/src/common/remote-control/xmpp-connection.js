@@ -13,6 +13,16 @@ export default class XmppConnection {
      * Initializes a new {@code XmppConnection} instance.
      *
      * @param {Object} options - Attributes to initialize the instance with.
+     * @param {Object} options.configuration - Details of endpoints to use for
+     * creating the XMPP connection.
+     * @param {string} options.configuration.bosh - The bosh url to use for
+     * long-polling witht the XMPP service.
+     * @param {Object} options.configuration.hosts - Details of endpoints to use
+     * for where to reate the MUC.
+     * @param {string} options.configuration.hosts.domain - The overall domain
+     * for which sub routes will be defined.
+     * @param {string} options.configuration.hosts.muc - Specifically the url
+     * where MUCs should be created.
      * @param {Function} options.onRemoteCommand - Callback to invoke when a
      * private message is received.
      * @param {Function} options.onSpotStatusUpdate - Callback to invoke when
@@ -52,7 +62,11 @@ export default class XmppConnection {
         this.xmppConnection = new JitsiMeetJS.JitsiConnection(
             null,
             null,
-            this.options.configuration
+            {
+                ...this.options.configuration,
+                bosh:
+                    `${this.options.configuration.bosh}?room=${roomName}`
+            }
         );
 
         const connectionPromise = new Promise((resolve, reject) => {
