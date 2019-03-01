@@ -63,9 +63,9 @@ export default class XmppConnection {
             null,
             null,
             {
+                ...this.options.configuration,
                 bosh:
-                    `${this.options.configuration.bosh}?room=${roomName}`,
-                hosts: this.options.configuration.hosts
+                    `${this.options.configuration.bosh}?room=${roomName}`
             }
         );
 
