@@ -71,15 +71,28 @@ export default class ScreenshareConnection {
     }
 
     /**
+     * See the description of {@link _createTracks}.
+     *
+     * @public
+     * @returns {Promise} - See the return description of {@link _createTracks}.
+     */
+    createTracks() {
+        return this._createTracks(/* deferred start */ true);
+    }
+
+    /**
      * Asks the user to select the desktop to be used for screensharing and creates the tracks.
      * The tracks are stored in this connection instance and will be used when
      * the {@code startScreenshare} method is called.
      *
+     * @param {boolean} deferredStart - Whether or not this call is made in the deferred start
+     * scenario where the tracks are created, before the connection gets established.
+     * @private
      * @returns {Promise} - Resolved when user selects the desktop and the tracks are created
      * successfully. The promise is rejected if user cancels the desktop picker or something goes
      * wrong on the lib-jitsi-meet side with creating the tracks.
      */
-    createTracks() {
+    _createTracks(deferredStart) {
         if (this._tracks.length) {
             return Promise.resolve();
         }
@@ -99,7 +112,7 @@ export default class ScreenshareConnection {
              * case the connection was lost while selecting a screenshare
              * source.
              */
-            if (!this._isActive) {
+            if (!this._isActive && !deferredStart) {
                 logger.log('screenshareConnection got track in inactive state');
 
                 this.stop();
@@ -116,7 +129,7 @@ export default class ScreenshareConnection {
                      * Assume the connection was lost if LOCAL_TRACK_STOPPED
                      * fires but stop() was not explicitly called.
                      */
-                    if (this._isActive) {
+                    if (this._isActive || deferredStart) {
                         this.options.onConnectionClosed();
                     }
                 }
@@ -142,7 +155,7 @@ export default class ScreenshareConnection {
             const preStart
                 = this._tracks.length
                     ? Promise.resolve()
-                    : this.createTracks();
+                    : this._createTracks(/* deferred start */ false);
 
             preStart.then(
                 () => {

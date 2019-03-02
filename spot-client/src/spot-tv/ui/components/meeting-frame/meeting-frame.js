@@ -25,7 +25,8 @@ export default class MeetingFrame extends React.Component {
         remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool,
-        startWithScreenshare: PropTypes.bool
+        startWithScreenshare: PropTypes.bool,
+        startWithVideoMuted: PropTypes.bool
     };
 
     /**
@@ -79,7 +80,8 @@ export default class MeetingFrame extends React.Component {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice,
                 startScreenSharing: Boolean(this.props.screenshareDevice)
-                    && this.props.startWithScreenshare
+                    && this.props.startWithScreenshare,
+                startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
             },
             interfaceConfigOverwrite: {
                 DEFAULT_LOCAL_DISPLAY_NAME: '',

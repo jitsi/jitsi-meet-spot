@@ -2,6 +2,7 @@ import { $iq } from 'strophe.js';
 
 import {
     getCalendarEvents,
+    getCurrentView,
     getInMeetingStatus,
     getMeetingApi,
     getSpotId,
@@ -106,6 +107,14 @@ export default class ProcessUpdateDelegate {
                 logger.log('has invites for the meeting');
 
                 path += `&invites=${JSON.stringify(data.invites)}`;
+            }
+
+            if (data.startWithScreensharing) {
+                path += '&screenshare=true';
+            }
+
+            if (data.startWithVideoMuted === true) {
+                path += '&startWithVideoMuted=true';
             }
 
             this._history.push(path);
@@ -297,10 +306,22 @@ export default class ProcessUpdateDelegate {
             }
         });
 
+        // In order to catch early join failures the view state needs to be tracked, because
+        // the 'inMeeting' flag may never be set to true if the meeting fails to join initially.
+        if (getCurrentView(this._store.getState()) === 'meeting' && newState.view !== 'meeting') {
+            this.stopScreenshare();
+        }
+
         const { inMeeting } = getInMeetingStatus(this._store.getState());
 
-        if (inMeeting && !newState.inMeeting) {
-            this.stopScreenshare();
+        if (!inMeeting && newState.inMeeting && this._startWithScreenshare) {
+            this.startScreenshare(this.getSpotId(), this._startWithScreenshare)
+                .then(() => {
+                    logger.log('Start with screensharing successful');
+                }, error => {
+                    logger.error('Failed to start with screensharing', error);
+                });
+            this._startWithScreenshare = null;
         }
 
         logger.log('processUpdateDelegate new spot state', { ...newState });
@@ -373,6 +394,21 @@ export default class ProcessUpdateDelegate {
     }
 
     /**
+     * Stores the screensharing connection that will be used to "start with wireless screensharing"
+     * as soon as the meeting is joined.
+     *
+     * @param {ScreenshareConnection} screenshareConnection - The screensharing connection instance.
+     * @returns {void}
+     */
+    setStartWithScreenshare(screenshareConnection) {
+        this._startWithScreenshare = screenshareConnection;
+
+        this._store.dispatch(updateSpotState({
+            isWirelessScreenshareConnectionActive: true
+        }));
+    }
+
+    /**
      * Stops any active {@code ScreenshareConnection}.
      *
      * @returns {void}
@@ -381,6 +417,11 @@ export default class ProcessUpdateDelegate {
         if (this._screenshareConnection) {
             this._screenshareConnection.stop();
             this._screenshareConnection = null;
+        }
+
+        if (this._startWithScreenshare) {
+            this._startWithScreenshare.stop();
+            this._startWithScreenshare = null;
         }
 
         this._store.dispatch(updateSpotState({

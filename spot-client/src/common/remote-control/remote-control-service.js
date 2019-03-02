@@ -5,6 +5,13 @@ import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
 /**
+ * @typedef {Object} GoToMeetingOptions
+ * @property {string} startWithScreensharing - if 'wireless' the meeting will be joined with
+ * the wireless screensharing turned on. If 'wired' will be joined with wired. The meeting will be
+ * joined without screensharing for any other value or lack of thereof.
+ */
+
+/**
  * The interface for interacting with the XMPP service which powers the
  * communication between a Spot instance and remote control instances. Both the
  * Spot instance and remote controls join the same MUC and can get messages to
@@ -133,18 +140,34 @@ class RemoteControlService {
      * Requests a Spot to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
-     * @param {Object} options - Additional details about how to join the
+     * @param {GoToMeetingOptions} options - Additional details about how to join the
      * meeting.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     goToMeeting(meetingName, options = {}) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
-            COMMANDS.GO_TO_MEETING,
-            {
-                ...options,
-                meetingName
-            });
+        const { startWithScreensharing, ...otherOptions } = options;
+        let preGoToMeeting = Promise.resolve();
+
+        if (startWithScreensharing === 'wireless') {
+            const connection = this._createScreensharingService();
+
+            preGoToMeeting
+                = connection
+                    .createTracks()
+                    .then(() => this._delegate.setStartWithScreenshare(connection));
+        }
+
+        return preGoToMeeting
+            .then(() => this.xmppConnection.sendCommand(
+                    this._getSpotId(),
+                    COMMANDS.GO_TO_MEETING,
+                    {
+                        startWithScreensharing: startWithScreensharing === 'wired',
+                        startWithVideoMuted: startWithScreensharing === 'wireless',
+                        ...otherOptions,
+                        meetingName
+                    })
+            );
     }
 
     /**
