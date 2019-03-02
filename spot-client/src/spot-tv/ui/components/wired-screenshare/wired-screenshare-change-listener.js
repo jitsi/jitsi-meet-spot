@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
-import { getRandomMeetingName } from 'common/utils';
 
 /**
  * A wrapper component for responding to a screenshare input device connecting
@@ -12,11 +11,13 @@ import { getRandomMeetingName } from 'common/utils';
  *
  * @extends React.Component
  */
-export class WiredScreenshareRedirector extends React.PureComponent {
+export class WiredScreenshareChangeListener extends React.PureComponent {
     static propTypes = {
         children: PropTypes.any,
         hasScreenshareDevice: PropTypes.bool,
-        history: PropTypes.object
+        history: PropTypes.object,
+        onDeviceConnected: PropTypes.func,
+        onDeviceDisconnected: PropTypes.func
     };
 
     /**
@@ -26,11 +27,15 @@ export class WiredScreenshareRedirector extends React.PureComponent {
      */
     componentDidUpdate(prevProps) {
         if (!prevProps.hasScreenshareDevice
-            && this.props.hasScreenshareDevice) {
-            const meetingName = getRandomMeetingName();
+            && this.props.hasScreenshareDevice
+            && this.props.onDeviceConnected) {
+            this.props.onDeviceConnected();
+        }
 
-            this.props.history.push(
-                `/meeting?location=${meetingName}&screenshare=true`);
+        if (prevProps.hasScreenshareDevice
+            && !this.props.hasScreenshareDevice
+            && this.props.onDeviceDisconnected) {
+            this.props.onDeviceDisconnected();
         }
     }
 
@@ -41,7 +46,7 @@ export class WiredScreenshareRedirector extends React.PureComponent {
      * @returns {ReactElement}
      */
     render() {
-        return this.props.children;
+        return this.props.children || null;
     }
 }
 
@@ -59,4 +64,5 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(connect(mapStateToProps)(WiredScreenshareRedirector));
+export default withRouter(
+    connect(mapStateToProps)(WiredScreenshareChangeListener));
