@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { setSpotTVState } from 'common/app-state';
 import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
@@ -15,7 +17,8 @@ class SpotView extends React.Component {
     static propTypes = {
         children: PropTypes.any,
         name: PropTypes.string,
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        updateSpotTvState: PropTypes.func
     };
 
     /**
@@ -70,8 +73,23 @@ class SpotView extends React.Component {
      * @returns {void}
      */
     _updateCurrentViewStatus(name) {
-        this.props.remoteControlService.notifyViewStatus(name);
+        this.props.updateSpotTvState({ view: name });
     }
 }
 
-export default SpotView;
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        updateSpotTvState(newState) {
+            dispatch(setSpotTVState(newState));
+        }
+    };
+}
+
+export default connect(undefined, mapDispatchToProps)(SpotView);
