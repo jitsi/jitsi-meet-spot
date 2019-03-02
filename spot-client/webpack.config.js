@@ -64,6 +64,15 @@ const app = {
                 from:
                     './node_modules/lib-quiet-js/dist/quiet-emscripten.js.mem',
                 to: '.'
+            },
+            {
+                from:
+                    './node_modules/lib-quiet-js/dist/quiet-emscripten.js.mem',
+                to: '.'
+            },
+            {
+                from: './static',
+                to: '.'
             }
         ]),
         new webpack.DefinePlugin({

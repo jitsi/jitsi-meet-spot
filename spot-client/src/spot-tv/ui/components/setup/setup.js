@@ -7,6 +7,7 @@ import { logger } from 'common/logger';
 
 import CalendarAuth from './calendar-auth';
 import ScreenshareInput from './screenshare-input';
+import { SelectMedia } from './select-media';
 import SelectRoom from './select-room';
 import Welcome from './welcome';
 
@@ -34,6 +35,7 @@ export class Setup extends React.Component {
 
         this.steps = [
             Welcome,
+            SelectMedia,
             CalendarAuth,
             SelectRoom,
             ScreenshareInput
