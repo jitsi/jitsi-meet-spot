@@ -137,6 +137,7 @@
   background-color: white;
   border-radius: 25px;
   height: 100%;
+  overflow: scroll;
   padding: 40px;
   width: 100%;
 }
@@ -146,7 +147,21 @@
   flex-direction: column;
   height: 100%;
 }
+.mic-preview {
+    background: #1B2638;
+    border-radius: 5px;
+    height: 8px;
 
+    .mic-preview-level {
+        background: #4C9AFF;
+        border-radius: 5px;
+        height: 100%;
+        -webkit-transition: width .1s ease-in-out;
+        -moz-transition: width .1s ease-in-out;
+        -o-transition: width .1s ease-in-out;
+        transition: width .1s ease-in-out;
+    }
+}
 .setup-title {
   font-size: 2em;
 }
