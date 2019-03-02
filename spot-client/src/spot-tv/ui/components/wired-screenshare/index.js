@@ -1,4 +1,4 @@
 export { default as WiredScreenshareDetector }
     from './wired-screenshare-detector';
-export { default as WiredScreenshareRedirector }
-    from './wired-screenshare-redirector';
+export { default as WiredScreenshareChangeListener }
+    from './wired-screenshare-change-listener';

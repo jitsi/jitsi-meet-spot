@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import {
     getCalendarEmail,
@@ -13,9 +14,16 @@ import {
     setCalendarEvents
 } from 'common/app-state';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
-import { hasUpdatedEvents, windowHandler } from 'common/utils';
+import {
+    getRandomMeetingName,
+    hasUpdatedEvents,
+    windowHandler
+} from 'common/utils';
 
-import { SettingsButton, WiredScreenshareRedirector } from './../components';
+import {
+    SettingsButton,
+    WiredScreenshareChangeListener
+} from './../components';
 import { withCalendar } from './../loaders';
 
 /**
@@ -54,6 +62,7 @@ export class Home extends React.Component {
 
         this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
+        this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
 
         this._isUnmounting = false;
         this._updateEventsInterval = null;
@@ -93,7 +102,8 @@ export class Home extends React.Component {
         const joinCode = this.props.joinCode.toUpperCase();
 
         return (
-            <WiredScreenshareRedirector>
+            <WiredScreenshareChangeListener
+                onDeviceConnected = { this._onRedirectToMeeting }>
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
@@ -108,7 +118,7 @@ export class Home extends React.Component {
                 <div className = 'settings_cog'>
                     <SettingsButton />
                 </div>
-            </WiredScreenshareRedirector>
+            </WiredScreenshareChangeListener>
         );
     }
 
@@ -145,6 +155,19 @@ export class Home extends React.Component {
         const url = `${baseUrl}#/?code=${this.props.joinCode.toUpperCase()}`;
 
         windowHandler.openNewWindow(url);
+    }
+
+    /**
+     * Proceeds into a random meeting with screensharing enabled.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onRedirectToMeeting() {
+        const meetingName = getRandomMeetingName();
+
+        this.props.history.push(
+            `/meeting?location=${meetingName}&screenshare=true`);
     }
 
     /**
@@ -256,4 +279,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withCalendar(connect(mapStateToProps)(Home));
+export default withRouter(withCalendar(connect(mapStateToProps)(Home)));

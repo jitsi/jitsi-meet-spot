@@ -6,6 +6,8 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { parseMeetingUrl } from 'common/utils';
 
+import { WiredScreenshareChangeListener } from '../wired-screenshare';
+
 /**
  * The iFrame used to to display a meeting hosted on a jitsi instance.
  *
@@ -49,6 +51,10 @@ export default class MeetingFrame extends React.Component {
         this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
+        this._onScreenshareDeviceConnected
+            = this._onScreenshareDeviceConnected.bind(this);
+        this._onScreenshareDeviceDisconnected
+            = this._onScreenshareDeviceDisconnected.bind(this);
         this._onSendMessageToRemoteControl
             = this._onSendMessageToRemoteControl.bind(this);
         this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
@@ -145,6 +151,11 @@ export default class MeetingFrame extends React.Component {
         return (
             <>
                 { this.state.feedbackDisplayed && this._renderFeedbackHider() }
+                <WiredScreenshareChangeListener
+                    onDeviceConnected
+                        = { this._onScreenshareDeviceConnected }
+                    onDeviceDisconnected
+                        = { this._onScreenshareDeviceDisconnected } />
                 <div
                     className = 'meeting-frame'
                     ref = { this._setMeetingContainerRef } />
@@ -271,6 +282,36 @@ export default class MeetingFrame extends React.Component {
         this._isScreensharing = on;
 
         this.props.remoteControlService.notifyScreenshareStatus(on);
+    }
+
+    /**
+     * Callback invoked to start screensharing if a screenshare device has
+     * recently been connected to the Spot-TV.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onScreenshareDeviceConnected() {
+        // FIXME: There can be clashing with the wireless screensharing.
+
+        if (!this._isScreensharing) {
+            this._jitsiApi.executeCommand('toggleShareScreen');
+        }
+    }
+
+    /**
+     * Callback invoked to start screensharing if a screenshare device has
+     * recently been disconnected to the Spot-TV.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onScreenshareDeviceDisconnected() {
+        // FIXME: There can be clashing with the wireless screensharing.
+
+        if (this._isScreensharing) {
+            this._jitsiApi.executeCommand('toggleShareScreen');
+        }
     }
 
     /**
