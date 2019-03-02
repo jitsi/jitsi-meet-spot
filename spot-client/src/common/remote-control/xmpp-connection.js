@@ -1,3 +1,4 @@
+import throttle from 'lodash.throttle';
 import { $iq } from 'strophe.js';
 
 import { logger } from 'common/logger';
@@ -32,6 +33,8 @@ export default class XmppConnection {
         this.options = options;
 
         this.initPromise = null;
+
+        this._sendPresence = throttle(this._sendPresence.bind(this), 100);
 
         this._onCommand = this._onCommand.bind(this);
         this._onMessage = this._onMessage.bind(this);
@@ -251,7 +254,8 @@ export default class XmppConnection {
         }
 
         this.updatePresence(type, valueToSend);
-        this.room.sendPresence();
+
+        this._sendPresence();
     }
 
     /**
@@ -405,5 +409,15 @@ export default class XmppConnection {
         this.options.onSpotStatusUpdate(presence);
 
         return true;
+    }
+
+    /**
+     * Updates other participant's in the MUC about the local client's status.
+     *
+     * @private
+     * @returns {void}
+     */
+    _sendPresence() {
+        this.room.sendPresence();
     }
 }
