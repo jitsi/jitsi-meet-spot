@@ -44,9 +44,9 @@ export class MeetingFrame extends React.Component {
     constructor(props) {
         super(props);
 
-        this._isAudioMuted = null;
-        this._isScreensharing = null;
-        this._isVideoMuted = null;
+        this._isAudioMuted = false;
+        this._isScreensharing = false;
+        this._isVideoMuted = false;
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
         this._onFeedbackPromptDisplayed
@@ -345,7 +345,8 @@ export class MeetingFrame extends React.Component {
         logger.log(`meetingFrame screenshare changed from ${
             this._isScreensharing} to ${on}`);
 
-        this._isScreensharing = on;
+        // The api passes in null or true for the value
+        this._isScreensharing = Boolean(on);
 
         this.props.updateSpotTvState({
             screensharing: on
