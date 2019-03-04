@@ -110,12 +110,29 @@ class RemoteControlService {
     }
 
     /**
+     * Stops any active {@code ScreenshareConnection}.
+     *
+     * @returns {void}
+     */
+    destroyWirelessScreenshareConnections() {
+        if (this._screenshareConnection) {
+            this._screenshareConnection.stop();
+            this._screenshareConnection = null;
+        }
+
+        if (this._startWithScreenshare) {
+            this._startWithScreenshare.stop();
+            this._startWithScreenshare = null;
+        }
+    }
+
+    /**
      * Stops the XMPP connection.
      *
      * @returns {void}
      */
     disconnect() {
-        this._destroyWirelessScreenshareConnections();
+        this.destroyWirelessScreenshareConnections();
 
         this._onDisconnect = null;
         this._onSpotUpdate = null;
@@ -435,23 +452,6 @@ class RemoteControlService {
     }
 
     /**
-     * Stops any active {@code ScreenshareConnection}.
-     *
-     * @returns {void}
-     */
-    _destroyWirelessScreenshareConnections() {
-        if (this._screenshareConnection) {
-            this._screenshareConnection.stop();
-            this._screenshareConnection = null;
-        }
-
-        if (this._startWithScreenshare) {
-            this._startWithScreenshare.stop();
-            this._startWithScreenshare = null;
-        }
-    }
-
-    /**
      * Called internally by Spot-Remote to the Spot-TV jid for which to send
      * commands and messages.
      *
@@ -669,7 +669,7 @@ class RemoteControlService {
                     { error }
                 );
 
-                this._destroyWirelessScreenshareConnections();
+                this.destroyWirelessScreenshareConnections();
 
                 return Promise.reject(error);
             });
@@ -684,7 +684,7 @@ class RemoteControlService {
      */
     _stopWirelessScreenshare() {
         this.setScreensharing(false);
-        this._destroyWirelessScreenshareConnections();
+        this.destroyWirelessScreenshareConnections();
     }
 }
 

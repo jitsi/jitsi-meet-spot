@@ -27,6 +27,15 @@ export class InCall extends React.Component {
     };
 
     /**
+     * Stops any wireless screensharing in progress with the Spot-Remote.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.remoteControlService.destroyWirelessScreenshareConnections();
+    }
+
+    /**
      * Implements React's {@link SettingsMenu#render()}.
      *
      * @inheritdoc
