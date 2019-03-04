@@ -15,7 +15,6 @@ import ScreensharePicker from './screenshare-picker';
  */
 export default class ScreenshareButton extends React.Component {
     static propTypes = {
-        isWirelessScreenshareConnectionActive: PropTypes.bool,
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
@@ -164,15 +163,9 @@ export default class ScreenshareButton extends React.Component {
         this._onHideScreensharePicker();
 
         const {
-            isWirelessScreenshareConnectionActive,
             remoteControlService,
             screensharing
         } = this.props;
-
-        // No-op if a proxy connection to set up screensharing is in progress.
-        if (isWirelessScreenshareConnectionActive && !screensharing) {
-            return;
-        }
 
         if (this.props.onStartWirelessScreenshare) {
             this.props.onStartWirelessScreenshare();

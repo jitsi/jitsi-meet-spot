@@ -659,6 +659,12 @@ class RemoteControlService {
      * @returns {void}
      */
     _startWirelessScreenshare(connection) {
+        if (this._screenshareConnection) {
+            logger.error('Already started wireless screenshare');
+
+            return Promise.reject('Already started wireless screenshare');
+        }
+
         this._screenshareConnection
             = connection || this._createScreensharingService();
 

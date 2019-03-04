@@ -9,7 +9,6 @@ import {
 const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: undefined,
-    isWirelessScreenshareConnectionActive: false,
     joinCode: null,
     lock: null,
     roomName: null,
