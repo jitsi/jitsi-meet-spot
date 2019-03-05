@@ -57,12 +57,6 @@ class WiredScreenshareDetector extends React.PureComponent {
                 .then(() =>
                     wiredScreenshareService.startListeningForDeviceChange(
                         this._onDeviceListChange));
-
-            wiredScreenshareService.startListeningForConnection(
-                this.props.wiredScreenshareDevice,
-                this._onWiredScreenshareChange,
-                this.props.wiredScreenshareDeviceIdleValue
-            );
         }
     }
 
@@ -79,12 +73,6 @@ class WiredScreenshareDetector extends React.PureComponent {
             wiredScreenshareService.stopListeningForConnection(
                 prevProps.wiredScreenshareDevice,
                 this._onWiredScreenshareChange,
-            );
-
-            wiredScreenshareService.startListeningForConnection(
-                this.props.wiredScreenshareDevice,
-                this._onWiredScreenshareChange,
-                this.props.wiredScreenshareDeviceIdleValue
             );
 
             wiredScreenshareService.getVideoInputDevices()
@@ -140,6 +128,18 @@ class WiredScreenshareDetector extends React.PureComponent {
 
         this.props.dispatch(setWiredScreenshareInputAvailable(
             listHasSelectedScreenshareDevice));
+
+        if (listHasSelectedScreenshareDevice) {
+            wiredScreenshareService.startListeningForConnection(
+                this.props.wiredScreenshareDevice,
+                this._onWiredScreenshareChange,
+                this.props.wiredScreenshareDeviceIdleValue);
+
+        } else {
+            wiredScreenshareService.stopListeningForConnection(
+                this.props.wiredScreenshareDevice,
+                this._onWiredScreenshareChange);
+        }
     }
 
     /**
