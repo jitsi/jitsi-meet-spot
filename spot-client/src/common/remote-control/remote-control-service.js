@@ -7,6 +7,20 @@ import { COMMANDS, MESSAGES } from './constants';
 import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
+
+/**
+ * Temporary method to generate a random string, intended to be used to
+ * create a random join code.
+ *
+ * @param {number} length - The desired length of the random string.
+ * @returns {string}
+ */
+function generateRandomString(length) {
+    return Math.random()
+        .toString(36)
+        .substr(2, length);
+}
+
 /**
  * @typedef {Object} GoToMeetingOptions
  * @property {string} startWithScreensharing - if 'wireless' the meeting will be joined with
@@ -71,18 +85,17 @@ class RemoteControlService {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
-     * @param {string} options.lock - The lock code to use when joining or
-     * to set when creating a new MUC.
+     * @param {string} options.joinCode - The code to use when joining or to set
+     * when creating a new MUC.
      * @param {Function} options.onDisconnect - Callback to invoke when the
      * connection has been terminated unexpectedly.
      * @param {Function} options.onSpotUpdate - Callback to invoke when a new
      * presence is received from a Spot-TV.
-     * @param {string} options.roomName - The name of the MUC to join or create.
      * @param {Object} options.serverConfig - Details on how the XMPP connection
      * should be made.
      * @returns {Promise<string>}
      */
-    connect({ joinAsSpot, lock, onDisconnect, onSpotUpdate, roomName, serverConfig }) {
+    connect({ joinAsSpot, joinCode, onDisconnect, onSpotUpdate, serverConfig }) {
         this._isSpot = joinAsSpot;
 
         if (this.xmppConnectionPromise) {
@@ -96,9 +109,23 @@ class RemoteControlService {
             onPresenceReceived: this._onPresenceReceived
         });
 
+        // FIXME: There is no proper join code service so the code is a
+        // combination of a 3 digit room name and a 3 digit room password.
+        let roomName, roomLock;
+
+        if (joinCode) {
+            roomName = joinCode.substring(0, 3);
+            roomLock = joinCode.substring(3, 6);
+        } else {
+            // If none joinCode is present then create a room and let the lock
+            // be set later. Setting the lock on join will throw an error about
+            // not being authorized..
+            roomName = generateRandomString(3);
+        }
+
         this.xmppConnectionPromise = this.xmppConnection.joinMuc({
             joinAsSpot,
-            lock,
+            roomLock,
             roomName,
             onDisconnect
         });
@@ -170,12 +197,12 @@ class RemoteControlService {
     }
 
     /**
-     * Returns the current MUC that is joined to use as signaling between a Spot
-     * and remote controls.
+     * Returns the current join code that is necessary to establish a connection
+     * to a Spot-TV.
      *
      * @returns {string}
      */
-    getRoomName() {
+    getJoinCode() {
         const fullJid
             = this.xmppConnection && this.xmppConnection.getRoomFullJid();
 
@@ -183,7 +210,10 @@ class RemoteControlService {
             return '';
         }
 
-        return fullJid.split('@')[0];
+        const roomName = fullJid.split('@')[0];
+        const roomLock = this.xmppConnection.getLock();
+
+        return `${roomName}${roomLock}`;
     }
 
     /**
@@ -275,6 +305,19 @@ class RemoteControlService {
     }
 
     /**
+     * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
+     * to pair with it.
+     *
+     * @returns {Promise<string>} Resolves with the new join code.
+     */
+    refreshJoinCode() {
+        const roomLock = generateRandomString(3);
+
+        return this.xmppConnection.setLock(roomLock)
+            .then(() => this.getJoinCode());
+    }
+
+    /**
      * Sends a message to a Spot-Remote.
      *
      * @param {string} jid - The jid of the remote control which should receive
@@ -296,16 +339,6 @@ class RemoteControlService {
     setAudioMute(mute) {
         return this.xmppConnection.sendCommand(
             this._getSpotId(), COMMANDS.SET_AUDIO_MUTE, { mute });
-    }
-
-    /**
-     * Requests the lock on a MUC be changed.
-     *
-     * @param {string} lock - The new lock to set on the room.
-     * @returns {Promise}
-     */
-    setLock(lock) {
-        return this.xmppConnection.setLock(lock);
     }
 
     /**

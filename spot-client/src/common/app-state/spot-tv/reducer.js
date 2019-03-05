@@ -1,8 +1,6 @@
 import {
     SPOT_TV_CLEAR_STATE,
     SPOT_TV_SET_JOIN_CODE,
-    SPOT_TV_SET_MUC_LOCK,
-    SPOT_TV_SET_MUC_ROOM,
     SPOT_TV_SET_STATE
 } from './action-types';
 
@@ -10,8 +8,6 @@ const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: undefined,
     joinCode: null,
-    lock: null,
-    roomName: null,
     screensharing: false,
     spotId: null,
     videoMuted: true,
@@ -40,18 +36,6 @@ const spotTv = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             joinCode: action.joinCode
-        };
-
-    case SPOT_TV_SET_MUC_LOCK:
-        return {
-            ...state,
-            lock: action.lock
-        };
-
-    case SPOT_TV_SET_MUC_ROOM:
-        return {
-            ...state,
-            roomName: action.roomName
         };
 
     case SPOT_TV_SET_STATE:

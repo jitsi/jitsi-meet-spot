@@ -6,8 +6,6 @@ import { withRouter } from 'react-router';
 import {
     getCalendarEmail,
     getCalendarEvents,
-    getCurrentLock,
-    getCurrentRoomName,
     getJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete,
@@ -48,8 +46,7 @@ export class Home extends React.Component {
         isSetupComplete: PropTypes.bool,
         joinCode: PropTypes.string,
         lock: PropTypes.string,
-        remoteControlService: PropTypes.object,
-        roomName: PropTypes.string
+        remoteControlService: PropTypes.object
     };
 
     /**
@@ -313,9 +310,7 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        joinCode: getJoinCode(state),
-        lock: getCurrentLock(state),
-        roomName: getCurrentRoomName(state)
+        joinCode: getJoinCode(state)
     };
 }
 

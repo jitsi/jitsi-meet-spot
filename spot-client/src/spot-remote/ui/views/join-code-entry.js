@@ -6,8 +6,7 @@ import {
     addNotification,
     getRemoteControlServerConfig,
     isConnectedToSpot,
-    setLock,
-    setRoomName
+    setJoinCode
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
@@ -63,8 +62,7 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidMount() {
         this.props.ultrasoundService.setMessage('');
-        this.props.dispatch(setRoomName(''));
-        this.props.dispatch(setLock(''));
+        this.props.dispatch(setJoinCode(''));
         remoteControlService.disconnect();
 
         const queryParams = new URLSearchParams(this.props.location.search);
@@ -196,11 +194,6 @@ export class JoinCodeEntry extends React.Component {
         });
         const trimmedCode = code.trim().toLowerCase();
 
-        // FIXME: There is no proper join code service so the code is a
-        // combination of a 3 digit room name and a 3 digit room password.
-        const roomName = trimmedCode.substring(0, 3);
-        const password = trimmedCode.substring(3, 6);
-
         // Piggyback on the connect button tap as workaround for mobile Safari
         // requiring a user action to autoplay any sound.
         this.props.ultrasoundService.setMessage(trimmedCode);
@@ -210,8 +203,7 @@ export class JoinCodeEntry extends React.Component {
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
-                this.props.dispatch(setRoomName(roomName));
-                this.props.dispatch(setLock(password));
+                this.props.dispatch(setJoinCode(trimmedCode));
 
                 this.props.history.push(ROUTES.REMOTE_CONTROL);
             })
