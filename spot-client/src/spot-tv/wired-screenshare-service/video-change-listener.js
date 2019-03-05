@@ -309,6 +309,9 @@ export default class VideoChangeListener {
 
             if (isDeviceConnected !== this._isDeviceConnected) {
                 this._isDeviceConnected = isDeviceConnected;
+                logger.log(
+                    `${this} device connected: ${isDeviceConnected},`
+                        + `rest score: ${rgbScoreAtRest}, current score: ${currentRGBScore}`);
                 this._notifyChangeDetected(this._isDeviceConnected);
             }
         }, 1000);
