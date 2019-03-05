@@ -1,3 +1,4 @@
+import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
 import { COMMANDS, MESSAGES } from './constants';
@@ -463,4 +464,8 @@ class RemoteControlService {
     }
 }
 
-export default new RemoteControlService();
+const remoteControlService = new RemoteControlService();
+
+globalDebugger.register('remoteControlService', remoteControlService);
+
+export default remoteControlService;

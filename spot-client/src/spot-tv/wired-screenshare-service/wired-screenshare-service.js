@@ -1,5 +1,6 @@
 import debounce from 'lodash.debounce';
 
+import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
@@ -208,4 +209,8 @@ export class WiredScreenshareService {
     }
 }
 
-export default new WiredScreenshareService();
+const wiredScreenshareService = new WiredScreenshareService();
+
+globalDebugger.register('wiredScreenshareService', wiredScreenshareService);
+
+export default wiredScreenshareService;

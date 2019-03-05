@@ -6,6 +6,7 @@ import { HashRouter } from 'react-router-dom';
 import { createHashHistory } from 'history';
 
 import 'common/css';
+import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
 import reducers, { getLoggingEndpoint } from 'common/app-state';
 import {
@@ -33,6 +34,8 @@ const store = createStore(
     }
 );
 
+globalDebugger.register('store', store);
+
 store.subscribe(() => {
     setPersistedState(store);
 });
@@ -55,14 +58,6 @@ if (loggingEndpoint) {
     );
 
     loggingService.start();
-}
-
-// eslint-disable-next-line no-undef
-if (process.env.NODE_ENV !== 'production') {
-    window.spot = {
-        remoteControlService,
-        store
-    };
 }
 
 const history = createHashHistory();
