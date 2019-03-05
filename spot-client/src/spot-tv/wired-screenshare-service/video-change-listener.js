@@ -1,3 +1,4 @@
+import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
@@ -119,6 +120,8 @@ export default class VideoChangeListener {
         this._videoElement.removeAttribute('src');
         this._videoElement.removeAttribute('srcObject');
         this._videoElement.load();
+
+        logger.log(`${this} stopped`);
     }
 
     /**
@@ -209,7 +212,10 @@ export default class VideoChangeListener {
                     this._videoElement.addEventListener('loadeddata', resolve);
                 });
             })
-            .then(() => this._startDiffCheckInterval());
+            .then(() => this._startDiffCheckInterval())
+            .then(() => {
+                logger.log(`${this} started`);
+            });
 
         return this._startPromise;
     }
@@ -306,5 +312,14 @@ export default class VideoChangeListener {
                 this._notifyChangeDetected(this._isDeviceConnected);
             }
         }, 1000);
+    }
+
+    /**
+     * Implements toString for logging convenience.
+     *
+     * @returns {string}
+     */
+    toString() {
+        return `VideoChangeListener[deviceLabel=${this._deviceLabel}]`;
     }
 }
