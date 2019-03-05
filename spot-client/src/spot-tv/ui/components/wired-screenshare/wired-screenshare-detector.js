@@ -139,6 +139,7 @@ class WiredScreenshareDetector extends React.PureComponent {
             wiredScreenshareService.stopListeningForConnection(
                 this.props.wiredScreenshareDevice,
                 this._onWiredScreenshareChange);
+            this._onWiredScreenshareChange(false);
         }
     }
 
