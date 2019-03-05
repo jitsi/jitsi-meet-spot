@@ -1,0 +1,55 @@
+@import './media-queries';
+@import './mixins';
+
+.meeting-name-entry {
+    background-color: var(--container-content-bg-color);
+    border-radius: 5px;
+    display: flex;
+    padding: 1.2em 2.5em;
+    width: 80%;
+
+    @media #{$mq-laptop} {
+        width: 70%;
+    }
+
+    @media #{$mq-laptop-l} {
+        width: 60%;
+    }
+
+    .input-container {
+        flex: 1;
+
+        .input {
+            @include styled-input;
+
+            padding-bottom: 16px;
+            border-image:
+                linear-gradient(
+                    to right,
+                    var(--name-entry-gradient-start),
+                    var(--name-entry-gradient-end)
+                )
+                1
+                stretch;
+
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+        }
+    }
+
+
+    .submit-wrapper {
+        @include centered-content;
+
+        margin-left: 2em;
+
+        .submit-button {
+            @include styled-button;
+
+            font-size: var(--font-size-medium);
+        }
+    }
+}

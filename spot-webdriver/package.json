@@ -1,0 +1,25 @@
+{
+    "devDependencies": {
+        "babel-eslint": "10.0.1",
+        "eslint": "5.14.0",
+        "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#7474f6668515eb5852f1273dc5a50b940a550d3f",
+        "eslint-loader": "2.1.2",
+        "eslint-plugin-flowtype": "3.4.2",
+        "eslint-plugin-import": "2.16.0",
+        "eslint-plugin-jsdoc": "4.1.0",
+        "eslint-plugin-react": "7.12.4",
+        "wdio-jasmine-framework": "0.3.8",
+        "wdio-selenium-standalone-service": "0.0.12",
+        "webdriverio": "4.14.0"
+    },
+    "engines": {
+        "node": "8.9.1",
+        "npm": "5.5.1"
+    },
+    "name": "spot-webdriver",
+    "scripts": {
+        "lint": "eslint .",
+        "start": "./node_modules/.bin/wdio wdio.conf.js"
+    },
+    "version": "0.0.1"
+}

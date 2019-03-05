@@ -1,0 +1,81 @@
+.meeting {
+    background-color: var(--container-content-bg-color);
+    cursor: pointer;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    grid-template-columns: .20fr 1fr auto;
+
+    * {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    &:active {
+        background-color: var(--container-content-highlight-bg-color);
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 3px;
+    }
+
+    .meeting-date,
+    .meeting-time,
+    .meeting-url {
+        font-size: var(--font-size-small);
+    }
+
+    .meeting-join {
+        align-items: center;
+
+        &.hidden {
+            visibility: hidden;
+        }
+
+        .join-cta  {
+            background-color: inherit;
+            border: 1px solid var(--container-content-font-color);
+            border-radius: 5px;
+            color: inherit;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0.3em 1em;
+        }
+    }
+
+    .meeting-date,
+    .meeting-name {
+        font-weight: bold;
+    }
+
+    .meeting-name,
+    .meeting-url {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .meeting-date {
+        grid-column: 1;
+    }
+    .meeting-name {
+        grid-column: 2;
+    }
+
+    .meeting-join {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+    }
+
+    .meeting-time {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .meeting-url {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}

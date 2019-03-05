@@ -1,0 +1,198 @@
+@import './media-queries';
+@import './mixins';
+
+/**
+ * nav is generally placed within a grid cell. That would cause the nav to
+ * take up all available space in the cell. To prevent that, let nav-section
+ * take up all the space, and wrap nav with inline-block so nav only takes up
+ * the space it needs.
+ */
+.nav-section {
+    padding: 0 0 20px;
+    text-align: center;
+
+    .nav-container {
+        display: inline-block;
+    }
+}
+
+.nav {
+    display: grid;
+    margin-bottom: 20px;
+    text-align: center;
+
+    @media #{$mq-xxsmall} {
+        grid-template-columns: auto auto;
+        grid-column-gap: 40px;
+        grid-row-gap: 30px;
+    }
+
+    @media #{$mq-tablet} {
+        grid-column-gap: 0;
+        grid-row-gap: 0;
+        grid-template-columns: auto auto auto auto;
+    }
+
+
+    .nav-button {
+        align-self: start;
+        background-color: transparent;
+        border: 0;
+        color: inherit;
+        font-size: inherit;
+        margin-top: 10px;
+
+        @media #{$mq-tablet} {
+            &:nth-child(odd) {
+                margin: 10px 0;
+            }
+
+            &:nth-child(even) {
+                margin: 10px 0;
+            }
+        }
+
+
+        &:not(:last-child) {
+            @media #{$mq-tablet} {
+                margin-right: 4em;
+            }
+
+            @media #{$mq-laptop} {
+                margin-right: 5em;
+            }
+        
+            @media #{$mq-4k} {
+                margin-right: 5em;
+            }
+        }
+
+        &.active {
+            cursor: default;
+        }
+
+        &.active,
+        &:active,
+        &:active .nav-icon {
+            @include active;
+        }
+
+        &:hover:not(.active) {
+            cursor: pointer;
+        }
+    }
+    .with-popup {
+        display: inline-block;
+        position: relative;
+
+        &.hide-popup {
+            .popup {
+                display: none;
+            }
+        }
+
+        .popup {
+            background-color: var(--container-content-bg-color);
+            border-radius: 5px;
+            color: var(--container-content-font-color);
+            padding: 30px;
+            position: absolute;
+            top: -20px;
+            transform: translate(-33%, -100%);
+
+            .title {
+                margin-bottom: 30px;
+                white-space: nowrap;
+            }
+
+            .options {
+                display: flex;
+                justify-content: center;
+
+                .nav-label-container {
+                    white-space: initial;
+                }
+            }
+        }
+    }
+    .nav-icon-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-icon {
+        border: 1px solid;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 1em;
+        height: calc(var(--font-size-x-large) * 2);
+        width: calc(var(--font-size-x-large) * 2);
+
+        @media #{$mq-laptop-l} {
+            height: calc(var(--font-size-large) * 2.5);
+            width: calc(var(--font-size-large) * 2.5);
+        }
+
+        @media #{$mq-4k} {
+            height: calc(var(--font-size-large) * 2.5);
+            width: calc(var(--font-size-large) * 2.5);
+        }
+
+        * {
+            font-size: var(--font-size-x-large);
+
+            @media #{$mq-laptop-l} {
+                font-size: var(--font-size-large);
+            }
+
+            @media #{$mq-4k} {
+                font-size: var(--font-size-large);
+            }
+        }
+    }
+
+    .nav-label-container {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        margin: auto;
+        white-space: nowrap;
+        width: calc(var(--font-size-large) * 2.5);
+    }
+}
+
+/**
+ * Special case styling for the hangup button.
+ */
+.nav {
+    .hangup.nav-button {
+        .nav-icon-container .nav-icon {
+            background-color: var(--hangup-bg-color);
+            border-color: var(--hangup-bg-color);
+
+            &:active {
+                color: var(--hangup-active-color);
+
+                .nav-icon {
+                    border-color: var(--hangup-active-color);
+                }
+            }
+        }
+
+        &:active {
+            .nav-icon {
+                border-color: var(--hangup-bg-color);
+            }
+
+            color: var(--hangup-active-color);
+        }
+    }
+
+    .screenshare.nav-button {
+        .nav-label-container {
+            white-space: pre;
+        }
+    }
+}

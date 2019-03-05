@@ -1,0 +1,310 @@
+/**
+ * In this file is placeholder CSS, used until designs are received. No CSS to
+ * be used on the final product should be included here.
+ */
+@import './media-queries';
+@import './mixins';
+
+.idleCursor {
+  cursor: none;
+}
+.idleCursor .cog {
+  display: none;
+}
+.idleCursor .cog:hover {
+  display: block;
+}
+
+.cog {
+  border-radius: 50%;
+  height: 1.4em;
+  opacity: 1;
+  text-align: center;
+  transition: opacity 0.5s;
+  width: 1.4em;
+}
+.cog,
+.cog * {
+  color: white;
+
+  /**
+  * TODO: remove !important usage and setting height/width larger than
+  * parent. Those stylings are being used right now to override jitsi-meet
+  * icon styling.
+  */
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+.cog:hover * {
+  color: lightgray;
+}
+
+.admin,
+.setup {
+  color: black;
+}
+
+.admin-container {
+  margin: 20px 0;
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+.admin-detail {
+  margin-bottom: 5px;
+}
+
+.admin-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.admin-title {
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+.button {
+  background: steelblue;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 17pt;
+}
+
+.button:hover {
+  background: teal;
+}
+
+.connecting {
+    font-size: var(--font-size-large);
+}
+
+.info-footer {
+    background: rgba(0, 0, 0, 0.3);
+    bottom: 0;
+    display: flex;
+    font-size: 1rem;
+    justify-content: space-between;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+
+    .info-code {
+        text-transform: uppercase;
+    }
+}
+
+@keyframes animateDots {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.loading-icon {
+    text-align: center;
+}
+
+.loading-icon > div {
+    animation: animateDots 2.5s ease-in-out infinite;
+    display: inline-block;
+    font-size: 3.5em;
+    opacity: 0;
+}
+
+.loading-icon > div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-icon > div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.loading-icon > div:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+.setup-content {
+  flex: 1;
+}
+
+.setup-roomList {
+  overflow: auto;
+}
+
+.setup {
+  background-color: white;
+  border-radius: 25px;
+  height: 100%;
+  overflow: scroll;
+  padding: 40px;
+  width: 100%;
+}
+
+.setup-step {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.mic-preview {
+    background: #1B2638;
+    border-radius: 5px;
+    height: 8px;
+
+    .mic-preview-level {
+        background: #4C9AFF;
+        border-radius: 5px;
+        height: 100%;
+        -webkit-transition: width .1s ease-in-out;
+        -moz-transition: width .1s ease-in-out;
+        -o-transition: width .1s ease-in-out;
+        transition: width .1s ease-in-out;
+    }
+}
+.setup-title {
+  font-size: 2em;
+}
+
+.meeting-frame {
+  /**
+   * The background color matching jitsi-meet is used to intentionally hide
+   * rendering issues of the meeting's large video disappearing and thereby
+   * flashing the Spot background.
+   */
+  background: rgb(27, 38, 56);
+  height: 100%;
+  width: 100%;
+}
+
+.notification-default {
+  background: white;
+}
+
+.notification-error {
+  background: red;
+}
+
+.notifications {
+  opacity: 0.5;
+  overflow: hidden;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+}
+
+.notification {
+  padding: 5px;
+}
+
+body.using-mouse :focus {
+  outline: none;
+}
+
+.admin {
+  background-color: white;
+  border-radius: 25px;
+  height: 100%;
+  overflow: hidden;
+  padding: 40px;
+  width: 100%;
+}
+
+.feedback-hider-overlay {
+  background: rgb(27, 38, 56);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.feedback-hider-text-frame {
+  display: block;
+  width: 55%;
+  background-color: var(--container-content-bg-color);
+  border-radius: 5px;
+  color: var(--container-sub-content-font-color);
+  padding: 3em;
+  margin-top: 3em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+  h1 {
+    font-size: var(--font-size-medium-plus);
+  }
+
+  .feedback-hider-text {
+    color: var(--container-sub-content-font-color);
+    margin: 15px 0;
+  }
+}
+
+.loading-curtain {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.meetingMouseHider {
+  pointer-events: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.idleCursor .meetingMouseHider {
+  pointer-events: all;
+}
+
+.container {
+  align-items: center;
+  border-radius: 5%;
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  padding: 25px;
+  width: 50%;
+}
+
+.loading {
+    @include centered-content;
+
+    height: 100%;
+    width: 100%;
+}
+
+.settings_cog {
+  position: fixed;
+  right: 32px;
+  top: 41px;
+
+}
+
+.subcontent {
+  width: 100%;
+}
+
+/**
+* view acts as the main wrapper each individual route. By default put the
+* content of view in the center of the screen.
+*/
+.view,
+.view-gradient {
+  align-items: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.view-gradient.visible {
+  background-image: linear-gradient(to bottom, #020f1b, rgba(0, 0, 0, 0) 30%), linear-gradient(to bottom, rgba(2, 15, 27, 0) 50%, #020f1b);
+  flex-grow: 1;
+}
+
+.app {
+  height: 100%;
+}

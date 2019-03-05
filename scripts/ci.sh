@@ -1,26 +1,34 @@
 #!/bin/bash
 
-pid=""
-
+cd spot-client
 npm install
 npm run lint
 npm run test
+npm run build:prod
 
-if [ -z "$TEST_SERVER_URL" ]; then
-    npm run build:prod
+cd ../in-room-controller
+npm install
+npm run lint
 
-    port=TEST_PORT
-    export TEST_SERVER_URL="http://localhost:$TEST_PORT"
+cd ../spot-webdriver
+npm install
+npm run lint
 
-    python -m SimpleHTTPServer $TEST_PORT &
-    pid=$!
+pid=""
 
-    sleep 1
+# if [ -z "$TEST_SERVER_URL" ]; then
+    # port=TEST_PORT
+    # export TEST_SERVER_URL="http://localhost:$TEST_PORT"
 
-    ps aux | grep "$pid" | grep -v "grep"
-    [ $? -eq 0 ] || exit $?;
-fi
+    # python -m SimpleHTTPServer $TEST_PORT &
+    # pid=$!
 
-npm run test:webdriver
+    # sleep 1
 
-kill $pid
+    # ps aux | grep "$pid" | grep -v "grep"
+    # [ $? -eq 0 ] || exit $?;
+# fi
+
+# npm run start
+
+# kill $pid

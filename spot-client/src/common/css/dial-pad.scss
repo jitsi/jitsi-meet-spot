@@ -1,0 +1,85 @@
+@import './mixins';
+
+.number-entry-view {
+    @include centered-content;
+}
+
+.dial-pad {
+    @include centered-content;
+
+    background-color: var(--container-bg-color);
+    border-radius: 4px;
+    flex-direction: column;
+    padding: 20px;
+
+    .dial-pad-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        .dial-button {
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 50%;
+            color: inherit;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            height: calc(var(--font-size-large) * 1.6);
+            line-height: 1;
+            margin: 10px;
+            width: calc(var(--font-size-large) * 1.6);
+
+            .main {
+                display:block;
+                font-size: var(--font-size-medium-plus);
+            }
+
+            .sub {
+                color: var(--container-sub-content-font-color);
+                font-size: var(--font-size-x-small);
+            }
+            .sub:empty:before {
+                content: '.';
+                visibility: hidden;
+            }
+
+            &.active,
+            &:active,
+            &:active .sub {
+                @include active;
+            }
+        }
+    }
+
+    .call-button {
+        @include styled-button;
+
+        font-size: var(--font-size-small);
+    }
+
+    .input-container,
+    .number-input {
+        width: 100%;
+    }
+
+    .input-container {
+        font-size: var(--font-size-small);
+    }
+
+    .number-input {
+        @include styled-input;
+
+        font: inherit;
+        text-align: center;
+
+        border-image:
+            linear-gradient(
+                to right,
+                var(--name-entry-gradient-end),
+                var(--name-entry-gradient-start),
+                var(--name-entry-gradient-end)
+            )
+            1
+            stretch;
+    }
+}

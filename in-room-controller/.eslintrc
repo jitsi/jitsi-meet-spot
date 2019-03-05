@@ -1,0 +1,15 @@
+{
+    "extends": [
+        "eslint-config-jitsi",
+        "eslint-config-jitsi/jsdoc",
+        "eslint-config-jitsi/react"
+    ],
+    "rules": {
+        "max-len": [ "error", 100 ]
+    },
+    "settings": {
+        "react": {
+            "version": "16.8.2"
+        }
+    }
+}

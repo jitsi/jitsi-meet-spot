@@ -1,0 +1,50 @@
+@import './media-queries';
+@import './mixins';
+
+.join-code-view {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100%;
+    width: 100%;
+
+    .cta {
+        padding: 2.5em;
+        text-align: center;
+
+        .title {
+            font-size: var(--font-size-x-large);
+        }
+
+        .help {
+            font-size: var(--font-size-large);
+        }
+    }
+
+    .code-entry-wrapper {
+        @include centered-content;
+
+        .code-entry {
+            // Usage of !important is needed to override the inline style
+            // set by react-code-input.
+            @media #{$mq-mobile-s} {
+                display: grid !important;
+
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            @media #{$mq-tablet} {
+                display: flex !important;
+            }
+        }
+    }
+
+    .hidden-submit {
+        position: absolute;
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    .nav {
+        column-gap: 0;
+    }
+}

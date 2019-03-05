@@ -1,21 +1,10 @@
-# Spot
+# Jitsi-Meet Spot
 
+This is the mono-repo for jitsi meet's room integration, named Spot.
 
-This is a web frontend application for integrating a Google calendar with jitsi meetings. The application is intended to be running within a physically-existing meeting room, and left running, so it can be used to join online meetings. Remote control functionality is available.
-
-## Getting Started
-
-There are a few requirements before the application can be launched.
-1. Have access to a computer that can build this application using node and npm; specific versions that are known to work should be listed in package.json.
-1. Have a Google client application that can be used for calendar syncing. Check `docs/creating_a_calendar_client.md` for more details.
-1. Clone this repository.
-1. In the local clone, fill out the configuration for this project. The actual configuration file is at `src/config/index.js`. and its values can be filled by creating a `.env` file in the project root and defining the configuration variables within the newly created file.
-1. Build the application by running `npm install` to download dependencies and `npm run build-prod` to create the javascript file for the application.
-1. Host the `index.html` and javascript on a server. For example use `python -m SimpleHTTPServer`.
-
-## Development
-
-Webdriver tests also exist and can be run with `npm run test:webdriver`, but some setup is needed; please see the README in ui-tests/ for more details.
+in-room-controller/ contains the iPad client to be used as a permanent in-room remote.
+spot-client/ contains the Spot code plus its remote control
+spot-webdriver/ contains selenium webdriver tests for spot-client
 
 
 ## Known limitations
@@ -27,6 +16,16 @@ Webdriver tests also exist and can be run with `npm run test:webdriver`, but som
 
 Contributions are definitely welcome! If reporting an issue or suggesting features, please do provide steps to reproduce and mention if the issue is consistently reproduceable. If contributing a pull request, the build scripts used for development should automatically be running to ensure (one day) tests are passing and styling is in compliance.
 
+
 ## Versioning
 
 Currently there is no versioning as the app is in early alpha.
+
+## Docker
+
+To do a docker build, be in the root directory /
+Decide on the next tag name, current tags are 0.0.1, 0.0.2, etc.
+Then run:
+```scripts/docker-build <TAG>```
+
+This will build and push a new image

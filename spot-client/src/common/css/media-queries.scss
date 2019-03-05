@@ -1,0 +1,55 @@
+/**
+ * The various screen-width breakpoints to use to determine when styles should
+ * adjust.
+ */
+$mq-xxsmall: '(min-width: 0em)'; // catch-all
+$mq-mobile-s: '(min-width: 320px)';
+$mq-mobile-l: '(min-width: 425px)';
+$mq-tablet: '(min-width: 768px)';
+$mq-laptop: '(min-width: 1024px)';
+$mq-laptop-l: '(min-width: 1440px)';
+$mq-4k: '(min-width: 2460px)';
+
+
+/**
+ * The font size from which all other font sizes should inherit.
+ */
+$base-font-size: 1em;
+
+/**
+ * The line height from which all other line heights should inherit.
+ */
+$base-line-height: 1.5;
+
+body {
+    font-size: $base-font-size;
+    line-height: $base-line-height;
+
+    @media #{$mq-xxsmall} {
+        font-size: $base-font-size * 0.7;
+        line-height: $base-line-height * 0.7;
+    }
+
+    @media #{$mq-mobile-s} {
+      font-size: $base-font-size * 0.7;
+      line-height: $base-line-height * 0.7;
+    }
+
+    @media #{$mq-tablet} {
+        font-size: $base-font-size * 0.9;
+        line-height: $base-line-height * 0.9;
+    }
+
+    @media #{$mq-laptop} {
+        font-size: $base-font-size;
+        line-height: $base-line-height;
+    }
+
+    @media #{$mq-laptop-l} {
+        font-size: $base-font-size * 1.3;
+    }
+
+    @media #{$mq-4k} {
+        font-size: $base-font-size * 1.5;
+    }
+}
