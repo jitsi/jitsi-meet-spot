@@ -19,12 +19,20 @@ export class InCall extends React.Component {
         audioMuted: PropTypes.bool,
         dispatch: PropTypes.func,
         inMeeting: PropTypes.string,
-        isWirelessScreenshareConnectionActive: PropTypes.bool,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         videoMuted: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
     };
+
+    /**
+     * Stops any wireless screensharing in progress with the Spot-Remote.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.remoteControlService.destroyWirelessScreenshareConnections();
+    }
 
     /**
      * Implements React's {@link SettingsMenu#render()}.
@@ -36,7 +44,6 @@ export class InCall extends React.Component {
         const {
             audioMuted,
             inMeeting,
-            isWirelessScreenshareConnectionActive,
             remoteControlService,
             screensharing,
             videoMuted,
@@ -54,8 +61,6 @@ export class InCall extends React.Component {
                 <div className = 'in-call-name'>{ meetingName }</div>
                 <RemoteControlMenu
                     audioMuted = { audioMuted }
-                    isWirelessScreenshareConnectionActive
-                        = { isWirelessScreenshareConnectionActive }
                     remoteControlService = { remoteControlService }
                     screensharing = { screensharing }
                     screensharingEnabled = { wiredScreensharingEnabled }

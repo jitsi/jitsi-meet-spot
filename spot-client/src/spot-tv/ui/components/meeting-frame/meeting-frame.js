@@ -2,8 +2,11 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { setSpotTVState } from 'common/app-state';
 import { logger } from 'common/logger';
+import { COMMANDS, MESSAGES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
@@ -13,7 +16,7 @@ import { WiredScreenshareChangeListener } from '../wired-screenshare';
  *
  * @extends React.Component
  */
-export default class MeetingFrame extends React.Component {
+export class MeetingFrame extends React.Component {
     static defaultProps = {
         displayName: 'Meeting Room'
     };
@@ -28,7 +31,8 @@ export default class MeetingFrame extends React.Component {
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool,
         startWithScreenshare: PropTypes.bool,
-        startWithVideoMuted: PropTypes.bool
+        startWithVideoMuted: PropTypes.bool,
+        updateSpotTvState: PropTypes.func
     };
 
     /**
@@ -40,13 +44,14 @@ export default class MeetingFrame extends React.Component {
     constructor(props) {
         super(props);
 
-        this._isAudioMuted = null;
-        this._isScreensharing = null;
-        this._isVideoMuted = null;
+        this._isAudioMuted = false;
+        this._isScreensharing = false;
+        this._isVideoMuted = false;
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
         this._onFeedbackPromptDisplayed
             = this._onFeedbackPromptDisplayed.bind(this);
+        this._onMeetingCommand = this._onMeetingCommand.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
         this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
@@ -119,6 +124,9 @@ export default class MeetingFrame extends React.Component {
 
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
 
+        this.props.remoteControlService.startListeningForRemoteMessages(
+            this._onMeetingCommand);
+
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
         }, 15000);
@@ -132,14 +140,14 @@ export default class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
-        const { remoteControlService } = this.props;
+        this.props.remoteControlService.stopListeningForRemoteMessages(
+            this._onMeetingCommand);
 
-        // Reset now-stale in-meeting status.
-        remoteControlService.notifyAudioMuteStatus(true);
-        remoteControlService.notifyScreenshareStatus(false);
-        remoteControlService.notifyVideoMuteStatus(true);
-
-        this._jitsiApi.dispose();
+        this.props.updateSpotTvState({
+            audioMuted: false,
+            screensharing: false,
+            videoMuted: false
+        });
     }
 
     /**
@@ -203,7 +211,58 @@ export default class MeetingFrame extends React.Component {
 
         this._isAudioMuted = muted;
 
-        this.props.remoteControlService.notifyAudioMuteStatus(muted);
+        this.props.updateSpotTvState({ audioMuted: muted });
+    }
+
+
+    /**
+     * Callback invoked when a Spot-Remote has sent this Spot-TV a message or
+     * command that should be acted upon while in a meeting.
+     *
+     * @param {string} type - The identifier for the command or message.
+     * @param {Object} data - Additional information necessary to process the
+     * command or message.
+     * @private
+     * @returns {void}
+     */
+    _onMeetingCommand(type, data) {
+        logger.log('MeetingFrame handling remote command', {
+            data,
+            type
+        });
+
+        switch (type) {
+        case COMMANDS.HANG_UP:
+            this._jitsiApi.executeCommand('hangup');
+            break;
+
+        case COMMANDS.SET_AUDIO_MUTE:
+            if (this._isAudioMuted !== data.mute) {
+                this._jitsiApi.executeCommand('toggleAudio');
+            }
+            break;
+
+        case COMMANDS.SET_SCREENSHARING:
+            if (this._isScreensharing !== data.on) {
+                this._jitsiApi.executeCommand('toggleShareScreen');
+            }
+            break;
+
+        case COMMANDS.SET_VIDEO_MUTE:
+            if (this._isVideoMuted !== data.mute) {
+                this._jitsiApi.executeCommand('toggleVideo');
+            }
+            break;
+
+        case COMMANDS.SUBMIT_FEEDBACK:
+            this._jitsiApi.executeCommand('submitFeedback', data);
+            break;
+
+        case MESSAGES.SPOT_REMOTE_LEFT:
+        case MESSAGES.SPOT_REMOTE_PROXY_MESSAGE:
+            this._jitsiApi.sendProxyConnectionEvent(data);
+            break;
+        }
     }
 
     /**
@@ -217,8 +276,10 @@ export default class MeetingFrame extends React.Component {
         this._meetingJoined = true;
 
         this.props.onMeetingStart(this._jitsiApi);
-        this.props.remoteControlService.notifyMeetingJoinStatus(
-            this.props.meetingUrl);
+
+        this.props.updateSpotTvState({
+            inMeeting: this.props.meetingUrl
+        });
 
         if (this.props.invites && this.props.invites.length) {
             this._jitsiApi.invite(this.props.invites);
@@ -234,7 +295,9 @@ export default class MeetingFrame extends React.Component {
     _onMeetingLeft() {
         logger.log('meetingFrame meeting left');
 
-        this.props.remoteControlService.notifyMeetingJoinStatus('');
+        this.props.updateSpotTvState({
+            inMeeting: ''
+        });
     }
 
     /**
@@ -249,7 +312,10 @@ export default class MeetingFrame extends React.Component {
         this.setState({
             feedbackDisplayed: true
         });
-        this.props.remoteControlService.notifyViewStatus('feedback');
+
+        this.props.updateSpotTvState({
+            view: 'feedback'
+        });
     }
 
     /**
@@ -279,9 +345,12 @@ export default class MeetingFrame extends React.Component {
         logger.log(`meetingFrame screenshare changed from ${
             this._isScreensharing} to ${on}`);
 
-        this._isScreensharing = on;
+        // The api passes in null or true for the value
+        this._isScreensharing = Boolean(on);
 
-        this.props.remoteControlService.notifyScreenshareStatus(on);
+        this.props.updateSpotTvState({
+            screensharing: on
+        });
     }
 
     /**
@@ -327,8 +396,10 @@ export default class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onSendMessageToRemoteControl({ to, data }) {
-        logger.log(`meetingFrame got proxy message from iframe ${to} ${
-            JSON.stringify(data)}`);
+        logger.log('meetingFrame got proxy message from iframe', {
+            to,
+            data
+        });
 
         this.props.remoteControlService.sendMessageToRemoteControl(to, data);
     }
@@ -346,7 +417,7 @@ export default class MeetingFrame extends React.Component {
 
         this._isVideoMuted = muted;
 
-        this.props.remoteControlService.notifyVideoMuteStatus(muted);
+        this.props.updateSpotTvState({ videoMuted: muted });
     }
 
     /**
@@ -381,3 +452,20 @@ export default class MeetingFrame extends React.Component {
         this._meetingContainer = ref;
     }
 }
+
+/**
+ * Creates actions which can update Redux state..
+ *
+ * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        updateSpotTvState(newState) {
+            dispatch(setSpotTVState(newState));
+        }
+    };
+}
+
+export default connect(undefined, mapDispatchToProps)(MeetingFrame);

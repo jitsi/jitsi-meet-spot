@@ -24,10 +24,12 @@ export default class XmppConnection {
      * for which sub routes will be defined.
      * @param {string} options.configuration.hosts.muc - Specifically the url
      * where MUCs should be created.
-     * @param {Function} options.onRemoteCommand - Callback to invoke when a
-     * private message is received.
-     * @param {Function} options.onSpotStatusUpdate - Callback to invoke when
-     * a Spot has updated its status.
+     * @param {Function} options.onCommandReceived - Callback to invoke when an
+     * iq command is received.
+     * @param {Function} options.onMessageReceived - Callback invoked  when an
+     * iq message is received.
+     * @param {Function} options.onPresenceReceived - Callback to invoke when
+     * receiving a new presence.
      */
     constructor(options) {
         this.options = options;
@@ -332,7 +334,7 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onCommand(iq) {
-        const ack = this.options.onRemoteCommand(iq);
+        const ack = this.options.onCommandReceived(iq);
 
         this.room.connection.send(ack);
 
@@ -347,7 +349,7 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onMessage(iq) {
-        const ack = this.options.onRemoteMessage(iq);
+        const ack = this.options.onMessageReceived(iq);
 
         this.room.connection.send(ack);
 
@@ -406,7 +408,7 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onPresence(presence) {
-        this.options.onSpotStatusUpdate(presence);
+        this.options.onPresenceReceived(presence);
 
         return true;
     }

@@ -3,14 +3,13 @@ import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
-import { createHashHistory } from 'history';
 
 import 'common/css';
 import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
 import reducers, { getLoggingEndpoint } from 'common/app-state';
 import {
-    ProcessUpdateDelegate,
+    RemoteControlServiceSubscriber,
     remoteControlService
 } from 'common/remote-control';
 import {
@@ -33,11 +32,13 @@ const store = createStore(
 
     }
 );
+const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
 globalDebugger.register('store', store);
 
 store.subscribe(() => {
     setPersistedState(store);
+    remoteControlServiceSubscriber.onUpdate(store);
 });
 
 const reduxState = store.getState();
@@ -60,14 +61,11 @@ if (loggingEndpoint) {
     loggingService.start();
 }
 
-const history = createHashHistory();
-
 remoteControlService.configureWirelessScreensharing({
     desktopSharingFrameRate: {
         max: window.JitsiMeetSpotConfig.MEDIA.WIRELESS_SS_MAX_FPS
     }
 });
-remoteControlService.setDelegate(new ProcessUpdateDelegate(store, history));
 
 render(
     <Provider store = { store }>

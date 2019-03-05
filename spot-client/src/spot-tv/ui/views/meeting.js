@@ -7,8 +7,7 @@ import {
     getDefaultMeetingDomain,
     getDisplayName,
     getMeetingOptions,
-    getWiredScreenshareInputLabel,
-    setMeetingApi
+    getWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
@@ -67,15 +66,6 @@ export class Meeting extends React.Component {
             );
             this._onMeetingLeave();
         }
-    }
-
-    /**
-     * Cleans up the redux store of all reference to the meeting.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this.props.dispatch(setMeetingApi(null));
     }
 
     /**
@@ -183,13 +173,10 @@ export class Meeting extends React.Component {
     /**
      * Callback invoked when the process of joining the meeting has started.
      *
-     * @param {Object} meetingApi - An instance of {@code JitsiMeetExternalAPI}.
      * @private
      * @returns {void}
      */
-    _onMeetingStart(meetingApi) {
-        this.props.dispatch(setMeetingApi(meetingApi));
-
+    _onMeetingStart() {
         this.setState({
             meetingLoaded: true
         });

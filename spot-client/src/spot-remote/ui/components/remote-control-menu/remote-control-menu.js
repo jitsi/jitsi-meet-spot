@@ -13,7 +13,6 @@ import ScreenshareButton from './screenshare-button';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
-        isWirelessScreenshareConnectionActive: PropTypes.bool,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool,
@@ -56,8 +55,6 @@ export default class RemoteControlMenu extends React.Component {
                         = { videoMuted ? 'Unmute Video' : 'Mute Video' }
                     onClick = { this._onToggleVideoMute } />
                 <ScreenshareButton
-                    isWirelessScreenshareConnectionActive
-                        = { this.props.isWirelessScreenshareConnectionActive }
                     remoteControlService = { this.props.remoteControlService }
                     screensharing = { this.props.screensharing }
                     screensharingEnabled = { this.props.screensharingEnabled } />

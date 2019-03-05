@@ -4,13 +4,40 @@ import { withRouter } from 'react-router-dom';
 
 import {
     addNotification,
+    clearSpotTVState,
     getCurrentLock,
     getCurrentRoomName,
-    getRemoteControlServerConfig
+    getRemoteControlServerConfig,
+    setCalendarEvents,
+    setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
+
+/**
+ * Presence attributes from Spot-TV to store as booleans in redux.
+ *
+ * @type {Set}
+ */
+const presenceToStoreAsBoolean = new Set([
+    'audioMuted',
+    'screensharing',
+    'videoMuted',
+    'wiredScreensharingEnabled'
+]);
+
+/**
+ * Presence attributes from Spot-TV to store as strings in redux.
+ *
+ * @type {Set}
+ */
+const presenceToStoreAsString = new Set([
+    'inMeeting',
+    'joinCode',
+    'spotId',
+    'view'
+]);
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -106,14 +133,65 @@ export class RemoteControlLoader extends AbstractLoader {
         }
 
         return remoteControlService.connect({
-            onDisconnect: () => {
-                logger.error('Disconnected from the remote control service. '
-                    + 'Will attempt reconnect');
-
-                this._reconnect();
-            },
-            roomName,
             lock,
+
+            /**
+             * Callback invoked when an unexpected disconnect happens with the
+             * remote control service connection. May trigger retrying to
+             * establish the connection.
+             *
+             * @param {boolean} isSpotDisconnect - Whether or not the disconenct
+             * is from a Spot-TV disconnecting.
+             * @private
+             * @returns {void}
+             */
+            onDisconnect: isSpotDisconnect => {
+                if (isSpotDisconnect) {
+                    this.props.dispatch(clearSpotTVState());
+                } else {
+                    logger.error(
+                        'Disconnected from the remote control service. '
+                            + 'Will attempt reconnect');
+                    this._reconnect();
+                }
+            },
+
+            /**
+             * Callback invoked to update redux about a new Spot-TV state.
+             *
+             * @param {Object} updatedState - The new Spot-TV status.
+             * @private
+             * @returns {void}
+             */
+            onSpotUpdate: updatedState => {
+                const newState = {};
+
+                Object.keys(updatedState).forEach(key => {
+                    if (presenceToStoreAsBoolean.has(key)) {
+                        newState[key] = updatedState[key] === 'true';
+                    } else if (presenceToStoreAsString.has(key)) {
+                        newState[key] = updatedState[key];
+                    }
+                });
+
+                this.props.dispatch(setSpotTVState(newState));
+
+                if (updatedState.calendar) {
+                    try {
+                        const events = JSON.parse(updatedState.calendar);
+
+                        this.props.dispatch(setCalendarEvents(events));
+                    } catch (error) {
+                        logger.error(
+                            'Error while parsing Spot calendar events',
+                            { error }
+                        );
+                    }
+                }
+            },
+
+            roomName,
+
             serverConfig: this.props.remoteControlConfiguration
         })
         .then(() => {

@@ -13,6 +13,7 @@ import {
     isSetupComplete,
     setCalendarEvents
 } from 'common/app-state';
+import { COMMANDS } from 'common/remote-control';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -60,6 +61,7 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
 
+        this._onCommand = this._onCommand.bind(this);
         this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
         this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
@@ -80,6 +82,9 @@ export class Home extends React.Component {
             this._updateEventsInterval
                 = setInterval(this._pollForEvents, 30000);
         }
+
+        this.props.remoteControlService.startListeningForRemoteMessages(
+            this._onCommand);
     }
 
     /**
@@ -89,6 +94,9 @@ export class Home extends React.Component {
      */
     componentWillUnmount() {
         this._isUnmounting = true;
+
+        this.props.remoteControlService.stopListeningForRemoteMessages(
+            this._onCommand);
 
         clearInterval(this._updateEventsInterval);
     }
@@ -140,6 +148,38 @@ export class Home extends React.Component {
         }
 
         return <LoadingIcon color = 'black' />;
+    }
+
+    /**
+     * Listens for Spot-Remotes commanding this Spot-TV to enter a meeting.
+     *
+     * @param {string} type - The type of the command being sent.
+     * @param {Object} data - Additional data necessary to execute the command.
+     * @private
+     * @returns {void}
+     */
+    _onCommand(type, data) {
+        switch (type) {
+        case COMMANDS.GO_TO_MEETING: {
+            let path = `/meeting?location=${data.meetingName}`;
+
+            if (data.invites) {
+                path += `&invites=${JSON.stringify(data.invites)}`;
+            }
+
+            if (data.startWithScreensharing) {
+                path += '&screenshare=true';
+            }
+
+            if (data.startWithVideoMuted === true) {
+                path += '&startWithVideoMuted=true';
+            }
+
+            this.props.history.push(path);
+
+            break;
+        }
+        }
     }
 
     /**

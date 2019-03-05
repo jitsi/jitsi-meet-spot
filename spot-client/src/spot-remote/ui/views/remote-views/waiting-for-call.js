@@ -27,7 +27,6 @@ const JitsiTrackErrors = JitsiMeetJSProvider.get().errors.track;
 class WaitingForCallView extends React.Component {
     static propTypes = {
         events: PropTypes.array,
-        isWirelessScreenshareConnectionActive: PropTypes.bool,
         onGoToMeeting: PropTypes.func,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
@@ -106,8 +105,6 @@ class WaitingForCallView extends React.Component {
                         label = 'Dial a Number'
                         onClick = { this._onSetDialActive } />
                     <ScreenshareButton
-                        isWirelessScreenshareConnectionActive
-                            = { this.props.isWirelessScreenshareConnectionActive }
                         onStartWiredScreenshare = { this._onJoinWithWiredScreensharing }
                         onStartWirelessScreenshare = { this._onJoinWithWirelessScreensharing }
                         remoteControlService = { this.props.remoteControlService }

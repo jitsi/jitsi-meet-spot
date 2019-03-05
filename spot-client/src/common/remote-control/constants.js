@@ -72,5 +72,9 @@ export const MESSAGES = {
      * A message from a remote control to Spot that is intended for Spot to
      * pass into the Jitsi-Meet meeting.
      */
-    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control'
+    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control',
+
+    SPOT_REMOTE_LEFT: 'spot-remote-left',
+
+    SPOT_REMOTE_PROXY_MESSAGE: 'spot-remote-message'
 };
