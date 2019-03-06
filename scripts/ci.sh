@@ -14,6 +14,7 @@ cd ../spot-webdriver
 npm install
 npm run lint
 
+
 pid=""
 
 # if [ -z "$TEST_SERVER_URL" ]; then
