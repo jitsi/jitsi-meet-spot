@@ -189,7 +189,7 @@ export class Home extends React.Component {
      */
     _onOpenRemote() {
         const baseUrl = windowHandler.getBaseUrl();
-        const url = `${baseUrl}#/?code=${this.props.joinCode.toUpperCase()}`;
+        const url = `${baseUrl}/${this.props.joinCode.toUpperCase()}`;
 
         windowHandler.openNewWindow(url);
     }

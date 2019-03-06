@@ -14,6 +14,7 @@ const app = {
     devServer: {
         compress: true,
         contentBase: path.join(__dirname, '/'),
+        historyApiFallback: true,
         port: 8000,
         publicPath: '/dist/'
     },
