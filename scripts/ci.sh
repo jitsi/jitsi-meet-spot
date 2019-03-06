@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 cd spot-client
 npm install
@@ -15,7 +15,6 @@ npm install
 npm run lint
 
 pid=""
-
 
 # if [ -z "$TEST_SERVER_URL" ]; then
     # port=TEST_PORT
