@@ -111,6 +111,7 @@ class RemoteControlService {
 
         // FIXME: There is no proper join code service so the code is a
         // combination of a 3 digit room name and a 3 digit room password.
+        // eslint-disable-next-line sort-vars
         let roomName, roomLock;
 
         if (joinCode) {
