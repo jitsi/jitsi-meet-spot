@@ -147,7 +147,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         return remoteControlService.refreshJoinCode()
             .then(joinCode => {
                 remoteControlService.notifyJoinCodeUpdate(joinCode);
-                this.props.dispatch(setJoinCode(joinCode))
+                this.props.dispatch(setJoinCode(joinCode));
             });
     }
 
