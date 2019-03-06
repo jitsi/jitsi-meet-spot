@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 cd spot-client
 npm install
