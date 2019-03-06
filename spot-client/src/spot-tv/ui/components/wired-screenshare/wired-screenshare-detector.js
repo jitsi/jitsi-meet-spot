@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    getInMeetingStatus,
     getWiredScreenshareInputIdleValue,
     getWiredScreenshareInputLabel,
     isDeviceConnectedForWiredScreensharing,
@@ -23,6 +24,7 @@ class WiredScreenshareDetector extends React.PureComponent {
     static propTypes = {
         dispatch: PropTypes.func,
         hasScreenshareDevice: PropTypes.bool,
+        inMeeting: PropTypes.string,
         remoteControlService: PropTypes.object,
         wiredScreenshareDevice: PropTypes.string,
         wiredScreenshareDeviceIdleValue: PropTypes.number
@@ -66,9 +68,19 @@ class WiredScreenshareDetector extends React.PureComponent {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        if (prevProps.wiredScreenshareDevice
-            !== this.props.wiredScreenshareDevice) {
-            logger.log('Screensharing input changed.');
+        const screensharingInputChanged
+            = prevProps.wiredScreenshareDevice !== this.props.wiredScreenshareDevice;
+
+        // This is a workaround for the USB dongle's issue where it sometimes gets stuck on
+        // the last frame when the HDMI cable is disconnected. Redoing the GUM restores it
+        // back to the black frame. The intention is to restart the VideoChangeListener
+        // which should also redo the GUM.
+        const meetingLeft = prevProps.inMeeting && !this.props.inMeeting;
+
+        if (screensharingInputChanged || meetingLeft) {
+
+            screensharingInputChanged && logger.log('Screensharing input changed.');
+            meetingLeft && logger.log('Meeting left - maybe will restart VideoChangeListener');
 
             wiredScreenshareService.stopListeningForConnection(
                 prevProps.wiredScreenshareDevice,
@@ -172,8 +184,11 @@ class WiredScreenshareDetector extends React.PureComponent {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const { inMeeting } = getInMeetingStatus(state);
+
     return {
         hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state),
+        inMeeting,
         wiredScreenshareDevice: getWiredScreenshareInputLabel(state),
         wiredScreenshareDeviceIdleValue:
             getWiredScreenshareInputIdleValue(state)
