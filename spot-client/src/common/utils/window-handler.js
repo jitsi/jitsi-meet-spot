@@ -10,7 +10,16 @@ export default {
      * @returns {string}
      */
     getBaseUrl() {
-        return `${window.location.origin}`;
+        return window.location.origin;
+    },
+
+    /**
+     * Returns the current url host--the base url without protocol.
+     *
+     * @returns {string}
+     */
+    getHost() {
+        return window.location.hostname;
     },
 
     /**

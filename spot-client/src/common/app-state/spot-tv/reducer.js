@@ -9,6 +9,7 @@ const DEFAULT_STATE = {
     inMeeting: undefined,
     joinCode: null,
     screensharing: false,
+    screensharingType: '',
     spotId: null,
     videoMuted: true,
     view: null

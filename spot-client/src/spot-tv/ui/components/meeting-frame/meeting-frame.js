@@ -347,15 +347,19 @@ export class MeetingFrame extends React.Component {
      * @private
      * @returns {void}
      */
-    _onScreenshareChange({ on }) {
-        logger.log(`meetingFrame screenshare changed from ${
-            this._isScreensharing} to ${on}`);
+    _onScreenshareChange({ on, details }) {
+        logger.log('meetingFrame screenshare changed', {
+            details,
+            on
+        });
 
         // The api passes in null or true for the value
         this._isScreensharing = Boolean(on);
 
         this.props.updateSpotTvState({
-            screensharing: on
+            screensharing: this._isScreensharing,
+            screensharingType: this._isScreensharing
+                ? details.sourceType : ''
         });
     }
 

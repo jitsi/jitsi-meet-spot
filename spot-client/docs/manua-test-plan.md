@@ -49,3 +49,32 @@ Disconnects
 ------
 - [ ] Spot-TV reloads and Spot-Remote displays join code entry
 - [ ] Spot-Remote reconnects to a Spot-TV after disconnect
+
+Screenshare Selection
+------
+Wired available and wireless available
+- [ ] Click start sharing shows selection buttons for both
+- [ ] Click Wireless opens desktop picker
+- [ ] Click start with Wireless in progress shows modal with stop button
+- [ ] Clicking stop wireless screenshare button stops screenshare, displays selection again  
+- [ ] Clicking Wired shows connect cable message
+- [ ] Click start with wired in progress shows stop button
+- [ ] Clicking stop wired screenshare button stops screenshare, displays selection again
+
+Wired unavailable and wireless available
+- [ ] Click start opens desktop picker
+- [ ] Click start with wireless in progress shows modal with stop button
+- [ ] Clicking stop wireless closes the modal
+- [ ] There is no mention of wired screensharing
+
+Wired available and wireless unavailable
+- [ ] Click start opens the modal showing connect cable message
+- [ ] Click start with wired in progress shows stop button
+- [ ] Clicking stop button stops screenshare, displays start again
+- [ ] On browser, clicking start button opens modal asking to use different browser
+- [ ] On mobile, clicking start button opens modal asking to go to a different site
+
+Wired unavailable and wireless unavailable
+- [ ] On browser, clicking start button opens modal asking to use different browser
+- [ ] On mobile, clicking start button opens modal asking to go to a different site
+- [ ] There is no mention of wired screensharing

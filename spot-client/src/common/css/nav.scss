@@ -71,10 +71,9 @@
             cursor: default;
         }
 
-        &.active,
-        &:active,
-        &:active .nav-icon {
-            @include active;
+        &.active .nav-icon-container,
+        &:active .nav-icon-container {
+            background-color: var(--container-bg-color);
         }
 
         &:hover:not(.active) {
@@ -116,20 +115,15 @@
         }
     }
     .nav-icon-container {
-        display: flex;
-        justify-content: center;
-    }
-
-    .nav-icon {
+        align-items: center;
         border: 1px solid;
         border-radius: 50%;
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        margin-bottom: 1em;
+        margin-bottom: 15px;
+
         height: calc(var(--font-size-x-large) * 2);
         width: calc(var(--font-size-x-large) * 2);
-
         @media #{$mq-laptop-l} {
             height: calc(var(--font-size-large) * 2.5);
             width: calc(var(--font-size-large) * 2.5);
@@ -140,15 +134,25 @@
             width: calc(var(--font-size-large) * 2.5);
         }
 
-        * {
-            font-size: var(--font-size-x-large);
+        .nav-icon {
+            position: relative;
 
-            @media #{$mq-laptop-l} {
-                font-size: var(--font-size-large);
+            .material-icons {
+                font-size: var(--font-size-x-large);
+    
+                @media #{$mq-laptop-l} {
+                    font-size: var(--font-size-large);
+                }
+    
+                @media #{$mq-4k} {
+                    font-size: var(--font-size-large);
+                }
             }
 
-            @media #{$mq-4k} {
-                font-size: var(--font-size-large);
+            .sub-icon {
+                bottom: 0;
+                position: absolute;
+                right: 0;
             }
         }
     }
@@ -168,31 +172,17 @@
  */
 .nav {
     .hangup.nav-button {
-        .nav-icon-container .nav-icon {
+        .nav-icon-container {
             background-color: var(--hangup-bg-color);
             border-color: var(--hangup-bg-color);
-
-            &:active {
-                color: var(--hangup-active-color);
-
-                .nav-icon {
-                    border-color: var(--hangup-active-color);
-                }
-            }
         }
 
         &:active {
-            .nav-icon {
-                border-color: var(--hangup-bg-color);
-            }
-
             color: var(--hangup-active-color);
-        }
-    }
 
-    .screenshare.nav-button {
-        .nav-label-container {
-            white-space: pre;
+            .nav-icon  {
+                color: var(--hangup-active-color);
+            }
         }
     }
 }

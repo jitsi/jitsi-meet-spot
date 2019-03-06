@@ -6,6 +6,10 @@
  * I could find to do this reliably was by placing the config on a global...
  */
 window.JitsiMeetSpotConfig = {
+    ADVERTISEMENT: {
+        APP_NAME: process.env.APP_NAME
+    },
+
     /**
      * Configuration objects necessary for client-side calendar integration.
      */

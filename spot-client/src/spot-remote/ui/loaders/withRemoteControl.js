@@ -34,6 +34,7 @@ const presenceToStoreAsBoolean = new Set([
 const presenceToStoreAsString = new Set([
     'inMeeting',
     'joinCode',
+    'screensharingType',
     'spotId',
     'view'
 ]);

@@ -3,8 +3,6 @@ import React from 'react';
 
 import { NavButton, NavContainer } from '../nav';
 
-import ScreenshareButton from './screenshare-button';
-
 /**
  * Displays buttons used for remotely controlling a Spot instance.
  *
@@ -13,6 +11,7 @@ import ScreenshareButton from './screenshare-button';
 export default class RemoteControlMenu extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
+        onToggleScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
         screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool,
@@ -54,10 +53,11 @@ export default class RemoteControlMenu extends React.Component {
                     label
                         = { videoMuted ? 'Unmute Video' : 'Mute Video' }
                     onClick = { this._onToggleVideoMute } />
-                <ScreenshareButton
-                    remoteControlService = { this.props.remoteControlService }
-                    screensharing = { this.props.screensharing }
-                    screensharingEnabled = { this.props.screensharingEnabled } />
+                <NavButton
+                    className = { 'sharebutton' }
+                    iconName = 'screen_share'
+                    label = 'Share Content'
+                    onClick = { this.props.onToggleScreenshare } />
                 <NavButton
                     className = 'hangup'
                     iconName = 'call_end'

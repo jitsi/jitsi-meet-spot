@@ -1,4 +1,15 @@
 /**
+ * A selector which returns the name of an application to advertise which has
+ * integration with Jitsi-Meet-Spot.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getAdvertisementAppName(state) {
+    return state.config.ADVERTISEMENT && state.config.ADVERTISEMENT.APP_NAME;
+}
+
+/**
  * A selector which returns the configured background image to display.
  *
  * @param {Object} state - The Redux state.
