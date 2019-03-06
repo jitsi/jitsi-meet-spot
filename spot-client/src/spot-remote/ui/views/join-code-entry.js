@@ -65,15 +65,16 @@ export class JoinCodeEntry extends React.Component {
         this.props.dispatch(setJoinCode(''));
         remoteControlService.disconnect();
 
-        const queryParams = new URLSearchParams(this.props.location.search);
-        const code = queryParams.get('code');
+        const { pathname } = this.props.location;
+        const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
+        const code = codeMatch && codeMatch[1];
 
         // Hide the code and other params for visual clarity only, no practical
         // purpose.
         this.props.history.replace(this.props.location.pathname);
 
         if (code) {
-            logger.log('joinCodeEntry detect query param code');
+            logger.log('joinCodeEntry detected a valid code');
 
             this._connectToSpot(code);
         }

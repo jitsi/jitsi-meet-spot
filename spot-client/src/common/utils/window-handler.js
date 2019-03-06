@@ -10,7 +10,7 @@ export default {
      * @returns {string}
      */
     getBaseUrl() {
-        return `${window.location.origin}${window.location.pathname}`;
+        return `${window.location.origin}`;
     },
 
     /**
