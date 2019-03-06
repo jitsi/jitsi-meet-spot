@@ -7,7 +7,10 @@ import { HashRouter } from 'react-router-dom';
 import 'common/css';
 import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
-import reducers, { getLoggingEndpoint } from 'common/app-state';
+import reducers, {
+    getDesktopSharingFramerate,
+    getLoggingEndpoint
+} from 'common/app-state';
 import {
     RemoteControlServiceSubscriber,
     remoteControlService
@@ -62,9 +65,7 @@ if (loggingEndpoint) {
 }
 
 remoteControlService.configureWirelessScreensharing({
-    desktopSharingFrameRate: {
-        max: window.JitsiMeetSpotConfig.MEDIA.WIRELESS_SS_MAX_FPS
-    }
+    desktopSharingFrameRate: getDesktopSharingFramerate(reduxState)
 });
 
 render(

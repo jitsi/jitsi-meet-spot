@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import {
     addNotification,
     getDefaultMeetingDomain,
+    getDesktopSharingFramerate,
     getDisplayName,
     getMeetingOptions,
     getWiredScreenshareInputLabel
@@ -29,6 +30,8 @@ export class Meeting extends React.Component {
         history: PropTypes.object,
         location: PropTypes.object,
         match: PropTypes.object,
+        maxDesktopSharingFramerate: PropTypes.number,
+        minDesktopSharingFramerate: PropTypes.number,
         remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
@@ -80,17 +83,28 @@ export class Meeting extends React.Component {
             return null;
         }
 
+        const {
+            displayName,
+            maxDesktopSharingFramerate,
+            minDesktopSharingFramerate,
+            remoteControlService,
+            screenshareDevice,
+            showMeetingToolbar
+        } = this.props;
+
         return (
             <div className = 'view'>
                 <MeetingFrame
-                    displayName = { this.props.displayName }
+                    displayName = { displayName }
                     invites = { invites }
+                    maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
                     meetingUrl = { location }
+                    minDesktopSharingFramerate = { minDesktopSharingFramerate }
                     onMeetingLeave = { this._onMeetingLeave }
                     onMeetingStart = { this._onMeetingStart }
-                    remoteControlService = { this.props.remoteControlService }
-                    screenshareDevice = { this.props.screenshareDevice }
-                    showMeetingToolbar = { this.props.showMeetingToolbar }
+                    remoteControlService = { remoteControlService }
+                    screenshareDevice = { screenshareDevice }
+                    showMeetingToolbar = { showMeetingToolbar }
                     startWithScreenshare = { screenshare }
                     startWithVideoMuted = { startWithVideoMuted } />
                 {
@@ -192,9 +206,18 @@ export class Meeting extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    // Intentionally pass the config object separately to avoid a new object
+    // from the selector triggering a re-render.
+    const {
+        max: maxDesktopSharingFramerate,
+        min: minDesktopSharingFramerate
+    } = getDesktopSharingFramerate(state);
+
     return {
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
+        maxDesktopSharingFramerate,
+        minDesktopSharingFramerate,
         screenshareDevice: getWiredScreenshareInputLabel(state),
         showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar
     };
