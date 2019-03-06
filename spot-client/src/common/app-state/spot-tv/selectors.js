@@ -1,25 +1,4 @@
 /**
- * A selector which returns the last known room lock set on the Spot-TV's MUC,
- * which must be entered to join the MUC.
- *
- * @param {Object} state - The Redux state.
- * @returns {string}
- */
-export function getCurrentLock(state) {
-    return state.spotTv.lock;
-}
-
-/**
-* A selector which returns the last known MUC room name the Spot-TV is in.
-*
-* @param {Object} state - The Redux state.
-* @returns {string}
-*/
-export function getCurrentRoomName(state) {
-    return state.spotTv.roomName;
-}
-
-/**
 * A selector which returns the current view that is being displayed on Spot-TV.
 *
 * @param {Object} state - The Redux state.

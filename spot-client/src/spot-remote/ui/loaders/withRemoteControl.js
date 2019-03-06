@@ -5,8 +5,7 @@ import { withRouter } from 'react-router-dom';
 import {
     addNotification,
     clearSpotTVState,
-    getCurrentLock,
-    getCurrentRoomName,
+    getJoinCode,
     getRemoteControlServerConfig,
     setCalendarEvents,
     setSpotTVState
@@ -95,7 +94,6 @@ export class RemoteControlLoader extends AbstractLoader {
     componentWillUnmount() {
         this._unmounted = true;
 
-        clearInterval(this._lockUpdateInterval);
         clearTimeout(this._reconnectTimeout);
     }
 
@@ -117,11 +115,10 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        const { lock, roomName } = this.props;
+        const { joinCode } = this.props;
 
-        if (!lock || !roomName) {
-            logger.error(
-                `Missing required field for login ${lock} ${roomName}`);
+        if (!joinCode) {
+            logger.error('Missing join code');
 
             this._redirectBackToLogin();
 
@@ -133,7 +130,7 @@ export class RemoteControlLoader extends AbstractLoader {
         }
 
         return remoteControlService.connect({
-            lock,
+            joinCode,
 
             /**
              * Callback invoked when an unexpected disconnect happens with the
@@ -189,8 +186,6 @@ export class RemoteControlLoader extends AbstractLoader {
                     }
                 }
             },
-
-            roomName,
 
             serverConfig: this.props.remoteControlConfiguration
         })
@@ -300,9 +295,8 @@ export class RemoteControlLoader extends AbstractLoader {
  */
 function mapStateToProps(state) {
     return {
-        lock: getCurrentLock(state),
-        remoteControlConfiguration: getRemoteControlServerConfig(state),
-        roomName: getCurrentRoomName(state)
+        joinCode: getJoinCode(state),
+        remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }
 

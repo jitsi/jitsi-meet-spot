@@ -3,12 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    getCurrentLock,
-    getCurrentRoomName,
+    getJoinCode,
     getRemoteControlServerConfig,
     setJoinCode,
-    setLock,
-    setRoomName,
     setIsSpot
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -45,22 +42,9 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this._stopLockUpdate();
+        this._stopJoinCodeUpdateInterval();
 
         clearTimeout(this._reconnectTimeout);
-    }
-
-    /**
-     * Temporary method to generate a random string, intended to be used to
-     * create a random join code.
-     *
-     * @param {number} length - The desired length of the random string.
-     * @returns {string}
-     */
-    _generateRandomString(length) {
-        return Math.random()
-            .toString(36)
-            .substr(2, length);
     }
 
     /**
@@ -81,32 +65,32 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        this.props.dispatch(setIsSpot(true));
+        const { dispatch, joinCode } = this.props;
 
+        dispatch(setIsSpot(true));
+
+        // FIXME: There is no proper join code service so the code is a
+        // combination of a 3 digit room name and a 3 digit room password.
         return remoteControlService.connect({
             onDisconnect: () => {
                 logger.error('Spot disconnected from the remote control '
                     + 'service. Will attempt reconnect');
 
-                this._stopLockUpdate();
+                this._stopJoinCodeUpdateInterval();
 
                 this._reconnect();
             },
-            lock: this.props.lock,
             joinAsSpot: true,
-            roomName: this.props.roomName || this._generateRandomString(3),
+            joinCode,
             serverConfig: this.props.remoteControlConfiguration
         })
             .then(() => {
                 logger.log('Spot connected to remote control service');
                 this._isReconnecting = false;
 
-                this.props.dispatch(setRoomName(
-                    remoteControlService.getRoomName()));
-
-                return this._setLock();
+                return this._refreshJoinCode();
             })
-            .then(() => this._startLockUpdate())
+            .then(() => this._startJoinCodeUpdateInterval())
             .catch(error => {
                 logger.error('Error connecting as spot to remote control '
                     + `remote control service: ${error}`);
@@ -114,8 +98,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 // The case of an incorrect password generally should not
                 // happen, but if it does then try to join a new room instead.
                 if (error === 'not-authorized') {
-                    this.props.dispatch(setRoomName(''));
-                    this.props.dispatch(setLock(''));
+                    this.props.dispatch(setJoinCode(''));
                 }
 
                 this._isReconnecting = false;
@@ -155,25 +138,16 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Places a new password on the current remote control connection.
+     * Places a new join code for Spot-Remotes to connect to Spot-TV.
      *
      * @private
      * @returns {void}
      */
-    _setLock() {
-        const lock = this._generateRandomString(3);
-
-        return remoteControlService.setLock(lock)
-            .then(() => {
-                logger.log(`New lock set ${lock}`);
-
-                this.props.dispatch(setLock(lock));
-
-                const joinCode = `${this.props.roomName}${lock}`;
-
+    _refreshJoinCode() {
+        return remoteControlService.refreshJoinCode()
+            .then(joinCode => {
                 remoteControlService.notifyJoinCodeUpdate(joinCode);
-
-                this.props.dispatch(setJoinCode(joinCode));
+                this.props.dispatch(setJoinCode(joinCode))
             });
     }
 
@@ -184,10 +158,10 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @private
      * @returns {void}
      */
-    _startLockUpdate() {
-        this._lockUpdateInterval = setInterval(() => {
-            this._setLock();
-        }, 300000);
+    _startJoinCodeUpdateInterval() {
+        this._joinCodeUpdateInterval = setInterval(() => {
+            this._refreshJoinCode();
+        }, 30000);
     }
 
     /**
@@ -196,8 +170,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @private
      * @returns {void}
      */
-    _stopLockUpdate() {
-        clearInterval(this._lockUpdateInterval);
+    _stopJoinCodeUpdateInterval() {
+        clearInterval(this._joinCodeUpdateInterval);
     }
 }
 
@@ -211,9 +185,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
  */
 function mapStateToProps(state) {
     return {
-        lock: getCurrentLock(state),
-        remoteControlConfiguration: getRemoteControlServerConfig(state),
-        roomName: getCurrentRoomName(state)
+        joinCode: getJoinCode(state),
+        remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }
 

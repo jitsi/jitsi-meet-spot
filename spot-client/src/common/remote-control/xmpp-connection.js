@@ -49,7 +49,7 @@ export default class XmppConnection {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
-     * @param {string} options.lock - The lock code to use when joining or
+     * @param {string} options.roomLock - The lock code to use when joining or
      * to set when creating a new MUC.
      * @param {Function} options.onDisconnect - Callback to invoke when the
      * connection has been terminated without an explicit disconnect.
@@ -57,7 +57,7 @@ export default class XmppConnection {
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    joinMuc({ joinAsSpot, lock, onDisconnect, roomName }) {
+    joinMuc({ joinAsSpot, roomLock, roomName, onDisconnect }) {
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -172,7 +172,7 @@ export default class XmppConnection {
                     this.updatePresence('isSpot', true);
                 }
             })
-            .then(() => this._joinMuc(lock))
+            .then(() => this._joinMuc(roomLock))
             .then(() => Promise.all([ joinPromise, mucJoinedPromise ]));
 
         return this.initPromise;
@@ -214,18 +214,18 @@ export default class XmppConnection {
      * Signals to the muc that the participant is joining the muc. This allows
      * for receipt of messages from other participants in the muc.
      *
-     * @param {string} lock - A lock code, if any, to set in order to join the
+     * @param {string} roomLock - A lock code, if any, to set in order to join the
      * muc.
      * @returns {Promise} - A Promise resolved when libjitsi-meet's ChatRoom.join method is resolved
      * which is not exactly equal with being in the muc already.
      */
-    _joinMuc(lock) {
+    _joinMuc(roomLock) {
         // NOTE At the time of this writing lib-jitsi-meet resolves this promise without
         // waiting for the actually confirmation that the muc room has been joined.
         //
-        // The 'lock' argument is optional on the lib-jitsi-meet side and it's fine to pass
+        // The 'roomLock' argument is optional on the lib-jitsi-meet side and it's fine to pass
         // undefined.
-        return this.room.join(lock);
+        return this.room.join(roomLock);
     }
 
     /**
@@ -377,25 +377,25 @@ export default class XmppConnection {
     }
 
     /**
-     * Returns the current known lock on the muc.
+     * Returns the current known lock on the MUC.
      *
      * @returns {string}
      */
     getLock() {
-        return this._lock;
+        return this._roomLock;
     }
 
     /**
      * Sets a new lock code on the current MUC.
      *
-     * @param {string} lock - The new code code to place on the MUC.
+     * @param {string} roomLock - The new code code to place on the MUC.
      * @returns {Promise}
      */
-    setLock(lock) {
-        this._lock = lock;
+    setLock(roomLock) {
+        this._roomLock = roomLock;
 
         return new Promise((resolve, reject) => {
-            this.room.lockRoom(this._lock, resolve, reject, reject);
+            this.room.lockRoom(this._roomLock, resolve, reject, reject);
         });
     }
 
