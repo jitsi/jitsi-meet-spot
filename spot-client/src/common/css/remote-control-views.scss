@@ -103,6 +103,16 @@
             padding: .8em 1.2em;
             width: 80%;
         }
+
+        .meeting:first-child {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .meeting:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
     }
 
     .meeting-name-entry-view {
