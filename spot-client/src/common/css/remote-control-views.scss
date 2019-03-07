@@ -102,6 +102,24 @@
         .meeting {
             padding: .8em 1.2em;
             width: 80%;
+
+            @media #{$mq-laptop} {
+                width: 70%;
+            }
+        
+            @media #{$mq-laptop-l} {
+                width: 60%;
+            }
+        }
+
+        .meeting:first-child {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .meeting:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
         }
     }
 

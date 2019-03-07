@@ -10,11 +10,12 @@
     background-color: var(--container-bg-color);
     border-radius: 4px;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px 15px 10px;
 
     .dial-pad-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
+        margin: 10px 0;
 
         .dial-button {
             background-color: transparent;
@@ -26,7 +27,7 @@
             font-size: inherit;
             height: calc(var(--font-size-large) * 1.6);
             line-height: 1;
-            margin: 10px;
+            margin: 4px;
             width: calc(var(--font-size-large) * 1.6);
 
             .main {

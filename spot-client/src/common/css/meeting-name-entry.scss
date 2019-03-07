@@ -22,7 +22,6 @@
         .input {
             @include styled-input;
 
-            padding-bottom: 16px;
             border-image:
                 linear-gradient(
                     to right,
@@ -31,7 +30,7 @@
                 )
                 1
                 stretch;
-
+            padding-bottom: 8px;
         }
 
         .input-label {
