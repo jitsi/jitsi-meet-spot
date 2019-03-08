@@ -19,6 +19,13 @@ export class ScreensharePicker extends React.Component {
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
+
+        /**
+         * FIXME: There is no need for both props screensharing and
+         * screensharingType. The prop screensharing should be removed once
+         * all target deployments are on the latest jitsi-meet master.
+         */
+        screensharing: PropTypes.bool,
         screensharingType: PropTypes.string,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
@@ -31,7 +38,7 @@ export class ScreensharePicker extends React.Component {
      * @inheritdoc
      */
     static getDerivedStateFromProps(props) {
-        if (props.screensharingType) {
+        if (props.screensharingType || props.screensharing) {
             return {
                 displayWirelessInstructions: false,
                 displayWiredInstructions: false
@@ -112,7 +119,7 @@ export class ScreensharePicker extends React.Component {
      */
     _renderContent() {
         // If screensharing is enabled, show a stop screensharing view.
-        if (this.props.screensharingType) {
+        if (this.props.screensharingType || this.props.screensharing) {
             return this._renderStopShare();
         }
 
@@ -228,9 +235,18 @@ export class ScreensharePicker extends React.Component {
         const icon = isWirelessScreensharing
             ? 'wireless_screen_share'
             : 'wired_screen_share';
-        const ctaTitle = isWirelessScreensharing
-            ? 'You can stop the wireless sharing below.'
-            : 'To stop sharing content unplug the cable or click stop sharing.';
+        let ctaTitle;
+
+        if (isWirelessScreensharing) {
+            ctaTitle = 'You can stop the wireless sharing below.';
+        } else if (this.props.screensharingType === 'device') {
+            ctaTitle
+                = 'To stop sharing content unplug the cable or click stop sharing.';
+        } else {
+            // This case handles the transitionary time when the jitsi-meet api
+            // was not updated on deployments to provide the screensharing type.
+            ctaTitle = 'You can stop screen sharing below.';
+        }
 
         return (
             <>

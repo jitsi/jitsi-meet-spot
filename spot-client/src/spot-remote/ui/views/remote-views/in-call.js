@@ -78,6 +78,7 @@ export class InCall extends React.Component {
         const {
             audioMuted,
             inMeeting,
+            screensharing,
             screensharingType,
             videoMuted,
             wiredScreensharingEnabled
@@ -128,6 +129,7 @@ export class InCall extends React.Component {
                             = { this._onStartWirelessScreenshare }
                         onStopScreensharing
                             = { this._onStopScreenshare }
+                        screensharing = { screensharing }
                         screensharingType = { screensharingType }
                         wiredScreenshareEnabled
                             = { wiredScreensharingEnabled }

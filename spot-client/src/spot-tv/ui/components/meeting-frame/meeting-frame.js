@@ -347,7 +347,7 @@ export class MeetingFrame extends React.Component {
      * @private
      * @returns {void}
      */
-    _onScreenshareChange({ on, details }) {
+    _onScreenshareChange({ on, details = {} }) {
         logger.log('meetingFrame screenshare changed', {
             details,
             on
