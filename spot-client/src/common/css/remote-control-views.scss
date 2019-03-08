@@ -128,6 +128,23 @@
         flex-direction: column;
         align-items: center;
     }
+
+    .share-select-view {
+        margin: auto;
+        width: 100%;
+
+        @media #{$mq-tablet} {
+            height: auto;
+            width: 450px;
+        }
+    
+        @media #{$mq-laptop-l} {
+            
+            width: 500px;
+        }
+
+    }
+
 }
 
 .in-call {
@@ -140,5 +157,11 @@
         font-size: var(--font-size-medium-plus);
         margin-top: 100px;
         text-align: center;
+    }
+
+    .sharebutton.sharing {
+        .nav-icon-container {
+            background-color:  var(--container-bg-color);
+        }
     }
 }

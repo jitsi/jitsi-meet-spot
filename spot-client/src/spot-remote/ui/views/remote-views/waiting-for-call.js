@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
 import { logger } from 'common/logger';
-import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
+import { Clock, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
@@ -12,7 +12,7 @@ import {
     DialPad,
     NavButton,
     NavContainer,
-    ScreenshareButton,
+    ScreensharePicker,
     SelfFillingNameEntry
 } from './../../components';
 
@@ -61,6 +61,8 @@ class WaitingForCallView extends React.Component {
         this._onSetCalendarActive = this._onSetCalendarActive.bind(this);
         this._onSetDialActive = this._onSetDialActive.bind(this);
         this._onSetInputActive = this._onSetInputActive.bind(this);
+        this._onSetScreenshareSelectActive
+            = this._onSetScreenshareSelectActive.bind(this);
     }
 
     /**
@@ -84,7 +86,7 @@ class WaitingForCallView extends React.Component {
         return (
             <div className = 'waiting-view'>
                 <Clock />
-                <div>
+                <div className = 'waiting-sub-view'>
                     { this._getSubView() }
                 </div>
                 <NavContainer>
@@ -104,12 +106,11 @@ class WaitingForCallView extends React.Component {
                         iconName = 'call'
                         label = 'Dial a Number'
                         onClick = { this._onSetDialActive } />
-                    <ScreenshareButton
-                        onStartWiredScreenshare = { this._onJoinWithWiredScreensharing }
-                        onStartWirelessScreenshare = { this._onJoinWithWirelessScreensharing }
-                        remoteControlService = { this.props.remoteControlService }
-                        screensharing = { this.props.screensharing }
-                        screensharingEnabled = { this.props.wiredScreensharingEnabled } />
+                    <NavButton
+                        active = { activeTab === 'share' }
+                        iconName = 'screen_share'
+                        label = 'Share Content'
+                        onClick = { this._onSetScreenshareSelectActive } />
                 </NavContainer>
             </div>
         );
@@ -147,7 +148,19 @@ class WaitingForCallView extends React.Component {
                 </div>
             );
         case 'share':
-            return <LoadingIcon color = 'white' />;
+            return (
+                <div className = 'share-select-view'>
+                    <ScreensharePicker
+                        onStartWiredScreenshare
+                            = { this._onJoinWithWiredScreensharing }
+                        onStartWirelessScreenshare
+                            = { this._onJoinWithWirelessScreensharing }
+                        wiredScreenshareEnabled
+                            = { this.props.wiredScreensharingEnabled }
+                        wirelessScreenshareEnabled
+                            = { JitsiMeetJSProvider.isWirelessScreenshareSupported() } />
+                </div>
+            );
         }
     }
 
@@ -182,6 +195,28 @@ class WaitingForCallView extends React.Component {
     }
 
     /**
+     * Automatically starts the wireless screensharing flow or displays the
+     * screenshare start content if both wireless and wired screensharing are
+     * supported.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onSetScreenshareSelectActive() {
+        // If only wireless sceensharing is available then start the wireless
+        // screensharing flow.
+        if (JitsiMeetJSProvider.isWirelessScreenshareSupported()
+            && !this.props.wiredScreensharingEnabled) {
+            this._onJoinWithScreensharing(true);
+
+            return;
+        }
+
+        // Otherwise defer all screensharing choices to the modal.
+        this.setState({ activeTab: 'share' });
+    }
+
+    /**
      * Updates the state to display screen share.
      *
      * @param {boolean} wireless - True for wireless or false for wired.
@@ -194,8 +229,6 @@ class WaitingForCallView extends React.Component {
             return;
         }
 
-        this.setState({ activeTab: 'share' });
-
         const goToMeetingPromise = this.props.onGoToMeeting(
             getRandomMeetingName(),
             {
@@ -207,11 +240,6 @@ class WaitingForCallView extends React.Component {
                 logger.log('onGoToMeeting with screensharing canceled by the user');
             } else {
                 logger.error(`onGoToMeeting with screensharin rejected: ${error}`);
-            }
-
-            // Prevents calling setState when the component has been unmounted
-            if (this._goToMeetingPromise === goToMeetingPromise) {
-                this.setState({ activeTab: '' });
             }
         })
         .then(() => {

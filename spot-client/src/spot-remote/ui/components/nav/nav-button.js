@@ -22,6 +22,7 @@ export default class NavButton extends React.Component {
         label: PropTypes.string,
         onClick: PropTypes.func,
         qaId: PropTypes.string,
+        subIcon: PropTypes.node,
         type: PropTypes.string
     };
 
@@ -50,6 +51,7 @@ export default class NavButton extends React.Component {
             iconName,
             label,
             qaId,
+            subIcon,
             type
         } = this.props;
 
@@ -72,6 +74,11 @@ export default class NavButton extends React.Component {
                 <div className = 'nav-icon-container'>
                     <div className = 'nav-icon'>
                         <i className = 'material-icons'>{ iconName }</i>
+                        { subIcon && (
+                            <div className = 'sub-icon'>
+                                { subIcon }
+                            </div>)
+                        }
                     </div>
                 </div>
                 <div className = 'nav-label-container'>
