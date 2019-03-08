@@ -21,9 +21,10 @@ export class ScreensharePicker extends React.Component {
         onStopScreensharing: PropTypes.func,
 
         /**
-         * FIXME: There is no need for both props screensharing and
-         * screensharingType. The prop screensharing should be removed once
-         * all target deployments are on the latest jitsi-meet master.
+         * Generally if screensharingType is defined, then screensharing should
+         * be true. However, screensharing may be true while there is not type
+         * (currently due to jitsi-meet changes not being deployed). So rely on
+         * both to show the proper view.
          */
         screensharing: PropTypes.bool,
         screensharingType: PropTypes.string,
@@ -243,8 +244,6 @@ export class ScreensharePicker extends React.Component {
             ctaTitle
                 = 'To stop sharing content unplug the cable or click stop sharing.';
         } else {
-            // This case handles the transitionary time when the jitsi-meet api
-            // was not updated on deployments to provide the screensharing type.
             ctaTitle = 'You can stop screen sharing below.';
         }
 
