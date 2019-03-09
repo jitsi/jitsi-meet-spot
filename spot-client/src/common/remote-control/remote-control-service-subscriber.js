@@ -10,6 +10,7 @@ export default class RemoteControlServiceSubscriber {
      */
     constructor() {
         this._previousSpotTvState = {};
+        this._previousCalendarEvents = [];
     }
 
     /**
@@ -23,12 +24,17 @@ export default class RemoteControlServiceSubscriber {
      */
     onUpdate(store) {
         const newSpotTvState = store.getState().spotTv;
+        const newCalendarEvents = store.getState().calendars.events || [];
 
-        if (newSpotTvState === this._previousSpotTvState) {
+        if (newSpotTvState === this._previousSpotTvState
+            && newCalendarEvents === this._previousCalendarEvents) {
             return;
         }
 
-        remoteControlService.updateStatus(newSpotTvState);
+        remoteControlService.updateStatus({
+            ...newSpotTvState,
+            calendar: newCalendarEvents
+        });
 
         if (this._previousSpotTvState.inMeeting !== newSpotTvState.inMeeting
             && newSpotTvState.inMeeting) {
@@ -36,5 +42,6 @@ export default class RemoteControlServiceSubscriber {
         }
 
         this._previousSpotTvState = newSpotTvState;
+        this._previousCalendarEvents = newCalendarEvents;
     }
 }
