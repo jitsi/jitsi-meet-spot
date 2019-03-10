@@ -61,8 +61,8 @@ export function getDefaultMeetingDomain(state) {
  */
 export function getDesktopSharingFramerate(state) {
     return {
-        max: state.config.MEDIA.SS_MAX_FPS || 60,
-        min: state.config.MEDIA.SS_MIN_FPS || 5
+        max: state.config.MEDIA.SS_MAX_FPS,
+        min: state.config.MEDIA.SS_MIN_FPS
     };
 }
 

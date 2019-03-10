@@ -1,13 +1,20 @@
-/* global process */
-
 /**
- * FIXME: I wanted to keep the local environment file to place overrides for
- * development while also making the config dynamically loadable. The only way
- * I could find to do this reliably was by placing the config on a global...
+ * Overrides for the default configuration for Spot. See file default-config.js
+ * for all the default values which are used.
  */
 window.JitsiMeetSpotConfig = {
+    /**
+     * Configuration object for referencing external links and applications that
+     * provide additional support for Spot.
+     */
     ADVERTISEMENT: {
-        APP_NAME: process.env.APP_NAME
+
+        /**
+         * The name of an application that enhances the functionality of Spot.
+         *
+         * @type {string}
+         */
+        APP_NAME: undefined
     },
 
     /**
@@ -22,9 +29,12 @@ window.JitsiMeetSpotConfig = {
 
             /**
              * The Google application client id to be used for interacting with
-             * a Google Calendar.
+             * a Google Calendar. Please see the docs directory for a guide on
+             * creating a calendar integration application.
+             *
+             * @type {string}
              */
-            CLIENT_ID: process.env.GOOGLE_CLIENT_ID || ''
+            CLIENT_ID: undefined
         },
 
         /**
@@ -32,33 +42,41 @@ window.JitsiMeetSpotConfig = {
          */
         OUTLOOK: {
 
-            /*
+            /**
              * The Microsoft application client id to be used for interacting
-             * with an Outlook calendar.
+             * with an Outlook calendar. Please see the docs directory for a
+             * guide on creating a calendar integration application.
+             *
+             * @type {string}
              */
-            CLIENT_ID: process.env.OUTLOOK_CLIENT_ID || ''
+            CLIENT_ID: undefined
         }
     },
 
     /**
      * The avatar image to display in the meetings list when a participant of
      * the meeting has no gravatar configured.
+     *
+     * @type {string}
      */
-    DEFAULT_AVATAR_URL: process.env.DEFAULT_AVATAR_URL
-        || 'https://meet.jit.si/images/avatar.png',
+    DEFAULT_AVATAR_URL: undefined,
 
     /**
-     * The app background image to display. An empty string will load no
-     * background image and instead display a solid color.
+     * The app background image to display. By default a solid color is
+     * displayed as the background.
+     *
+     * @type {string}
      */
-    DEFAULT_BACKGROUND_IMAGE_URL: process.env.DEFAULT_BACKGROUND_IMAGE_URL
-        || '',
+    DEFAULT_BACKGROUND_IMAGE_URL: undefined,
 
     /**
-     * The domain to proceed to when a meeting name is submitted with a base
-     * url.
+     * The domain to proceed to when a meeting name is submitted without a base
+     * url. This value should be set to the domain of a jitsi-meet deployment;
+     * for example, set it to "meet.jit.si."
+     *
+     * @type {string}
      */
-    DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
+    DEFAULT_MEETING_DOMAIN: undefined,
 
     /**
      * Configuration object related to printing, collecting, and reporting of
@@ -67,9 +85,12 @@ window.JitsiMeetSpotConfig = {
     LOGGING: {
 
         /**
-         * Currently logging is implemented to send logs to an endpoint.
+         * The URL to which to post client logs. Currently logging is only
+         * implemented to send logs to an endpoint as an array of objects.
+         *
+         * @type {string}
          */
-        ENDPOINT: process.env.LOGGING_ENDPOINT || ''
+        ENDPOINT: undefined
     },
 
     /**
@@ -80,14 +101,18 @@ window.JitsiMeetSpotConfig = {
         /**
          * The maximum frames per second the browser should be allowed to
          * capture during wired and wireless screensharing.
+         *
+         * @type {number}
          */
-        SS_MAX_FPS: process.env.SS_MAX_FPS,
+        SS_MAX_FPS: undefined,
 
         /**
          * The minumum frames per second the browser should capture during
          * wired and wireless screensharing.
+         *
+         * @type {number}
          */
-        SS_MIN_FPS: process.env.SS_MIN_FPS
+        SS_MIN_FPS: undefined
     },
 
     /**
@@ -96,30 +121,34 @@ window.JitsiMeetSpotConfig = {
     ULTRASOUND: {
 
         /**
-         * The location of the quiet-emscripten.js file necessary for
+         * The URL pathname of the quiet-emscripten.js file necessary for
          * lib-quiet-js to process ultrasound.
+         *
+         * @type {string}
          */
-        EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH || '/dist/',
+        EMSCRIPTEN_PATH: undefined,
 
         /**
-         * The location of the quiet-emscriptem.js.mem file used by
+         * The URL pathname of the quiet-emscriptem.js.mem file used by
          * lib-quiet-js's emscripten.
+         *
+         * @type {string}
          */
-        MEM_INITIALIZER_PATH:
-            process.env.ULTRASOUND_MEM_INITIALIZER_PATH || '/dist/',
+        MEM_INITIALIZER_PATH: undefined,
 
         /**
          * A string to convert to regex which will be run against the user
          * agent to determine if a remote control should play ultrasound.
+         *
+         * @type {string}
          */
-        SUPPORTED_ENV_REGEX:
-            typeof process.env.ULTRASOUND_SUPPORT_ENV === 'undefined'
-                ? 'ipad'
-                : process.env.ULTRASOUND_SUPPORT_ENV,
+        SUPPORTED_ENV_REGEX: undefined,
 
         /**
          * The amount of time in milliseconds to wait until playing an
          * ultrasound message after a message has finished playing.
+         *
+         * @type {number}
          */
         TRANSMISSION_DELAY: undefined
     },
@@ -134,11 +163,10 @@ window.JitsiMeetSpotConfig = {
      * the jitsi UI.
      */
     XMPP_CONFIG: {
-        bosh: process.env.XMPP_BOSH || 'https://meet.jit.si/http-bind',
+        bosh:  undefined,
         hosts: {
-            domain: process.env.XMPP_HOSTS_DOMAIN || 'meet.jit.si',
-            muc: process.env.XMPP_HOSTS_MUC_URL
-                || 'conference.meet.jit.si'
+            domain: undefined,
+            muc: undefined
         }
     }
 };

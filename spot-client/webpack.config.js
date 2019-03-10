@@ -10,7 +10,7 @@ const webpack = require('webpack');
 const mode = process.env.NODE_ENV === 'production'
     ? 'production' : 'development';
 
-const app = {
+module.exports = {
     devServer: {
         compress: true,
         contentBase: path.join(__dirname, '/'),
@@ -74,10 +74,17 @@ const app = {
             {
                 from: './static',
                 to: '.'
+            },
+            {
+                from: './config.js',
+                to: './config'
             }
         ]),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        new Dotenv({
+            systemvars: true // Respect existing environment variables
         }),
         new WriteFilePlugin()
     ],
@@ -92,20 +99,3 @@ const app = {
         ]
     }
 };
-
-const config = {
-    entry: './config',
-    mode,
-    output: {
-        filename: 'config.js',
-        path: path.resolve(__dirname, 'dist/config')
-    },
-    plugins: [
-        new Dotenv({
-            systemvars: true // Respect existing environment variables
-        }),
-        new WriteFilePlugin()
-    ]
-};
-
-module.exports = [ app, config ];

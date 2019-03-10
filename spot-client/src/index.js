@@ -9,7 +9,8 @@ import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
 import reducers, {
     getDesktopSharingFramerate,
-    getLoggingEndpoint
+    getLoggingEndpoint,
+    setDefaultValues
 } from 'common/app-state';
 import {
     RemoteControlServiceSubscriber,
@@ -29,7 +30,7 @@ const store = createStore(
     reducers,
     {
         config: {
-            ...window.JitsiMeetSpotConfig
+            ...setDefaultValues(window.JitsiMeetSpotConfig)
         },
         ...getPersistedState()
 
