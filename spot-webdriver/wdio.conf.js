@@ -2,38 +2,16 @@
 
 const path = require('path');
 
-const CHROMEDRIVER_SHUTDOWN_WAIT = 1000;
-
 exports.config = {
-    /**
-     * Waits momentarily to give wdio-selenium-standalone time to close down
-     * webdriver sessions. This is a workaround chromedriver instances not
-     * being terminated.
-     *
-     * @returns {void}
-     */
-    after() {
-        browser.pause(CHROMEDRIVER_SHUTDOWN_WAIT);
-    },
+    // How many fails should trigger stopping the tests. Zero skips stopping.
+    bail: 0,
 
-    /**
-     * Ends the current webdriver session and closes all browsers. This method
-     * is normally called immediately after webdriver.io has closed the session,
-     * but wdio-selenium-standalone  can fail to shut down chromedriver and
-     * calling close again is a workaround. The async/await declaration is
-     * necessary in the context of this method call.
-     *
-     * @returns {void}
-     */
-    async afterSession() {
-        await browser.end().pause(CHROMEDRIVER_SHUTDOWN_WAIT);
-    },
-
+    // Use multi-remote support for one Spot-TV and one Spot-Remote.
     capabilities: {
         spotBrowser: {
-            desiredCapabilities: {
+            capabilities: {
                 browserName: 'chrome',
-                chromeOptions: {
+                'goog:chromeOptions': {
                     args: [
                         'use-fake-device-for-media-stream',
                         'use-fake-ui-for-media-stream'
@@ -42,7 +20,7 @@ exports.config = {
             }
         },
         remoteControlBrowser: {
-            desiredCapabilities: {
+            capabilities: {
                 browserName: 'chrome'
             }
         }
@@ -50,7 +28,15 @@ exports.config = {
 
     framework: 'jasmine',
 
+    logLevel: 'info',
+
+    reporters: [ 'dot' ],
+
+    // Use selenium-standalone to automatically download and launch selenium.
     services: [ 'selenium-standalone' ],
 
-    specs: [ path.resolve(__dirname, 'specs/*.spec.js') ]
+    specs: [ path.resolve(__dirname, 'specs/*.spec.js') ],
+
+    // Default wait time for all webdriverio wait-related functions.
+    waitforTimeout: 10000
 };

@@ -1,5 +1,3 @@
-const constants = require('../constants');
-
 const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
@@ -28,12 +26,10 @@ class RemoteControlPage extends PageObject {
      * @returns {MeetingInput}
      */
     getMeetingInput() {
-        this.driver.waitForVisible(
-            MEET_NOW_BUTTON,
-            constants.VISIBILITY_WAIT
-        );
+        const meetNowButton = this.driver.$(MEET_NOW_BUTTON);
 
-        this.driver.click(MEET_NOW_BUTTON);
+        meetNowButton.waitForDisplayed();
+        meetNowButton.click(MEET_NOW_BUTTON);
 
         return this.meetingInput;
     }

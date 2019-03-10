@@ -26,9 +26,8 @@ class MeetingPage extends PageObject {
      * @returns {string}
      */
     getMeetingName() {
-        const meetingUrl = this.driver.getAttribute(
-            MEETING_IFRAME,
-            'src');
+        const iframe = this.driver.$(MEETING_IFRAME);
+        const meetingUrl = iframe.getAttribute('src');
         const urlParts = new URL(meetingUrl);
 
         return urlParts.pathname.split('/').pop();
