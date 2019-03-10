@@ -12,7 +12,7 @@ const browser = Bowser.getParser(window.navigator.userAgent);
 export function isAutoFocusSupported() {
     const { model } = browser.getPlatform();
 
-    return model === 'iPhone' || model === 'iPad';
+    return model !== 'iPhone' && model !== 'iPad';
 }
 
 /**
