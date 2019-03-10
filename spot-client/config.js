@@ -163,7 +163,7 @@ window.JitsiMeetSpotConfig = {
      * the jitsi UI.
      */
     XMPP_CONFIG: {
-        bosh:  undefined,
+        bosh: undefined,
         hosts: {
             domain: undefined,
             muc: undefined
