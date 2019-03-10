@@ -38,5 +38,11 @@ exports.config = {
     specs: [ path.resolve(__dirname, 'specs/*.spec.js') ],
 
     // Default wait time for all webdriverio wait-related functions.
-    waitforTimeout: 10000
+    waitforTimeout: 10000,
+
+    // Workaround for chrome and chromedriver instances not getting cleaned up
+    // automatically.
+    after: () => {
+        browser.deleteSession();
+    }
 };
