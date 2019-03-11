@@ -28,7 +28,10 @@ class MeetingInput extends PageObject {
      */
     setMeetingName(meetingName) {
         this.waitForVisible();
-        this.driver.setValue(INPUT, meetingName);
+
+        const meetingNameEntry = this.driver.$(INPUT);
+
+        meetingNameEntry.setValue(meetingName);
     }
 
     /**
@@ -37,7 +40,9 @@ class MeetingInput extends PageObject {
      * @returns {void}
      */
     submit() {
-        this.driver.click(SUBMIT_BUTTON);
+        const submitButton = this.driver.$(SUBMIT_BUTTON);
+
+        submitButton.click(SUBMIT_BUTTON);
     }
 
     /**

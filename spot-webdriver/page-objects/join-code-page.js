@@ -27,16 +27,19 @@ class JoinCodePage extends PageObject {
      * @returns {void}
      */
     submitCode(code) {
-        this.driver.waitForVisible(
-            JOIN_CODE_INPUT,
-            constants.VISIBILITY_WAIT
-        );
+        const joinCodeInput = this.driver.$(JOIN_CODE_INPUT);
+
+        joinCodeInput.waitForDisplayed();
 
         Array.prototype.forEach.call(code, character => {
             this.driver.keys(character);
         });
 
-        this.driver.click(SUBMIT_BUTTON);
+        const submitButton = this.driver.$(SUBMIT_BUTTON);
+
+        submitButton.waitForDisplayed();
+
+        submitButton.click();
     }
 
     /**

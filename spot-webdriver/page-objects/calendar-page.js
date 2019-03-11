@@ -27,12 +27,11 @@ class CalendarPage extends PageObject {
      * @returns {string}
      */
     getJoinCode() {
-        this.driver.waitForVisible(
-            JOIN_CODE,
-            constants.VISIBILITY_WAIT
-        );
+        const joinCodeDisplay = this.driver.$(JOIN_CODE);
 
-        const fullText = this.driver.getText(JOIN_CODE);
+        joinCodeDisplay.waitForDisplayed();
+
+        const fullText = joinCodeDisplay.getText();
         const parts = fullText.split(' ');
 
         return parts[parts.length - 1];

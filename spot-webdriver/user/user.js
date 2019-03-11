@@ -20,54 +20,6 @@ class User {
         this.joinCodePage = new JoinCodePage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
-
-        this.driver.getCurrentTabId()
-            .then(tabId => {
-                this.startTab = tabId;
-            });
-    }
-
-    /**
-     * Closes all tabs or windows opened by the user expect the one which should
-     * be displaying Spot.
-     *
-     * @returns {void}
-     */
-    closeAnyRemoteControls() {
-        const tabsAfterClick = this.driver.getTabIds();
-
-        tabsAfterClick.forEach(tabId => {
-            if (tabId === this.startTab) {
-                return;
-            }
-
-            this.driver.switchTab(tabId);
-            this.driver.close(this.startTab);
-        });
-    }
-
-    /**
-     * Switches focus onto the tab with the Spot instance.
-     *
-     * @returns {void}
-     */
-    focusOnStartingTab() {
-        this.focusOnTabWithId(this.startTab);
-    }
-
-    /**
-     * Switches driver focus onto the tab with the specified id so any further
-     * driver actions will take place in the context of that tab.
-     *
-     * @param {string} tabId - The tab to focus on.
-     * @returns {void}
-     */
-    focusOnTabWithId(tabId) {
-        this.driver.waitUntil(() => {
-            this.driver.switchTab(tabId);
-
-            return this.driver.getCurrentTabId() === tabId;
-        }, 3000, 'Failed to switch driver focus');
     }
 
     /**

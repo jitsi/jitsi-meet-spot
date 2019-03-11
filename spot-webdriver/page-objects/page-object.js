@@ -1,5 +1,3 @@
-const constants = require('../constants');
-
 /**
  * The base class for page objects from which all other page objects should
  * inherit from.
@@ -16,16 +14,14 @@ class PageObject {
     }
 
     /**
-     * Waits for this page object to be visible on the browser. Will error if
-     * it is not visible within {@code VISIBILITY_WAIT}.
+     * Waits for this page object to be visible on the browser.
      *
      * @returns {void}
      */
     waitForVisible() {
-        this.driver.waitForVisible(
-            this.rootSelector,
-            constants.VISIBILITY_WAIT
-        );
+        const rootElement = this.driver.$(this.rootSelector);
+
+        rootElement.waitForExist();
     }
 }
 
