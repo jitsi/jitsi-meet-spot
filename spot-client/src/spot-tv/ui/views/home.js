@@ -20,6 +20,7 @@ import {
 } from 'common/utils';
 
 import {
+    FullscreenToggle,
     SettingsButton,
     WiredScreenshareChangeListener
 } from './../components';
@@ -121,6 +122,7 @@ export class Home extends React.Component {
                         </div> }
                 </div>
                 <div className = 'settings_cog'>
+                    <FullscreenToggle />
                     <SettingsButton />
                 </div>
             </WiredScreenshareChangeListener>
