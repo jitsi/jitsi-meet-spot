@@ -273,16 +273,6 @@ class RemoteControlService {
     }
 
     /**
-     * Notifies all Spot-Remotes about a change in known calendar events.
-     *
-     * @param {Array<Object>} events - The calendar events for Spot-TV.
-     * @returns {void}
-     */
-    notifyCalendarStatus(events) {
-        this.xmppConnection.updateStatus('calendar', events);
-    }
-
-    /**
      * Notifies all Spot-Remotes of the current join code for a Spot-TV.
      *
      * @param {string} joinCode - The join code necessary for a user to connect

@@ -233,14 +233,12 @@ export class Home extends React.Component {
                 const {
                     dispatch,
                     events: previousEvents,
-                    hasFetchedEvents,
-                    remoteControlService
+                    hasFetchedEvents
                 } = this.props;
 
                 if (!hasFetchedEvents
                     || hasUpdatedEvents(previousEvents, events)) {
                     dispatch(setCalendarEvents(events));
-                    remoteControlService.notifyCalendarStatus(events);
                 }
             });
     }
