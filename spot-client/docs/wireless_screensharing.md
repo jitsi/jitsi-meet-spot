@@ -4,7 +4,7 @@ Last updated: March 2019
 
 Spot supports a Spot-Remote being able to share a desktop stream into a Jitsi-Meet meeting without being physically connected to the Spot-TV; this feature is known as wireless screensharing. The technical implementation for wireless screensharing requires establishing a peer connection between the Spot-Remote and the Jitsi-Meet meeting participant, and there are several handoff stages for offers, answers, and various other updates. This document exists to provide an overview of those handoffs.
 
-Diagrams: https://sketchboard.me/VBo2MpWJlRwl#/
+Diagrams: https://sketchboard.me/lBuHYsJuvTnC#/
 
 ## Phase 0: The setup
 1. Spot-TV and Spot-Remote each have their own instances of RemoteControlService and XmppConnection.
