@@ -1,37 +1,39 @@
 # Implementation overview of Wireless Screensharing
 
-Last updated: January 2019
+Last updated: March 2019
 
-Spot supports a remote control being able to share a desktop stream into a Jitsi-Meet meeting without being physically connected to the Spot machine; this feature is known as wireless screensharing. The technical implementation for wireless screensharing requires establishing a peer connection between the remote control and the Jitsi-Meet meeting participant, and there are several handoff stages for offers, answers, and various other updates. This document exists to provide an overview of those handoffs.
+Spot supports a Spot-Remote being able to share a desktop stream into a Jitsi-Meet meeting without being physically connected to the Spot-TV; this feature is known as wireless screensharing. The technical implementation for wireless screensharing requires establishing a peer connection between the Spot-Remote and the Jitsi-Meet meeting participant, and there are several handoff stages for offers, answers, and various other updates. This document exists to provide an overview of those handoffs.
 
 Diagrams: https://sketchboard.me/VBo2MpWJlRwl#/
 
 ## Phase 0: The setup
-1. Spot and the remote control have their own instances of XmppConnection, RemoteControlService, and the degelate.
-1. XmppConnection serves as the communication bus between a remote control and Spot to send messages.
-1. RemoteControlService serves as the facade for the app to interact with XmppConnection, and XmppConnection is instantiated by RemoteControlService. During instantiation callbacks are passed into XmppConnection that allow XmppConnection to defer parsing of incoming messages to a delegate.
-1. On app bootstrapping, RemoteControlService is passed in a delegate, which knows how to process incoming messages, create replies (acks), and modify app state. XmppConnection when receiving messages will call its callbacks, which call into RemoteControlService, which call into the delegate.
+1. Spot-TV and Spot-Remote each have their own instances of RemoteControlService and XmppConnection.
+1. XmppConnection serves as the communication bus between Spot-TV and Spot-Remote to send messages. It controls the connection to the MUC, which both the Spot-Remote and Spot-TV join so they message each other.
+1. RemoteControlService is the facade for the Spot app to interact with XmppConnection, and XmppConnection is instantiated by RemoteControlService. During instantiation of XmppConnection, RemoteControlService passes in callbacks to XmppConnection that allow XmppConnection to defer parsing of incoming IQs and private messages.
 
-## Phase 1: Remote control starts screensharing
-1. On the remote control, RemoteControlMenu kicks off the wireless screensharing flow by calling RemoteControlService.
-1. RemoteControlService creates an instance of ProxyConnectionService. ProxyConnectionService is used to establish a direct connection between the remote control and the Jitsi-Meet meeting participant. At this point callbacks are passed into ProxyConnectionService that give it indirect access to XmppConnection so it can send updates as it needs to Spot, which then will send updates to Jitsi-Meet. The remote control's jid is also passed in so that all outgoing messages can be replied and routed to the initiating remote control.
-1. RemoteControlService passes the ProxyConnectionService to the delegate, as the delegate knows how to handle ProxyConnectionService related updates.
-1. The delegate starts the ProxyConnectionService connection.
-1. ProxyConnectionService starts sending connection related messages using callbacks provided during instantiation that call into RemoteControlService which then call into XmppConnection.
+## Phase 1: Spot-Remote starts screensharing
+1. On Spot-Remote, RemoteControlService is called to kick off the wireless screensharing flow.
+1. RemoteControlService creates an instance of ProxyConnectionService. ProxyConnectionService is used to establish and maintain a direct connection between Spot-Remote and the Jitsi-Meet participant. At this point callbacks are passed into ProxyConnectionService that give it indirect access to XmppConnection so it can send updates as it needs to Spot-TV, which then will send updates to Jitsi-Meet via the JitsiMeetExternalAPI. The Spot-Remote's MUC jid are also passed in to ProxyConnection so that it can filter all messages received from the MUC and act on the screensharing related messages sent directly to the Spot-Remote.
+1. RemoteControlService holds a references to the ProxyConnectionService.
+1. RemoteControlService starts the ProxyConnectionService connection flow.
+1. ProxyConnectionService starts sending connection related messages using callbacks provided during instantiation that call into RemoteControlService which then call into XmppConnection. XmppConnection sends those messages into the MUC to Spot-TV.
 
-## Phase 2: Spot passes messages on
-1. Spot's XmppConnection instance receives message from the remote control about the desired proxy connection.
-1. Spot's XmppConnection uses its callbacks, which call into RemoteControlService and then the delegate.
-1. Spot's delegate reads app state to get access to the JitsiMeetExternalApi (iframe api) instance in order to pass the messages into Jitsi-Meet.
+## Phase 2: Spot-TV passes messages on
+1. Spot-TV's XmppConnection instance receives message from the Spot-Remote about the desired proxy connection.
+1. Spot-TV's XmppConnection uses its callbacks, which call into RemoteControlService, and notify any in-app listeners which are registered for incoming messages.
+1. At this point Spot-TV's MeetingFrame should have already registered listeners for messages from RemoteControlService and those callbacks should be invoked.
+1. Spot-TV's MeetingFrame passes the messages into Jitsi-Meet through the JitsiMeetExternalApi.
 
-## Phase 3: Jitsi-meet responds
-1. Jitsi-Meet processes the messages from the remote control, kicking off its own screensharing flow. It likely creates its own ProxyConnectionService.
-1. Jitsi-Meet sends messages back through the JitsiMeetExternalApi. The messages include the remote control jid to pass the message to.
-1. A listener in the MeetingFrame view is invoked and calls into RemoteControlService to pass along messages to the appropriate remote control jid.
-1. RemoteControlService calls into XmppConnection to pass the messages.
+## Phase 3: Jitsi-Meet responds
+1. Jitsi-Meet processes the messages from Spot-Remote by kicking off its own screensharing flow. It likely creates its own ProxyConnectionService.
+1. Jitsi-Meet sends messages back through the JitsiMeetExternalApi to Spot-TV. The messages include the Spot-Remote jid.
+1. Jitsi-Meet's JitsiMeetExternalApi messages trigger a callback in Spot-TV's MeetingFrame.
+1. Spot-TV's MeetingFrame calls into RemoteControlService to pass along the messages to the appropriate Spot-Remote.
+1. RemoteControlService calls into XmppConnection to pass the messages to the appropriate Spot-Remote.
 
-## Phase 4: Proxy connection established
-1. The remote control's XmppConnection receives the the messages.
-1. XmppConnection invokes callbacks, set by the RemoteControlService, which route the messages into the delegate.
-1. The delegate parses the messages and passes them into remote control instance of ProxyConnectionService.
-1. As messages are passed back and forth, eventually a direct connection between the remote control and the Jitsi-Meet meeting participant is established. Through this connection the remote control is able to send a desktop stream.
+## Phase 4: Proxy connection established between Spot-Remote and Jitsi-Meet participant
+1. Spot-Remote's XmppConnection receives the the messages from Spot-TV, which were originally sent by Jitsi-Meet.
+1. Spot-Remote's XmppConnection invokes callbacks registered by the RemoteControlService.
+1. Spot-Remote's RemoteControlService passes the messages to its instance of ProxyConnectionService.
+1. As messages are passed back and forth, between Spot-Remote and Jitsi-Meet participant, eventually a direct connection between the Spot-Remote and the Jitsi-Meet participant is established.
+1. Through the established connection Spot-Remote sends its desktop stream to the Jitsi-Meet participant to use as a screensharing source.
