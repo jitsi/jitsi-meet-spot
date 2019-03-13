@@ -68,6 +68,9 @@ export default class XmppConnection {
             null,
             null,
             {
+                p2p: {
+                    useStunTurn: true
+                },
                 ...this.options.configuration,
                 bosh:
                     `${this.options.configuration.bosh}?room=${roomName}`
@@ -354,6 +357,15 @@ export default class XmppConnection {
         this.room.connection.send(ack);
 
         return true;
+    }
+
+    /**
+     * Returns the underlying {@link JitsiConnection} instance.
+     *
+     * @returns {JitsiMeetJS.JitsiConnection}
+     */
+    getJitsiConnection() {
+        return this.xmppConnection;
     }
 
     /**
