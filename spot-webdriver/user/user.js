@@ -1,4 +1,5 @@
 const CalendarPage = require('../page-objects/calendar-page');
+const InMeetingPage = require('../page-objects/spot-remote-in-meeting-page');
 const JoinCodePage = require('../page-objects/join-code-page');
 const MeetingPage = require('../page-objects/meeting-page');
 const RemoteControlPage = require('../page-objects/remote-control-page');
@@ -17,6 +18,7 @@ class User {
         this.driver = driver;
 
         this.calendarPage = new CalendarPage(this.driver);
+        this.inMeetingPage = new InMeetingPage(this.driver);
         this.joinCodePage = new JoinCodePage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
@@ -60,6 +62,16 @@ class User {
      */
     getRemoteControlPage() {
         return this.remoteControlPage;
+    }
+
+    /**
+     * Returns an instance of {@code InMeetingPage} which wraps interactions
+     * with the Spot-Remote view when connected to a Spot-TV in a meeting.
+     *
+     * @returns {InMeetingPage}
+     */
+    getInMeetingPage() {
+        return this.inMeetingPage;
     }
 }
 
