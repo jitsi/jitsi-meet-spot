@@ -10,6 +10,8 @@ export default class ScreenshareConnection {
      * Initializes a new {@code ScreenshareConnection} instance.
      *
      * @param {Object} options - Configuration to initialize with.
+     * @param {JitsiConnection} options.jitsiConnection - The JitsiConnection instance which will be
+     * used to fetch TURN credentials.
      * @param {Object} options.mediaConfiguration - Describes how the desktop
      * sharing source should be captured.
      * @param {Object} options.mediaConfiguration.desktopSharingFrameRate - The
@@ -44,6 +46,7 @@ export default class ScreenshareConnection {
 
         this._proxyConnectionService
             = new JitsiMeetJS.ProxyConnectionService({
+                jitsiConnection: options.jitsiConnection,
                 onConnectionClosed: () => this.options.onConnectionClosed(),
                 onSendMessage: (to, data) => this.options.sendMessage(to, data),
                 onRemoteStream() { /** no-op */ }

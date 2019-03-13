@@ -449,6 +449,11 @@ class RemoteControlService {
                 this._wirelessScreensharingConfiguration || {},
 
             /**
+             * The {@code JitsiConnection} instance will be used to fetch TURN credentials.
+             */
+            jitsiConnection: this.xmppConnection.getJitsiConnection(),
+
+            /**
              * Callback invoked when the connection has been closed
              * automatically. Triggers cleanup of {@code ScreenshareService}.
              *
