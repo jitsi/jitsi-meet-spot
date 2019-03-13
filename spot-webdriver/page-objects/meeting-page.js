@@ -1,5 +1,7 @@
 const { URL } = require('url');
 
+const constants = require('../constants');
+
 const PageObject = require('./page-object');
 
 const MEETING_IFRAME = '#jitsiConferenceFrame0';
@@ -31,6 +33,19 @@ class MeetingPage extends PageObject {
         const urlParts = new URL(meetingUrl);
 
         return urlParts.pathname.split('/').pop();
+    }
+
+    /**
+     * Waits for the jitsi meeting to be displayed.
+     *
+     * @returns {void}
+     */
+    waitForMeetingJoined() {
+        this.driver.$(MEETING_IFRAME)
+            .waitForDisplayed(constants.MEETING_LOAD_WAIT);
+
+        this.driver.$('.loading-curtain')
+            .waitForExist(constants.MEETING_LOAD_WAIT, true);
     }
 }
 

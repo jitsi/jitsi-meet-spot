@@ -113,6 +113,9 @@ export class InCall extends React.Component {
                         iconName = 'screen_share'
                         label = 'Share Content'
                         onClick = { this._onToggleScreenshare }
+                        qaId = {
+                            screensharing ? 'stop-share' : 'start-share'
+                        }
                         subIcon = { this._renderScreenshareSubIcon() } />
                     <NavButton
                         className = 'hangup'

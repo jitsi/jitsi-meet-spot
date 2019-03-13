@@ -21,7 +21,12 @@ exports.config = {
         },
         remoteControlBrowser: {
             capabilities: {
-                browserName: 'chrome'
+                browserName: 'chrome',
+                'goog:chromeOptions': {
+                    args: [
+                        'auto-select-desktop-capture-source=Entire screen'
+                    ]
+                }
             }
         }
     },

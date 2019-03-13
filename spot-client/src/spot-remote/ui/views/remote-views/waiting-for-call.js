@@ -110,7 +110,8 @@ class WaitingForCallView extends React.Component {
                         active = { activeTab === 'share' }
                         iconName = 'screen_share'
                         label = 'Share Content'
-                        onClick = { this._onSetScreenshareSelectActive } />
+                        onClick = { this._onSetScreenshareSelectActive }
+                        qaId = 'share-content' />
                 </NavContainer>
             </div>
         );
