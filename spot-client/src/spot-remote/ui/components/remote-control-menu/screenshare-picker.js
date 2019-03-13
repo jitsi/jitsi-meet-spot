@@ -263,8 +263,8 @@ export class ScreensharePicker extends React.Component {
                     { ctaTitle }
                     <button
                         className = 'cta-button stop'
-                        onClick = { this.props.onStopScreensharing }
-                        data-qa-id = 'stop-share-button'>
+                        data-qa-id = 'stop-share-button'
+                        onClick = { this.props.onStopScreensharing }>
                         Stop sharing
                     </button>
                 </div>
