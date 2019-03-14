@@ -3,6 +3,8 @@
 const path = require('path');
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
+const PATH_TO_FAKE_VIDEO
+    = path.resolve(__dirname, 'resources/static-image.y4m');
 
 exports.config = {
     // How many fails should trigger stopping the tests. Zero skips stopping.
@@ -16,7 +18,8 @@ exports.config = {
                 'goog:chromeOptions': {
                     args: [
                         'use-fake-device-for-media-stream',
-                        'use-fake-ui-for-media-stream'
+                        'use-fake-ui-for-media-stream',
+                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`
                     ]
                 }
             }
