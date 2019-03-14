@@ -14,6 +14,7 @@
         "eslint-plugin-import": "2.16.0",
         "eslint-plugin-jsdoc": "4.1.0",
         "eslint-plugin-react": "7.12.4",
+        "screen-info": "1.0.1",
         "webdriverio": "5.7.2"
     },
     "name": "spot-webdriver",

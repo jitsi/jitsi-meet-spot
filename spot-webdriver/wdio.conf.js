@@ -1,6 +1,10 @@
 /* global __dirname */
 
 const path = require('path');
+const screen = require('screen-info');
+
+const DESKTOP_SOURCE_NAME
+    = screen.all().length > 1 ? 'Screen 1' : 'Entire screen';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
 const PATH_TO_FAKE_VIDEO
@@ -29,7 +33,7 @@ exports.config = {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
                     args: [
-                        'auto-select-desktop-capture-source=Entire screen'
+                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`
                     ]
                 }
             }
