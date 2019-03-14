@@ -1,6 +1,7 @@
 /* global remoteControlBrowser, spotBrowser */
 
-const User = require('./user');
+const SpotTV = require('./spot-tv-user');
+const SpotRemote = require('./spot-remote-user');
 
 /**
  * The current webdriver.io configuration creates two browser drivers. Both
@@ -8,27 +9,26 @@ const User = require('./user');
  * the tests.
  */
 
-const remoteControlUser = new User(remoteControlBrowser);
-const spotUser = new User(spotBrowser);
+const spotRemote = new SpotRemote(remoteControlBrowser);
+const spotTV = new SpotTV(spotBrowser);
 
 module.exports = {
     /**
-     * Returns an instance of {@code User} that can be used to interact with
-     * an instance of Spot.
+     * Returns an instance of {@code SpotTV} which is the main Spot screen.
      *
-     * @returns {User}
+     * @returns {SpotTV}
      */
-    getSpotUser() {
-        return spotUser;
+    getSpotTV() {
+        return spotTV;
     },
 
     /**
-     * Returns an instance of {@code User} that can be used to interact with
-     * an instance of a remote control.
+     * Returns an instance of {@code SpotRemote} which acts as the remote controller of
+     * {@code SpotTV}.
      *
-     * @returns {User}
+     * @returns {SpotRemote}
      */
-    getRemoteControlUser() {
-        return remoteControlUser;
+    getSpotRemote() {
+        return spotRemote;
     }
 };

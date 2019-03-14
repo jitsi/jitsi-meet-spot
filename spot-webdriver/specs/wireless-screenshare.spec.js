@@ -2,27 +2,27 @@ const remoteControlConnect = require('../flow-utils/remote-control-connect');
 
 describe('A Spot-Remote can screenshare wirelessly', () => {
     const userFactory = require('../user/user-factory');
-    const spotUser = userFactory.getSpotUser();
-    const remoteControlUser = userFactory.getRemoteControlUser();
+    const spotTV = userFactory.getSpotTV();
+    const spotRemote = userFactory.getSpotRemote();
 
     beforeEach(() => {
-        remoteControlConnect(spotUser, remoteControlUser);
+        remoteControlConnect(spotTV, spotRemote);
     });
 
     describe('with no wired screenshare setup', () => {
         it('from the waiting screen', () => {
-            const remoteControlPage = remoteControlUser.getRemoteControlPage();
+            const remoteControlPage = spotRemote.getRemoteControlPage();
 
             remoteControlPage.waitForVisible();
 
             remoteControlPage.startWirelessScreenshare();
 
-            const meetingPage = spotUser.getMeetingPage();
+            const meetingPage = spotTV.getMeetingPage();
 
             meetingPage.waitForVisible();
             meetingPage.waitForMeetingJoined();
 
-            const inMeetingPage = remoteControlUser.getInMeetingPage();
+            const inMeetingPage = spotRemote.getInMeetingPage();
 
             inMeetingPage.waitForScreensharingStateToBe(true);
             inMeetingPage.stopScreensharing();

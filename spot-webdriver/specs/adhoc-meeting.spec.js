@@ -2,15 +2,15 @@ const remoteControlConnect = require('../flow-utils/remote-control-connect');
 
 describe('Can start a meeting of any name', () => {
     const userFactory = require('../user/user-factory');
-    const spotUser = userFactory.getSpotUser();
-    const remoteControlUser = userFactory.getRemoteControlUser();
+    const spotTV = userFactory.getSpotTV();
+    const spotRemote = userFactory.getSpotRemote();
 
     beforeEach(() => {
-        remoteControlConnect(spotUser, remoteControlUser);
+        remoteControlConnect(spotTV, spotRemote);
     });
 
     it('from the remote control', () => {
-        const remoteControlPage = remoteControlUser.getRemoteControlPage();
+        const remoteControlPage = spotRemote.getRemoteControlPage();
 
         remoteControlPage.waitForVisible();
 
@@ -19,7 +19,7 @@ describe('Can start a meeting of any name', () => {
 
         meetingInput.submitMeetingName(testMeetingName);
 
-        const meetingPage = spotUser.getMeetingPage();
+        const meetingPage = spotTV.getMeetingPage();
 
         meetingPage.waitForVisible();
 
