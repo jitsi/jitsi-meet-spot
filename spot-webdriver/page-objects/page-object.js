@@ -25,6 +25,22 @@ class PageObject {
     }
 
     /**
+     * A shortcut for first selecting an {@code Element} and then calling {@code waitForDisplayed}.
+     *
+     * @param {string | Function} selector - A selector passed to the driver in order to find
+     * the element.
+     * @param {number} [waitTime] - Optional wait time given in milliseconds.
+     * @returns {Element} - Returns the selected element for future use.
+     */
+    waitForElementDisplayed(selector, waitTime) {
+        const element = this.select(selector);
+
+        element.waitForDisplayed(waitTime);
+
+        return element;
+    }
+
+    /**
      * Waits for this page object to be visible on the browser.
      *
      * @returns {void}

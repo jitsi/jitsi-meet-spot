@@ -27,17 +27,13 @@ class JoinCodePage extends PageObject {
      * @returns {void}
      */
     submitCode(code) {
-        const joinCodeInput = this.select(JOIN_CODE_INPUT);
-
-        joinCodeInput.waitForDisplayed();
+        this.waitForElementDisplayed(JOIN_CODE_INPUT);
 
         Array.prototype.forEach.call(code, character => {
             this.driver.keys(character);
         });
 
-        const submitButton = this.select(SUBMIT_BUTTON);
-
-        submitButton.waitForDisplayed();
+        const submitButton = this.waitForElementDisplayed(SUBMIT_BUTTON);
 
         submitButton.click();
     }

@@ -27,10 +27,7 @@ class CalendarPage extends PageObject {
      * @returns {string}
      */
     getJoinCode() {
-        const joinCodeDisplay = this.select(JOIN_CODE);
-
-        joinCodeDisplay.waitForDisplayed();
-
+        const joinCodeDisplay = this.waitForElementDisplayed(JOIN_CODE);
         const fullText = joinCodeDisplay.getText();
         const parts = fullText.split(' ');
 

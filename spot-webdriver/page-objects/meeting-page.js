@@ -41,8 +41,7 @@ class MeetingPage extends PageObject {
      * @returns {void}
      */
     waitForMeetingJoined() {
-        this.select(MEETING_IFRAME)
-            .waitForDisplayed(constants.MEETING_LOAD_WAIT);
+        this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
 
         this.select('.loading-curtain')
             .waitForExist(constants.MEETING_LOAD_WAIT, true);
