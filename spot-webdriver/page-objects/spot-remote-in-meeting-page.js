@@ -30,11 +30,11 @@ class SpotRemoteInMeetingPage extends PageObject {
     stopScreensharing() {
         this.waitForScreensharingStateToBe(true);
 
-        this.driver.$(STOP_SHARE_BUTTON).click();
+        this.select(STOP_SHARE_BUTTON).click();
 
         this.waitForSharePicker();
 
-        this.driver.$(STOP_SHARE_CONFIRM).click();
+        this.select(STOP_SHARE_CONFIRM).click();
     }
 
     /**
@@ -50,7 +50,7 @@ class SpotRemoteInMeetingPage extends PageObject {
         const shareButtonSelector
             = enabled ? STOP_SHARE_BUTTON : START_SHARE_BUTTON;
 
-        this.driver.$(shareButtonSelector)
+        this.select(shareButtonSelector)
             .waitForDisplayed(constants.REMOTE_COMMAND_WAIT);
     }
 
@@ -61,7 +61,7 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @returns {void}
      */
     waitForSharePicker() {
-        const picker = this.driver.$(SHARE_PICKER);
+        const picker = this.select(SHARE_PICKER);
 
         picker.waitForDisplayed();
     }

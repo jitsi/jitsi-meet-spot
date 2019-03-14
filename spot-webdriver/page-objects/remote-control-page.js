@@ -27,7 +27,7 @@ class RemoteControlPage extends PageObject {
      * @returns {MeetingInput}
      */
     getMeetingInput() {
-        const meetNowButton = this.driver.$(MEET_NOW_BUTTON);
+        const meetNowButton = this.select(MEET_NOW_BUTTON);
 
         meetNowButton.waitForDisplayed();
         meetNowButton.click(MEET_NOW_BUTTON);
@@ -42,7 +42,7 @@ class RemoteControlPage extends PageObject {
      * @returns {void}
      */
     startWirelessScreenshare() {
-        const shareContentButton = this.driver.$(SHARE_CONTENT_BUTTON);
+        const shareContentButton = this.select(SHARE_CONTENT_BUTTON);
 
         shareContentButton.waitForDisplayed();
         shareContentButton.click(SHARE_CONTENT_BUTTON);

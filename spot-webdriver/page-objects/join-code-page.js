@@ -27,7 +27,7 @@ class JoinCodePage extends PageObject {
      * @returns {void}
      */
     submitCode(code) {
-        const joinCodeInput = this.driver.$(JOIN_CODE_INPUT);
+        const joinCodeInput = this.select(JOIN_CODE_INPUT);
 
         joinCodeInput.waitForDisplayed();
 
@@ -35,7 +35,7 @@ class JoinCodePage extends PageObject {
             this.driver.keys(character);
         });
 
-        const submitButton = this.driver.$(SUBMIT_BUTTON);
+        const submitButton = this.select(SUBMIT_BUTTON);
 
         submitButton.waitForDisplayed();
 

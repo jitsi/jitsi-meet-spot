@@ -27,7 +27,7 @@ class CalendarPage extends PageObject {
      * @returns {string}
      */
     getJoinCode() {
-        const joinCodeDisplay = this.driver.$(JOIN_CODE);
+        const joinCodeDisplay = this.select(JOIN_CODE);
 
         joinCodeDisplay.waitForDisplayed();
 

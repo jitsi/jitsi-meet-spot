@@ -8,7 +8,7 @@ const MEETING_IFRAME = '#jitsiConferenceFrame0';
 const MEETING_VIEW = '[data-qa-id=meeting-view]';
 
 /**
- * A page object for interacting with the in-meeting view of Spot.
+ * A page object for interacting with the in-meeting view of Spot TV.
  */
 class MeetingPage extends PageObject {
     /**
@@ -28,7 +28,7 @@ class MeetingPage extends PageObject {
      * @returns {string}
      */
     getMeetingName() {
-        const iframe = this.driver.$(MEETING_IFRAME);
+        const iframe = this.select(MEETING_IFRAME);
         const meetingUrl = iframe.getAttribute('src');
         const urlParts = new URL(meetingUrl);
 
@@ -41,10 +41,10 @@ class MeetingPage extends PageObject {
      * @returns {void}
      */
     waitForMeetingJoined() {
-        this.driver.$(MEETING_IFRAME)
+        this.select(MEETING_IFRAME)
             .waitForDisplayed(constants.MEETING_LOAD_WAIT);
 
-        this.driver.$('.loading-curtain')
+        this.select('.loading-curtain')
             .waitForExist(constants.MEETING_LOAD_WAIT, true);
     }
 }
