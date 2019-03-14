@@ -30,7 +30,7 @@ exports.config = {
 
     logLevel: 'info',
 
-    reporters: [ 'dot' ],
+    reporters: [ 'spec' ],
 
     // Use selenium-standalone to automatically download and launch selenium.
     services: [ 'selenium-standalone' ],
