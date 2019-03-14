@@ -14,12 +14,23 @@ class PageObject {
     }
 
     /**
+     * Finds HTML element.
+     *
+     * @param {string | Function} selector - A selector passed to the driver in order to find
+     * the element.
+     * @returns {Element}
+     */
+    select(selector) {
+        return this.driver.$(selector);
+    }
+
+    /**
      * Waits for this page object to be visible on the browser.
      *
      * @returns {void}
      */
     waitForVisible() {
-        const rootElement = this.driver.$(this.rootSelector);
+        const rootElement = this.select(this.rootSelector);
 
         rootElement.waitForExist();
     }
