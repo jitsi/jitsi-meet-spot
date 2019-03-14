@@ -2,6 +2,8 @@
 
 const path = require('path');
 
+const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
+
 exports.config = {
     // How many fails should trigger stopping the tests. Zero skips stopping.
     bail: 0,
@@ -28,7 +30,7 @@ exports.config = {
 
     framework: 'jasmine',
 
-    logLevel: 'info',
+    logLevel: LOG_LEVEL,
 
     reporters: [ 'spec' ],
 
