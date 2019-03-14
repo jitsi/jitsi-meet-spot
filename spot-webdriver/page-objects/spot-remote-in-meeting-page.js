@@ -50,8 +50,7 @@ class SpotRemoteInMeetingPage extends PageObject {
         const shareButtonSelector
             = enabled ? STOP_SHARE_BUTTON : START_SHARE_BUTTON;
 
-        this.select(shareButtonSelector)
-            .waitForDisplayed(constants.REMOTE_COMMAND_WAIT);
+        this.waitForElementDisplayed(shareButtonSelector, constants.REMOTE_COMMAND_WAIT);
     }
 
     /**
@@ -61,9 +60,7 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @returns {void}
      */
     waitForSharePicker() {
-        const picker = this.select(SHARE_PICKER);
-
-        picker.waitForDisplayed();
+        this.waitForElementDisplayed(SHARE_PICKER);
     }
 }
 
