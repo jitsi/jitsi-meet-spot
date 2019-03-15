@@ -83,11 +83,15 @@ class ScreenshareInput extends React.Component {
                     Select screenshare input
                 </div>
                 <div>Please ensure no device is connected to the input</div>
-                <div className = 'setup-content'>
+                <div
+                    className = 'setup-content'
+                    data-qa-id = 'screenshare-input-devices'>
                     { this._renderDeviceList() }
                 </div>
                 <div className = 'setup-buttons'>
-                    <Button onClick = { this._onSkip }>
+                    <Button
+                        data-qa-id = 'screenshare-input-skip'
+                        onClick = { this._onSkip }>
                         Skip
                     </Button>
                 </div>
@@ -131,6 +135,7 @@ class ScreenshareInput extends React.Component {
     _renderDeviceList() {
         return this.state.devices.map(device => (
             <Button
+                className = 'screenshare-input-selection'
                 key = { device.deviceId }
 
                 // eslint-disable-next-line react/jsx-no-bind
