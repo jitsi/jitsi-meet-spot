@@ -1,15 +1,15 @@
 const constants = require('../constants');
 const PageObject = require('./page-object');
+const ScreensharePicker = require('./screenshare-picker');
 
 const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
 const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
-const SHARE_PICKER = '[data-qa-id=screenshare-picker]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
-const STOP_SHARE_CONFIRM = '[data-qa-id=stop-share-button]';
 const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
 const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
+
 
 /**
  * A page object for interacting with the in meeting view of Spot-Remote.
@@ -22,6 +22,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      */
     constructor(driver) {
         super(driver);
+
+        this.screensharePicker = new ScreensharePicker(this.driver);
 
         this.rootSelector = REMOTE_CONTROL;
     }
@@ -48,6 +50,29 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.select(VIDEO_MUTE_BUTTON).click();
     }
 
+    /*
+     * Begins the wireless screensharing flow for when there is both wireless
+     * and wired screensharing enabled.
+     *
+     * @returns {void}
+     */
+    startWirelessScreenshareWithPicker() {
+        this.startWirelessScreenshareWithoutPicker();
+        this.screensharePicker.startWirelessScreenshare();
+    }
+
+    /**
+     * Begins the wireless screensharing flow for when there is only wireless
+     * screensharing enabled.
+     *
+     * @returns {void}
+     */
+    startWirelessScreenshareWithoutPicker() {
+        this.waitForScreensharingStateToBe(false);
+
+        this.select(START_SHARE_BUTTON).click();
+    }
+
     /**
      * Turns off the current screenshare.
      *
@@ -58,9 +83,7 @@ class SpotRemoteInMeetingPage extends PageObject {
 
         this.select(STOP_SHARE_BUTTON).click();
 
-        this.waitForSharePicker();
-
-        this.select(STOP_SHARE_CONFIRM).click();
+        this.screensharePicker.stopScreensharing();
     }
 
     /**

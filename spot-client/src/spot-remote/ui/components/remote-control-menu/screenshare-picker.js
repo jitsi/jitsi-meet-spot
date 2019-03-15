@@ -174,7 +174,8 @@ export class ScreensharePicker extends React.Component {
                         className = 'screenshare'
                         iconName = 'wireless_screen_share'
                         label = 'Wireless Screensharing'
-                        onClick = { this._onShowStartWireless } />
+                        onClick = { this._onShowStartWireless }
+                        qaId = 'start-wireless-screenshare' />
                     { this.props.wiredScreenshareEnabled
                         && (
                             <NavButton

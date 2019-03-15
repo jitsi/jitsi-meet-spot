@@ -2,11 +2,12 @@ const constants = require('../constants');
 const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
+const ADMIN_SETTINGS_BUTTON = '[data-qa-id=admin-settings]';
 const CALENDAR_VIEW = '[data-qa-id=home-view]';
 const JOIN_CODE = '[data-qa-id=join-info]';
 
 /**
- * A page object for interacting with the calendar view of Spot.
+ * A page object for interacting with the calendar view of Spot-TV.
  */
 class CalendarPage extends PageObject {
     /**
@@ -22,7 +23,7 @@ class CalendarPage extends PageObject {
     }
 
     /**
-     * Scrapes the join code necessary for a remote control to connect to Spot.
+     * Scrapes the join code necessary for a Spot-Remote to connect to Spot-TV.
      *
      * @returns {string}
      */
@@ -35,28 +36,27 @@ class CalendarPage extends PageObject {
     }
 
     /**
-     * Proceeds directly to the calendar view of Spot.
+     * Interacts with the UI to visit the admin configuration view of Spot-TV.
+     *
+     * @returns {void}
+     */
+    goToAdminPage() {
+        const adminSettingsButtons = this.driver.$(ADMIN_SETTINGS_BUTTON);
+
+        adminSettingsButtons.waitForExist();
+        adminSettingsButtons.moveTo();
+        adminSettingsButtons.waitForDisplayed();
+        adminSettingsButtons.click();
+    }
+
+    /**
+     * Proceeds directly to the calendar view of Spot-TV.
      *
      * @returns {void}
      */
     visit() {
         this.driver.url(constants.SPOT_URL);
         this.waitForVisible();
-    }
-
-    /**
-     * Compares the currently opened tab ids with an array of tab ids and
-     * returns the difference.
-     *
-     * @param {Array<string>} previousTabIds - The old tab ids to compare
-     * against to calculate which of the current tabs are new.
-     * @private
-     * @returns {Array<string>}
-     */
-    _getNewTabIds(previousTabIds) {
-        const currentTabIds = this.driver.getTabIds();
-
-        return currentTabIds.filter(id => !previousTabIds.includes(id));
     }
 }
 

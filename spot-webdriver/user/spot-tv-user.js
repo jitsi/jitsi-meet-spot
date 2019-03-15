@@ -1,3 +1,4 @@
+const AdminPage = require('../page-objects/admin-page');
 const CalendarPage = require('../page-objects/calendar-page');
 const MeetingPage = require('../page-objects/meeting-page');
 
@@ -14,13 +15,24 @@ class SpotTV {
     constructor(driver) {
         this.driver = driver;
 
+        this.adminPage = new AdminPage(this.driver);
         this.calendarPage = new CalendarPage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
     }
 
     /**
+     * Returns an instance of {@code Admin} which wraps interactions with
+     * the admin view in Spot-TV.
+     *
+     * @returns {CalendarPage}
+     */
+    getAdminPage() {
+        return this.adminPage;
+    }
+
+    /**
      * Returns an instance of {@code CalendarPage} which wraps interactions with
-     * the calendar view in Spot.
+     * the calendar view in Spot-TV.
      *
      * @returns {CalendarPage}
      */
@@ -44,7 +56,7 @@ class SpotTV {
 
     /**
      * Returns an instance of {@code MeetingPage} which wraps interactions with
-     * the in-meeting view in Spot.
+     * the in-meeting view in Spot-TV.
      *
      * @returns {MeetingPage}
      */
