@@ -46,17 +46,29 @@ export class MeetingFrame extends React.Component {
     constructor(props) {
         super(props);
 
+        /**
+         * The external api exposes toggle actions. Store various state to
+         * prevent execution of remote commands when the meeting is already in
+         * the desired state.
+         */
         this._isAudioMuted = false;
+        this._isFilmstripVisible = true;
         this._isScreensharing = false;
         this._isVideoMuted = false;
+
+        this._participants = new Map();
 
         this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
         this._onFeedbackPromptDisplayed
             = this._onFeedbackPromptDisplayed.bind(this);
+        this._onFilmstripDisplayChanged
+            = this._onFilmstripDisplayChanged.bind(this);
         this._onMeetingCommand = this._onMeetingCommand.bind(this);
         this._onMeetingJoined = this._onMeetingJoined.bind(this);
         this._onMeetingLeft = this._onMeetingLeft.bind(this);
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
+        this._onParticipantJoined = this._onParticipantJoined.bind(this);
+        this._onParticipantLeft = this._onParticipantLeft.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onScreenshareDeviceConnected
             = this._onScreenshareDeviceConnected.bind(this);
@@ -115,6 +127,12 @@ export class MeetingFrame extends React.Component {
             'feedbackSubmitted', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'feedbackPromptDisplayed', this._onFeedbackPromptDisplayed);
+        this._jitsiApi.addListener(
+            'filmstripDisplayChanged', this._onFilmstripDisplayChanged);
+        this._jitsiApi.addListener(
+            'participantJoined', this._onParticipantJoined);
+        this._jitsiApi.addListener(
+            'participantLeft', this._onParticipantLeft);
         this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
         this._jitsiApi.addListener(
@@ -202,6 +220,21 @@ export class MeetingFrame extends React.Component {
         this.props.onMeetingLeave({
             error: 'An error occurred while joining the meeting'
         });
+    }
+
+    /**
+     * Hides the filmstrip if in a lonely call while screensharing.
+     *
+     * @private
+     * @returns {void}
+     */
+    _maybeToggleFilmstripVisibility() {
+        const shouldFilmstripBeVisible = !this._isScreensharing
+            || this._participants.size > 0;
+
+        if (shouldFilmstripBeVisible !== this._isFilmstripVisible) {
+            this._jitsiApi.executeCommand('toggleFilmStrip');
+        }
     }
 
     /**
@@ -325,6 +358,52 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
+     * Updates the current known display state of the filmstrip, whether it is
+     * displayed or hidden.
+     *
+     * @param {Object} event - The event returned from the external api about
+     * the filmstrip change.
+     * @param {boolean} visible - Whether or not the filmstrip strip is
+     * currently set to be displayed all the time.
+     * @private
+     * @returns {void}
+     */
+    _onFilmstripDisplayChanged({ visible }) {
+        this._isFilmstripVisible = visible;
+    }
+
+    /**
+     * Adds a participant from the list of known current participants in the
+     * meeting.
+     *
+     * @param {Object} event - An object with participant information.
+     * @param {string} event.id - The jitsi-meet ID of the participant.
+     * @param {string} even.displayName - The current name of the participant.
+     * @private
+     * @returns {void}
+     */
+    _onParticipantJoined({ id, displayName }) {
+        this._participants.set(id, displayName);
+
+        this._maybeToggleFilmstripVisibility();
+    }
+
+    /**
+     * Removes a participant from the list of known current participants in the
+     * meeting.
+     *
+     * @param {Object} event - An object with participant information.
+     * @param {string} event.id - The jitsi-meet ID of the participant.
+     * @private
+     * @returns {void}
+     */
+    _onParticipantLeft({ id }) {
+        this._participants.delete(id);
+
+        this._maybeToggleFilmstripVisibility();
+    }
+
+    /**
      * Sets the internal flag for the jitsi iframe api having loaded the page.
      * This event fires no matter the state of the page load, for example on
      * 404.
@@ -355,6 +434,8 @@ export class MeetingFrame extends React.Component {
 
         // The api passes in null or true for the value
         this._isScreensharing = Boolean(on);
+
+        this._maybeToggleFilmstripVisibility();
 
         this.props.updateSpotTvState({
             screensharing: this._isScreensharing,
