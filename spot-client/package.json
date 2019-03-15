@@ -37,6 +37,7 @@
         "jsrsasign": "8.0.12",
         "lib-quiet-js": "github:virtuacoplenny/quiet-js#lenny/rewrite",
         "lodash.debounce": "4.0.8",
+        "lodash.merge": "4.6.1",
         "lodash.throttle": "4.1.1",
         "md5": "2.2.1",
         "moment": "2.24.0",

@@ -30,3 +30,5 @@ export * from './notifications/selectors';
 export * from './setup/selectors';
 export * from './spot-tv/selectors';
 export * from './wired-screenshare/selectors';
+
+export * from './config/set-default-values';
