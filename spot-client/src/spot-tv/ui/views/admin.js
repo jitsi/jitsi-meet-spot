@@ -7,33 +7,113 @@ import { ROUTES } from 'common/routing';
 import {
     CalendarStatus,
     InMeetingConfig,
+    ScreenshareInput,
     ScreenshareStatus
 } from './../components';
 
 /**
  * A component for providing post-setup Spot configuration.
  *
- * @returns {ReactElement}
+ * @extends React.Component
  */
-export default function AdminView() {
-    return (
-        <div className = 'container'>
-            <div className = 'admin'>
-                <CalendarStatus />
-                <ScreenshareStatus />
-                <ResetState />
-                <InMeetingConfig />
-                <div>
-                    <Link to = { ROUTES.SETUP }>
-                        <Button>Setup</Button>
-                    </Link>
-                </div>
-                <div>
-                    <Link to = { ROUTES.HOME }>
-                        <Button>Done</Button>
-                    </Link>
+export default class AdminView extends React.Component {
+    /**
+     * Initializes a new {@code AdminView} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            view: 'all'
+        };
+
+        this._onChangeScreenshareInput
+            = this._onChangeScreenshareInput.bind(this);
+        this._onShowAllOptions = this._onShowAllOptions.bind(this);
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        return (
+            <div className = 'container'>
+                <div className = 'admin'>
+                    { this._renderSubcomponent() }
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
+
+    /**
+     * Returns the contents that should be displayed.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderSubcomponent() {
+        switch (this.state.view) {
+        case 'screenshare-input':
+            return <ScreenshareInput onSuccess = { this._onShowAllOptions } />;
+        case 'all':
+        default:
+            return (
+                <>
+                    <CalendarStatus />
+                    <div>
+                        <div className = 'admin-title'>Screenshare Input</div>
+                        <ScreenshareStatus />
+                        <Button
+                            data-qa-id = 'admin-change-screenshare'
+                            onClick = { this._onChangeScreenshareInput }>
+                            Change
+                        </Button>
+                    </div>
+                    <ResetState />
+                    <InMeetingConfig />
+                    <div>
+                        <div className = 'admin-title'>Setup Wizard</div>
+                        <Link to = { ROUTES.SETUP }>
+                            <Button>Start wizard</Button>
+                        </Link>
+                    </div>
+                    <div>
+                        <div className = 'admin-title'>Exit Admin Tools</div>
+                        <Link to = { ROUTES.HOME }>
+                            <Button data-qa-id = 'admin-exit'>
+                                Exit
+                            </Button>
+                        </Link>
+                    </div>
+                </>
+            );
+        }
+    }
+
+    /**
+     * Displays the view for selecting a wired screensharing input device.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onChangeScreenshareInput() {
+        this.setState({ view: 'screenshare-input' });
+    }
+
+    /**
+     * Displays the main admin view for a summary of the current Spot-TV
+     * configuration.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShowAllOptions() {
+        this.setState({ view: 'all' });
+    }
 }
