@@ -1,4 +1,5 @@
 @import './media-queries';
+@import './variables.scss';
 
 .feedback-view {
     display: flex;
@@ -32,7 +33,7 @@
         }
 
         .cta {
-            font-size: var(--font-size-medium-plus);
+            font-size: $font-size-medium-plus;
         }
 
         .message-help {
@@ -74,7 +75,7 @@
             border-radius: 5px;
             color: var(--container-content-font-color);
             cursor: pointer;
-            font-size: var(--font-size-medium);
+            font-size: $font-size-medium;
             padding: 0.5em 1em;
 
             &:active {
@@ -159,7 +160,7 @@
     width: 100%;
 
     .in-call-name {
-        font-size: var(--font-size-medium-plus);
+        font-size: $font-size-medium-plus;
         margin-top: 100px;
         text-align: center;
     }

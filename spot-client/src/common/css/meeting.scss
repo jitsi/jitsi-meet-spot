@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .meeting {
     background-color: var(--container-content-bg-color);
     cursor: pointer;
@@ -22,7 +24,7 @@
     .meeting-date,
     .meeting-time,
     .meeting-url {
-        font-size: var(--font-size-small);
+        font-size: $font-size-small;
     }
 
     .meeting-join {

@@ -1,5 +1,6 @@
 @import './media-queries';
 @import './mixins';
+@import './variables.scss';
 
 /**
  * nav is generally placed within a grid cell. That would cause the nav to
@@ -122,30 +123,30 @@
         justify-content: center;
         margin-bottom: 15px;
 
-        height: calc(var(--font-size-x-large) * 2);
-        width: calc(var(--font-size-x-large) * 2);
+        height: calc(#{$font-size-x-large} * 2);
+        width: calc(#{$font-size-x-large} * 2);
         @media #{$mq-laptop-l} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
+            height: calc(#{$font-size-large} * 2.5);
+            width: calc(#{$font-size-large} * 2.5);
         }
 
         @media #{$mq-4k} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
+            height: calc(#{$font-size-large} * 2.5);
+            width: calc(#{$font-size-large} * 2.5);
         }
 
         .nav-icon {
             position: relative;
 
             .material-icons {
-                font-size: var(--font-size-x-large);
+                font-size: $font-size-x-large;
     
                 @media #{$mq-laptop-l} {
-                    font-size: var(--font-size-large);
+                    font-size: $font-size-large;
                 }
     
                 @media #{$mq-4k} {
-                    font-size: var(--font-size-large);
+                    font-size: $font-size-large;
                 }
             }
 
@@ -163,7 +164,7 @@
         justify-content: center;
         margin: auto;
         white-space: nowrap;
-        width: calc(var(--font-size-large) * 2.5);
+        width: calc(#{$font-size-large} * 2.5);
     }
 }
 

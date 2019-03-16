@@ -1,4 +1,5 @@
 @import './mixins.scss';
+@import './variables.scss';
 
 .code-entry {
     outline: none;
@@ -12,14 +13,14 @@
         border-radius: 5px;
         color: var(--container-content-font-color);
         display: inline-block;
-        font-size: var(--font-size-x-large);
-        height: calc(var(--font-size-x-large) * 0.7);
+        font-size: $font-size-x-large;
+        height: calc(#{$font-size-x-large} * 0.7);
         line-height: normal;
         margin-top: 10px;
         padding: 0;
         text-align: center;
         text-transform: uppercase;
-        width: calc(var(--font-size-x-large) * 0.5);
+        width: calc(#{$font-size-x-large} * 0.5);
 
         &:focus {
             border: 5px solid var(--active);

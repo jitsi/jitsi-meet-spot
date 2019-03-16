@@ -12,13 +12,6 @@
 
     --feedback-background: #1c2025;
     --font: 'Nunito', sans-serif;
-    --font-size-xx-large: 4em;
-    --font-size-x-large: 3em;
-    --font-size-large: 2em;
-    --font-size-medium-plus: 1.5em;
-    --font-size-medium: 1em;
-    --font-size-small: 0.8em;
-    --font-size-x-small: 0.5em;
 
     --hangup-active-color: lightcoral;
     --hangup-bg-color: red;
@@ -26,3 +19,11 @@
     --name-entry-gradient-start: black;
     --name-entry-gradient-end: rgba(0, 0, 0, 0);
 }
+
+$font-size-xx-large: 4em;
+$font-size-x-large: 3em;
+$font-size-large: 2em;
+$font-size-medium-plus: 1.5em;
+$font-size-medium: 1em;
+$font-size-small: 0.8em;
+$font-size-x-small: 0.5em;

@@ -1,5 +1,6 @@
 @import './media-queries';
 @import './mixins';
+@import './variables.scss';
 
 .join-code-view {
     display: flex;
@@ -13,11 +14,11 @@
         text-align: center;
 
         .title {
-            font-size: var(--font-size-x-large);
+            font-size: $font-size-x-large;
         }
 
         .help {
-            font-size: var(--font-size-large);
+            font-size: $font-size-large;
         }
     }
 

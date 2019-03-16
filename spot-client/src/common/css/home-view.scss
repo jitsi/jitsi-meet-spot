@@ -1,4 +1,5 @@
 @import './media-queries';
+@import './variables.scss';
 
 .spot-home {
     background-color: var(--container-bg-color);
@@ -47,7 +48,7 @@
         text-align: center;
 
         h1 {
-            font-size: var(--font-size-medium-plus);
+            font-size: $font-size-medium-plus;
         }
 
         .setup-instructions {
