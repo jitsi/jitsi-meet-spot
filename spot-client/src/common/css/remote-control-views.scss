@@ -1,8 +1,8 @@
 @import './media-queries';
 
 .feedback-view {
-    display: grid;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-direction: column;
     min-height: 100%;
     width: 100%;
 
@@ -85,10 +85,14 @@
 }
 
 .waiting-view {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
     min-height: 100%;
     width: 100%;
+
+    .waiting-sub-view {
+        flex: 1;
+    }
 
     .clock {
         padding: 2.6em;
@@ -148,8 +152,9 @@
 }
 
 .in-call {
-    display: grid;
-    grid-template-rows:  1fr auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-height: 100%;
     width: 100%;
 
