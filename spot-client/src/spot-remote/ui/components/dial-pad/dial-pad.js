@@ -28,54 +28,6 @@ export default class DialPad extends React.Component {
             enteredNumber: ''
         };
 
-        this._displayConfig = [
-            {
-                main: '1',
-                sub: ''
-            },
-            {
-                main: '2',
-                sub: 'ABC'
-            },
-            {
-                main: '3',
-                sub: 'DEF'
-            },
-            {
-                main: '4',
-                sub: 'GHI'
-            },
-            {
-                main: '5',
-                sub: 'JKL'
-            },
-            {
-                main: '6',
-                sub: 'MNO'
-            },
-            {
-                main: '7',
-                sub: 'PQRS'
-            },
-            {
-                main: '8',
-                sub: 'TUV'
-            },
-            {
-                main: '9',
-                sub: 'WXYZ'
-            },
-            {
-                main: '*'
-            },
-            {
-                main: '0'
-            },
-            {
-                main: '#'
-            }
-        ];
-
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
         this._onGoToCall = this._onGoToCall.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
@@ -103,7 +55,26 @@ export default class DialPad extends React.Component {
                         value = { this.state.enteredNumber } />
                 </div>
                 <div className = 'dial-pad-buttons'>
-                    { this._displayConfig.map(this._renderDialButton) }
+                    <div className = 'row'>
+                        { this._renderDialButton('1', '') }
+                        { this._renderDialButton('2', 'ABC') }
+                        { this._renderDialButton('3', 'DEF') }
+                    </div>
+                    <div className = 'row'>
+                        { this._renderDialButton('4', 'GHI') }
+                        { this._renderDialButton('5', 'JKL') }
+                        { this._renderDialButton('6', 'MNO') }
+                    </div>
+                    <div className = 'row'>
+                        { this._renderDialButton('7', 'PQRS') }
+                        { this._renderDialButton('8', 'TUV') }
+                        { this._renderDialButton('9', 'WXYZ') }
+                    </div>
+                    <div className = 'row'>
+                        { this._renderDialButton('*') }
+                        { this._renderDialButton('0') }
+                        { this._renderDialButton('#') }
+                    </div>
                 </div>
                 <div>
                     <button
@@ -173,14 +144,13 @@ export default class DialPad extends React.Component {
     /**
      * Helper to create a button for display in the dial pad.
      *
-     * @param {Object} configuration - Describes how the button should display.
-     * @param {string} configuration.main - The value of the button.
-     * @param {string} configuration.sub - A smaller value to display at the
-     * bottom of the button.
+     * @param {string} main - The value of the button.
+     * @param {string} sub - A smaller value to display at the bottom of the
+     * button.
      * @private
      * @returns {ReactComponent}
      */
-    _renderDialButton({ main, sub }) {
+    _renderDialButton(main, sub) {
         return (
             <DialButton
                 key = { main }

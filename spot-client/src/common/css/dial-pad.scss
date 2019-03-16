@@ -13,9 +13,11 @@
     padding: 20px 15px 10px;
 
     .dial-pad-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
         margin: 10px 0;
+
+        .row {
+            display: flex;
+        }
 
         .dial-button {
             background-color: transparent;
