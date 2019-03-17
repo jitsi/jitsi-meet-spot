@@ -18,20 +18,20 @@
 }
 
 .nav {
-    display: grid;
+    display: flex;
     margin-bottom: 20px;
     text-align: center;
+    width: auto;
 
     @media #{$mq-xxsmall} {
-        grid-template-columns: auto auto;
-        grid-column-gap: 40px;
-        grid-row-gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 200px;
     }
 
     @media #{$mq-tablet} {
-        grid-column-gap: 0;
-        grid-row-gap: 0;
-        grid-template-columns: auto auto auto auto;
+        flex-wrap: nowrap;
+        width: auto;
     }
 
 
