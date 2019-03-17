@@ -16,7 +16,7 @@
         font-size: $font-size-x-large;
         height: calc(#{$font-size-x-large} * 0.7);
         line-height: normal;
-        margin-top: 10px;
+        margin: 15px;
         padding: 0;
         text-align: center;
         text-transform: uppercase;
@@ -27,9 +27,6 @@
         }
         &:hover {
             cursor: pointer;
-        }
-        &:not(:last-child) {
-            margin-right: 0.5em;
         }
     }
 }

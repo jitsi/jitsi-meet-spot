@@ -28,14 +28,20 @@
         .code-entry {
             // Usage of !important is needed to override the inline style
             // set by react-code-input.
-            @media #{$mq-mobile-s} {
-                display: grid !important;
+            display: flex !important;
+            justify-content: center;
+            margin: auto;
 
-                grid-template-columns: 1fr 1fr 1fr;
+            @media #{$mq-mobile-s} {
+                flex-wrap: wrap;
+
+                // Hardcode some width that force a 3x2 code entry.
+                width: 65%;
             }
 
             @media #{$mq-tablet} {
-                display: flex !important;
+                flex-wrap: nowrap;
+                width: auto;
             }
         }
     }
