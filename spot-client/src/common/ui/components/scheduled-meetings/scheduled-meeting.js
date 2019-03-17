@@ -48,20 +48,26 @@ export default class ScheduledMeeting extends React.Component {
             <div
                 className = 'meeting'
                 onClick = { this._onMeetingClick }>
-                <div className = 'meeting-date'>
-                    { this._getFormattedDate(startTime) }
-                </div>
-                <div className = 'meeting-name'>
-                    { title }
+                <div className = 'meeting-info-container'>
+                    <div className = 'time-info'>
+                        <div className = 'meeting-date'>
+                            { this._getFormattedDate(startTime) }
+                        </div>
+                        <div className = 'meeting-name'>
+                            { title }
+                        </div>
+                    </div>
+                    <div className = 'meeting-info'>
+                        <div className = 'meeting-time'>
+                            { this._getFormattedTimes(startTime) }
+                        </div>
+                        <div className = 'meeting-url'>
+                            { this._removeProtocolFromUrl(meetingUrl) }
+                        </div>
+                    </div>
                 </div>
                 <div className = { joinNowClasses }>
                     <button className = 'join-cta'>Join Now</button>
-                </div>
-                <div className = 'meeting-time'>
-                    { this._getFormattedTimes(startTime) }
-                </div>
-                <div className = 'meeting-url'>
-                    { this._removeProtocolFromUrl(meetingUrl) }
                 </div>
             </div>
         );
