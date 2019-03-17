@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
     addNotification,
+    getAvatarUrl,
     getDefaultMeetingDomain,
     getDesktopSharingFramerate,
     getDisplayName,
@@ -24,6 +25,7 @@ import { MeetingFrame } from './../components';
  */
 export class Meeting extends React.Component {
     static propTypes = {
+        avatarUrl: PropTypes.string,
         defaultMeetingDomain: PropTypes.string,
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
@@ -84,6 +86,7 @@ export class Meeting extends React.Component {
         }
 
         const {
+            avatarUrl,
             displayName,
             maxDesktopSharingFramerate,
             minDesktopSharingFramerate,
@@ -95,6 +98,7 @@ export class Meeting extends React.Component {
         return (
             <div className = 'view'>
                 <MeetingFrame
+                    avatarUrl = { avatarUrl }
                     displayName = { displayName }
                     invites = { invites }
                     maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
@@ -214,6 +218,7 @@ function mapStateToProps(state) {
     } = getDesktopSharingFramerate(state);
 
     return {
+        avatarUrl: getAvatarUrl(state),
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
         maxDesktopSharingFramerate,

@@ -1,11 +1,15 @@
 import {
     SETUP_COMPLETED,
+    SET_AVATAR_URL,
+    SET_DISPLAY_NAME,
     SET_IS_SPOT,
     SET_SHOW_MEETING_TOOLBAR
 } from './action-types';
 
 const DEFAULT_STATE = {
+    avatarUrl: '',
     completed: false,
+    displayName: '',
     isSpot: false,
     showMeetingToolbar: false
 };
@@ -24,6 +28,18 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             completed: true
+        };
+
+    case SET_AVATAR_URL:
+        return {
+            ...state,
+            avatarUrl: action.avatarUrl
+        };
+
+    case SET_DISPLAY_NAME:
+        return {
+            ...state,
+            displayName: action.displayName
         };
 
     case SET_IS_SPOT:

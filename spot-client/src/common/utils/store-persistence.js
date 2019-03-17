@@ -29,7 +29,9 @@ const keysToStore = [
     'calendars.calendarType',
     'calendars.email',
     'calendars.displayName',
+    'setup.avatarUrl',
     'setup.completed',
+    'setup.displayName',
     'setup.showMeetingToolbar',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
@@ -70,7 +72,9 @@ function parsePersistedState(state) {
             email: state.calendars.email
         },
         setup: {
+            avatarUrl: state.setup.avatarUrl,
             completed: state.setup.completed,
+            displayName: state.setup.displayName,
             screenshareDevice: state.setup.screenshareDevice,
             screenshareDeviceIdleValue:
                 state.setup.screenshareDeviceIdleValue,
