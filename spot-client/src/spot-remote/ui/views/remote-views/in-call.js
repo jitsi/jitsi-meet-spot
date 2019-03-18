@@ -99,9 +99,9 @@ export class InCall extends React.Component {
                 <NavContainer>
                     <NavButton
                         iconName = { audioMuted ? 'mic_off' : 'mic' }
-                        label
-                            = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
-                        onClick = { this._onToggleAudioMute } />
+                        label = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
+                        onClick = { this._onToggleAudioMute }
+                        qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' } />
                     <NavButton
                         iconName
                             = { videoMuted ? 'videocam_off' : 'videocam' }
