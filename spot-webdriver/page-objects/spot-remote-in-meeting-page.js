@@ -1,6 +1,8 @@
 const constants = require('../constants');
 const PageObject = require('./page-object');
 
+const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
+const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const SHARE_PICKER = '[data-qa-id=screenshare-picker]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
@@ -23,6 +25,17 @@ class SpotRemoteInMeetingPage extends PageObject {
     }
 
     /**
+     * Mutes the audio.
+     *
+     * @returns {void}
+     */
+    muteAudio() {
+        this.waitForAudioMutedStateToBe(false);
+
+        this.select(AUDIO_MUTE_BUTTON).click();
+    }
+
+    /**
      * Turns off the current screenshare.
      *
      * @returns {void}
@@ -35,6 +48,29 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.waitForSharePicker();
 
         this.select(STOP_SHARE_CONFIRM).click();
+    }
+
+    /**
+     * Unmutes the audio.
+     *
+     * @returns {void}
+     */
+    unmuteAudio() {
+        this.waitForAudioMutedStateToBe(true);
+
+        this.select(AUDIO_UNMUTE_BUTTON).click();
+    }
+
+    /**
+     * Waits for the audio button to be in muted/unmuted state.
+     *
+     * @param {boolean} muted - The state in which the audio buttons needs to be in.
+     * @returns {void}
+     */
+    waitForAudioMutedStateToBe(muted) {
+        const muteButtonSelector = muted ? AUDIO_UNMUTE_BUTTON : AUDIO_MUTE_BUTTON;
+
+        this.waitForElementDisplayed(muteButtonSelector, constants.REMOTE_COMMAND_WAIT);
     }
 
     /**
