@@ -1,28 +1,18 @@
-const remoteControlConnect = require('../flow-utils/remote-control-connect');
+const SpotSession = require('../user/spot-session');
 
 describe('Can start a meeting of any name', () => {
     const userFactory = require('../user/user-factory');
     const spotTV = userFactory.getSpotTV();
     const spotRemote = userFactory.getSpotRemote();
+    const session = new SpotSession(spotTV, spotRemote);
 
     beforeEach(() => {
-        remoteControlConnect(spotTV, spotRemote);
+        session.connectRemoteToTV();
     });
 
     it('from the remote control', () => {
-        const remoteControlPage = spotRemote.getRemoteControlPage();
+        const testMeetingName = session.joinMeeting();
 
-        remoteControlPage.waitForVisible();
-
-        const testMeetingName = `ui-test-${Date.now()}`;
-        const meetingInput = remoteControlPage.getMeetingInput();
-
-        meetingInput.submitMeetingName(testMeetingName);
-
-        const meetingPage = spotTV.getMeetingPage();
-
-        meetingPage.waitForVisible();
-
-        expect(meetingPage.getMeetingName()).toBe(testMeetingName);
+        expect(spotTV.getMeetingName()).toBe(testMeetingName);
     });
 });

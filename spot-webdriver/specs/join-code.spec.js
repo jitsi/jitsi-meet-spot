@@ -1,4 +1,4 @@
-const remoteControlConnect = require('../flow-utils/remote-control-connect');
+const SpotSession = require('../user/spot-session');
 
 describe('A remote can connect to a Spot', () => {
     const userFactory = require('../user/user-factory');
@@ -6,6 +6,6 @@ describe('A remote can connect to a Spot', () => {
     const spotRemote = userFactory.getSpotRemote();
 
     it('from the remote control', () => {
-        remoteControlConnect(spotTV, spotRemote);
+        new SpotSession(spotTV, spotRemote).connectRemoteToTV();
     });
 });
