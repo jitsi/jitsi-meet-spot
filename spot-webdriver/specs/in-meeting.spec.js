@@ -25,4 +25,16 @@ describe('While in a meeting ', () => {
 
         inMeetingPage.waitForAudioMutedStateToBe(false);
     });
+
+    it('can toggle video mute', () => {
+        const inMeetingPage = spotRemote.getInMeetingPage();
+
+        inMeetingPage.muteVideo();
+
+        inMeetingPage.waitForVideoMutedStateToBe(true);
+
+        inMeetingPage.unmuteVideo();
+
+        inMeetingPage.waitForVideoMutedStateToBe(false);
+    });
 });

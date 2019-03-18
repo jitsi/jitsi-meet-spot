@@ -41,6 +41,29 @@ class PageObject {
     }
 
     /**
+     * Waits for the element to be in the given state.
+     *
+     * @param {boolean} state - The state to wait for.
+     * @param {Object} options - See each option for details.
+     * @param {string} options.onStateSelector - The element selector used for the thruthy state.
+     * @param {string} options.offStateSelector - The element's selector used for the not thruthy
+     * state.
+     * @param {number} options.waitTime - How long will the method wait for the state to change (in
+     * milliseconds).
+     * @returns {void}
+     */
+    waitForBooleanState(state, options) {
+        const {
+            onStateSelector,
+            offStateSelector,
+            waitTime
+        } = options;
+        const selector = state ? onStateSelector : offStateSelector;
+
+        this.waitForElementDisplayed(selector, waitTime);
+    }
+
+    /**
      * Waits for this page object to be visible on the browser.
      *
      * @returns {void}

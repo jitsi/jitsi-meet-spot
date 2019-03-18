@@ -103,11 +103,10 @@ export class InCall extends React.Component {
                         onClick = { this._onToggleAudioMute }
                         qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' } />
                     <NavButton
-                        iconName
-                            = { videoMuted ? 'videocam_off' : 'videocam' }
-                        label
-                            = { videoMuted ? 'Unmute Video' : 'Mute Video' }
-                        onClick = { this._onToggleVideoMute } />
+                        iconName = { videoMuted ? 'videocam_off' : 'videocam' }
+                        label = { videoMuted ? 'Unmute Video' : 'Mute Video' }
+                        onClick = { this._onToggleVideoMute }
+                        qaId = { videoMuted ? 'unmute-video' : 'mute-video' } />
                     <NavButton
                         className = { screenshareButtonStyles }
                         iconName = 'screen_share'
