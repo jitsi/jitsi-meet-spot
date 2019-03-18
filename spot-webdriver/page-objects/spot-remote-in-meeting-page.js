@@ -8,6 +8,8 @@ const SHARE_PICKER = '[data-qa-id=screenshare-picker]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
 const STOP_SHARE_CONFIRM = '[data-qa-id=stop-share-button]';
+const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
+const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
 
 /**
  * A page object for interacting with the in meeting view of Spot-Remote.
@@ -33,6 +35,17 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.waitForAudioMutedStateToBe(false);
 
         this.select(AUDIO_MUTE_BUTTON).click();
+    }
+
+    /**
+     * Mutes the video.
+     *
+     * @returns {void}
+     */
+    muteVideo() {
+        this.waitForVideoMutedStateToBe(false);
+
+        this.select(VIDEO_MUTE_BUTTON).click();
     }
 
     /**
@@ -62,15 +75,25 @@ class SpotRemoteInMeetingPage extends PageObject {
     }
 
     /**
+     * Unmutes the video.
+     *
+     * @returns {void}
+     */
+    unmuteVideo() {
+        this.waitForVideoMutedStateToBe(true);
+
+        this.select(VIDEO_UNMUTE_BUTTON).click();
+    }
+
+    /**
      * Waits for the audio button to be in muted/unmuted state.
      *
      * @param {boolean} muted - The state in which the audio buttons needs to be in.
      * @returns {void}
      */
     waitForAudioMutedStateToBe(muted) {
-        const muteButtonSelector = muted ? AUDIO_UNMUTE_BUTTON : AUDIO_MUTE_BUTTON;
-
-        this.waitForElementDisplayed(muteButtonSelector, constants.REMOTE_COMMAND_WAIT);
+        this.waitForBooleanState(
+            muted, AUDIO_UNMUTE_BUTTON, AUDIO_MUTE_BUTTON, constants.REMOTE_COMMAND_WAIT);
     }
 
     /**
@@ -83,10 +106,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @returns {void}
      */
     waitForScreensharingStateToBe(enabled) {
-        const shareButtonSelector
-            = enabled ? STOP_SHARE_BUTTON : START_SHARE_BUTTON;
-
-        this.waitForElementDisplayed(shareButtonSelector, constants.REMOTE_COMMAND_WAIT);
+        this.waitForBooleanState(
+            enabled, STOP_SHARE_BUTTON, START_SHARE_BUTTON, constants.REMOTE_COMMAND_WAIT);
     }
 
     /**
@@ -97,6 +118,17 @@ class SpotRemoteInMeetingPage extends PageObject {
      */
     waitForSharePicker() {
         this.waitForElementDisplayed(SHARE_PICKER);
+    }
+
+    /**
+     * Waits for the video button to be in muted/unmuted state.
+     *
+     * @param {boolean} muted - The state in which the video buttons needs to be in.
+     * @returns {void}
+     */
+    waitForVideoMutedStateToBe(muted) {
+        this.waitForBooleanState(
+            muted, VIDEO_UNMUTE_BUTTON, VIDEO_MUTE_BUTTON, constants.REMOTE_COMMAND_WAIT);
     }
 }
 
