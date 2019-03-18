@@ -1,12 +1,13 @@
-const remoteControlConnect = require('../flow-utils/remote-control-connect');
+const SpotSession = require('../user/spot-session');
 
 describe('A Spot-Remote can screenshare wirelessly', () => {
     const userFactory = require('../user/user-factory');
     const spotTV = userFactory.getSpotTV();
     const spotRemote = userFactory.getSpotRemote();
+    const spotSession = new SpotSession(spotTV, spotRemote);
 
     beforeEach(() => {
-        remoteControlConnect(spotTV, spotRemote);
+        spotSession.connectRemoteToTV();
     });
 
     describe('with no wired screenshare setup', () => {

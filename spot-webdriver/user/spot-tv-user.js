@@ -29,6 +29,20 @@ class SpotTV {
     }
 
     /**
+     * Waits for the meeting page to be displayed and obtains the name of the meeting that this Spot
+     * TV instance is currently in.
+     *
+     * @returns {string}
+     */
+    getMeetingName() {
+        const meetingPage = this.getMeetingPage();
+
+        meetingPage.waitForVisible();
+
+        return meetingPage.getMeetingName();
+    }
+
+    /**
      * Returns an instance of {@code MeetingPage} which wraps interactions with
      * the in-meeting view in Spot.
      *
