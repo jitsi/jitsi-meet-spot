@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import {
     getJoinCode,
+    getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     setJoinCode,
     setIsSpot
@@ -21,7 +22,8 @@ import { AbstractLoader } from 'common/ui';
 export class SpotTVRemoteControlLoader extends AbstractLoader {
     static propTypes = {
         ...AbstractLoader.propTypes,
-        dispatch: PropTypes.func
+        dispatch: PropTypes.func,
+        joinCodeRefreshRate: PropTypes.number
     };
 
     /**
@@ -161,7 +163,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     _startJoinCodeUpdateInterval() {
         this._joinCodeUpdateInterval = setInterval(() => {
             this._refreshJoinCode();
-        }, 30000);
+        }, this.props.joinCodeRefreshRate);
     }
 
     /**
@@ -186,6 +188,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
 function mapStateToProps(state) {
     return {
         joinCode: getJoinCode(state),
+        joinCodeRefreshRate: getJoinCodeRefreshRate(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }

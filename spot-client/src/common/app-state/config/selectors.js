@@ -67,6 +67,17 @@ export function getDesktopSharingFramerate(state) {
 }
 
 /**
+ * A selector which returns how often the Spot-TV should change its join code.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getJoinCodeRefreshRate(state) {
+    return state.config.JOIN_CODE_REFRESH_RATE
+        || 1000 * 60 * 60; // One hour.
+}
+
+/**
 * A selector which returns a unique id used for identifying the current client
 * in logs aggregations.
 *
