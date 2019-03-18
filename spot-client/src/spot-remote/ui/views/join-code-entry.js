@@ -67,7 +67,14 @@ export class JoinCodeEntry extends React.Component {
 
         const { pathname } = this.props.location;
         const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
-        const code = codeMatch && codeMatch[1];
+        let code = codeMatch && codeMatch[1];
+
+        if (!code && this.props.location.hash && this.props.location.hash.includes('#/?')) {
+            const parts = this.props.location.hash.substr(3);
+            const queryParams = new URLSearchParams(parts);
+
+            code = queryParams.get('code');
+        }
 
         // Hide the code and other params for visual clarity only, no practical
         // purpose.
