@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 @mixin active {
     background-color:  var(--container-bg-color);
 }
@@ -40,7 +42,7 @@
 
     background-color: transparent;
     color: var(--container-content-font-color);
-    font-size: var(--font-size-small);
+    font-size: $font-size-small;
     width: 100%;
 
     /**

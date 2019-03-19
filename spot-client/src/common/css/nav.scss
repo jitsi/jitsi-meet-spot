@@ -1,5 +1,6 @@
 @import './media-queries';
 @import './mixins';
+@import './variables.scss';
 
 /**
  * nav is generally placed within a grid cell. That would cause the nav to
@@ -17,20 +18,20 @@
 }
 
 .nav {
-    display: grid;
+    display: flex;
     margin-bottom: 20px;
     text-align: center;
+    width: auto;
 
     @media #{$mq-xxsmall} {
-        grid-template-columns: auto auto;
-        grid-column-gap: 40px;
-        grid-row-gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 200px;
     }
 
     @media #{$mq-tablet} {
-        grid-column-gap: 0;
-        grid-row-gap: 0;
-        grid-template-columns: auto auto auto auto;
+        flex-wrap: nowrap;
+        width: auto;
     }
 
 
@@ -122,30 +123,30 @@
         justify-content: center;
         margin-bottom: 15px;
 
-        height: calc(var(--font-size-x-large) * 2);
-        width: calc(var(--font-size-x-large) * 2);
+        height: calc(#{$font-size-x-large} * 2);
+        width: calc(#{$font-size-x-large} * 2);
         @media #{$mq-laptop-l} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
+            height: calc(#{$font-size-large} * 2.5);
+            width: calc(#{$font-size-large} * 2.5);
         }
 
         @media #{$mq-4k} {
-            height: calc(var(--font-size-large) * 2.5);
-            width: calc(var(--font-size-large) * 2.5);
+            height: calc(#{$font-size-large} * 2.5);
+            width: calc(#{$font-size-large} * 2.5);
         }
 
         .nav-icon {
             position: relative;
 
             .material-icons {
-                font-size: var(--font-size-x-large);
+                font-size: $font-size-x-large;
     
                 @media #{$mq-laptop-l} {
-                    font-size: var(--font-size-large);
+                    font-size: $font-size-large;
                 }
     
                 @media #{$mq-4k} {
-                    font-size: var(--font-size-large);
+                    font-size: $font-size-large;
                 }
             }
 
@@ -163,7 +164,7 @@
         justify-content: center;
         margin: auto;
         white-space: nowrap;
-        width: calc(var(--font-size-large) * 2.5);
+        width: calc(#{$font-size-large} * 2.5);
     }
 }
 

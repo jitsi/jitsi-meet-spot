@@ -1,4 +1,5 @@
 @import './mixins';
+@import './variables.scss';
 
 .number-entry-view {
     @include centered-content;
@@ -13,9 +14,11 @@
     padding: 20px 15px 10px;
 
     .dial-pad-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
         margin: 10px 0;
+
+        .row {
+            display: flex;
+        }
 
         .dial-button {
             background-color: transparent;
@@ -25,19 +28,19 @@
             cursor: pointer;
             font-family: inherit;
             font-size: inherit;
-            height: calc(var(--font-size-large) * 1.6);
+            height: calc(#{$font-size-large} * 1.6);
             line-height: 1;
             margin: 4px;
-            width: calc(var(--font-size-large) * 1.6);
+            width: calc(#{$font-size-large} * 1.6);
 
             .main {
                 display:block;
-                font-size: var(--font-size-medium-plus);
+                font-size: $font-size-medium-plus;
             }
 
             .sub {
                 color: var(--container-sub-content-font-color);
-                font-size: var(--font-size-x-small);
+                font-size: $font-size-x-small;
             }
             .sub:empty:before {
                 content: '.';
@@ -55,7 +58,7 @@
     .call-button {
         @include styled-button;
 
-        font-size: var(--font-size-small);
+        font-size: $font-size-small;
 
         &:active {
             background-color: var(--button-active-color);
@@ -68,7 +71,7 @@
     }
 
     .input-container {
-        font-size: var(--font-size-small);
+        font-size: $font-size-small;
     }
 
     .number-input {

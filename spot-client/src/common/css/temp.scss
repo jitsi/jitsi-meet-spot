@@ -4,6 +4,7 @@
  */
 @import './media-queries';
 @import './mixins';
+@import './variables.scss';
 
 .idleCursor {
     cursor: none;
@@ -79,7 +80,7 @@
 }
 
 .connecting {
-    font-size: var(--font-size-large);
+    font-size: $font-size-large;
 }
 
 .info-footer {
@@ -233,7 +234,7 @@ body.using-mouse :focus {
   text-align: center;
 
   h1 {
-    font-size: var(--font-size-medium-plus);
+    font-size: $font-size-medium-plus;
   }
 
   .feedback-hider-text {

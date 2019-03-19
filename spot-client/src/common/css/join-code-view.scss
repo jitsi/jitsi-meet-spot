@@ -1,9 +1,11 @@
 @import './media-queries';
 @import './mixins';
+@import './variables.scss';
 
 .join-code-view {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-height: 100%;
     width: 100%;
 
@@ -12,11 +14,11 @@
         text-align: center;
 
         .title {
-            font-size: var(--font-size-x-large);
+            font-size: $font-size-x-large;
         }
 
         .help {
-            font-size: var(--font-size-large);
+            font-size: $font-size-large;
         }
     }
 
@@ -26,14 +28,20 @@
         .code-entry {
             // Usage of !important is needed to override the inline style
             // set by react-code-input.
-            @media #{$mq-mobile-s} {
-                display: grid !important;
+            display: flex !important;
+            justify-content: center;
+            margin: auto;
 
-                grid-template-columns: 1fr 1fr 1fr;
+            @media #{$mq-mobile-s} {
+                flex-wrap: wrap;
+
+                // Hardcode some width that force a 3x2 code entry.
+                width: 65%;
             }
 
             @media #{$mq-tablet} {
-                display: flex !important;
+                flex-wrap: nowrap;
+                width: auto;
             }
         }
     }

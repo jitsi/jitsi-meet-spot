@@ -1,13 +1,15 @@
+@import './variables.scss';
+
 .clock {
     text-align: center;
     padding: 2.6em;
 
     .date {
         color: var(--container-sub-content-font-color);
-        font-size: var(--font-size-medium-plus);
+        font-size: $font-size-medium-plus;
     }
 
     .time {
-        font-size: var(--font-size-x-large);
+        font-size: $font-size-x-large;
     }
 }
