@@ -1,0 +1,70 @@
+@import './mixins';
+
+.electron-desktop-picker-modal {
+    .modal-shroud {
+        background-color: black;
+        opacity: 0.7;
+    }
+
+    .modal-content {
+        background-color: var(--container-bg-color);
+        padding: 20px;
+
+        button.close {
+            background-color: rgba(0, 0, 0, 0);
+        }
+    }
+}
+
+.desktop-picker {
+    width: 100%;
+
+    .picker-tabs {
+        button {
+            @include button-reset;
+            border: 0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            padding: 10px;
+        }
+
+        button.selected {
+            background-color: var(--container-bg-color);
+        }
+    }
+
+    .picker-choices {
+        background-color: var(--container-bg-color);
+        height: 250px;
+        overflow: auto;
+        padding: 10px;
+    }
+    
+    .picker-choice {
+        @include button-reset;
+    
+        border: 0;
+        border-radius: 5px;
+        display: inline-block;
+        width: 30%;
+    
+        &.selected {
+            background-color: var(--container-content-highlight-bg-color);
+        }
+    }
+    
+    .picker-choice-thumbnail {
+        height: auto;
+        padding: 10px;
+        width: 100%;
+    }
+    
+    .picker-choice-label {
+        display: block;
+        margin-top: 3px;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

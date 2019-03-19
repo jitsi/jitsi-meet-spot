@@ -28,7 +28,8 @@ export default {
     isWirelessScreenshareSupported() {
         const JitsiMeetJS = this.get();
 
-        return JitsiMeetJS.util.browser.isChrome()
-            && JitsiMeetJS.util.browser.supportsGetDisplayMedia();
+        return (JitsiMeetJS.util.browser.isChrome()
+            && JitsiMeetJS.util.browser.supportsGetDisplayMedia())
+            || JitsiMeetJS.util.browser.isElectron();
     }
 };
