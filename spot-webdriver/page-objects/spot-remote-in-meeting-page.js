@@ -50,7 +50,7 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.select(VIDEO_MUTE_BUTTON).click();
     }
 
-    /*
+    /**
      * Begins the wireless screensharing flow for when there is both wireless
      * and wired screensharing enabled.
      *
@@ -142,16 +142,6 @@ class SpotRemoteInMeetingPage extends PageObject {
                 waitTime: constants.REMOTE_COMMAND_WAIT
 
             });
-    }
-
-    /**
-     * Waits for the component for screenshare interaction confirmation to be
-     * displayed.
-     *
-     * @returns {void}
-     */
-    waitForSharePicker() {
-        this.waitForElementDisplayed(SHARE_PICKER);
     }
 
     /**

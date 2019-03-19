@@ -41,8 +41,8 @@ class SpotTV {
     }
 
     /**
-     * Waits for the meeting page to be displayed and obtains the name of the meeting that this Spot
-     * TV instance is currently in.
+     * Waits for the meeting page to be displayed and obtains the name of the
+     * meeting that this Spot-TV instance is currently in.
      *
      * @returns {string}
      */
