@@ -22,6 +22,7 @@ export class MeetingFrame extends React.Component {
     };
 
     static propTypes = {
+        avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
         invites: PropTypes.array,
         maxDesktopSharingFramerate: PropTypes.number,
@@ -146,6 +147,7 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'videoMuteStatusChanged', this._onVideoMuteChange);
 
+        this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
 
         this.props.remoteControlService.startListeningForRemoteMessages(

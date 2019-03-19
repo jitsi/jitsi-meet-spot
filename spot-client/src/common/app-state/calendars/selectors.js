@@ -28,7 +28,7 @@ export function getCalendarEvents(state) {
 * @param {Object} state - The Redux state.
 * @returns {string}
 */
-export function getDisplayName(state) {
+export function getCalendarName(state) {
     return state.calendars.displayName;
 }
 

@@ -7,6 +7,7 @@ import { ROUTES } from 'common/routing';
 import {
     CalendarStatus,
     InMeetingConfig,
+    Profile,
     ScreenshareInput,
     ScreenshareStatus
 } from './../components';
@@ -30,6 +31,7 @@ export default class AdminView extends React.Component {
             view: 'all'
         };
 
+        this._onChangeProfile = this._onChangeProfile.bind(this);
         this._onChangeScreenshareInput
             = this._onChangeScreenshareInput.bind(this);
         this._onShowAllOptions = this._onShowAllOptions.bind(this);
@@ -59,6 +61,8 @@ export default class AdminView extends React.Component {
      */
     _renderSubcomponent() {
         switch (this.state.view) {
+        case 'profile':
+            return <Profile onSuccess = { this._onShowAllOptions } />;
         case 'screenshare-input':
             return <ScreenshareInput onSuccess = { this._onShowAllOptions } />;
         case 'all':
@@ -66,6 +70,12 @@ export default class AdminView extends React.Component {
             return (
                 <>
                     <CalendarStatus />
+                    <div>
+                        <div className = 'admin-title'>Profile</div>
+                        <Button onClick = { this._onChangeProfile }>
+                            Change
+                        </Button>
+                    </div>
                     <div>
                         <div className = 'admin-title'>Screenshare Input</div>
                         <ScreenshareStatus />
@@ -94,6 +104,17 @@ export default class AdminView extends React.Component {
                 </>
             );
         }
+    }
+
+    /**
+     * Displays the view for setting a display name and avatar to use during a
+     * meeting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onChangeProfile() {
+        this.setState({ view: 'profile' });
     }
 
     /**

@@ -6,6 +6,7 @@ import { setSetupCompleted } from 'common/app-state';
 import { logger } from 'common/logger';
 
 import CalendarAuth from './calendar-auth';
+import Profile from './profile';
 import ScreenshareInput from './screenshare-input';
 import { SelectMedia } from './select-media';
 import SelectRoom from './select-room';
@@ -38,6 +39,7 @@ export class Setup extends React.Component {
             SelectMedia,
             CalendarAuth,
             SelectRoom,
+            Profile,
             ScreenshareInput
         ];
 

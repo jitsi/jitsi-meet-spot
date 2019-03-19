@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setCalendar } from 'common/app-state';
+import { setCalendar, setDisplayName } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button, Input, LoadingIcon } from 'common/ui';
 
@@ -166,6 +166,8 @@ export class SelectRoom extends React.Component {
             calendarService.getType()
         ));
 
+        this.props.dispatch(setDisplayName(''));
+
         this.props.onSuccess();
     }
 
@@ -184,6 +186,8 @@ export class SelectRoom extends React.Component {
             room.resourceName,
             calendarService.getType()
         ));
+
+        this.props.dispatch(setDisplayName(room.resourceName));
 
         this.props.onSuccess();
     }
