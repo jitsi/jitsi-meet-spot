@@ -1,6 +1,16 @@
 const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://localhost:8000';
 
 module.exports = {
+    /**
+     * The name of the video file which should be used by Chrome as the video
+     * to display while using a fake camera.
+     */
+    FAKE_SCREENSHARE_FILE_NAME: 'static-image.y4m',
+
+    /**
+     * The direct URL to visit to start the flow for becoming a Spot-Remote for
+     * a Spot-TV.
+     */
     JOIN_CODE_ENTRY_URL: TEST_SERVER_URL,
 
     /**
@@ -15,5 +25,13 @@ module.exports = {
      */
     REMOTE_COMMAND_WAIT: 5000,
 
-    SPOT_URL: `${TEST_SERVER_URL}/spot`
+    /**
+     * The direct URL to visit to for a browser to act as a Spot-TV.
+     */
+    SPOT_URL: `${TEST_SERVER_URL}/spot`,
+
+    /**
+     * The direct URL to visit to display the configuration for Spot-TV.
+     */
+    SPOT_TV_ADMIN_URL: `${TEST_SERVER_URL}/admin`
 };

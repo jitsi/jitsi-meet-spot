@@ -16,7 +16,11 @@ class SettingsButton extends React.Component {
         return (
             <div className = 'cog'>
                 <Link to = { ROUTES.ADMIN } >
-                    <i className = 'material-icons'>settings</i>
+                    <i
+                        className = 'material-icons'
+                        data-qa-id = 'admin-settings'>
+                        settings
+                    </i>
                 </Link>
             </div>
         );
