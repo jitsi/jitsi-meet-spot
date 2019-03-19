@@ -33,6 +33,7 @@
         "file-loader": "3.0.1",
         "jest": "24.1.0",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
+        "js-utils": "github:jitsi/js-utils#73a67a7a60d52f8e895f50939c8fcbd1f20fe7b5",
         "jsdoc": "3.5.5",
         "jsrsasign": "8.0.12",
         "lib-quiet-js": "github:virtuacoplenny/quiet-js#lenny/rewrite",
