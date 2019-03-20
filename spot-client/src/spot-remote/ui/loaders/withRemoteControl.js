@@ -11,7 +11,7 @@ import {
     setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
-import { remoteControlService } from 'common/remote-control';
+import { CONNECTION_EVENTS, remoteControlService } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 /**
@@ -67,15 +67,6 @@ export class RemoteControlLoader extends AbstractLoader {
          * @type {boolean}
          */
         this._isReconnectQueued = false;
-
-        /**
-         * The number of successive reconnect attempt made. After the limit of
-         * three attempts is reached, reconnects will be aborted and the login
-         * page will be displayed.
-         *
-         * @type {number}
-         */
-        this._reconnectCount = 0;
 
         /**
          * Whether or not the current instance of {@code RemoteControlLoader} is
@@ -138,13 +129,14 @@ export class RemoteControlLoader extends AbstractLoader {
              * remote control service connection. May trigger retrying to
              * establish the connection.
              *
-             * @param {boolean} isSpotDisconnect - Whether or not the disconenct
-             * is from a Spot-TV disconnecting.
+             * @param {string} reason - A constant which provides an explanation
+             * for the disconnect.
              * @private
              * @returns {void}
              */
-            onDisconnect: isSpotDisconnect => {
-                if (isSpotDisconnect) {
+            onDisconnect: reason => {
+                if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED) {
+                    logger.error('Disconnected due to Spot-TV leaving');
                     this.props.dispatch(clearSpotTVState());
                 } else {
                     logger.error(
@@ -191,6 +183,8 @@ export class RemoteControlLoader extends AbstractLoader {
             serverConfig: this.props.remoteControlConfiguration
         })
         .then(() => {
+            logger.log('Successfully connected to Spot-TV');
+
             this._isReconnectQueued = false;
         })
         .catch(error => {
@@ -237,22 +231,12 @@ export class RemoteControlLoader extends AbstractLoader {
             return Promise.reject();
         }
 
-        if (this._reconnectCount > 3) {
-            logger.warn(`Reconnect limit hit at ${this._reconnectCount}.`);
-
-            this._redirectBackToLogin();
-
-            return Promise.reject();
-        }
-
-        this._reconnectCount += 1;
         this._isReconnectQueued = true;
 
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = Math.floor(Math.random() * 1500) + 500;
 
-        logger.log(`Reconnect attempt number ${this._reconnectCount} in ${
-            jitter}ms`);
+        logger.log('Spot-Remote queue reconnect');
 
         const jitterPromise = new Promise(resolve => {
             this._reconnectTimeout = setTimeout(() => {
@@ -262,17 +246,9 @@ export class RemoteControlLoader extends AbstractLoader {
             }, jitter);
         });
 
-        const retryPromise = jitterPromise
+        return jitterPromise
             .then(() => remoteControlService.disconnect())
-            .then(() => this._loadService())
-            .then(() => {
-                logger.log(
-                    `Reconnected after ${this._reconnectCount} tries`);
-
-                this._reconnectCount = 0;
-            });
-
-        return retryPromise;
+            .then(() => this._loadService());
     }
 
     /**
