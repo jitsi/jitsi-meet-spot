@@ -55,6 +55,26 @@
         }
     }
 
+    .dial-pad-footer {
+        display: flex;
+        text-align: center;
+        width: 100%;
+
+        .dial-pad-footer-button {
+            flex: 1;
+        }
+
+        .backspace {
+            @include button-reset;
+
+            border: 0;
+
+            &:active {
+                @include active;
+            }
+        }
+    }
+
     .call-button {
         @include styled-button;
 
