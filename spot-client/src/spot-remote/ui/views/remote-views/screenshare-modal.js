@@ -14,7 +14,6 @@ export class ScreenshareModal extends React.Component {
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
-        screensharing: PropTypes.bool,
         screensharingType: PropTypes.string,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
@@ -45,7 +44,6 @@ export class ScreenshareModal extends React.Component {
                                 = { this.props.onStartWirelessScreenshare }
                             onStopScreensharing
                                 = { this.props.onStopScreensharing }
-                            screensharing = { this.props.screensharing }
                             screensharingType = { this.props.screensharingType }
                             wiredScreenshareEnabled
                                 = { this.props.wiredScreenshareEnabled }

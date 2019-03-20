@@ -23,7 +23,6 @@ export class InCall extends React.Component {
         dispatch: PropTypes.func,
         inMeeting: PropTypes.string,
         remoteControlService: PropTypes.object,
-        screensharing: PropTypes.bool,
         screensharingType: PropTypes.string,
         videoMuted: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
@@ -78,7 +77,6 @@ export class InCall extends React.Component {
         const {
             audioMuted,
             inMeeting,
-            screensharing,
             screensharingType,
             videoMuted,
             wiredScreensharingEnabled
@@ -113,7 +111,7 @@ export class InCall extends React.Component {
                         label = 'Share Content'
                         onClick = { this._onToggleScreenshare }
                         qaId = {
-                            screensharing ? 'stop-share' : 'start-share'
+                            screensharingType ? 'stop-share' : 'start-share'
                         }
                         subIcon = { this._renderScreenshareSubIcon() } />
                     <NavButton
@@ -131,7 +129,6 @@ export class InCall extends React.Component {
                             = { this._onStartWirelessScreenshare }
                         onStopScreensharing
                             = { this._onStopScreenshare }
-                        screensharing = { screensharing }
                         screensharingType = { screensharingType }
                         wiredScreenshareEnabled
                             = { wiredScreensharingEnabled }
@@ -185,7 +182,7 @@ export class InCall extends React.Component {
         // screenshare occurring, then start the wireless screensharing flow.
         if (this._isWirelessScreenshareSupported
             && !this.props.wiredScreensharingEnabled
-            && !this.props.screensharing) {
+            && !this.props.screensharingType) {
             this.props.remoteControlService.setWirelessScreensharing(true);
 
             return;
@@ -252,7 +249,7 @@ export class InCall extends React.Component {
      * @returns {ReactElement | null}
      */
     _renderScreenshareSubIcon() {
-        return this.props.screensharing
+        return this.props.screensharingType
             ? <div className = 'on-indicator' />
             : null;
     }

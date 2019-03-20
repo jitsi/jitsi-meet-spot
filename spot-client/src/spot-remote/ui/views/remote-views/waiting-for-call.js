@@ -29,7 +29,6 @@ class WaitingForCallView extends React.Component {
         events: PropTypes.array,
         onGoToMeeting: PropTypes.func,
         remoteControlService: PropTypes.object,
-        screensharing: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
     };
 

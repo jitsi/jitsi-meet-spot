@@ -171,7 +171,7 @@ export class MeetingFrame extends React.Component {
 
         this.props.updateSpotTvState({
             audioMuted: false,
-            screensharing: false,
+            screensharingType: undefined,
             videoMuted: false
         });
     }
@@ -440,9 +440,9 @@ export class MeetingFrame extends React.Component {
         this._maybeToggleFilmstripVisibility();
 
         this.props.updateSpotTvState({
-            screensharing: this._isScreensharing,
             screensharingType: this._isScreensharing
-                ? details.sourceType : ''
+                ? details.sourceType || 'other'
+                : undefined
         });
     }
 
