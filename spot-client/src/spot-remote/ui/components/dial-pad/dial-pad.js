@@ -28,6 +28,7 @@ export default class DialPad extends React.Component {
             enteredNumber: ''
         };
 
+        this._onDeleteLastCharacter = this._onDeleteLastCharacter.bind(this);
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
         this._onGoToCall = this._onGoToCall.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
@@ -76,16 +77,52 @@ export default class DialPad extends React.Component {
                         { this._renderDialButton('#') }
                     </div>
                 </div>
-                <div>
-                    <button
-                        className = 'call-button'
-                        onClick = { this._onGoToCall }
-                        type = 'submit'>
-                        Call
-                    </button>
+                <div className = 'dial-pad-footer'>
+                    <div className = 'dial-pad-footer-button' />
+                    <div className = 'dial-pad-footer-button'>
+                        <button
+                            className = 'call-button'
+                            onClick = { this._onGoToCall }
+                            type = 'submit'>
+                            Call
+                        </button>
+                    </div>
+                    <div className = 'dial-pad-footer-button'>
+                        <button
+                            className = 'backspace'
+                            onClick = { this._onDeleteLastCharacter }
+                            type = 'button'>
+                            <i className = 'material-icons'>backspace</i>
+                        </button>
+                    </div>
                 </div>
             </form>
         );
+    }
+
+    /**
+     * Removes the last character from the entered number.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onDeleteLastCharacter() {
+        this.setState({
+            enteredNumber: this.state.enteredNumber.slice(0, -1)
+        });
+    }
+
+    /**
+     * Callback invoked when a button on the dial pad is clicked.
+     *
+     * @param {string} value - The value of the button.
+     * @private
+     * @returns {void}
+     */
+    _onDialButtonClick(value) {
+        this.setState({
+            enteredNumber: this.state.enteredNumber + value
+        });
     }
 
     /**
@@ -125,19 +162,6 @@ export default class DialPad extends React.Component {
     _onInputChange(event) {
         this.setState({
             enteredNumber: event.target.value
-        });
-    }
-
-    /**
-     * Callback invoked when a button on the dial pad is clicked.
-     *
-     * @param {string} value - The value of the button.
-     * @private
-     * @returns {void}
-     */
-    _onDialButtonClick(value) {
-        this.setState({
-            enteredNumber: this.state.enteredNumber + value
         });
     }
 
