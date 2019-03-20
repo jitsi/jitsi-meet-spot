@@ -3,7 +3,7 @@ import { $iq } from 'strophe.js';
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
-import { COMMANDS, MESSAGES } from './constants';
+import { COMMANDS, CONNECTION_EVENTS, MESSAGES } from './constants';
 import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
@@ -628,7 +628,7 @@ class RemoteControlService {
             } else if (this._getSpotId() === from) {
                 // A Spot-Remote needs to be updated about no longer being
                 // connected to a Spot-TV.
-                this._onDisconnect(true);
+                this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
             }
 
             return;
@@ -642,8 +642,8 @@ class RemoteControlService {
 
         if (updateType === 'error') {
             logger.log(
-                'error presence received, interpretting as Spot-TV disconnect');
-            this._onDisconnect(true);
+                'error presence received, interpreting as Spot-TV disconnect');
+            this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
 
             return;
         }

@@ -36,6 +36,17 @@ export const COMMANDS = {
 };
 
 /**
+ * An enumeration of custom connection-related events that can be emitted.
+ */
+export const CONNECTION_EVENTS = {
+
+    /**
+     * A Spot-TV has is no longer available.
+     */
+    SPOT_TV_DISCONNECTED: 'spot-tv-disconnected'
+};
+
+/**
  * An enumeration of custom namespaces to use for iqs.
  */
 export const IQ_NAMESPACES = {
