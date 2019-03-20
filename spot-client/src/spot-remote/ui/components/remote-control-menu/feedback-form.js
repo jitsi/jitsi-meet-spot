@@ -4,6 +4,13 @@ import React from 'react';
 import { logger } from 'common/logger';
 
 /**
+ * By default will use 1 minute for feedback inactivity timeout.
+ *
+ * @type {number}
+ */
+const DEFAULT_INACTIVITY_TIMEOUT = 60 * 1000;
+
+/**
  * A React Component for inputting and submitting post-call feedback by leaving
  * a rating and a
  *
@@ -11,8 +18,20 @@ import { logger } from 'common/logger';
  */
 export default class FeedbackForm extends React.Component {
     static propTypes = {
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        timeout: PropTypes.number
     };
+
+    static defaultProps = {
+        timeout: DEFAULT_INACTIVITY_TIMEOUT
+    };
+
+    /**
+     * The inactivity timeout ID.
+     *
+     * @type {number|null}
+     */
+    _timeout = null;
 
     /**
      * Initializes a new {@code FeedbackForm} instance.
@@ -33,6 +52,24 @@ export default class FeedbackForm extends React.Component {
         this._onMessageChange = this._onMessageChange.bind(this);
         this._onRatingChange = this._onRatingChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
+    }
+
+    /**
+     * Restarts the idle timeout when the component is mounted.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._restartInactivityTimeout();
+    }
+
+    /**
+     * Cancels the inactivity timeout when the component is unmounted.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._cancelInactivityTimeout();
     }
 
     /**
@@ -60,6 +97,17 @@ export default class FeedbackForm extends React.Component {
     }
 
     /**
+     * Cancels the inactivity timeout.
+     *
+     * @private
+     * @returns {void}
+     */
+    _cancelInactivityTimeout() {
+        clearTimeout(this._timeout);
+        this._timeout = null;
+    }
+
+    /**
      * Callback invoked when the entered additional feedback details is updated.
      *
      * @param {ChangeEvent} e - The DOM event from the message field being
@@ -71,6 +119,7 @@ export default class FeedbackForm extends React.Component {
         this.setState({
             message: e.target.value
         });
+        this._restartInactivityTimeout();
     }
 
     /**
@@ -83,6 +132,7 @@ export default class FeedbackForm extends React.Component {
      */
     _onRatingChange(score) {
         this.setState({ score });
+        this._restartInactivityTimeout();
     }
 
     /**
@@ -110,10 +160,7 @@ export default class FeedbackForm extends React.Component {
 
         logger.log('Feedback submitting');
 
-        this.props.remoteControlService.submitFeedback({
-            message: this.state.message,
-            score: this.state.score
-        });
+        this._submitFeedback();
     }
 
     /**
@@ -174,5 +221,37 @@ export default class FeedbackForm extends React.Component {
                 { stars }
             </div>
         );
+    }
+
+    /**
+     * Restarts the inactivity timeout.
+     *
+     * @private
+     * @returns {void}
+     */
+    _restartInactivityTimeout() {
+        this._cancelInactivityTimeout();
+        if (this.props.timeout && this.props.timeout > 0) {
+            this._timeout = setTimeout(
+                () => {
+                    logger.log('Feedback submitting by inactivity timeout');
+
+                    this._submitFeedback();
+                },
+                this.props.timeout);
+        }
+    }
+
+    /**
+     * Submits the feedback currently stored in the state (whatever it is).
+     *
+     * @private
+     * @returns {void}
+     */
+    _submitFeedback() {
+        this.props.remoteControlService.submitFeedback({
+            message: this.state.message,
+            score: this.state.score
+        });
     }
 }
