@@ -75,12 +75,16 @@ export default class DesktopPicker extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const windowSelected = this.state.tab === 'window';
+        const rootClasses
+            = `desktop-picker ${windowSelected ? 'left-most-tab' : ''}`;
+
         return (
-            <div className = 'desktop-picker'>
+            <div className = { rootClasses }>
                 <div className = 'picker-tabs'>
                     <button
                         className
-                            = { this.state.tab === 'window' ? 'selected' : '' }
+                            = { windowSelected ? 'selected' : '' }
                         onClick = { this._onShowWindowPreviews }>
                         Window
                     </button>

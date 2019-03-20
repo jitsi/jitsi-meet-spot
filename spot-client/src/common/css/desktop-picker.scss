@@ -7,11 +7,15 @@
     }
 
     .modal-content {
-        background-color: var(--container-bg-color);
+        background-color: rgb(42, 58, 75);
         padding: 20px;
 
         button.close {
             background-color: rgba(0, 0, 0, 0);
+        }
+
+        button.close:active {
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 }
@@ -29,12 +33,13 @@
         }
 
         button.selected {
-            background-color: var(--container-bg-color);
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 
     .picker-choices {
-        background-color: var(--container-bg-color);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
         height: 250px;
         overflow: auto;
         padding: 10px;
@@ -42,7 +47,7 @@
     
     .picker-choice {
         @include button-reset;
-    
+        background-color: rgba(0, 0, 0, 0);
         border: 0;
         border-radius: 5px;
         display: inline-block;
@@ -66,5 +71,11 @@
         text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    &.left-most-tab {
+        .picker-choices  {
+            border-top-left-radius: 0px;
+        }
     }
 }
