@@ -13,7 +13,6 @@ export default class RemoteControlMenu extends React.Component {
         audioMuted: PropTypes.bool,
         onToggleScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
-        screensharing: PropTypes.bool,
         screensharingEnabled: PropTypes.bool,
         videoMuted: PropTypes.bool
     };

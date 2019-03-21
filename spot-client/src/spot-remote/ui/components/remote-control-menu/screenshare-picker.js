@@ -19,14 +19,6 @@ export class ScreensharePicker extends React.Component {
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
-
-        /**
-         * Generally if screensharingType is defined, then screensharing should
-         * be true. However, screensharing may be true while there is not type
-         * (currently due to jitsi-meet changes not being deployed). So rely on
-         * both to show the proper view.
-         */
-        screensharing: PropTypes.bool,
         screensharingType: PropTypes.string,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
@@ -39,7 +31,7 @@ export class ScreensharePicker extends React.Component {
      * @inheritdoc
      */
     static getDerivedStateFromProps(props) {
-        if (props.screensharingType || props.screensharing) {
+        if (props.screensharingType) {
             return {
                 displayWirelessInstructions: false,
                 displayWiredInstructions: false
@@ -122,7 +114,7 @@ export class ScreensharePicker extends React.Component {
      */
     _renderContent() {
         // If screensharing is enabled, show a stop screensharing view.
-        if (this.props.screensharingType || this.props.screensharing) {
+        if (this.props.screensharingType) {
             return this._renderStopShare();
         }
 

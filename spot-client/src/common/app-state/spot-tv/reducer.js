@@ -8,8 +8,7 @@ const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: undefined,
     joinCode: null,
-    screensharing: false,
-    screensharingType: '',
+    screensharingType: undefined,
     spotId: null,
     videoMuted: true,
     view: null
