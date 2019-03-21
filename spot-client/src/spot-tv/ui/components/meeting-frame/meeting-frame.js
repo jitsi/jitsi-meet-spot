@@ -115,6 +115,7 @@ export class MeetingFrame extends React.Component {
             },
             interfaceConfigOverwrite: {
                 DEFAULT_LOCAL_DISPLAY_NAME: '',
+                ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
                 TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
             onload: this._onMeetingLoaded,
