@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { JitsiMeetJSProvider } from 'common/vendor';
+import { avUtils } from 'common/media';
 
 /**
  * Displays a volume meter for previewing the selected audio input device.
@@ -98,19 +98,15 @@ export default class MicPreview extends React.PureComponent {
             return;
         }
 
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
+        avUtils.createLocalAudioTrack(description.deviceId)
+            .then(jitsiLocalTrack => {
+                this._previewTrack = jitsiLocalTrack;
 
-        JitsiMeetJS.createLocalTracks({
-            micDeviceId: description.deviceId,
-            devices: [ 'audio' ]
-        }).then(jitsiLocalTracks => {
-            this._previewTrack = jitsiLocalTracks[0];
-
-            this._previewTrack.on(
-                JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED,
-                this._updateAudioLevel
-            );
-        });
+                this._previewTrack.on(
+                    avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
+                    this._updateAudioLevel
+                );
+            });
     }
 
     /**
@@ -121,10 +117,8 @@ export default class MicPreview extends React.PureComponent {
      */
     _destroyPreviewTrack() {
         if (this._previewTrack) {
-            const JitsiMeetJS = JitsiMeetJSProvider.get();
-
             this._previewTrack.off(
-                JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED,
+                avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
                 this._updateAudioLevel
             );
             this._previewTrack.dispose();

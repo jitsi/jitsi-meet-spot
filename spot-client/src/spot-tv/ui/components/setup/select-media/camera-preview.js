@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { JitsiMeetJSProvider } from 'common/vendor';
+import { avUtils } from 'common/media';
 
 /**
  * Displays a video element previewing the selected video input device.
@@ -79,21 +79,18 @@ export default class CameraPreview extends React.PureComponent {
 
         const description = this.props.devices.find(device =>
             device.label === this.props.label);
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         if (!description) {
             return;
         }
 
-        JitsiMeetJS.createLocalTracks({
-            cameraDeviceId: description.deviceId,
-            devices: [ 'video' ]
-        }).then(jitsiLocalTracks => {
-            this._previewTrack = jitsiLocalTracks[0];
+        avUtils.createLocalVideoTrack(description.deviceId)
+            .then(jitsiLocalTrack => {
+                this._previewTrack = jitsiLocalTrack;
 
-            this._ref.current.srcObject
-                = this._previewTrack.getOriginalStream();
-        });
+                this._ref.current.srcObject
+                    = this._previewTrack.getOriginalStream();
+            });
     }
 
     /**

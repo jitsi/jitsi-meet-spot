@@ -1,5 +1,7 @@
 import Bowser from 'bowser';
 
+import { JitsiMeetJSProvider } from 'common/vendor';
+
 const browser = Bowser.getParser(window.navigator.userAgent);
 
 /**
@@ -23,4 +25,20 @@ export function isAutoFocusSupported() {
  */
 export function isDesktopBrowser() {
     return browser.getPlatformType() === 'desktop';
+}
+
+/**
+ * Returns whether or not the current environment supports wirelessly screensharing into a Spot.
+ * Currently only Chrome works and the underlying implementation assumes getDisplayMedia is
+ * available.
+ *
+ * @private
+ * @returns {boolean}
+ */
+export function isWirelessScreenshareSupported() {
+    const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
+
+    return (jitsiBrowserDetection.isChrome()
+        && jitsiBrowserDetection.supportsGetDisplayMedia())
+        || jitsiBrowserDetection.isElectron();
 }

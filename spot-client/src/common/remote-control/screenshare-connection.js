@@ -1,4 +1,5 @@
 import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
@@ -48,8 +49,8 @@ export default class ScreenshareConnection {
             = new JitsiMeetJS.ProxyConnectionService({
                 jitsiConnection: options.jitsiConnection,
                 onConnectionClosed: () => this.options.onConnectionClosed(),
-                onSendMessage: (to, data) => this.options.sendMessage(to, data),
-                onRemoteStream() { /** no-op */ }
+                onRemoteStream: () => { /** no-op for Spot */ },
+                onSendMessage: (to, data) => this.options.sendMessage(to, data)
             });
     }
 
@@ -100,15 +101,12 @@ export default class ScreenshareConnection {
             return Promise.resolve();
         }
 
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        return JitsiMeetJS.createLocalTracks({
-            ...this.options.mediaConfiguration,
-            devices: [ 'desktop' ]
-        }).then(jitsiLocalTracks => {
+        return avUtils.createLocalDesktopTrack(
+            this.options.mediaConfiguration
+        ).then(jitsiLocalTrack => {
             logger.log('screenshareConnection created desktop track');
 
-            this._tracks = this._tracks.concat(jitsiLocalTracks);
+            this._tracks = this._tracks.concat([ jitsiLocalTrack ]);
 
             /**
              * Clean up the tracks and {@code ProxyConnectionService} in
@@ -123,8 +121,8 @@ export default class ScreenshareConnection {
                 return;
             }
 
-            jitsiLocalTracks[0].on(
-                JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
+            jitsiLocalTrack.on(
+                avUtils.getTrackEvents().LOCAL_TRACK_STOPPED,
                 () => {
                     logger.log('screenshareConnection desktop stopped');
 

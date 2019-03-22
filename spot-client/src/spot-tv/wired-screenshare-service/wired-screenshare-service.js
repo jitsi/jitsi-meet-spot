@@ -2,7 +2,7 @@ import debounce from 'lodash.debounce';
 
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
-import { JitsiMeetJSProvider } from 'common/vendor';
+import { avUtils } from 'common/media';
 
 import VideoChangeListener from './video-change-listener';
 
@@ -23,16 +23,12 @@ export class WiredScreenshareService {
 
         this._videoInputDevices = null;
 
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
         this._onDeviceListChange = debounce(
             this._onDeviceListChange.bind(this),
             500
         );
 
-        JitsiMeetJS.mediaDevices.addEventListener(
-            JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
-           this._onDeviceListChange);
+        avUtils.listenForDeviceListChanged(this._onDeviceListChange);
     }
 
     /**
@@ -54,19 +50,15 @@ export class WiredScreenshareService {
      * @returns {Array<Object>}
      */
     getVideoInputDevices() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
         if (this._videoInputDevices) {
             return Promise.resolve(this._videoInputDevices);
         }
 
         // TODO: check if permission is already provided and avoid calling gum
         // if possible.
-        return JitsiMeetJS.createLocalTracks({ devices: [ 'video' ] })
-            .then(tracks => tracks.forEach(track => track.dispose()))
-            .then(() => new Promise(
-                resolve => JitsiMeetJS.mediaDevices.enumerateDevices(resolve)
-            ))
+        return avUtils.createLocalVideoTrack()
+            .then(track => track.dispose())
+            .then(() => avUtils.enumerateDevices())
             .then(deviceList => {
                 const videoInputDevices
                     = this._filterForVideoInputs(deviceList);

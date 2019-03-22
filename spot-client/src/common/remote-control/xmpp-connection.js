@@ -77,12 +77,14 @@ export default class XmppConnection {
             }
         );
 
+        const connectionEvents = JitsiMeetJS.events.connection;
+
         const connectionPromise = new Promise((resolve, reject) => {
             this.xmppConnection.addEventListener(
-                JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+                connectionEvents.CONNECTION_ESTABLISHED,
                 () => {
                     this.xmppConnection.addEventListener(
-                        JitsiMeetJS.events.connection.CONNECTION_FAILED,
+                        connectionEvents.CONNECTION_FAILED,
                         onDisconnect);
 
                     resolve();
@@ -90,7 +92,7 @@ export default class XmppConnection {
             );
 
             this.xmppConnection.addEventListener(
-                JitsiMeetJS.events.connection.CONNECTION_FAILED,
+                connectionEvents.CONNECTION_FAILED,
                 reject
             );
         });

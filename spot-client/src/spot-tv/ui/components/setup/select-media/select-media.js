@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Button } from 'common/ui';
-import { JitsiMeetJSProvider } from 'common/vendor';
+import { avUtils } from 'common/media';
 
 import CameraPreview from './camera-preview';
 import MicPreview from './mic-preview';
@@ -52,12 +52,7 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        JitsiMeetJS.mediaDevices.addEventListener(
-            JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
-            this._onDeviceListChange
-        );
+        avUtils.listenForDeviceListChanged(this._onDeviceListChange);
 
         this._getDevices();
     }
@@ -68,12 +63,7 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        JitsiMeetJS.mediaDevices.removeEventListener(
-            JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
-            this._onDeviceListChange
-        );
+        avUtils.stopListeningForDeviceListChanged(this._onDeviceListChange);
     }
 
     /**
@@ -200,13 +190,9 @@ class SelectMedia extends React.Component {
      * @returns {void}
      */
     _getDevices() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-
-        JitsiMeetJS.createLocalTracks({ devices: [ 'audio', 'video' ] })
+        avUtils.createLocalTracks()
             .then(tracks => tracks.forEach(track => track.dispose()))
-            .then(() => new Promise(
-                resolve => JitsiMeetJS.mediaDevices.enumerateDevices(resolve)
-            ))
+            .then(() => avUtils.enumerateDevices())
             .then(devices => {
                 this._onDeviceListChange(devices);
             });
