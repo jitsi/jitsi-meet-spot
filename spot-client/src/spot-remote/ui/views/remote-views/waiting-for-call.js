@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
 import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 import { Clock, ScheduledMeetings } from 'common/ui';
-import { getRandomMeetingName } from 'common/utils';
-import { JitsiMeetJSProvider } from 'common/vendor';
+import {
+    getRandomMeetingName,
+    isWirelessScreenshareSupported
+} from 'common/utils';
 
 import {
     DialPad,
@@ -15,8 +18,6 @@ import {
     ScreensharePicker,
     SelfFillingNameEntry
 } from './../../components';
-
-const JitsiTrackErrors = JitsiMeetJSProvider.get().errors.track;
 
 /**
  * Returns the React Element to display while the Spot instance is not in a
@@ -158,7 +159,7 @@ class WaitingForCallView extends React.Component {
                         wiredScreenshareEnabled
                             = { this.props.wiredScreensharingEnabled }
                         wirelessScreenshareEnabled
-                            = { JitsiMeetJSProvider.isWirelessScreenshareSupported() } />
+                            = { isWirelessScreenshareSupported() } />
                 </div>
             );
         }
@@ -205,7 +206,7 @@ class WaitingForCallView extends React.Component {
     _onSetScreenshareSelectActive() {
         // If only wireless sceensharing is available then start the wireless
         // screensharing flow.
-        if (JitsiMeetJSProvider.isWirelessScreenshareSupported()
+        if (isWirelessScreenshareSupported()
             && !this.props.wiredScreensharingEnabled) {
             this._onJoinWithScreensharing(true);
 
@@ -236,10 +237,12 @@ class WaitingForCallView extends React.Component {
             }
         )
         .catch(error => {
-            if (error.name === JitsiTrackErrors.CHROME_EXTENSION_USER_CANCELED) {
+            const events = avUtils.getTrackErrorEvents();
+
+            if (error.name === events.CHROME_EXTENSION_USER_CANCELED) {
                 logger.log('onGoToMeeting with screensharing canceled by the user');
             } else {
-                logger.error(`onGoToMeeting with screensharin rejected: ${error}`);
+                logger.error(`onGoToMeeting with screensharing rejected: ${error}`);
             }
         })
         .then(() => {

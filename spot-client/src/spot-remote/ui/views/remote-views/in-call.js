@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
 import { LoadingIcon } from 'common/ui';
-import { parseMeetingUrl } from 'common/utils';
+import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
 import { NavButton, NavContainer } from '../../components';
 
 import ScreenshareModal from './screenshare-modal';
-import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
  * A view for displaying ways to interact with the Spot while Spot is in a
@@ -41,9 +40,7 @@ export class InCall extends React.Component {
             showScreenshareModal: false
         };
 
-        this._isWirelessScreenshareSupported
-            = JitsiMeetJSProvider.isWirelessScreenshareSupported();
-
+        this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
         this._onCloseScreenshareModal
             = this._onCloseScreenshareModal.bind(this);
         this._onHangUp = this._onHangUp.bind(this);

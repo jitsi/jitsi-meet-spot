@@ -1,5 +1,6 @@
 import { logger } from 'common/logger';
-import { JitsiMeetJSProvider } from 'common/vendor';
+
+import { avUtils } from 'common/media';
 
 /**
  * The default dimensions for the video element and canvas. Lower resolution is
@@ -228,13 +229,9 @@ export default class VideoChangeListener {
      * @returns {Promise}
      */
     _getVideoStream() {
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
-        const enumerateDevicesPromise = new Promise(resolve =>
-            JitsiMeetJS.mediaDevices.enumerateDevices(resolve));
-
         let desiredDeviceId;
 
-        return enumerateDevicesPromise
+        return avUtils.enumerateDevices()
             .then(devices => devices.find(
                 device => device.label === this._deviceLabel
                     && device.kind === 'videoinput'))
@@ -247,28 +244,24 @@ export default class VideoChangeListener {
 
                 desiredDeviceId = deviceId;
 
-                return JitsiMeetJS.createLocalTracks({
-                    cameraDeviceId: deviceId,
-                    devices: [ 'video' ]
-                });
+                return avUtils.createLocalVideoTrack(deviceId);
             })
-            .then(jitsiLocalTracks => {
+            .then(jitsiLocalTrack => {
                 // Verify the correct track has been obtained because jitsi
                 // does not use exact device id matching for getUserMedia.
 
-                const jitsiVideoTrack = jitsiLocalTracks[0];
-                const mediaStream = jitsiLocalTracks[0].getOriginalStream();
+                const mediaStream = jitsiLocalTrack.getOriginalStream();
                 const videoTracks = mediaStream && mediaStream.getVideoTracks();
                 const videoTrack = videoTracks[0];
                 const constraints = videoTrack.getConstraints();
 
                 if (constraints.deviceId !== desiredDeviceId) {
-                    jitsiVideoTrack.dispose();
+                    jitsiLocalTrack.dispose();
 
                     return Promise.reject('Did not obtain track');
                 }
 
-                return jitsiVideoTrack;
+                return jitsiLocalTrack;
             });
     }
 
