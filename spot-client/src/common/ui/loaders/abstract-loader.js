@@ -64,7 +64,7 @@ export class AbstractLoader extends React.PureComponent {
      * @returns {Object | null}
      */
     _getPropsForChildren() {
-        throw new Error('Method _loadService must be implemented by subclass');
+        throw new Error('Method _getPropsForChildren must be implemented by subclass');
     }
 
     /**

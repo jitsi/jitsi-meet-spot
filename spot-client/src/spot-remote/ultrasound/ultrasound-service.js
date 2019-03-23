@@ -92,7 +92,7 @@ class UltrasoundService {
             this._transmissionDelay = transmissionDelay;
         })
         .catch(error => {
-            logger.error(`ultrasound failed to initialize ${error}`);
+            logger.error('ultrasound failed to initialize', { error });
 
             this._initializationPromise = null;
 

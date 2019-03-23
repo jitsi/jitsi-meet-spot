@@ -166,8 +166,10 @@ class WiredScreenshareDetector extends React.PureComponent {
      */
     _onWiredScreenshareChange(isDeviceConnected) {
         if (isDeviceConnected !== this.props.hasScreenshareDevice) {
-            logger.log(`Screensharing device connection changing to ${
-                isDeviceConnected}`);
+            logger.log(
+                'Screensharing device connection changed',
+                { isDeviceConnected }
+            );
 
             this.props.dispatch(
                 setWiredScreenshareDeviceConnected(isDeviceConnected));

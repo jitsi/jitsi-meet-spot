@@ -66,8 +66,8 @@ export class Meeting extends React.Component {
     componentDidMount() {
         if (!this._queryParams.location) {
             logger.error(
-                'No valid meeting url detected. Params are: ',
-                this.props.location.search
+                'No valid meeting url detected.',
+                { params: this.props.location.search }
             );
             this._onMeetingLeave();
         }

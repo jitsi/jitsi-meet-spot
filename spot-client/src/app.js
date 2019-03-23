@@ -61,8 +61,10 @@ export class App extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        logger.log(`App mounted in ${window.performance.now()} on ${
-            window.navigator.userAgent}`);
+        logger.log('App mounted', {
+            duration: window.performance.now(),
+            userAgent: window.navigator.userAgent
+        });
 
         /**
          * Defer touch actions to web to handle instead of the mobile device.

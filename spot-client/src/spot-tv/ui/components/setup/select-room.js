@@ -120,7 +120,7 @@ export class SelectRoom extends React.Component {
         return calendarService.getRooms()
             .then(rooms => {
                 logger.log(
-                    `selectRoom got room list of ${rooms.length}`);
+                    'fetched list of rooms', { count: rooms.length });
 
                 this.setState({
                     loading: false,
@@ -128,8 +128,7 @@ export class SelectRoom extends React.Component {
                 });
             })
             .catch(error => {
-                logger.error(
-                    `selectRoom could not fetch rooms ${error}`);
+                logger.error('could not fetch list of rooms', { error });
 
                 this.setState({
                     loading: false,

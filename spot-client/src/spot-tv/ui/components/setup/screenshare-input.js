@@ -49,16 +49,18 @@ class ScreenshareInput extends React.Component {
     componentDidMount() {
         wiredScreenshareService.getVideoInputDevices()
             .then(cameras => {
-                logger.log(`screenshareInput got ${cameras.length} devices`);
+                logger.log(
+                    'got device list for screenshare inputs',
+                    { count: cameras.length }
+                );
 
                 this._onDeviceListChange(cameras);
 
                 wiredScreenshareService.startListeningForDeviceChange(
                     this._onDeviceListChange);
             })
-            .catch(error =>
-                logger.error(`screenshareInput failed gUM ${
-                    JSON.stringify(error)}`));
+            .catch(error => logger.error(
+                'failed to get list of screenshare inputs', { error }));
     }
 
     /**

@@ -204,9 +204,10 @@ class SelfFillingNameEntry extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
-        logger.log(`selfFillingMeetingName submitted using entered name ${
-            Boolean(this.state.enteredMeetingName)} or using previous random ${
-            Boolean(this._fullGeneratedMeetingName)}`);
+        logger.log('meeting name submitted', {
+            enteredName: this.state.enteredMeetingName,
+            generatedName: this._fullGeneratedMeetingName
+        });
 
         this.props.onSubmit(
             this.state.enteredMeetingName

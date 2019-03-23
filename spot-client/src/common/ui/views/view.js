@@ -25,7 +25,7 @@ class View extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        logger.log(`View mounted: ${this.props.name}`);
+        logger.log('View mounted', { name: this.props.name });
     }
 
     /**

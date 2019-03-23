@@ -62,7 +62,7 @@ export class InMeetingConfig extends React.Component {
      * @returns {void}
      */
     _onShowToolbarChange({ target: { checked } }) {
-        logger.log(`inMeetingConfig changed toolbar ${checked}`);
+        logger.log('updated in-meeting toolbar display', { display: checked });
 
         this.props.dispatch(setMeetingToolbarVisible(checked));
     }

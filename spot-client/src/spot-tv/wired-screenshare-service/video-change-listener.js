@@ -122,7 +122,9 @@ export default class VideoChangeListener {
         this._videoElement.removeAttribute('srcObject');
         this._videoElement.load();
 
-        logger.log(`${this} stopped`);
+        logger.log('Video change listener stopped', {
+            label: this._deviceLabel
+        });
     }
 
     /**
@@ -215,7 +217,9 @@ export default class VideoChangeListener {
             })
             .then(() => this._startDiffCheckInterval())
             .then(() => {
-                logger.log(`${this} started`);
+                logger.log('Video change listener started', {
+                    label: this._deviceLabel
+                });
             });
 
         return this._startPromise;
@@ -302,20 +306,14 @@ export default class VideoChangeListener {
 
             if (isDeviceConnected !== this._isDeviceConnected) {
                 this._isDeviceConnected = isDeviceConnected;
-                logger.log(
-                    `${this} device connected: ${isDeviceConnected},`
-                        + `rest score: ${rgbScoreAtRest}, current score: ${currentRGBScore}`);
+                logger.log('Video changed detected', {
+                    currentScore: currentRGBScore,
+                    isDeviceConnected,
+                    label: this._deviceLabel,
+                    restScore: rgbScoreAtRest
+                });
                 this._notifyChangeDetected(this._isDeviceConnected);
             }
         }, 1000);
-    }
-
-    /**
-     * Implements toString for logging convenience.
-     *
-     * @returns {string}
-     */
-    toString() {
-        return `VideoChangeListener[deviceLabel=${this._deviceLabel}]`;
     }
 }

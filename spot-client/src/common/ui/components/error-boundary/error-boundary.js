@@ -25,8 +25,10 @@ export default class ErrorBoundary extends React.Component {
      * @inheritdoc
      */
     componentDidCatch(error, info) {
-        logger.error(`errorBoundary triggered: ${error.toString()}, Info: ${
-            JSON.stringify(info)}`);
+        logger.error('error boundary triggered', {
+            error,
+            info
+        });
 
         this.setState({
             error,

@@ -69,7 +69,7 @@ export class CalendarAuth extends React.Component {
      * @returns {Promise}
      */
     _onAuthEnter(type) {
-        logger.log(`calendarAuth selected ${type}`);
+        logger.log('calendar selected', { type });
 
         return calendarService.initialize(type)
             .then(() => calendarService.triggerSignIn())
@@ -78,8 +78,7 @@ export class CalendarAuth extends React.Component {
 
                 this.props.onSuccess();
             })
-            .catch(error => logger.error(
-                `calendarAuth failed ${JSON.stringify(error)}`));
+            .catch(error => logger.error('calendar auth failed', { error }));
     }
 
     /**
