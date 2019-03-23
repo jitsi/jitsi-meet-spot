@@ -1,0 +1,38 @@
+@import './../media-queries';
+@import './../mixins';
+@import './../variables.scss';
+
+.nav-section {
+    padding: 0 0 20px;
+    text-align: center;
+
+    .nav-container {
+        display: inline-block;
+    }
+}
+
+.nav {
+    @include centered-content;
+
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 200px;
+
+    @media #{$mq-tablet} {
+        flex-wrap: nowrap;
+        width: auto;
+    }
+
+    .nav-button {
+        @media #{$mq-tablet} {
+            margin: 10px 0;
+        }
+
+        &:not(:last-child) {
+            @media #{$mq-tablet} {
+                margin-right: 4em;
+            }
+        }
+    }
+}

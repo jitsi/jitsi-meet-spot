@@ -1,0 +1,84 @@
+@import './../media-queries';
+@import './../mixins';
+
+.nav-button {
+    background-color: transparent;
+    border: 0;
+    color: inherit;
+    font-size: inherit;
+    margin-top: 10px;
+
+    &.active {
+        cursor: default;
+    }
+
+    &.active .nav-icon-container,
+    &:active .nav-icon-container {
+        background-color: var(--container-bg-color);
+    }
+
+    &:hover:not(.active) {
+        cursor: pointer;
+    }
+
+    .nav-icon-container {
+        @include centered-content;
+
+        border: 1px solid;
+        border-radius: 50%;
+        margin-bottom: 15px;
+
+        height: calc(#{$font-size-x-large} * 2);
+        width: calc(#{$font-size-x-large} * 2);
+
+        @media #{$mq-laptop-l} {
+            height: calc(#{$font-size-large} * 2.5);
+            width: calc(#{$font-size-large} * 2.5);
+        }
+
+        .nav-icon {
+            position: relative;
+
+            .material-icons {
+                font-size: $font-size-x-large;
+    
+                @media #{$mq-laptop-l} {
+                    font-size: $font-size-large;
+                }
+            }
+
+            .sub-icon {
+                bottom: 0;
+                position: absolute;
+                right: 0;
+            }
+        }
+    }
+
+    .nav-label-container {
+        @include centered-content;
+
+        flex-grow: 1;
+        margin: auto;
+        white-space: nowrap;
+        width: calc(#{$font-size-large} * 2.5);
+    }
+
+    /**
+     * Special case styling for the hangup button.
+     */
+    &.hangup {
+        .nav-icon-container {
+            background-color: var(--hangup-bg-color);
+            border-color: var(--hangup-bg-color);
+        }
+
+        &:active {
+            color: var(--hangup-active-color);
+
+            .nav-icon  {
+                color: var(--hangup-active-color);
+            }
+        }
+    }
+}

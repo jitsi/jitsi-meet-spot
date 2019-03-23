@@ -14,7 +14,8 @@ import './join-code-view.scss';
 import './meeting.scss';
 import './meeting-name-entry.scss';
 import './modal.scss';
-import './nav.scss';
+import './nav/nav.scss';
+import './nav/nav-button.scss';
 import './remote-control-views.scss';
 import './screenshare.scss';
 
