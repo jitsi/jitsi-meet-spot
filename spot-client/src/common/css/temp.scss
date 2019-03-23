@@ -6,42 +6,6 @@
 @import './mixins';
 @import './variables.scss';
 
-.idleCursor {
-    cursor: none;
-}
-.idleCursor .settings_cog {
-    display: none;
-}
-.idleCursor .settings_cog:hover {
-    display: block;
-}
-
-.cog,
-.fullscreen-toggle {
-    border-radius: 50%;
-    cursor: pointer;
-    display: inline-block;
-    margin-left: 10px;
-    opacity: 1;
-    padding: 5px;
-    text-align: center;
-    transition: opacity 0.5s;
-}
-.cog,
-.cog *,
-.fullscreen-toggle {
-    color: var(--container-content-font-color);
-}
-.cog:hover,
-.fullscreen-toggle:hover {
-    border-radius: 50%;
-    padding: 5px;
-}
-.cog:hover,
-.fullscreen-toggle:hover {
-    background: var(--container-content-bg-color);
-}
-
 .admin,
 .setup {
   color: black;
@@ -256,10 +220,6 @@ body.using-mouse :focus {
   width: 100%;
 }
 
-.idleCursor .meetingMouseHider {
-  pointer-events: all;
-}
-
 .container {
   align-items: center;
   border-radius: 5%;
@@ -275,13 +235,6 @@ body.using-mouse :focus {
 
     height: 100%;
     width: 100%;
-}
-
-.settings_cog {
-  position: fixed;
-  right: 32px;
-  top: 41px;
-
 }
 
 .subcontent {

@@ -1,0 +1,28 @@
+.admin-toolbar {
+    position: fixed;
+    right: 32px;
+    top: 32px;
+
+    .cog,
+    .fullscreen-toggle {
+        border-radius: 50%;
+        color: var(--container-content-font-color);
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 10px;
+        opacity: 1;
+        padding: 5px;
+        text-align: center;
+        transition: opacity 0.5s;
+
+        &:hover {
+            background: var(--container-content-bg-color);
+            border-radius: 50%;
+            padding: 5px;
+        }
+    }
+
+    .cog i {
+        color: var(--container-content-font-color);
+    }
+}
