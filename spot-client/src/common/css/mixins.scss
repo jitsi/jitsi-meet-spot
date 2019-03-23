@@ -5,19 +5,34 @@
 }
 
 @mixin button-reset {
-    background-color: inherit;
+    @include inherit-reset;
     border: 1px solid var(--container-content-font-color);
     border-radius: 5px;
-    color: inherit;
     cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
 }
 
 @mixin centered-content {
     align-items: center;
     display: flex;
     justify-content: center;
+}
+
+@mixin inherit-reset {
+    background-color: inherit;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+@mixin spot-remote-view-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    width: 100%;
+
+    .clock {
+        padding: 2.6em;
+    }
 }
 
 @mixin styled-button {
@@ -27,6 +42,10 @@
     color: var(--container-content-font-color);
     cursor: pointer;
     padding: 0.5em 1em;
+
+    &:active {
+        background-color: var(--button-active-color);
+    }
 }
 
 @mixin styled-input {

@@ -65,7 +65,7 @@
     }
 
     /**
-     * Special case styling for the hangup button.
+     * Special case styling for the red hangup button.
      */
     &.hangup {
         .nav-icon-container {
@@ -80,5 +80,12 @@
                 color: var(--hangup-active-color);
             }
         }
+    }
+
+    /**
+     * Share button should seem clickable when it shows a screenshare is active.
+     */
+    &.sharebutton.active:hover {
+        cursor: pointer;
     }
 }

@@ -1,0 +1,64 @@
+@import './../media-queries';
+@import './../mixins.scss';
+@import './../variables.scss';
+
+.feedback-view {
+    @include spot-remote-view-layout;
+
+    .remote-feedback {
+        background-color: var(--container-bg-color);
+        border-radius: 5px;
+        margin: auto;
+        padding: 32px 16px; 
+        text-align: center;
+
+        @media #{$mq-xxsmall} {
+            width: 100%;
+        }
+
+        @media #{$mq-tablet} {
+            width: 50%;
+        }
+
+        .cta {
+            font-size: $font-size-medium-plus;
+        }
+
+        .message-help {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            margin: 3em 0;
+        }
+
+        .remote-message {
+            @include inherit-reset;
+
+            background-color: var(--feedback-background);
+            border-radius: 5px;
+            margin: 10px 0px 20px;
+            resize: none;
+            width: 100%;
+        }
+
+        .remote-score {
+            background: inherit;
+            border: none;
+            color: white;
+            font-size: 3em;
+            padding: 0 10px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .submit-button {
+            @include styled-button;
+
+            font-size: $font-size-medium;
+        }
+    }
+}
