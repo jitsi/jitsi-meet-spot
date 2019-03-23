@@ -2,12 +2,6 @@
 @import './mixins';
 @import './variables.scss';
 
-/**
- * nav is generally placed within a grid cell. That would cause the nav to
- * take up all available space in the cell. To prevent that, let nav-section
- * take up all the space, and wrap nav with inline-block so nav only takes up
- * the space it needs.
- */
 .nav-section {
     padding: 0 0 20px;
     text-align: center;
@@ -81,6 +75,7 @@
             }
         }
     }
+
     .with-popup {
         display: inline-block;
         position: relative;
@@ -115,6 +110,7 @@
             }
         }
     }
+
     .nav-icon-container {
         align-items: center;
         border: 1px solid;
@@ -144,7 +140,7 @@
                 @media #{$mq-laptop-l} {
                     font-size: $font-size-large;
                 }
-    
+
                 @media #{$mq-4k} {
                     font-size: $font-size-large;
                 }

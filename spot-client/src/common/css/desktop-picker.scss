@@ -52,7 +52,7 @@
         border-radius: 5px;
         display: inline-block;
         width: 30%;
-    
+
         &.selected {
             background-color: var(--container-content-highlight-bg-color);
         }
@@ -63,7 +63,7 @@
         padding: 10px;
         width: 100%;
     }
-    
+
     .picker-choice-label {
         display: block;
         margin-top: 3px;
