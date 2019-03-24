@@ -1,4 +1,3 @@
-import throttle from 'lodash.throttle';
 import { $iq } from 'strophe.js';
 
 import { logger } from 'common/logger';
@@ -35,8 +34,6 @@ export default class XmppConnection {
         this.options = options;
 
         this.initPromise = null;
-
-        this._sendPresence = throttle(this._sendPresence.bind(this), 100);
 
         this._onCommand = this._onCommand.bind(this);
         this._onMessage = this._onMessage.bind(this);
@@ -249,18 +246,21 @@ export default class XmppConnection {
      * Updates the current muc participant's status, which should notify other
      * participants of the update. This is a fire and forget call with no ack.
      *
-     * @param {string} type - The status type to send.
-     * @param {*} value - Additional information about the status update.
+     * @param {Object} newStatus - The presence values to be updated. The
+     * key-values will override existing presence key-values and will not
+     * override the complete presence.
      * @returns {void}
      */
-    updateStatus(type, value) {
-        let valueToSend = value;
+    updateStatus(newStatus = {}) {
+        Object.keys(newStatus).forEach(key => {
+            let valueToSend = newStatus[key];
 
-        if (typeof value !== 'string') {
-            valueToSend = JSON.stringify(value);
-        }
+            if (typeof valueToSend !== 'string') {
+                valueToSend = JSON.stringify(valueToSend);
+            }
 
-        this.updatePresence(type, valueToSend);
+            this.updatePresence(key, valueToSend);
+        });
 
         this._sendPresence();
     }

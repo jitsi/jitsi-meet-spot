@@ -280,19 +280,19 @@ class RemoteControlService {
      * @returns {void}
      */
     notifyJoinCodeUpdate(joinCode) {
-        this.xmppConnection.updateStatus('joinCode', joinCode);
+        this.updateStatus({ joinCode });
     }
 
     /**
      * Notifies all Spot-Remotes about the the current availability of wired
      * screensharing on a Spot-TV.
      *
-     * @param {boolean} isEnabled - Whether or not screensharing is possible.
+     * @param {boolean} wiredScreensharingEnabled - Whether or not screensharing
+     * is possible.
      * @returns {void}
      */
-    notifyWiredScreenshareEnabled(isEnabled) {
-        this.xmppConnection.updateStatus(
-            'wiredScreensharingEnabled', isEnabled);
+    notifyWiredScreenshareEnabled(wiredScreensharingEnabled) {
+        this.updateStatus({ wiredScreensharingEnabled });
     }
 
     /**
@@ -419,21 +419,18 @@ class RemoteControlService {
     /**
      * To be called by Spot-TV to update self presence.
      *
-     * @param {Object} newState - The presence values to be updated. The
-     * key-values will override existing presence key-values and will not
-     * override the complete presence.
+     * @param {Object} newStatus - The new presence object that should be merged
+     * with existing presence.
      * @returns {void}
      */
-    updateStatus(newState = {}) {
+    updateStatus(newStatus = {}) {
         // FIXME: these truthy checks also fix a condition where updateStatus
         // is fired when the redux store is initialized.
         if (!this.xmppConnection || !this._isSpot) {
             return;
         }
 
-        Object.keys(newState).forEach(key => {
-            this.xmppConnection.updateStatus(key, newState[key]);
-        });
+        this.xmppConnection.updateStatus(newStatus);
     }
 
     /**
