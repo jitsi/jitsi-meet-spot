@@ -11,6 +11,7 @@ import {
     setWiredScreenshareInputAvailable
 } from 'common/app-state';
 import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
@@ -52,13 +53,12 @@ class WiredScreenshareDetector extends React.PureComponent {
      */
     componentDidMount() {
         if (this.props.wiredScreenshareDevice) {
-            wiredScreenshareService.getVideoInputDevices()
+            avUtils.enumerateVideoDevices()
                 .then(deviceList => this._onDeviceListChange(deviceList))
                 .catch(() => logger.error(
                     'Screenshare detector failed to obtain device list'))
-                .then(() =>
-                    wiredScreenshareService.startListeningForDeviceChange(
-                        this._onDeviceListChange));
+                .then(() => avUtils.listenForCameraDeviceListChange(
+                    this._onDeviceListChange));
         }
     }
 
@@ -87,7 +87,7 @@ class WiredScreenshareDetector extends React.PureComponent {
                 this._onWiredScreenshareChange,
             );
 
-            wiredScreenshareService.getVideoInputDevices()
+            avUtils.enumerateVideoDevices()
                 .then(deviceList => this._onDeviceListChange(deviceList));
         }
     }
@@ -104,7 +104,7 @@ class WiredScreenshareDetector extends React.PureComponent {
             this._onWiredScreenshareChange
         );
 
-        wiredScreenshareService.stopListeningForDeviceChange(
+        avUtils.stopListeningForCameraDeviceListChange(
             this._onDeviceListChange);
     }
 

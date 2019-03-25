@@ -1,3 +1,6 @@
+import debounce from 'lodash.debounce';
+
+import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
 /**
@@ -9,6 +12,10 @@ export default {
      * prevent multiple initialization calls.
      */
     _initialized: false,
+
+    _cachedDeviceList: null,
+
+    _videoDeviceListChangeListeners: new Set(),
 
     /**
      * Creates a new {@code JitsiLocalTrack} for a specified microphone.
@@ -76,8 +83,35 @@ export default {
     enumerateDevices() {
         this._initializeWebRTC();
 
-        return new Promise(resolve =>
-            JitsiMeetJSProvider.get().mediaDevices.enumerateDevices(resolve));
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
+        // TODO: implementing handling of gum permissions being denied
+        return JitsiMeetJS.mediaDevices.isDevicePermissionGranted()
+            .then(hasPermission => {
+                if (hasPermission) {
+                    return Promise.resolve();
+                }
+
+                return this.createLocalTracks()
+                    .then(tracks => tracks.forEach(track => track.dispose()));
+            })
+            .then(() => new Promise(resolve =>
+                JitsiMeetJS.mediaDevices.enumerateDevices(resolve)));
+    },
+
+    /**
+     * Returns all connected video input devices.
+     *
+     * @returns {Array<Object>}
+     */
+    enumerateVideoDevices() {
+        const enumerateDevicesPromise = this._cachedDeviceList
+            ? Promise.resolve(this._cachedDeviceList)
+            : this.enumerateDevices();
+
+        return enumerateDevicesPromise
+            .then(deviceList => deviceList.filter(
+                device => device.kind === 'videoinput'));
     },
 
     /**
@@ -100,32 +134,27 @@ export default {
     },
 
     /**
-     * Adds a listener for when the list of connected WebRTC capable devices has
-     * changed.
+     * Be notified when a new camera device has been connected or disconnected.
      *
-     * @param {Function} callback - Invoked when the list of connected WebRTC
-     * capable devices has changed. The list of devices will be passed in.
+     * @param {Function} callback - The function to invoke on camera change.
+     * @private
      * @returns {void}
      */
-    listenForDeviceListChanged(callback) {
-        JitsiMeetJSProvider.get().mediaDevices.addEventListener(
-            JitsiMeetJSProvider.get().events.mediaDevices.DEVICE_LIST_CHANGED,
-            callback);
+    listenForCameraDeviceListChange(callback) {
+        this._videoDeviceListChangeListeners.add(callback);
     },
 
     /**
-     * Removes a listener for when the list of connected WebRTC capable devices
-     * has changed.
+     * Stop being notified when a new camera device has been connected or
+     * disconnected.
      *
-     * @param {Function} callback - The listener which should no longer receive
-     * updates.
+     * @param {Function} callback - The function which should not longer be
+     * called.
+     * @private
      * @returns {void}
      */
-    stopListeningForDeviceListChanged(callback) {
-        JitsiMeetJSProvider.get().mediaDevices.removeEventListener(
-            JitsiMeetJSProvider.get().events.mediaDevices.DEVICE_LIST_CHANGED,
-            callback
-        );
+    stopListeningForCameraDeviceListChange(callback) {
+        this._videoDeviceListChangeListeners.delete(callback);
     },
 
     /**
@@ -156,6 +185,44 @@ export default {
 
         JitsiMeetJSProvider.get().init({});
 
+        this._onDeviceListChange = debounce(
+            this._onDeviceListChange.bind(this),
+            500
+        );
+
+        JitsiMeetJSProvider.get().mediaDevices.addEventListener(
+            JitsiMeetJSProvider.get().events.mediaDevices.DEVICE_LIST_CHANGED,
+            this._onDeviceListChange);
+
         this._initialized = true;
+    },
+
+    /*
+     * Callback invoked when the list of known media devices has changed.
+     * Notifies any registered listeners of the change.
+     *
+     * @param {Array<Object>} deviceList - Descriptions of the media devices,
+     * as provided by WebRTC.
+     * @private
+     * @returns {void}
+     */
+    _onDeviceListChange(deviceList) {
+        this._cachedDeviceList = deviceList;
+
+        const videoInputDevices
+            = deviceList.filter(device => device.kind === 'videoinput');
+
+        if (!videoInputDevices.length) {
+            logger.warn('Received device list change with no cameras');
+        }
+
+        if (videoInputDevices.length
+            && !videoInputDevices.some(device => Boolean(device.label))) {
+            logger.warn(
+                'Received device list change but maybe no video permission');
+        }
+
+        this._videoDeviceListChangeListeners.forEach(
+            callback => callback(videoInputDevices));
     }
 };

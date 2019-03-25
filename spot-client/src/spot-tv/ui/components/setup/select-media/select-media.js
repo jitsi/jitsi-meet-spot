@@ -52,7 +52,7 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        avUtils.listenForDeviceListChanged(this._onDeviceListChange);
+        avUtils.listenForCameraDeviceListChange(this._onDeviceListChange);
 
         this._getDevices();
     }
@@ -63,7 +63,8 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        avUtils.stopListeningForDeviceListChanged(this._onDeviceListChange);
+        avUtils.stopListeningForCameraDeviceListChange(
+            this._onDeviceListChange);
     }
 
     /**
