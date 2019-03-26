@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
 import 'common/css';
 import { globalDebugger } from 'common/debugging';
@@ -33,8 +34,8 @@ const store = createStore(
             ...setDefaultValues(window.JitsiMeetSpotConfig)
         },
         ...getPersistedState()
-
-    }
+    },
+    applyMiddleware(thunk)
 );
 const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
