@@ -1,0 +1,13 @@
+{
+  "name": "spot-admin",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  },
+  "scripts": {
+    "start:dev": "nodemon app.js"
+  }
+}
