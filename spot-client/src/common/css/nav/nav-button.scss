@@ -5,20 +5,20 @@
     background-color: transparent;
     border: 0;
     color: inherit;
+    cursor: pointer;
     font-size: inherit;
     margin-top: 10px;
 
-    &.active {
-        cursor: default;
-    }
-
-    &.active .nav-icon-container,
-    &:active .nav-icon-container {
+    &.active .nav-icon-container {
         background-color: var(--container-bg-color);
     }
 
-    &:hover:not(.active) {
-        cursor: pointer;
+    &.pending,
+    &:active {
+        .nav-icon-container {
+            border-color: var(--pending);
+            color: var(--pending);
+        }
     }
 
     .nav-icon-container {
