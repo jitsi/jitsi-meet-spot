@@ -104,8 +104,8 @@ export class Setup extends React.Component {
         } else {
             const nextStep = this._getNextStep();
 
-            logger.log(`setup going to next step ${
-                nextStep.displayName || nextStep.name}`);
+            logger.log('setup going to next step',
+                { next: nextStep.displayName || nextStep.name });
 
             this.setState({
                 currentStep: nextStep

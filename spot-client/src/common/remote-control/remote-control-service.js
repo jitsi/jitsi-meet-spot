@@ -473,7 +473,8 @@ class RemoteControlService {
                     to,
                     MESSAGES.REMOTE_CONTROL_UPDATE,
                     data
-                ).catch(error => logger.error(error))
+                ).catch(error => logger.error(
+                    'Failed to send screensharing message', { error }))
         });
     }
 

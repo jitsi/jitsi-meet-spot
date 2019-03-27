@@ -126,7 +126,7 @@ class WaitingForCallView extends React.Component {
     _getSubView() {
         const { activeTab } = this.state;
 
-        logger.log(`waitingForCall showing ${activeTab}`);
+        logger.log('waitingForCall view updating', { activeTab });
 
         switch (activeTab) {
         case 'calendar':
@@ -242,7 +242,7 @@ class WaitingForCallView extends React.Component {
             if (error.name === events.CHROME_EXTENSION_USER_CANCELED) {
                 logger.log('onGoToMeeting with screensharing canceled by the user');
             } else {
-                logger.error(`onGoToMeeting with screensharing rejected: ${error}`);
+                logger.error('onGoToMeeting with screensharing rejected', { error });
             }
         })
         .then(() => {

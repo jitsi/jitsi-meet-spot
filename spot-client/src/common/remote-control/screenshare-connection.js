@@ -68,8 +68,7 @@ export default class ScreenshareConnection {
      * @returns {void}
      */
     processMessage(message) {
-        logger.log(
-            `screenshareConnection got message ${JSON.stringify(message)}`);
+        logger.log('screenshare connection got message', { message });
 
         this._proxyConnectionService.processMessage(message);
     }
@@ -148,7 +147,7 @@ export default class ScreenshareConnection {
      * @returns {Promise}
      */
     startScreenshare(spotJid) {
-        logger.log(`screenshareConnection started ${spotJid}`);
+        logger.log('screenshare connection started', { spotJid });
 
         this._isActive = true;
 

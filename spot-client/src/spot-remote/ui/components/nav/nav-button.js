@@ -97,7 +97,7 @@ export default class NavButton extends React.Component {
      * @returns {void}
      */
     _onClick() {
-        logger.log(`NavButton clicked ${this.props.label}`);
+        logger.log('Nav button clicked', { label: this.props.label });
 
         if (this.props.onClick) {
             this.props.onClick();

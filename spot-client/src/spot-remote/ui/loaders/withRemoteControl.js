@@ -140,8 +140,10 @@ export class RemoteControlLoader extends AbstractLoader {
                     this.props.dispatch(clearSpotTVState());
                 } else {
                     logger.error(
-                        'Disconnected from the remote control service. '
-                            + 'Will attempt reconnect');
+                        'Spot-Remove disconnected from remote control service',
+                        { reason }
+                    );
+
                     this._reconnect();
                 }
             },
@@ -173,7 +175,7 @@ export class RemoteControlLoader extends AbstractLoader {
                         this.props.dispatch(setCalendarEvents(events));
                     } catch (error) {
                         logger.error(
-                            'Error while parsing Spot calendar events',
+                            'Spot-Remote could not parse calendar events',
                             { error }
                         );
                     }
@@ -188,8 +190,10 @@ export class RemoteControlLoader extends AbstractLoader {
             this._isReconnectQueued = false;
         })
         .catch(error => {
-            logger.error(`Error connecting to remote control service: ${
-                error}`);
+            logger.error(
+                'Spot-Remote could not connect to remote control service',
+                { error }
+            );
 
             this._isReconnectQueued = false;
 

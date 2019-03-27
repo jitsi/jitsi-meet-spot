@@ -84,12 +84,11 @@ export class Notifications extends React.PureComponent {
             return;
         }
 
-        logger.log(`notifications setting timeout for ${
-            JSON.stringify(notifications)}`);
+        logger.log('notifications beings displayed', { notifications });
 
         notifications.forEach(({ id }) => {
             setTimeout(() => {
-                logger.log(`notifications dismissing ${id}`);
+                logger.log('notification being dismissed', { id });
 
                 this.props.dispatch(removeNotification(id));
             }, 5000);

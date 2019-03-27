@@ -75,8 +75,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         // combination of a 3 digit room name and a 3 digit room password.
         return remoteControlService.connect({
             onDisconnect: () => {
-                logger.error('Spot disconnected from the remote control '
-                    + 'service. Will attempt reconnect');
+                logger.error(
+                    'Spot-TV disconnected from the remote control service.');
 
                 this._stopJoinCodeUpdateInterval();
 
@@ -87,15 +87,17 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
             serverConfig: this.props.remoteControlConfiguration
         })
             .then(() => {
-                logger.log('Spot connected to remote control service');
+                logger.log('Spot-TV connected to remote control service');
                 this._isReconnecting = false;
 
                 return this._refreshJoinCode();
             })
             .then(() => this._startJoinCodeUpdateInterval())
             .catch(error => {
-                logger.error('Error connecting as spot to remote control '
-                    + `remote control service: ${error}`);
+                logger.error(
+                    'Error connecting as Spot-TV to remote control service',
+                    { error }
+                );
 
                 // The case of an incorrect password generally should not
                 // happen, but if it does then try to join a new room instead.
@@ -119,7 +121,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     _reconnect() {
         if (this._isReconnecting) {
-            logger.warn('Spot reconnect called while already reconnecting');
+            logger.warn('Spot-TV reconnect called while already reconnecting');
 
             return;
         }
@@ -132,7 +134,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         return remoteControlService.disconnect()
             .then(() => {
                 this._reconnectTimeout = setTimeout(() => {
-                    logger.log('Spot is attempting remote control reconnect');
+                    logger.log('Spot-TV attempting reconnect');
 
                     this._loadService();
                 }, jitter);

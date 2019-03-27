@@ -191,7 +191,7 @@ export default class XmppConnection {
         // FIXME: The leave promise always times out.
         return leavePromise
             .catch(error =>
-                logger.error(`XmppConnection error on disconnect ${error}`))
+                logger.error('XmppConnection error on disconnect', { error }))
             .then(() => this.xmppConnection.disconnect());
     }
 

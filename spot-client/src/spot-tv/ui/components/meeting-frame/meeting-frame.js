@@ -215,10 +215,10 @@ export class MeetingFrame extends React.Component {
             return;
         }
 
-        logger.error(
-            `meetingFrame error while loading meeting, iframe loaded ${
-                this._meetingLoaded} joined ${this._meetingJoined}`
-        );
+        logger.error('error while loading meeting', {
+            iFrameLoaded: this._meetingLoaded,
+            meetingJoined: this._meetingJoined
+        });
 
         this.props.onMeetingLeave({
             error: 'An error occurred while joining the meeting'
@@ -248,8 +248,10 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onAudioMuteChange({ muted }) {
-        logger.log(`meetingFrame audio mute changed from ${
-            this._isVideoMuted} to ${muted}`);
+        logger.log('audio mute changed', {
+            from: this._isAudioMuted,
+            to: muted
+        });
 
         this._isAudioMuted = muted;
 
@@ -490,7 +492,7 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onSendMessageToRemoteControl({ to, data }) {
-        logger.log('meetingFrame got proxy message from iframe', {
+        logger.log('got proxy message from iframe', {
             to,
             data
         });
@@ -506,8 +508,10 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onVideoMuteChange({ muted }) {
-        logger.log(`meetingFrame video mute changed from ${
-            this._isVideoMuted} to ${muted}`);
+        logger.log('Video mute changed', {
+            from: this._isVideoMuted,
+            to: muted
+        });
 
         this._isVideoMuted = muted;
 
