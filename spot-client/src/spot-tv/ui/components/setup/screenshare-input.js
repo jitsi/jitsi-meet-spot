@@ -7,6 +7,7 @@ import {
     setWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 import { Button } from 'common/ui';
 
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
@@ -47,13 +48,13 @@ class ScreenshareInput extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        wiredScreenshareService.getVideoInputDevices()
+        avUtils.enumerateVideoDevices()
             .then(cameras => {
                 logger.log(`screenshareInput got ${cameras.length} devices`);
 
                 this._onDeviceListChange(cameras);
 
-                wiredScreenshareService.startListeningForDeviceChange(
+                avUtils.listenForCameraDeviceListChange(
                     this._onDeviceListChange);
             })
             .catch(error =>
@@ -67,7 +68,7 @@ class ScreenshareInput extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        wiredScreenshareService.stopListeningForDeviceChange(
+        avUtils.stopListeningForCameraDeviceListChange(
             this._onDeviceListChange);
     }
 
