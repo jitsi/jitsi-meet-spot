@@ -7,6 +7,10 @@ import { LoadingIcon } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
 import { NavButton, NavContainer } from '../../components';
+import {
+    AudioMuteButton,
+    VideoMuteButton
+} from './../../components/nav/buttons';
 
 import ScreenshareModal from './screenshare-modal';
 
@@ -18,12 +22,10 @@ import ScreenshareModal from './screenshare-modal';
  */
 export class InCall extends React.Component {
     static propTypes = {
-        audioMuted: PropTypes.bool,
         dispatch: PropTypes.func,
         inMeeting: PropTypes.string,
         remoteControlService: PropTypes.object,
         screensharingType: PropTypes.string,
-        videoMuted: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -50,9 +52,7 @@ export class InCall extends React.Component {
             = this._onStartWirelessScreenshare.bind(this);
         this._onStopScreenshare
             = this._onStopScreenshare.bind(this);
-        this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
-        this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
     }
 
     /**
@@ -72,10 +72,8 @@ export class InCall extends React.Component {
      */
     render() {
         const {
-            audioMuted,
             inMeeting,
             screensharingType,
-            videoMuted,
             wiredScreensharingEnabled
         } = this.props;
 
@@ -92,16 +90,8 @@ export class InCall extends React.Component {
             <div className = 'in-call'>
                 <div className = 'in-call-name'>{ meetingName }</div>
                 <NavContainer>
-                    <NavButton
-                        iconName = { audioMuted ? 'mic_off' : 'mic' }
-                        label = { audioMuted ? 'Umute Audio' : 'Mute Audio' }
-                        onClick = { this._onToggleAudioMute }
-                        qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' } />
-                    <NavButton
-                        iconName = { videoMuted ? 'videocam_off' : 'videocam' }
-                        label = { videoMuted ? 'Unmute Video' : 'Mute Video' }
-                        onClick = { this._onToggleVideoMute }
-                        qaId = { videoMuted ? 'unmute-video' : 'mute-video' } />
+                    <AudioMuteButton />
+                    <VideoMuteButton />
                     <NavButton
                         className = { screenshareButtonStyles }
                         iconName = 'screen_share'
@@ -157,16 +147,6 @@ export class InCall extends React.Component {
     }
 
     /**
-     * Changes the current local audio mute state.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleAudioMute() {
-        this.props.remoteControlService.setAudioMute(!this.props.audioMuted);
-    }
-
-    /**
      * Callback invoked when the screenshare button is clicked. Will either open
      * the screenshare modal or automatically start the wireless screensharing
      * flow.
@@ -189,16 +169,6 @@ export class InCall extends React.Component {
         this.setState({
             showScreenshareModal: !this.state.showScreenshareModal
         });
-    }
-
-    /**
-     * Changes the current local video mute state.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleVideoMute() {
-        this.props.remoteControlService.setVideoMute(!this.props.videoMuted);
     }
 
     /**
