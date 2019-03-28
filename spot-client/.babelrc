@@ -1,6 +1,5 @@
-{	
+{
     "plugins": [
-
         // Stage 2
         [ "@babel/plugin-proposal-decorators", { "legacy": true } ],
         "@babel/plugin-proposal-function-sent",
