@@ -1,0 +1,63 @@
+@import './../media-queries';
+@import './../mixins.scss';
+@import './../variables.scss';
+
+.waiting-view {
+    @include spot-remote-view-layout;
+
+    .waiting-sub-view {
+        flex: 1;
+    }
+
+    .meetings {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .meeting {
+            padding: .8em 1.2em;
+            width: 80%;
+
+            @media #{$mq-laptop} {
+                width: 70%;
+            }
+        
+            @media #{$mq-laptop-l} {
+                width: 60%;
+            }
+        }
+
+        .meeting:first-child {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .meeting:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+
+    .meeting-name-entry-view {
+        @include centered-content;
+    }
+
+    .share-select-view {
+        @include centered-content;
+
+        margin: auto;
+        width: 100%;
+
+        @media #{$mq-tablet} {
+            width: 450px;
+        }
+    
+        @media #{$mq-laptop-l} {
+            width: 500px;
+        }
+    }
+
+    .number-entry-view {
+        @include centered-content;
+    }  
+}

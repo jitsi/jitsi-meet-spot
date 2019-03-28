@@ -121,7 +121,7 @@ export class Home extends React.Component {
                             Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
                         </div> }
                 </div>
-                <div className = 'settings_cog'>
+                <div className = 'admin-toolbar'>
                     <FullscreenToggle />
                     <SettingsButton />
                 </div>

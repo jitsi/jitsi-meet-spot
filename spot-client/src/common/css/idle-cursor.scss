@@ -1,0 +1,15 @@
+.idleCursor {
+    cursor: none;
+
+    .admin-toolbar {
+        display: none;
+    }
+
+    .admin-toolbar:hover {
+        display: block;
+    }
+
+    .meetingMouseHider {
+        pointer-events: all;
+    }
+}

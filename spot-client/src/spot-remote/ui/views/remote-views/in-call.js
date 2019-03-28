@@ -83,7 +83,7 @@ export class InCall extends React.Component {
 
         const { showScreenshareModal } = this.state;
         const screenshareButtonStyles = `sharebutton ${showScreenshareModal
-            || screensharingType ? 'sharing' : ''}`;
+            || screensharingType ? 'active' : ''}`;
         const { meetingName } = parseMeetingUrl(inMeeting);
 
         return (

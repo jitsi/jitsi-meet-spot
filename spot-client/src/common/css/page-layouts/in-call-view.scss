@@ -1,0 +1,15 @@
+@import './../media-queries';
+@import './../mixins.scss';
+@import './../variables.scss';
+
+.in-call {
+    @include spot-remote-view-layout;
+
+    justify-content: space-between;
+
+    .in-call-name {
+        font-size: $font-size-medium-plus;
+        margin-top: 100px;
+        text-align: center;
+    }
+}

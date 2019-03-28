@@ -1,10 +1,6 @@
 @import './mixins';
 @import './variables.scss';
 
-.number-entry-view {
-    @include centered-content;
-}
-
 .dial-pad {
     @include centered-content;
 
@@ -79,10 +75,6 @@
         @include styled-button;
 
         font-size: $font-size-small;
-
-        &:active {
-            background-color: var(--button-active-color);
-        }
     }
 
     .input-container,
