@@ -43,11 +43,14 @@ export class VideoMuteButton extends React.Component {
     render() {
         const { changePending, videoMuted } = this.props;
         let label;
+        let qaId;
 
         if (changePending) {
             label = videoMuted ? 'Muting...' : 'Unmuting...';
+            qaId = 'mute-video-change-pending';
         } else {
             label = videoMuted ? 'Unmute Video' : 'Mute Video';
+            qaId = videoMuted ? 'unmute-video' : 'mute-video';
         }
 
         return (
@@ -57,7 +60,7 @@ export class VideoMuteButton extends React.Component {
                 iconName = { videoMuted ? 'videocam_off' : 'videocam' }
                 label = { label }
                 onClick = { this._onToggleVideoMute }
-                qaId = { videoMuted ? 'unmute-video' : 'mute-video' } />
+                qaId = { qaId } />
         );
     }
 
