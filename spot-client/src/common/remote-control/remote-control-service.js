@@ -273,17 +273,6 @@ class RemoteControlService {
     }
 
     /**
-     * Notifies all Spot-Remotes of the current join code for a Spot-TV.
-     *
-     * @param {string} joinCode - The join code necessary for a user to connect
-     * a Spot-Remote to a Spot-TV.
-     * @returns {void}
-     */
-    notifyJoinCodeUpdate(joinCode) {
-        this.updateStatus({ joinCode });
-    }
-
-    /**
      * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
      * to pair with it.
      *
