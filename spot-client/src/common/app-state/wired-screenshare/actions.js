@@ -1,6 +1,5 @@
 import {
     WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
-    WIRED_SCREENSHARE_SET_INPUT_AVAILABILITY,
     WIRED_SCREENSHARE_SET_INPUT_IDLE_VALUE,
     WIRED_SCREENSHARE_SET_INPUT_LABEL
 } from './action-types';
@@ -16,22 +15,6 @@ export function setWiredScreenshareDeviceConnected(connected) {
     return {
         type: WIRED_SCREENSHARE_SET_DEVICE_CONNECTED,
         connected
-    };
-}
-
-/**
- * Signals the preferred screensharing input is now available or unavailable
- * to be used.
- *
- * @param {boolean} available - Whether or not the screensharing input can or
- * cannot be used.
- * @private
- * @returns {Object}
- */
-export function setWiredScreenshareInputAvailable(available) {
-    return {
-        type: WIRED_SCREENSHARE_SET_INPUT_AVAILABILITY,
-        available
     };
 }
 

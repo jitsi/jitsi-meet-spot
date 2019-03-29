@@ -46,3 +46,14 @@ export function getJoinCode(state) {
 export function isConnectedToSpot(state) {
     return Boolean(state.spotTv.spotId);
 }
+
+/**
+* A selector which returns whether or not the configured screensharing input
+* device is plugged in.
+*
+* @param {Object} state - The Redux state.
+* @returns {boolean}
+*/
+export function isWiredScreenshareInputAvailable(state) {
+    return Boolean(state.spotTv.wiredScreensharingEnabled);
+}

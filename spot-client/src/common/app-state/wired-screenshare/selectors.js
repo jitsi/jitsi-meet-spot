@@ -31,14 +31,3 @@ export function getWiredScreenshareInputIdleValue(state) {
 export function isDeviceConnectedForWiredScreensharing(state) {
     return Boolean(state.wiredScreenshare.isDeviceConnected);
 }
-
-/**
-* A selector which returns whether or not the configured screensharing input
-* device is plugged in.
-*
-* @param {Object} state - The Redux state.
-* @returns {boolean}
-*/
-export function isWiredScreenshareInputAvailable(state) {
-    return Boolean(state.wiredScreenshare.available);
-}
