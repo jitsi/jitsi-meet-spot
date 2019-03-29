@@ -7,6 +7,7 @@ import {
     getWiredScreenshareInputIdleValue,
     getWiredScreenshareInputLabel,
     isDeviceConnectedForWiredScreensharing,
+    setSpotTVState,
     setWiredScreenshareDeviceConnected,
     setWiredScreenshareInputAvailable
 } from 'common/app-state';
@@ -26,7 +27,6 @@ class WiredScreenshareDetector extends React.PureComponent {
         dispatch: PropTypes.func,
         hasScreenshareDevice: PropTypes.bool,
         inMeeting: PropTypes.string,
-        remoteControlService: PropTypes.object,
         wiredScreenshareDevice: PropTypes.string,
         wiredScreenshareDeviceIdleValue: PropTypes.number
     };
@@ -135,8 +135,9 @@ class WiredScreenshareDetector extends React.PureComponent {
         const listHasSelectedScreenshareDevice = Boolean(deviceList.find(
             device => device.label === this.props.wiredScreenshareDevice));
 
-        this.props.remoteControlService.notifyWiredScreenshareEnabled(
-            listHasSelectedScreenshareDevice);
+        this.props.dispatch(setSpotTVState({
+            wiredScreensharingEnabled: listHasSelectedScreenshareDevice
+        }));
 
         this.props.dispatch(setWiredScreenshareInputAvailable(
             listHasSelectedScreenshareDevice));

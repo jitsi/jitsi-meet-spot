@@ -284,18 +284,6 @@ class RemoteControlService {
     }
 
     /**
-     * Notifies all Spot-Remotes about the the current availability of wired
-     * screensharing on a Spot-TV.
-     *
-     * @param {boolean} wiredScreensharingEnabled - Whether or not screensharing
-     * is possible.
-     * @returns {void}
-     */
-    notifyWiredScreenshareEnabled(wiredScreensharingEnabled) {
-        this.updateStatus({ wiredScreensharingEnabled });
-    }
-
-    /**
      * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
      * to pair with it.
      *
