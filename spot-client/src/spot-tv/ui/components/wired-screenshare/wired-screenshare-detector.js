@@ -52,18 +52,14 @@ class WiredScreenshareDetector extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
-        // Let's fake the call to get video devices if there is no input device
-        // set. This avoid a call to gUM and the camera light flashing.
-        const getVideoDevicePromise = this.props.wiredScreenshareDevice
-            ? avUtils.enumerateVideoDevices()
-            : Promise.resolve([]);
-
-        getVideoDevicePromise
-            .then(deviceList => this._onDeviceListChange(deviceList))
-            .catch(() => logger.error(
-                'Screenshare detector failed to obtain device list'))
-            .then(() => avUtils.listenForCameraDeviceListChange(
-                this._onDeviceListChange));
+        if (this.props.wiredScreenshareDevice) {
+            avUtils.enumerateVideoDevices()
+                .then(deviceList => this._onDeviceListChange(deviceList))
+                .catch(() => logger.error(
+                    'Screenshare detector failed to obtain device list'))
+                .then(() => avUtils.listenForCameraDeviceListChange(
+                    this._onDeviceListChange));
+        }
     }
 
     /**
@@ -131,10 +127,8 @@ class WiredScreenshareDetector extends React.PureComponent {
      * @private
      * @returns {void}
      */
-    _onDeviceListChange(deviceList = []) {
+    _onDeviceListChange(deviceList) {
         if (!this.props.wiredScreenshareDevice) {
-            this.props.remoteControlService.notifyWiredScreenshareEnabled(false);
-
             return;
         }
 
