@@ -43,11 +43,14 @@ export class AudioMuteButton extends React.Component {
     render() {
         const { audioMuted, changePending } = this.props;
         let label;
+        let qaId;
 
         if (changePending) {
             label = audioMuted ? 'Muting...' : 'Unmuting...';
+            qaId = 'mute-audio-change-pending';
         } else {
             label = audioMuted ? 'Unmute Audio' : 'Mute Audio';
+            qaId = audioMuted ? 'unmute-audio' : 'mute-audio';
         }
 
         return (
@@ -57,7 +60,7 @@ export class AudioMuteButton extends React.Component {
                 iconName = { audioMuted ? 'mic_off' : 'mic' }
                 label = { label }
                 onClick = { this._onToggleAudioMute }
-                qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' } />
+                qaId = { qaId } />
         );
     }
 
