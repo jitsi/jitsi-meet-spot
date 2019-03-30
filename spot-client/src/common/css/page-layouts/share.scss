@@ -1,0 +1,33 @@
+@import './../media-queries';
+@import './../mixins.scss';
+@import './../variables.scss';
+
+.mode-select,
+.stop-share {
+    background-color: var(--container-bg-color);
+    padding: 50px;
+
+    .title {
+        font-size: $font-size-large;
+        text-align: center;
+    }
+
+    .selections {
+        display: flex;
+        justify-content: center;
+        margin: 50px 0;
+
+        .selection {
+            background-color: var(--container-content-bg-color);
+            border-radius: 5px;
+
+            .nav-button {
+                padding: 50px;
+            }
+        }
+        
+        .selection:not(:last-child) {
+            margin-right: 50px;
+        }
+    }
+}

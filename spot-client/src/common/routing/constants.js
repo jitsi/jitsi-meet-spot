@@ -8,5 +8,6 @@ export const ROUTES = {
     LOADING: '/loading',
     MEETING: '/meeting',
     REMOTE_CONTROL: '/remote-control',
-    SETUP: '/setup'
+    SETUP: '/setup',
+    SHARE: '/share'
 };

@@ -27,6 +27,10 @@ export default {
 
     DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
 
+    DOMAINS: {
+        SHARE: undefined
+    },
+
     LOGGING: {
         ENDPOINT: process.env.LOGGING_ENDPOINT || ''
     },

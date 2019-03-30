@@ -1,6 +1,11 @@
-import { REMOTE_CONTROL_REQUEST_STATE } from './actionTypes';
+import {
+    REMOTE_CONTROL_REQUEST_STATE,
+    REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
+} from './actionTypes';
 
-const DEFAULT_STATE = {};
+const DEFAULT_STATE = {
+    isWirelessScreensharing: false
+};
 
 /**
  * A {@code Reducer} to update the current Redux state for the
@@ -12,6 +17,12 @@ const DEFAULT_STATE = {};
  */
 const remoteControlService = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
+    case REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE:
+        return {
+            ...state,
+            isWirelessScreensharing: action.isSharing
+        };
+
     case REMOTE_CONTROL_REQUEST_STATE:
         return {
             ...state,

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
     addNotification,
     getRemoteControlServerConfig,
+    getShareDomain,
     isConnectedToSpot,
     setJoinCode
 } from 'common/app-state';
@@ -33,6 +34,7 @@ export class JoinCodeEntry extends React.Component {
         isConnectedToSpot: PropTypes.bool,
         location: PropTypes.object,
         remoteControlConfiguration: PropTypes.object,
+        shareDomain: PropTypes.string,
         ultrasoundService: PropTypes.object
     };
 
@@ -76,28 +78,10 @@ export class JoinCodeEntry extends React.Component {
             code = queryParams.get('code');
         }
 
-        // Hide the code and other params for visual clarity only, no practical
-        // purpose.
-        this.props.history.replace(this.props.location.pathname);
-
         if (code) {
             logger.log('joinCodeEntry detected a valid code');
 
             this._connectToSpot(code);
-        }
-    }
-
-    /**
-     * Redirects to the remote control view when a connection to Spot is
-     * established.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate(prevProps) {
-        if (!prevProps.isConnectedToSpot && this.props.isConnectedToSpot) {
-            logger.log('joinCodeEntry connection to spot established');
-
-            this.props.history.push(ROUTES.REMOTE_CONTROL);
         }
     }
 
@@ -213,7 +197,21 @@ export class JoinCodeEntry extends React.Component {
 
                 this.props.dispatch(setJoinCode(trimmedCode));
 
-                this.props.history.push(ROUTES.REMOTE_CONTROL);
+                let redirectTo = ROUTES.REMOTE_CONTROL;
+
+                if (this.props.shareDomain
+                    && window.location.host.includes(this.props.shareDomain)) {
+                    redirectTo = ROUTES.SHARE;
+                } else {
+                    const queryParams
+                        = new URLSearchParams(this.props.location.search);
+
+                    if (queryParams.get('share') === 'true') {
+                        redirectTo = ROUTES.SHARE;
+                    }
+                }
+
+                this.props.history.push(redirectTo);
             })
             .catch(() => {
                 this.setState({ validating: false });
@@ -235,7 +233,8 @@ export class JoinCodeEntry extends React.Component {
 function mapStateToProps(state) {
     return {
         isConnectedToSpot: isConnectedToSpot(state),
-        remoteControlConfiguration: getRemoteControlServerConfig(state)
+        remoteControlConfiguration: getRemoteControlServerConfig(state),
+        shareDomain: getShareDomain(state)
     };
 }
 

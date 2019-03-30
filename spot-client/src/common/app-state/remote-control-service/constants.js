@@ -6,5 +6,6 @@ export const requestStates = {
 
 export const requestTypes = {
     AUDIO_MUTE: 'audioMute',
+    SCREENSHARE: 'screenshare',
     VIDEO_MUTE: 'videoMute'
 };

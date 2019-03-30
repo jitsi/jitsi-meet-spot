@@ -115,6 +115,10 @@ window.JitsiMeetSpotConfig = {
         SS_MIN_FPS: undefined
     },
 
+    DOMAINS: {
+        SHARE: undefined
+    },
+
     /**
      * Configuration object for loading the ultrasound library.
      */

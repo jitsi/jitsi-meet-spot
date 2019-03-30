@@ -41,10 +41,22 @@ class JoinCodePage extends PageObject {
     /**
      * Proceeds directly to the join code view of a remote control.
      *
+     * @param {Map} [queryParams] - Additional parameters to append to the join
+     * code url.
      * @returns {void}
      */
-    visit() {
-        this.driver.url(constants.JOIN_CODE_ENTRY_URL);
+    visit(queryParams) {
+        let joinCodePageUrl = constants.JOIN_CODE_ENTRY_URL;
+
+        if (queryParams) {
+            joinCodePageUrl += '?';
+
+            for (const [ key, value ] of queryParams) {
+                joinCodePageUrl += `${key}=${value}&`;
+            }
+        }
+
+        this.driver.url(joinCodePageUrl);
         this.waitForVisible();
     }
 }
