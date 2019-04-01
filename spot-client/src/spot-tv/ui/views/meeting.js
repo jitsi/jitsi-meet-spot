@@ -96,7 +96,7 @@ export class Meeting extends React.Component {
         } = this.props;
 
         return (
-            <div className = 'view'>
+            <div className = 'meeting-view'>
                 <MeetingFrame
                     avatarUrl = { avatarUrl }
                     displayName = { displayName }
