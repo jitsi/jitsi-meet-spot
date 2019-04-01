@@ -178,48 +178,6 @@ body.using-mouse :focus {
   width: 100%;
 }
 
-.feedback-hider-overlay {
-  background: rgb(27, 38, 56);
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-
-.feedback-hider-text-frame {
-  display: block;
-  width: 55%;
-  background-color: var(--container-content-bg-color);
-  border-radius: 5px;
-  color: var(--container-sub-content-font-color);
-  padding: 3em;
-  margin-top: 3em;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-
-  h1 {
-    font-size: $font-size-medium-plus;
-  }
-
-  .feedback-hider-text {
-    color: var(--container-sub-content-font-color);
-    margin: 15px 0;
-  }
-}
-
-.loading-curtain {
-    height: 100%;
-    position: absolute;
-    width: 100%;
-}
-
-.meetingMouseHider {
-  pointer-events: none;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-
 .container {
   align-items: center;
   border-radius: 5%;
