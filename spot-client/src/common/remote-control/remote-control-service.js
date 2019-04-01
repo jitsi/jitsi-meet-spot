@@ -1,5 +1,6 @@
 import { $iq } from 'strophe.js';
 
+import { fetchRoomInfo } from 'common/backend/utils';
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
@@ -95,13 +96,15 @@ class RemoteControlService {
      * should be made.
      * @returns {Promise<string>}
      */
-    connect({ joinAsSpot, joinCode, onDisconnect, onSpotUpdate, serverConfig }) {
+    connect({ joinAsSpot, joinCode, onDisconnect, onSpotUpdate, serverConfig,
+        joinCodeServiceUrl }) {
         this._isSpot = joinAsSpot;
 
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
 
+        this.joinCodeServiceUrl = joinCodeServiceUrl;
         this.xmppConnection = new XmppConnection({
             configuration: serverConfig,
             onCommandReceived: this._onCommandReceived,
@@ -109,27 +112,32 @@ class RemoteControlService {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        // FIXME: There is no proper join code service so the code is a
-        // combination of a 3 digit room name and a 3 digit room password.
-        // eslint-disable-next-line sort-vars
-        let roomName, roomLock;
+        let getRoomInfoPromise;
 
-        if (joinCode) {
-            roomName = joinCode.substring(0, 3);
-            roomLock = joinCode.substring(3, 6);
+        if (this.joinCodeServiceUrl) {
+            getRoomInfoPromise = fetchRoomInfo(this.joinCodeServiceUrl, joinCode);
+        } else if (joinCode) {
+            getRoomInfoPromise = Promise.resolve({
+                roomName: joinCode.substring(0, 3),
+                roomLock: joinCode.substring(3, 6)
+            });
         } else {
-            // If none joinCode is present then create a room and let the lock
-            // be set later. Setting the lock on join will throw an error about
-            // not being authorized..
-            roomName = generateRandomString(3);
+            getRoomInfoPromise = Promise.resolve({
+                // If none joinCode is present then create a room and let the lock
+                // be set later. Setting the lock on join will throw an error about
+                // not being authorized..
+                roomName: generateRandomString(3)
+            });
         }
 
-        this.xmppConnectionPromise = this.xmppConnection.joinMuc({
-            joinAsSpot,
-            roomLock,
-            roomName,
-            onDisconnect
-        });
+        this.xmppConnectionPromise
+            = getRoomInfoPromise
+                .then(roomInfo => this.xmppConnection.joinMuc({
+                    joinAsSpot,
+                    roomName: roomInfo.roomName,
+                    roomLock: roomInfo.roomLock,
+                    onDisconnect
+                }));
 
         this._onDisconnect = onDisconnect;
         this._onSpotUpdate = onSpotUpdate;

@@ -46,7 +46,7 @@ export default class XmppConnection {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
-     * @param {string} options.roomLock - The lock code to use when joining or
+     * @param {string} [options.roomLock] - The lock code to use when joining or
      * to set when creating a new MUC.
      * @param {Function} options.onDisconnect - Callback to invoke when the
      * connection has been terminated without an explicit disconnect.

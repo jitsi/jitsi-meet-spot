@@ -100,6 +100,17 @@ export function getRemoteControlServerConfig(state) {
 }
 
 /**
+ * A selector which returns configuration for Spot related services like the join code service and
+ * the admin service URLs.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getSpotServicesConfig(state) {
+    return state.config.SPOT_SERVICES;
+}
+
+/**
 * A selector which returns ultrasound configuration for creating loading
 * dependencies required by the ultrasound service.
 *

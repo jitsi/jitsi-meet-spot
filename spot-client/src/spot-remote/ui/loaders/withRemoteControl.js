@@ -8,6 +8,7 @@ import {
     getJoinCode,
     getRemoteControlServerConfig,
     setCalendarEvents,
+    getSpotServicesConfig,
     setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -48,7 +49,8 @@ const presenceToStoreAsString = new Set([
 export class RemoteControlLoader extends AbstractLoader {
     static propTypes = {
         ...AbstractLoader.propTypes,
-        dispatch: PropTypes.func
+        dispatch: PropTypes.func,
+        joinCodeServiceUrl: PropTypes.string
     };
 
     /**
@@ -182,6 +184,7 @@ export class RemoteControlLoader extends AbstractLoader {
                 }
             },
 
+            joinCodeServiceUrl: this.props.joinCodeServiceUrl,
             serverConfig: this.props.remoteControlConfiguration
         })
         .then(() => {
@@ -275,8 +278,11 @@ export class RemoteControlLoader extends AbstractLoader {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const { joinCodeServiceUrl } = getSpotServicesConfig(state);
+
     return {
         joinCode: getJoinCode(state),
+        joinCodeServiceUrl,
         remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }

@@ -6,9 +6,11 @@ import {
     getJoinCode,
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
+    getSpotServicesConfig,
     setJoinCode,
     setIsSpot
 } from 'common/app-state';
+import { fetchJoinCode } from 'common/backend';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader } from 'common/ui';
@@ -22,8 +24,10 @@ import { AbstractLoader } from 'common/ui';
 export class SpotTVRemoteControlLoader extends AbstractLoader {
     static propTypes = {
         ...AbstractLoader.propTypes,
+        adminServiceUrl: PropTypes.string,
         dispatch: PropTypes.func,
-        joinCodeRefreshRate: PropTypes.number
+        joinCodeRefreshRate: PropTypes.number,
+        joinCodeServiceUrl: PropTypes.string
     };
 
     /**
@@ -67,32 +71,55 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        const { dispatch, joinCode } = this.props;
+        const {
+            adminServiceUrl,
+            dispatch,
+            joinCode: _joinCode
+        } = this.props;
 
         dispatch(setIsSpot(true));
 
-        // FIXME: There is no proper join code service so the code is a
-        // combination of a 3 digit room name and a 3 digit room password.
-        return remoteControlService.connect({
-            onDisconnect: () => {
-                logger.error(
-                    'Spot-TV disconnected from the remote control service.');
+        let getJoinCodePromise;
 
-                this._stopJoinCodeUpdateInterval();
+        if (adminServiceUrl) {
+            logger.log(`Will use ${adminServiceUrl} to get the join code`);
+            getJoinCodePromise = fetchJoinCode(adminServiceUrl);
+        } else {
+            getJoinCodePromise = Promise.resolve(_joinCode);
+        }
 
-                this._reconnect();
-            },
-            joinAsSpot: true,
-            joinCode,
-            serverConfig: this.props.remoteControlConfiguration
-        })
+        return getJoinCodePromise.then(
+            joinCode => {
+                logger.log(`Will use ${joinCode} code to setup the Spot TV`);
+                this.props.dispatch(setJoinCode(joinCode));
+
+                return remoteControlService.connect({
+                    onDisconnect: () => {
+                        logger.error('Spot-TV disconnected from the remote control service.');
+
+                        this._stopJoinCodeUpdateInterval();
+
+                        this._reconnect();
+                    },
+                    joinAsSpot: true,
+                    joinCode,
+                    joinCodeServiceUrl: this.props.joinCodeServiceUrl,
+                    serverConfig: this.props.remoteControlConfiguration
+                });
+            })
             .then(() => {
                 logger.log('Spot-TV connected to remote control service');
                 this._isReconnecting = false;
 
-                return this._refreshJoinCode();
+                if (adminServiceUrl) {
+                    // FIXME join code refresh is disabled with the backend as the first step,
+                    // because there's no password set on the room and the JWT is used instead.
+                    return Promise.resolve();
+                }
+
+                return this._refreshJoinCode()
+                        .then(() => this._startJoinCodeUpdateInterval());
             })
-            .then(() => this._startJoinCodeUpdateInterval())
             .catch(error => {
                 logger.error(
                     'Error connecting as Spot-TV to remote control service',
@@ -185,9 +212,16 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const {
+        adminServiceUrl,
+        joinCodeServiceUrl
+    } = getSpotServicesConfig(state);
+
     return {
+        adminServiceUrl,
         joinCode: getJoinCode(state),
         joinCodeRefreshRate: getJoinCodeRefreshRate(state),
+        joinCodeServiceUrl,
         remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }

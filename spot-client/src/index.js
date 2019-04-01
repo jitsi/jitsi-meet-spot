@@ -18,9 +18,8 @@ import {
     remoteControlService
 } from 'common/remote-control';
 import {
-    generateGuid,
+    getDeviceId,
     getPersistedState,
-    persistence,
     setPersistedState
 } from 'common/utils';
 
@@ -50,9 +49,7 @@ const reduxState = store.getState();
 const loggingEndpoint = getLoggingEndpoint(reduxState);
 
 if (loggingEndpoint) {
-    const deviceId = persistence.get('deviceId') || generateGuid();
-
-    persistence.set('deviceId', deviceId);
+    const deviceId = getDeviceId();
 
     const loggingService = new LoggingService(loggingEndpoint);
 
