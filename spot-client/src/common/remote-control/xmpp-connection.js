@@ -192,7 +192,7 @@ export default class XmppConnection {
         return leavePromise
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
-            .then(() => this.xmppConnection.disconnect());
+            .then(() => this.xmppConnection && this.xmppConnection.disconnect());
     }
 
     /**
@@ -239,7 +239,7 @@ export default class XmppConnection {
      * @returns {void}
      */
     updatePresence(type, value) {
-        this.room.addToPresence(type, { value });
+        this.room && this.room.addToPresence(type, { value });
     }
 
     /**
@@ -434,6 +434,6 @@ export default class XmppConnection {
      * @returns {void}
      */
     _sendPresence() {
-        this.room.sendPresence();
+        this.room && this.room.sendPresence();
     }
 }
