@@ -36,6 +36,11 @@ export default {
         SS_MIN_FPS: process.env.SS_MIN_FPS || 5
     },
 
+    SPOT_SERVICES: {
+        adminServiceUrl: process.env.ADMIN_SERVICE_URL,
+        joinCodeServiceUrl: process.env.JOIN_CODE_SERVICE_URL
+    },
+
     ULTRASOUND: {
         EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH || '/dist/',
         MEM_INITIALIZER_PATH:
