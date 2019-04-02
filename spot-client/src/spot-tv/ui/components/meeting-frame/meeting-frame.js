@@ -30,6 +30,9 @@ export class MeetingFrame extends React.Component {
         minDesktopSharingFramerate: PropTypes.number,
         onMeetingLeave: PropTypes.func,
         onMeetingStart: PropTypes.func,
+        preferredCamera: PropTypes.string,
+        preferredMic: PropTypes.string,
+        preferredSpeaker: PropTypes.string,
         remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool,
@@ -112,6 +115,11 @@ export class MeetingFrame extends React.Component {
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
                 startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
+            },
+            devices: {
+                audioInput: this.props.preferredMic,
+                audioOutput: this.props.preferredSpeaker,
+                videoInput: this.props.preferredCamera
             },
             interfaceConfigOverwrite: {
                 DEFAULT_LOCAL_DISPLAY_NAME: '',

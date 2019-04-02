@@ -32,6 +32,9 @@ const keysToStore = [
     'setup.avatarUrl',
     'setup.completed',
     'setup.displayName',
+    'setup.preferredCamera',
+    'setup.preferredMic',
+    'setup.preferredSpeaker',
     'setup.showMeetingToolbar',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
@@ -75,6 +78,9 @@ function parsePersistedState(state) {
             avatarUrl: state.setup.avatarUrl,
             completed: state.setup.completed,
             displayName: state.setup.displayName,
+            preferredCamera: state.setup.preferredCamera,
+            preferredMic: state.setup.preferredMic,
+            preferredSpeaker: state.setup.preferredSpeaker,
             screenshareDevice: state.setup.screenshareDevice,
             screenshareDeviceIdleValue:
                 state.setup.screenshareDeviceIdleValue,

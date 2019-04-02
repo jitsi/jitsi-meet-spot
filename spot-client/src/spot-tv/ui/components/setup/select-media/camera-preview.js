@@ -40,10 +40,8 @@ export default class CameraPreview extends React.PureComponent {
      *
      * @inheritdoc
      */
-    componentDidUpdate(prevProps) {
-        if (prevProps.label !== this.props.label) {
-            this._createPreviewTrack();
-        }
+    componentDidUpdate() {
+        this._createPreviewTrack();
     }
 
     /**
