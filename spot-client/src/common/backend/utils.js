@@ -1,9 +1,84 @@
+import { logger } from 'common/logger';
 import { getDeviceId } from 'common/utils/device-id';
 
 /**
- * FIXME.
+ * FIXME duplicated with post-to-endpoint and the jitter calculation in the loaders.
  *
- * @param {string} serviceEndpointUrl - FIXME.
+ * Gets next timeout using the full jitter pattern.
+ *
+ * @param {number} retry - The retry number. It's 1 on the first retry.
+ * @returns {number} - The amount of waiting before trying another time given in milliseconds.
+ * @private
+ */
+function _getNextTimeout(retry) {
+    // 1st retry 0 - 2 seconds
+    // 2nd retry 0 - 4 seconds
+    // 3rd retry 0 - 16 seconds
+    return Math.floor(Math.random() * Math.pow(2, retry) * 1000);
+}
+
+/**
+ * Sends HTTP request using {@code fetch} with retries on network and server errors.
+ *
+ * @param {Object} fetchOptions - Options related to the fetch request.
+ * @param {string} fetchOptions.url - The URL to be passed to the fetch function.
+ * @param {Object} fetchOptions.requestOptions - The options to be passed to the fetch function.
+ * @param {string} fetchOptions.operationName - The name of the fetch operation that will appear in
+ * the retry related log entries.
+ * @param {number} retry - Keeps track of the retry attempt.
+ * @param {number} maxRetries - How many times will retry the request.
+ * @returns {Promise<Object>} - A promise resolved with the JSON parsed from the response.
+ */
+function fetchWithRetry(fetchOptions, retry = 0, maxRetries = 3) {
+    const { url, requestOptions, operationName } = fetchOptions;
+
+    return new Promise((resolve, reject) => {
+        fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    const error
+                        = `Failed to ${operationName}:`
+                            + `${response.statusText}, HTTP code: ${response.status}`;
+
+                    if (status < 500 && status >= 600) {
+                        // Break the retry chain
+                        reject(error);
+
+                        return;
+                    }
+
+                    // Throw and retry
+                    throw Error(error);
+                }
+
+                // Return result as JSON
+                resolve(response.json());
+            })
+            .catch(error => {
+                if (retry >= maxRetries) {
+                    logger.log(`${operationName}  - maximum retries exceeded`);
+                    reject(error);
+
+                    return;
+                }
+
+                const _retry = retry + 1;
+                const timeout = _getNextTimeout(_retry);
+
+                logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
+
+                setTimeout(() => {
+                    fetchWithRetry(fetchOptions, _retry)
+                        .then(resolve, reject);
+                }, timeout);
+            });
+    });
+}
+
+/**
+ * Contacts the backend service in order to get the join code assigned to this device.
+ *
+ * @param {string} serviceEndpointUrl - The URL pointing to the service.
  * @returns {Promise<string>}
  */
 export function fetchJoinCode(serviceEndpointUrl) {
@@ -18,16 +93,11 @@ export function fetchJoinCode(serviceEndpointUrl) {
         mode: 'cors'
     };
 
-    return fetch(serviceEndpointUrl, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw Error(
-                    'Failed to fetch the join code:'
-                     + `${response.statusText}, HTTP code: ${response.status}`);
-            }
-
-            return response.json();
-        })
+    return fetchWithRetry({
+        operationName: 'fetch the join code',
+        requestOptions,
+        url: serviceEndpointUrl
+    })
         .then(json => {
             if (!json.joinCode) {
                 throw new Error(`No 'joinCode' in the response: ${JSON.stringify(json)}`);
@@ -38,11 +108,16 @@ export function fetchJoinCode(serviceEndpointUrl) {
 }
 
 /**
- * FIXME.
+ * @typedef {Object} SpotRoomInfo
+ * @property {string} roomName - the name of the MUC room assigned for the Spot's join code which
+ * tells where both Spot TV and Spot Remote have to go in order to establish the connection.
+ */
+/**
+ * Contacts the backend service which assigns the MUC room names for Spot join codes.
  *
- * @param {string} serviceEndpointUrl - FIXME.
- * @param {string} joinCode - FIXME.
- * @returns {Promise<Object>}
+ * @param {string} serviceEndpointUrl - The URL which points to the service.
+ * @param {string} joinCode - The join code for which the MUC room name is to be retrieved.
+ * @returns {Promise<SpotRoomInfo>}
  */
 export function fetchRoomInfo(serviceEndpointUrl, joinCode) {
     if (!joinCode) {
@@ -54,17 +129,11 @@ export function fetchRoomInfo(serviceEndpointUrl, joinCode) {
         mode: 'cors'
     };
 
-    return fetch(`${serviceEndpointUrl}?joinCode=${joinCode}`, requestOptions)
-        .then(response => {
-            // FIXME error handling is duplicated with the 'fetchJoinCode'
-            if (!response.ok) {
-                throw Error(
-                    'Failed to fetch the join code:'
-                    + `${response.statusText}, HTTP code: ${response.status}`);
-            }
-
-            return response.json();
-        })
+    return fetchWithRetry({
+        operationName: 'get room info',
+        requestOptions,
+        url: `${serviceEndpointUrl}?joinCode=${joinCode}`
+    })
         .then(json => {
             if (!json.roomName) {
                 throw new Error(`No 'roomName' in the response: ${JSON.stringify(json)}`);
