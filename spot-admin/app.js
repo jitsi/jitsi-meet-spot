@@ -1,3 +1,11 @@
+require('dotenv').config();
+
+const registerDeviceFailureRate = process.env.REG_DEVICE_FAILURE_RATE;
+const roomInfoFailureRate = process.env.ROOM_INFO_FAILURE_RATE;
+
+console.info('register-device failure rate: ' + registerDeviceFailureRate);
+console.info('room-info failure rate: ' + roomInfoFailureRate);
+
 const express = require('express');
 const app = express();
 const port = 8001;
@@ -9,6 +17,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const SpotRoom = require('./model/SpotRoom');
+
+const spots = new Map();
 
 function sendJSON(response, object) {
     response.type('json');
@@ -27,13 +37,23 @@ function send404Error(res, error) {
     res.end();
 }
 
-const spots = new Map();
+function send500Error(res, error) {
+    res.status(500);
+    res.statusMessage = error;
+    res.end();
+}
 
 app.post('/register-device', (req, res) => {
     const { deviceId } = req.body;
 
     if (!deviceId) {
         send400Error(res, '"deviceId" is required');
+
+        return;
+    }
+
+    if (registerDeviceFailureRate && Math.random() < registerDeviceFailureRate) {
+        send500Error(res, "Randomly failed /register-device");
 
         return;
     }
@@ -62,6 +82,12 @@ app.get('/room-info', (req, res) => {
 
     if (!joinCode) {
         send400Error(res, `Invalid join code: ${joinCode}`);
+
+        return;
+    }
+
+    if (roomInfoFailureRate && Math.random() < roomInfoFailureRate) {
+        send500Error(res, "Randomly failed /room-info");
 
         return;
     }
