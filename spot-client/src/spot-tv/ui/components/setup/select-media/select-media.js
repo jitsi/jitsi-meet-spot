@@ -130,9 +130,6 @@ class SelectMedia extends React.Component {
                 { cameraSelect }
                 { micSelect }
                 { speakerSelect }
-                <div>
-                    Note: saving of devices not yet implemented
-                </div>
                 <CameraPreview
                     devices = { cameras }
                     label = { selectedCamera } />
