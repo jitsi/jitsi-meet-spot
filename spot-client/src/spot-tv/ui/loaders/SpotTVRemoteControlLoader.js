@@ -135,6 +135,9 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 this._isReconnecting = false;
 
                 this._reconnect();
+
+                // Do not mark the component as loaded
+                throw error;
             });
     }
 
@@ -154,6 +157,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         }
 
         this._isReconnecting = true;
+        this.setState({ loaded: false });
 
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = Math.floor(Math.random() * 1500) + 500;
@@ -163,7 +167,15 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 this._reconnectTimeout = setTimeout(() => {
                     logger.log('Spot-TV attempting reconnect');
 
-                    this._loadService();
+                    this._loadService()
+                        .then(() => {
+                            this.setState({ loaded: true });
+                        })
+                        .catch(() => {
+                            // FIXME this swallows the error as it's logged and handled
+                            // the in _loadService. The plan is to remove when refactoring for
+                            // loader component with reconnects.
+                        });
                 }, jitter);
             });
     }
