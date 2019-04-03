@@ -20,6 +20,16 @@ export class CalendarLoader extends AbstractLoader {
     };
 
     /**
+     * Initializes a new {@code CalendarLoader} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props, 'Calendar');
+    }
+
+    /**
      * Returns the props that should be passed into this loader's child
      * elements.
      *

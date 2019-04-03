@@ -18,9 +18,44 @@ export class AbstractLoader extends React.PureComponent {
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
+     * @param {string} serviceName - The name of the service that will be loaded and which will
+     * appear in the logs.
+     * @param {boolean} supportsReconnects=false - Whether or not the service to be loaded by
+     * the {@code AbstractLoader} subclass supports or is willing to do reconnects.
      */
-    constructor(props) {
+    constructor(props, serviceName = 'abstract-loader', supportsReconnects = false) {
         super(props);
+
+        /**
+         * Whether or not a reconnect attempt is in progress. Used to prevent
+         * multiple reconnects from being in flight at the same time.
+         *
+         * @type {boolean}
+         */
+        this._isReconnectQueued = false;
+
+        /**
+         * See description in the constructor.
+         *
+         * @type {string}
+         */
+        this._serviceName = serviceName;
+
+        /**
+         * See description in the constructor.
+         *
+         * @type {boolean}
+         */
+        this._supportsReconnects = supportsReconnects;
+
+        /**
+         * Whether or not the current instance of {@code RemoteControlLoader} is
+         * mounted. Used to prevent the various async remote control service
+         * connection flows from firing.
+         *
+         * @type {boolean}
+         */
+        this._unmounted = false;
 
         this.state = {
             loaded: false
@@ -33,9 +68,44 @@ export class AbstractLoader extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
+        this._doLoadService();
+    }
+
+    /**
+     * Clears any reconnect in progress.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._unmounted = true;
+
+        clearTimeout(this._reconnectTimeout);
+    }
+
+    /**
+     * Loads the service.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doLoadService() {
         this._loadService()
-            .then(() => this.setState({ loaded: true }))
-            .catch(() => logger.warn('abstract loader failed to load service'));
+            .then(() => {
+                logger.log(`${this._serviceName} loaded`);
+
+                this._isReconnectQueued = false;
+
+                this.setState({ loaded: true });
+            })
+            .catch(error => {
+                logger.warn(`${this._serviceName} failed to load`, { error });
+
+                this._isReconnectQueued = false;
+
+                if (this._supportsReconnects) {
+                    this._reconnect();
+                }
+            });
     }
 
     /**
@@ -75,6 +145,60 @@ export class AbstractLoader extends React.PureComponent {
      */
     _loadService() {
         throw new Error('Method _loadService must be implemented by subclass');
+    }
+
+    /**
+     * Attempts to re-establish a previous connection to the remote control
+     * service. Triggers display of a service message while reconnection is in
+     * progress.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _reconnect() {
+        if (this._isReconnectQueued) {
+            logger.warn(`${this._serviceName} - reconnect called while already reconnecting`);
+
+            return;
+        }
+
+        if (this._unmounted) {
+            logger.warn(`${this._serviceName} - cancelling reconnect due to unmount`);
+
+            return;
+        }
+
+        this._isReconnectQueued = true;
+        this.setState({ loaded: false });
+
+        // FIXME re-use jitter function (which doesn't exist yet)
+        // wait a little bit to retry to avoid a stampeding herd
+        const jitter = Math.floor(Math.random() * 1500) + 500;
+
+        this._stopService()
+            .catch(error => {
+                logger.error(
+                    `${this._serviceName} an error occurred while trying to stop the service`,
+                    { error }
+                );
+            })
+            .then(() => {
+                this._reconnectTimeout = setTimeout(() => {
+                    logger.log(`${this._serviceName} attempting reconnect`);
+
+                    this._doLoadService();
+                }, jitter);
+            });
+    }
+
+    /**
+     * Release any resources associated with the underlying service.
+     *
+     * @returns {Promise<void>}
+     * @private
+     */
+    _stopService() {
+        return Promise.resolve();
     }
 }
 

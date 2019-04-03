@@ -19,6 +19,16 @@ class WithUltrasound extends AbstractLoader {
     };
 
     /**
+     * Initializes a new {@code WithUltrasound} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props, 'Ultrasound');
+    }
+
+    /**
      * Enables and disables ultrasound as the app setting changes.
      *
      * @inheritdoc
