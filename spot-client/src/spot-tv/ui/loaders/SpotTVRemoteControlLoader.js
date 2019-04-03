@@ -37,9 +37,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props);
-
-        this._isReconnecting = false;
+        super(props, 'SpotTV', /* supports reconnects */ true);
     }
 
     /**
@@ -50,7 +48,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     componentWillUnmount() {
         this._stopJoinCodeUpdateInterval();
 
-        clearTimeout(this._reconnectTimeout);
+        super.componentWillUnmount();
     }
 
     /**
@@ -108,9 +106,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 });
             })
             .then(() => {
-                logger.log('Spot-TV connected to remote control service');
-                this._isReconnecting = false;
-
                 if (adminServiceUrl) {
                     // FIXME join code refresh is disabled with the backend as the first step,
                     // because there's no password set on the room and the JWT is used instead.
@@ -121,63 +116,25 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                         .then(() => this._startJoinCodeUpdateInterval());
             })
             .catch(error => {
-                logger.error(
-                    'Error connecting as Spot-TV to remote control service',
-                    { error }
-                );
-
                 // The case of an incorrect password generally should not
                 // happen, but if it does then try to join a new room instead.
                 if (error === 'not-authorized') {
                     this.props.dispatch(setJoinCode(''));
                 }
 
-                this._isReconnecting = false;
-
-                this._reconnect();
-
-                // Do not mark the component as loaded
+                // Let the parent component handle reconnects
                 throw error;
             });
     }
 
     /**
-     * Attempts to re-establish a previous connection to the remote control
-     * service. Triggers display of a service message while reconnection is in
-     * progress.
+     * Disconnects the remote control service.
      *
+     * @returns {*}
      * @private
-     * @returns {Promise}
      */
-    _reconnect() {
-        if (this._isReconnecting) {
-            logger.warn('Spot-TV reconnect called while already reconnecting');
-
-            return;
-        }
-
-        this._isReconnecting = true;
-        this.setState({ loaded: false });
-
-        // wait a little bit to retry to avoid a stampeding herd
-        const jitter = Math.floor(Math.random() * 1500) + 500;
-
-        return remoteControlService.disconnect()
-            .then(() => {
-                this._reconnectTimeout = setTimeout(() => {
-                    logger.log('Spot-TV attempting reconnect');
-
-                    this._loadService()
-                        .then(() => {
-                            this.setState({ loaded: true });
-                        })
-                        .catch(() => {
-                            // FIXME this swallows the error as it's logged and handled
-                            // the in _loadService. The plan is to remove when refactoring for
-                            // loader component with reconnects.
-                        });
-                }, jitter);
-            });
+    _stopService() {
+        return remoteControlService.disconnect();
     }
 
     /**

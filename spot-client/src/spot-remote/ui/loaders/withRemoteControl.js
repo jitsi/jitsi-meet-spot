@@ -60,35 +60,7 @@ export class RemoteControlLoader extends AbstractLoader {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props);
-
-        /**
-         * Whether or not a reconnect attempt is in progress. Used to prevent
-         * multiple reconnects from being in flight at the same time.
-         *
-         * @type {boolean}
-         */
-        this._isReconnectQueued = false;
-
-        /**
-         * Whether or not the current instance of {@code RemoteControlLoader} is
-         * mounted. Used to prevent the various async remote control service
-         * connection flows from firing.
-         *
-         * @type {boolean}
-         */
-        this._unmounted = false;
-    }
-
-    /**
-     * Clears any reconnect in progress.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this._unmounted = true;
-
-        clearTimeout(this._reconnectTimeout);
+        super(props, 'SpotRemote', /* supports reconnects */ true);
     }
 
     /**
@@ -187,23 +159,14 @@ export class RemoteControlLoader extends AbstractLoader {
             joinCodeServiceUrl: this.props.joinCodeServiceUrl,
             serverConfig: this.props.remoteControlConfiguration
         })
-        .then(() => {
-            logger.log('Successfully connected to Spot-TV');
-
-            this._isReconnectQueued = false;
-        })
         .catch(error => {
-            logger.error(
-                'Spot-Remote could not connect to remote control service',
-                { error }
-            );
-
-            this._isReconnectQueued = false;
-
-            remoteControlService.disconnect();
-
             // In the wrong password case return back to join code entry.
             if (error === 'not-authorized') {
+                logger.error(
+                    'Spot-Remote could not connect to remote control service',
+                    { error }
+                );
+
                 this.props.dispatch(
                     addNotification('error', 'Something went wrong'));
 
@@ -212,50 +175,18 @@ export class RemoteControlLoader extends AbstractLoader {
                 return Promise.reject();
             }
 
-            return this._reconnect();
+            // This will trigger reconnect
+            throw error;
         });
     }
 
     /**
-     * Attempts to re-establish a previous connection to the remote control
-     * service.
+     * Disconnects the remote control service.
      *
-     * @private
      * @returns {Promise}
      */
-    _reconnect() {
-        // Underneath remoteControlService, strophe can end up disconnecting
-        // twice, and having two reconnects should be avoided.
-        if (this._isReconnectQueued) {
-            logger.warn('Reconnect called while already reconnecting');
-
-            return Promise.reject();
-        }
-
-        if (this._unmounted) {
-            logger.warn('Cancelling reconnect due to unmount');
-
-            return Promise.reject();
-        }
-
-        this._isReconnectQueued = true;
-
-        // wait a little bit to retry to avoid a stampeding herd
-        const jitter = Math.floor(Math.random() * 1500) + 500;
-
-        logger.log('Spot-Remote queue reconnect');
-
-        const jitterPromise = new Promise(resolve => {
-            this._reconnectTimeout = setTimeout(() => {
-                logger.log('Attempting reconnect');
-
-                resolve();
-            }, jitter);
-        });
-
-        return jitterPromise
-            .then(() => remoteControlService.disconnect())
-            .then(() => this._loadService());
+    _stopService() {
+        return remoteControlService.disconnect();
     }
 
     /**
