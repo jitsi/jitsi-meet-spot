@@ -1,3 +1,4 @@
+import { getJitterDelay } from 'common/utils';
 
 /**
  * The structure holds the meta data about the log requests waiting in the queue
@@ -37,10 +38,10 @@ export default class PostToEndpoint {
      * @private
      */
     static _getNextTimeout(retry) {
-        // 1st retry 0 - 3 seconds
-        // 2nd retry 0 - 9 seconds
-        // 3rd retry 0 - 27 seconds
-        return Math.floor(Math.random() * Math.pow(3, retry) * 1000);
+        // 1st retry 500 - 3 seconds
+        // 2nd retry 500 - 9 seconds
+        // 3rd retry 500 - 27 seconds
+        return getJitterDelay(retry, /* min delay */ 500, /* base */ 3);
     }
 
     /**

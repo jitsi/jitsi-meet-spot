@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { logger } from 'common/logger';
+import { getJitterDelay } from 'common/utils';
 
 import { Loading } from './../views';
 
@@ -171,9 +172,8 @@ export class AbstractLoader extends React.PureComponent {
         this._isReconnectQueued = true;
         this.setState({ loaded: false });
 
-        // FIXME re-use jitter function (which doesn't exist yet)
         // wait a little bit to retry to avoid a stampeding herd
-        const jitter = Math.floor(Math.random() * 1500) + 500;
+        const jitter = getJitterDelay();
 
         this._stopService()
             .catch(error => {
