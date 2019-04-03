@@ -21,15 +21,48 @@ export function getDisplayName(state) {
 }
 
 /**
-* A selector which returns the UI configuration for the Jitsi-Meet meeting.
-*
-* @param {Object} state - The Redux state.
-* @returns {boolean}
-*/
+ * A selector which returns the UI configuration for the Jitsi-Meet meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
 export function getMeetingOptions(state) {
     return {
         showMeetingToolbar: state.setup.showMeetingToolbar
     };
+}
+
+/**
+ * A selector which returns the label for the camera device that should be
+ * attempted to be used when starting a call.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getPreferredCamera(state) {
+    return state.setup.preferredCamera;
+}
+
+/**
+ * A selector which returns the label for the microphone device that should be
+ * attempted to be used when starting a call.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getPreferredMic(state) {
+    return state.setup.preferredMic;
+}
+
+/**
+ * A selector which returns the label for the speaker device that should be
+ * attempted to be used when starting a call.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getPreferredSpeaker(state) {
+    return state.setup.preferredSpeaker;
 }
 
 /**

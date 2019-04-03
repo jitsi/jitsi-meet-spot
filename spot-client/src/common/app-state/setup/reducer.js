@@ -3,6 +3,7 @@ import {
     SET_AVATAR_URL,
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
+    SET_PREFERRED_DEVICES,
     SET_SHOW_MEETING_TOOLBAR
 } from './action-types';
 
@@ -11,6 +12,9 @@ const DEFAULT_STATE = {
     completed: false,
     displayName: '',
     isSpot: false,
+    preferredCamera: undefined,
+    preferredMic: undefined,
+    preferredSpeaker: undefined,
     showMeetingToolbar: false
 };
 
@@ -46,6 +50,14 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             isSpot: action.isSpot
+        };
+
+    case SET_PREFERRED_DEVICES:
+        return {
+            ...state,
+            preferredCamera: action.cameraLabel,
+            preferredMic: action.micLabel,
+            preferredSpeaker: action.speakerLabel
         };
 
     case SET_SHOW_MEETING_TOOLBAR:

@@ -9,7 +9,8 @@ import {
     InMeetingConfig,
     Profile,
     ScreenshareInput,
-    ScreenshareStatus
+    ScreenshareStatus,
+    SelectMedia
 } from './../components';
 
 /**
@@ -31,6 +32,7 @@ export default class AdminView extends React.Component {
             view: 'all'
         };
 
+        this._onChangeDevices = this._onChangeDevices.bind(this);
         this._onChangeProfile = this._onChangeProfile.bind(this);
         this._onChangeScreenshareInput
             = this._onChangeScreenshareInput.bind(this);
@@ -61,6 +63,8 @@ export default class AdminView extends React.Component {
      */
     _renderSubcomponent() {
         switch (this.state.view) {
+        case 'device-selection':
+            return <SelectMedia onSuccess = { this._onShowAllOptions } />;
         case 'profile':
             return <Profile onSuccess = { this._onShowAllOptions } />;
         case 'screenshare-input':
@@ -74,6 +78,14 @@ export default class AdminView extends React.Component {
                         <div className = 'admin-title'>Profile</div>
                         <Button onClick = { this._onChangeProfile }>
                             Change
+                        </Button>
+                    </div>
+                    <div>
+                        <div className = 'admin-title'>
+                            Preferred devices
+                        </div>
+                        <Button onClick = { this._onChangeDevices }>
+                            Device Selection
                         </Button>
                     </div>
                     <div>
@@ -104,6 +116,17 @@ export default class AdminView extends React.Component {
                 </>
             );
         }
+    }
+
+    /**
+     * Displays the view for setting preferred audio and video devices for
+     * conferencing.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onChangeDevices() {
+        this.setState({ view: 'device-selection' });
     }
 
     /**

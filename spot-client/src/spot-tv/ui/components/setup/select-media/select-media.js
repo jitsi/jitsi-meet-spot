@@ -2,6 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {
+    getPreferredCamera,
+    getPreferredMic,
+    getPreferredSpeaker,
+    setPreferredDevices
+} from 'common/app-state';
 import { Button } from 'common/ui';
 import { avUtils } from 'common/media';
 
@@ -16,8 +22,18 @@ import SpeakerPreview from './speaker-preview';
  * @extends React.Component
  */
 class SelectMedia extends React.Component {
+    static defaultProps = {
+        preferredCamera: '',
+        preferredMic: '',
+        preferredSpeaker: ''
+    };
+
     static propTypes = {
-        onSuccess: PropTypes.func
+        dispatch: PropTypes.func,
+        onSuccess: PropTypes.func,
+        preferredCamera: PropTypes.string,
+        preferredMic: PropTypes.string,
+        preferredSpeaker: PropTypes.string
     };
 
     /**
@@ -32,9 +48,9 @@ class SelectMedia extends React.Component {
         this.state = {
             cameras: [],
             mics: [],
-            selectedCamera: '',
-            selectedMic: '',
-            selectedSpeaker: '',
+            selectedCamera: props.preferredCamera,
+            selectedMic: props.preferredMic,
+            selectedSpeaker: props.preferredSpeaker,
             speakers: []
         };
 
@@ -52,7 +68,7 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        avUtils.listenForCameraDeviceListChange(this._onDeviceListChange);
+        avUtils.listenForDeviceListChange(this._onDeviceListChange);
 
         this._getDevices();
     }
@@ -63,7 +79,7 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        avUtils.stopListeningForCameraDeviceListChange(
+        avUtils.stopListeningForDeviceListChange(
             this._onDeviceListChange);
     }
 
@@ -114,9 +130,6 @@ class SelectMedia extends React.Component {
                 { cameraSelect }
                 { micSelect }
                 { speakerSelect }
-                <div>
-                    Note: saving of devices not yet implemented
-                </div>
                 <CameraPreview
                     devices = { cameras }
                     label = { selectedCamera } />
@@ -279,8 +292,30 @@ class SelectMedia extends React.Component {
      * @inheritdoc
      */
     _onSubmit() {
+        this.props.dispatch(setPreferredDevices(
+            this.state.selectedCamera,
+            this.state.selectedMic,
+            this.state.selectedSpeaker
+        ));
+
         this.props.onSuccess();
     }
 }
 
-export default connect()(SelectMedia);
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code SelectMedia}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        preferredCamera: getPreferredCamera(state),
+        preferredMic: getPreferredMic(state),
+        preferredSpeaker: getPreferredSpeaker(state)
+    };
+}
+
+export default connect(mapStateToProps)(SelectMedia);

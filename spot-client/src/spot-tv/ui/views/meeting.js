@@ -9,6 +9,9 @@ import {
     getDesktopSharingFramerate,
     getDisplayName,
     getMeetingOptions,
+    getPreferredCamera,
+    getPreferredMic,
+    getPreferredSpeaker,
     getWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -34,6 +37,9 @@ export class Meeting extends React.Component {
         match: PropTypes.object,
         maxDesktopSharingFramerate: PropTypes.number,
         minDesktopSharingFramerate: PropTypes.number,
+        preferredCamera: PropTypes.string,
+        preferredMic: PropTypes.string,
+        preferredSpeaker: PropTypes.string,
         remoteControlService: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
@@ -90,6 +96,9 @@ export class Meeting extends React.Component {
             displayName,
             maxDesktopSharingFramerate,
             minDesktopSharingFramerate,
+            preferredCamera,
+            preferredMic,
+            preferredSpeaker,
             remoteControlService,
             screenshareDevice,
             showMeetingToolbar
@@ -106,6 +115,9 @@ export class Meeting extends React.Component {
                     minDesktopSharingFramerate = { minDesktopSharingFramerate }
                     onMeetingLeave = { this._onMeetingLeave }
                     onMeetingStart = { this._onMeetingStart }
+                    preferredCamera = { preferredCamera }
+                    preferredMic = { preferredMic }
+                    preferredSpeaker = { preferredSpeaker }
                     remoteControlService = { remoteControlService }
                     screenshareDevice = { screenshareDevice }
                     showMeetingToolbar = { showMeetingToolbar }
@@ -223,6 +235,9 @@ function mapStateToProps(state) {
         displayName: getDisplayName(state),
         maxDesktopSharingFramerate,
         minDesktopSharingFramerate,
+        preferredCamera: getPreferredCamera(state),
+        preferredMic: getPreferredMic(state),
+        preferredSpeaker: getPreferredSpeaker(state),
         screenshareDevice: getWiredScreenshareInputLabel(state),
         showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar
     };

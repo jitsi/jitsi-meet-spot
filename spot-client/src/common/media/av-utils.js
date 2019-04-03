@@ -15,6 +15,8 @@ export default {
 
     _cachedDeviceList: null,
 
+    _deviceListChangeListeners: new Set(),
+
     _videoDeviceListChangeListeners: new Set(),
 
     /**
@@ -145,16 +147,41 @@ export default {
     },
 
     /**
+     * Be notified of any changes to connected audio and video devices.
+     *
+     * @param {Function} callback - The function to invoke on when a device has
+     * been connected or removed.
+     * @private
+     * @returns {void}
+     */
+    listenForDeviceListChange(callback) {
+        this._deviceListChangeListeners.add(callback);
+    },
+
+    /**
      * Stop being notified when a new camera device has been connected or
      * disconnected.
      *
-     * @param {Function} callback - The function which should not longer be
+     * @param {Function} callback - The function which should no longer be
      * called.
      * @private
      * @returns {void}
      */
     stopListeningForCameraDeviceListChange(callback) {
         this._videoDeviceListChangeListeners.delete(callback);
+    },
+
+    /**
+     * Stop being notified when audio and video devices are disconnected or
+     * connected.
+     *
+     * @param {Function} callback - The function which should no longer be
+     * called.
+     * @private
+     * @returns {void}
+     */
+    stopListeningForDeviceListChange(callback) {
+        this._deviceListChangeListeners.delete(callback);
     },
 
     /**
@@ -208,6 +235,9 @@ export default {
      */
     _onDeviceListChange(deviceList) {
         this._cachedDeviceList = deviceList;
+
+        this._deviceListChangeListeners.forEach(
+            callback => callback(deviceList));
 
         const videoInputDevices
             = deviceList.filter(device => device.kind === 'videoinput');
