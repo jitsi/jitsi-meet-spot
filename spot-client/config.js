@@ -115,7 +115,14 @@ window.JitsiMeetSpotConfig = {
         SS_MIN_FPS: undefined
     },
 
-    DOMAINS: {
+    /**
+     * Domains which Spot can be hosted on which should place Spot into a
+     * different UX mode.
+     */
+    MODE_DOMAINS: {
+        /**
+         * The domain which should trigger share mode for the Spot-Remote.
+         */
         SHARE: undefined
     },
 

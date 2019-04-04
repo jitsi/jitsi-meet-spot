@@ -107,7 +107,7 @@ export function getRemoteControlServerConfig(state) {
  * @returns {string}
  */
 export function getShareDomain(state) {
-    return state.config.DOMAINS.SHARE;
+    return state.config.MODE_DOMAINS.SHARE;
 }
 
 /**

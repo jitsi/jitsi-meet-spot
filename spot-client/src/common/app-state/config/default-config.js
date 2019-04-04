@@ -27,10 +27,6 @@ export default {
 
     DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
 
-    DOMAINS: {
-        SHARE: undefined
-    },
-
     LOGGING: {
         ENDPOINT: process.env.LOGGING_ENDPOINT || ''
     },
@@ -38,6 +34,10 @@ export default {
     MEDIA: {
         SS_MAX_FPS: process.env.SS_MAX_FPS || 60,
         SS_MIN_FPS: process.env.SS_MIN_FPS || 5
+    },
+
+    MODE_DOMAINS: {
+        SHARE: undefined
     },
 
     SPOT_SERVICES: {
