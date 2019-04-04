@@ -99,7 +99,7 @@ export function getRemoteControlServerConfig(state) {
     return state.config.XMPP_CONFIG;
 }
 
-/*
+/**
  * A selector which returns the domain which should trigger the share mode for
  * a Spot-Remote.
  *
