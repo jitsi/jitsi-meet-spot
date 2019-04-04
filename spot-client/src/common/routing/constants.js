@@ -7,6 +7,7 @@ export const ROUTES = {
     HOME: '/spot',
     LOADING: '/loading',
     MEETING: '/meeting',
+    OUTLOOK_OAUTH: '/oauth',
     REMOTE_CONTROL: '/remote-control',
     SETUP: '/setup'
 };

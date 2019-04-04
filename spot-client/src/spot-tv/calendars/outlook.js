@@ -1,3 +1,4 @@
+import { ROUTES } from 'common/routing';
 import { isValidMeetingUrl } from 'common/utils';
 
 import { integrationTypes } from './constants';
@@ -26,7 +27,9 @@ export default {
                 'Calendars.Read',
                 'Calendars.Read.Shared'
             ].join(' '),
-            redirectUri: `${window.location.origin}${window.location.pathname}`
+
+            // FIXME: Account for spot being hosted within a path.
+            redirectUri: `${window.location.origin}${ROUTES.OUTLOOK_OAUTH}`
         });
     },
 
