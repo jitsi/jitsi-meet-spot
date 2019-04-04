@@ -1,12 +1,56 @@
-import { setSpotTVState } from './../spot-tv/actions';
-
+import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
+
+import { setSpotTVState } from './../spot-tv/actions';
 
 import {
     REMOTE_CONTROL_REQUEST_STATE,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
 } from './actionTypes';
 import { requestStates, requestTypes } from './constants';
+
+/**
+ * Encapsulates updating the known status of a command in flight to a Spot-TV
+ * for a state change.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update the
+ * current state of a request in flight.
+ * @param {Function} request - The function which should be executed that
+ * performs the async request. The function must return a promise.
+ * @param {Function} requestType - The type of the request. Used to reference
+ * the request in Redux.
+ * @param {Function} expectedValue - What the expected result of the request
+ * should be. Used for optimistic updating of the UI.
+ * @private
+ * @returns {Function<Promise>}
+ */
+function createActionWithRequestStates( // eslint-disable-line max-params
+        dispatch,
+        request,
+        requestType,
+        expectedValue) {
+    dispatch(setRequestState(
+        requestType,
+        requestStates.PENDING,
+        expectedValue
+    ));
+
+    return request()
+        .then(() => dispatch(setRequestState(
+            requestType,
+            requestStates.DONE,
+            expectedValue
+        )))
+        .catch(error => {
+            logger.error('Encountered error commanding Spot-TV', {
+                error,
+                expectedValue,
+                requestType
+            });
+
+            dispatch(setRequestState(requestType, requestStates.ERROR));
+        });
+}
 
 /**
  * Requests a Spot to join a meeting.
@@ -57,25 +101,12 @@ function setRequestState(requestType, requestState, expectedState) {
  * @returns {Function}
  */
 export function setAudioMute(mute) {
-    return dispatch => {
-        dispatch(setRequestState(
-            requestTypes.AUDIO_MUTE,
-            requestStates.PENDING,
-            mute
-        ));
-
-        return remoteControlService.setAudioMute(mute)
-            .then(() => {
-                dispatch(setSpotTVState({ audioMuted: mute }));
-                dispatch(setRequestState(
-                    requestTypes.AUDIO_MUTE,
-                    requestStates.DONE,
-                    mute
-                ));
-            })
-            .catch(() => dispatch(setRequestState(
-                requestTypes.AUDIO_MUTE, requestStates.ERROR)));
-    };
+    return dispatch => createActionWithRequestStates(
+        dispatch,
+        () => remoteControlService.setAudioMute(mute),
+        requestTypes.AUDIO_MUTE,
+        mute
+    ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
 }
 
 /**
@@ -85,25 +116,12 @@ export function setAudioMute(mute) {
  * @returns {Function}
  */
 export function setVideoMute(mute) {
-    return dispatch => {
-        dispatch(setRequestState(
-            requestTypes.VIDEO_MUTE,
-            requestStates.PENDING,
-            mute
-        ));
-
-        return remoteControlService.setVideoMute(mute)
-            .then(() => {
-                dispatch(setSpotTVState({ videoMuted: mute }));
-                dispatch(setRequestState(
-                    requestTypes.VIDEO_MUTE,
-                    requestStates.DONE,
-                    mute
-                ));
-            })
-            .catch(() => dispatch(setRequestState(
-                requestTypes.VIDEO_MUTE, requestStates.ERROR)));
-    };
+    return dispatch => createActionWithRequestStates(
+        dispatch,
+        () => remoteControlService.setVideoMute(mute),
+        requestTypes.VIDEO_MUTE,
+        mute
+    ).then(() => dispatch(setSpotTVState({ videoMuted: mute })));
 }
 
 /**
