@@ -14,6 +14,7 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { logger } from 'common/logger';
 import { LoadingIcon, View } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -56,7 +57,8 @@ export class Share extends React.PureComponent {
         super(props);
 
         this.state = {
-            autoPromptScreenshare: true
+            autoPromptScreenshare: true,
+            screensharePending: false
         };
 
         this._onGoToSpotRemoveView = this._onGoToSpotRemoveView.bind(this);
@@ -122,7 +124,7 @@ export class Share extends React.PureComponent {
      * @returns {ReactComponent}
      */
     _renderSubView() {
-        if (this.state.autoPromptScreenshare) {
+        if (this.state.screensharePending) {
             return <LoadingIcon color = 'white' />;
         }
 
@@ -154,10 +156,19 @@ export class Share extends React.PureComponent {
             return;
         }
 
+        this.setState({
+            screensharePending: true
+        });
+
         if (this.props.inMeeting) {
             this.props.dispatch(startWirelessScreensharing(true))
+                .catch(error =>
+                    logger.warn('failed to start screenshare', { error }))
                 .then(() => {
-                    this.setState({ autoPromptScreenshare: false });
+                    this.setState({
+                        autoPromptScreenshare: false,
+                        screensharePending: false
+                    });
                 });
 
             return;
@@ -176,7 +187,10 @@ export class Share extends React.PureComponent {
         .catch(() =>
             this.props.dispatch(setLocalWirelessScreensharing(false)))
         .then(() => {
-            this.setState({ autoPromptScreenshare: false });
+            this.setState({
+                autoPromptScreenshare: false,
+                screensharePending: false
+            });
         });
     }
 
