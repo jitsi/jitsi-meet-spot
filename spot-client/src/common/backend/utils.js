@@ -33,53 +33,55 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
     let retry = 0;
 
     /**
-     * A private function used to perform the fetch request while keeping access
-     * the retry count through a closure.
+     * A private function used to perform the fetch request.
      *
      * @returns {Promise<Object>}
      */
     function internalFetchWithRetry() {
-        return new Promise((resolve, reject) => {
-            fetch(url, requestOptions)
-                .then(response => {
-                    if (!response.ok) {
-                        const error
-                            = `Failed to ${operationName}:`
-                                + `${response.statusText}, HTTP code: ${response.status}`;
+        return fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    const error
+                        = `Failed to ${operationName}:`
+                            + `${response.statusText}, HTTP code: ${response.status}`;
 
-                        if (status < 500 && status >= 600) {
-                            // Break the retry chain
-                            reject(error);
-
-                            return;
-                        }
-
-                        // Throw and retry
-                        throw Error(error);
+                    if (status < 500 && status >= 600) {
+                        return Promise.reject(error);
                     }
 
-                    // Return result as JSON
-                    resolve(response.json());
-                })
-                .catch(error => {
-                    if (retry >= maxRetries) {
-                        logger.log(`${operationName}  - maximum retries exceeded`);
-                        reject(error);
+                    return createRetryTimeout(error);
+                }
 
-                        return;
-                    }
+                // Return result as JSON
+                return response.json();
+            });
+    }
 
-                    retry = retry + 1;
-                    const timeout = _getNextTimeout(retry);
+    /**
+     * A private function to retry a fetch after a timeout while keeping access
+     * the retry count through a closure.
+     *
+     * @param {string} error - The error which caused the triggering of the
+     * retry.
+     * @returns {Promise<Object>}
+     */
+    function createRetryTimeout(error) {
+        if (retry >= maxRetries) {
+            logger.log(`${operationName}  - maximum retries exceeded`);
 
-                    logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
+            return Promise.reject(error);
+        }
 
-                    setTimeout(() => {
-                        internalFetchWithRetry()
-                            .then(resolve, reject);
-                    }, timeout);
-                });
+        retry = retry + 1;
+        const timeout = _getNextTimeout(retry);
+
+        logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
+
+        const retryTimeout = new Promise(resolve => {
+            setTimeout(resolve, timeout);
         });
+
+        return retryTimeout.then(() => internalFetchWithRetry());
     }
 
     return internalFetchWithRetry();
