@@ -25,54 +25,64 @@ function _getNextTimeout(retry) {
  * @param {Object} fetchOptions.requestOptions - The options to be passed to the fetch function.
  * @param {string} fetchOptions.operationName - The name of the fetch operation that will appear in
  * the retry related log entries.
- * @param {number} retry - Keeps track of the retry attempt.
  * @param {number} maxRetries - How many times will retry the request.
  * @returns {Promise<Object>} - A promise resolved with the JSON parsed from the response.
  */
-function fetchWithRetry(fetchOptions, retry = 0, maxRetries = 3) {
+function fetchWithRetry(fetchOptions, maxRetries = 3) {
     const { url, requestOptions, operationName } = fetchOptions;
+    let retry = 0;
 
-    return new Promise((resolve, reject) => {
-        fetch(url, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    const error
-                        = `Failed to ${operationName}:`
-                            + `${response.statusText}, HTTP code: ${response.status}`;
+    /**
+     * A private function used to perform the fetch request while keeping access
+     * the retry count through a closure.
+     *
+     * @returns {Promise<Object>}
+     */
+    function internalFetchWithRetry() {
+        return new Promise((resolve, reject) => {
+            fetch(url, requestOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        const error
+                            = `Failed to ${operationName}:`
+                                + `${response.statusText}, HTTP code: ${response.status}`;
 
-                    if (status < 500 && status >= 600) {
-                        // Break the retry chain
+                        if (status < 500 && status >= 600) {
+                            // Break the retry chain
+                            reject(error);
+
+                            return;
+                        }
+
+                        // Throw and retry
+                        throw Error(error);
+                    }
+
+                    // Return result as JSON
+                    resolve(response.json());
+                })
+                .catch(error => {
+                    if (retry >= maxRetries) {
+                        logger.log(`${operationName}  - maximum retries exceeded`);
                         reject(error);
 
                         return;
                     }
 
-                    // Throw and retry
-                    throw Error(error);
-                }
+                    retry = retry + 1;
+                    const timeout = _getNextTimeout(retry);
 
-                // Return result as JSON
-                resolve(response.json());
-            })
-            .catch(error => {
-                if (retry >= maxRetries) {
-                    logger.log(`${operationName}  - maximum retries exceeded`);
-                    reject(error);
+                    logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
 
-                    return;
-                }
+                    setTimeout(() => {
+                        internalFetchWithRetry()
+                            .then(resolve, reject);
+                    }, timeout);
+                });
+        });
+    }
 
-                const _retry = retry + 1;
-                const timeout = _getNextTimeout(_retry);
-
-                logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
-
-                setTimeout(() => {
-                    fetchWithRetry(fetchOptions, _retry)
-                        .then(resolve, reject);
-                }, timeout);
-            });
-    });
+    return internalFetchWithRetry();
 }
 
 /**
