@@ -21,7 +21,7 @@
         flex-direction: row;
     }
 
-    &:active {
+    &:active:not(.no-url) {
         background-color: var(--container-content-highlight-bg-color);
     }
 

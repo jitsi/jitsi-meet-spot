@@ -25,6 +25,11 @@
             @media #{$mq-laptop-l} {
                 width: 60%;
             }
+
+            &.no-url {
+                background-color: rgba(105, 105, 105, 0.7);
+                cursor: initial;
+            }
         }
 
         .meeting:first-child {

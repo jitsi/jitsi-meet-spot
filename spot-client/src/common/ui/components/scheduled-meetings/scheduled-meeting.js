@@ -41,12 +41,11 @@ export default class ScheduledMeeting extends React.Component {
             title
         } = this.props.event;
         const startTime = new Date(start);
-        const joinNowClasses
-            = `meeting-join ${this._hasMeetingToJoin() ? '' : 'hidden'}`;
+        const hasMeetingToJoin = this._hasMeetingToJoin();
 
         return (
             <div
-                className = 'meeting'
+                className = { `meeting ${hasMeetingToJoin ? '' : 'no-url'} ` }
                 onClick = { this._onMeetingClick }>
                 <div className = 'meeting-info-container'>
                     <div className = 'time-info'>
@@ -66,7 +65,7 @@ export default class ScheduledMeeting extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className = { joinNowClasses }>
+                <div className = { `meeting-join ${hasMeetingToJoin ? '' : 'hidden'}` }>
                     <button className = 'join-cta'>Join Now</button>
                 </div>
             </div>
