@@ -247,7 +247,7 @@ export default {
  */
 function getParamsFromHash(url) {
     const params = {};
-    const hashParams = url.split('#/')[1];
+    const hashParams = url.split('#')[1];
 
     hashParams.split('&').forEach(pair => {
         const [ key, value ] = pair.split('=');

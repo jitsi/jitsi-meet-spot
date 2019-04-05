@@ -15,6 +15,7 @@ import {
     Admin,
     Home,
     Meeting,
+    OutlookOauth,
     Setup,
     SpotView,
     WiredScreenshareDetector
@@ -106,18 +107,6 @@ export class App extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        // Outlook auth redirect URL cannot be a direct hash route. The
-        // workaround implemented is redirecting to the home route but detecting
-        // when it might be a oauth redirect.
-        if (this._isOauthRedirect()) {
-            window.opener.postMessage({
-                type: 'ms-login',
-                url: window.location.href
-            }, window.location.origin);
-
-            return <div> Auth successful! </div>;
-        }
-
         const rootClassName
             = `app ${this.state.hideCursor ? 'idleCursor' : ''}`;
 
@@ -132,7 +121,7 @@ export class App extends React.Component {
                             {
 
                                 /**
-                                 * Spot instance specific routes.
+                                 * Spot-TV specific routes.
                                  */
                             }
                             <Route
@@ -141,6 +130,9 @@ export class App extends React.Component {
                             <Route
                                 path = { ROUTES.MEETING }
                                 render = { this._renderMeetingView } />
+                            <Route
+                                path = { ROUTES.OUTLOOK_OAUTH }
+                                render = { this._renderOutlookOauthView } />
                             <Route
                                 path = { ROUTES.SETUP }
                                 render = { this._renderSetupView } />
@@ -151,7 +143,7 @@ export class App extends React.Component {
                             {
 
                                 /**
-                                 * Remote control specific routes.
+                                 * Spot-Remote specific routes.
                                  */
                             }
                             <Route
@@ -163,23 +155,6 @@ export class App extends React.Component {
                 </IdleCursorDetector>
             </ErrorBoundary>
         );
-    }
-
-    /**
-     * The hack used to detect when the page is being loaded as a result of an
-     * oath flow redirect from a third-party calendar service. This hack is
-     * implemented during the time when no deployment strategy is known and no
-     * server-side routing is set up to handle a proper oauth landing page.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _isOauthRedirect() {
-        // Outlook auth redirect URL cannot be a direct hash route. The
-        // workaround implemented is redirecting to the home route but detecting
-        // when it might be a oauth redirect.
-        return Boolean(window.opener
-            && this.props.location.pathname.includes('access_token'));
     }
 
     /**
@@ -252,6 +227,16 @@ export class App extends React.Component {
      */
     _renderMeetingView() {
         return this._renderSpotViewWithRemoteControl(Meeting, 'meeting');
+    }
+
+    /**
+     * Returns the Spot-TV view for processing an Outlook oauth redirect.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderOutlookOauthView() {
+        return <OutlookOauth />;
     }
 
     /**
