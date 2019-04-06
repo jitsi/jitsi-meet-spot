@@ -59,6 +59,10 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            calendarError: null
+        };
+
         this._onCommand = this._onCommand.bind(this);
         this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
@@ -135,6 +139,10 @@ export class Home extends React.Component {
     _getCalendarEventsView() {
         if (!this.props.isSetupComplete) {
             return this._renderSetupMessage();
+        }
+
+        if (this.state.calendarError) {
+            return this._renderError();
         }
 
         if (this.props.hasFetchedEvents) {
@@ -237,11 +245,39 @@ export class Home extends React.Component {
                     dispatch(setCalendarEvents(events));
                 }
 
-                clearTimeout(this._updateEventsTimeout);
+                this.setState({ calendarError: null });
 
-                this._updateEventsTimeout
-                    = setTimeout(() => this._pollForEvents(), 30000);
+                this._updateEventsTimeout = setTimeout(
+                    () => this._pollForEvents(),
+                    30000 // Get new events in 30 seconds
+                );
+            })
+            .catch(calendarError => {
+                this.setState({ calendarError });
+
+                this._updateEventsTimeout = setTimeout(
+                    () => this._pollForEvents(),
+                    1000 * 60 * 5 // Try again in 5 minutes
+                );
             });
+    }
+
+    /**
+     * Instantiates a ReactElement with a message stating calendar events could
+     * not be fetched.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderError() {
+        return (
+            <div className = 'no-events-message'>
+                <div>Unable to get calendar events.</div>
+                <div>
+                   Please try reconnecting to the room's calendar.
+                </div>
+            </div>
+        );
     }
 
     /**

@@ -1,3 +1,4 @@
+import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { isValidMeetingUrl } from 'common/utils';
 
@@ -43,11 +44,25 @@ export default {
     getCalendar(email) {
         const now = new Date();
         const filter = `Start/DateTime ge '${now.toISOString()}'`;
-        const url = `/users/${email}/calendar/events?$filter=${filter}&$top=3`;
+        const url = `/users/${email}/calendfar/events?$filtefdr=${filter}&$top=3`;
         const orderBy = 'createdDateTime ASC';
 
         return microsoftClientApi.request(url, { orderBy })
             .then(response => response.value)
+            .catch(response => {
+                const formattedError = {
+                    errorCode: response.code,
+                    message: response.message,
+                    statusCode: response.statusCode
+                };
+
+                logger.error(
+                    'Outlook Calendar events fetch failed',
+                    { error: formattedError }
+                );
+
+                return Promise.reject(formattedError);
+            })
             .then(events => filterJoinableEvents(events, email));
     },
 
