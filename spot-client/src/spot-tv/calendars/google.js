@@ -1,5 +1,6 @@
 /* global gapi */
 
+import { logger } from 'common/logger';
 import { date, isValidMeetingUrl } from 'common/utils';
 
 import { integrationTypes } from './constants';
@@ -61,6 +62,20 @@ export default {
 
         return gapi.client.request(calendarEventsEndpoint)
             .then(response => response.result.items)
+            .catch(response => {
+                const formattedError = {
+                    errorCode: response.result.error.errors[0].domain,
+                    message: response.result.error.message,
+                    statusCode: response.status
+                };
+
+                logger.error(
+                    'Google Calendar events fetch failed',
+                    { error: formattedError }
+                );
+
+                return Promise.reject(formattedError);
+            })
             .then(events => filterJoinableEvents(events, email));
     },
 
