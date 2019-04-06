@@ -65,7 +65,7 @@ export class Home extends React.Component {
         this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
 
         this._isUnmounting = false;
-        this._updateEventsInterval = null;
+        this._updateEventsTimeout = null;
     }
 
     /**
@@ -76,9 +76,6 @@ export class Home extends React.Component {
     componentDidMount() {
         if (this.props.isSetupComplete) {
             this._pollForEvents();
-
-            this._updateEventsInterval
-                = setInterval(this._pollForEvents, 30000);
         }
 
         this.props.remoteControlService.startListeningForRemoteMessages(
@@ -96,7 +93,7 @@ export class Home extends React.Component {
         this.props.remoteControlService.stopListeningForRemoteMessages(
             this._onCommand);
 
-        clearInterval(this._updateEventsInterval);
+        clearTimeout(this._updateEventsTimeout);
     }
 
     /**
@@ -223,7 +220,6 @@ export class Home extends React.Component {
             return;
         }
 
-        // TODO: prevent multiple requests being in flight at the same time
         this.props.calendarService.getCalendar(calendarEmail)
             .then(events => {
                 if (this._isUnmounting) {
@@ -240,6 +236,11 @@ export class Home extends React.Component {
                     || hasUpdatedEvents(previousEvents, events)) {
                     dispatch(setCalendarEvents(events));
                 }
+
+                clearTimeout(this._updateEventsTimeout);
+
+                this._updateEventsTimeout
+                    = setTimeout(() => this._pollForEvents(), 30000);
             });
     }
 
