@@ -47,7 +47,7 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                             = `Failed to ${operationName}:`
                                 + `${response.statusText}, HTTP code: ${response.status}`;
 
-                        if (status < 500 && status >= 600) {
+                        if (response.status < 500 && response.status >= 600) {
                             // Break the retry chain
                             reject(error);
 
