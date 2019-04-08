@@ -40,8 +40,7 @@ function createActionWithRequestStates( // eslint-disable-line max-params
             requestType,
             requestStates.DONE,
             expectedValue
-        )))
-        .catch(error => {
+        )), error => {
             logger.error('Encountered error commanding Spot-TV', {
                 error,
                 expectedValue,
