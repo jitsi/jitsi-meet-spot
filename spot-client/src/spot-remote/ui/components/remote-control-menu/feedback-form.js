@@ -51,6 +51,7 @@ export default class FeedbackForm extends React.Component {
 
         this._onMessageChange = this._onMessageChange.bind(this);
         this._onRatingChange = this._onRatingChange.bind(this);
+        this._onSkip = this._onSkip.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
 
@@ -87,6 +88,12 @@ export default class FeedbackForm extends React.Component {
                 { this.state.requestMoreInfo
                     ? this._renderInfoRequest()
                     : this._renderStars() }
+                <button
+                    className = 'skip-button'
+                    onClick = { this._onSkip }
+                    type = 'button'>
+                    Skip
+                </button>
                 <button
                     className = 'submit-button'
                     type = 'submit'>
@@ -126,13 +133,26 @@ export default class FeedbackForm extends React.Component {
      * Updates the known number of stars selected for rating the meeting
      * experience.
      *
-     * @param {int} score - The star value that has been selected.
+     * @param {number} score - The star value that has been selected.
      * @private
      * @returns {void}
      */
     _onRatingChange(score) {
         this.setState({ score });
         this._restartInactivityTimeout();
+    }
+
+    /**
+     * Dismiss feedback without submitting any feedback.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onSkip() {
+        this.props.remoteControlService.submitFeedback({
+            message: '',
+            score: -1
+        });
     }
 
     /**
