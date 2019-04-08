@@ -33,6 +33,16 @@ export function getCalendarName(state) {
 }
 
 /**
+ * A selector which returns the type of the currently selected calendar integration.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getCalendarType(state) {
+    return state.calendars.calendarType;
+}
+
+/**
 * A selector which returns whether or not calendar events have ever been
 * updated during this session.
 *

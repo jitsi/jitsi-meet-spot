@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getCalendarConfig } from 'common/app-state';
+import { getCalendarConfig, getCalendarType } from 'common/app-state';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { calendarService } from './../../calendars';
@@ -64,7 +64,7 @@ export class CalendarLoader extends AbstractLoader {
 function mapStateToProps(state) {
     return {
         calendarConfig: getCalendarConfig(state),
-        calendarType: state.calendars.calendarType
+        calendarType: getCalendarType(state)
     };
 }
 
