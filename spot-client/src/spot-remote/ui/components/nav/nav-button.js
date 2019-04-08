@@ -68,7 +68,7 @@ export default class NavButton extends React.Component {
         }
 
         if (className) {
-            rootClassName +=  ` ${className}`;
+            rootClassName += ` ${className}`;
         }
 
         return (
