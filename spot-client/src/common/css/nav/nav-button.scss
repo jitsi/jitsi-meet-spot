@@ -76,6 +76,10 @@
         &:active {
             color: var(--hangup-active-color);
 
+            .nav-icon-container {
+                border-color: var(--hangup-active-color);
+            }
+
             .nav-icon  {
                 color: var(--hangup-active-color);
             }
