@@ -19,6 +19,9 @@ The javascript library which contains XMPP, MUC, and WebRTC code used by jitsi-m
 ### Quiet
 A library for ultrasound transmitting and decoding. The main library is lib-quiet, written in C, but the maintainer provides iOS, Android, and JS libraries to use lib-quiet. See Ultrasound.
 
+### Share Mode
+Spot-Remote supports a special UX flow where the UI is reduced mainly to starting and stopping wireless screensharing. 
+
 ### Spot
 A standalone web application intended for conference integration with a huddle room. One part of the application is Spot-TV, which runs on a computer and is left running on a screen. Spot-TV has no direct controls on it. Instead, another part of the application,the Spot-Remote, must be used to navigate to meetings with Spot.
 

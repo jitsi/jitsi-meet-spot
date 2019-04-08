@@ -23,8 +23,9 @@ export default class RemoteControlServiceSubscriber {
      * @returns {oid}
      */
     onUpdate(store) {
-        const newSpotTvState = store.getState().spotTv;
-        const newCalendarEvents = store.getState().calendars.events || [];
+        const state = store.getState();
+        const newSpotTvState = state.spotTv;
+        const newCalendarEvents = state.calendars.events || [];
 
         if (newSpotTvState === this._previousSpotTvState
             && newCalendarEvents === this._previousCalendarEvents) {

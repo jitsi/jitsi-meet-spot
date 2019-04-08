@@ -18,6 +18,7 @@ export default class NavButton extends React.Component {
     static propTypes = {
         active: PropTypes.bool,
         className: PropTypes.string,
+        disabled: PropTypes.bool,
         iconName: PropTypes.string,
         label: PropTypes.string,
         onClick: PropTypes.func,
@@ -48,6 +49,7 @@ export default class NavButton extends React.Component {
         const {
             active,
             className,
+            disabled,
             iconName,
             label,
             qaId,
@@ -55,15 +57,28 @@ export default class NavButton extends React.Component {
             type
         } = this.props;
 
+        let rootClassName = 'nav-button';
+
+        if (disabled) {
+            rootClassName += ' disabled';
+        }
+
+        if (active) {
+            rootClassName += ' active';
+        }
+
+        if (className) {
+            rootClassName += ' rootClassName';
+        }
+
         return (
             <button
-                className
-                    = { `nav-button ${active ? 'active' : ''} ${className}` }
+                className = { rootClassName }
                 data-qa-id = { qaId }
+                disabled = { disabled }
                 onClick = { this._onClick }
                 tabIndex = { 0 }
                 type = { type }>
-
                 {
 
                     /**

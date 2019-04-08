@@ -9,6 +9,7 @@ import './page-layouts/spot-tv/meeting-view.scss';
 import './page-layouts/feedback-view.scss';
 import './page-layouts/in-call-view.scss';
 import './page-layouts/join-code-view.scss';
+import './page-layouts/share.scss';
 import './page-layouts/waiting-view.scss';
 
 import './admin-toolbar.scss';

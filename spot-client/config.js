@@ -116,6 +116,17 @@ window.JitsiMeetSpotConfig = {
     },
 
     /**
+     * Domains which Spot can be hosted on which should place Spot into a
+     * different UX mode.
+     */
+    MODE_DOMAINS: {
+        /**
+         * The domain which should trigger share mode for the Spot-Remote.
+         */
+        SHARE: undefined
+    },
+
+    /**
      * Configuration object for loading the ultrasound library.
      */
     ULTRASOUND: {

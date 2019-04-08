@@ -180,6 +180,7 @@ export class MeetingFrame extends React.Component {
 
         this.props.updateSpotTvState({
             audioMuted: false,
+            inMeeting: '',
             screensharingType: undefined,
             videoMuted: false
         });
@@ -286,6 +287,11 @@ export class MeetingFrame extends React.Component {
         switch (type) {
         case COMMANDS.HANG_UP:
             this._jitsiApi.executeCommand('hangup');
+
+            if (data.skipFeedback) {
+                this.props.onMeetingLeave();
+            }
+
             break;
 
         case COMMANDS.SET_AUDIO_MUTE:

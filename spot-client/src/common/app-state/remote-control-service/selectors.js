@@ -53,3 +53,14 @@ export function isVideoMutePending(state) {
 
     return Boolean(videoMute && videoMute.requestState === requestStates.PENDING);
 }
+
+/**
+ * A selector which returns the whether or a not the local Spot-Remote is
+ * actively screensharing wirelessly.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isWirelessScreensharingLocally(state) {
+    return Boolean(state.remoteControlService.isWirelessScreensharing);
+}

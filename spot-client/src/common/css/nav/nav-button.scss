@@ -13,8 +13,8 @@
         background-color: var(--container-bg-color);
     }
 
-    &.pending,
-    &:active {
+    &.pending:not(.disabled),
+    &:active:not(.disabled) {
         .nav-icon-container {
             border-color: var(--pending);
             color: var(--pending);
@@ -87,5 +87,10 @@
      */
     &.sharebutton.active:hover {
         cursor: pointer;
+    }
+
+    &.disabled {
+        color: gray;
+        cursor: default;
     }
 }

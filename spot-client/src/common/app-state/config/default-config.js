@@ -36,6 +36,10 @@ export default {
         SS_MIN_FPS: process.env.SS_MIN_FPS || 5
     },
 
+    MODE_DOMAINS: {
+        SHARE: undefined
+    },
+
     SPOT_SERVICES: {
         adminServiceUrl: process.env.ADMIN_SERVICE_URL,
         joinCodeServiceUrl: process.env.JOIN_CODE_SERVICE_URL

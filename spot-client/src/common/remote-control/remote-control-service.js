@@ -238,7 +238,7 @@ class RemoteControlService {
         let preGoToMeeting = Promise.resolve();
 
         if (startWithScreensharing === 'wireless') {
-            const connection = this._createScreensharingService();
+            const connection = this._createScreensharingService(otherOptions);
 
             preGoToMeeting = connection.createTracks()
                 .then(() => {
@@ -262,11 +262,20 @@ class RemoteControlService {
     /**
      * Requests a Spot-TV to leave a meeting in progress.
      *
+     * @param {boolean} skipFeedback - Whether or not to immediately navigate
+     * out of the meeting instead of display feedback entry.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
-    hangUp() {
+    hangUp(skipFeedback = false) {
+        this.destroyWirelessScreenshareConnections();
+
         return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.HANG_UP);
+            this._getSpotId(),
+            COMMANDS.HANG_UP,
+            {
+                skipFeedback
+            }
+        );
     }
 
     /**
@@ -350,11 +359,13 @@ class RemoteControlService {
      * in-meeting Jitsi in order to directly share a local screen.
      *
      * @param {boolean} enable - Whether to start ot stop screensharing.
+     * @param {Object} options - Additional configuration to use for creating
+     * the screenshare connection.
      * @returns {Promise}
      */
-    setWirelessScreensharing(enable) {
+    setWirelessScreensharing(enable, options) {
         return enable
-            ? this._startWirelessScreenshare()
+            ? this._startWirelessScreenshare(undefined, options)
             : this._stopWirelessScreenshare();
     }
 
@@ -422,10 +433,12 @@ class RemoteControlService {
      * Invoked by a Spot-Remote to initialize a new {@link ScreenshareService}
      * instance.
      *
+     * @param {Object} options - Additional configuration to use for creating
+     * the screenshare connection.
      * @private
      * @returns {ScreenshareService}
      */
-    _createScreensharingService() {
+    _createScreensharingService(options = {}) {
         return new ScreenshareService({
             mediaConfiguration:
                 this._wirelessScreensharingConfiguration || {},
@@ -441,7 +454,10 @@ class RemoteControlService {
              *
              * @returns {void}
              */
-            onConnectionClosed: () => this._stopWirelessScreenshare(),
+            onConnectionClosed: () => {
+                this._stopWirelessScreenshare();
+                options.onClose && options.onClose();
+            },
 
             /**
              * Callback invoked by {@code ScreenshareService} in order to
@@ -667,10 +683,12 @@ class RemoteControlService {
      * instance of ScreenshareConnection instead of instantiating one. This
      * would be used when creating a desktop track to stream first but the
      * actual connection to the JItsi participant must occur later.
+     * @param {Object} options - Additional configuration to use for creating
+     * the screenshare connection.
      * @private
      * @returns {void}
      */
-    _startWirelessScreenshare(connection) {
+    _startWirelessScreenshare(connection, options) {
         if (this._screenshareConnection) {
             logger.error('Already started wireless screenshare');
 
@@ -678,7 +696,7 @@ class RemoteControlService {
         }
 
         this._screenshareConnection
-            = connection || this._createScreensharingService();
+            = connection || this._createScreensharingService(options);
 
         return this._screenshareConnection.startScreenshare(this._getSpotId())
             .catch(error => {
@@ -698,11 +716,12 @@ class RemoteControlService {
      * participant that are pending or have successfully been made.
      *
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _stopWirelessScreenshare() {
-        this.setScreensharing(false);
         this.destroyWirelessScreenshareConnections();
+
+        return this.setScreensharing(false);
     }
 }
 

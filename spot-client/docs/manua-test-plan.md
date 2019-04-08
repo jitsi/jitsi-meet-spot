@@ -78,3 +78,16 @@ Wired unavailable and wireless unavailable
 - [ ] On browser, clicking start button opens modal asking to use different browser
 - [ ] On mobile, clicking start button opens modal asking to go to a different site
 - [ ] There is no mention of wired screensharing
+
+Share Mode
+------
+- [ ] Spot-Remote enters share mode when submitting the join code while the host name matches the one specified share domain in config
+- [ ] Spot-Remote enters share mode when submitting the join code with the "share" query param present
+- [ ] Spot-Remote is automatically prompted with the screenshare picker after initial join code submit
+- [ ] On wireless screenshare start, and Spot-TV not in a meeting, Spot-TV enters a random meeting with screensharing
+- [ ] On wireless screenshare start, and Spot-TV in a meeting, SpotTV starts wireless screensharing in the current meeting
+- [ ] Spot-Remote stopping screensharing exists the meeting
+- [ ] Another Spot-Remote stopping the screensharing leave Spot-TV in the meeting
+- [ ] At mode select, clicking the "Remote Control" button takes Spot-Remote to the full remote control view
+- [ ] At mode select, unsupported browsers cannot start wireless screensharing
+- [ ] At mode select, Spot-Remote cannot start a wireless screenshare if Spot-TV is already screensharing

@@ -100,6 +100,17 @@ export function getRemoteControlServerConfig(state) {
 }
 
 /**
+ * A selector which returns the domain which should trigger the share mode for
+ * a Spot-Remote.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getShareDomain(state) {
+    return state.config.MODE_DOMAINS.SHARE;
+}
+
+/**
  * A selector which returns configuration for Spot related services like the join code service and
  * the admin service URLs.
  *

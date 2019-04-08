@@ -9,5 +9,6 @@ export const ROUTES = {
     MEETING: '/meeting',
     OUTLOOK_OAUTH: '/oauth',
     REMOTE_CONTROL: '/remote-control',
-    SETUP: '/setup'
+    SETUP: '/setup',
+    SHARE: '/share'
 };
