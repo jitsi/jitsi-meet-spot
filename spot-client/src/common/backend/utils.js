@@ -1,21 +1,6 @@
 import { logger } from 'common/logger';
 import { getDeviceId } from 'common/utils/device-id';
-
-/**
- * FIXME duplicated with post-to-endpoint and the jitter calculation in the loaders.
- *
- * Gets next timeout using the full jitter pattern.
- *
- * @param {number} retry - The retry number. It's 1 on the first retry.
- * @returns {number} - The amount of waiting before trying another time given in milliseconds.
- * @private
- */
-function _getNextTimeout(retry) {
-    // 1st retry 0 - 2 seconds
-    // 2nd retry 0 - 4 seconds
-    // 3rd retry 0 - 16 seconds
-    return Math.floor(Math.random() * Math.pow(2, retry) * 1000);
-}
+import { getJitterDelay } from 'common/utils/retry';
 
 /**
  * Sends HTTP request using {@code fetch} with retries on network and server errors.
@@ -70,7 +55,7 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                     }
 
                     retry = retry + 1;
-                    const timeout = _getNextTimeout(retry);
+                    const timeout = getJitterDelay(retry, 500, 2);
 
                     logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
 
