@@ -1,3 +1,4 @@
+import backendCalendar from './backend-calendar';
 import { integrationTypes } from './constants';
 import google from './google';
 import outlook from './outlook';
@@ -10,6 +11,7 @@ import outlook from './outlook';
  * @type {Object}
  */
 const calendarIntegrations = {
+    [integrationTypes.BACKEND]: backendCalendar,
     [integrationTypes.GOOGLE]: google,
     [integrationTypes.OUTLOOK]: outlook
 };

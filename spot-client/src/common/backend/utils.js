@@ -86,6 +86,38 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
 }
 
 /**
+ * @typedef {Object} RESTBackendCalendarEvent
+ * @property {boolean} allDay
+ * @property {string} calendarId
+ * @property {string} description
+ * @property {string} end - The end date as formatted with {@link Date.toISOString()}.
+ * @property {string} eventId
+ * @property {string} meetingLink
+ * @property {string} start - The start date as formatted with {@link Date.toISOString()}.
+ * @property {string} summary - The title ?
+ * @property {boolean} updatable
+ */
+/**
+ * Retrieves the list of calendar events.
+ *
+ * @param {string} serviceEndpointUrl - The URL pointing to the REST endpoint which serves
+ * the calendar events.
+ * @returns {Promise<Array<RESTBackendCalendarEvent>>}
+ */
+export function fetchCalendarEvents(serviceEndpointUrl) {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors'
+    };
+
+    return fetchWithRetry({
+        operationName: 'get calendar events',
+        requestOptions,
+        url: serviceEndpointUrl
+    });
+}
+
+/**
  * Contacts the backend service in order to get the join code assigned to this device.
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the service.
