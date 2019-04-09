@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const calendarRequestHandler = require('./backend/calendar');
 const registerDeviceHandler = require('./backend/register-device');
 const roomInfoHandler = require('./backend/room-info');
 
@@ -17,5 +18,6 @@ const spots = new Map();
 
 app.post('/register-device', registerDeviceHandler.bind(null, spots));
 app.get('/room-info', roomInfoHandler.bind(null, spots));
+app.get('/calendar', calendarRequestHandler);
 
 app.listen(port, () => console.log(`Spot-admin app listening on port ${port}!`));
