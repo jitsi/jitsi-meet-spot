@@ -26,6 +26,7 @@ You can make the backend randomly fail by creating `.env` file in the `spot-admi
 properties:
 
 ```
+CALENDAR_FAILURE_RATE=0.6
 REG_DEVICE_FAILURE_RATE=0.7
 ROOM_INFO_FAILURE_RATE=0.5
 ```
@@ -45,3 +46,7 @@ B. To retrieve the room info:
 
 The `ABC456` is the Spot join code. The app should return a JSON which contains MUC room name needed for the Spot Remote
 to connect to the Spot TV.
+
+C. To get the list of calendar events:
+
+`./scripts/calendar_events.sh`

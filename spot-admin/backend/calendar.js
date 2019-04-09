@@ -11,9 +11,19 @@
  * @property {boolean} updatable
  */
 
-const { sendJSON } = require('./utils');
+const { send500Error, sendJSON } = require('./utils');
+
+const calendarFailureRate = process.env.CALENDAR_FAILURE_RATE;
+
+console.info('calendar failure rate: ' + calendarFailureRate);
 
 function calendarRequestHandler(req, res) {
+    if (calendarFailureRate && Math.random() < calendarFailureRate) {
+        send500Error(res, "Randomly failed /calendar");
+
+        return;
+    }
+
     let trailingStart = new Date();
     let trailingEnd = new Date();
     const events = [];
