@@ -37,7 +37,7 @@ export default {
     },
 
     MODE_DOMAINS: {
-        SHARE: undefined
+        SHARE: process.env.SHARE_DOMAIN
     },
 
     SPOT_SERVICES: {
