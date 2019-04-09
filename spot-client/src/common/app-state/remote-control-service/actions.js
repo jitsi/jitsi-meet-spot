@@ -52,6 +52,25 @@ function createActionWithRequestStates( // eslint-disable-line max-params
 }
 
 /**
+ * Updates the known request state of a command to a Spot-TV.
+ *
+ * @param {string} requestType - The type of the request to the Spot-TV.
+ * @param {string} requestState - Whether the request is pending, completed, or
+ * has ended with an error.
+ * @param {*} expectedState - The desired state the command is trying to make
+ * the Spot-TV change to.
+ * @returns {Object}
+ */
+function setRequestState(requestType, requestState, expectedState) {
+    return {
+        type: REMOTE_CONTROL_REQUEST_STATE,
+        requestType,
+        requestState,
+        expectedState
+    };
+}
+
+/**
  * Requests a Spot to join a meeting.
  *
  * @param {string} meetingName - The meeting to join.
@@ -72,25 +91,6 @@ export function goToMeeting(meetingName, options) {
  */
 export function hangUp(skipFeedback) {
     return () => remoteControlService.hangUp(skipFeedback);
-}
-
-/**
- * Updates the known request state of a command to a Spot-TV.
- *
- * @param {string} requestType - The type of the request to the Spot-TV.
- * @param {string} requestState - Whether the request is pending, completed, or
- * has ended with an error.
- * @param {*} expectedState - The desired state the command is trying to make
- * the Spot-TV change to.
- * @returns {Object}
- */
-function setRequestState(requestType, requestState, expectedState) {
-    return {
-        type: REMOTE_CONTROL_REQUEST_STATE,
-        requestType,
-        requestState,
-        expectedState
-    };
 }
 
 /**
@@ -129,28 +129,18 @@ export function setVideoMute(mute) {
  * @returns {Function}
  */
 export function startWirelessScreensharing() {
-    return dispatch => {
-        dispatch(setRequestState(
-            requestTypes.SCREENSHARE,
-            requestStates.PENDING,
-            'proxy'
-        ));
-
-        return remoteControlService.setWirelessScreensharing(
+    return dispatch => createActionWithRequestStates(
+        dispatch,
+        () => remoteControlService.setWirelessScreensharing(
             true,
             { onClose: () => dispatch(stopScreenshare()) }
-        ).then(() => {
-            dispatch(setLocalWirelessScreensharing(true));
-            dispatch(setSpotTVState({ screensharingType: 'proxy' }));
-            dispatch(setRequestState(
-                requestTypes.SCREENSHARE,
-                requestStates.DONE,
-                'proxy'
-            ));
-        })
-        .catch(() => dispatch(setRequestState(
-            requestTypes.SCREENSHARE, requestStates.ERROR)));
-    };
+        ),
+        requestTypes.SCREENSHARE,
+        'proxy'
+    ).then(() => {
+        dispatch(setLocalWirelessScreensharing(true));
+        dispatch(setSpotTVState({ screensharingType: 'proxy' }));
+    });
 }
 
 /**
@@ -159,11 +149,15 @@ export function startWirelessScreensharing() {
  * @returns {Function}
  */
 export function stopScreenshare() {
-    return dispatch => remoteControlService.setScreensharing(false)
-        .then(() => {
-            dispatch(setLocalWirelessScreensharing(false));
-            dispatch(setSpotTVState({ screensharingType: undefined }));
-        });
+    return dispatch => createActionWithRequestStates(
+        dispatch,
+        () => remoteControlService.setScreensharing(false),
+        requestTypes.SCREENSHARE,
+        undefined
+    ).then(() => {
+        dispatch(setLocalWirelessScreensharing(false));
+        dispatch(setSpotTVState({ screensharingType: undefined }));
+    });
 }
 
 /**
