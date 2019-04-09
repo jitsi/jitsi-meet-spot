@@ -16,6 +16,9 @@ export default {
         },
         OUTLOOK: {
             CLIENT_ID: process.env.OUTLOOK_CLIENT_ID || ''
+        },
+        BACKEND: {
+            SERVICE_URL: process.env.CALENDAR_SERVICE_URL || ''
         }
     },
 

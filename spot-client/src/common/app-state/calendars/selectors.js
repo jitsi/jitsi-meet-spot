@@ -1,3 +1,5 @@
+import { getCalendarConfig } from '../config/selectors';
+import { integrationTypes } from '../../../spot-tv/calendars';
 
 /**
  * A selector which returns the email associated with the currently configured
@@ -39,6 +41,12 @@ export function getCalendarName(state) {
  * @returns {string}
  */
 export function getCalendarType(state) {
+    const { BACKEND } = getCalendarConfig(state);
+
+    if (BACKEND && BACKEND.SERVICE_URL) {
+        return integrationTypes.BACKEND;
+    }
+
     return state.calendars.calendarType;
 }
 
