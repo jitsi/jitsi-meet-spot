@@ -87,28 +87,49 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the REST endpoint which serves
  * the calendar events.
+ * @param {string} jwtToken - The JWT token required for authentication.
  * @returns {Promise<Array<RESTBackendCalendarEvent>>}
  */
-export function fetchCalendarEvents(serviceEndpointUrl) {
+export function fetchCalendarEvents(serviceEndpointUrl, jwtToken) {
     const requestOptions = {
         method: 'GET',
         mode: 'cors'
     };
 
+    if (jwtToken) {
+        requestOptions.headers = new Headers();
+        requestOptions.headers.append('Authorization', `Bearer ${jwtToken}`);
+        requestOptions.headers.append('Accept', 'application/json');
+    }
+
+    let url = serviceEndpointUrl;
+
+    if (!url.includes('{tzid}')) {
+        return Promise.reject(`Missing {tzid} template in the URL: ${url}`);
+    }
+
+    // eslint-disable-next-line new-cap
+    url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
+
     return fetchWithRetry({
         operationName: 'get calendar events',
         requestOptions,
-        url: serviceEndpointUrl
+        url
     });
 }
 
 /**
+ * @typedef {Object} DeviceInfo
+ * @property {string} joinCode
+ * @property {string} jwt
+ */
+/**
  * Contacts the backend service in order to get the join code assigned to this device.
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the service.
- * @returns {Promise<string>}
+ * @returns {Promise<DeviceInfo>}
  */
-export function fetchJoinCode(serviceEndpointUrl) {
+export function registerDevice(serviceEndpointUrl) {
     const requestOptions = {
         headers: {
             'content-type': 'application/json; charset=UTF-8'
@@ -130,7 +151,10 @@ export function fetchJoinCode(serviceEndpointUrl) {
                 throw new Error(`No 'joinCode' in the response: ${JSON.stringify(json)}`);
             }
 
-            return json.joinCode;
+            return {
+                joinCode: json.joinCode,
+                jwt: json.jwt
+            };
         });
 }
 

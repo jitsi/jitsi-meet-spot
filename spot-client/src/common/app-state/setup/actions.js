@@ -3,6 +3,7 @@ import {
     SET_AVATAR_URL,
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
+    SET_JWT_TOKEN,
     SET_PREFERRED_DEVICES,
     SET_SHOW_MEETING_TOOLBAR
 } from './action-types';
@@ -44,6 +45,19 @@ export function setIsSpot(isSpot) {
     return {
         type: SET_IS_SPOT,
         isSpot
+    };
+}
+
+/**
+ * Sets the JWT token used for authentication with the backend services.
+ *
+ * @param {string} jwtToken - The JWT token string to be stored in the redux store.
+ * @returns {Object}
+ */
+export function setJwtToken(jwtToken) {
+    return {
+        type: SET_JWT_TOKEN,
+        jwtToken
     };
 }
 

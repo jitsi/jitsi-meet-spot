@@ -3,6 +3,7 @@ import {
     SET_AVATAR_URL,
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
+    SET_JWT_TOKEN,
     SET_PREFERRED_DEVICES,
     SET_SHOW_MEETING_TOOLBAR
 } from './action-types';
@@ -50,6 +51,12 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             isSpot: action.isSpot
+        };
+
+    case SET_JWT_TOKEN:
+        return {
+            ...state,
+            jwtToken: action.jwtToken
         };
 
     case SET_PREFERRED_DEVICES:

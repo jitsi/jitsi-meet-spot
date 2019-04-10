@@ -11,15 +11,39 @@
  * @property {boolean} updatable
  */
 
-const { send500Error, sendJSON } = require('./utils');
+const { send401Error, send500Error, sendJSON } = require('./utils');
 
 const calendarFailureRate = process.env.CALENDAR_FAILURE_RATE;
 
 console.info('calendar failure rate: ' + calendarFailureRate);
 
+const jwtToken = process.env.JWT_TOKEN;
+
 function calendarRequestHandler(req, res) {
     if (calendarFailureRate && Math.random() < calendarFailureRate) {
         send500Error(res, "Randomly failed /calendar");
+
+        return;
+    }
+
+    if (jwtToken) {
+        const authorization = req.headers['authorization'];
+        if (authorization !== `Bearer ${jwtToken}`) {
+            console.info(`Invalid token, "Authorization" header = ${authorization}`);
+            send401Error(res, `Invalid token`);
+
+            return;
+        }
+    }
+
+    const tzid = req.query['tzid'];
+
+    // Note that it's only a checks for the 'tzid' presence, but it's not really used.
+    // When date is formatted with the "toISOString" it includes the timezone and the client is able
+    // to recognize the timezone anyway. A real backend will probably use it to figure out
+    // the upcoming events.
+    if (!tzid) {
+        send400Error(res, '\'tzid\' query param is required');
 
         return;
     }
