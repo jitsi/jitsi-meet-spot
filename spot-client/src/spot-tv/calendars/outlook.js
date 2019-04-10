@@ -1,8 +1,8 @@
+import { integrationTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { isValidMeetingUrl } from 'common/utils';
 
-import { integrationTypes } from './constants';
 import { getMeetingUrl } from './event-parsers';
 import { microsoftClientApi } from './microsoft-client-api';
 

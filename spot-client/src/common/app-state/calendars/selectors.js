@@ -1,5 +1,6 @@
 import { getCalendarConfig } from '../config/selectors';
-import { integrationTypes } from '../../../spot-tv/calendars';
+
+import { integrationTypes } from './constants';
 
 /**
  * A selector which returns the email associated with the currently configured
