@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { integrationTypes } from 'common/app-state';
+import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
 
@@ -90,7 +90,7 @@ export class CalendarAuth extends React.Component {
      * @returns {Promise}
      */
     _onAuthEnterGoogle() {
-        return this._onAuthEnter(integrationTypes.GOOGLE);
+        return this._onAuthEnter(calendarTypes.GOOGLE);
     }
 
     /**
@@ -101,7 +101,7 @@ export class CalendarAuth extends React.Component {
      * @returns {Promise}
      */
     _onAuthEnterOutlook() {
-        return this._onAuthEnter(integrationTypes.OUTLOOK);
+        return this._onAuthEnter(calendarTypes.OUTLOOK);
     }
 }
 

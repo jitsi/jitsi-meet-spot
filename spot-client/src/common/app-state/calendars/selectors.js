@@ -1,6 +1,6 @@
 import { getCalendarConfig } from '../config/selectors';
 
-import { integrationTypes } from './constants';
+import { calendarTypes } from './constants';
 
 /**
  * A selector which returns the email associated with the currently configured
@@ -45,7 +45,7 @@ export function getCalendarType(state) {
     const { BACKEND } = getCalendarConfig(state);
 
     if (BACKEND && BACKEND.SERVICE_URL) {
-        return integrationTypes.BACKEND;
+        return calendarTypes.BACKEND;
     }
 
     return state.calendars.calendarType;

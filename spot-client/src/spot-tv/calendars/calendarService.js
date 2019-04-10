@@ -1,20 +1,20 @@
-import { integrationTypes } from 'common/app-state';
+import { calendarTypes } from 'common/app-state';
 
 import backendCalendar from './backend-calendar';
 import google from './google';
 import outlook from './outlook';
 
 /**
- * A mapping of a {@code integrationTypes} enum with its associated calendar
+ * A mapping of a {@code calendarTypes} enum with its associated calendar
  * integration implementation.
  *
  * @private
  * @type {Object}
  */
 const calendarIntegrations = {
-    [integrationTypes.BACKEND]: backendCalendar,
-    [integrationTypes.GOOGLE]: google,
-    [integrationTypes.OUTLOOK]: outlook
+    [calendarTypes.BACKEND]: backendCalendar,
+    [calendarTypes.GOOGLE]: google,
+    [calendarTypes.OUTLOOK]: outlook
 };
 
 /**
@@ -52,7 +52,7 @@ export default {
     },
 
     /**
-     * Gets the constants from {@code integrationTypes} for the currently
+     * Gets the constants from {@code calendarTypes} for the currently
      * selected calendar integration.
      *
      * @returns {string|undefined}

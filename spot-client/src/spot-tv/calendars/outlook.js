@@ -1,4 +1,4 @@
-import { integrationTypes } from 'common/app-state';
+import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { isValidMeetingUrl } from 'common/utils';
@@ -72,7 +72,7 @@ export default {
      * @returns {string}
      */
     getType() {
-        return integrationTypes.OUTLOOK;
+        return calendarTypes.OUTLOOK;
     },
 
     /**
