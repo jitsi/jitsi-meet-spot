@@ -7,7 +7,7 @@ import {
     getCalendarEmail,
     getCalendarEvents,
     getJoinCode,
-    getJwtToken,
+    getJwt,
     hasCalendarBeenFetched,
     isSetupComplete,
     setCalendarEvents
@@ -47,7 +47,7 @@ export class Home extends React.Component {
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         joinCode: PropTypes.string,
-        jwtToken: PropTypes.string,
+        jwt: PropTypes.string,
         lock: PropTypes.string,
         remoteControlService: PropTypes.object
     };
@@ -224,7 +224,7 @@ export class Home extends React.Component {
      * @returns {void}
      */
     _pollForEvents() {
-        const { calendarEmail, jwtToken } = this.props;
+        const { calendarEmail, jwt } = this.props;
 
         if (!calendarEmail) {
             return;
@@ -232,7 +232,7 @@ export class Home extends React.Component {
 
         this.props.calendarService.getCalendar({
             email: calendarEmail,
-            jwtToken
+            jwt
         })
             .then(events => {
                 if (this._isUnmounting) {
@@ -353,7 +353,7 @@ function mapStateToProps(state) {
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
         joinCode: getJoinCode(state),
-        jwtToken: getJwtToken(state)
+        jwt: getJwt(state)
     };
 }
 

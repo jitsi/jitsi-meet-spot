@@ -8,7 +8,7 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     setJoinCode,
-    setJwtToken,
+    setJwt,
     setIsSpot
 } from 'common/app-state';
 import { registerDevice } from 'common/backend';
@@ -88,7 +88,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                         const { joinCode, jwt } = json;
 
                         // Clear it if the jwt is empty
-                        this.props.dispatch(setJwtToken(jwt));
+                        this.props.dispatch(setJwt(jwt));
 
                         return joinCode;
                     });

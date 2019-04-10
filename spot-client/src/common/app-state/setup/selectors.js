@@ -21,13 +21,13 @@ export function getDisplayName(state) {
 }
 
 /**
- * Returns the JWT token for authentication with backend services.
+ * Returns the JWT for authentication with backend services.
  *
  * @param {Object} state - The Redux state.
  * @returns {string}
  */
-export function getJwtToken(state) {
-    return state.setup.jwtToken;
+export function getJwt(state) {
+    return state.setup.jwt;
 }
 
 /**

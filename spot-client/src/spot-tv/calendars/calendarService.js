@@ -42,8 +42,8 @@ export default {
      * @param {Object} options - Options required for fetch the calendar events.
      * @param {string} options.email - The account email from which to request calendar
      * events.
-     * @param {string} [options.jwtToken] - The JWT token required for authentication (used only by
-     * some calendars).
+     * @param {string} [options.jwt] - The JWT required for authentication (used only by some
+     * calendars).
      * @returns {Promise<Array<Object>>}
      */
     getCalendar(options) {
