@@ -76,7 +76,9 @@ export class Share extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
-        this._onStartWirelessScreenshare();
+        if (isWirelessScreenshareSupported()) {
+            this._onStartWirelessScreenshare();
+        }
     }
 
     /**
