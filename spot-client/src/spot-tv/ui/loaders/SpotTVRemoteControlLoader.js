@@ -8,9 +8,10 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     setJoinCode,
+    setJwtToken,
     setIsSpot
 } from 'common/app-state';
-import { fetchJoinCode } from 'common/backend';
+import { registerDevice } from 'common/backend';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { AbstractLoader } from 'common/ui';
@@ -81,7 +82,16 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
 
         if (adminServiceUrl) {
             logger.log(`Will use ${adminServiceUrl} to get the join code`);
-            getJoinCodePromise = fetchJoinCode(adminServiceUrl);
+            getJoinCodePromise
+                = registerDevice(adminServiceUrl)
+                    .then(json => {
+                        const { joinCode, jwt } = json;
+
+                        // Clear it if the jwt is empty
+                        this.props.dispatch(setJwtToken(jwt));
+
+                        return joinCode;
+                    });
         } else {
             getJoinCodePromise = Promise.resolve(_joinCode);
         }

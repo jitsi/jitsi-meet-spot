@@ -18,7 +18,9 @@
     ```
     ADMIN_SERVICE_URL="http://localhost:8001/register-device"
     JOIN_CODE_SERVICE_URL="http://localhost:8001/room-info"
+    CALENDAR_SERVICE_URL="http://localhost:8001/calendar?tzid={tzid}"
     ```
+ The `{tzid}' part is replaced with the current timezone ID of the Spot TV machine.
 
 8. Run the spot-client as usual. It should try to use the backend for getting join codes and MUC room names.
 

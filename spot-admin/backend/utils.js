@@ -9,6 +9,12 @@ function send400Error(res, error) {
     res.end();
 }
 
+function send401Error(res, error) {
+    res.status(401);
+    res.statusMessage = error;
+    res.end();
+}
+
 function send404Error(res, error) {
     res.status(404);
     res.statusMessage = error;
@@ -23,6 +29,7 @@ function send500Error(res, error) {
 
 module.exports = {
     send400Error,
+    send401Error,
     send404Error,
     send500Error,
     sendJSON

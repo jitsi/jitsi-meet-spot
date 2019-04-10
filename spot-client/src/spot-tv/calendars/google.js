@@ -47,7 +47,7 @@ export default {
      * events.
      * @returns {Promise<Array<Object>>}
      */
-    getCalendar(email) {
+    getCalendar({ email }) {
         const params = [
             'alwaysIncludeEmail=true',
             'maxResults=3',

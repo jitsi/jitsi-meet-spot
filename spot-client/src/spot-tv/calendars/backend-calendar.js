@@ -25,11 +25,11 @@ export default {
      *
      * @returns {Promise<Array<Object>>}
      */
-    getCalendar() {
+    getCalendar({ jwtToken }) {
 
         logger.log(`Will fetch calendar events from: ${this.url}`);
 
-        return fetchCalendarEvents(this.url)
+        return fetchCalendarEvents(this.url, jwtToken)
             .then(response => {
                 const events = response && response.events;
 

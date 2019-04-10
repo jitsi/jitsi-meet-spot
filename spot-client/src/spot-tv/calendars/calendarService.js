@@ -39,12 +39,15 @@ export default {
     /**
      * Requests current calendar events for a provided room.
      *
-     * @param {string} email - The account email from which to request calendar
+     * @param {Object} options - Options required for fetch the calendar events.
+     * @param {string} options.email - The account email from which to request calendar
      * events.
+     * @param {string} [options.jwtToken] - The JWT token required for authentication (used only by
+     * some calendars).
      * @returns {Promise<Array<Object>>}
      */
-    getCalendar(email) {
-        return this._calendarIntegration.getCalendar(email);
+    getCalendar(options) {
+        return this._calendarIntegration.getCalendar(options);
     },
 
     /**

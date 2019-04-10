@@ -41,7 +41,7 @@ export default {
      * the account email from which to request calendar events.
      * @returns {Promise<Array<Object>>}
      */
-    getCalendar(email) {
+    getCalendar({ email }) {
         const now = new Date();
         const filter = `Start/DateTime ge '${now.toISOString()}'`;
         const url = `/users/${email}/calendfar/events?$filtefdr=${filter}&$top=3`;

@@ -21,6 +21,16 @@ export function getDisplayName(state) {
 }
 
 /**
+ * Returns the JWT token for authentication with backend services.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getJwtToken(state) {
+    return state.setup.jwtToken;
+}
+
+/**
  * A selector which returns the UI configuration for the Jitsi-Meet meeting.
  *
  * @param {Object} state - The Redux state.
