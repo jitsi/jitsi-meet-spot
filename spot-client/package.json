@@ -39,7 +39,7 @@
         "js-utils": "github:jitsi/js-utils#73a67a7a60d52f8e895f50939c8fcbd1f20fe7b5",
         "jsdoc": "3.5.5",
         "jsrsasign": "8.0.12",
-        "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#83af6e78a82466153e93d4a467e1459c9c97d5ee",
+        "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#86e3badd5c04e1df72435205d28a58c8a64e343a",
         "lib-quiet-js": "github:virtuacoplenny/quiet-js#lenny/rewrite",
         "lodash.debounce": "4.0.8",
         "lodash.merge": "4.6.1",
