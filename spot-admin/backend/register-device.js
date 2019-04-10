@@ -5,7 +5,7 @@ const registerDeviceFailureRate = process.env.REG_DEVICE_FAILURE_RATE;
 
 console.info('register-device failure rate: ' + registerDeviceFailureRate);
 
-const jwtToken = process.env.JWT_TOKEN;
+const jwt = process.env.JWT;
 
 function registerDeviceController(spots, req, res) {
     const { deviceId } = req.body;
@@ -40,8 +40,8 @@ function registerDeviceController(spots, req, res) {
         joinCode: spotRoom.options.joinCode
     };
 
-    if (jwtToken) {
-        response['jwt'] = jwtToken;
+    if (jwt) {
+        response['jwt'] = jwt;
     }
 
     sendJSON(res, response);

@@ -87,18 +87,18 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the REST endpoint which serves
  * the calendar events.
- * @param {string} jwtToken - The JWT token required for authentication.
+ * @param {string} jwt - The JWT required for authentication.
  * @returns {Promise<Array<RESTBackendCalendarEvent>>}
  */
-export function fetchCalendarEvents(serviceEndpointUrl, jwtToken) {
+export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
     const requestOptions = {
         method: 'GET',
         mode: 'cors'
     };
 
-    if (jwtToken) {
+    if (jwt) {
         requestOptions.headers = new Headers();
-        requestOptions.headers.append('Authorization', `Bearer ${jwtToken}`);
+        requestOptions.headers.append('Authorization', `Bearer ${jwt}`);
         requestOptions.headers.append('Accept', 'application/json');
     }
 

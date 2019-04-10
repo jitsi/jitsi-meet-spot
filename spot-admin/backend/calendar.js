@@ -17,7 +17,7 @@ const calendarFailureRate = process.env.CALENDAR_FAILURE_RATE;
 
 console.info('calendar failure rate: ' + calendarFailureRate);
 
-const jwtToken = process.env.JWT_TOKEN;
+const jwt = process.env.JWT;
 
 function calendarRequestController(req, res) {
     if (calendarFailureRate && Math.random() < calendarFailureRate) {
@@ -26,9 +26,9 @@ function calendarRequestController(req, res) {
         return;
     }
 
-    if (jwtToken) {
+    if (jwt) {
         const authorization = req.headers['authorization'];
-        if (authorization !== `Bearer ${jwtToken}`) {
+        if (authorization !== `Bearer ${jwt}`) {
             console.info(`Invalid token, "Authorization" header = ${authorization}`);
             send401Error(res, `Invalid token`);
 
