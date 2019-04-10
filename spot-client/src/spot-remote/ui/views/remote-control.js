@@ -6,6 +6,7 @@ import {
     addNotification,
     getCalendarEvents,
     getCurrentView,
+    goToMeeting,
     isConnectedToSpot,
     setCalendarEvents
 } from 'common/app-state';
@@ -30,25 +31,12 @@ export class RemoteControl extends React.PureComponent {
         events: PropTypes.array,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
+        onClearCalendarEvents: PropTypes.func,
+        onDisconnected: PropTypes.func,
+        onGoToMeeting: PropTypes.func,
         remoteControlService: PropTypes.object,
         view: PropTypes.string
     };
-
-    /**
-     * Initializes a new {@code RemoteControl} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            events: []
-        };
-
-        this._onGoToMeeting = this._onGoToMeeting.bind(this);
-    }
 
     /**
      * Navigates away from the view {@code RemoteControl} when no longer
@@ -58,7 +46,7 @@ export class RemoteControl extends React.PureComponent {
      */
     componentDidUpdate() {
         if (!this.props.isConnectedToSpot) {
-            this.props.dispatch(addNotification('error', 'Disconnected'));
+            this.props.onDisconnected();
             this.props.history.push('/');
         }
     }
@@ -70,7 +58,10 @@ export class RemoteControl extends React.PureComponent {
      */
     componentWillUnmount() {
         this.props.remoteControlService.disconnect();
-        this.props.dispatch(setCalendarEvents([]));
+
+        // FIXME: clear calendar events as part of the disconnet logic instead
+        // of being a separate explicit call.
+        this.props.onClearCalendarEvents();
     }
 
     /**
@@ -111,7 +102,7 @@ export class RemoteControl extends React.PureComponent {
             return (
                 <WaitingForCall
                     events = { this.props.events }
-                    onGoToMeeting = { this._onGoToMeeting } />
+                    onGoToMeeting = { this.props.onGoToMeeting } />
             );
         case 'meeting':
             return <InCall remoteControlService = { remoteControlService } />;
@@ -120,19 +111,6 @@ export class RemoteControl extends React.PureComponent {
         default:
             return <LoadingIcon color = 'white' />;
         }
-    }
-
-    /**
-     * Callback invoked when a remote control needs to signal to a Spot to
-     * join a specific meeting.
-     *
-     * @param {string} meetingName - The name of the jitsi meeting to join.
-     * @param {Object} options - Additional details of how to join the meeting.
-     * @private
-     * @returns {Promise}
-     */
-    _onGoToMeeting(meetingName, options = {}) {
-        return this.props.remoteControlService.goToMeeting(meetingName, options);
     }
 }
 
@@ -151,5 +129,48 @@ function mapStateToProps(state) {
         view: getCurrentView(state)
     };
 }
+
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Resets the known calendar events associated with a Spot-TV.
+         *
+         * @returns {void}
+         */
+        onClearCalendarEvents() {
+            dispatch(setCalendarEvents([]));
+        },
+
+        /**
+         * Adds a notification that an unexpected disconnect has occurred.
+         *
+         * @returns {void}
+         */
+        onDisconnected() {
+            dispatch(addNotification('error', 'Disconnected'));
+        },
+
+        /**
+         * Callback invoked when a remote control needs to signal to a Spot to
+         * join a specific meeting.
+         *
+         * @param {string} meetingName - The name of the jitsi meeting to join.
+         * @param {Object} options - Additional details of how to join the
+         * meeting.
+         * @returns {Promise}
+         */
+        onGoToMeeting(meetingName, options) {
+            return dispatch(goToMeeting(meetingName, options));
+        }
+    };
+}
+
 export default withUltrasound(withRemoteControl(
-    connect(mapStateToProps)(RemoteControl)));
+    connect(mapStateToProps, mapDispatchToProps)(RemoteControl)));
