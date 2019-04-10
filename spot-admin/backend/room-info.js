@@ -4,7 +4,7 @@ const roomInfoFailureRate = process.env.ROOM_INFO_FAILURE_RATE;
 
 console.info('room-info failure rate: ' + roomInfoFailureRate);
 
-function roomInfoHandler(spots, req, res){
+function roomInfoController(spots, req, res){
     const { joinCode } = req.query;
 
     if (!joinCode) {
@@ -41,4 +41,4 @@ function roomInfoHandler(spots, req, res){
     });
 }
 
-module.exports = roomInfoHandler;
+module.exports = roomInfoController;

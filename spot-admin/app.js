@@ -1,8 +1,8 @@
 require('dotenv').config();
 
-const calendarRequestHandler = require('./backend/calendar');
-const registerDeviceHandler = require('./backend/register-device');
-const roomInfoHandler = require('./backend/room-info');
+const calendarRequestController = require('./backend/calendar');
+const registerDeviceController = require('./backend/register-device');
+const roomInfoController = require('./backend/room-info');
 
 const express = require('express');
 const app = express();
@@ -16,8 +16,8 @@ app.use(bodyParser.json());
 
 const spots = new Map();
 
-app.post('/register-device', registerDeviceHandler.bind(null, spots));
-app.get('/room-info', roomInfoHandler.bind(null, spots));
-app.get('/calendar', calendarRequestHandler);
+app.post('/register-device', registerDeviceController.bind(null, spots));
+app.get('/room-info', roomInfoController.bind(null, spots));
+app.get('/calendar', calendarRequestController);
 
 app.listen(port, () => console.log(`Spot-admin app listening on port ${port}!`));
