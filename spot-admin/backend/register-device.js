@@ -7,7 +7,7 @@ console.info('register-device failure rate: ' + registerDeviceFailureRate);
 
 const jwtToken = process.env.JWT_TOKEN;
 
-function registerDeviceHandler(spots, req, res) {
+function registerDeviceController(spots, req, res) {
     const { deviceId } = req.body;
 
     if (!deviceId) {
@@ -47,4 +47,4 @@ function registerDeviceHandler(spots, req, res) {
     sendJSON(res, response);
 }
 
-module.exports = registerDeviceHandler;
+module.exports = registerDeviceController;

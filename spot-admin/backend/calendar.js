@@ -19,7 +19,7 @@ console.info('calendar failure rate: ' + calendarFailureRate);
 
 const jwtToken = process.env.JWT_TOKEN;
 
-function calendarRequestHandler(req, res) {
+function calendarRequestController(req, res) {
     if (calendarFailureRate && Math.random() < calendarFailureRate) {
         send500Error(res, "Randomly failed /calendar");
 
@@ -71,4 +71,4 @@ function calendarRequestHandler(req, res) {
     sendJSON(res, { events });
 }
 
-module.exports = calendarRequestHandler;
+module.exports = calendarRequestController;
