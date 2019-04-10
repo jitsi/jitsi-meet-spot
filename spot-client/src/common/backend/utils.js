@@ -91,6 +91,15 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
  * @returns {Promise<Array<RESTBackendCalendarEvent>>}
  */
 export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
+    let url = serviceEndpointUrl;
+
+    if (!url.includes('{tzid}')) {
+        return Promise.reject(`Missing {tzid} template in the URL: ${url}`);
+    }
+
+    // eslint-disable-next-line new-cap
+    url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
+
     const requestOptions = {
         method: 'GET',
         mode: 'cors'
@@ -102,15 +111,6 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
             accept: 'application/json'
         });
     }
-
-    let url = serviceEndpointUrl;
-
-    if (!url.includes('{tzid}')) {
-        return Promise.reject(`Missing {tzid} template in the URL: ${url}`);
-    }
-
-    // eslint-disable-next-line new-cap
-    url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     return fetchWithRetry({
         operationName: 'get calendar events',
