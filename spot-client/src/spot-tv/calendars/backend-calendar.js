@@ -1,4 +1,4 @@
-import { integrationTypes } from 'common/app-state';
+import { calendarTypes } from 'common/app-state';
 import { fetchCalendarEvents } from 'common/backend';
 
 /**
@@ -62,7 +62,7 @@ export default {
      * @returns {string}
      */
     getType() {
-        return integrationTypes.BACKEND;
+        return calendarTypes.BACKEND;
     },
 
     /**

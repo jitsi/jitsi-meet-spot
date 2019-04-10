@@ -1,6 +1,6 @@
 /* global gapi */
 
-import { integrationTypes } from 'common/app-state';
+import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { date, isValidMeetingUrl } from 'common/utils';
 
@@ -85,7 +85,7 @@ export default {
      * @returns {string}
      */
     getType() {
-        return integrationTypes.GOOGLE;
+        return calendarTypes.GOOGLE;
     },
 
     /**
