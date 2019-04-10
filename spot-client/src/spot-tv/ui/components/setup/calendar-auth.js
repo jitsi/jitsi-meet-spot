@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { integrationTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
 
-import { calendarService, integrationTypes } from './../../../calendars';
+import { calendarService } from './../../../calendars';
 
 /**
  * Prompts to sign in to the calendar service and allow Spot to access calendar

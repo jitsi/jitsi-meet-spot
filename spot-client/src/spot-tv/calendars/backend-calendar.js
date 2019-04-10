@@ -1,5 +1,5 @@
+import { integrationTypes } from 'common/app-state';
 import { fetchCalendarEvents } from 'common/backend';
-import { integrationTypes } from './constants';
 
 /**
  * The calendar's implementation based on REST API.

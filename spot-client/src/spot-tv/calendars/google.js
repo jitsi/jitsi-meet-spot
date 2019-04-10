@@ -1,9 +1,9 @@
 /* global gapi */
 
+import { integrationTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { date, isValidMeetingUrl } from 'common/utils';
 
-import { integrationTypes } from './constants';
 import { getMeetingUrl } from './event-parsers';
 
 let initPromise;

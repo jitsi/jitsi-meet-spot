@@ -1,5 +1,6 @@
+import { integrationTypes } from 'common/app-state';
+
 import backendCalendar from './backend-calendar';
-import { integrationTypes } from './constants';
 import google from './google';
 import outlook from './outlook';
 
