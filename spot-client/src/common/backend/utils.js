@@ -97,9 +97,10 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
     };
 
     if (jwt) {
-        requestOptions.headers = new Headers();
-        requestOptions.headers.append('Authorization', `Bearer ${jwt}`);
-        requestOptions.headers.append('Accept', 'application/json');
+        requestOptions.headers = new Headers({
+            authorization: `Bearer ${jwt}`,
+            accept: 'application/json'
+        });
     }
 
     let url = serviceEndpointUrl;
