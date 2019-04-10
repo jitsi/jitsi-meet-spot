@@ -1,5 +1,4 @@
 import { fetchCalendarEvents } from 'common/backend';
-import { logger } from 'common/logger';
 import { integrationTypes } from './constants';
 
 /**
@@ -26,9 +25,6 @@ export default {
      * @returns {Promise<Array<Object>>}
      */
     getCalendar({ jwt }) {
-
-        logger.log(`Will fetch calendar events from: ${this.url}`);
-
         return fetchCalendarEvents(this.url, jwt)
             .then(response => {
                 const events = response && response.events;
