@@ -3,9 +3,9 @@ import amplitude from 'amplitude-js';
 /**
  * Wraps the details of communicating with the Amplitude analytics service.
  */
-export default class Amplitude {
+export default class AmplitudeHandler {
     /**
-     * Initializes a new {@code Amplitude} instance.
+     * Initializes a new {@code AmplitudeHandler} instance.
      *
      * @param {string} deviceId - The user identifier for the current user.
      * @param {string} appKey - The key needed to associate events with a

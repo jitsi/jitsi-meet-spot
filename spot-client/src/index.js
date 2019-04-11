@@ -6,7 +6,7 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import 'common/css';
-import { analytics } from 'common/analytics';
+import { AmplitudeHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
 import reducers, {
@@ -49,14 +49,10 @@ store.subscribe(() => {
 
 const reduxState = store.getState();
 const deviceId = getDeviceId();
-
 const analyticsAppKey = getAnalyticsAppKey(reduxState);
 
 if (analyticsAppKey) {
-    analytics.init({
-        appKey: analyticsAppKey,
-        deviceId
-    });
+    analytics.addHandler(new AmplitudeHandler(deviceId, analyticsAppKey));
 }
 
 const loggingEndpoint = getLoggingEndpoint(reduxState);
