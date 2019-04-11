@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { analytics } from 'common/analytics';
 import {
     getJoinCode,
     getJoinCodeRefreshRate,
@@ -39,6 +40,17 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     constructor(props) {
         super(props, 'SpotTV', /* supports reconnects */ true);
+    }
+
+    /**
+     * Configures analytics to report events as a Spot-TV.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        super.componentDidMount();
+
+        analytics.updateProperty('spot-tv', true);
     }
 
     /**
