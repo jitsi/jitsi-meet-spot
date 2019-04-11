@@ -10,7 +10,6 @@ import Profile from './profile';
 import ScreenshareInput from './screenshare-input';
 import { SelectMedia } from './select-media';
 import SelectRoom from './select-room';
-import Welcome from './welcome';
 
 /**
  * Displays the Spot setup flow by handling display of each setup step.
@@ -35,7 +34,6 @@ export class Setup extends React.Component {
         this._onNextStep = this._onNextStep.bind(this);
 
         this.steps = [
-            Welcome,
             SelectMedia,
             CalendarAuth,
             SelectRoom,

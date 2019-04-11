@@ -93,7 +93,7 @@ export class SelectRoom extends React.Component {
                                 onChange = { this._onEmailChange }
                                 placeholder = 'Enter an email'
                                 value = { this.state.email } />
-                            <Button type = 'submit'>Go</Button>
+                            <Button type = 'accept'>Go</Button>
                         </form>
                     </div>
                     <div>
