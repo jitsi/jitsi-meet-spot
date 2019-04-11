@@ -1,22 +1,17 @@
-import AmplitudeHandler from './amplitude';
-
 /**
  * Service for sending analytics events to an analytics endpoint.
  */
 export default {
+    _handlers: new Set(),
+
     /**
-     * Create the handler for analytics events.
+     * Sets a handler to intercept and process log events.
      *
-     * @param {Object} options - The properties needed to initialize the
-     * analytics handler.
-     * @param {string} options.deviceId - The unique identifier for the current
-     * user.
-     * @param {string} options.appKey - The key needed to log analytics events
-     * to a specified endpoint.
+     * @param {Object} handler - An analytics handler which can log events.
      * @returns {void}
      */
-    init(options) {
-        this.handler = new AmplitudeHandler(options.deviceId, options.appKey);
+    addHandler(handler) {
+        this._handlers.add(handler);
     },
 
     /**
@@ -29,9 +24,8 @@ export default {
      * @returns {void}
      */
     log(eventName, eventProperties) {
-        if (this.handler) {
-            this.handler.log(eventName, eventProperties);
-        }
+        this._handlers.forEach(handler =>
+            handler.log(eventName, eventProperties));
     },
 
     /**
@@ -43,8 +37,7 @@ export default {
      * @returns {void}
      */
     updateProperty(propertyName, propertyValue) {
-        if (this.handler) {
-            this.handler.updateProperty(propertyName, propertyValue);
-        }
+        this._handlers.forEach(handler =>
+            handler.updateProperty(propertyName, propertyValue));
     }
 };
