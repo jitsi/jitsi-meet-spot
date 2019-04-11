@@ -10,6 +10,17 @@ export function getAdvertisementAppName(state) {
 }
 
 /**
+ * A selector which returns the application key to use when connecting to the
+ * analytics service.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getAnalyticsAppKey(state) {
+    return state.config.LOGGING.ANALYTICS_APP_KEY;
+}
+
+/**
  * A selector which returns the configured background image to display.
  *
  * @param {Object} state - The Redux state.

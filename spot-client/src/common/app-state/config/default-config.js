@@ -28,6 +28,7 @@ export default {
     DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
 
     LOGGING: {
+        ANALYTICS_APP_KEY: process.env.ANALYTICS_APP_KEY,
         ENDPOINT: process.env.LOGGING_ENDPOINT || ''
     },
 

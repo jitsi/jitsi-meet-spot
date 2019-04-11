@@ -6,9 +6,11 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import 'common/css';
+import { analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
 import { LoggingService } from 'common/logger';
 import reducers, {
+    getAnalyticsAppKey,
     getDesktopSharingFramerate,
     getLoggingEndpoint,
     setDefaultValues
@@ -46,11 +48,20 @@ store.subscribe(() => {
 });
 
 const reduxState = store.getState();
+const deviceId = getDeviceId();
+
+const analyticsAppKey = getAnalyticsAppKey(reduxState);
+
+if (analyticsAppKey) {
+    analytics.init({
+        appKey: analyticsAppKey,
+        deviceId
+    });
+}
+
 const loggingEndpoint = getLoggingEndpoint(reduxState);
 
 if (loggingEndpoint) {
-    const deviceId = getDeviceId();
-
     const loggingService = new LoggingService(loggingEndpoint);
 
     loggingService.addHandler(
