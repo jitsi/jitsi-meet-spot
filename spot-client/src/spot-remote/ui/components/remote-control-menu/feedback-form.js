@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { analytics, feedbackEvents } from 'common/analytics';
 import { logger } from 'common/logger';
 
 /**
@@ -149,6 +150,8 @@ export default class FeedbackForm extends React.Component {
      * @returns {void}
      */
     _onSkip() {
+        analytics.log(feedbackEvents.SKIP);
+
         this.props.remoteControlService.submitFeedback({
             message: '',
             score: -1
@@ -170,6 +173,10 @@ export default class FeedbackForm extends React.Component {
             && this.state.score !== -1) {
             logger.log('Feedback requesting additional information');
 
+            analytics.log(feedbackEvents.SUBMIT, {
+                lowScore: true
+            });
+
             this.setState({
                 hasSubmittedStars: true,
                 requestMoreInfo: true
@@ -179,6 +186,11 @@ export default class FeedbackForm extends React.Component {
         }
 
         logger.log('Feedback submitting');
+
+        analytics.log(feedbackEvents.SUBMIT, {
+            requestedMoreInfo: this.state.requestMoreInfo,
+            skip: this.state.score === -1
+        });
 
         this._submitFeedback();
     }

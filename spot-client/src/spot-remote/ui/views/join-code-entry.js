@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, joinCodeEvents } from 'common/analytics';
 import {
     addNotification,
     getRemoteControlServerConfig,
@@ -51,6 +52,8 @@ export class JoinCodeEntry extends React.Component {
             enteredCode: ''
         };
 
+        this._isShareModeEnabled = this._isInShareModeEnv();
+
         this._onCodeChange = this._onCodeChange.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
@@ -80,6 +83,10 @@ export class JoinCodeEntry extends React.Component {
 
         if (code) {
             logger.log('joinCodeEntry detected a valid code');
+
+            analytics.log(joinCodeEvents.AUTO_VALIDATE, {
+                shareMode: this._isShareModeEnabled
+            });
 
             this._connectToSpot(code);
         }
@@ -170,6 +177,10 @@ export class JoinCodeEntry extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        analytics.log(joinCodeEvents.SUBMIT, {
+            shareMode: this._isShareModeEnabled
+        });
+
         this._connectToSpot(this.state.enteredCode);
     }
 
@@ -195,30 +206,44 @@ export class JoinCodeEntry extends React.Component {
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
+                analytics.log(joinCodeEvents.VALIDATE_SUCCESS);
+
                 this.props.dispatch(setJoinCode(trimmedCode));
 
-                let redirectTo = ROUTES.REMOTE_CONTROL;
-
-                if (this.props.shareDomain
-                    && window.location.host.includes(this.props.shareDomain)) {
-                    redirectTo = ROUTES.SHARE;
-                } else {
-                    const queryParams
-                        = new URLSearchParams(this.props.location.search);
-
-                    if (queryParams.get('share') === 'true') {
-                        redirectTo = ROUTES.SHARE;
-                    }
-                }
+                const redirectTo = this._isShareModeEnabled
+                    ? ROUTES.SHARE : ROUTES.REMOTE_CONTROL;
 
                 this.props.history.push(redirectTo);
             })
             .catch(() => {
+                analytics.log(joinCodeEvents.VALIDATE_FAIL);
+
                 this.setState({ validating: false });
 
                 this.props.dispatch(
                     addNotification('error', 'Something went wrong'));
             });
+    }
+
+    /**
+     * Whether or not a successful connection to a Spot-TV should proceed into
+     * screenshare only mode.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isInShareModeEnv() {
+        const isShareDomain = this.props.shareDomain
+            && window.location.host.includes(this.props.shareDomain);
+
+        if (isShareDomain) {
+            return true;
+        }
+
+        const queryParams
+            = new URLSearchParams(this.props.location.search);
+
+        return queryParams.get('share') === 'true';
     }
 }
 

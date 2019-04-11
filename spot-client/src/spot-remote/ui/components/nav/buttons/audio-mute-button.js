@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, inCallEvents } from 'common/analytics';
 import {
     getInMeetingStatus,
     getOptimisticAudioMuteState,
@@ -74,6 +75,10 @@ export class AudioMuteButton extends React.Component {
         if (this.props.changePending) {
             return;
         }
+
+        analytics.log(inCallEvents.AUDIO_MUTE, {
+            muting: !this.props.audioMuted
+        });
 
         this.props.setAudioMute(!this.props.audioMuted);
     }

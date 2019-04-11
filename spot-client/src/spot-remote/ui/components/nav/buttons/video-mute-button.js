@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, inCallEvents } from 'common/analytics';
 import {
     getInMeetingStatus,
     getOptimisticVideoMuteState,
@@ -74,6 +75,10 @@ export class VideoMuteButton extends React.Component {
         if (this.props.changePending) {
             return;
         }
+
+        analytics.log(inCallEvents.VIDEO_MUTE, {
+            muting: !this.props.videoMuted
+        });
 
         this.props.setVideoMute(!this.props.videoMuted);
     }

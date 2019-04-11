@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { analytics, meetingJoinEvents } from 'common/analytics';
 import { logger } from 'common/logger';
 import { date } from 'common/utils';
 
@@ -144,6 +145,8 @@ export default class ScheduledMeeting extends React.Component {
         }
 
         logger.log('scheduledMeeting clicked on meeting with url');
+
+        analytics.log(meetingJoinEvents.SCHEDULED_MEETING_JOIN);
 
         this.props.onMeetingClick(this.props.event.meetingUrl);
     }

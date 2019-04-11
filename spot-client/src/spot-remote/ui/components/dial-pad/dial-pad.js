@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { analytics, meetingJoinEvents } from 'common/analytics';
 import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';
@@ -137,12 +138,14 @@ export default class DialPad extends React.Component {
     _onGoToCall(event) {
         event.preventDefault();
 
+        analytics.log(meetingJoinEvents.DIAL_OUT);
+
         this.props.onSubmit(
             getRandomMeetingName(),
             {
                 invites: [
                     {
-                        type: 'phone', // jitsi-meet expets type phone
+                        type: 'phone', // jitsi-meet expects type phone
                         number: this.state.enteredNumber
                     }
                 ]

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { analytics, meetingJoinEvents } from 'common/analytics';
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
 import MeetingNameEntry from './meeting-name-entry';
@@ -207,6 +208,10 @@ class SelfFillingNameEntry extends React.Component {
         logger.log('meeting name submitted', {
             enteredName: this.state.enteredMeetingName,
             generatedName: this._fullGeneratedMeetingName
+        });
+
+        analytics.log(meetingJoinEvents.AD_HOC, {
+            random: !this.state.enteredMeetingName
         });
 
         this.props.onSubmit(

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, meetingJoinEvents } from 'common/analytics';
 import { getInMeetingStatus } from 'common/app-state';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
@@ -229,6 +230,12 @@ class WaitingForCallView extends React.Component {
         if (this._goToMeetingPromise) {
             return;
         }
+
+        analytics.log(
+            wireless
+                ? meetingJoinEvents.WIRELESS_SCREENSHARE
+                : meetingJoinEvents.WIRED_SCREENSHARE
+        );
 
         const goToMeetingPromise = this.props.onGoToMeeting(
             getRandomMeetingName(),

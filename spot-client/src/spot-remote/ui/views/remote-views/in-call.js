@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, inCallEvents } from 'common/analytics';
 import {
     getInMeetingStatus,
     hangUp,
@@ -52,8 +53,11 @@ export class InCall extends React.Component {
         this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
         this._onCloseScreenshareModal
             = this._onCloseScreenshareModal.bind(this);
+        this._onHangUp = this._onHangUp.bind(this);
         this._onStartWiredScreenshare
             = this._onStartWiredScreenshare.bind(this);
+        this._onStartWirelessScreenshare
+            = this._onStartWirelessScreenshare.bind(this);
         this._onStopScreenshare
             = this._onStopScreenshare.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
@@ -109,7 +113,7 @@ export class InCall extends React.Component {
                         className = 'hangup'
                         iconName = 'call_end'
                         label = 'Leave'
-                        onClick = { this.props.onHangUp } />
+                        onClick = { this._onHangUp } />
                 </NavContainer>
                 { this.state.showScreenshareModal && (
                     <ScreenshareModal
@@ -117,7 +121,7 @@ export class InCall extends React.Component {
                         onStartWiredScreenshare
                             = { this._onStartWiredScreenshare }
                         onStartWirelessScreenshare
-                            = { this.props.onStartWirelessScreenshare }
+                            = { this._onStartWirelessScreenshare }
                         onStopScreensharing
                             = { this._onStopScreenshare }
                         screensharingType = { screensharingType }
@@ -134,10 +138,35 @@ export class InCall extends React.Component {
     /**
      * Sets the {@code ScreenshareModal} to be hidden.
      *
+     * @private
      * @returns {void}
      */
     _onCloseScreenshareModal() {
         this.setState({ showScreenshareModal: false });
+    }
+
+    /**
+     * Exits the current meeting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHangUp() {
+        analytics.log(inCallEvents.HANG_UP);
+
+        this.props.onHangUp();
+    }
+
+    /**
+     * Triggers a wireless screenshare session to be started.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onStartWirelessScreenshare() {
+        analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
+
+        this.props.onStartWirelessScreenshare();
     }
 
     /**
@@ -154,10 +183,15 @@ export class InCall extends React.Component {
         if (this._isWirelessScreenshareSupported
             && !this.props.wiredScreensharingEnabled
             && !this.props.screensharingType) {
+            analytics.log(
+                inCallEvents.WIRELESS_SCREENSHARE_START_NO_WIRED_AVAILABLE);
+
             this.props.onStartWirelessScreenshare();
 
             return;
         }
+
+        analytics.log(inCallEvents.SHARE_CONTENT);
 
         // Otherwise defer all screensharing choices to the modal.
         this.setState({
@@ -172,6 +206,8 @@ export class InCall extends React.Component {
      * @returns {void}
      */
     _onStartWiredScreenshare() {
+        analytics.log(inCallEvents.WIRED_SCREENSHARE_START);
+
         this.props.remoteControlService.setScreensharing(true);
     }
 
@@ -182,6 +218,8 @@ export class InCall extends React.Component {
      * @returns {void}
      */
     _onStopScreenshare() {
+        analytics.log(inCallEvents.SCREENSHARE_STOP);
+
         this.props.onStopScreenshare()
             .then(() => {
                 // Special case to immediately close the modal when stopping

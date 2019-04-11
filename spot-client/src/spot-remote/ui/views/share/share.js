@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics, shareModeEvents } from 'common/analytics';
 import {
     addNotification,
     getCurrentView,
@@ -61,9 +62,9 @@ export class Share extends React.PureComponent {
             screensharePending: false
         };
 
+        this._onClickStartWirelessScreenshare
+            = this._onClickStartWirelessScreenshare.bind(this);
         this._onGoToSpotRemoveView = this._onGoToSpotRemoveView.bind(this);
-        this._onStartWirelessScreenshare
-            = this._onStartWirelessScreenshare.bind(this);
         this._onStopWirelessScreenshare
             = this._onStopWirelessScreenshare.bind(this);
     }
@@ -77,6 +78,8 @@ export class Share extends React.PureComponent {
      */
     componentDidMount() {
         if (isWirelessScreenshareSupported()) {
+            analytics.log(shareModeEvents.AUTO_START_SCREENSHARE);
+
             this._onStartWirelessScreenshare();
         }
     }
@@ -116,6 +119,8 @@ export class Share extends React.PureComponent {
      * @returns {void}
      */
     _onGoToSpotRemoveView() {
+        analytics.log(shareModeEvents.ENTER_REMOTE_CONTROL_MODE);
+
         this.props.history.push('/remote-control');
     }
 
@@ -142,8 +147,20 @@ export class Share extends React.PureComponent {
                 isScreenshareActive = { this.props.isScreenshareActiveRemotely }
                 isWirelessScreenshareSupported = { isWirelessScreenshareSupported() }
                 onGoToSpotRemoveView = { this._onGoToSpotRemoveView }
-                onStartWirelessScreenshare = { this._onStartWirelessScreenshare } />
+                onStartWirelessScreenshare = { this._onClickStartWirelessScreenshare } />
         );
+    }
+
+    /**
+     * Callback invoked to start the wireless screensharing flow.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onClickStartWirelessScreenshare() {
+        analytics.log(shareModeEvents.SCREENSHARE_START);
+
+        this._onStartWirelessScreenshare();
     }
 
     /**
@@ -163,6 +180,8 @@ export class Share extends React.PureComponent {
         });
 
         if (this.props.inMeeting) {
+            analytics.log(shareModeEvents.JOIN_EXISTING_MEETING);
+
             this.props.dispatch(startWirelessScreensharing(true))
                 .catch(error =>
                     logger.warn('failed to start screenshare', { error }))
@@ -175,6 +194,8 @@ export class Share extends React.PureComponent {
 
             return;
         }
+
+        analytics.log(shareModeEvents.CREATE_MEETING);
 
         this.props.dispatch(goToMeeting(
             getRandomMeetingName(),
@@ -205,6 +226,8 @@ export class Share extends React.PureComponent {
      * @returns {void}
      */
     _onStopWirelessScreenshare() {
+        analytics.log(shareModeEvents.SCREENSHARE_STOP);
+
         this.props.dispatch(stopScreenshare());
 
         // Pass true to immediately leave the meeting as share mode should not
