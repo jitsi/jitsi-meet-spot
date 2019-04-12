@@ -10,7 +10,22 @@ export default {
      * @returns {string}
      */
     getBaseUrl() {
-        return window.location.origin;
+        const origin = window.location.origin;
+        const pathParts = window.location.pathname.split('/');
+
+        pathParts.length = pathParts.length - 1;
+
+        const newPath = pathParts.reduce((accumulator, currentValue) => {
+            if (currentValue) {
+                return `${accumulator}/${currentValue}`;
+            }
+
+            return accumulator;
+        }, '');
+
+        const url = `${origin}${newPath}`;
+
+        return url.replace(/^https?:\/\//i, '');
     },
 
     /**

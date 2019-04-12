@@ -108,8 +108,6 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     render() {
-        const joinCode = this.props.joinCode.toUpperCase();
-
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
@@ -121,7 +119,7 @@ export class Home extends React.Component {
                             className = 'join-info'
                             data-qa-id = 'join-info'
                             onClick = { this._onOpenRemote }>
-                            Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
+                            Connect at { this._getSpotRemoteConnectUrl() }
                         </div> }
                 </div>
                 <div className = 'admin-toolbar'>
@@ -197,10 +195,7 @@ export class Home extends React.Component {
      * @returns {void}
      */
     _onOpenRemote() {
-        const baseUrl = windowHandler.getBaseUrl();
-        const url = `${baseUrl}/${this.props.joinCode.toUpperCase()}`;
-
-        windowHandler.openNewWindow(url);
+        windowHandler.openNewWindow(this._getSpotRemoteConnectUrl());
     }
 
     /**
@@ -335,6 +330,16 @@ export class Home extends React.Component {
                 }
             </div>
         );
+    }
+
+    /**
+     * Generates the URL for a browser to become a Spot-Remote.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getSpotRemoteConnectUrl() {
+        return `${windowHandler.getBaseUrl()}/${this.props.joinCode.toUpperCase()}`;
     }
 }
 

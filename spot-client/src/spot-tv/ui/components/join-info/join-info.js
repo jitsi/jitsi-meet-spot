@@ -17,6 +17,18 @@ class JoinInfo extends React.Component {
     };
 
     /**
+     * Initializes a new {@code JoinInfo} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._onOpenSpotRemote = this._onOpenSpotRemote.bind(this);
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -28,21 +40,29 @@ class JoinInfo extends React.Component {
             return null;
         }
 
+        const spotRemoteUrl
+            = `${windowHandler.getBaseUrl()}/${joinCode.toUpperCase()}`;
+
         return (
             <div className = 'info-footer'>
-                <div>
-                    <span>connect at: </span>
-                    <span>
-                        { windowHandler.getBaseUrl() }
-                    </span>
-                </div>
-                <div>
-                    <span>sharing key: </span>
+                <div onClick = { this._onOpenSpotRemote }>
                     <span className = 'info-code'>
-                        { joinCode }
+                        { spotRemoteUrl }
                     </span>
                 </div>
             </div>
+        );
+    }
+
+    /**
+     * Debug feature for opening the Spot-Remote to the Spot-TV.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onOpenSpotRemote() {
+        windowHandler.openNewWindow(
+            `${windowHandler.getBaseUrl()}/${this.props.joinCode}`
         );
     }
 }
