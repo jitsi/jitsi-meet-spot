@@ -1,0 +1,120 @@
+@import './../../variables.scss';
+
+.setup {
+    background-color: var(--container-content-bg-color-no-opacity);
+    border-radius: 25px;
+    color: var(--container-sub-content-font-color);
+    height: auto;
+    justify-content: center;
+    max-height: 100%;
+    overflow: auto;
+    padding: 16px 64px;
+    width: 100%;
+
+    .setup-buttons {
+        margin-top: 34px;
+        text-align: center;
+    }
+
+    .setup-content {
+        overflow: auto;
+    }
+    
+    .setup-roomList {
+        overflow: auto;
+    }
+    
+    .setup-step {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .setup-title {
+        font-size: $font-size-medium-plus;
+        margin-bottom: 34px;
+        text-align: center;
+    }
+
+    .columns {
+        display: flex;
+        margin-top: 10px;
+
+        .column {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .column:not(:last-child) {
+            margin-right: 18px;
+        }
+    }
+
+    .select-media {
+        .camera-preview {
+            background: black;
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+
+            video {
+                max-height: 100%;
+                max-width: 100%;
+            }
+        }
+
+        .selector:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        select {
+            // Set appearance none to hide the default select stylings
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+
+            background-color: var(--select-background-color);
+            border: 0;
+            color: var(--container-sub-content-font-color);
+            cursor: pointer;
+            font-size: $font-size-small;
+            padding: 15px 10px;
+            width: 100%;
+        }
+
+        .speaker-preview-link {
+            color: var(--mic-preview-active-background-color);
+            cursor: pointer;
+            font-size: $font-size-small;
+
+            &:active {
+                color: var(--button-active-color);
+            }
+        }
+
+        .select-label {
+            font-size: $font-size-small;
+            margin-bottom: 5px;
+        }
+
+        .mic-preview {
+            background: var(--mic-preview-background-color);
+            border-radius: 5px;
+            height: 2px;
+        
+            .mic-preview-level {
+                background: var(--mic-preview-active-background-color);
+                border-radius: 5px;
+                height: 100%;
+                -webkit-transition: width .1s ease-in-out;
+                -moz-transition: width .1s ease-in-out;
+                -o-transition: width .1s ease-in-out;
+                transition: width .1s ease-in-out;
+            }
+        }
+
+        .button:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}

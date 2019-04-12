@@ -10,8 +10,8 @@ export default class Selector extends React.Component {
     static propTypes = {
         device: PropTypes.string,
         devices: PropTypes.array,
-        onChange: PropTypes.func,
-        type: PropTypes.string
+        label: PropTypes.string,
+        onChange: PropTypes.func
     };
 
     /**
@@ -33,9 +33,9 @@ export default class Selector extends React.Component {
      */
     render() {
         const {
-            type,
             devices,
-            device
+            device,
+            label: selectorLabel
         } = this.props;
 
         const selections = devices.map(({ label }) => (
@@ -57,10 +57,10 @@ export default class Selector extends React.Component {
         }
 
         return (
-            <div>
-                Select a { type }:
+            <div className = 'selector'>
+                <div className = 'select-label'>{ selectorLabel }</div>
                 <select
-                    key = { type }
+                    key = { selectorLabel }
                     onChange = { this._onChange }
                     value = { device }>
                     {

@@ -102,6 +102,7 @@ class SelectMedia extends React.Component {
                 device = { selectedCamera }
                 devices = { cameras }
                 key = 'camera'
+                label = 'Camera'
                 onChange = { this._onCameraChange }
                 type = 'camera' />
         );
@@ -110,6 +111,7 @@ class SelectMedia extends React.Component {
                 device = { selectedMic }
                 devices = { mics }
                 key = 'mic'
+                label = 'Microphone'
                 onChange = { this._onMicChange }
                 type = 'mic' />
         );
@@ -118,31 +120,51 @@ class SelectMedia extends React.Component {
                 device = { selectedSpeaker }
                 devices = { speakers }
                 key = 'speaker'
+                label = 'Speaker'
                 onChange = { this._onSpeakerChange }
                 type = 'speaker' />
         );
 
         return (
-            <div className = 'setup-step'>
+            <div className = 'spot-setup select-media'>
                 <div className = 'setup-title'>
                     Select your devices
                 </div>
-                { cameraSelect }
-                { micSelect }
-                { speakerSelect }
-                <CameraPreview
-                    devices = { cameras }
-                    label = { selectedCamera } />
-                <MicPreview
-                    devices = { mics }
-                    label = { selectedMic } />
-                <SpeakerPreview
-                    devices = { speakers }
-                    label = { selectedSpeaker }
-                    src = 'dist/ring.wav' />
+                <div className = 'columns'>
+                    <div className = 'column'>
+                        { cameraSelect }
+                        { micSelect }
+                        { speakerSelect }
+                    </div>
+                    <div className = 'column'>
+                        <div className = 'camera-preview'>
+                            <CameraPreview
+                                devices = { cameras }
+                                label = { selectedCamera } />
+                        </div>
+                    </div>
+                </div>
+                <div className = 'columns'>
+                    <div className = 'column'>
+                        <SpeakerPreview
+                            devices = { speakers }
+                            label = { selectedSpeaker }
+                            src = 'dist/ring.wav' />
+                    </div>
+                    <div className = 'column'>
+                        <MicPreview
+                            devices = { mics }
+                            label = { selectedMic } />
+                    </div>
+                </div>
                 <div className = 'setup-buttons'>
                     <Button onClick = { this._onSubmit }>
                         Save
+                    </Button>
+                    <Button
+                        onClick = { this._onSubmit }
+                        type = 'cancel'>
+                        Skip
                     </Button>
                 </div>
             </div>

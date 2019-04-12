@@ -64,7 +64,11 @@ export default class AdminView extends React.Component {
     _renderSubcomponent() {
         switch (this.state.view) {
         case 'device-selection':
-            return <SelectMedia onSuccess = { this._onShowAllOptions } />;
+            return (
+                <div className = 'setup'>
+                    <SelectMedia onSuccess = { this._onShowAllOptions } />
+                </div>
+            );
         case 'profile':
             return <Profile onSuccess = { this._onShowAllOptions } />;
         case 'screenshare-input':

@@ -12,19 +12,21 @@ export default function Button(props) {
     return (
         <button
             { ...props }
-            className = { `button ${props.className}` }>
+            className = { `button ${props.type} ${props.className}` }>
             { props.children }
         </button>
     );
 }
 
 Button.defaultProps = {
-    className: ''
+    className: '',
+    type: 'accept'
 };
 
 Button.propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,
     'data-qa-id': PropTypes.string,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    type: PropTypes.string
 };
