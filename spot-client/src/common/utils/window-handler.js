@@ -4,8 +4,8 @@
  */
 export default {
     /**
-     * Returns the current url of the current window, excluding any query params
-     * and fragments.
+     * Returns the url that is hosting this Spot instance, excluding any query
+     * params and fragments.
      *
      * @returns {string}
      */
