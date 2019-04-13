@@ -3,6 +3,7 @@ import { $iq } from 'strophe.js';
 import { fetchRoomInfo } from 'common/backend/utils';
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
+import { getJitterDelay } from 'common/utils';
 
 import { COMMANDS, CONNECTION_EVENTS, MESSAGES, SERVICE_UPDATES } from './constants';
 import ScreenshareService from './screenshare-connection';
@@ -56,7 +57,7 @@ class RemoteControlService {
          * used by a Spot-TV.
          */
         this._isSpot = false;
-        this._spotTvJid = null;
+        this._lastSpotState = null;
 
         this._onDisconnect = this._onDisconnect.bind(this);
 
@@ -119,13 +120,16 @@ class RemoteControlService {
      * @returns {Promise<string>}
      */
     connect(options) {
+        // Keep a cache of the initial options for reference when reconnecting.
+        this._options = options;
+
         const {
             joinAsSpot,
             joinCode,
             joinCodeRefreshRate,
             serverConfig,
             joinCodeServiceUrl
-        } = options;
+        } = this._options;
 
         this._isSpot = joinAsSpot;
 
@@ -171,7 +175,7 @@ class RemoteControlService {
 
         this.xmppConnectionPromise
             .then(() => {
-                if (joinCodeRefreshRate) {
+                if (joinAsSpot && joinCodeRefreshRate) {
                     this.refreshJoinCode(joinCodeRefreshRate);
                 }
             });
@@ -189,7 +193,72 @@ class RemoteControlService {
     _onDisconnect(reason) {
         clearTimeout(this._nextJoinCodeUpdate);
 
-        this._emit(SERVICE_UPDATES.DISCONNECT, { reason });
+        if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED
+            || reason === 'not-authorized') {
+            this._emit(SERVICE_UPDATES.DISCONNECT, { reason });
+
+            return;
+        }
+
+        if (this._options.autoReconnect) {
+            this._reconnect();
+        }
+    }
+
+    /**
+     * Attempt to re-create the XMPP connection.
+     *
+     * @private
+     * @returns {void}
+     */
+    _reconnect() {
+        if (this._isReconnectQueued) {
+            logger.warn('reconnect called while already reconnecting');
+
+            return;
+        }
+
+        this._isReconnectQueued = true;
+
+        // wait a little bit to retry to avoid a stampeding herd
+        const jitter = getJitterDelay();
+
+        const previousJoinCode = this._isSpot
+            ? this.getJoinCode()
+            : (this._lastSpotState && this._lastSpotState.joinCode)
+                || this._options.joinCode;
+
+        this.disconnect()
+            .catch(error => {
+                logger.error(
+                    'an error occurred while trying to stop the service',
+                    { error }
+                );
+            })
+            .then(() => new Promise((resolve, reject) => {
+                this._reconnectTimeout = setTimeout(() => {
+                    logger.log('attempting reconnect');
+
+                    this.connect({
+                        ...this._options,
+                        joinCode: previousJoinCode
+                    })
+                        .then(resolve)
+                        .catch(reject);
+                }, jitter);
+            }))
+            .then(() => {
+                logger.log('loaded');
+
+                this._isReconnectQueued = false;
+            })
+            .catch(error => {
+                logger.warn('failed to load', { error });
+
+                this._isReconnectQueued = false;
+
+                this._onDisconnect(error);
+            });
     }
 
     /**
@@ -217,7 +286,7 @@ class RemoteControlService {
     disconnect() {
         this.destroyWirelessScreenshareConnections();
 
-        this._spotTvJid = null;
+        this._lastSpotState = null;
 
         clearTimeout(this._nextJoinCodeUpdate);
 
@@ -561,7 +630,7 @@ class RemoteControlService {
      * @returns {string|null}
      */
     _getSpotId() {
-        return this._spotTvJid;
+        return this._lastSpotState && this._lastSpotState.spotId;
     }
 
     /**
@@ -736,18 +805,18 @@ class RemoteControlService {
 
         const spotTvJid = presence.getAttribute('from');
 
-        // Redundantly update the knwon Spot-TV jid in case there are multiple
+        // Redundantly update the known Spot-TV jid in case there are multiple
         // due to ghosts left form disconnect, in which case the active Spot-TV
         // should be emitting updates.
-        this._spotTvJid = spotTvJid;
+        this._lastSpotState = {
+            ...status,
+            spotId: spotTvJid
+        };
 
         this._emit(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
             {
-                updatedState: {
-                    ...status,
-                    spotId: spotTvJid
-                }
+                updatedState: this._lastSpotState
             }
         );
     }
