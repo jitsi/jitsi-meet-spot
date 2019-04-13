@@ -14,7 +14,7 @@ import {
 } from 'common/app-state';
 import { registerDevice } from 'common/backend';
 import { logger } from 'common/logger';
-import { remoteControlService } from 'common/remote-control';
+import { SERVICE_UPDATES, remoteControlService } from 'common/remote-control';
 import { AbstractLoader } from 'common/ui';
 
 /**
@@ -40,6 +40,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     constructor(props) {
         super(props, 'SpotTV', /* supports reconnects */ true);
+
+        this._onServiceEvent = this._onServiceEvent.bind(this);
     }
 
     /**
@@ -48,6 +50,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentDidMount() {
+        remoteControlService.addEventListener(this._onServiceEvent);
         super.componentDidMount();
 
         analytics.updateProperty('spot-tv', true);
@@ -59,6 +62,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentWillUnmount() {
+        remoteControlService.removeEventListener(this._onServiceEvent);
+
         this._stopJoinCodeUpdateInterval();
 
         super.componentWillUnmount();
@@ -114,13 +119,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 this.props.dispatch(setJoinCode(joinCode));
 
                 return remoteControlService.connect({
-                    onDisconnect: () => {
-                        logger.error('Spot-TV disconnected from the remote control service.');
-
-                        this._stopJoinCodeUpdateInterval();
-
-                        this._reconnect();
-                    },
                     joinAsSpot: true,
                     joinCode,
                     joinCodeServiceUrl: this.props.joinCodeServiceUrl,
@@ -147,6 +145,26 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 // Let the parent component handle reconnects
                 throw error;
             });
+    }
+
+    /**
+     * Callback invoked when {@code remoteControlService} has an update.
+     *
+     * @param {string} eventName - The event triggered.
+     * @private
+     * @returns {void}
+     */
+    _onServiceEvent(eventName) {
+        switch (eventName) {
+        case SERVICE_UPDATES.DISCONNECT:
+            logger.error(
+                'Spot-TV disconnected from the remote control service.');
+
+            this._stopJoinCodeUpdateInterval();
+
+            this._reconnect();
+            break;
+        }
     }
 
     /**

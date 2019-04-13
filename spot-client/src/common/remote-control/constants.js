@@ -89,3 +89,15 @@ export const MESSAGES = {
 
     SPOT_REMOTE_PROXY_MESSAGE: 'spot-remote-message'
 };
+
+export const SERVICE_UPDATES = {
+    /**
+     * The remote control service has lost the XMPP connection.
+     */
+    DISCONNECT: 'disconnect',
+
+    /**
+     * The remote control service has received an updated Spot-TV state.
+     */
+    SPOT_TV_STATE_CHANGE: 'spot-tv-state-change'
+};
