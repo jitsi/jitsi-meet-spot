@@ -7,7 +7,7 @@ import {
 const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: undefined,
-    joinCode: null,
+    joinCode: undefined,
     screensharingType: undefined,
     spotId: null,
     videoMuted: true,
