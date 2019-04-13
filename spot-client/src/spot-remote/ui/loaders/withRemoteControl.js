@@ -12,7 +12,11 @@ import {
     setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
-import { CONNECTION_EVENTS, remoteControlService } from 'common/remote-control';
+import {
+    CONNECTION_EVENTS,
+    SERVICE_UPDATES,
+    remoteControlService
+} from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 /**
@@ -61,6 +65,30 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     constructor(props) {
         super(props, 'SpotRemote', /* supports reconnects */ true);
+
+        this._onServiceEvent = this._onServiceEvent.bind(this);
+    }
+
+    /**
+     * Adds a listener for {@code remoteControlService} updates.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        remoteControlService.addEventListener(this._onServiceEvent);
+
+        super.componentDidMount();
+    }
+
+    /**
+     * Clears the listener for {@code remoteControlService} updates.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        remoteControlService.removeEventListener(this._onServiceEvent);
+
+        super.componentWillUnmount();
     }
 
     /**
@@ -97,65 +125,6 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect({
             joinCode,
-
-            /**
-             * Callback invoked when an unexpected disconnect happens with the
-             * remote control service connection. May trigger retrying to
-             * establish the connection.
-             *
-             * @param {string} reason - A constant which provides an explanation
-             * for the disconnect.
-             * @private
-             * @returns {void}
-             */
-            onDisconnect: reason => {
-                if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED) {
-                    logger.error('Disconnected due to Spot-TV leaving');
-                    this.props.dispatch(clearSpotTVState());
-                } else {
-                    logger.error(
-                        'Spot-Remove disconnected from remote control service',
-                        { reason }
-                    );
-
-                    this._reconnect();
-                }
-            },
-
-            /**
-             * Callback invoked to update redux about a new Spot-TV state.
-             *
-             * @param {Object} updatedState - The new Spot-TV status.
-             * @private
-             * @returns {void}
-             */
-            onSpotUpdate: updatedState => {
-                const newState = {};
-
-                Object.keys(updatedState).forEach(key => {
-                    if (presenceToStoreAsBoolean.has(key)) {
-                        newState[key] = updatedState[key] === 'true';
-                    } else if (presenceToStoreAsString.has(key)) {
-                        newState[key] = updatedState[key];
-                    }
-                });
-
-                this.props.dispatch(setSpotTVState(newState));
-
-                if (updatedState.calendar) {
-                    try {
-                        const events = JSON.parse(updatedState.calendar);
-
-                        this.props.dispatch(setCalendarEvents(events));
-                    } catch (error) {
-                        logger.error(
-                            'Spot-Remote could not parse calendar events',
-                            { error }
-                        );
-                    }
-                }
-            },
-
             joinCodeServiceUrl: this.props.joinCodeServiceUrl,
             serverConfig: this.props.remoteControlConfiguration
         })
@@ -178,6 +147,66 @@ export class RemoteControlLoader extends AbstractLoader {
             // This will trigger reconnect
             throw error;
         });
+    }
+
+    /**
+     * Callback invoked when {@code remoteControlService} has an update.
+     *
+     * @param {string} eventName - The event triggered.
+     * @param {Object} data - Additional information about the event.
+     * @private
+     * @returns {void}
+     */
+    _onServiceEvent(eventName, data) {
+        switch (eventName) {
+        case SERVICE_UPDATES.DISCONNECT: {
+            const { reason } = data;
+
+            if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED) {
+                logger.error('Disconnected due to Spot-TV leaving');
+                this.props.dispatch(clearSpotTVState());
+            } else {
+                logger.error(
+                    'Spot-Remove disconnected from remote control service',
+                    { reason }
+                );
+
+                this._reconnect();
+            }
+
+            break;
+        }
+
+        case SERVICE_UPDATES.SPOT_TV_STATE_CHANGE: {
+            const newState = {};
+            const { updatedState } = data;
+
+            Object.keys(updatedState).forEach(key => {
+                if (presenceToStoreAsBoolean.has(key)) {
+                    newState[key] = updatedState[key] === 'true';
+                } else if (presenceToStoreAsString.has(key)) {
+                    newState[key] = updatedState[key];
+                }
+            });
+
+            this.props.dispatch(setSpotTVState(newState));
+
+            if (updatedState.calendar) {
+                try {
+                    const events = JSON.parse(updatedState.calendar);
+
+                    this.props.dispatch(setCalendarEvents(events));
+                } catch (error) {
+                    logger.error(
+                        'Spot-Remote could not parse calendar events',
+                        { error }
+                    );
+                }
+            }
+
+            break;
+        }
+        }
     }
 
     /**

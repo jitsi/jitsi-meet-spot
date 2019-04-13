@@ -4,7 +4,7 @@ import { fetchRoomInfo } from 'common/backend/utils';
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
-import { COMMANDS, CONNECTION_EVENTS, MESSAGES } from './constants';
+import { COMMANDS, CONNECTION_EVENTS, MESSAGES, SERVICE_UPDATES } from './constants';
 import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
@@ -58,12 +58,35 @@ class RemoteControlService {
         this._isSpot = false;
         this._spotTvJid = null;
 
-        this._onDisconnect = null;
-        this._onSpotUpdate = null;
+        this._onDisconnect = this._onDisconnect.bind(this);
+
+        this._listeners = new Set();
 
         this._wirelessScreensharingConfiguration = null;
 
         window.addEventListener('beforeunload', () => this.disconnect());
+    }
+
+    /**
+     * Receive status updates.
+     *
+     * @param {Function} listener - The callback which should be invoked when
+     * there is a status update.
+     * @returns {void}
+     */
+    addEventListener(listener) {
+        this._listeners.add(listener);
+    }
+
+    /**
+     * Stop receiving status updates.
+     *
+     * @param {Function} listener - The callback which should no longer be
+     * invoked when there is a status update.
+     * @returns {void}
+     */
+    removeEventListener(listener) {
+        this._listeners.delete(listener);
     }
 
     /**
@@ -88,16 +111,18 @@ class RemoteControlService {
      * being made by a Spot client.
      * @param {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
-     * @param {Function} options.onDisconnect - Callback to invoke when the
-     * connection has been terminated unexpectedly.
-     * @param {Function} options.onSpotUpdate - Callback to invoke when a new
-     * presence is received from a Spot-TV.
      * @param {Object} options.serverConfig - Details on how the XMPP connection
      * should be made.
      * @returns {Promise<string>}
      */
-    connect({ joinAsSpot, joinCode, onDisconnect, onSpotUpdate, serverConfig,
-        joinCodeServiceUrl }) {
+    connect(options) {
+        const {
+            joinAsSpot,
+            joinCode,
+            serverConfig,
+            joinCodeServiceUrl
+        } = options;
+
         this._isSpot = joinAsSpot;
 
         if (this.xmppConnectionPromise) {
@@ -136,13 +161,21 @@ class RemoteControlService {
                     joinAsSpot,
                     roomName: roomInfo.roomName,
                     roomLock: roomInfo.roomLock,
-                    onDisconnect
+                    onDisconnect: this._onDisconnect
                 }));
 
-        this._onDisconnect = onDisconnect;
-        this._onSpotUpdate = onSpotUpdate;
-
         return this.xmppConnectionPromise;
+    }
+
+    /**
+     * Callback invoked when the xmpp connection is disconnected.
+     *
+     * @param {string} reason - The name of the disconnect event.
+     * @private
+     * @returns {void}
+     */
+    _onDisconnect(reason) {
+        this._emit(SERVICE_UPDATES.DISCONNECT, { reason });
     }
 
     /**
@@ -170,8 +203,6 @@ class RemoteControlService {
     disconnect() {
         this.destroyWirelessScreenshareConnections();
 
-        this._onDisconnect = null;
-        this._onSpotUpdate = null;
         this._spotTvJid = null;
 
         const destroyPromise = this.xmppConnection
@@ -480,6 +511,18 @@ class RemoteControlService {
     }
 
     /**
+     * Updates registered listeners about state updates.
+     *
+     * @param {string} eventName - The event triggered.
+     * @param {Object} data - Additional information about the event.
+     * @private
+     * @returns {void}
+     */
+    _emit(eventName, data) {
+        this._listeners.forEach(listener => listener(eventName, data));
+    }
+
+    /**
      * Called internally by Spot-Remote to the Spot-TV jid for which to send
      * commands and messages.
      *
@@ -667,12 +710,15 @@ class RemoteControlService {
         // should be emitting updates.
         this._spotTvJid = spotTvJid;
 
-        const newState = {
-            ...status,
-            spotId: spotTvJid
-        };
-
-        this._onSpotUpdate(newState);
+        this._emit(
+            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
+            {
+                updatedState: {
+                    ...status,
+                    spotId: spotTvJid
+                }
+            }
+        );
     }
 
     /**
