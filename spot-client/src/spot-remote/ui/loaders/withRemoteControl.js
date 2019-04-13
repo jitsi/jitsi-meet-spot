@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    addNotification,
     clearSpotTVState,
     getJoinCode,
     getRemoteControlServerConfig,
@@ -13,7 +12,6 @@ import {
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import {
-    CONNECTION_EVENTS,
     SERVICE_UPDATES,
     remoteControlService
 } from 'common/remote-control';
@@ -64,7 +62,7 @@ export class RemoteControlLoader extends AbstractLoader {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props, 'SpotRemote', /* supports reconnects */ true);
+        super(props, 'SpotRemote');
 
         this._onServiceEvent = this._onServiceEvent.bind(this);
     }
@@ -75,9 +73,9 @@ export class RemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentDidMount() {
-        remoteControlService.addEventListener(this._onServiceEvent);
-
         super.componentDidMount();
+
+        remoteControlService.addEventListener(this._onServiceEvent);
     }
 
     /**
@@ -87,8 +85,6 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     componentWillUnmount() {
         remoteControlService.removeEventListener(this._onServiceEvent);
-
-        super.componentWillUnmount();
     }
 
     /**
@@ -124,6 +120,7 @@ export class RemoteControlLoader extends AbstractLoader {
         }
 
         return remoteControlService.connect({
+            autoReconnect: true,
             joinCode,
             joinCodeServiceUrl: this.props.joinCodeServiceUrl,
             serverConfig: this.props.remoteControlConfiguration
@@ -131,21 +128,12 @@ export class RemoteControlLoader extends AbstractLoader {
         .catch(error => {
             // In the wrong password case return back to join code entry.
             if (error === 'not-authorized') {
-                logger.error(
-                    'Spot-Remote could not connect to remote control service',
-                    { error }
-                );
-
-                this.props.dispatch(
-                    addNotification('error', 'Something went wrong'));
-
-                this._redirectBackToLogin();
+                this._onUnauthorizedError();
 
                 return Promise.reject();
             }
 
-            // This will trigger reconnect
-            throw error;
+            return Promise.reject(error);
         });
     }
 
@@ -160,20 +148,7 @@ export class RemoteControlLoader extends AbstractLoader {
     _onServiceEvent(eventName, data) {
         switch (eventName) {
         case SERVICE_UPDATES.DISCONNECT: {
-            const { reason } = data;
-
-            if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED) {
-                logger.error('Disconnected due to Spot-TV leaving');
-                this.props.dispatch(clearSpotTVState());
-            } else {
-                logger.error(
-                    'Spot-Remove disconnected from remote control service',
-                    { reason }
-                );
-
-                this._reconnect();
-            }
-
+            this._onUnauthorizedError();
             break;
         }
 
@@ -210,12 +185,17 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Disconnects the remote control service.
+     * Clean up the connection to the remote control service.
      *
-     * @returns {Promise}
+     * @private
+     * @returns {void}
      */
-    _stopService() {
-        return remoteControlService.disconnect();
+    _onUnauthorizedError() {
+        logger.error('Spot-Remote could not connect to remote control service');
+
+        this.props.dispatch(clearSpotTVState());
+
+        this._redirectBackToLogin();
     }
 
     /**

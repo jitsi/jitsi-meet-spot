@@ -39,7 +39,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props, 'SpotTV', /* supports reconnects */ true);
+        super(props, 'SpotTV');
 
         this._onServiceEvent = this._onServiceEvent.bind(this);
     }
@@ -50,9 +50,9 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentDidMount() {
-        remoteControlService.addEventListener(this._onServiceEvent);
         super.componentDidMount();
 
+        remoteControlService.addEventListener(this._onServiceEvent);
         analytics.updateProperty('spot-tv', true);
     }
 
@@ -63,8 +63,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     componentWillUnmount() {
         remoteControlService.removeEventListener(this._onServiceEvent);
-
-        super.componentWillUnmount();
     }
 
     /**
@@ -117,6 +115,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 this.props.dispatch(setJoinCode(joinCode));
 
                 return remoteControlService.connect({
+                    autoReconnect: true,
                     joinAsSpot: true,
                     joinCode,
 
@@ -126,16 +125,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                     joinCodeServiceUrl: this.props.joinCodeServiceUrl,
                     serverConfig: this.props.remoteControlConfiguration
                 });
-            })
-            .catch(error => {
-                // The case of an incorrect password generally should not
-                // happen, but if it does then try to join a new room instead.
-                if (error === 'not-authorized') {
-                    this.props.dispatch(setJoinCode(''));
-                }
-
-                // Let the parent component handle reconnects
-                throw error;
             });
     }
 
@@ -152,8 +141,10 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         case SERVICE_UPDATES.DISCONNECT:
             logger.error(
                 'Spot-TV disconnected from the remote control service.');
+            remoteControlService.disconnect();
+            this.props.dispatch(setJoinCode(''));
 
-            this._reconnect();
+            this._loadService();
             break;
 
         case SERVICE_UPDATES.JOIN_CODE_CHANGE:
@@ -161,16 +152,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
 
             break;
         }
-    }
-
-    /**
-     * Disconnects the remote control service.
-     *
-     * @returns {*}
-     * @private
-     */
-    _stopService() {
-        return remoteControlService.disconnect();
     }
 }
 
