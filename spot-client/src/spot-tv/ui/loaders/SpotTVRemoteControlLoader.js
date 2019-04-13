@@ -64,8 +64,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     componentWillUnmount() {
         remoteControlService.removeEventListener(this._onServiceEvent);
 
-        this._stopJoinCodeUpdateInterval();
-
         super.componentWillUnmount();
     }
 
@@ -121,19 +119,13 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 return remoteControlService.connect({
                     joinAsSpot: true,
                     joinCode,
+
+                    // FIXME join code refresh is disabled with the backend as the first step,
+                    // because there's no password set on the room and the JWT is used instead.
+                    joinCodeRefreshRate: !adminServiceUrl && this.props.joinCodeRefreshRate,
                     joinCodeServiceUrl: this.props.joinCodeServiceUrl,
                     serverConfig: this.props.remoteControlConfiguration
                 });
-            })
-            .then(() => {
-                if (adminServiceUrl) {
-                    // FIXME join code refresh is disabled with the backend as the first step,
-                    // because there's no password set on the room and the JWT is used instead.
-                    return Promise.resolve();
-                }
-
-                return this._refreshJoinCode()
-                        .then(() => this._startJoinCodeUpdateInterval());
             })
             .catch(error => {
                 // The case of an incorrect password generally should not
@@ -151,18 +143,22 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * Callback invoked when {@code remoteControlService} has an update.
      *
      * @param {string} eventName - The event triggered.
+     * @param {Object} data - Additional information about the event.
      * @private
      * @returns {void}
      */
-    _onServiceEvent(eventName) {
+    _onServiceEvent(eventName, data) {
         switch (eventName) {
         case SERVICE_UPDATES.DISCONNECT:
             logger.error(
                 'Spot-TV disconnected from the remote control service.');
 
-            this._stopJoinCodeUpdateInterval();
-
             this._reconnect();
+            break;
+
+        case SERVICE_UPDATES.JOIN_CODE_CHANGE:
+            this.props.dispatch(setJoinCode(data.joinCode));
+
             break;
         }
     }
@@ -175,40 +171,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     _stopService() {
         return remoteControlService.disconnect();
-    }
-
-    /**
-     * Places a new join code for Spot-Remotes to connect to Spot-TV.
-     *
-     * @private
-     * @returns {void}
-     */
-    _refreshJoinCode() {
-        return remoteControlService.refreshJoinCode()
-            .then(joinCode => this.props.dispatch(setJoinCode(joinCode)));
-    }
-
-    /**
-     * Starts an update loop to change the password of the current remote
-     * control connection.
-     *
-     * @private
-     * @returns {void}
-     */
-    _startJoinCodeUpdateInterval() {
-        this._joinCodeUpdateInterval = setInterval(() => {
-            this._refreshJoinCode();
-        }, this.props.joinCodeRefreshRate);
-    }
-
-    /**
-     * Helper to stop the loop of changing the MUC password.
-     *
-     * @private
-     * @returns {void}
-     */
-    _stopJoinCodeUpdateInterval() {
-        clearInterval(this._joinCodeUpdateInterval);
     }
 }
 

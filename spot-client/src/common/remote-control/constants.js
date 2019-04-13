@@ -97,6 +97,12 @@ export const SERVICE_UPDATES = {
     DISCONNECT: 'disconnect',
 
     /**
+     * An update to the room join code, triggered locally, has been successfully
+     * completed.
+     */
+    JOIN_CODE_CHANGE: 'join-code-change',
+
+    /**
      * The remote control service has received an updated Spot-TV state.
      */
     SPOT_TV_STATE_CHANGE: 'spot-tv-state-change'

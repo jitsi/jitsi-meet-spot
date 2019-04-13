@@ -111,6 +111,9 @@ class RemoteControlService {
      * being made by a Spot client.
      * @param {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
+     * @param {number} [options.joinCodeRefreshRate] - A duration in
+     * milliseconds. If provided, a join code will be created and an interval
+     * created to automatically update the join code at the provided rate.
      * @param {Object} options.serverConfig - Details on how the XMPP connection
      * should be made.
      * @returns {Promise<string>}
@@ -119,6 +122,7 @@ class RemoteControlService {
         const {
             joinAsSpot,
             joinCode,
+            joinCodeRefreshRate,
             serverConfig,
             joinCodeServiceUrl
         } = options;
@@ -164,6 +168,14 @@ class RemoteControlService {
                     onDisconnect: this._onDisconnect
                 }));
 
+
+        this.xmppConnectionPromise
+            .then(() => {
+                if (joinCodeRefreshRate) {
+                    this.refreshJoinCode(joinCodeRefreshRate);
+                }
+            });
+
         return this.xmppConnectionPromise;
     }
 
@@ -175,6 +187,8 @@ class RemoteControlService {
      * @returns {void}
      */
     _onDisconnect(reason) {
+        clearTimeout(this._nextJoinCodeUpdate);
+
         this._emit(SERVICE_UPDATES.DISCONNECT, { reason });
     }
 
@@ -204,6 +218,8 @@ class RemoteControlService {
         this.destroyWirelessScreenshareConnections();
 
         this._spotTvJid = null;
+
+        clearTimeout(this._nextJoinCodeUpdate);
 
         const destroyPromise = this.xmppConnection
             ? this.xmppConnection.destroy()
@@ -324,13 +340,28 @@ class RemoteControlService {
      * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
      * to pair with it.
      *
+     * @param {number} nextRefreshTimeout - If defined will start an interval
+     * to automatically update join code.
      * @returns {Promise<string>} Resolves with the new join code.
      */
-    refreshJoinCode() {
+    refreshJoinCode(nextRefreshTimeout) {
+        clearTimeout(this._nextJoinCodeUpdate);
+
         const roomLock = generateRandomString(3);
 
-        return this.xmppConnection.setLock(roomLock)
-            .then(() => this.getJoinCode());
+        this.xmppConnection.setLock(roomLock)
+            .then(() => {
+                this._emit(
+                    SERVICE_UPDATES.JOIN_CODE_CHANGE,
+                    { joinCode: this.getJoinCode() }
+                );
+
+                if (nextRefreshTimeout) {
+                    this._nextJoinCodeUpdate = setTimeout(() => {
+                        this.refreshJoinCode(nextRefreshTimeout);
+                    }, nextRefreshTimeout);
+                }
+            });
     }
 
     /**
