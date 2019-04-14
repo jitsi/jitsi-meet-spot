@@ -1,5 +1,6 @@
 import {
     CALENDAR_SET_ACCOUNT,
+    CALENDAR_SET_ERROR,
     CALENDAR_SET_EVENTS
 } from './action-types';
 
@@ -23,11 +24,24 @@ export function setCalendar(email, displayName, calendarType) {
 }
 
 /**
-* Signals to replace the currently known calendar events.
-*
-* @param {Array<Object>} events - The calendar events to display.
-* @returns {Object}
-*/
+ * Signals an error has occurred with the calendar service.
+ *
+ * @param {Object} error - The error object describing what occurred.
+ * @returns {Object}
+ */
+export function setCalendarError(error) {
+    return {
+        type: CALENDAR_SET_ERROR,
+        error
+    };
+}
+
+/**
+ * Signals to replace the currently known calendar events.
+ *
+ * @param {Array<Object>} events - The calendar events to display.
+ * @returns {Object}
+ */
 export function setCalendarEvents(events = []) {
     return {
         type: CALENDAR_SET_EVENTS,

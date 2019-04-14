@@ -1,11 +1,13 @@
 import {
     CALENDAR_SET_ACCOUNT,
+    CALENDAR_SET_ERROR,
     CALENDAR_SET_EVENTS
 } from './action-types';
 
 const DEFAULT_STATE = {
     name: undefined,
     displayName: undefined,
+    error: undefined,
     events: [],
     hasCalendarBeenFetch: false
 };
@@ -27,13 +29,22 @@ const calendar = (state = DEFAULT_STATE, action) => {
             calendarType: action.calendarType,
             displayName: action.displayName,
             email: action.email,
+            error: undefined,
             events: [],
             hasSetEvents: false
         };
 
+    case CALENDAR_SET_ERROR: {
+        return {
+            ...state,
+            error: action.error
+        };
+    }
+
     case CALENDAR_SET_EVENTS:
         return {
             ...state,
+            error: undefined,
             events: action.events,
             hasSetEvents: true
         };

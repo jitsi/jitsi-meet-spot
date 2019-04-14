@@ -1,4 +1,5 @@
 import { calendarTypes } from 'common/app-state';
+import { hasUpdatedEvents } from 'common/utils';
 
 import backendCalendar from './backend-calendar';
 import google from './google';
@@ -21,6 +22,16 @@ const calendarIntegrations = {
  * The interface for interacting with a calendar integration.
  */
 export default {
+    /**
+     * A cache of the last calendar events that have been fetched.
+     */
+    _events: [],
+
+    /**
+     * The callbacks to invoke when a service event has occurred.
+     */
+    _listeners: new Set(),
+
     /**
      * Triggers any loading necessary for a calendar integration to be usable.
      *
@@ -83,11 +94,102 @@ export default {
     },
 
     /**
+     * Register for service update events.
+     *
+     * @param {Function} listener - A callback to invoke when this service has
+     * an update.
+     * @returns {void}
+     */
+    startListeningForEvents(listener) {
+        this._listeners.add(listener);
+    },
+
+    /**
+     * Begin fetching and automatically re-fetching calendar events.
+     *
+     * @param {Object} options - Options required for fetch the calendar events.
+     * See {@code getCalendar} for details.
+     * @returns {void}
+     */
+    startPollingForEvents(options) {
+        if (this._updateEventsTimeout) {
+            return;
+        }
+
+        this._pollForEvents(options);
+    },
+
+    /**
+     * Stop being notified of service update events.
+     *
+     * @param {Function} listener - The callback which should no longer receive
+     * updates.
+     * @returns {void}
+     */
+    stopListeningForEvents(listener) {
+        this._listeners.delete(listener);
+    },
+
+    /**
+     * Stop any ongoing process to automatically fetch calendar events.
+     *
+     * @returns {void}
+     */
+    stopPollingForEvents() {
+        clearTimeout(this._updateEventsTimeout);
+        this._updateEventsTimeout = null;
+    },
+
+    /**
      * Display the calendar integration sign in flow.
      *
      * @returns {Promise} Resolves when sign in completes successfully.
      */
     triggerSignIn() {
         return this._calendarIntegration.triggerSignIn();
+    },
+
+    /**
+     * Notifies registered listeners of an update.
+     *
+     * @param {string} eventName - The event type.
+     * @param {Object} data  - Additional information about the event.
+     * @private
+     * @returns {void}
+     */
+    _emit(eventName, data = {}) {
+        this._listeners.forEach(listener => listener(eventName, data));
+    },
+
+    /**
+     * Fetches calendar events and sets an interval to fetch again.
+     *
+     * @param {Object} options - Options required for fetch the calendar events.
+     * See {@code getCalendar} for details.
+     * @returns {void}
+     * @private
+     */
+    _pollForEvents(options) {
+        this.getCalendar(options)
+            .then(events => {
+                if (hasUpdatedEvents(this._events, events)) {
+                    this._events = events;
+
+                    this._emit('events-updated', { events: this._events });
+                }
+
+                this._updateEventsTimeout = setTimeout(
+                    () => this._pollForEvents(options),
+                    60000 // Get new events in 60 seconds
+                );
+            })
+            .catch(error => {
+                this._emit('events-error', { error });
+
+                this._updateEventsTimeout = setTimeout(
+                    () => this._pollForEvents(options),
+                    1000 * 60 * 5 // Try again in 5 minutes
+                );
+            });
     }
 };
