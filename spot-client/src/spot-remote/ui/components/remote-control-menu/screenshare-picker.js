@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getAdvertisementAppName, getJoinCode } from 'common/app-state';
+import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { isDesktopBrowser, windowHandler } from 'common/utils';
 
 import { NavButton } from './../nav';
@@ -167,7 +168,7 @@ export class ScreensharePicker extends React.Component {
                         label = 'Wireless Screensharing'
                         onClick = { this._onShowStartWireless }
                         qaId = 'start-wireless-screenshare'>
-                        <i className = 'material-icons'>wireless_screen_share</i>
+                        <WirelessScreenshare />
                     </NavButton>
                     { this.props.wiredScreenshareEnabled
                         && (
@@ -175,7 +176,7 @@ export class ScreensharePicker extends React.Component {
                                 className = 'screenshare'
                                 label = 'HDMI Screensharing'
                                 onClick = { this._onShowStartWired }>
-                                <i className = 'material-icons'>wired_screen_share</i>
+                                <WiredScreenshare />
                             </NavButton>
                         )
                     }
