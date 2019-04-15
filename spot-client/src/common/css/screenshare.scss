@@ -29,26 +29,11 @@
         }
 
         .cta-button {
-            @include button-reset;
-
             display: block;
             margin-left: auto;
             margin-right: auto;
             margin-top: 10px;
             padding: 0.3em 1em;
-
-            &.stop {
-                border-color: red;
-                color: red;
-
-                &:active {
-                    background-color: lightcoral;
-                }
-            }
-
-            &:active:not(.stop) {
-                @include active;
-            }
         }
 
         .share-url {

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Backspace } from 'common/icons';
-import { Input } from 'common/ui';
+import { Button, Input } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';
@@ -82,12 +82,12 @@ export default class DialPad extends React.Component {
                 <div className = 'dial-pad-footer'>
                     <div className = 'dial-pad-footer-button' />
                     <div className = 'dial-pad-footer-button'>
-                        <button
+                        <Button
                             className = 'call-button'
                             onClick = { this._onGoToCall }
                             type = 'submit'>
                             Call
-                        </button>
+                        </Button>
                     </div>
                     <div className = 'dial-pad-footer-button'>
                         <button

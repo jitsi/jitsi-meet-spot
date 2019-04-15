@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { getAdvertisementAppName, getJoinCode } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
+import { Button } from 'common/ui';
 import { isDesktopBrowser, windowHandler } from 'common/utils';
 
 import { NavButton } from './../nav';
@@ -210,11 +211,12 @@ export class ScreensharePicker extends React.Component {
                         'If sharing doesn\'t start automatically '
                             + 'click start sharing below.'
                     }
-                    <button
+                    <Button
+                        appearance = 'subtle'
                         className = 'cta-button'
                         onClick = { this.props.onStartWiredScreenshare }>
                             Share now
-                    </button>
+                    </Button>
                 </div>
             </>
         );
@@ -257,12 +259,13 @@ export class ScreensharePicker extends React.Component {
                 </div>
                 <div className = 'footer'>
                     { ctaTitle }
-                    <button
-                        className = 'cta-button stop'
-                        data-qa-id = 'stop-share-button'
-                        onClick = { this.props.onStopScreensharing }>
+                    <Button
+                        appearance = 'subtle-danger'
+                        className = 'cta-button'
+                        onClick = { this.props.onStopScreensharing }
+                        qaId = 'stop-share-button'>
                         Stop sharing
-                    </button>
+                    </Button>
                 </div>
             </>
         );

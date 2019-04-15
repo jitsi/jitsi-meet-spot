@@ -96,8 +96,8 @@ export default class AdminView extends React.Component {
                         <div className = 'admin-title'>Screenshare Input</div>
                         <ScreenshareStatus />
                         <Button
-                            data-qa-id = 'admin-change-screenshare'
-                            onClick = { this._onChangeScreenshareInput }>
+                            onClick = { this._onChangeScreenshareInput }
+                            qaId = 'admin-change-screenshare'>
                             Change
                         </Button>
                     </div>
@@ -112,7 +112,7 @@ export default class AdminView extends React.Component {
                     <div>
                         <div className = 'admin-title'>Exit Admin Tools</div>
                         <Link to = { ROUTES.HOME }>
-                            <Button data-qa-id = 'admin-exit'>
+                            <Button qaId = 'admin-exit'>
                                 Exit
                             </Button>
                         </Link>

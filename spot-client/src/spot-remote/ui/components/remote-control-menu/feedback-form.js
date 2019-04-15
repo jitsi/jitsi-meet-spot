@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { Star, StarBorder } from 'common/icons';
 import { logger } from 'common/logger';
+import { Button } from 'common/ui';
+
 import { submitFeedback } from 'spot-remote/remote-control';
 
 /**
@@ -91,17 +93,15 @@ class FeedbackForm extends React.Component {
                 { this.state.requestMoreInfo
                     ? this._renderInfoRequest()
                     : this._renderStars() }
-                <button
+                <Button
+                    appearance = 'subtle'
                     className = 'skip-button'
-                    onClick = { this._onSkip }
-                    type = 'button'>
+                    onClick = { this._onSkip }>
                     Skip
-                </button>
-                <button
-                    className = 'submit-button'
-                    type = 'submit'>
+                </Button>
+                <Button type = 'submit'>
                     Send
-                </button>
+                </Button>
             </form>
         );
     }

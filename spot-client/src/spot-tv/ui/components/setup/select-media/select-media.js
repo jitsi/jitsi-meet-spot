@@ -163,8 +163,8 @@ class SelectMedia extends React.Component {
                         Save
                     </Button>
                     <Button
-                        onClick = { this._onSkip }
-                        type = 'cancel'>
+                        appearance = 'subtle'
+                        onClick = { this._onSkip }>
                         Skip
                     </Button>
                 </div>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Input } from 'common/ui';
+import { Button, Input } from 'common/ui';
 
 /**
  * Displays an input for entering the name of a meeting.
@@ -59,12 +59,11 @@ export class MeetingNameEntry extends React.Component {
                         value = { this.props.meetingName } />
                 </div>
                 <div className = 'submit-wrapper'>
-                    <button
-                        className = 'submit-button'
-                        data-qa-id = 'meeting-name-submit'
+                    <Button
+                        qaId = 'meeting-name-submit'
                         type = 'submit'>
                         GO
-                    </button>
+                    </Button>
                 </div>
             </form>
         );

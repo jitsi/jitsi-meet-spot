@@ -32,8 +32,6 @@
         margin-left: 2em;
 
         .submit-button {
-            @include styled-button;
-
             font-size: $font-size-medium;
         }
     }
