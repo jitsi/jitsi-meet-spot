@@ -1,9 +1,9 @@
-import { CalendarToday, Call, ScreenShare, Videocam } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
+import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 import { Clock, ScheduledMeetings } from 'common/ui';

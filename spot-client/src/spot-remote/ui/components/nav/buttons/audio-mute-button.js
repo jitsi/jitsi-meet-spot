@@ -1,4 +1,3 @@
-import { Mic, MicOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,6 +8,7 @@ import {
     isAudioMutePending,
     setAudioMute
 } from 'common/app-state';
+import { Mic, MicOff } from 'common/icons';
 
 import NavButton from './../nav-button';
 

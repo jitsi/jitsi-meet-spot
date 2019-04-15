@@ -1,7 +1,7 @@
-import { Settings } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Settings } from 'common/icons';
 import { ROUTES } from 'common/routing';
 
 /**

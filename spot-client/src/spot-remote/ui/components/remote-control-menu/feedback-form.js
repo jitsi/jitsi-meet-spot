@@ -1,7 +1,7 @@
-import { Star, StarBorder } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Star, StarBorder } from 'common/icons';
 import { logger } from 'common/logger';
 
 /**
