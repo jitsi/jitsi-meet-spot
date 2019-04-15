@@ -4,7 +4,7 @@ const PageObject = require('./page-object');
 
 const ADMIN_SETTINGS_BUTTON = '[data-qa-id=admin-settings]';
 const CALENDAR_VIEW = '[data-qa-id=home-view]';
-const JOIN_CODE = '[data-qa-id=join-info]';
+const INFO_CODE = '[data-qa-id=info-code]';
 
 /**
  * A page object for interacting with the calendar view of Spot-TV.
@@ -28,9 +28,9 @@ class CalendarPage extends PageObject {
      * @returns {string}
      */
     getJoinCode() {
-        const joinCodeDisplay = this.waitForElementDisplayed(JOIN_CODE);
+        const joinCodeDisplay = this.waitForElementDisplayed(INFO_CODE);
         const fullText = joinCodeDisplay.getText();
-        const parts = fullText.split(' ');
+        const parts = fullText.split('/');
 
         return parts[parts.length - 1];
     }

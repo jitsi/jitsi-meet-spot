@@ -59,10 +59,22 @@
         .setup-join-code {
             color: #6aafeb;
             font-size: $font-size-large;
+
+            .join-info {
+                color: inherit;
+            }
         }
     }
 
     ~ .info-footer {
         display: none;
+    }
+
+    .spot-home-footer {
+        text-align: center;
+
+        .join-info {
+            display: inline-block;
+        }
     }
 }

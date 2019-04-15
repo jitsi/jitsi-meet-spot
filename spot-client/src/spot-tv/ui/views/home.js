@@ -22,6 +22,7 @@ import {
 
 import {
     FullscreenToggle,
+    JoinInfo,
     SettingsButton,
     WiredScreenshareChangeListener
 } from './../components';
@@ -66,7 +67,6 @@ export class Home extends React.Component {
         };
 
         this._onCommand = this._onCommand.bind(this);
-        this._onOpenRemote = this._onOpenRemote.bind(this);
         this._pollForEvents = this._pollForEvents.bind(this);
         this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
 
@@ -108,8 +108,6 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     render() {
-        const joinCode = this.props.joinCode.toUpperCase();
-
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
@@ -117,11 +115,8 @@ export class Home extends React.Component {
                     <Clock />
                     { this._getCalendarEventsView() }
                     { this.props.isSetupComplete
-                        && <div
-                            className = 'join-info'
-                            data-qa-id = 'join-info'
-                            onClick = { this._onOpenRemote }>
-                            Connect at { windowHandler.getBaseUrl() } | Sharing key { joinCode }
+                        && <div className = 'spot-home-footer'>
+                            Connect at <JoinInfo />
                         </div> }
                 </div>
                 <div className = 'admin-toolbar'>
@@ -186,21 +181,6 @@ export class Home extends React.Component {
             break;
         }
         }
-    }
-
-    /**
-     * Opens an instance of a remote control for the Spot in a new window. This
-     * is a debug feature to immediately open the remote without entering a join
-     * code.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onOpenRemote() {
-        const baseUrl = windowHandler.getBaseUrl();
-        const url = `${baseUrl}/${this.props.joinCode.toUpperCase()}`;
-
-        windowHandler.openNewWindow(url);
     }
 
     /**
@@ -325,11 +305,8 @@ export class Home extends React.Component {
                 {
                     this.props.joinCode
                         && (
-                            <div
-                                className = 'setup-join-code'
-                                data-qa-id = 'join-info'
-                                onClick = { this._onOpenRemote }>
-                                { this.props.joinCode.toUpperCase() }
+                            <div className = 'setup-join-code'>
+                                <JoinInfo />
                             </div>
                         )
                 }

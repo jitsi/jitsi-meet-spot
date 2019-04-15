@@ -39,14 +39,10 @@
     bottom: 0;
     display: flex;
     font-size: 1rem;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 10px;
     position: fixed;
     width: 100%;
-
-    .info-code {
-        text-transform: uppercase;
-    }
 }
 
 @keyframes animateDots {
