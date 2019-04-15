@@ -17,9 +17,9 @@ export default class NavButton extends React.Component {
 
     static propTypes = {
         active: PropTypes.bool,
+        children: PropTypes.node,
         className: PropTypes.string,
         disabled: PropTypes.bool,
-        iconName: PropTypes.string,
         label: PropTypes.string,
         onClick: PropTypes.func,
         qaId: PropTypes.string,
@@ -50,7 +50,6 @@ export default class NavButton extends React.Component {
             active,
             className,
             disabled,
-            iconName,
             label,
             qaId,
             subIcon,
@@ -88,7 +87,9 @@ export default class NavButton extends React.Component {
                 }
                 <div className = 'nav-icon-container'>
                     <div className = 'nav-icon'>
-                        <i className = 'material-icons'>{ iconName }</i>
+                        {
+                            this.props.children
+                        }
                         { subIcon && (
                             <div className = 'sub-icon'>
                                 { subIcon }

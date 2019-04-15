@@ -1,3 +1,4 @@
+import { Backspace } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -92,7 +93,7 @@ export default class DialPad extends React.Component {
                             className = 'backspace'
                             onClick = { this._onDeleteLastCharacter }
                             type = 'button'>
-                            <i className = 'material-icons'>backspace</i>
+                            <Backspace />
                         </button>
                     </div>
                 </div>

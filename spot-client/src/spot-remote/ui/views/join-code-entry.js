@@ -1,3 +1,4 @@
+import { ArrowForward } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -126,11 +127,12 @@ export class JoinCodeEntry extends React.Component {
                     </div>
                     <NavContainer>
                         <NavButton
-                            iconName = 'arrow_forward'
                             label = 'Continue'
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
-                            tabIndex = { 0 } />
+                            tabIndex = { 0 }>
+                            <ArrowForward />
+                        </NavButton>
                     </NavContainer>
                 </div>
             </View>

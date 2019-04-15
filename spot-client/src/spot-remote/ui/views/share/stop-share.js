@@ -1,3 +1,4 @@
+import { ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -28,10 +29,11 @@ export class StopShare extends React.Component {
                     <div className = 'selection'>
                         <NavButton
                             className = 'sharebutton active'
-                            iconName = 'screen_share'
                             label = 'Stop sharing'
                             onClick = { this.props.onStopScreenshare }
-                            qaId = 'stop-share-button' />
+                            qaId = 'stop-share-button'>
+                            <ScreenShare />
+                        </NavButton>
                     </div>
                 </div>
             </div>

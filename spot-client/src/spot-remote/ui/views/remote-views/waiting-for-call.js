@@ -1,3 +1,4 @@
+import { CalendarToday, Call, ScreenShare, Videocam } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -92,26 +93,30 @@ class WaitingForCallView extends React.Component {
                 <NavContainer>
                     <NavButton
                         active = { activeTab === 'calendar' }
-                        iconName = 'calendar_today'
                         label = 'Calendar'
-                        onClick = { this._onSetCalendarActive } />
+                        onClick = { this._onSetCalendarActive }>
+                        <CalendarToday />
+                    </NavButton>
                     <NavButton
                         active = { activeTab === 'input' }
-                        iconName = 'videocam'
                         label = 'Meet Now'
                         onClick = { this._onSetInputActive }
-                        qaId = 'meet-now' />
+                        qaId = 'meet-now'>
+                        <Videocam />
+                    </NavButton>
                     <NavButton
                         active = { activeTab === 'dial' }
-                        iconName = 'call'
                         label = 'Dial a Number'
-                        onClick = { this._onSetDialActive } />
+                        onClick = { this._onSetDialActive }>
+                        <Call />
+                    </NavButton>
                     <NavButton
                         active = { activeTab === 'share' }
-                        iconName = 'screen_share'
                         label = 'Share Content'
                         onClick = { this._onSetScreenshareSelectActive }
-                        qaId = 'share-content' />
+                        qaId = 'share-content'>
+                        <ScreenShare />
+                    </NavButton>
                 </NavContainer>
             </div>
         );

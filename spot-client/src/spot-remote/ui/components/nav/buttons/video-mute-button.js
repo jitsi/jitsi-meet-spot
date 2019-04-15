@@ -1,3 +1,4 @@
+import { Videocam, VideocamOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -57,10 +58,11 @@ export class VideoMuteButton extends React.Component {
             <NavButton
                 active = { changePending ? !videoMuted : videoMuted }
                 className = { changePending ? 'pending' : '' }
-                iconName = { videoMuted ? 'videocam_off' : 'videocam' }
                 label = { label }
                 onClick = { this._onToggleVideoMute }
-                qaId = { qaId } />
+                qaId = { qaId }>
+                { videoMuted ? <VideocamOff /> : <Videocam /> }
+            </NavButton>
         );
     }
 
