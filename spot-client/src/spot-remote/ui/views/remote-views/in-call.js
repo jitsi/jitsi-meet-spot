@@ -1,3 +1,4 @@
+import { CallEnd, ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -98,18 +99,20 @@ export class InCall extends React.Component {
                     <VideoMuteButton />
                     <NavButton
                         className = { screenshareButtonStyles }
-                        iconName = 'screen_share'
                         label = 'Share Content'
                         onClick = { this._onToggleScreenshare }
                         qaId = {
                             screensharingType ? 'stop-share' : 'start-share'
                         }
-                        subIcon = { this._renderScreenshareSubIcon() } />
+                        subIcon = { this._renderScreenshareSubIcon() }>
+                        <ScreenShare />
+                    </NavButton>
                     <NavButton
                         className = 'hangup'
-                        iconName = 'call_end'
                         label = 'Leave'
-                        onClick = { this.props.onHangUp } />
+                        onClick = { this.props.onHangUp }>
+                        <CallEnd />
+                    </NavButton>
                 </NavContainer>
                 { this.state.showScreenshareModal && (
                     <ScreenshareModal

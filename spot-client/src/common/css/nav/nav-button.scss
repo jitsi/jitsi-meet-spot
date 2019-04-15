@@ -39,6 +39,8 @@
         .nav-icon {
             position: relative;
 
+            // Override material icon SVG size
+            svg,
             .material-icons {
                 font-size: $font-size-x-large;
     

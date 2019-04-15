@@ -1,3 +1,4 @@
+import { Fullscreen, FullscreenExit } from '@material-ui/icons';
 import React from 'react';
 
 /**
@@ -53,13 +54,11 @@ export default class FullscreenToggle extends React.Component {
             <a
                 className = 'fullscreen-toggle'
                 onClick = { this._onToggleFullscreen }>
-                <i className = 'material-icons'>
-                    {
-                        this.state.isFullscreen
-                            ? 'fullscreen_exit'
-                            : 'fullscreen'
-                    }
-                </i>
+                {
+                    this.state.isFullscreen
+                        ? <FullscreenExit />
+                        : <Fullscreen />
+                }
             </a>
         );
     }

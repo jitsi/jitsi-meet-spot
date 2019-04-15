@@ -164,17 +164,19 @@ export class ScreensharePicker extends React.Component {
                 <div className = 'options'>
                     <NavButton
                         className = 'screenshare'
-                        iconName = 'wireless_screen_share'
                         label = 'Wireless Screensharing'
                         onClick = { this._onShowStartWireless }
-                        qaId = 'start-wireless-screenshare' />
+                        qaId = 'start-wireless-screenshare'>
+                        <i className = 'material-icons'>wireless_screen_share</i>
+                    </NavButton>
                     { this.props.wiredScreenshareEnabled
                         && (
                             <NavButton
                                 className = 'screenshare'
-                                iconName = 'wired_screen_share'
                                 label = 'HDMI Screensharing'
-                                onClick = { this._onShowStartWired } />
+                                onClick = { this._onShowStartWired }>
+                                <i className = 'material-icons'>wired_screen_share</i>
+                            </NavButton>
                         )
                     }
                 </div>

@@ -1,3 +1,4 @@
+import { ArrowForward, ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -53,17 +54,19 @@ export class ModeSelect extends React.Component {
                     <div className = 'selection'>
                         <NavButton
                             disabled = { disabled }
-                            iconName = 'screen_share'
                             label = 'Wireless screensharing'
                             onClick = { onStartWirelessScreenshare }
-                            qaId = 'start-share' />
+                            qaId = 'start-share'>
+                            <ScreenShare />
+                        </NavButton>
                     </div>
                     <div className = 'selection'>
                         <NavButton
-                            iconName = 'arrow_forward'
                             label = 'Remote Control'
                             onClick = { onGoToSpotRemoveView }
-                            qaId = 'remote-control' />
+                            qaId = 'remote-control'>
+                            <ArrowForward />
+                        </NavButton>
                     </div>
                 </div>
                 <div className = 'footer'>

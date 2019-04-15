@@ -1,3 +1,4 @@
+import { Star, StarBorder } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -221,11 +222,11 @@ export default class FeedbackForm extends React.Component {
         const stars = [];
 
         for (let i = 1; i <= 5; i++) {
-            const starIcon = i <= score ? 'star' : 'star_border';
+            const starIcon = i <= score ? <Star /> : <StarBorder />;
 
             stars.push(
                 <button
-                    className = 'material-icons remote-score'
+                    className = 'remote-score'
                     key = { i }
 
                     // eslint-disable-next-line react/jsx-no-bind

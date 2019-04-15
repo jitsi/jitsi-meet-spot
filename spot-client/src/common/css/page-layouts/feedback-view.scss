@@ -47,8 +47,11 @@
             background: inherit;
             border: none;
             color: white;
-            font-size: 3em;
             padding: 0 10px;
+
+            * {
+                font-size: 3em;
+            }
 
             &:hover {
                 cursor: pointer;

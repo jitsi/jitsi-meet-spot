@@ -1,3 +1,4 @@
+import { Settings } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -16,11 +17,9 @@ class SettingsButton extends React.Component {
         return (
             <div className = 'cog'>
                 <Link to = { ROUTES.ADMIN } >
-                    <i
-                        className = 'material-icons'
-                        data-qa-id = 'admin-settings'>
-                        settings
-                    </i>
+                    <div data-qa-id = 'admin-settings'>
+                        <Settings />
+                    </div>
                 </Link>
             </div>
         );

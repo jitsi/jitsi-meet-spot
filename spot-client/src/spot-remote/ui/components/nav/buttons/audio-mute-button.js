@@ -1,3 +1,4 @@
+import { Mic, MicOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -57,10 +58,11 @@ export class AudioMuteButton extends React.Component {
             <NavButton
                 active = { changePending ? !audioMuted : audioMuted }
                 className = { changePending ? 'pending' : '' }
-                iconName = { audioMuted ? 'mic_off' : 'mic' }
                 label = { label }
                 onClick = { this._onToggleAudioMute }
-                qaId = { qaId } />
+                qaId = { qaId }>
+                { audioMuted ? <MicOff /> : <Mic /> }
+            </NavButton>
         );
     }
 
