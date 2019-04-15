@@ -1,4 +1,3 @@
-import { Videocam, VideocamOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,6 +8,7 @@ import {
     isVideoMutePending,
     setVideoMute
 } from 'common/app-state';
+import { Videocam, VideocamOff } from 'common/icons';
 
 import NavButton from './../nav-button';
 

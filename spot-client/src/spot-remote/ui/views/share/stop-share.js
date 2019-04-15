@@ -1,7 +1,7 @@
-import { ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { ScreenShare } from 'common/icons';
 import { NavButton } from './../../components';
 
 /**

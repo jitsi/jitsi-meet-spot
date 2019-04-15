@@ -1,7 +1,7 @@
-import { Backspace } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Backspace } from 'common/icons';
 import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';

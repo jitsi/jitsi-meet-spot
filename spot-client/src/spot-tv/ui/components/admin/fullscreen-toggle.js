@@ -1,5 +1,6 @@
-import { Fullscreen, FullscreenExit } from '@material-ui/icons';
 import React from 'react';
+
+import { Fullscreen, FullscreenExit } from 'common/icons';
 
 /**
  * Shows a toggle link to enter and exit fullscreen mode.

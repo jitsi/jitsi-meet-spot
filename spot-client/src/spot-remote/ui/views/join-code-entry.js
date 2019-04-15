@@ -1,4 +1,3 @@
-import { ArrowForward } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -10,6 +9,7 @@ import {
     isConnectedToSpot,
     setJoinCode
 } from 'common/app-state';
+import { ArrowForward } from 'common/icons';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';

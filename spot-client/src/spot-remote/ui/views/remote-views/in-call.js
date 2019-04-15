@@ -1,4 +1,3 @@
-import { CallEnd, ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,6 +8,7 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { CallEnd, ScreenShare } from 'common/icons';
 import { LoadingIcon } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 

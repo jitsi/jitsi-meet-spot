@@ -1,7 +1,7 @@
-import { ArrowForward, ScreenShare } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { ArrowForward, ScreenShare } from 'common/icons';
 import { NavButton } from './../../components';
 
 /**
