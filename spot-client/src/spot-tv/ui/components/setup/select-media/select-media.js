@@ -57,6 +57,7 @@ class SelectMedia extends React.Component {
         this._onCameraChange = this._onCameraChange.bind(this);
         this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onMicChange = this._onMicChange.bind(this);
+        this._onSkip = this._onSkip.bind(this);
         this._onSpeakerChange = this._onSpeakerChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -162,7 +163,7 @@ class SelectMedia extends React.Component {
                         Save
                     </Button>
                     <Button
-                        onClick = { this._onSubmit }
+                        onClick = { this._onSkip }
                         type = 'cancel'>
                         Skip
                     </Button>
@@ -296,6 +297,17 @@ class SelectMedia extends React.Component {
     }
 
     /**
+     * Callback invoked to proceed to the next step of setup without saving
+     * and device preferences.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onSkip() {
+        this.props.onSuccess();
+    }
+
+    /**
      * Callback invoked when the selected speaker (audiooutput) has changed.
      *
      * @param {string} label - The label of the selected device.
@@ -311,7 +323,8 @@ class SelectMedia extends React.Component {
     /**
      * Callback invoked to proceed to the next step of setup.
      *
-     * @inheritdoc
+     * @private
+     * @returns {void}
      */
     _onSubmit() {
         this.props.dispatch(setPreferredDevices(
