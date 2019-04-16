@@ -10,7 +10,7 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/app-state';
-import { COMMANDS } from 'common/remote-control';
+import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -71,8 +71,10 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        this.props.remoteControlService.startListeningForRemoteMessages(
-            this._onCommand);
+        this.props.remoteControlService.addListener(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            this._onCommand
+        );
     }
 
     /**
@@ -81,8 +83,10 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.stopListeningForRemoteMessages(
-            this._onCommand);
+        this.props.remoteControlService.removeListener(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            this._onCommand
+        );
     }
 
     /**

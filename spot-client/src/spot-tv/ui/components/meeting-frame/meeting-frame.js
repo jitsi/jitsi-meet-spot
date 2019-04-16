@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { setSpotTVState } from 'common/app-state';
 import { logger } from 'common/logger';
-import { COMMANDS, MESSAGES } from 'common/remote-control';
+import { COMMANDS, MESSAGES, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
@@ -160,8 +160,10 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
 
-        this.props.remoteControlService.startListeningForRemoteMessages(
-            this._onMeetingCommand);
+        this.props.remoteControlService.addListener(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            this._onMeetingCommand
+        );
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
@@ -176,8 +178,10 @@ export class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
-        this.props.remoteControlService.stopListeningForRemoteMessages(
-            this._onMeetingCommand);
+        this.props.remoteControlService.removeListener(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            this._onMeetingCommand
+        );
 
         this.props.updateSpotTvState({
             audioMuted: false,
