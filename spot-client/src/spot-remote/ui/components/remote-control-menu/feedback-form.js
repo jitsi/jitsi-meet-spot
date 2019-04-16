@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Star, StarBorder } from 'common/icons';
 import { logger } from 'common/logger';
+import { submitFeedback } from 'spot-remote/remote-control';
 
 /**
  * By default will use 1 minute for feedback inactivity timeout.
@@ -17,9 +19,9 @@ const DEFAULT_INACTIVITY_TIMEOUT = 60 * 1000;
  *
  * @extends React.Component
  */
-export default class FeedbackForm extends React.Component {
+class FeedbackForm extends React.Component {
     static propTypes = {
-        remoteControlService: PropTypes.object,
+        _submitFeedback: PropTypes.func,
         timeout: PropTypes.number
     };
 
@@ -150,7 +152,7 @@ export default class FeedbackForm extends React.Component {
      * @returns {void}
      */
     _onSkip() {
-        this.props.remoteControlService.submitFeedback({
+        this.props._submitFeedback({
             message: '',
             score: -1
         });
@@ -178,8 +180,6 @@ export default class FeedbackForm extends React.Component {
 
             return;
         }
-
-        logger.log('Feedback submitting');
 
         this._submitFeedback();
     }
@@ -255,9 +255,7 @@ export default class FeedbackForm extends React.Component {
         if (this.props.timeout && this.props.timeout > 0) {
             this._timeout = setTimeout(
                 () => {
-                    logger.log('Feedback submitting by inactivity timeout');
-
-                    this._submitFeedback();
+                    this._submitFeedback(/* timeout */true);
                 },
                 this.props.timeout);
         }
@@ -266,13 +264,46 @@ export default class FeedbackForm extends React.Component {
     /**
      * Submits the feedback currently stored in the state (whatever it is).
      *
+     * @param {boolean} timeout - If set to true it means that the call's been made as the result of
+     * inactivity timeout rather than explicit user's action.
      * @private
      * @returns {void}
      */
-    _submitFeedback() {
-        this.props.remoteControlService.submitFeedback({
+    _submitFeedback(timeout = false) {
+        if (timeout) {
+            logger.log('Feedback submitting by inactivity timeout');
+        } else {
+            logger.log('Feedback submitting');
+        }
+
+        this.props._submitFeedback({
             message: this.state.message,
-            score: this.state.score
+            requestedMoreInfo: this.state.requestMoreInfo,
+            score: this.state.score,
+            timeout
         });
     }
 }
+
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Dispatches the submit feedback action.
+         *
+         * @param {Object} options - The options as defined by the {@link submitFeedback} action.
+         * @private
+         * @returns {void}
+         */
+        _submitFeedback(options) {
+            dispatch(submitFeedback(options));
+        }
+    };
+}
+export default connect(undefined, mapDispatchToProps)(FeedbackForm);

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { applyMiddleware, createStore } from 'redux';
+import { createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import 'common/css';
@@ -15,6 +15,7 @@ import reducers, {
     getLoggingEndpoint,
     setDefaultValues
 } from 'common/app-state';
+import { MiddlewareRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,
     remoteControlService
@@ -36,7 +37,7 @@ const store = createStore(
         },
         ...getPersistedState()
     },
-    applyMiddleware(thunk)
+    MiddlewareRegistry.applyMiddleware(thunk)
 );
 const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
