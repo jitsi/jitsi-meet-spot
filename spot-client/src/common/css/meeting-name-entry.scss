@@ -19,20 +19,6 @@
     .input-container {
         flex: 1;
 
-        .input {
-            @include styled-input;
-
-            border-image:
-                linear-gradient(
-                    to right,
-                    var(--name-entry-gradient-start),
-                    var(--name-entry-gradient-end)
-                )
-                1
-                stretch;
-            padding-bottom: 8px;
-        }
-
         .input-label {
             display: block;
             margin-bottom: 10px;

@@ -47,30 +47,3 @@
         background-color: var(--button-active-color);
     }
 }
-
-@mixin styled-input {
-    /**
-    * Explicitly override default input element styles.
-    */
-    &:focus {
-      outline: none;
-    }
-    &::placeholder {
-        color: var(--container-sub-content-font-color);
-    }
-
-    background-color: transparent;
-    color: var(--container-content-font-color);
-    font-size: $font-size-small;
-    width: 100%;
-
-    /**
-    * Set each border attribute separately for mobile safari to
-    * support border-image.
-    */
-    border-bottom: 2px;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    border-style: solid;
-}

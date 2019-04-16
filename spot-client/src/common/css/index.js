@@ -21,6 +21,7 @@ import './desktop-picker.scss';
 import './dial-pad.scss';
 import './home-view.scss';
 import './idle-cursor.scss';
+import './input.scss';
 import './meeting.scss';
 import './meeting-name-entry.scss';
 import './modal.scss';

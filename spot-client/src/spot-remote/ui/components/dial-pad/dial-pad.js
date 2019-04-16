@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Backspace } from 'common/icons';
+import { Input } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';
@@ -48,11 +49,11 @@ export default class DialPad extends React.Component {
                 className = 'dial-pad'
                 onSubmit = { this._onGoToCall }>
                 <div className = 'input-container'>
-                    <input
-                        autoComplete = { 'off' }
+                    <Input
                         className = 'number-input'
+                        gradientStart = 'center'
                         onChange = { this._onInputChange }
-                        spellCheck = { false }
+                        placeholder = 'Enter a phone number'
                         type = 'tel'
                         value = { this.state.enteredNumber } />
                 </div>
