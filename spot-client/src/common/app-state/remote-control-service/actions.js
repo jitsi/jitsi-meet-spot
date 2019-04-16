@@ -48,6 +48,8 @@ function createActionWithRequestStates( // eslint-disable-line max-params
             });
 
             dispatch(setRequestState(requestType, requestStates.ERROR));
+
+            return Promise.reject(error);
         });
 }
 
