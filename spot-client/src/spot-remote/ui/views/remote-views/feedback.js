@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Clock } from 'common/ui';
@@ -12,10 +11,6 @@ import { FeedbackForm } from './../../components';
  * @extends React.PureComponent
  */
 export default class FeedbackView extends React.PureComponent {
-    static propTypes = {
-        remoteControlService: PropTypes.object
-    };
-
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -23,14 +18,11 @@ export default class FeedbackView extends React.PureComponent {
      * @returns {ReactElement}
      */
     render() {
-        const { remoteControlService } = this.props;
-
         return (
             <div className = 'feedback-view'>
                 <Clock />
                 <div className = 'feedback-form'>
-                    <FeedbackForm
-                        remoteControlService = { remoteControlService } />
+                    <FeedbackForm />
                 </div>
             </div>
         );

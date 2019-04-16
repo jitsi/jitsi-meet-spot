@@ -95,8 +95,7 @@ export class RemoteControl extends React.PureComponent {
             return <div>currently in admin tools</div>;
         case 'feedback':
             return (
-                <Feedback
-                    remoteControlService = { remoteControlService } />
+                <Feedback />
             );
         case 'home':
             return (
