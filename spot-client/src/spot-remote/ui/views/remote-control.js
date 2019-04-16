@@ -12,6 +12,7 @@ import {
 } from 'common/app-state';
 import { LoadingIcon, View } from 'common/ui';
 
+import './../../analytics';
 import { NoSleep } from './../../no-sleep';
 
 import { withRemoteControl, withUltrasound } from './../loaders';
