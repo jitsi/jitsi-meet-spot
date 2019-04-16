@@ -103,6 +103,11 @@ export const SERVICE_UPDATES = {
     JOIN_CODE_CHANGE: 'join-code-change',
 
     /**
+     * A command from a Spot-Remote has been received.
+     */
+    SPOT_REMOTE_MESSAGE_RECEIVED: 'message-received',
+
+    /**
      * The remote control service has received an updated Spot-TV state.
      */
     SPOT_TV_STATE_CHANGE: 'spot-tv-state-change'

@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { $iq } from 'strophe.js';
 
 import { fetchRoomInfo } from 'common/backend/utils';
@@ -5,7 +6,12 @@ import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
 
-import { COMMANDS, CONNECTION_EVENTS, MESSAGES, SERVICE_UPDATES } from './constants';
+import {
+    COMMANDS,
+    CONNECTION_EVENTS,
+    MESSAGES,
+    SERVICE_UPDATES
+} from './constants';
 import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
 
@@ -36,17 +42,12 @@ function generateRandomString(length) {
  * Spot instance and remote controls join the same MUC and can get messages to
  * each other.
  */
-class RemoteControlService {
+class RemoteControlService extends EventEmitter {
     /**
      * Initializes a new {@code RemoteControlService} instance.
      */
     constructor() {
-        /**
-         * Callbacks to invoke as commands and presence updates are received.
-         *
-         * @type {Set<Function>}
-         */
-        this._remoteMessageListeners = new Set();
+        super();
 
         this._onCommandReceived = this._onCommandReceived.bind(this);
         this._onMessageReceived = this._onMessageReceived.bind(this);
@@ -61,33 +62,9 @@ class RemoteControlService {
 
         this._onDisconnect = this._onDisconnect.bind(this);
 
-        this._listeners = new Set();
-
         this._wirelessScreensharingConfiguration = null;
 
         window.addEventListener('beforeunload', () => this.disconnect());
-    }
-
-    /**
-     * Receive status updates.
-     *
-     * @param {Function} listener - The callback which should be invoked when
-     * there is a status update.
-     * @returns {void}
-     */
-    addEventListener(listener) {
-        this._listeners.add(listener);
-    }
-
-    /**
-     * Stop receiving status updates.
-     *
-     * @param {Function} listener - The callback which should no longer be
-     * invoked when there is a status update.
-     * @returns {void}
-     */
-    removeEventListener(listener) {
-        this._listeners.delete(listener);
     }
 
     /**
@@ -195,7 +172,7 @@ class RemoteControlService {
 
         if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED
             || reason === 'not-authorized') {
-            this._emit(SERVICE_UPDATES.DISCONNECT, { reason });
+            this.emit(SERVICE_UPDATES.DISCONNECT, { reason });
 
             return;
         }
@@ -395,17 +372,6 @@ class RemoteControlService {
     }
 
     /**
-     * Registers a callback to be notified of incoming command and message IQs.
-     *
-     * @param {Function} listener - The callback to invoke. Will be passed the
-     * command or message type and any associated payload.
-     * @returns {void}
-     */
-    startListeningForRemoteMessages(listener) {
-        this._remoteMessageListeners.add(listener);
-    }
-
-    /**
      * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
      * to pair with it.
      *
@@ -420,7 +386,7 @@ class RemoteControlService {
 
         this.xmppConnection.setLock(roomLock)
             .then(() => {
-                this._emit(
+                this.emit(
                     SERVICE_UPDATES.JOIN_CODE_CHANGE,
                     { joinCode: this.getJoinCode() }
                 );
@@ -522,17 +488,6 @@ class RemoteControlService {
     }
 
     /**
-     * De-registers a callback for when a command or message IQ is received.
-     *
-     * @param {Function} listener - The callback which should no longer be
-     * notified.
-     * @returns {void}
-     */
-    stopListeningForRemoteMessages(listener) {
-        this._remoteMessageListeners.delete(listener);
-    }
-
-    /**
      * Requests a Spot to change submit meeting feedback.
      *
      * @param {Object} feedback - The feedback to submit.
@@ -611,18 +566,6 @@ class RemoteControlService {
     }
 
     /**
-     * Updates registered listeners about state updates.
-     *
-     * @param {string} eventName - The event triggered.
-     * @param {Object} data - Additional information about the event.
-     * @private
-     * @returns {void}
-     */
-    _emit(eventName, data) {
-        this._listeners.forEach(listener => listener(eventName, data));
-    }
-
-    /**
      * Called internally by Spot-Remote to the Spot-TV jid for which to send
      * commands and messages.
      *
@@ -631,6 +574,23 @@ class RemoteControlService {
      */
     _getSpotId() {
         return this._lastSpotState && this._lastSpotState.spotId;
+    }
+
+    /**
+     * Emits an event that a message or command has been received from an
+     * instance of Spot Remote.
+     *
+     * @param {string} messageType - The constant of the message or command.
+     * @param {Object} data - Additional details about the message.
+     * @private
+     * @returns {void}
+     */
+    _notifySpotRemoteMessageReceived(messageType, data) {
+        this.emit(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            messageType,
+            data
+        );
     }
 
     /**
@@ -659,7 +619,7 @@ class RemoteControlService {
             data = {};
         }
 
-        this._remoteMessageListeners.forEach(cb => cb(commandType, data));
+        this._notifySpotRemoteMessageReceived(commandType, data);
 
         return $iq({
             id: iq.getAttribute('id'),
@@ -710,13 +670,13 @@ class RemoteControlService {
         case MESSAGES.REMOTE_CONTROL_UPDATE:
             // Spot-TV received a message from a Spot-Remote to sent to the
             // Jitsi participant.
-            this._remoteMessageListeners.forEach(cb => cb(
+            this._notifySpotRemoteMessageReceived(
                 MESSAGES.SPOT_REMOTE_PROXY_MESSAGE,
                 {
                     data,
                     from
                 }
-            ));
+            );
 
             break;
         }
@@ -760,13 +720,13 @@ class RemoteControlService {
                     .t('unavailable')
                     .up();
 
-                this._remoteMessageListeners.forEach(cb => cb(
+                this._notifySpotRemoteMessageReceived(
                     MESSAGES.SPOT_REMOTE_LEFT,
                     {
                         from,
                         data: { iq: iq.toString() }
                     }
-                ));
+                );
             } else if (this._getSpotId() === from) {
                 // A Spot-Remote needs to be updated about no longer being
                 // connected to a Spot-TV.
@@ -813,7 +773,7 @@ class RemoteControlService {
             spotId: spotTvJid
         };
 
-        this._emit(
+        this.emit(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
             {
                 updatedState: this._lastSpotState

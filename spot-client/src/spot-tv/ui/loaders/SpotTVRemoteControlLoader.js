@@ -41,7 +41,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     constructor(props) {
         super(props, 'SpotTV');
 
-        this._onServiceEvent = this._onServiceEvent.bind(this);
+        this._onDisconnect = this._onDisconnect.bind(this);
+        this._onJoinCodeChange = this._onJoinCodeChange.bind(this);
     }
 
     /**
@@ -52,7 +53,15 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     componentDidMount() {
         super.componentDidMount();
 
-        remoteControlService.addEventListener(this._onServiceEvent);
+        remoteControlService.addListener(
+            SERVICE_UPDATES.DISCONNECT,
+            this._onDisconnect
+        );
+        remoteControlService.addListener(
+            SERVICE_UPDATES.JOIN_CODE_CHANGE,
+            this._onJoinCodeChange
+        );
+
         analytics.updateProperty('spot-tv', true);
     }
 
@@ -62,7 +71,14 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentWillUnmount() {
-        remoteControlService.removeEventListener(this._onServiceEvent);
+        remoteControlService.removeListener(
+            SERVICE_UPDATES.DISCONNECT,
+            this._onDisconnect
+        );
+        remoteControlService.removeListener(
+            SERVICE_UPDATES.JOIN_CODE_CHANGE,
+            this._onJoinCodeChange
+        );
     }
 
     /**
@@ -129,29 +145,32 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Callback invoked when {@code remoteControlService} has an update.
+     * Callback invoked when {@code remoteControlService} has been disconnected
+     * from an unrecoverable error. Tries to reconnect.
      *
      * @param {string} eventName - The event triggered.
-     * @param {Object} data - Additional information about the event.
      * @private
      * @returns {void}
      */
-    _onServiceEvent(eventName, data) {
-        switch (eventName) {
-        case SERVICE_UPDATES.DISCONNECT:
-            logger.error(
-                'Spot-TV disconnected from the remote control service.');
-            remoteControlService.disconnect();
-            this.props.dispatch(setJoinCode(''));
+    _onDisconnect() {
+        logger.error(
+            'Spot-TV disconnected from the remote control service.');
+        remoteControlService.disconnect();
+        this.props.dispatch(setJoinCode(''));
 
-            this._loadService();
-            break;
+        this._loadService();
+    }
 
-        case SERVICE_UPDATES.JOIN_CODE_CHANGE:
-            this.props.dispatch(setJoinCode(data.joinCode));
-
-            break;
-        }
+    /**
+     * Callback invoked when {@code remoteControlService} has changes the join
+     * code necessary to pair with the Spot-TV.
+     *
+     * @param {Object} data - An object containing the update.
+     * @private
+     * @returns {void}
+     */
+    _onJoinCodeChange(data) {
+        this.props.dispatch(setJoinCode(data.joinCode));
     }
 }
 

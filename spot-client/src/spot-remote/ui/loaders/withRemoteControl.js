@@ -64,7 +64,8 @@ export class RemoteControlLoader extends AbstractLoader {
     constructor(props) {
         super(props, 'SpotRemote');
 
-        this._onServiceEvent = this._onServiceEvent.bind(this);
+        this._onSpotTVStateChange = this._onSpotTVStateChange.bind(this);
+        this._onUnauthorizedError = this._onUnauthorizedError.bind(this);
     }
 
     /**
@@ -75,7 +76,14 @@ export class RemoteControlLoader extends AbstractLoader {
     componentDidMount() {
         super.componentDidMount();
 
-        remoteControlService.addEventListener(this._onServiceEvent);
+        remoteControlService.addListener(
+            SERVICE_UPDATES.DISCONNECT,
+            this._onUnauthorizedError
+        );
+        remoteControlService.addListener(
+            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
+            this._onSpotTVStateChange
+        );
     }
 
     /**
@@ -84,7 +92,14 @@ export class RemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentWillUnmount() {
-        remoteControlService.removeEventListener(this._onServiceEvent);
+        remoteControlService.removeListener(
+            SERVICE_UPDATES.DISCONNECT,
+            this._onUnauthorizedError
+        );
+        remoteControlService.removeListener(
+            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
+            this._onSpotTVStateChange
+        );
     }
 
     /**
@@ -138,49 +153,38 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Callback invoked when {@code remoteControlService} has an update.
+     * Callback invoked when {@code remoteControlService} has an update about
+     * the current state of a Spot-TV.
      *
-     * @param {string} eventName - The event triggered.
-     * @param {Object} data - Additional information about the event.
+     * @param {Object} data - Details of the Spot-TV's current state.
      * @private
      * @returns {void}
      */
-    _onServiceEvent(eventName, data) {
-        switch (eventName) {
-        case SERVICE_UPDATES.DISCONNECT: {
-            this._onUnauthorizedError();
-            break;
-        }
+    _onSpotTVStateChange(data) {
+        const newState = {};
+        const { updatedState } = data;
 
-        case SERVICE_UPDATES.SPOT_TV_STATE_CHANGE: {
-            const newState = {};
-            const { updatedState } = data;
-
-            Object.keys(updatedState).forEach(key => {
-                if (presenceToStoreAsBoolean.has(key)) {
-                    newState[key] = updatedState[key] === 'true';
-                } else if (presenceToStoreAsString.has(key)) {
-                    newState[key] = updatedState[key];
-                }
-            });
-
-            this.props.dispatch(setSpotTVState(newState));
-
-            if (updatedState.calendar) {
-                try {
-                    const events = JSON.parse(updatedState.calendar);
-
-                    this.props.dispatch(setCalendarEvents(events));
-                } catch (error) {
-                    logger.error(
-                        'Spot-Remote could not parse calendar events',
-                        { error }
-                    );
-                }
+        Object.keys(updatedState).forEach(key => {
+            if (presenceToStoreAsBoolean.has(key)) {
+                newState[key] = updatedState[key] === 'true';
+            } else if (presenceToStoreAsString.has(key)) {
+                newState[key] = updatedState[key];
             }
+        });
 
-            break;
-        }
+        this.props.dispatch(setSpotTVState(newState));
+
+        if (updatedState.calendar) {
+            try {
+                const events = JSON.parse(updatedState.calendar);
+
+                this.props.dispatch(setCalendarEvents(events));
+            } catch (error) {
+                logger.error(
+                    'Spot-Remote could not parse calendar events',
+                    { error }
+                );
+            }
         }
     }
 
