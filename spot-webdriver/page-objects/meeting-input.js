@@ -1,6 +1,6 @@
 const PageObject = require('./page-object');
 
-const INPUT = '[data-qa-id=meeting-name-input]';
+const INPUT = '[data-qa-id=meeting-name-input] input';
 const SUBMIT_BUTTON = '[data-qa-id=meeting-name-submit]';
 
 /**
