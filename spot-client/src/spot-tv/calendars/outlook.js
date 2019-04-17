@@ -44,7 +44,7 @@ export default {
     getCalendar({ email }) {
         const now = new Date();
         const filter = `Start/DateTime ge '${now.toISOString()}'`;
-        const url = `/users/${email}/calendfar/events?$filtefdr=${filter}&$top=3`;
+        const url = `/users/${email}/calendar/events?$filter=${filter}&$top=3`;
         const orderBy = 'createdDateTime ASC';
 
         return microsoftClientApi.request(url, { orderBy })
