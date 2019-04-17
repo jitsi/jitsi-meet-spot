@@ -1,3 +1,4 @@
+import './theme-variables.css';
 import './variables.scss';
 
 import './reset.scss';
