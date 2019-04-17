@@ -23,9 +23,7 @@ export default {
             return accumulator;
         }, '');
 
-        const url = `${origin}${newPath}`;
-
-        return url.replace(/^https?:\/\//i, '');
+        return `${origin}${newPath}`;
     },
 
     /**
