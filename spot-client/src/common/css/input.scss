@@ -9,7 +9,10 @@
 
     &.input-underline {
         &:before {
-            border-width: 2px;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            border-bottom-width: 2px;
         }
 
         &.gradient-start-left {
