@@ -25,4 +25,5 @@ import './meeting.scss';
 import './meeting-name-entry.scss';
 import './modal.scss';
 import './screenshare.scss';
+import './select.scss';
 import './temp.scss';

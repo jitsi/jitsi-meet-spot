@@ -8,7 +8,7 @@
     justify-content: center;
     max-height: 100%;
     overflow: auto;
-    padding: 16px 64px;
+    padding: 16px 32px;
     width: 100%;
 
     .setup-buttons {
@@ -43,10 +43,12 @@
             display: flex;
             flex: 1;
             flex-direction: column;
+            width: 50%;
+            max-width: 50%;
         }
 
         .column:not(:last-child) {
-            margin-right: 18px;
+            padding-right: 18px;
         }
     }
 
@@ -65,21 +67,6 @@
 
         .selector:not(:last-child) {
             margin-bottom: 10px;
-        }
-
-        select {
-            // Set appearance none to hide the default select stylings
-            -webkit-appearance: none; 
-            -moz-appearance: none;
-            appearance: none;
-
-            background-color: var(--select-background-color);
-            border: 0;
-            color: var(--container-sub-content-font-color);
-            cursor: pointer;
-            font-size: $font-size-small;
-            padding: 15px 10px;
-            width: 100%;
         }
 
         .speaker-preview-link {

@@ -13,7 +13,7 @@ import { avUtils } from 'common/media';
 
 import CameraPreview from './camera-preview';
 import MicPreview from './mic-preview';
-import Selector from './selector';
+import MediaSelector from './media-selector';
 import SpeakerPreview from './speaker-preview';
 
 /**
@@ -98,7 +98,7 @@ class SelectMedia extends React.Component {
             speakers
         } = this.state;
         const cameraSelect = (
-            <Selector
+            <MediaSelector
                 device = { selectedCamera }
                 devices = { cameras }
                 key = 'camera'
@@ -107,7 +107,7 @@ class SelectMedia extends React.Component {
                 type = 'camera' />
         );
         const micSelect = (
-            <Selector
+            <MediaSelector
                 device = { selectedMic }
                 devices = { mics }
                 key = 'mic'
@@ -116,7 +116,7 @@ class SelectMedia extends React.Component {
                 type = 'mic' />
         );
         const speakerSelect = (
-            <Selector
+            <MediaSelector
                 device = { selectedSpeaker }
                 devices = { speakers }
                 key = 'speaker'
@@ -167,53 +167,6 @@ class SelectMedia extends React.Component {
                         Skip
                     </Button>
                 </div>
-            </div>
-        );
-    }
-
-    /**
-     * Renders a {@code Selector} for choosing a media source.
-     *
-     * @param {Object} options - Details of how to render the {@code Selector}.
-     * @param {string} type - The media source (hardware) type.
-     * @param {Array<Object>} devices - The list of devices related to the
-     * type. The objects are instances of MediaDeviceInfo as passed back by
-     * enumerateDevices.
-     * @param {Function} onChange - Callback invoked when a new selection has
-     * been made.
-     * @private
-     * @returns {Selector}
-     */
-    _createSelect({ type, devices, device, onChange }) {
-        const selections = devices.map(({ label }) => (
-            <option
-                key = { label }
-                value = { label }>
-                { label }
-            </option>
-        ));
-
-        if (!device) {
-            selections.unshift(
-                <option
-                    key = 'default'
-                    value = ''>
-                    Please select a device
-                </option>
-            );
-        }
-
-        return (
-            <div>
-                Select a { type }:
-                <select
-                    key = { type }
-                    onChange = { onChange }
-                    value = { device }>
-                    {
-                        selections
-                    }
-                </select>
             </div>
         );
     }

@@ -7,3 +7,4 @@ export * from './loading-icon';
 export * from './notifications';
 export * from './reset';
 export * from './scheduled-meetings';
+export * from './select';

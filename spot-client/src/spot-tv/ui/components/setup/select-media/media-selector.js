@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { SimpleSelect } from 'common/ui';
+
 /**
- * Displays a dropdown for choosing a media device.
+ * Displays a select element for choosing a media device.
  *
  * @extends React.Component
  */
-export default class Selector extends React.Component {
+export default class MediaSelector extends React.Component {
     static propTypes = {
         device: PropTypes.string,
         devices: PropTypes.array,
@@ -15,7 +17,7 @@ export default class Selector extends React.Component {
     };
 
     /**
-     * Initializes a new {@code Selector} instance.
+     * Initializes a new {@code MediaSelector} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -38,47 +40,33 @@ export default class Selector extends React.Component {
             label: selectorLabel
         } = this.props;
 
-        const selections = devices.map(({ label }) => (
-            <option
-                key = { label }
-                value = { label }>
-                { label }
-            </option>
-        ));
-
-        if (!device) {
-            selections.unshift(
-                <option
-                    key = 'default'
-                    value = ''>
-                    Please select a device
-                </option>
-            );
-        }
+        const selections = devices.map(({ label }) => {
+            return {
+                label,
+                value: label
+            };
+        });
 
         return (
             <div className = 'selector'>
                 <div className = 'select-label'>{ selectorLabel }</div>
-                <select
-                    key = { selectorLabel }
+                <SimpleSelect
                     onChange = { this._onChange }
-                    value = { device }>
-                    {
-                        selections
-                    }
-                </select>
+                    options = { selections }
+                    placeholder = 'Please select a device'
+                    value = { device } />
             </div>
         );
     }
 
     /**
-     * Callback fired a new option has been selected.
+     * Callback fired when a media device has been selected.
      *
-     * @param {ChangEvent} event - The change event fired by the select element.
+     * @param {string} value - The value from the the selected option.
      * @private
      * @returns {void}
      */
-    _onChange(event) {
-        this.props.onChange(event.target.value);
+    _onChange(value) {
+        this.props.onChange(value);
     }
 }
