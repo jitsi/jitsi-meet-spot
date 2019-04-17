@@ -1,0 +1,15 @@
+.select {
+    .select-element {
+        background-color: var(--select-background-color);
+        border-radius: 5px;
+        color: var(--container-sub-content-font-color);
+    }
+
+    .select-trigger {
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+
+    width: 100%;
+}
