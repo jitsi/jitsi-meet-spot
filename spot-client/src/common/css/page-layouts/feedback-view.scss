@@ -58,16 +58,7 @@
             }
         }
 
-        .skip-button,
-        .submit-button {
-            @include styled-button;
-
-            font-size: $font-size-medium;
-        }
-
         .skip-button {
-            background-color: var(--container-content-highlight-bg-color);
-
             margin-right: 20px;
         }
     }

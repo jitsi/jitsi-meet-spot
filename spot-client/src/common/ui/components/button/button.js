@@ -1,5 +1,24 @@
+import { Button as MaterialButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+const mapActionTypeToStyle = {
+    'subtle-danger': {
+        className: 'button subtle-danger',
+        color: 'default',
+        variant: 'outlined'
+    },
+    primary: {
+        className: 'button primary',
+        color: 'primary',
+        variant: 'contained'
+    },
+    subtle: {
+        className: 'button subtle',
+        color: 'default',
+        variant: 'outlined'
+    }
+};
 
 /**
  * A component for a styled {@code HTMLButtonElement}.
@@ -9,24 +28,33 @@ import React from 'react';
  * @returns {ReactElement}
  */
 export default function Button(props) {
+    const mappedProps = mapActionTypeToStyle[props.appearance];
+
     return (
-        <button
-            { ...props }
-            className = { `button ${props.type} ${props.className}` }>
+        <MaterialButton
+            { ...mappedProps }
+            className = { `${mappedProps.className} ${props.className}` }
+            data-qa-id = { props.qaId }
+            disableRipple = { true }
+            onClick = { props.onClick }
+            type = { props.type } >
             { props.children }
-        </button>
+        </MaterialButton>
     );
 }
 
 Button.defaultProps = {
+    appearance: 'primary',
     className: '',
-    type: 'accept'
+    type: 'button'
 };
 
 Button.propTypes = {
+    appearance: PropTypes.string,
     children: PropTypes.any,
     className: PropTypes.string,
     'data-qa-id': PropTypes.string,
     onClick: PropTypes.func,
+    qaId: PropTypes.string,
     type: PropTypes.string
 };

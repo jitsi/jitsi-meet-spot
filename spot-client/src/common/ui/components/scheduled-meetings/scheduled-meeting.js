@@ -4,6 +4,8 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { date } from 'common/utils';
 
+import { Button } from './../button';
+
 import Avatar from './avatar';
 
 /**
@@ -67,7 +69,11 @@ export default class ScheduledMeeting extends React.Component {
                     </div>
                 </div>
                 <div className = { joinNowClasses }>
-                    <button className = 'join-cta'>Join Now</button>
+                    <Button
+                        appearance = 'subtle'
+                        className = 'join-cta'>
+                        Join Now
+                    </Button>
                 </div>
             </div>
         );
