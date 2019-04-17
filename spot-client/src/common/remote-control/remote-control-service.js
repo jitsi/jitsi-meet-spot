@@ -172,7 +172,7 @@ class RemoteControlService extends EventEmitter {
 
         if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED
             || reason === 'not-authorized') {
-            this.emit(SERVICE_UPDATES.DISCONNECT, { reason });
+            this.emit(SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason });
 
             return;
         }

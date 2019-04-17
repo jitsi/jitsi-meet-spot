@@ -64,8 +64,8 @@ export class RemoteControlLoader extends AbstractLoader {
     constructor(props) {
         super(props, 'SpotRemote');
 
+        this._onDisconnect = this._onDisconnect.bind(this);
         this._onSpotTVStateChange = this._onSpotTVStateChange.bind(this);
-        this._onUnauthorizedError = this._onUnauthorizedError.bind(this);
     }
 
     /**
@@ -77,8 +77,8 @@ export class RemoteControlLoader extends AbstractLoader {
         super.componentDidMount();
 
         remoteControlService.addListener(
-            SERVICE_UPDATES.DISCONNECT,
-            this._onUnauthorizedError
+            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
+            this._onDisconnect
         );
         remoteControlService.addListener(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
@@ -93,8 +93,8 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     componentWillUnmount() {
         remoteControlService.removeListener(
-            SERVICE_UPDATES.DISCONNECT,
-            this._onUnauthorizedError
+            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
+            this._onDisconnect
         );
         remoteControlService.removeListener(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
@@ -143,7 +143,7 @@ export class RemoteControlLoader extends AbstractLoader {
         .catch(error => {
             // In the wrong password case return back to join code entry.
             if (error === 'not-authorized') {
-                this._onUnauthorizedError();
+                this._onDisconnect();
 
                 return Promise.reject();
             }
@@ -189,12 +189,13 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Clean up the connection to the remote control service.
+     * Clean up the connection to the remote control service because a disconnect
+     * event occurred which cannot be recovered from.
      *
      * @private
      * @returns {void}
      */
-    _onUnauthorizedError() {
+    _onDisconnect() {
         logger.error('Spot-Remote could not connect to remote control service');
 
         this.props.dispatch(clearSpotTVState());

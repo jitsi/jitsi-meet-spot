@@ -92,11 +92,6 @@ export const MESSAGES = {
 
 export const SERVICE_UPDATES = {
     /**
-     * The remote control service has lost the XMPP connection.
-     */
-    DISCONNECT: 'disconnect',
-
-    /**
      * An update to the room join code, triggered locally, has been successfully
      * completed.
      */
@@ -110,5 +105,11 @@ export const SERVICE_UPDATES = {
     /**
      * The remote control service has received an updated Spot-TV state.
      */
-    SPOT_TV_STATE_CHANGE: 'spot-tv-state-change'
+    SPOT_TV_STATE_CHANGE: 'spot-tv-state-change',
+
+    /**
+     * The remote control service has lost the XMPP connection and cannot
+     * automatically reconnect.
+     */
+    UNRECOVERABLE_DISCONNECT: 'unrecoverable-disconnect'
 };
