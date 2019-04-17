@@ -54,7 +54,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
         super.componentDidMount();
 
         remoteControlService.addListener(
-            SERVICE_UPDATES.DISCONNECT,
+            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             this._onDisconnect
         );
         remoteControlService.addListener(
@@ -72,7 +72,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      */
     componentWillUnmount() {
         remoteControlService.removeListener(
-            SERVICE_UPDATES.DISCONNECT,
+            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             this._onDisconnect
         );
         remoteControlService.removeListener(
