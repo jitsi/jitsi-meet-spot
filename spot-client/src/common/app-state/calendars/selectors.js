@@ -14,6 +14,17 @@ export function getCalendarEmail(state) {
 }
 
 /**
+ * A selector which returns the last error that occurred while interacting with
+ * the calendar service.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getCalendarError(state) {
+    return state.calendars.error;
+}
+
+/**
 * A selector which returns calendar events associated with the currently
 * configured calendar.
 *

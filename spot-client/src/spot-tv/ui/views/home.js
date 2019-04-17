@@ -4,19 +4,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import {
-    getCalendarEmail,
+    getCalendarError,
     getCalendarEvents,
     getJoinCode,
-    getJwt,
     hasCalendarBeenFetched,
-    isSetupComplete,
-    setCalendarEvents
+    isSetupComplete
 } from 'common/app-state';
 import { COMMANDS } from 'common/remote-control';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import {
     getRandomMeetingName,
-    hasUpdatedEvents,
     windowHandler
 } from 'common/utils';
 
@@ -40,7 +37,7 @@ export class Home extends React.Component {
     };
 
     static propTypes = {
-        calendarEmail: PropTypes.string,
+        calendarError: PropTypes.any,
         calendarService: PropTypes.object,
         dispatch: PropTypes.func,
         events: PropTypes.array,
@@ -48,8 +45,6 @@ export class Home extends React.Component {
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         joinCode: PropTypes.string,
-        jwt: PropTypes.string,
-        lock: PropTypes.string,
         remoteControlService: PropTypes.object
     };
 
@@ -67,11 +62,7 @@ export class Home extends React.Component {
         };
 
         this._onCommand = this._onCommand.bind(this);
-        this._pollForEvents = this._pollForEvents.bind(this);
         this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
-
-        this._isUnmounting = false;
-        this._updateEventsTimeout = null;
     }
 
     /**
@@ -80,10 +71,6 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        if (this.props.isSetupComplete) {
-            this._pollForEvents();
-        }
-
         this.props.remoteControlService.startListeningForRemoteMessages(
             this._onCommand);
     }
@@ -94,12 +81,8 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this._isUnmounting = true;
-
         this.props.remoteControlService.stopListeningForRemoteMessages(
             this._onCommand);
-
-        clearTimeout(this._updateEventsTimeout);
     }
 
     /**
@@ -128,7 +111,7 @@ export class Home extends React.Component {
     }
 
     /**
-     * Returns the React Component which should be dislayed for the list of
+     * Returns the React Component which should be displayed for the list of
      * calendars.
      *
      * @returns {ReactComponent|null}
@@ -138,7 +121,7 @@ export class Home extends React.Component {
             return this._renderSetupMessage();
         }
 
-        if (this.state.calendarError) {
+        if (this.props.calendarError) {
             return this._renderError();
         }
 
@@ -194,57 +177,6 @@ export class Home extends React.Component {
 
         this.props.history.push(
             `/meeting?location=${meetingName}&screenshare=true`);
-    }
-
-    /**
-     * Fetches the latest calendar data and updates the internal state of known
-     * calendar events.
-     *
-     * @private
-     * @returns {void}
-     */
-    _pollForEvents() {
-        const { calendarEmail, jwt } = this.props;
-
-        if (!calendarEmail) {
-            return;
-        }
-
-        this.props.calendarService.getCalendar({
-            email: calendarEmail,
-            jwt
-        })
-            .then(events => {
-                if (this._isUnmounting) {
-                    return;
-                }
-
-                const {
-                    dispatch,
-                    events: previousEvents,
-                    hasFetchedEvents
-                } = this.props;
-
-                if (!hasFetchedEvents
-                    || hasUpdatedEvents(previousEvents, events)) {
-                    dispatch(setCalendarEvents(events));
-                }
-
-                this.setState({ calendarError: null });
-
-                this._updateEventsTimeout = setTimeout(
-                    () => this._pollForEvents(),
-                    30000 // Get new events in 30 seconds
-                );
-            })
-            .catch(calendarError => {
-                this.setState({ calendarError });
-
-                this._updateEventsTimeout = setTimeout(
-                    () => this._pollForEvents(),
-                    1000 * 60 * 5 // Try again in 5 minutes
-                );
-            });
     }
 
     /**
@@ -325,12 +257,11 @@ export class Home extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        calendarEmail: getCalendarEmail(state),
+        calendarError: getCalendarError(state),
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        joinCode: getJoinCode(state),
-        jwt: getJwt(state)
+        joinCode: getJoinCode(state)
     };
 }
 

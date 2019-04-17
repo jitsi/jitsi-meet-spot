@@ -1,7 +1,15 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getCalendarConfig, getCalendarType } from 'common/app-state';
+import {
+    getCalendarConfig,
+    getCalendarEmail,
+    getCalendarType,
+    getJwt,
+    isSetupComplete,
+    setCalendarEvents,
+    setCalendarError
+} from 'common/app-state';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { calendarService } from './../../calendars';
@@ -16,7 +24,9 @@ export class CalendarLoader extends AbstractLoader {
     static propTypes = {
         ...AbstractLoader.propTypes,
         calendarConfig: PropTypes.object,
-        calendarType: PropTypes.string
+        calendarEmail: PropTypes.string,
+        calendarType: PropTypes.string,
+        jwt: PropTypes.string
     };
 
     /**
@@ -27,6 +37,29 @@ export class CalendarLoader extends AbstractLoader {
      */
     constructor(props) {
         super(props, 'Calendar');
+
+        this._onServiceEvent = this._onServiceEvent.bind(this);
+    }
+
+    /**
+     * Begins interactions with the {@code calendarService}.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        super.componentDidMount();
+
+        calendarService.startListeningForEvents(this._onServiceEvent);
+    }
+
+    /**
+     * Stops the {@code calendarService}.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        calendarService.stopListeningForEvents(this._onServiceEvent);
+        calendarService.stopPollingForEvents();
     }
 
     /**
@@ -49,7 +82,35 @@ export class CalendarLoader extends AbstractLoader {
     _loadService() {
         calendarService.setConfig(this.props.calendarConfig);
 
-        return calendarService.initialize(this.props.calendarType);
+        return calendarService.initialize(this.props.calendarType)
+            .then(() => {
+                if (isSetupComplete && this.props.calendarEmail) {
+                    calendarService.startPollingForEvents({
+                        email: this.props.calendarEmail,
+                        jwt: this.props.jwt
+                    });
+                }
+            });
+    }
+
+    /**
+     * Callback invoked when the {@code calendarService} has an update.
+     *
+     * @param {string} eventName - The type of the update.
+     * @param {Object} data - Additional information describing the update.
+     * @private
+     * @returns {void}
+     */
+    _onServiceEvent(eventName, data) {
+        switch (eventName) {
+        case 'events-updated':
+            this.props.dispatch(setCalendarEvents(data.events));
+            break;
+
+        case 'events-error':
+            this.props.dispatch(setCalendarError(data.error));
+            break;
+        }
     }
 }
 
@@ -64,7 +125,10 @@ export class CalendarLoader extends AbstractLoader {
 function mapStateToProps(state) {
     return {
         calendarConfig: getCalendarConfig(state),
-        calendarType: getCalendarType(state)
+        calendarEmail: getCalendarEmail(state),
+        calendarType: getCalendarType(state),
+        isSetupComplete: isSetupComplete(state),
+        jwt: getJwt(state)
     };
 }
 
