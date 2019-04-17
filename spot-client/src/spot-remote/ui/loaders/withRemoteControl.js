@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
+    addNotification,
     clearSpotTVState,
     getJoinCode,
     getRemoteControlServerConfig,
@@ -143,6 +144,9 @@ export class RemoteControlLoader extends AbstractLoader {
         .catch(error => {
             // In the wrong password case return back to join code entry.
             if (error === 'not-authorized') {
+                this.props.dispatch(
+                    addNotification('error', 'Something went wrong'));
+
                 this._onDisconnect();
 
                 return Promise.reject();
