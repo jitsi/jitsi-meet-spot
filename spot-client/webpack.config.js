@@ -2,6 +2,7 @@
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { DuplicatesPlugin } = require('inspectpack/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -87,6 +88,9 @@ module.exports = {
         }),
         new Dotenv({
             systemvars: true // Respect existing environment variables
+        }),
+        new DuplicatesPlugin({
+            emitErrors: true
         }),
         new WriteFilePlugin()
     ],
