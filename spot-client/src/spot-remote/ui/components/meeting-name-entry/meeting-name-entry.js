@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Input } from 'common/ui';
+
 /**
  * Displays an input for entering the name of a meeting.
  *
@@ -44,11 +46,10 @@ export class MeetingNameEntry extends React.Component {
                     <label className = 'input-label'>
                         Start a new meeting
                     </label>
-                    <input
-                        autoComplete = { 'off' }
+                    <Input
+                        autoComplete = 'off'
                         className = 'input'
                         data-qa-id = 'meeting-name-input'
-                        id = 'meeting-name-input'
                         onBlur = { this.props.onBlur }
                         onChange = { this._onMeetingNameChange }
                         onFocus = { this.props.onFocus }

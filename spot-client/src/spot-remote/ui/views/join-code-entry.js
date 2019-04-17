@@ -118,6 +118,13 @@ export class JoinCodeEntry extends React.Component {
                                 <CodeInput
                                     onChange = { this._onCodeChange }
                                     value = { this.state.enteredCode } />
+                                {
+
+                                    /**
+                                     * Hidden submit exists to capture enter
+                                     * presses to submit the form.
+                                     */
+                                }
                                 <input
                                     className = 'hidden-submit'
                                     tabIndex = { -1 }

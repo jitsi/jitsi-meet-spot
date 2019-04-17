@@ -76,30 +76,4 @@
 
         font-size: $font-size-small;
     }
-
-    .input-container,
-    .number-input {
-        width: 100%;
-    }
-
-    .input-container {
-        font-size: $font-size-small;
-    }
-
-    .number-input {
-        @include styled-input;
-
-        font: inherit;
-        text-align: center;
-
-        border-image:
-            linear-gradient(
-                to right,
-                var(--name-entry-gradient-end),
-                var(--name-entry-gradient-start),
-                var(--name-entry-gradient-end)
-            )
-            1
-            stretch;
-    }
 }
