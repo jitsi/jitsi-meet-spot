@@ -4,6 +4,7 @@ import { remoteControlService } from 'common/remote-control';
 import { setSpotTVState } from './../spot-tv/actions';
 
 import {
+    HANG_UP,
     REMOTE_CONTROL_REQUEST_STATE,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
 } from './actionTypes';
@@ -92,7 +93,13 @@ export function goToMeeting(meetingName, options) {
  * @returns {Function}
  */
 export function hangUp(skipFeedback) {
-    return () => remoteControlService.hangUp(skipFeedback);
+    return dispatch => {
+        remoteControlService.hangUp(skipFeedback);
+        dispatch({
+            type: HANG_UP,
+            skipFeedback
+        });
+    };
 }
 
 /**
