@@ -1,10 +1,15 @@
 import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 import { remoteControlService } from 'common/remote-control';
 
 import { setSpotTVState } from './../spot-tv/actions';
 
 import {
+    DIAL_OUT,
     HANG_UP,
+    JOIN_AD_HOC_MEETING,
+    JOIN_SCHEDULED_MEETING,
+    JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_REQUEST_STATE,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
 } from './actionTypes';
@@ -74,15 +79,99 @@ function setRequestState(requestType, requestState, expectedState) {
 }
 
 /**
- * Requests a Spot to join a meeting.
+ * Requests a Spot to join a meeting with the screensharing turned on from the start.
  *
  * @param {string} meetingName - The meeting to join.
- * @param {GoToMeetingOptions} options - Additional details about how to join the
- * meeting.
+ * @param {string} screensharingType - Either 'wired' or 'wireless'.
  * @returns {Function}
  */
-export function goToMeeting(meetingName, options) {
-    return () => remoteControlService.goToMeeting(meetingName, options);
+export function joinWithScreensharing(meetingName, screensharingType) {
+    return dispatch => {
+        remoteControlService
+            .goToMeeting(
+                meetingName,
+                {
+                    startWithScreensharing: screensharingType,
+                    onClose: () => screensharingType === 'wireless' && dispatch(setLocalWirelessScreensharing(false))
+                })
+            .then(
+                () => screensharingType === 'wireless' && dispatch(setLocalWirelessScreensharing(true)),
+                error => {
+                    const events = avUtils.getTrackErrorEvents();
+
+                    if (error.name === events.CHROME_EXTENSION_USER_CANCELED) {
+                        logger.log('onGoToMeeting with screensharing canceled by the user');
+                    } else {
+                        logger.error('onGoToMeeting with screensharing rejected', { error });
+                    }
+
+                    screensharingType === 'wireless' && dispatch(setLocalWirelessScreensharing(false));
+                });
+        dispatch({
+            type: JOIN_WITH_SCREENSHARING,
+            meetingName,
+            screensharingType
+        });
+    };
+}
+
+/**
+ * Requests a Spot to join a scheduled meeting.
+ *
+ * @param {string} meetingName - The meeting to join.
+ * @returns {Function}
+ */
+export function joinScheduledMeeting(meetingName) {
+    return dispatch => {
+        remoteControlService.goToMeeting(meetingName);
+        dispatch({
+            type: JOIN_SCHEDULED_MEETING,
+            meetingName
+        });
+    };
+}
+
+/**
+ * Requests a Spot to join a ad hoc meeting.
+ *
+ * @param {string} meetingName - The meeting to join.
+ * @returns {Function}
+ */
+export function joinAdHocMeeting(meetingName) {
+    return dispatch => {
+        remoteControlService.goToMeeting(meetingName);
+        dispatch({
+            type: JOIN_AD_HOC_MEETING,
+            meetingName
+        });
+    };
+}
+
+/**
+ * Requests a Spot to join a meeting by dialing out a specified phone number.
+ *
+ * @param {string} meetingName - The meeting name that will be used for the call.
+ * @param {string} phoneNumber - The phone number to dialed into the meeting.
+ * @returns {Function}
+ */
+export function dialOut(meetingName, phoneNumber) {
+    const options = {
+        invites: [
+            {
+                type: 'phone', // jitsi-meet expects type phone
+                number: phoneNumber
+            }
+        ]
+    };
+
+    return dispatch => {
+        remoteControlService.goToMeeting(meetingName, options);
+        dispatch({
+            type: DIAL_OUT,
+            meetingName,
+            phoneNumber
+        });
+    };
 }
 
 /**

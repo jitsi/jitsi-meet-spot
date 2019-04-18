@@ -6,15 +6,14 @@ import {
     addNotification,
     getCurrentView,
     getInMeetingStatus,
-    goToMeeting,
     hangUp,
     isConnectedToSpot,
     isWirelessScreensharingLocally,
-    setLocalWirelessScreensharing,
+    isWirelessScreensharingPending,
+    joinWithScreensharing,
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
-import { logger } from 'common/logger';
 import { LoadingIcon, View } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -44,6 +43,7 @@ export class Share extends React.PureComponent {
         isConnectedToSpot: PropTypes.bool,
         isScreenshareActiveRemotely: PropTypes.bool,
         isWirelessScreensharing: PropTypes.bool,
+        isWirelessScreensharingPending: PropTypes.bool,
         remoteControlService: PropTypes.object
     };
 
@@ -57,8 +57,7 @@ export class Share extends React.PureComponent {
         super(props);
 
         this.state = {
-            autoPromptScreenshare: true,
-            screensharePending: false
+            autoPromptScreenshare: true
         };
 
         this._onGoToSpotRemoveView = this._onGoToSpotRemoveView.bind(this);
@@ -126,7 +125,7 @@ export class Share extends React.PureComponent {
      * @returns {ReactComponent}
      */
     _renderSubView() {
-        if (this.state.screensharePending) {
+        if (this.props.isWirelessScreensharingPending) {
             return <LoadingIcon color = 'white' />;
         }
 
@@ -152,48 +151,22 @@ export class Share extends React.PureComponent {
      * @returns {void}
      */
     _onStartWirelessScreenshare() {
+        this.setState({
+            autoPromptScreenshare: false
+        });
+
         if (this.props.isScreenshareActiveRemotely) {
-            this.setState({ autoPromptScreenshare: false });
 
             return;
         }
-
-        this.setState({
-            screensharePending: true
-        });
 
         if (this.props.inMeeting) {
-            this.props.dispatch(startWirelessScreensharing(true))
-                .catch(error =>
-                    logger.warn('failed to start screenshare', { error }))
-                .then(() => {
-                    this.setState({
-                        autoPromptScreenshare: false,
-                        screensharePending: false
-                    });
-                });
+            this.props.dispatch(startWirelessScreensharing());
 
             return;
         }
 
-        this.props.dispatch(goToMeeting(
-            getRandomMeetingName(),
-            {
-                startWithScreensharing: 'wireless',
-                onClose: () =>
-                    this.props.dispatch(setLocalWirelessScreensharing(false))
-            })
-        ).then(() => {
-            this.props.dispatch(setLocalWirelessScreensharing(true));
-        })
-        .catch(() =>
-            this.props.dispatch(setLocalWirelessScreensharing(false)))
-        .then(() => {
-            this.setState({
-                autoPromptScreenshare: false,
-                screensharePending: false
-            });
-        });
+        this.props.dispatch(joinWithScreensharing(getRandomMeetingName(), 'wireless'));
     }
 
     /**
@@ -230,6 +203,7 @@ function mapStateToProps(state) {
         isScreenshareActiveRemotely:
             !isWirelessScreensharing && Boolean(inMeetingState.screensharingType),
         isWirelessScreensharing,
+        isWirelessScreensharingPending: isWirelessScreensharingPending(state),
         view: getCurrentView(state)
     };
 }

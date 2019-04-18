@@ -2,10 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getInMeetingStatus } from 'common/app-state';
+import {
+    dialOut,
+    getInMeetingStatus,
+    joinAdHocMeeting,
+    joinScheduledMeeting,
+    joinWithScreensharing
+} from 'common/app-state';
 import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
 import { logger } from 'common/logger';
-import { avUtils } from 'common/media';
 import { Clock, ScheduledMeetings } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -28,19 +33,14 @@ import {
  */
 class WaitingForCallView extends React.Component {
     static propTypes = {
+        _dispatchJoinWithScreensharing: PropTypes.func,
+        _onDialOut: PropTypes.func,
+        _onJoinAdHocMeeting: PropTypes.func,
+        _onJoinScheduledMeeting: PropTypes.func,
         events: PropTypes.array,
-        onGoToMeeting: PropTypes.func,
         remoteControlService: PropTypes.object,
         wiredScreensharingEnabled: PropTypes.bool
     };
-
-    /**
-     * This field is used to keep tracks of the long, asynchronous process of joining the meeting
-     * with the screensharing turned on.
-     *
-     * @type {Promise|undefined}
-     */
-    _goToMeetingPromise = undefined;
 
     /**
      * Initializes a new {@code App} instance.
@@ -64,15 +64,6 @@ class WaitingForCallView extends React.Component {
         this._onSetInputActive = this._onSetInputActive.bind(this);
         this._onSetScreenshareSelectActive
             = this._onSetScreenshareSelectActive.bind(this);
-    }
-
-    /**
-     * Reset some fields when the component is being unmounted.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this._goToMeetingPromise = undefined;
     }
 
     /**
@@ -138,19 +129,19 @@ class WaitingForCallView extends React.Component {
             return (
                 <ScheduledMeetings
                     events = { this.props.events }
-                    onMeetingClick = { this.props.onGoToMeeting } />
+                    onMeetingClick = { this.props._onJoinScheduledMeeting } />
             );
         case 'input':
             return (
                 <div className = 'meeting-name-entry-view'>
                     <SelfFillingNameEntry
-                        onSubmit = { this.props.onGoToMeeting } />
+                        onSubmit = { this.props._onJoinAdHocMeeting } />
                 </div>
             );
         case 'dial':
             return (
                 <div className = 'number-entry-view'>
-                    <DialPad onSubmit = { this.props.onGoToMeeting } />
+                    <DialPad onSubmit = { this.props._onDialOut } />
                 </div>
             );
         case 'share':
@@ -230,31 +221,10 @@ class WaitingForCallView extends React.Component {
      * @returns {void}
      */
     _onJoinWithScreensharing(wireless) {
-        // This prevents from triggering the action twice
-        if (this._goToMeetingPromise) {
-            return;
-        }
-
-        const goToMeetingPromise = this.props.onGoToMeeting(
+        this.props._dispatchJoinWithScreensharing(
             getRandomMeetingName(),
-            {
-                startWithScreensharing: wireless ? 'wireless' : 'wired'
-            }
-        )
-        .catch(error => {
-            const events = avUtils.getTrackErrorEvents();
-
-            if (error.name === events.CHROME_EXTENSION_USER_CANCELED) {
-                logger.log('onGoToMeeting with screensharing canceled by the user');
-            } else {
-                logger.error('onGoToMeeting with screensharing rejected', { error });
-            }
-        })
-        .then(() => {
-            this._goToMeetingPromise = undefined;
-        });
-
-        this._goToMeetingPromise = goToMeetingPromise;
+            wireless ? 'wireless' : 'wired'
+        );
     }
 }
 
@@ -271,4 +241,28 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(WaitingForCallView);
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        _dispatchJoinWithScreensharing(meetingName, screensharingType) {
+            dispatch(joinWithScreensharing(meetingName, screensharingType));
+        },
+        _onDialOut(meetingName, phoneNumber) {
+            dispatch(dialOut(meetingName, phoneNumber));
+        },
+        _onJoinScheduledMeeting(meetingName) {
+            dispatch(joinScheduledMeeting(meetingName));
+        },
+        _onJoinAdHocMeeting(meetingName) {
+            dispatch(joinAdHocMeeting(meetingName));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WaitingForCallView);

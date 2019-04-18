@@ -1,4 +1,5 @@
 import {
+    JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_REQUEST_STATE,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
 } from './actionTypes';
@@ -20,7 +21,8 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
     case REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE:
         return {
             ...state,
-            isWirelessScreensharing: action.isSharing
+            isWirelessScreensharing: action.isSharing,
+            joinWithScreensharing: undefined
         };
 
     case REMOTE_CONTROL_REQUEST_STATE:
@@ -30,6 +32,11 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
                 requestState: action.requestState,
                 expectedState: action.expectedState
             }
+        };
+    case JOIN_WITH_SCREENSHARING:
+        return {
+            ...state,
+            joinWithScreensharing: action.screensharingType
         };
     default:
         return state;
