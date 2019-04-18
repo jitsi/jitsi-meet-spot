@@ -6,7 +6,6 @@ import {
     addNotification,
     getCalendarEvents,
     getCurrentView,
-    goToMeeting,
     isConnectedToSpot,
     setCalendarEvents
 } from 'common/app-state';
@@ -34,7 +33,6 @@ export class RemoteControl extends React.PureComponent {
         isConnectedToSpot: PropTypes.bool,
         onClearCalendarEvents: PropTypes.func,
         onDisconnected: PropTypes.func,
-        onGoToMeeting: PropTypes.func,
         remoteControlService: PropTypes.object,
         view: PropTypes.string
     };
@@ -99,11 +97,7 @@ export class RemoteControl extends React.PureComponent {
                 <Feedback />
             );
         case 'home':
-            return (
-                <WaitingForCall
-                    events = { this.props.events }
-                    onGoToMeeting = { this.props.onGoToMeeting } />
-            );
+            return <WaitingForCall events = { this.props.events } />;
         case 'meeting':
             return <InCall remoteControlService = { remoteControlService } />;
         case 'setup':
@@ -155,19 +149,6 @@ function mapDispatchToProps(dispatch) {
          */
         onDisconnected() {
             dispatch(addNotification('error', 'Disconnected'));
-        },
-
-        /**
-         * Callback invoked when a remote control needs to signal to a Spot to
-         * join a specific meeting.
-         *
-         * @param {string} meetingName - The name of the jitsi meeting to join.
-         * @param {Object} options - Additional details of how to join the
-         * meeting.
-         * @returns {Promise}
-         */
-        onGoToMeeting(meetingName, options) {
-            return dispatch(goToMeeting(meetingName, options));
         }
     };
 }

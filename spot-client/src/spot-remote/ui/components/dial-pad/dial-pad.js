@@ -141,14 +141,7 @@ export default class DialPad extends React.Component {
 
         this.props.onSubmit(
             getRandomMeetingName(),
-            {
-                invites: [
-                    {
-                        type: 'phone', // jitsi-meet expets type phone
-                        number: this.state.enteredNumber
-                    }
-                ]
-            }
+            this.state.enteredNumber
         );
     }
 

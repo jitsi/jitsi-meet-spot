@@ -54,6 +54,13 @@ class RemoteControlService extends EventEmitter {
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
 
         /**
+         * Prevents from triggering more than one go to meeting actions at the same time.
+         * @type {Promise|null}
+         * @private
+         */
+        this._goToMeetingPromise = null;
+
+        /**
          * Whether or not the instance of {@code RemoteControlService} will be
          * used by a Spot-TV.
          */
@@ -327,6 +334,10 @@ class RemoteControlService extends EventEmitter {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     goToMeeting(meetingName, options = {}) {
+        if (this._goToMeetingPromise) {
+            return Promise.reject('Another goToMeeting action is still in progress');
+        }
+
         const { startWithScreensharing, ...otherOptions } = options;
         let preGoToMeeting = Promise.resolve();
 
@@ -339,17 +350,26 @@ class RemoteControlService extends EventEmitter {
                 });
         }
 
-        return preGoToMeeting
-            .then(() => this.xmppConnection.sendCommand(
-                    this._getSpotId(),
-                    COMMANDS.GO_TO_MEETING,
-                    {
-                        startWithScreensharing: startWithScreensharing === 'wired',
-                        startWithVideoMuted: startWithScreensharing === 'wireless',
-                        ...otherOptions,
-                        meetingName
-                    })
-            );
+        this._goToMeetingPromise
+            = preGoToMeeting
+                .then(() => this.xmppConnection.sendCommand(
+                        this._getSpotId(),
+                        COMMANDS.GO_TO_MEETING,
+                        {
+                            startWithScreensharing: startWithScreensharing === 'wired',
+                            startWithVideoMuted: startWithScreensharing === 'wireless',
+                            ...otherOptions,
+                            meetingName
+                        })
+                )
+            .then(() => {
+                this._goToMeetingPromise = null;
+            }, error => {
+                this._goToMeetingPromise = null;
+                throw error;
+            });
+
+        return this._goToMeetingPromise;
     }
 
     /**

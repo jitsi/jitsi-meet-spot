@@ -1,6 +1,10 @@
-import { analytics, feedbackEvents, inCallEvents } from 'common/analytics';
+import { analytics, feedbackEvents, inCallEvents, meetingJoinEvents } from 'common/analytics';
 import {
+    DIAL_OUT,
     HANG_UP,
+    JOIN_AD_HOC_MEETING,
+    JOIN_SCHEDULED_MEETING,
+    JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_REQUEST_STATE,
     requestStates,
     requestTypes
@@ -12,6 +16,25 @@ MiddlewareRegistry.register(() => next => action => {
     const result = next(action);
 
     switch (action.type) {
+    case DIAL_OUT: {
+        analytics.log(meetingJoinEvents.DIAL_OUT);
+        break;
+    }
+    case JOIN_AD_HOC_MEETING: {
+        analytics.log(meetingJoinEvents.AD_HOC);
+        break;
+    }
+    case JOIN_SCHEDULED_MEETING: {
+        analytics.log(meetingJoinEvents.SCHEDULED_MEETING_JOIN);
+        break;
+    }
+    case JOIN_WITH_SCREENSHARING: {
+        analytics.log(
+            action.screensharingType === 'wireless'
+                ? meetingJoinEvents.WIRELESS_SCREENSHARE
+                : meetingJoinEvents.WIRED_SCREENSHARE);
+        break;
+    }
     case HANG_UP: {
         analytics.log(inCallEvents.HANG_UP);
         break;

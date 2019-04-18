@@ -1,3 +1,5 @@
+import { getInMeetingStatus } from '../spot-tv/selectors';
+
 import { requestStates, requestTypes } from './constants';
 
 /**
@@ -63,4 +65,20 @@ export function isVideoMutePending(state) {
  */
 export function isWirelessScreensharingLocally(state) {
     return Boolean(state.remoteControlService.isWirelessScreensharing);
+}
+
+/**
+ * Tells whether or not the wireless screensharing is pending.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isWirelessScreensharingPending(state) {
+    const inMeetingState = getInMeetingStatus(state);
+
+    if (inMeetingState.inMeeting) {
+        return state.remoteControlService[requestTypes.SCREENSHARE] === requestStates.PENDING;
+    }
+
+    return state.remoteControlService.joinWithScreensharing === 'wireless';
 }

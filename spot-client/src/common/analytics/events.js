@@ -13,3 +13,11 @@ export const inCallEvents = {
     WIRELESS_SCREENSHARE_START: 'wireless-screenshare',
     WIRELESS_SCREENSHARE_START_NO_WIRED_AVAILABLE: 'wireless-only-screenshare'
 };
+
+export const meetingJoinEvents = {
+    AD_HOC: 'ad-hoc-meeting-start',
+    DIAL_OUT: 'dial-out-start',
+    SCHEDULED_MEETING_JOIN: 'scheduled-meeting-join',
+    WIRED_SCREENSHARE: 'wired-screenshare-meeting-start',
+    WIRELESS_SCREENSHARE: 'wireless-screenshare-meeting-start'
+};
