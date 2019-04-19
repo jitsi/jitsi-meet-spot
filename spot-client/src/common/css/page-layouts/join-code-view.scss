@@ -24,13 +24,11 @@
         @include centered-content;
 
         .code-entry {
-            // Usage of !important is needed to override the inline style
-            // set by react-code-input.
-            display: flex !important;
+            display: flex;
             justify-content: center;
             margin: auto;
 
-            @media #{$mq-mobile-s} {
+            @media #{$mq-xxsmall} {
                 flex-wrap: wrap;
 
                 // Hardcode some width that force a 3x2 code entry.
