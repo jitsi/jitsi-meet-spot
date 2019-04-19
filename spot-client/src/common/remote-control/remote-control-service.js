@@ -792,7 +792,7 @@ class RemoteControlService extends EventEmitter {
      * @param {Object} options - Additional configuration to use for creating
      * the screenshare connection.
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _startWirelessScreenshare(connection, options) {
         if (this._screenshareConnection) {
