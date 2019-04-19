@@ -29,7 +29,7 @@
         "dotenv": "6.2.0",
         "dotenv-webpack": "1.7.0",
         "eslint": "5.14.0",
-        "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#7474f6668515eb5852f1273dc5a50b940a550d3f",
+        "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
         "eslint-loader": "2.1.2",
         "eslint-plugin-flowtype": "3.4.2",
         "eslint-plugin-import": "2.16.0",
