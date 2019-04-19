@@ -6,6 +6,7 @@ import {
     getInMeetingStatus,
     hangUp,
     startWirelessScreensharing,
+    startWiredScreensharing,
     stopScreenshare
 } from 'common/app-state';
 import { CallEnd, ScreenShare } from 'common/icons';
@@ -30,6 +31,7 @@ export class InCall extends React.Component {
     static propTypes = {
         inMeeting: PropTypes.string,
         onHangUp: PropTypes.func,
+        onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
@@ -53,8 +55,6 @@ export class InCall extends React.Component {
         this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
         this._onCloseScreenshareModal
             = this._onCloseScreenshareModal.bind(this);
-        this._onStartWiredScreenshare
-            = this._onStartWiredScreenshare.bind(this);
         this._onStopScreenshare
             = this._onStopScreenshare.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
@@ -118,7 +118,7 @@ export class InCall extends React.Component {
                     <ScreenshareModal
                         onClose = { this._onCloseScreenshareModal }
                         onStartWiredScreenshare
-                            = { this._onStartWiredScreenshare }
+                            = { this.props.onStartWiredScreenshare }
                         onStartWirelessScreenshare
                             = { this.props.onStartWirelessScreenshare }
                         onStopScreensharing
@@ -166,16 +166,6 @@ export class InCall extends React.Component {
         this.setState({
             showScreenshareModal: !this.state.showScreenshareModal
         });
-    }
-
-    /**
-     * Triggers wired screensharing to be enabled.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onStartWiredScreenshare() {
-        this.props.remoteControlService.setScreensharing(true);
     }
 
     /**
@@ -248,6 +238,16 @@ function mapDispatchToProps(dispatch) {
          */
         onStartWirelessScreenshare() {
             return dispatch(startWirelessScreensharing());
+        },
+
+        /**
+         * Triggers wired screensharing to be enabled.
+         *
+         * @private
+         * @returns {void}
+         */
+        onStartWiredScreenshare() {
+            dispatch(startWiredScreensharing());
         },
 
         /**

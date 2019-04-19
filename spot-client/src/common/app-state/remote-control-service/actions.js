@@ -222,6 +222,19 @@ export function setVideoMute(mute) {
 }
 
 /**
+ * Start wired screensharing.
+ *
+ * @returns {Function}
+ */
+export function startWiredScreensharing() {
+    return dispatch => createActionWithRequestStates(
+        dispatch,
+        () => remoteControlService.setScreensharing(true),
+        requestTypes.SCREENSHARE,
+        'wired');
+}
+
+/**
  * Start wireless screensharing.
  *
  * @returns {Function}

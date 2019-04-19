@@ -71,6 +71,15 @@ function _remoteControlRequestState({ requestType, requestState, expectedState }
     case requestTypes.AUDIO_MUTE:
         analytics.log(inCallEvents.AUDIO_MUTE, { muting: expectedState });
         break;
+    case requestTypes.SCREENSHARE:
+        if (expectedState === 'proxy') {
+            analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
+        } else if (expectedState === 'wired') {
+            analytics.log(inCallEvents.WIRED_SCREENSHARE_START);
+        } else if (expectedState === undefined) {
+            analytics.log(inCallEvents.SCREENSHARE_STOP);
+        }
+        break;
     case requestTypes.VIDEO_MUTE:
         analytics.log(inCallEvents.VIDEO_MUTE, { muting: expectedState });
         break;
