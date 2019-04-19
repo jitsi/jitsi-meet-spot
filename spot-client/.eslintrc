@@ -15,7 +15,6 @@
         }
     ],
     "rules": {
-        "max-len": [ "error", 100 ],
         "no-console": 1,
         "space-before-function-paren": ["error", {
             "anonymous": "always",
