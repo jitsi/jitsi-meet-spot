@@ -36,7 +36,18 @@ export default class NavButton extends React.Component {
     constructor(props) {
         super(props);
 
+        this._buttonRef = React.createRef();
+
         this._onClick = this._onClick.bind(this);
+    }
+
+    /**
+     * Programmatically set focus on the HTML Button element.
+     *
+     * @returns {void}
+     */
+    focus() {
+        this._buttonRef.current.focus();
     }
 
     /**
@@ -76,6 +87,7 @@ export default class NavButton extends React.Component {
                 data-qa-id = { qaId }
                 disabled = { disabled }
                 onClick = { this._onClick }
+                ref = { this._buttonRef }
                 tabIndex = { 0 }
                 type = { type }>
                 {

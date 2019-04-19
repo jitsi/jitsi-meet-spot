@@ -52,7 +52,10 @@ export class JoinCodeEntry extends React.Component {
             enteredCode: ''
         };
 
+        this._submitButtonRef = React.createRef();
+
         this._onCodeChange = this._onCodeChange.bind(this);
+        this._onEntryComplete = this._onEntryComplete.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -117,7 +120,7 @@ export class JoinCodeEntry extends React.Component {
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
                                     onChange = { this._onCodeChange }
-                                    value = { this.state.enteredCode } />
+                                    onEntryComplete = { this._onEntryComplete } />
                                 {
 
                                     /**
@@ -137,6 +140,7 @@ export class JoinCodeEntry extends React.Component {
                             label = 'Continue'
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
+                            ref = { this._submitButtonRef }
                             tabIndex = { 0 }>
                             <ArrowForward />
                         </NavButton>
@@ -155,6 +159,16 @@ export class JoinCodeEntry extends React.Component {
      */
     _onCodeChange(enteredCode) {
         this.setState({ enteredCode });
+    }
+
+    /**
+     * Focuses on the submit button once a code has been entered.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onEntryComplete() {
+        this._submitButtonRef.current.focus();
     }
 
     /**
