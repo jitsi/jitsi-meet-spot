@@ -1,4 +1,4 @@
-import { analytics, feedbackEvents, inCallEvents, meetingJoinEvents } from 'common/analytics';
+import { analytics, feedbackEvents, inCallEvents, joinCodeEvents, meetingJoinEvents } from 'common/analytics';
 import {
     DIAL_OUT,
     HANG_UP,
@@ -10,6 +10,12 @@ import {
     requestTypes
 } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
+
+import {
+    SPOT_REMOTE_JOIN_CODE_INVALID,
+    SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
+} from './../app-state';
 import { SUBMIT_FEEDBACK } from './../remote-control';
 
 MiddlewareRegistry.register(() => next => action => {
@@ -22,6 +28,14 @@ MiddlewareRegistry.register(() => next => action => {
     }
     case JOIN_AD_HOC_MEETING: {
         analytics.log(meetingJoinEvents.AD_HOC);
+        break;
+    }
+    case SPOT_REMOTE_JOIN_CODE_INVALID: {
+        analytics.log(joinCodeEvents.VALIDATE_FAIL, { shareMode: action.shareMode });
+        break;
+    }
+    case SPOT_REMOTE_JOIN_CODE_VALID: {
+        analytics.log(joinCodeEvents.VALIDATE_SUCCESS, { shareMode: action.shareMode });
         break;
     }
     case JOIN_SCHEDULED_MEETING: {
@@ -45,6 +59,10 @@ MiddlewareRegistry.register(() => next => action => {
     }
     case SUBMIT_FEEDBACK: {
         _submitFeedback(action);
+        break;
+    }
+    case SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE: {
+        analytics.log(joinCodeEvents.SUBMIT, { shareMode: action.shareMode });
         break;
     }
     }
