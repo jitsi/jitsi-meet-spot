@@ -49,6 +49,8 @@ export class AbstractLoader extends React.PureComponent {
                 logger.log(`${this._serviceName} loaded`);
 
                 this.setState({ loaded: true });
+            }, error => {
+                logger.error(`${this._serviceName} failed to load`, { error });
             });
     }
 
