@@ -143,9 +143,8 @@ export class RemoteControlLoader extends AbstractLoader {
         })
         .catch(error => {
             // In the wrong password case return back to join code entry.
-            if (error === 'not-authorized') {
-                this.props.dispatch(
-                    addNotification('error', 'Something went wrong'));
+            if (error === 'not-authorized' || error === 'unrecoverable-error') {
+                this.props.dispatch(addNotification('error', 'Something went wrong'));
 
                 this._onDisconnect();
 
