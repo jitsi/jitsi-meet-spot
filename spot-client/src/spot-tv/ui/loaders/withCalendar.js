@@ -12,7 +12,7 @@ import {
 } from 'common/app-state';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
-import { calendarService } from './../../calendars';
+import { calendarService, SERVICE_UPDATES } from './../../calendars';
 
 /**
  * Loads the calendar service so it can be used to interact with calendar
@@ -38,7 +38,8 @@ export class CalendarLoader extends AbstractLoader {
     constructor(props) {
         super(props, 'Calendar');
 
-        this._onServiceEvent = this._onServiceEvent.bind(this);
+        this._onEventsError = this._onEventsError.bind(this);
+        this._onEventsUpdated = this._onEventsUpdated.bind(this);
     }
 
     /**
@@ -49,7 +50,14 @@ export class CalendarLoader extends AbstractLoader {
     componentDidMount() {
         super.componentDidMount();
 
-        calendarService.startListeningForEvents(this._onServiceEvent);
+        calendarService.addListener(
+            SERVICE_UPDATES.EVENTS_ERROR,
+            this._onEventsError
+        );
+        calendarService.addListener(
+            SERVICE_UPDATES.EVENTS_UPDATED,
+            this._onEventsUpdated
+        );
     }
 
     /**
@@ -58,7 +66,15 @@ export class CalendarLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentWillUnmount() {
-        calendarService.stopListeningForEvents(this._onServiceEvent);
+        calendarService.removeListener(
+            SERVICE_UPDATES.EVENTS_ERROR,
+            this._onEventsError
+        );
+        calendarService.removeListener(
+            SERVICE_UPDATES.EVENTS_UPDATED,
+            this._onEventsUpdated
+        );
+
         calendarService.stopPollingForEvents();
     }
 
@@ -94,23 +110,27 @@ export class CalendarLoader extends AbstractLoader {
     }
 
     /**
-     * Callback invoked when the {@code calendarService} has an update.
+     * Callback invoked when the {@code calendarService} has detected a change
+     * in calendar events.
      *
-     * @param {string} eventName - The type of the update.
-     * @param {Object} data - Additional information describing the update.
+     * @param {Object} data - The update which includes new events.
      * @private
      * @returns {void}
      */
-    _onServiceEvent(eventName, data) {
-        switch (eventName) {
-        case 'events-updated':
-            this.props.dispatch(setCalendarEvents(data.events));
-            break;
+    _onEventsUpdated(data) {
+        this.props.dispatch(setCalendarEvents(data.events));
+    }
 
-        case 'events-error':
-            this.props.dispatch(setCalendarError(data.error));
-            break;
-        }
+    /**
+     * Callback invoked when the {@code calendarService} has detected an error
+     * with calendar events.
+     *
+     * @param {Object} data - The update which includes the error.
+     * @private
+     * @returns {void}
+     */
+    _onEventsError(data) {
+        this.props.dispatch(setCalendarError(data.error));
     }
 }
 

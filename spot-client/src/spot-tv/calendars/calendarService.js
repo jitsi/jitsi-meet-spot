@@ -1,7 +1,9 @@
+import EventEmitter from 'events';
 import { calendarTypes } from 'common/app-state';
 import { hasUpdatedEvents } from 'common/utils';
 
 import backendCalendar from './backend-calendar';
+import { SERVICE_UPDATES } from './constants';
 import google from './google';
 import outlook from './outlook';
 
@@ -21,16 +23,18 @@ const calendarIntegrations = {
 /**
  * The interface for interacting with a calendar integration.
  */
-export default {
+export class CalendarService extends EventEmitter {
     /**
-     * A cache of the last calendar events that have been fetched.
+     * Initializes a new {@code CalendarService} instance.
      */
-    _events: [],
+    constructor() {
+        super();
 
-    /**
-     * The callbacks to invoke when a service event has occurred.
-     */
-    _listeners: new Set(),
+        /**
+         * A cache of the last calendar events that have been fetched.
+         */
+        this._calendarEvents = [];
+    }
 
     /**
      * Triggers any loading necessary for a calendar integration to be usable.
@@ -46,7 +50,7 @@ export default {
         this._calendarIntegration = calendarIntegrations[type];
 
         return this._calendarIntegration.initialize(this.config[type]);
-    },
+    }
 
     /**
      * Requests current calendar events for a provided room.
@@ -60,7 +64,7 @@ export default {
      */
     getCalendar(options) {
         return this._calendarIntegration.getCalendar(options);
-    },
+    }
 
     /**
      * Gets the constants from {@code calendarTypes} for the currently
@@ -70,7 +74,7 @@ export default {
      */
     getType() {
         return this._calendarIntegration && this._calendarIntegration.getType();
-    },
+    }
 
     /**
      * Requests the rooms accessible by email linked to the currently active
@@ -80,7 +84,7 @@ export default {
      */
     getRooms() {
         return this._calendarIntegration.getRooms();
-    },
+    }
 
     /**
      * Sets a reference to all configuration objects necessary to initialize
@@ -91,18 +95,7 @@ export default {
      */
     setConfig(config) {
         this.config = config;
-    },
-
-    /**
-     * Register for service update events.
-     *
-     * @param {Function} listener - A callback to invoke when this service has
-     * an update.
-     * @returns {void}
-     */
-    startListeningForEvents(listener) {
-        this._listeners.add(listener);
-    },
+    }
 
     /**
      * Begin fetching and automatically re-fetching calendar events.
@@ -117,18 +110,7 @@ export default {
         }
 
         this._pollForEvents(options);
-    },
-
-    /**
-     * Stop being notified of service update events.
-     *
-     * @param {Function} listener - The callback which should no longer receive
-     * updates.
-     * @returns {void}
-     */
-    stopListeningForEvents(listener) {
-        this._listeners.delete(listener);
-    },
+    }
 
     /**
      * Stop any ongoing process to automatically fetch calendar events.
@@ -138,7 +120,7 @@ export default {
     stopPollingForEvents() {
         clearTimeout(this._updateEventsTimeout);
         this._updateEventsTimeout = null;
-    },
+    }
 
     /**
      * Display the calendar integration sign in flow.
@@ -147,19 +129,7 @@ export default {
      */
     triggerSignIn() {
         return this._calendarIntegration.triggerSignIn();
-    },
-
-    /**
-     * Notifies registered listeners of an update.
-     *
-     * @param {string} eventName - The event type.
-     * @param {Object} data  - Additional information about the event.
-     * @private
-     * @returns {void}
-     */
-    _emit(eventName, data = {}) {
-        this._listeners.forEach(listener => listener(eventName, data));
-    },
+    }
 
     /**
      * Fetches calendar events and sets an interval to fetch again.
@@ -172,10 +142,13 @@ export default {
     _pollForEvents(options) {
         this.getCalendar(options)
             .then(events => {
-                if (hasUpdatedEvents(this._events, events)) {
-                    this._events = events;
+                if (hasUpdatedEvents(this._calendarEvents, events)) {
+                    this._calendarEvents = events;
 
-                    this._emit('events-updated', { events: this._events });
+                    this.emit(
+                        SERVICE_UPDATES.EVENTS_UPDATED,
+                        { events: this._calendarEvents }
+                    );
                 }
 
                 this._updateEventsTimeout = setTimeout(
@@ -184,7 +157,7 @@ export default {
                 );
             })
             .catch(error => {
-                this._emit('events-error', { error });
+                this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });
 
                 this._updateEventsTimeout = setTimeout(
                     () => this._pollForEvents(options),
@@ -192,4 +165,6 @@ export default {
                 );
             });
     }
-};
+}
+
+export default new CalendarService();
