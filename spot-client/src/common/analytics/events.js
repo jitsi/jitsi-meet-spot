@@ -12,6 +12,12 @@ export const inCallEvents = {
     WIRELESS_SCREENSHARE_START: 'wireless-screenshare'
 };
 
+export const joinCodeEvents = {
+    SUBMIT: 'join-code-submit',
+    VALIDATE_FAIL: 'join-code-validation-fail',
+    VALIDATE_SUCCESS: 'join-code-validation-success'
+};
+
 export const meetingJoinEvents = {
     AD_HOC: 'ad-hoc-meeting-start',
     DIAL_OUT: 'dial-out-start',
