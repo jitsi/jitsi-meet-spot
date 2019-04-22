@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import bootstrap from './bootstrap/reducer';
 import calendars from './calendars/reducer';
 import config from './config/reducer';
 import notifications from './notifications/reducer';
@@ -8,7 +9,10 @@ import setup from './setup/reducer';
 import spotTv from './spot-tv/reducer';
 import wiredScreenshare from './wired-screenshare/reducer';
 
+// TODO: Port over jitsi-meet's ReducerRegistry to match jitsi-meet behavior and
+// the Spot app's middleware registration behavior.
 const reducers = combineReducers({
+    bootstrap,
     calendars,
     config,
     notifications,
@@ -20,24 +24,13 @@ const reducers = combineReducers({
 
 export default reducers;
 
-export * from './calendars/actions';
-export * from './notifications/actions';
-export * from './remote-control-service/actions';
-export * from './setup/actions';
-export * from './spot-tv/actions';
-export * from './wired-screenshare/actions';
+export * from './bootstrap';
+export * from './calendars';
+export * from './config';
+export * from './notifications';
+export * from './remote-control-service';
+export * from './setup';
+export * from './spot-tv';
+export * from './wired-screenshare';
 
-export * from './remote-control-service/actionTypes';
 
-export * from './calendars/constants';
-export * from './remote-control-service/constants';
-
-export * from './calendars/selectors';
-export * from './config/selectors';
-export * from './notifications/selectors';
-export * from './remote-control-service/selectors';
-export * from './setup/selectors';
-export * from './spot-tv/selectors';
-export * from './wired-screenshare/selectors';
-
-export * from './config/set-default-values';

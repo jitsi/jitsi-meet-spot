@@ -14,7 +14,12 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
-import { LoadingIcon, View } from 'common/ui';
+import { ROUTES } from 'common/routing';
+import {
+    LoadingIcon,
+    RemoteControlServiceLoading,
+    View
+} from 'common/ui';
 import {
     getRandomMeetingName,
     isWirelessScreenshareSupported
@@ -25,7 +30,6 @@ import { NoSleep } from './../../../no-sleep';
 import {
     ElectronDesktopPickerModal
 } from './../../components';
-import { withRemoteControl } from './../../loaders';
 
 import ModeSelect from './mode-select';
 import StopShare from './stop-share';
@@ -75,20 +79,11 @@ export class Share extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
-        if (isWirelessScreenshareSupported()) {
-            this._onStartWirelessScreenshare();
-        }
-    }
-
-    /**
-     * Navigates away from {@code Share} if not connected to a Spot-TV.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate() {
         if (!this.props.isConnectedToSpot) {
             this.props.dispatch(addNotification('error', 'Disconnected'));
-            this.props.history.push('/');
+            this.props.history.push(ROUTES.CODE);
+        } else if (isWirelessScreenshareSupported()) {
+            this._onStartWirelessScreenshare();
         }
     }
 
@@ -100,10 +95,12 @@ export class Share extends React.PureComponent {
     render() {
         return (
             <NoSleep>
-                <View name = 'share-view'>
-                    { this._renderSubView() }
-                    <ElectronDesktopPickerModal />
-                </View>
+                <RemoteControlServiceLoading>
+                    <View name = 'share-view'>
+                        { this._renderSubView() }
+                        <ElectronDesktopPickerModal />
+                    </View>
+                </RemoteControlServiceLoading>
             </NoSleep>
         );
     }
@@ -208,4 +205,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRemoteControl(connect(mapStateToProps)(Share));
+export default connect(mapStateToProps)(Share);

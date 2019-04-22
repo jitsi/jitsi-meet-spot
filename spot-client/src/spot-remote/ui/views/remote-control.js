@@ -4,17 +4,19 @@ import { connect } from 'react-redux';
 
 import {
     addNotification,
+    destroyRemoteControlConnection,
     getCalendarEvents,
     getCurrentView,
     isConnectedToSpot,
     setCalendarEvents
 } from 'common/app-state';
 import { LoadingIcon, View } from 'common/ui';
+import { ROUTES } from 'common/routing';
 
 import './../../analytics';
 import { NoSleep } from './../../no-sleep';
 
-import { withRemoteControl, withUltrasound } from './../loaders';
+import { withUltrasound } from './../loaders';
 import { ElectronDesktopPickerModal } from './../components/electron-desktop-picker';
 
 import { Feedback, InCall, WaitingForCall } from './remote-views';
@@ -32,21 +34,19 @@ export class RemoteControl extends React.PureComponent {
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
         onClearCalendarEvents: PropTypes.func,
-        onDisconnected: PropTypes.func,
+        onUnmount: PropTypes.func,
         remoteControlService: PropTypes.object,
         view: PropTypes.string
     };
 
     /**
-     * Navigates away from the view {@code RemoteControl} when no longer
-     * connected to a Spot.
+     * Redirects to the home view if there is no connection.
      *
      * @inheritdoc
      */
-    componentDidUpdate() {
+    componentDidMount() {
         if (!this.props.isConnectedToSpot) {
-            this.props.onDisconnected();
-            this.props.history.push('/');
+            this.props.history.push(ROUTES.CODE);
         }
     }
 
@@ -56,11 +56,7 @@ export class RemoteControl extends React.PureComponent {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.disconnect();
-
-        // FIXME: clear calendar events as part of the disconnet logic instead
-        // of being a separate explicit call.
-        this.props.onClearCalendarEvents();
+        this.props.onUnmount();
     }
 
     /**
@@ -134,24 +130,28 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         /**
-         * Resets the known calendar events associated with a Spot-TV.
+         * Callback to invoke not connected to the remoteControlService.
          *
          * @returns {void}
          */
-        onClearCalendarEvents() {
-            dispatch(setCalendarEvents([]));
+        onDisconnect() {
+            dispatch(addNotification('error', 'Disconnected'));
         },
 
         /**
-         * Adds a notification that an unexpected disconnect has occurred.
+         * Resets the known calendar events associated with a Spot-TV and
+         * cleans up any existing remote control connections.
          *
          * @returns {void}
          */
-        onDisconnected() {
-            dispatch(addNotification('error', 'Disconnected'));
+        onUnmount() {
+            // TODO: clear calendar events as part of the disconnet logic
+            // instead of being a separate explicit call.
+            dispatch(setCalendarEvents([]));
+            dispatch(destroyRemoteControlConnection());
         }
     };
 }
 
-export default withUltrasound(withRemoteControl(
-    connect(mapStateToProps, mapDispatchToProps)(RemoteControl)));
+export default withUltrasound(
+    connect(mapStateToProps, mapDispatchToProps)(RemoteControl));

@@ -168,6 +168,16 @@ class RemoteControlService extends EventEmitter {
     }
 
     /**
+     * Returns whether or not this singleton has or is creating a connection
+     * instance.
+     *
+     * @returns {boolean}
+     */
+    hasConnection() {
+        return Boolean(this.xmppConnectionPromise);
+    }
+
+    /**
      * Callback invoked when the xmpp connection is disconnected.
      *
      * @param {string} reason - The name of the disconnect event.
@@ -278,11 +288,10 @@ class RemoteControlService extends EventEmitter {
             ? this.xmppConnection.destroy()
             : Promise.resolve();
 
-        return destroyPromise
-            .then(() => {
-                this.xmppConnection = null;
-                this.xmppConnectionPromise = null;
-            });
+        this.xmppConnection = null;
+        this.xmppConnectionPromise = null;
+
+        return destroyPromise;
     }
 
     /**

@@ -1,13 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import 'common/css';
 import { AmplitudeHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
+import { history } from 'common/history';
 import { LoggingService } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
@@ -77,9 +78,9 @@ remoteControlService.configureWirelessScreensharing({
 
 render(
     <Provider store = { store }>
-        <BrowserRouter>
+        <Router history = { history }>
             <App />
-        </BrowserRouter>
+        </Router>
     </Provider>,
     document.getElementById('root')
 );

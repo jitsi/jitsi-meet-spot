@@ -5,6 +5,7 @@ import { remoteControlService } from 'common/remote-control';
 import { setSpotTVState } from './../spot-tv/actions';
 
 import {
+    CREATE_CONNECTION,
     DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
@@ -60,6 +61,29 @@ function createActionWithRequestStates( // eslint-disable-line max-params
 }
 
 /**
+ * Establishes a connection to an existing Spot-MUC using the provided join code.
+ *
+ * @param {string} joinCode - The join code necessary to become connected to
+ * a Spot-MUC and Spot-TV.
+ * @returns {Object}
+ */
+export function createRemoteControlConnection(joinCode) {
+    return {
+        type: CREATE_CONNECTION,
+        joinCode
+    };
+}
+
+/**
+ * Cleans up any existing connection to a Spot-MUC.
+ *
+ * @returns {Object}
+ */
+export function destroyRemoteControlConnection() {
+    return () => remoteControlService.disconnect();
+}
+
+/**
  * Updates the known request state of a command to a Spot-TV.
  *
  * @param {string} requestType - The type of the request to the Spot-TV.
@@ -69,7 +93,7 @@ function createActionWithRequestStates( // eslint-disable-line max-params
  * the Spot-TV change to.
  * @returns {Object}
  */
-function setRequestState(requestType, requestState, expectedState) {
+export function setRequestState(requestType, requestState, expectedState) {
     return {
         type: REMOTE_CONTROL_REQUEST_STATE,
         requestType,
@@ -239,6 +263,16 @@ export function startWirelessScreensharing() {
         dispatch(setLocalWirelessScreensharing(true));
         dispatch(setSpotTVState({ screensharingType: 'proxy' }));
     });
+}
+
+/**
+ * Immediately stops any wireless screenshare in progress without waiting for
+ * any acks. This function is intended for teardown of a meeting view.
+ *
+ * @returns {Object}
+ */
+export function forceStopLocalWirelessScreenshare() {
+    return () => remoteControlService.destroyWirelessScreenshareConnections();
 }
 
 /**

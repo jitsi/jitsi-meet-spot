@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import { setBootstrapComplete } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
     IdleCursorDetector,
-    Notifications
+    Notifications,
+    RemoteControlServiceLoading
 } from 'common/ui';
 import { JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
@@ -20,7 +23,6 @@ import {
     SpotView,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
-import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
 
 /**
  * The root of the application which determines what view should be displayed.
@@ -29,6 +31,7 @@ import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
  */
 export class App extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         location: PropTypes.object
     };
 
@@ -87,6 +90,8 @@ export class App extends React.Component {
          * outline the focused element.
          */
         document.body.addEventListener('keydown', this._onKeyDown);
+
+        this.props.dispatch(setBootstrapComplete());
     }
 
     /**
@@ -265,14 +270,14 @@ export class App extends React.Component {
      */
     _renderSpotViewWithRemoteControl(View, name) {
         return (
-            <SpotTVRemoteControlLoader>
+            <RemoteControlServiceLoading isSpot = { true }>
                 <WiredScreenshareDetector />
                 <SpotView name = { name }>
                     <View />
                 </SpotView>
-            </SpotTVRemoteControlLoader>
+            </RemoteControlServiceLoading>
         );
     }
 }
 
-export default withRouter(App);
+export default withRouter(connect()(App));

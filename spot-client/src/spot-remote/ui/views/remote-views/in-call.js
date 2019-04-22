@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    forceStopLocalWirelessScreenshare,
     getInMeetingStatus,
     hangUp,
     startWirelessScreensharing,
@@ -32,6 +33,7 @@ export class InCall extends React.Component {
         onHangUp: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreenshare: PropTypes.func,
+        onUnmount: PropTypes.func,
         remoteControlService: PropTypes.object,
         screensharingType: PropTypes.string,
         wiredScreensharingEnabled: PropTypes.bool
@@ -61,12 +63,13 @@ export class InCall extends React.Component {
     }
 
     /**
-     * Stops any wireless screensharing in progress with the Spot-Remote.
+     * Triggers the onUnmount callback in case any additional cleanup is
+     * necessary.
      *
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.destroyWirelessScreenshareConnections();
+        this.props.onUnmount();
     }
 
     /**
@@ -257,6 +260,18 @@ function mapDispatchToProps(dispatch) {
          */
         onStopScreenshare() {
             return dispatch(stopScreenshare());
+        },
+
+        /**
+         * Cleans up any processes that might have been left running due to
+         * a meeting disconnect not triggered locally.
+         *
+         * @returns {void}
+         */
+        onUnmount() {
+            // TODO: It should be possible to move this logic into a middleware
+            // or subscriber.
+            return dispatch(forceStopLocalWirelessScreenshare());
         }
     };
 }

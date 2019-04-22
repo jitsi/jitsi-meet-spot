@@ -3,17 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    addNotification,
-    getRemoteControlServerConfig,
-    getShareDomain,
-    isConnectedToSpot,
-    setJoinCode
+    createRemoteControlConnection,
+    isConnectionPending
 } from 'common/app-state';
 import { ArrowForward } from 'common/icons';
 import { logger } from 'common/logger';
-import { remoteControlService } from 'common/remote-control';
-import { ROUTES } from 'common/routing';
-import { View } from 'common/ui';
+import { Loading, View } from 'common/ui';
 
 import { CodeInput, NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
@@ -32,10 +27,9 @@ export class JoinCodeEntry extends React.Component {
         dispatch: PropTypes.func,
         entryLength: PropTypes.number,
         history: PropTypes.object,
-        isConnectedToSpot: PropTypes.bool,
+        isConnectionPending: PropTypes.bool,
+        joiningState: PropTypes.string,
         location: PropTypes.object,
-        remoteControlConfiguration: PropTypes.object,
-        shareDomain: PropTypes.string,
         ultrasoundService: PropTypes.object
     };
 
@@ -68,8 +62,6 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidMount() {
         this.props.ultrasoundService.setMessage('');
-        this.props.dispatch(setJoinCode(''));
-        remoteControlService.disconnect();
 
         const { pathname } = this.props.location;
         const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
@@ -95,11 +87,9 @@ export class JoinCodeEntry extends React.Component {
      * @inheritdoc
      */
     render() {
-        if (this.state.validating) {
+        if (this.props.isConnectionPending) {
             return (
-                <View name = 'join-code-validating'>
-                    <div className = 'connecting'>Connecting...</div>
-                </View>
+                <Loading />
             );
         }
 
@@ -204,44 +194,20 @@ export class JoinCodeEntry extends React.Component {
      * @returns {void}
      */
     _connectToSpot(code) {
-        const submitPromise = new Promise(resolve => {
-            this.setState({ validating: true }, resolve);
-        });
         const trimmedCode = code.trim().toLowerCase();
 
-        // Piggyback on the connect button tap as workaround for mobile Safari
-        // requiring a user action to autoplay any sound.
+        if (trimmedCode.length < 6) {
+            return;
+        }
+
+        // FIXME: setting the ultrasound message here is to piggyback on the
+        // connect button tap as workaround for mobile Safari requiring a user
+        // action to autoplay any sound. However, we want to play ultrasound
+        // only for the mobile app, which can work around the user tap. As such
+        // remove this logic one day.
         this.props.ultrasoundService.setMessage(trimmedCode);
 
-        submitPromise
-            .then(() => remoteControlService.exchangeCode(trimmedCode))
-            .then(() => {
-                logger.log('joinCodeEntry code is valid');
-
-                this.props.dispatch(setJoinCode(trimmedCode));
-
-                let redirectTo = ROUTES.REMOTE_CONTROL;
-
-                if (this.props.shareDomain
-                    && window.location.host.includes(this.props.shareDomain)) {
-                    redirectTo = ROUTES.SHARE;
-                } else {
-                    const queryParams
-                        = new URLSearchParams(this.props.location.search);
-
-                    if (queryParams.get('share') === 'true') {
-                        redirectTo = ROUTES.SHARE;
-                    }
-                }
-
-                this.props.history.push(redirectTo);
-            })
-            .catch(() => {
-                this.setState({ validating: false });
-
-                this.props.dispatch(
-                    addNotification('error', 'Something went wrong'));
-            });
+        this.props.dispatch(createRemoteControlConnection(trimmedCode));
     }
 }
 
@@ -255,9 +221,7 @@ export class JoinCodeEntry extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        isConnectedToSpot: isConnectedToSpot(state),
-        remoteControlConfiguration: getRemoteControlServerConfig(state),
-        shareDomain: getShareDomain(state)
+        isConnectionPending: isConnectionPending(state)
     };
 }
 
