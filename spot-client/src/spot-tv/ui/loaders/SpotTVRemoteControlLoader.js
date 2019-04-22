@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 
 import { analytics } from 'common/analytics';
 import {
-    getJoinCode,
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
@@ -16,6 +15,7 @@ import { registerDevice } from 'common/backend';
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES, remoteControlService } from 'common/remote-control';
 import { AbstractLoader } from 'common/ui';
+import { generateRandomString } from 'common/utils';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -101,8 +101,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
     _loadService() {
         const {
             adminServiceUrl,
-            dispatch,
-            joinCode: _joinCode
+            dispatch
         } = this.props;
 
         dispatch(setIsSpot(true));
@@ -111,6 +110,8 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
 
         if (adminServiceUrl) {
             logger.log(`Will use ${adminServiceUrl} to get the join code`);
+
+            // FIXME 'registerDevice' should be retried forever (the abstract loader no longer does that)
             getJoinCodePromise
                 = registerDevice(adminServiceUrl)
                     .then(json => {
@@ -122,7 +123,7 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                         return joinCode;
                     });
         } else {
-            getJoinCodePromise = Promise.resolve(_joinCode);
+            getJoinCodePromise = Promise.resolve(undefined);
         }
 
         return getJoinCodePromise.then(
@@ -130,17 +131,34 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
                 logger.log(`Will use ${joinCode} code to setup the Spot TV`);
                 this.props.dispatch(setJoinCode(joinCode));
 
-                return remoteControlService.connect({
-                    autoReconnect: true,
-                    joinAsSpot: true,
-                    joinCode,
+                let getRoomInfoPromise;
 
-                    // FIXME join code refresh is disabled with the backend as the first step,
-                    // because there's no password set on the room and the JWT is used instead.
-                    joinCodeRefreshRate: !adminServiceUrl && this.props.joinCodeRefreshRate,
-                    joinCodeServiceUrl: this.props.joinCodeServiceUrl,
-                    serverConfig: this.props.remoteControlConfiguration
-                });
+                if (this.props.joinCodeServiceUrl) {
+                    getRoomInfoPromise
+                        = remoteControlService.exchangeCode(
+                            joinCode, {
+                                joinCodeServiceUrl: this.props.joinCodeServiceUrl
+                            });
+                } else {
+                    getRoomInfoPromise = Promise.resolve({
+                        // If there's no joinCode service then create a room and let the lock
+                        // be set later. Setting the lock on join will throw an error about
+                        // not being authorized..
+                        roomName: generateRandomString(3)
+                    });
+                }
+
+                return getRoomInfoPromise
+                    .then(roomInfo => remoteControlService.connect({
+                        autoReconnect: true,
+                        joinAsSpot: true,
+
+                        // FIXME join code refresh is disabled with the backend as the first step,
+                        // because there's no password set on the room and the JWT is used instead.
+                        joinCodeRefreshRate: !adminServiceUrl && this.props.joinCodeRefreshRate,
+                        roomInfo,
+                        serverConfig: this.props.remoteControlConfiguration
+                    }));
             });
     }
 
@@ -190,7 +208,6 @@ function mapStateToProps(state) {
 
     return {
         adminServiceUrl,
-        joinCode: getJoinCode(state),
         joinCodeRefreshRate: getJoinCodeRefreshRate(state),
         joinCodeServiceUrl,
         remoteControlConfiguration: getRemoteControlServerConfig(state)

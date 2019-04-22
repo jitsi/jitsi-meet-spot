@@ -5,10 +5,8 @@ import { withRouter } from 'react-router-dom';
 import {
     addNotification,
     clearSpotTVState,
-    getJoinCode,
     getRemoteControlServerConfig,
     setCalendarEvents,
-    getSpotServicesConfig,
     setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -17,6 +15,8 @@ import {
     remoteControlService
 } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
+
+import { getRoomInfo } from './../../app-state';
 
 /**
  * Presence attributes from Spot-TV to store as booleans in redux.
@@ -121,10 +121,10 @@ export class RemoteControlLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        const { joinCode } = this.props;
+        const { roomInfo } = this.props;
 
-        if (!joinCode) {
-            logger.error('Missing join code');
+        if (!roomInfo) {
+            logger.error('No `roomInfo` property');
 
             this._redirectBackToLogin();
 
@@ -137,8 +137,7 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return remoteControlService.connect({
             autoReconnect: true,
-            joinCode,
-            joinCodeServiceUrl: this.props.joinCodeServiceUrl,
+            roomInfo,
             serverConfig: this.props.remoteControlConfiguration
         })
         .catch(error => {
@@ -226,11 +225,8 @@ export class RemoteControlLoader extends AbstractLoader {
  * @returns {Object}
  */
 function mapStateToProps(state) {
-    const { joinCodeServiceUrl } = getSpotServicesConfig(state);
-
     return {
-        joinCode: getJoinCode(state),
-        joinCodeServiceUrl,
+        roomInfo: getRoomInfo(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state)
     };
 }
