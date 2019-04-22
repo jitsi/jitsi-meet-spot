@@ -15,7 +15,7 @@ import reducers, {
     getLoggingEndpoint,
     setDefaultValues
 } from 'common/app-state';
-import { MiddlewareRegistry } from 'common/redux';
+import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,
     remoteControlService
@@ -30,7 +30,7 @@ import App from './app';
 import PostToEndpoint from './common/logger/post-to-endpoint';
 
 const store = createStore(
-    reducers,
+    ReducerRegistry.combineReducers(reducers),
     {
         config: {
             ...setDefaultValues(window.JitsiMeetSpotConfig)
