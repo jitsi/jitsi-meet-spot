@@ -15,6 +15,7 @@ import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { View } from 'common/ui';
 
+import { connectToSpotTV } from './../../app-state';
 import { CodeInput, NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
@@ -52,6 +53,8 @@ export class JoinCodeEntry extends React.Component {
             enteredCode: ''
         };
 
+        this._isShareModeEnabled = this._isInShareModeEnv();
+
         this._submitButtonRef = React.createRef();
 
         this._onCodeChange = this._onCodeChange.bind(this);
@@ -83,10 +86,29 @@ export class JoinCodeEntry extends React.Component {
         }
 
         if (code) {
-            logger.log('joinCodeEntry detected a valid code');
+            logger.log('joinCodeEntry detected a join code');
 
             this._connectToSpot(code);
         }
+    }
+
+    /**
+     * Whether or not a successful connection to a Spot-TV should proceed into
+     * screenshare only mode.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isInShareModeEnv() {
+        const isShareDomain = this.props.shareDomain && window.location.host.includes(this.props.shareDomain);
+
+        if (isShareDomain) {
+            return true;
+        }
+
+        const queryParams = new URLSearchParams(this.props.location.search);
+
+        return queryParams.get('share') === 'true';
     }
 
     /**
@@ -214,33 +236,19 @@ export class JoinCodeEntry extends React.Component {
         this.props.ultrasoundService.setMessage(trimmedCode);
 
         submitPromise
-            .then(() => remoteControlService.exchangeCode(trimmedCode))
+            .then(() => this.props.dispatch(connectToSpotTV(trimmedCode, this._isShareModeEnabled)))
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
-                this.props.dispatch(setJoinCode(trimmedCode));
+                this.setState({ validating: false });
 
-                let redirectTo = ROUTES.REMOTE_CONTROL;
-
-                if (this.props.shareDomain
-                    && window.location.host.includes(this.props.shareDomain)) {
-                    redirectTo = ROUTES.SHARE;
-                } else {
-                    const queryParams
-                        = new URLSearchParams(this.props.location.search);
-
-                    if (queryParams.get('share') === 'true') {
-                        redirectTo = ROUTES.SHARE;
-                    }
-                }
+                const redirectTo = this._isShareModeEnabled ? ROUTES.SHARE : ROUTES.REMOTE_CONTROL;
 
                 this.props.history.push(redirectTo);
             })
             .catch(() => {
                 this.setState({ validating: false });
-
-                this.props.dispatch(
-                    addNotification('error', 'Something went wrong'));
+                this.props.dispatch(addNotification('error', 'Something went wrong'));
             });
     }
 }

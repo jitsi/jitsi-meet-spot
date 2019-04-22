@@ -4,7 +4,7 @@ import { $iq } from 'strophe.js';
 import { fetchRoomInfo } from 'common/backend/utils';
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
-import { getJitterDelay } from 'common/utils';
+import { generateRandomString, getJitterDelay } from 'common/utils';
 
 import {
     COMMANDS,
@@ -14,20 +14,6 @@ import {
 } from './constants';
 import ScreenshareService from './screenshare-connection';
 import XmppConnection from './xmpp-connection';
-
-
-/**
- * Temporary method to generate a random string, intended to be used to
- * create a random join code.
- *
- * @param {number} length - The desired length of the random string.
- * @returns {string}
- */
-function generateRandomString(length) {
-    return Math.random()
-        .toString(36)
-        .substr(2, length);
-}
 
 /**
  * @typedef {Object} GoToMeetingOptions
@@ -109,10 +95,9 @@ class RemoteControlService extends EventEmitter {
 
         const {
             joinAsSpot,
-            joinCode,
+            roomInfo,
             joinCodeRefreshRate,
-            serverConfig,
-            joinCodeServiceUrl
+            serverConfig
         } = this._options;
 
         this._isSpot = joinAsSpot;
@@ -121,7 +106,6 @@ class RemoteControlService extends EventEmitter {
             return this.xmppConnectionPromise;
         }
 
-        this.joinCodeServiceUrl = joinCodeServiceUrl;
         this.xmppConnection = new XmppConnection({
             configuration: serverConfig,
             onCommandReceived: this._onCommandReceived,
@@ -129,33 +113,12 @@ class RemoteControlService extends EventEmitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        let getRoomInfoPromise;
-
-        if (this.joinCodeServiceUrl) {
-            getRoomInfoPromise = fetchRoomInfo(this.joinCodeServiceUrl, joinCode);
-        } else if (joinCode) {
-            getRoomInfoPromise = Promise.resolve({
-                roomName: joinCode.substring(0, 3),
-                roomLock: joinCode.substring(3, 6)
-            });
-        } else {
-            getRoomInfoPromise = Promise.resolve({
-                // If none joinCode is present then create a room and let the lock
-                // be set later. Setting the lock on join will throw an error about
-                // not being authorized..
-                roomName: generateRandomString(3)
-            });
-        }
-
-        this.xmppConnectionPromise
-            = getRoomInfoPromise
-                .then(roomInfo => this.xmppConnection.joinMuc({
-                    joinAsSpot,
-                    roomName: roomInfo.roomName,
-                    roomLock: roomInfo.roomLock,
-                    onDisconnect: this._onDisconnect
-                }));
-
+        this.xmppConnectionPromise = this.xmppConnection.joinMuc({
+            joinAsSpot,
+            roomName: roomInfo.roomName,
+            roomLock: roomInfo.roomLock,
+            onDisconnect: this._onDisconnect
+        });
 
         this.xmppConnectionPromise
             .then(() => {
@@ -289,20 +252,33 @@ class RemoteControlService extends EventEmitter {
      * Converts a join code to Spot-TV connection information so it can be
      * connected to by a Spot-Remote.
      *
-     * @param {string} code - The join code to exchange for connection
-     * information.
+     * @param {string} code - The join code to exchange for connection information.
+     * @param {string} joinCodeServiceUrl - The URL pointing to the join code service.
      * @returns {Promise<string>} Resolve with join information or an error.
      */
-    exchangeCode(code = '') {
-        return new Promise((resolve, reject) => {
-            const enteredCode = code.trim();
+    exchangeCode(code = '', { joinCodeServiceUrl }) {
+        if (joinCodeServiceUrl) {
+            logger.log(`Will use ${joinCodeServiceUrl} to validate the join code...`);
 
-            if (enteredCode.length === 6) {
-                resolve(code.trim());
-            } else {
-                reject('Error with code.');
-            }
-        });
+            return fetchRoomInfo(joinCodeServiceUrl, code)
+                .then(({ roomName, roomLock }) => {
+                    return {
+                        roomName,
+                        roomLock
+                    };
+                });
+        }
+
+        const enteredCode = code.trim();
+
+        if (enteredCode.length === 6) {
+            return Promise.resolve({
+                roomName: enteredCode.substring(0, 3),
+                roomLock: enteredCode.substring(3, 6)
+            });
+        }
+
+        return Promise.reject('Error with code.');
     }
 
     /**
