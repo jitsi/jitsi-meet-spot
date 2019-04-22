@@ -12,11 +12,13 @@ import {
 import { MiddlewareRegistry } from 'common/redux';
 
 import {
+    SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './../app-state';
 import { SUBMIT_FEEDBACK } from './../remote-control';
+import { shareModeEvents } from '../../common/analytics';
 
 MiddlewareRegistry.register(() => next => action => {
     const result = next(action);
@@ -28,6 +30,11 @@ MiddlewareRegistry.register(() => next => action => {
     }
     case JOIN_AD_HOC_MEETING: {
         analytics.log(meetingJoinEvents.AD_HOC);
+        break;
+    }
+    case SPOT_REMOTE_EXIT_SHARE_MODE: {
+        analytics.updateProperty('share-mode', false);
+        analytics.log(shareModeEvents.EXIT_SHARE_MODE);
         break;
     }
     case SPOT_REMOTE_JOIN_CODE_INVALID: {
@@ -62,6 +69,10 @@ MiddlewareRegistry.register(() => next => action => {
         break;
     }
     case SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE: {
+        if (action.shareMode) {
+            analytics.updateProperty('share-mode', true);
+            analytics.log(shareModeEvents.ENTER_SHARE_MODE);
+        }
         analytics.log(joinCodeEvents.SUBMIT, { shareMode: action.shareMode });
         break;
     }
