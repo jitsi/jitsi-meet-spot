@@ -25,3 +25,8 @@ export const meetingJoinEvents = {
     WIRED_SCREENSHARE: 'wired-screenshare-meeting-start',
     WIRELESS_SCREENSHARE: 'wireless-screenshare-meeting-start'
 };
+
+export const shareModeEvents = {
+    ENTER_SHARE_MODE: 'enter-share-mode',
+    EXIT_SHARE_MODE: 'exit-share-mode'
+};

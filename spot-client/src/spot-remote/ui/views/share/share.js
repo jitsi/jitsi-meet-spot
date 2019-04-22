@@ -20,6 +20,7 @@ import {
     isWirelessScreenshareSupported
 } from 'common/utils';
 
+import { exitShareMode } from './../../../app-state';
 import { NoSleep } from './../../../no-sleep';
 
 import {
@@ -60,7 +61,7 @@ export class Share extends React.PureComponent {
             autoPromptScreenshare: true
         };
 
-        this._onGoToSpotRemoveView = this._onGoToSpotRemoveView.bind(this);
+        this._onGoToSpotRemoteView = this._onGoToSpotRemoteView.bind(this);
         this._onStartWirelessScreenshare
             = this._onStartWirelessScreenshare.bind(this);
         this._onStopWirelessScreenshare
@@ -114,8 +115,8 @@ export class Share extends React.PureComponent {
      * @private
      * @returns {void}
      */
-    _onGoToSpotRemoveView() {
-        this.props.history.push('/remote-control');
+    _onGoToSpotRemoteView() {
+        this.props.dispatch(exitShareMode(this.props.history));
     }
 
     /**
@@ -140,7 +141,7 @@ export class Share extends React.PureComponent {
             <ModeSelect
                 isScreenshareActive = { this.props.isScreenshareActiveRemotely }
                 isWirelessScreenshareSupported = { isWirelessScreenshareSupported() }
-                onGoToSpotRemoveView = { this._onGoToSpotRemoveView }
+                onGoToSpotRemoveView = { this._onGoToSpotRemoteView }
                 onStartWirelessScreenshare = { this._onStartWirelessScreenshare } />
         );
     }
