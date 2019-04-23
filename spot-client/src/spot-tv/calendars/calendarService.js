@@ -34,6 +34,8 @@ export class CalendarService extends EventEmitter {
          * A cache of the last calendar events that have been fetched.
          */
         this._calendarEvents = [];
+
+        this._hasFetchedEvents = false;
     }
 
     /**
@@ -142,7 +144,9 @@ export class CalendarService extends EventEmitter {
     _pollForEvents(options) {
         this.getCalendar(options)
             .then(events => {
-                if (hasUpdatedEvents(this._calendarEvents, events)) {
+                if (!this._hasFetchedEvents
+                    || hasUpdatedEvents(this._calendarEvents, events)) {
+                    this._hasFetchedEvents = true;
                     this._calendarEvents = events;
 
                     this.emit(
