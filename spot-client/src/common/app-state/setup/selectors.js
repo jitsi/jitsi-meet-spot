@@ -10,8 +10,8 @@ export function getAvatarUrl(state) {
 }
 
 /**
- * A selector which returns the configured name to use for the Spot-TV to be
- * displayed while in a meeting.
+ * A selector which returns the locally configured name to use for the Spot-TV
+ * to be displayed while in a meeting.
  *
  * @param {Object} state - The Redux state.
  * @returns {boolean}

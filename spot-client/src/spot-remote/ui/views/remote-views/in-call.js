@@ -10,7 +10,7 @@ import {
     stopScreenshare
 } from 'common/app-state';
 import { CallEnd, ScreenShare } from 'common/icons';
-import { LoadingIcon } from 'common/ui';
+import { LoadingIcon, RoomName } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
 import { NavButton, NavContainer } from '../../components';
@@ -93,7 +93,10 @@ export class InCall extends React.Component {
 
         return (
             <div className = 'in-call'>
-                <div className = 'in-call-name'>{ meetingName }</div>
+                <div className = 'view-header'>
+                    <div className = 'in-call-name'>{ meetingName }</div>
+                    <RoomName render = { this._generateRoomNameString } />
+                </div>
                 <NavContainer>
                     <AudioMuteButton />
                     <VideoMuteButton />
@@ -132,6 +135,28 @@ export class InCall extends React.Component {
                 }
             </div>
         );
+    }
+
+    /**
+     * Custom render function for displaying the Spot-Room name.
+     *
+     * @param {string} roomName - The name of the Spot-Room.
+     * @private
+     * @returns {ReactElement|null}
+     */
+    _generateRoomNameString(roomName) {
+        return roomName
+            ? (
+                <div>
+                    <div>
+                        at
+                    </div>
+                    <div>
+                        { roomName }
+                    </div>
+                </div>
+            )
+            : null;
     }
 
     /**

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Clock } from 'common/ui';
+import { Clock, RoomName } from 'common/ui';
 
 import { FeedbackForm } from './../../components';
 
@@ -20,7 +20,10 @@ export default class FeedbackView extends React.PureComponent {
     render() {
         return (
             <div className = 'feedback-view'>
-                <Clock />
+                <div className = 'view-header'>
+                    <Clock />
+                    <RoomName />
+                </div>
                 <div className = 'feedback-form'>
                     <FeedbackForm />
                 </div>

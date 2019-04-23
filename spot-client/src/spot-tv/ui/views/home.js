@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import {
     getCalendarError,
     getCalendarEvents,
+    getDisplayName,
     getJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete
@@ -42,7 +43,8 @@ export class Home extends React.Component {
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         joinCode: PropTypes.string,
-        remoteControlService: PropTypes.object
+        remoteControlService: PropTypes.object,
+        spotRoomName: PropTypes.string
     };
 
     /**
@@ -100,7 +102,7 @@ export class Home extends React.Component {
                     { this._getCalendarEventsView() }
                     { this.props.isSetupComplete
                         && <div className = 'spot-home-footer'>
-                            Sharing Key <JoinInfo />
+                            { this.props.spotRoomName } | Sharing Key <JoinInfo />
                         </div> }
                 </div>
                 <div className = 'admin-toolbar'>
@@ -261,7 +263,8 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        joinCode: getJoinCode(state)
+        joinCode: getJoinCode(state),
+        spotRoomName: getDisplayName(state)
     };
 }
 

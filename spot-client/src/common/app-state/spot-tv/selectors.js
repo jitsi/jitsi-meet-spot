@@ -37,6 +37,17 @@ export function getJoinCode(state) {
 }
 
 /**
+ * A selector which returns the remotely configured name to use for the Spot-TV
+ * to be displayed while in a meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function getRemoteSpotTVRoomName(state) {
+    return state.spotTv.roomName;
+}
+
+/**
 * A selector for Spot-Remote which returns whether or not it is currently
 * able to communicate with a Spot-TV.
 *
