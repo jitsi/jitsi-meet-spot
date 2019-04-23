@@ -116,7 +116,7 @@ export class Share extends React.PureComponent {
      * @returns {void}
      */
     _onGoToSpotRemoteView() {
-        this.props.dispatch(exitShareMode(this.props.history));
+        this.props.dispatch(exitShareMode());
     }
 
     /**

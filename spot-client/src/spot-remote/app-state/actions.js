@@ -1,5 +1,6 @@
 import { getSpotServicesConfig } from 'common/app-state';
 import { remoteControlService } from 'common/remote-control';
+import { history } from 'common/history';
 
 import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
@@ -48,10 +49,9 @@ export function connectToSpotTV(joinCode, shareMode) {
 /**
  * Exits the special share mode.
  *
- * @param {Object} history - The history object user for navigating the browser.
  * @returns {Function}
  */
-export function exitShareMode(history) {
+export function exitShareMode() {
     return dispatch => {
         dispatch({
             type: SPOT_REMOTE_EXIT_SHARE_MODE
