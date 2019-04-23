@@ -1,11 +1,11 @@
 import EventEmitter from 'events';
 import { calendarTypes } from 'common/app-state';
-import { hasUpdatedEvents } from 'common/utils';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';
 import google from './google';
 import outlook from './outlook';
+import { hasUpdatedEvents } from './utils';
 
 /**
  * A mapping of a {@code calendarTypes} enum with its associated calendar
