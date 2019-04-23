@@ -40,8 +40,6 @@ class JoinInfo extends React.Component {
             return null;
         }
 
-        const spotRemoteUrl = `${this._getSpotRemoteConnectUrl()}`;
-
         return (
             <div
                 className = 'join-info'
@@ -49,7 +47,7 @@ class JoinInfo extends React.Component {
                 <span
                     className = 'info-code'
                     data-qa-id = 'info-code'>
-                    { spotRemoteUrl }
+                    { this.props.joinCode.toUpperCase() }
                 </span>
             </div>
         );

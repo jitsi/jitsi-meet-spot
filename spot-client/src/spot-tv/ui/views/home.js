@@ -12,10 +12,7 @@ import {
 } from 'common/app-state';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
-import {
-    getRandomMeetingName,
-    windowHandler
-} from 'common/utils';
+import { getRandomMeetingName } from 'common/utils';
 
 import {
     FullscreenToggle,
@@ -103,7 +100,7 @@ export class Home extends React.Component {
                     { this._getCalendarEventsView() }
                     { this.props.isSetupComplete
                         && <div className = 'spot-home-footer'>
-                            Connect at <JoinInfo />
+                            Sharing Key <JoinInfo />
                         </div> }
                 </div>
                 <div className = 'admin-toolbar'>
@@ -234,8 +231,7 @@ export class Home extends React.Component {
                 <div className = 'setup-instructions'>
                     <div>You're almost set</div>
                     <div>
-                        Pair your remote and connect your calendar at
-                        <div>{ windowHandler.getBaseUrl() }</div>
+                        Pair your remote and connect your calendar.
                     </div>
                 </div>
                 {

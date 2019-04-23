@@ -60,7 +60,7 @@ class SpotView extends React.Component {
             <View { ...this.props }>
                 { childComponents }
                 <div className = 'info-footer'>
-                    <JoinInfo />
+                    Sharing Key <JoinInfo />
                 </div>
             </View>
         );
