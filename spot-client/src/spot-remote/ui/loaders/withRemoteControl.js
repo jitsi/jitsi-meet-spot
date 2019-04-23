@@ -38,6 +38,7 @@ const presenceToStoreAsBoolean = new Set([
 const presenceToStoreAsString = new Set([
     'inMeeting',
     'joinCode',
+    'roomName',
     'screensharingType',
     'spotId',
     'view'

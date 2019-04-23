@@ -9,6 +9,7 @@ export default class RemoteControlServiceSubscriber {
      * Initializes a new {@code RemoteControlServiceSubscriber} instance.
      */
     constructor() {
+        this._previousRoomName = '';
         this._previousSpotTvState = {};
         this._previousCalendarEvents = [];
     }
@@ -26,14 +27,17 @@ export default class RemoteControlServiceSubscriber {
         const state = store.getState();
         const newSpotTvState = state.spotTv;
         const newCalendarEvents = state.calendars.events || [];
+        const newRoomName = state.setup.displayName;
 
         if (newSpotTvState === this._previousSpotTvState
-            && newCalendarEvents === this._previousCalendarEvents) {
+            && newCalendarEvents === this._previousCalendarEvents
+            && newRoomName === this._previousRoomName) {
             return;
         }
 
         remoteControlService.updateStatus({
             ...newSpotTvState,
+            roomName: newRoomName,
             calendar: newCalendarEvents
         });
 
@@ -42,6 +46,7 @@ export default class RemoteControlServiceSubscriber {
             remoteControlService.startAnyDeferredWirelessScreenshare();
         }
 
+        this._previousRoomName = newRoomName;
         this._previousSpotTvState = newSpotTvState;
         this._previousCalendarEvents = newCalendarEvents;
     }

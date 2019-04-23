@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSpotTVState } from 'common/app-state';
+import { getDisplayName, setSpotTVState } from 'common/app-state';
 import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
@@ -18,6 +18,7 @@ class SpotView extends React.Component {
         children: PropTypes.any,
         name: PropTypes.string,
         remoteControlService: PropTypes.object,
+        spotRoomName: PropTypes.string,
         updateSpotTvState: PropTypes.func
     };
 
@@ -60,7 +61,7 @@ class SpotView extends React.Component {
             <View { ...this.props }>
                 { childComponents }
                 <div className = 'info-footer'>
-                    Sharing Key <JoinInfo />
+                    { this.props.spotRoomName } | Sharing Key <JoinInfo />
                 </div>
             </View>
         );
@@ -80,6 +81,19 @@ class SpotView extends React.Component {
 }
 
 /**
+ * Selects parts of the Redux state to pass in with the props of {@code SpotView}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        spotRoomName: getDisplayName(state)
+    };
+}
+
+/**
  * Creates actions which can update Redux state.
  *
  * @param {Object} dispatch - The Redux dispatch function to update state.
@@ -94,4 +108,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(SpotView);
+export default connect(mapStateToProps, mapDispatchToProps)(SpotView);

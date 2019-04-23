@@ -6,5 +6,6 @@ export * from './input';
 export * from './loading-icon';
 export * from './notifications';
 export * from './reset';
+export * from './room-name';
 export * from './scheduled-meetings';
 export * from './select';
