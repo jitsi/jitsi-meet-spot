@@ -13,7 +13,7 @@ import { ArrowForward } from 'common/icons';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { View } from 'common/ui';
+import { Loading, View } from 'common/ui';
 
 import { connectToSpotTV } from './../../app-state';
 import { CodeInput, NavButton, NavContainer } from './../components';
@@ -118,11 +118,7 @@ export class JoinCodeEntry extends React.Component {
      */
     render() {
         if (this.state.validating) {
-            return (
-                <View name = 'join-code-validating'>
-                    <div className = 'connecting'>Connecting...</div>
-                </View>
-            );
+            return <Loading />;
         }
 
         return (
