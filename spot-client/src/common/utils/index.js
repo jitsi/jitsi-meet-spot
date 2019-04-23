@@ -4,7 +4,6 @@ export { default as date } from './date';
 export * from './detection';
 export * from './device-id';
 export * from './get-random-meeting-name';
-export * from './hasUpdatedEvents';
 export * from './hash';
 export * from './meeting';
 export { default as persistence } from './persistence';
