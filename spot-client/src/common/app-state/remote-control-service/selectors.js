@@ -1,6 +1,6 @@
-import { getInMeetingStatus } from '../spot-tv/selectors';
+import { asyncActionRequestStates } from 'common/redux';
 
-import { requestStates, requestTypes } from './constants';
+import { getInMeetingStatus } from '../spot-tv/selectors';
 
 /**
  * A selector which returns the desired audio mute state of any pending audio
@@ -12,7 +12,7 @@ import { requestStates, requestTypes } from './constants';
  */
 export function getOptimisticAudioMuteState(state) {
     return isAudioMutePending(state)
-        ? state.remoteControlService[requestTypes.AUDIO_MUTE].expectedState
+        ? state.remoteControlService.audioMute.expectedState
         : undefined;
 }
 
@@ -26,7 +26,7 @@ export function getOptimisticAudioMuteState(state) {
  */
 export function getOptimisticVideoMuteState(state) {
     return isVideoMutePending(state)
-        ? state.remoteControlService[requestTypes.VIDEO_MUTE].expectedState
+        ? state.remoteControlService.videoMute.expectedState
         : undefined;
 }
 
@@ -38,9 +38,11 @@ export function getOptimisticVideoMuteState(state) {
  * @returns {boolean}
  */
 export function isAudioMutePending(state) {
-    const audioMute = state.remoteControlService[requestTypes.AUDIO_MUTE];
+    const audioMute = state.remoteControlService.audioMute;
 
-    return Boolean(audioMute && audioMute.requestState === requestStates.PENDING);
+    return Boolean(
+        audioMute
+            && audioMute.requestState === asyncActionRequestStates.PENDING);
 }
 
 /**
@@ -51,9 +53,11 @@ export function isAudioMutePending(state) {
  * @returns {boolean}
  */
 export function isVideoMutePending(state) {
-    const videoMute = state.remoteControlService[requestTypes.VIDEO_MUTE];
+    const videoMute = state.remoteControlService.videoMute;
 
-    return Boolean(videoMute && videoMute.requestState === requestStates.PENDING);
+    return Boolean(
+        videoMute
+            && videoMute.requestState === asyncActionRequestStates.PENDING);
 }
 
 /**
@@ -77,7 +81,7 @@ export function isWirelessScreensharingPending(state) {
     const inMeetingState = getInMeetingStatus(state);
 
     if (inMeetingState.inMeeting) {
-        return state.remoteControlService[requestTypes.SCREENSHARE] === requestStates.PENDING;
+        return state.remoteControlService.screenshare === asyncActionRequestStates.PENDING;
     }
 
     return state.remoteControlService.joinWithScreensharing === 'wireless';

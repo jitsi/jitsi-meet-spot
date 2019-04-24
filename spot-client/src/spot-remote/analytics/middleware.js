@@ -1,15 +1,15 @@
 import { analytics, feedbackEvents, inCallEvents, joinCodeEvents, meetingJoinEvents } from 'common/analytics';
 import {
+    AUDIO_MUTE,
     DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
-    REMOTE_CONTROL_REQUEST_STATE,
-    requestStates,
-    requestTypes
+    SCREENSHARE,
+    VIDEO_MUTE
 } from 'common/app-state';
-import { MiddlewareRegistry } from 'common/redux';
+import { MiddlewareRegistry, asyncActionRequestStates } from 'common/redux';
 
 import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
@@ -24,6 +24,12 @@ MiddlewareRegistry.register(() => next => action => {
     const result = next(action);
 
     switch (action.type) {
+    case AUDIO_MUTE: {
+        if (!isPendingAsyncAction(action)) {
+            analytics.log(inCallEvents.AUDIO_MUTE, { muting: action.expectedState });
+        }
+        break;
+    }
     case DIAL_OUT: {
         analytics.log(meetingJoinEvents.DIAL_OUT);
         break;
@@ -60,8 +66,18 @@ MiddlewareRegistry.register(() => next => action => {
         analytics.log(inCallEvents.HANG_UP);
         break;
     }
-    case REMOTE_CONTROL_REQUEST_STATE: {
-        _remoteControlRequestState(action);
+
+    case SCREENSHARE: {
+        if (!isPendingAsyncAction(action)) {
+            if (action.expectedState === 'proxy') {
+                analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
+            } else if (action.expectedState === 'wired') {
+                analytics.log(inCallEvents.WIRED_SCREENSHARE_START);
+            } else if (action.expectedState === undefined) {
+                analytics.log(inCallEvents.SCREENSHARE_STOP);
+            }
+        }
+
         break;
     }
     case SUBMIT_FEEDBACK: {
@@ -76,43 +92,25 @@ MiddlewareRegistry.register(() => next => action => {
         analytics.log(joinCodeEvents.SUBMIT, { shareMode: action.shareMode });
         break;
     }
+    case VIDEO_MUTE: {
+        if (!isPendingAsyncAction(action)) {
+            analytics.log(inCallEvents.VIDEO_MUTE, { muting: action.expectedState });
+        }
+    }
     }
 
     return result;
 });
 
 /**
- * Tracks the {@link REMOTE_CONTROL_REQUEST_STATE} action and logs analytics when the PENDING state
- * is set (it corresponds to the user triggering an action).
+ * Checks if an async action update is notifies that a request is pending.
  *
- * @param {string} requestType - The type of request like audio mute, video mute etc.
- * @param {string} requestState - The request state.
- * @param {any} expectedState - Depends on the request type.
+ * @param {Object} action - The Redux action.
  * @private
- * @returns {void}
+ * @returns {boolean}
  */
-function _remoteControlRequestState({ requestType, requestState, expectedState }) {
-    if (requestState !== requestStates.PENDING) {
-        return;
-    }
-
-    switch (requestType) {
-    case requestTypes.AUDIO_MUTE:
-        analytics.log(inCallEvents.AUDIO_MUTE, { muting: expectedState });
-        break;
-    case requestTypes.SCREENSHARE:
-        if (expectedState === 'proxy') {
-            analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
-        } else if (expectedState === 'wired') {
-            analytics.log(inCallEvents.WIRED_SCREENSHARE_START);
-        } else if (expectedState === undefined) {
-            analytics.log(inCallEvents.SCREENSHARE_STOP);
-        }
-        break;
-    case requestTypes.VIDEO_MUTE:
-        analytics.log(inCallEvents.VIDEO_MUTE, { muting: expectedState });
-        break;
-    }
+function isPendingAsyncAction(action) {
+    return action.requestState !== asyncActionRequestStates.PENDING;
 }
 
 /**

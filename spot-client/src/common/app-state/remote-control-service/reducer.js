@@ -1,7 +1,9 @@
 import {
+    AUDIO_MUTE,
     JOIN_WITH_SCREENSHARING,
-    REMOTE_CONTROL_REQUEST_STATE,
-    REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
+    REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
+    SCREENSHARE,
+    VIDEO_MUTE
 } from './actionTypes';
 
 const DEFAULT_STATE = {
@@ -18,6 +20,9 @@ const DEFAULT_STATE = {
  */
 const remoteControlService = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
+    case AUDIO_MUTE:
+        return updateStateForAsyncAction(state, 'audioMute', action);
+
     case REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE:
         return {
             ...state,
@@ -25,22 +30,41 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
             joinWithScreensharing: undefined
         };
 
-    case REMOTE_CONTROL_REQUEST_STATE:
-        return {
-            ...state,
-            [action.requestType]: {
-                requestState: action.requestState,
-                expectedState: action.expectedState
-            }
-        };
     case JOIN_WITH_SCREENSHARING:
         return {
             ...state,
             joinWithScreensharing: action.screensharingType
         };
+
+    case SCREENSHARE:
+        return updateStateForAsyncAction(state, 'screenshare', action);
+
+    case VIDEO_MUTE:
+        return updateStateForAsyncAction(state, 'videoMute', action);
+
     default:
         return state;
     }
 };
+
+/**
+ * Abstracts the updating of state to store the status of an async request.
+ *
+ * @param {Object} state - The feature state to be updated.
+ * @param {string} key - The key which should be updated in the feature state
+ * with request data.
+ * @param {Object} action - The update for an async action.
+ * @private
+ * @returns {Object}
+ */
+function updateStateForAsyncAction(state, key, action) {
+    return {
+        ...state,
+        [key]: {
+            requestState: action.requestState,
+            expectedState: action.expectedState
+        }
+    };
+}
 
 export default remoteControlService;
