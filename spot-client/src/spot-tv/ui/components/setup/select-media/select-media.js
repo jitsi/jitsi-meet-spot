@@ -129,7 +129,7 @@ class SelectMedia extends React.Component {
         return (
             <div className = 'spot-setup select-media'>
                 <div className = 'setup-title'>
-                    Select your devices
+                    Setup your devices
                 </div>
                 <div className = 'columns'>
                     <div className = 'column'>
