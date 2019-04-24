@@ -25,7 +25,7 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case AUDIO_MUTE: {
-        if (!isPendingAsyncAction(action)) {
+        if (isPendingAsyncAction(action)) {
             analytics.log(inCallEvents.AUDIO_MUTE, { muting: action.expectedState });
         }
         break;
@@ -68,7 +68,7 @@ MiddlewareRegistry.register(() => next => action => {
     }
 
     case SCREENSHARE: {
-        if (!isPendingAsyncAction(action)) {
+        if (isPendingAsyncAction(action)) {
             if (action.expectedState === 'proxy') {
                 analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
             } else if (action.expectedState === 'wired') {
@@ -93,7 +93,7 @@ MiddlewareRegistry.register(() => next => action => {
         break;
     }
     case VIDEO_MUTE: {
-        if (!isPendingAsyncAction(action)) {
+        if (isPendingAsyncAction(action)) {
             analytics.log(inCallEvents.VIDEO_MUTE, { muting: action.expectedState });
         }
     }
@@ -110,7 +110,7 @@ MiddlewareRegistry.register(() => next => action => {
  * @returns {boolean}
  */
 function isPendingAsyncAction(action) {
-    return action.requestState !== asyncActionRequestStates.PENDING;
+    return action.requestState === asyncActionRequestStates.PENDING;
 }
 
 /**
