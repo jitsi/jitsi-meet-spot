@@ -3,9 +3,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { setSetupCompleted } from 'common/app-state';
+import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 
-import { Setup as SetupSteps } from './../components';
+import {
+    CalendarAuth,
+    SelectRoom,
+    Profile,
+    SelectMedia
+} from './../components/setup';
 import { withCalendar } from './../loaders';
 
 /**
@@ -15,6 +22,7 @@ import { withCalendar } from './../loaders';
  */
 export class Setup extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         history: PropTypes.object,
         remoteControlService: PropTypes.object
     };
@@ -28,6 +36,18 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
+        this.steps = [
+            SelectMedia,
+            CalendarAuth,
+            SelectRoom,
+            Profile
+        ];
+
+        this.state = {
+            currentStep: this.steps[0]
+        };
+
+        this._onNextStep = this._onNextStep.bind(this);
         this._onRedirectHome = this._onRedirectHome.bind(this);
     }
 
@@ -37,11 +57,66 @@ export class Setup extends React.Component {
      * @inheritdoc
      */
     render() {
+        const CurrentStep = this.state.currentStep;
+
         return (
             <div className = 'container'>
-                <SetupSteps onSuccess = { this._onRedirectHome } />
+                <div className = 'setup'>
+                    <CurrentStep onSuccess = { this._onNextStep } />
+                </div>
             </div>
+
         );
+    }
+
+    /**
+     * Returns the React {@code Component} that should be displayed after the
+     * currently displayed step.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _getNextStep() {
+        const currentStepIndex
+            = this.steps.indexOf(this.state.currentStep);
+
+        return this.steps[currentStepIndex + 1];
+    }
+
+    /**
+     * Checks if the currently displayed step is the final step of setup.
+     *
+     * @private
+     * @returns {boolean} True if the final setup step is currently displayed.
+     */
+    _isOnLastStep() {
+        return this.steps[this.steps.length - 1]
+            === this.state.currentStep;
+    }
+
+    /**
+     * Displays the next step of the setup flow or signals setup has been
+     * completed.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onNextStep() {
+        if (this._isOnLastStep()) {
+            logger.log('setup completed');
+
+            this.props.dispatch(setSetupCompleted());
+            this._onRedirectHome();
+        } else {
+            const nextStep = this._getNextStep();
+
+            logger.log('setup going to next step',
+                { next: nextStep.displayName || nextStep.name });
+
+            this.setState({
+                currentStep: nextStep
+            });
+        }
     }
 
     /**
