@@ -1,82 +1,19 @@
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
+import { createAsyncActionWithStates } from 'common/redux';
 import { remoteControlService } from 'common/remote-control';
-
 import { setSpotTVState } from './../spot-tv/actions';
-
 import {
+    AUDIO_MUTE,
     DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
-    REMOTE_CONTROL_REQUEST_STATE,
-    REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE
+    REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
+    SCREENSHARE,
+    VIDEO_MUTE
 } from './actionTypes';
-import { requestStates, requestTypes } from './constants';
-
-/**
- * Encapsulates updating the known status of a command in flight to a Spot-TV
- * for a state change.
- *
- * @param {Function} dispatch - The Redux dispatch function to update the
- * current state of a request in flight.
- * @param {Function} request - The function which should be executed that
- * performs the async request. The function must return a promise.
- * @param {Function} requestType - The type of the request. Used to reference
- * the request in Redux.
- * @param {Function} expectedValue - What the expected result of the request
- * should be. Used for optimistic updating of the UI.
- * @private
- * @returns {Function<Promise>}
- */
-function createActionWithRequestStates( // eslint-disable-line max-params
-        dispatch,
-        request,
-        requestType,
-        expectedValue) {
-    dispatch(setRequestState(
-        requestType,
-        requestStates.PENDING,
-        expectedValue
-    ));
-
-    return request()
-        .then(() => dispatch(setRequestState(
-            requestType,
-            requestStates.DONE,
-            expectedValue
-        )), error => {
-            logger.error('Encountered error commanding Spot-TV', {
-                error,
-                expectedValue,
-                requestType
-            });
-
-            dispatch(setRequestState(requestType, requestStates.ERROR));
-
-            return Promise.reject(error);
-        });
-}
-
-/**
- * Updates the known request state of a command to a Spot-TV.
- *
- * @param {string} requestType - The type of the request to the Spot-TV.
- * @param {string} requestState - Whether the request is pending, completed, or
- * has ended with an error.
- * @param {*} expectedState - The desired state the command is trying to make
- * the Spot-TV change to.
- * @returns {Object}
- */
-function setRequestState(requestType, requestState, expectedState) {
-    return {
-        type: REMOTE_CONTROL_REQUEST_STATE,
-        requestType,
-        requestState,
-        expectedState
-    };
-}
 
 /**
  * Requests a Spot to join a meeting with the screensharing turned on from the start.
@@ -198,10 +135,10 @@ export function hangUp(skipFeedback) {
  * @returns {Function}
  */
 export function setAudioMute(mute) {
-    return dispatch => createActionWithRequestStates(
+    return dispatch => createAsyncActionWithStates(
         dispatch,
         () => remoteControlService.setAudioMute(mute),
-        requestTypes.AUDIO_MUTE,
+        AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
 }
@@ -213,10 +150,10 @@ export function setAudioMute(mute) {
  * @returns {Function}
  */
 export function setVideoMute(mute) {
-    return dispatch => createActionWithRequestStates(
+    return dispatch => createAsyncActionWithStates(
         dispatch,
         () => remoteControlService.setVideoMute(mute),
-        requestTypes.VIDEO_MUTE,
+        VIDEO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ videoMuted: mute })));
 }
@@ -227,10 +164,10 @@ export function setVideoMute(mute) {
  * @returns {Function}
  */
 export function startWiredScreensharing() {
-    return dispatch => createActionWithRequestStates(
+    return dispatch => createAsyncActionWithStates(
         dispatch,
         () => remoteControlService.setScreensharing(true),
-        requestTypes.SCREENSHARE,
+        SCREENSHARE,
         'wired');
 }
 
@@ -240,13 +177,13 @@ export function startWiredScreensharing() {
  * @returns {Function}
  */
 export function startWirelessScreensharing() {
-    return dispatch => createActionWithRequestStates(
+    return dispatch => createAsyncActionWithStates(
         dispatch,
         () => remoteControlService.setWirelessScreensharing(
             true,
             { onClose: () => dispatch(stopScreenshare()) }
         ),
-        requestTypes.SCREENSHARE,
+        SCREENSHARE,
         'proxy'
     ).then(() => {
         dispatch(setLocalWirelessScreensharing(true));
@@ -260,10 +197,10 @@ export function startWirelessScreensharing() {
  * @returns {Function}
  */
 export function stopScreenshare() {
-    return dispatch => createActionWithRequestStates(
+    return dispatch => createAsyncActionWithStates(
         dispatch,
         () => remoteControlService.setScreensharing(false),
-        requestTypes.SCREENSHARE,
+        SCREENSHARE,
         undefined
     ).then(() => {
         dispatch(setLocalWirelessScreensharing(false));

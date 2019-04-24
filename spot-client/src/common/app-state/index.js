@@ -28,7 +28,6 @@ export * from './wired-screenshare/actions';
 export * from './remote-control-service/actionTypes';
 
 export * from './calendars/constants';
-export * from './remote-control-service/constants';
 
 export * from './calendars/selectors';
 export * from './config/selectors';
