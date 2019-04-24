@@ -34,7 +34,9 @@
         margin-bottom: 34px;
         text-align: center;
     }
+}
 
+.select-media {
     .columns {
         display: flex;
         margin-top: 10px;
@@ -52,22 +54,22 @@
         }
     }
 
-    .select-media {
-        .camera-preview {
-            background: black;
-            display: flex;
-            flex: 1;
-            overflow: hidden;
+    .camera-preview {
+        background: black;
+        overflow: hidden;
 
-            video {
-                max-height: 100%;
-                max-width: 100%;
-            }
+        video {
+            max-height: 100%;
+            max-width: 100%;
         }
+    }
 
-        .selector:not(:last-child) {
-            margin-bottom: 10px;
-        }
+    .selector:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    .speaker-preview {
+        margin: 10px 0;
 
         .speaker-preview-link {
             color: var(--mic-preview-active-background-color);
@@ -78,30 +80,30 @@
                 color: var(--button-active-color);
             }
         }
+    }
 
-        .select-label {
-            font-size: $font-size-small;
-            margin-bottom: 5px;
-        }
+    .select-label {
+        font-size: $font-size-small;
+        margin-bottom: 5px;
+    }
 
-        .mic-preview {
-            background: var(--mic-preview-background-color);
+    .mic-preview {
+        background: var(--mic-preview-background-color);
+        border-radius: 5px;
+        height: 2px;
+
+        .mic-preview-level {
+            background: var(--mic-preview-active-background-color);
             border-radius: 5px;
-            height: 2px;
-        
-            .mic-preview-level {
-                background: var(--mic-preview-active-background-color);
-                border-radius: 5px;
-                height: 100%;
-                -webkit-transition: width .1s ease-in-out;
-                -moz-transition: width .1s ease-in-out;
-                -o-transition: width .1s ease-in-out;
-                transition: width .1s ease-in-out;
-            }
+            height: 100%;
+            -webkit-transition: width .1s ease-in-out;
+            -moz-transition: width .1s ease-in-out;
+            -o-transition: width .1s ease-in-out;
+            transition: width .1s ease-in-out;
         }
+    }
 
-        .button:not(:last-child) {
-            margin-right: 10px;
-        }
+    .button:not(:last-child) {
+        margin-right: 10px;
     }
 }
