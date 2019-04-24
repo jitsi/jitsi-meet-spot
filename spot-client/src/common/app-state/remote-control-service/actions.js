@@ -2,11 +2,19 @@ import { registerDevice } from 'common/backend';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 import { createAsyncActionWithStates } from 'common/redux';
-import { remoteControlService } from 'common/remote-control';
-import { setSpotTVState } from './../spot-tv/actions';
+import { SERVICE_UPDATES, remoteControlService } from 'common/remote-control';
+import { generateRandomString } from 'common/utils';
+import {
+    getJoinCodeRefreshRate,
+    getRemoteControlServerConfig,
+    getSpotServicesConfig
+} from './../config/selectors';
+import { setJwt } from './../setup/actions';
+import { setJoinCode, setSpotTVState } from './../spot-tv/actions';
 
 import {
     AUDIO_MUTE,
+    CREATE_CONNECTION,
     DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
@@ -48,10 +56,12 @@ export function createSpotTVRemoteControlConnection() {
         function onDisconnect() {
             logger.error(
                 'Spot-TV disconnected from the remote control service.');
-            remoteControlService.disconnect();
-            dispatch(setJoinCode(''));
+            remoteControlService.disconnect()
+                .then(() => {
+                    dispatch(setJoinCode(''));
 
-            doConnect();
+                    doConnect();
+                });
         }
 
         /**
@@ -73,11 +83,12 @@ export function createSpotTVRemoteControlConnection() {
          * @returns {Promise}
          */
         function doConnect() {
-            return createActionWithRequestStates(
+            return createAsyncActionWithStates(
                 dispatch,
                 () => createConnection(getState()),
-                requestTypes.CONNECTION
-            ).then(onSuccessfulConnect);
+                CREATE_CONNECTION
+            ).then(onSuccessfulConnect)
+            .catch(onDisconnect);
         }
 
         remoteControlService.addListener(

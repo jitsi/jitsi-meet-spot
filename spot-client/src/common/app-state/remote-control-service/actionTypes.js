@@ -1,5 +1,7 @@
 export const AUDIO_MUTE = 'AUDIO_MUTE';
 
+export const CREATE_CONNECTION = 'CREATE_CONNECTION';
+
 export const DIAL_OUT = 'DIAL_OUT';
 
 export const JOIN_AD_HOC_MEETING = 'JOIN_AD_HOC_MEETING';

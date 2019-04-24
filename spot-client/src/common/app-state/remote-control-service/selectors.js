@@ -53,9 +53,9 @@ export function isAudioMutePending(state) {
  * @returns {boolean}
  */
 export function isConnectionEstablished(state) {
-    const connection = state.remoteControlService[requestTypes.CONNECTION];
+    const connect = state.remoteControlService.connect;
 
-    return Boolean(connection && connection.requestState === requestStates.DONE);
+    return Boolean(connect && connect.requestState === asyncActionRequestStates.DONE);
 }
 
 /**
