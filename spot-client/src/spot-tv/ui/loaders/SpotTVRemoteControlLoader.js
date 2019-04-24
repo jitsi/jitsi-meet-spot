@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 
 import { analytics } from 'common/analytics';
 import {
-    createSpotTVRemoteControlConnection,
     isConnectionEstablished,
     setIsSpot
 } from 'common/app-state';
 import { remoteControlService } from 'common/remote-control';
 import { Loading } from 'common/ui';
+
+import { createSpotTVRemoteControlConnection } from './../../app-state';
 
 /**
  * Loads application services while displaying a loading icon. Will display
