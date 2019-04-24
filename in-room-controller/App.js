@@ -23,7 +23,7 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
-            remoteControlUrl: ''
+            remoteControlUrl: null
         };
 
         this._onClearRemoteUrl = this._onClearRemoteUrl.bind(this);
@@ -38,11 +38,10 @@ export default class App extends React.Component {
     componentDidMount() {
         AsyncStorage.getItem('remote-control-url')
             .then(remoteControlUrl => {
-                if (remoteControlUrl !== null) {
-                    this.setState({
-                        remoteControlUrl
-                    });
-                }
+                // FIXME make it possible to configure default URL on the build time
+                this.setState({
+                    remoteControlUrl: remoteControlUrl === null ? 'https://spot.8x8.vc' : remoteControlUrl
+                });
             });
     }
 
@@ -73,10 +72,13 @@ export default class App extends React.Component {
      * @returns {void}
      */
     _onClearRemoteUrl() {
-        AsyncStorage.removeItem('remote-control-url');
-
-        this.setState({
-            remoteControlUrl: null
+        AsyncStorage.setItem(
+            'remote-control-url',
+            ''
+        ).then(() => {
+            this.setState({
+                remoteControlUrl: ''
+            });
         });
     }
 
