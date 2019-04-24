@@ -13,7 +13,8 @@ export default class MediaSelector extends React.Component {
         device: PropTypes.string,
         devices: PropTypes.array,
         label: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        qaId: PropTypes.string
     };
 
     /**
@@ -54,6 +55,7 @@ export default class MediaSelector extends React.Component {
                     onChange = { this._onChange }
                     options = { selections }
                     placeholder = 'Please select a device'
+                    qaId = { this.props.qaId }
                     value = { device } />
             </div>
         );

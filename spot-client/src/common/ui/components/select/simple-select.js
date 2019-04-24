@@ -2,6 +2,16 @@ import { FormControl, Input, MenuItem, Select } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const classes = {
+    select: 'select-trigger'
+};
+const menuProps = {
+    classes: {
+        paper: 'select-menu'
+    },
+    transitionDuration: 0
+};
+
 /**
  * Displays a custom select/dropdown element.
  *
@@ -17,6 +27,7 @@ export default class SimpleSelect extends React.Component {
         onChange: PropTypes.func,
         options: PropTypes.array,
         placeholder: PropTypes.string,
+        qaId: PropTypes.string,
         selected: PropTypes.object,
         value: PropTypes.any
     };
@@ -59,10 +70,10 @@ export default class SimpleSelect extends React.Component {
                 className = 'select'
                 variant = 'filled'>
                 <Select
+                    MenuProps = { menuProps }
                     className = 'select-element'
-                    classes = {{
-                        select: 'select-trigger'
-                    }}
+                    classes = { classes }
+                    data-qa-id = { this.props.qaId }
                     displayEmpty = { true }
                     input = { this._renderInput() }
                     onChange = { this._onChange }

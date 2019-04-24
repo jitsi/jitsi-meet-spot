@@ -6,7 +6,10 @@ import {
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
-    setPreferredDevices
+    getWiredScreenshareInputLabel,
+    setPreferredDevices,
+    setWiredScreenshareInputIdleValue,
+    setWiredScreenshareInputLabel
 } from 'common/app-state';
 import { Button } from 'common/ui';
 import { avUtils } from 'common/media';
@@ -15,6 +18,8 @@ import CameraPreview from './camera-preview';
 import MicPreview from './mic-preview';
 import MediaSelector from './media-selector';
 import SpeakerPreview from './speaker-preview';
+
+import { wiredScreenshareService } from './../../../../wired-screenshare-service';
 
 /**
  * Displays a selector for choosing a media source.
@@ -25,6 +30,7 @@ class SelectMedia extends React.Component {
     static defaultProps = {
         preferredCamera: '',
         preferredMic: '',
+        selectedScreenshareDongle: '',
         preferredSpeaker: ''
     };
 
@@ -33,6 +39,7 @@ class SelectMedia extends React.Component {
         onSuccess: PropTypes.func,
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
+        preferredScreenshareDongle: PropTypes.string,
         preferredSpeaker: PropTypes.string
     };
 
@@ -48,8 +55,10 @@ class SelectMedia extends React.Component {
         this.state = {
             cameras: [],
             mics: [],
+            screenshareDongles: [],
             selectedCamera: props.preferredCamera,
             selectedMic: props.preferredMic,
+            selectedScreenshareDongle: props.preferredScreenshareDongle,
             selectedSpeaker: props.preferredSpeaker,
             speakers: []
         };
@@ -57,6 +66,7 @@ class SelectMedia extends React.Component {
         this._onCameraChange = this._onCameraChange.bind(this);
         this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onMicChange = this._onMicChange.bind(this);
+        this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onSkip = this._onSkip.bind(this);
         this._onSpeakerChange = this._onSpeakerChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
@@ -93,8 +103,10 @@ class SelectMedia extends React.Component {
         const {
             cameras,
             mics,
+            screenshareDongles,
             selectedCamera,
             selectedMic,
+            selectedScreenshareDongle,
             selectedSpeaker,
             speakers
         } = this.state;
@@ -125,6 +137,16 @@ class SelectMedia extends React.Component {
                 onChange = { this._onSpeakerChange }
                 type = 'speaker' />
         );
+        const screenshareSelect = (
+            <MediaSelector
+                device = { selectedScreenshareDongle }
+                devices = { screenshareDongles }
+                key = 'screenshare'
+                label = 'Screen sharing'
+                onChange = { this._onScreenshareChange }
+                qaId = 'screenshare'
+                type = 'screenshare' />
+        );
 
         return (
             <div className = 'spot-setup select-media'>
@@ -136,36 +158,34 @@ class SelectMedia extends React.Component {
                         { cameraSelect }
                         { micSelect }
                         { speakerSelect }
+                        { screenshareSelect }
                     </div>
                     <div className = 'column'>
+                        <div className = 'select-label'>Preview</div>
                         <div className = 'camera-preview'>
                             <CameraPreview
                                 devices = { cameras }
                                 label = { selectedCamera } />
                         </div>
-                    </div>
-                </div>
-                <div className = 'columns'>
-                    <div className = 'column'>
                         <SpeakerPreview
                             devices = { speakers }
                             label = { selectedSpeaker }
                             src = 'dist/ring.wav' />
-                    </div>
-                    <div className = 'column'>
                         <MicPreview
                             devices = { mics }
                             label = { selectedMic } />
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
-                    <Button onClick = { this._onSubmit }>
-                        Save
+                    <Button
+                        onClick = { this._onSubmit }
+                        qaId = 'device-selection-submit'>
+                        Next
                     </Button>
                     <Button
                         appearance = 'subtle'
                         onClick = { this._onSkip }>
-                        Skip
+                        Cancel
                     </Button>
                 </div>
             </div>
@@ -213,12 +233,14 @@ class SelectMedia extends React.Component {
     _onDeviceListChange(devices) {
         const cameras = [];
         const mics = [];
+        const screenshareDongles = [];
         const speakers = [];
 
         devices.forEach(device => {
             switch (device.kind) {
             case 'videoinput':
                 cameras.push(device);
+                screenshareDongles.push(device);
                 break;
             case 'audioinput':
                 mics.push(device);
@@ -231,6 +253,7 @@ class SelectMedia extends React.Component {
 
         this.setState({
             cameras,
+            screenshareDongles,
             mics,
             speakers
         });
@@ -246,6 +269,19 @@ class SelectMedia extends React.Component {
     _onMicChange(label) {
         this.setState({
             selectedMic: label
+        });
+    }
+
+    /**
+     * Callback invoked when the selected screenshare dongle has changed.
+     *
+     * @param {string} label - The label of the selected device.
+     * @private
+     * @returns {void}
+     */
+    _onScreenshareChange(label) {
+        this.setState({
+            selectedScreenshareDongle: label
         });
     }
 
@@ -280,11 +316,31 @@ class SelectMedia extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        const {
+            selectedCamera,
+            selectedMic,
+            selectedScreenshareDongle,
+            selectedSpeaker
+        } = this.state;
+
         this.props.dispatch(setPreferredDevices(
-            this.state.selectedCamera,
-            this.state.selectedMic,
-            this.state.selectedSpeaker
+            selectedCamera,
+            selectedMic,
+            selectedSpeaker
         ));
+
+        const changeListener = wiredScreenshareService.getVideoChangeListener(
+            selectedScreenshareDongle);
+
+        changeListener.start()
+            .then(() => {
+                const value = changeListener.getCurrentValue();
+
+                changeListener.destroy();
+
+                this.props.dispatch(setWiredScreenshareInputLabel(selectedScreenshareDongle));
+                this.props.dispatch(setWiredScreenshareInputIdleValue(value));
+            });
 
         this.props.onSuccess();
     }
@@ -302,6 +358,7 @@ function mapStateToProps(state) {
     return {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
+        preferredScreenshareDongle: getWiredScreenshareInputLabel(state),
         preferredSpeaker: getPreferredSpeaker(state)
     };
 }

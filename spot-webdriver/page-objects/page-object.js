@@ -41,6 +41,22 @@ class PageObject {
     }
 
     /**
+     * Waits for an element to no longer be visible.
+     *
+     * @param {string | Function} selector - A selector passed to the driver in order to find
+     * the element.
+     * @param {number} [waitTime] - Optional wait time given in milliseconds.
+     * @returns {Element} - Returns the selected element for future use.
+     */
+    waitForElementHidden(selector, waitTime) {
+        const element = this.select(selector);
+
+        element.waitForDisplayed(waitTime, true);
+
+        return element;
+    }
+
+    /**
      * Waits for the element to be in the given state.
      *
      * @param {boolean} state - The state to wait for.

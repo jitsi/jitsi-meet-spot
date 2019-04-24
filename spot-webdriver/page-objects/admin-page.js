@@ -2,10 +2,10 @@ const constants = require('../constants');
 const PageObject = require('./page-object');
 
 const ADMIN_VIEW = '[data-qa-id=admin-view]';
-const CHANGE_SCREENSHARE_BUTTON = '[data-qa-id=admin-change-screenshare]';
+const DEVICE_SELECTION_START_BUTTON = '[data-qa-id=device-selection-button]';
+const DEVICE_SELECTION_SUBMIT_BUTTON = '[data-qa-id=device-selection-submit]';
 const EXIT_BUTTON = '[data-qa-id=admin-exit]';
-const SCREENSHARE_DEVICE_LIST = '[data-qa-id=screenshare-input-devices]';
-const SCREENSHARE_DEVICE_SKIP = '[data-qa-id=screenshare-input-skip]';
+const SCREENSHARE_SELECTOR = '[data-qa-id=screenshare]';
 
 /**
  * A page object for interacting with the admin configuration view of a Spot-TV.
@@ -44,18 +44,26 @@ class AdminPage extends PageObject {
      */
     setScreenshareInput(deviceLabel) {
         const changeScreenshareButton
-            = this.waitForElementDisplayed(CHANGE_SCREENSHARE_BUTTON);
+            = this.waitForElementDisplayed(DEVICE_SELECTION_START_BUTTON);
 
         changeScreenshareButton.click();
 
-        this.waitForElementDisplayed(SCREENSHARE_DEVICE_LIST);
+        const screenshareSelector
+            = this.waitForElementDisplayed(SCREENSHARE_SELECTOR);
 
-        const screenshareInputButtonSelector = deviceLabel
-            ? `button*=${deviceLabel}` : SCREENSHARE_DEVICE_SKIP;
-        const button = this.driver.$(screenshareInputButtonSelector);
+        screenshareSelector.click();
 
-        button.waitForDisplayed();
-        button.click();
+        const deviceSelection = `li*=${deviceLabel}`;
+        const deviceLabelOption = this.waitForElementDisplayed(deviceSelection);
+
+        deviceLabelOption.click();
+
+        this.waitForElementHidden(deviceSelection);
+
+        const submitButton
+            = this.waitForElementDisplayed(DEVICE_SELECTION_SUBMIT_BUTTON);
+
+        submitButton.click();
     }
 
     /**

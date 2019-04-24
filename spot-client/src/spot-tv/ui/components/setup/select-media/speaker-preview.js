@@ -55,7 +55,7 @@ export default class SpeakerPreview extends React.PureComponent {
      */
     render() {
         return (
-            <div>
+            <div className = 'speaker-preview'>
                 <a
                     className = 'speaker-preview-link'
                     onClick = { this._onPreview }>

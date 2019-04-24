@@ -8,8 +8,6 @@ import {
     CalendarStatus,
     InMeetingConfig,
     Profile,
-    ScreenshareInput,
-    ScreenshareStatus,
     SelectMedia
 } from './../components';
 
@@ -34,8 +32,6 @@ export default class AdminView extends React.Component {
 
         this._onChangeDevices = this._onChangeDevices.bind(this);
         this._onChangeProfile = this._onChangeProfile.bind(this);
-        this._onChangeScreenshareInput
-            = this._onChangeScreenshareInput.bind(this);
         this._onShowAllOptions = this._onShowAllOptions.bind(this);
     }
 
@@ -47,10 +43,8 @@ export default class AdminView extends React.Component {
      */
     render() {
         return (
-            <div className = 'container'>
-                <div className = 'admin'>
-                    { this._renderSubcomponent() }
-                </div>
+            <div className = 'admin'>
+                { this._renderSubcomponent() }
             </div>
         );
     }
@@ -65,14 +59,10 @@ export default class AdminView extends React.Component {
         switch (this.state.view) {
         case 'device-selection':
             return (
-                <div className = 'setup'>
-                    <SelectMedia onSuccess = { this._onShowAllOptions } />
-                </div>
+                <SelectMedia onSuccess = { this._onShowAllOptions } />
             );
         case 'profile':
             return <Profile onSuccess = { this._onShowAllOptions } />;
-        case 'screenshare-input':
-            return <ScreenshareInput onSuccess = { this._onShowAllOptions } />;
         case 'all':
         default:
             return (
@@ -88,17 +78,10 @@ export default class AdminView extends React.Component {
                         <div className = 'admin-title'>
                             Preferred devices
                         </div>
-                        <Button onClick = { this._onChangeDevices }>
-                            Device Selection
-                        </Button>
-                    </div>
-                    <div>
-                        <div className = 'admin-title'>Screenshare Input</div>
-                        <ScreenshareStatus />
                         <Button
-                            onClick = { this._onChangeScreenshareInput }
-                            qaId = 'admin-change-screenshare'>
-                            Change
+                            onClick = { this._onChangeDevices }
+                            qaId = 'device-selection-button'>
+                            Device Selection
                         </Button>
                     </div>
                     <ResetState />
@@ -142,16 +125,6 @@ export default class AdminView extends React.Component {
      */
     _onChangeProfile() {
         this.setState({ view: 'profile' });
-    }
-
-    /**
-     * Displays the view for selecting a wired screensharing input device.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onChangeScreenshareInput() {
-        this.setState({ view: 'screenshare-input' });
     }
 
     /**
