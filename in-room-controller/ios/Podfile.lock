@@ -99,10 +99,10 @@ SPEC CHECKSUMS:
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
-  React: 1d605e098d69bdf08960787f3446f0a9dc2e2ccf
-  react-native-webview: a42108b827082f8f0333529b0772102031d5960d
-  yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
+  React: 5cb71fb1a15b5ce04794ab49e24b48ebe4c94e65
+  react-native-webview: 8fc6bdcd3e75bfac60e4f95bb9ddf13570466230
+  yoga: 596e61c9b57751d08a22b07aba310dbd3e65ab75
 
 PODFILE CHECKSUM: ec17fb17fb60103fdc95c124a990b38fdd4bbbeb
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1
