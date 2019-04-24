@@ -1,6 +1,10 @@
+import EventEmitter from 'events';
+
 import { logger } from 'common/logger';
 
 import { avUtils } from 'common/media';
+
+const VIDEO_CHANGE_DETECTED = 'VIDEO_CHANGE_DETECTED';
 
 /**
  * The default dimensions for the video element and canvas. Lower resolution is
@@ -15,7 +19,7 @@ const ELEMENT_WIDTH = 320;
  * wired screenshare input will emit a static frame when in an idle state and
  * that frame changes when a device is connected.
  */
-export default class VideoChangeListener {
+export default class VideoChangeListener extends EventEmitter {
     /**
      * Initializes a new {@code VideoChangeListener} instance.
      *
@@ -27,6 +31,8 @@ export default class VideoChangeListener {
      * will be calculated using the current stream.
      */
     constructor(deviceLabel, initialFrameValue) {
+        super();
+
         this._deviceLabel = deviceLabel;
         this._initialFrameValue = initialFrameValue;
 
@@ -77,14 +83,6 @@ export default class VideoChangeListener {
         this._diffCheckInterval = null;
 
         /**
-         * Callbacks to invoke when there is a change to and from the idle
-         * frame.
-         *
-         * @type {Set}
-         */
-        this._listeners = new Set();
-
-        /**
          * It is assumed the listener starts with no device connected and any
          * changes will change this variable to true or back to false.
          *
@@ -102,7 +100,7 @@ export default class VideoChangeListener {
      * @returns {void}
      */
     addChangeListener(callback) {
-        this._listeners.add(callback);
+        this.addListener(VIDEO_CHANGE_DETECTED, callback);
     }
 
     /**
@@ -111,7 +109,7 @@ export default class VideoChangeListener {
      * @returns {void}
      */
     destroy() {
-        this._listeners.clear();
+        this.removeAllListeners();
 
         clearInterval(this._diffCheckInterval);
 
@@ -177,7 +175,7 @@ export default class VideoChangeListener {
      * @returns {boolean}
      */
     hasActiveListeners() {
-        return this._listeners.length > 0;
+        return this.listenerCount(VIDEO_CHANGE_DETECTED) > 0;
     }
 
     /**
@@ -189,7 +187,7 @@ export default class VideoChangeListener {
      * @returns {void}
      */
     removeChangeListener(callback) {
-        this._listeners.delete(callback);
+        this.removeListener(VIDEO_CHANGE_DETECTED, callback);
     }
 
     /**
@@ -279,7 +277,7 @@ export default class VideoChangeListener {
      * @returns {void}
      */
     _notifyChangeDetected(isDeviceConnected) {
-        this._listeners.forEach(listener => listener(isDeviceConnected));
+        this.emit(VIDEO_CHANGE_DETECTED, isDeviceConnected);
     }
 
     /**
