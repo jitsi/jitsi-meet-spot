@@ -5,8 +5,14 @@
     outline: none;
     position: relative;
 
-    input {
+    .box {
         @include  centered-content;
+
+        /**
+         * Using initial-box sizing is important for mobile Safari to properly
+         * scroll and center each input without causing the page to jump.
+         */
+        box-sizing: initial;
 
         background-color: var(--container-bg-color);
         border: 1px solid var(--container-sub-content-font-color);
@@ -23,7 +29,14 @@
         width: calc(#{$font-size-x-large} * 0.5);
 
         &:focus {
-            border: 5px solid var(--active);
+            border-color: var(--active);
+            box-shadow: 0px 0px 0px 5px var(--active);
+
+            /**
+             * Set appearance none because the boxes are in a form and mobile
+             * safari will otherwise prevent box-shadow from displaying.
+             */
+            -webkit-appearance: none;
         }
         &:hover {
             cursor: pointer;
