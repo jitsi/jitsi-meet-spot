@@ -1,5 +1,6 @@
 export * from './button';
 export * from './clock';
+export * from './code-input';
 export * from './error-boundary';
 export * from './idle-cursor-detector';
 export * from './input';

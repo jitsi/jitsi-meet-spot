@@ -52,7 +52,7 @@ export class Profile extends React.Component {
      */
     render() {
         return (
-            <div className = 'setup-step'>
+            <div className = 'spot-setup setup-step'>
                 <div className = 'setup-title'>
                     Room Settings
                 </div>

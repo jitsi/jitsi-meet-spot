@@ -39,7 +39,7 @@ export class CalendarAuth extends React.Component {
      */
     render() {
         return (
-            <div className = 'setup-step'>
+            <div className = 'spot-setup setup-step'>
                 <div className = 'setup-title'>
                     Authenticate With Google
                 </div>

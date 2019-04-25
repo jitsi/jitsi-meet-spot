@@ -81,7 +81,7 @@ export class SelectRoom extends React.Component {
         }
 
         return (
-            <div className = 'setup-step setup-roomList'>
+            <div className = 'spot-setup setup-step setup-roomList'>
                 <div className = 'setup-title'>
                     Select A Room
                 </div>

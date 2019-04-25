@@ -1,6 +1,6 @@
 @import './../../variables.scss';
 
-.setup {
+.spot-setup {
     background-color: var(--container-bg-color);
     border-radius: 25px;
     color: var(--container-sub-content-font-color);
@@ -9,11 +9,16 @@
     max-height: 100%;
     overflow: auto;
     padding: 16px 32px;
-    width: 100%;
+    width: 500px;
+    min-width: 50%;
 
     .setup-buttons {
         margin-top: 34px;
         text-align: center;
+
+        .button:not(:last-child) {
+            margin-right: 10px;
+        }
     }
 
     .setup-content {
@@ -102,8 +107,41 @@
             transition: width .1s ease-in-out;
         }
     }
+}
 
-    .button:not(:last-child) {
-        margin-right: 10px;
+.setup-sync-with-backend {
+    text-align: center;
+
+    .cta {
+        margin: -5em 0 5em;
+        text-align: center;
+
+        .title {
+            font-size: $font-size-x-large;
+        }
+
+        .description {
+            font-size: $font-size-large;
+        }
     }
+}
+
+.pair-remote {
+    .description {
+        font-size: $font-size-medium;
+    }
+
+    .join-code {
+        color: #eeb556;
+        font-size: $font-size-x-large;
+        letter-spacing: 0.5em;
+        margin-top: 1em;
+        text-align: center;
+        text-shadow: 0px 4px rgba(0, 0, 0, 0.4);
+        text-transform: uppercase;
+    }
+}
+
+.setup ~ .info-footer {
+    display: none;
 }
