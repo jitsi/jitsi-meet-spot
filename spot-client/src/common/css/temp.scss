@@ -48,6 +48,12 @@
     position: fixed;
     width: 100%;
     z-index: 10;
+
+    pointer-events: none;
+
+    .join-info {
+        pointer-events: all
+    }
 }
 
 @keyframes animateDots {
