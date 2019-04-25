@@ -51,6 +51,9 @@ export class CalendarService extends EventEmitter {
 
         this._calendarIntegration = calendarIntegrations[type];
 
+        this._calendarEvents = [];
+        this._hasFetchedEvents = false;
+
         return this._calendarIntegration.initialize(this.config[type]);
     }
 
