@@ -1,21 +1,16 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import { analytics } from 'common/analytics';
 import {
-    getJoinCodeRefreshRate,
-    getRemoteControlServerConfig,
-    getSpotServicesConfig,
-    setJoinCode,
-    setJwt,
+    isConnectionEstablished,
     setIsSpot
 } from 'common/app-state';
-import { registerDevice } from 'common/backend';
-import { logger } from 'common/logger';
-import { SERVICE_UPDATES, remoteControlService } from 'common/remote-control';
-import { AbstractLoader } from 'common/ui';
-import { generateRandomString } from 'common/utils';
+import { remoteControlService } from 'common/remote-control';
+import { Loading } from 'common/ui';
+
+import { createSpotTVRemoteControlConnection } from './../../app-state';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -23,27 +18,12 @@ import { generateRandomString } from 'common/utils';
  *
  * @extends React.Component
  */
-export class SpotTVRemoteControlLoader extends AbstractLoader {
+export class SpotTVRemoteControlLoader extends React.Component {
     static propTypes = {
-        ...AbstractLoader.propTypes,
-        adminServiceUrl: PropTypes.string,
+        children: PropTypes.node,
         dispatch: PropTypes.func,
-        joinCodeRefreshRate: PropTypes.number,
-        joinCodeServiceUrl: PropTypes.string
+        isConnected: PropTypes.bool
     };
-
-    /**
-     * Initializes a new {@code SpotTVRemoteControlLoader} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props, 'SpotTV');
-
-        this._onDisconnect = this._onDisconnect.bind(this);
-        this._onJoinCodeChange = this._onJoinCodeChange.bind(this);
-    }
 
     /**
      * Configures analytics to report events as a Spot-TV.
@@ -51,34 +31,31 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
      * @inheritdoc
      */
     componentDidMount() {
-        super.componentDidMount();
-
-        remoteControlService.addListener(
-            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-            this._onDisconnect
-        );
-        remoteControlService.addListener(
-            SERVICE_UPDATES.JOIN_CODE_CHANGE,
-            this._onJoinCodeChange
-        );
+        this.props.dispatch(setIsSpot(true));
 
         analytics.updateProperty('spot-tv', true);
+
+        // TODO: Add some retry logic to error handling for when the initial
+        // connection fails to be established.
+        this.props.dispatch(createSpotTVRemoteControlConnection());
     }
 
     /**
-     * Clears the interval to update the remote control lock.
+     * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
+     * @returns {ReactElement}
      */
-    componentWillUnmount() {
-        remoteControlService.removeListener(
-            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-            this._onDisconnect
-        );
-        remoteControlService.removeListener(
-            SERVICE_UPDATES.JOIN_CODE_CHANGE,
-            this._onJoinCodeChange
-        );
+    render() {
+        if (this.props.isConnected) {
+            const { children } = this.props;
+            const childProps = this._getPropsForChildren();
+
+            return React.Children.map(children, child =>
+                React.cloneElement(child, childProps));
+        }
+
+        return <Loading />;
     }
 
     /**
@@ -92,104 +69,6 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
             remoteControlService
         };
     }
-
-    /**
-     * Establishes the connection to the remote control service.
-     *
-     * @override
-     */
-    _loadService() {
-        const {
-            adminServiceUrl,
-            dispatch
-        } = this.props;
-
-        dispatch(setIsSpot(true));
-
-        let getJoinCodePromise;
-
-        if (adminServiceUrl) {
-            logger.log(`Will use ${adminServiceUrl} to get the join code`);
-
-            // FIXME 'registerDevice' should be retried forever (the abstract loader no longer does that)
-            getJoinCodePromise
-                = registerDevice(adminServiceUrl)
-                    .then(json => {
-                        const { joinCode, jwt } = json;
-
-                        // Clear it if the jwt is empty
-                        this.props.dispatch(setJwt(jwt));
-
-                        return joinCode;
-                    });
-        } else {
-            getJoinCodePromise = Promise.resolve(undefined);
-        }
-
-        return getJoinCodePromise.then(
-            joinCode => {
-                logger.log(`Will use ${joinCode} code to setup the Spot TV`);
-                this.props.dispatch(setJoinCode(joinCode));
-
-                let getRoomInfoPromise;
-
-                if (this.props.joinCodeServiceUrl) {
-                    getRoomInfoPromise
-                        = remoteControlService.exchangeCode(
-                            joinCode, {
-                                joinCodeServiceUrl: this.props.joinCodeServiceUrl
-                            });
-                } else {
-                    getRoomInfoPromise = Promise.resolve({
-                        // If there's no joinCode service then create a room and let the lock
-                        // be set later. Setting the lock on join will throw an error about
-                        // not being authorized..
-                        roomName: generateRandomString(3)
-                    });
-                }
-
-                return getRoomInfoPromise
-                    .then(roomInfo => remoteControlService.connect({
-                        autoReconnect: true,
-                        joinAsSpot: true,
-
-                        // FIXME join code refresh is disabled with the backend as the first step,
-                        // because there's no password set on the room and the JWT is used instead.
-                        joinCodeRefreshRate: !adminServiceUrl && this.props.joinCodeRefreshRate,
-                        roomInfo,
-                        serverConfig: this.props.remoteControlConfiguration
-                    }));
-            });
-    }
-
-    /**
-     * Callback invoked when {@code remoteControlService} has been disconnected
-     * from an unrecoverable error. Tries to reconnect.
-     *
-     * @param {string} eventName - The event triggered.
-     * @private
-     * @returns {void}
-     */
-    _onDisconnect() {
-        logger.error(
-            'Spot-TV disconnected from the remote control service.');
-        remoteControlService.disconnect();
-        this.props.dispatch(setJoinCode(''));
-
-        this._loadService();
-    }
-
-    /**
-     * Callback invoked when {@code remoteControlService} has changes the join
-     * code necessary to pair with the Spot-TV.
-     *
-     * @param {Object} data - An object containing the update.
-     * @private
-     * @returns {void}
-     */
-    _onJoinCodeChange(data) {
-        this.props.dispatch(setJoinCode(data.joinCode));
-    }
 }
 
 /**
@@ -201,17 +80,9 @@ export class SpotTVRemoteControlLoader extends AbstractLoader {
  * @returns {Object}
  */
 function mapStateToProps(state) {
-    const {
-        adminServiceUrl,
-        joinCodeServiceUrl
-    } = getSpotServicesConfig(state);
-
     return {
-        adminServiceUrl,
-        joinCodeRefreshRate: getJoinCodeRefreshRate(state),
-        joinCodeServiceUrl,
-        remoteControlConfiguration: getRemoteControlServerConfig(state)
+        isConnected: isConnectionEstablished(state)
     };
 }
 
-export default withRouter(connect(mapStateToProps)(SpotTVRemoteControlLoader));
+export default connect(mapStateToProps)(SpotTVRemoteControlLoader);

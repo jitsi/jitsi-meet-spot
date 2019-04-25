@@ -1,5 +1,6 @@
 import {
     AUDIO_MUTE,
+    CREATE_CONNECTION,
     JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
@@ -22,6 +23,9 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case AUDIO_MUTE:
         return updateStateForAsyncAction(state, 'audioMute', action);
+
+    case CREATE_CONNECTION:
+        return updateStateForAsyncAction(state, 'connect', action);
 
     case REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE:
         return {

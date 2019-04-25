@@ -2,7 +2,9 @@ import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 import { createAsyncActionWithStates } from 'common/redux';
 import { remoteControlService } from 'common/remote-control';
+
 import { setSpotTVState } from './../spot-tv/actions';
+
 import {
     AUDIO_MUTE,
     DIAL_OUT,
