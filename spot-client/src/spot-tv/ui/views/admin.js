@@ -7,7 +7,6 @@ import { ROUTES } from 'common/routing';
 import {
     CalendarStatus,
     InMeetingConfig,
-    Profile,
     SelectMedia
 } from './../components';
 
@@ -31,7 +30,6 @@ export default class AdminView extends React.Component {
         };
 
         this._onChangeDevices = this._onChangeDevices.bind(this);
-        this._onChangeProfile = this._onChangeProfile.bind(this);
         this._onShowAllOptions = this._onShowAllOptions.bind(this);
     }
 
@@ -61,19 +59,11 @@ export default class AdminView extends React.Component {
             return (
                 <SelectMedia onSuccess = { this._onShowAllOptions } />
             );
-        case 'profile':
-            return <Profile onSuccess = { this._onShowAllOptions } />;
         case 'all':
         default:
             return (
                 <>
                     <CalendarStatus />
-                    <div>
-                        <div className = 'admin-title'>Profile</div>
-                        <Button onClick = { this._onChangeProfile }>
-                            Change
-                        </Button>
-                    </div>
                     <div>
                         <div className = 'admin-title'>
                             Preferred devices
@@ -114,17 +104,6 @@ export default class AdminView extends React.Component {
      */
     _onChangeDevices() {
         this.setState({ view: 'device-selection' });
-    }
-
-    /**
-     * Displays the view for setting a display name and avatar to use during a
-     * meeting.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onChangeProfile() {
-        this.setState({ view: 'profile' });
     }
 
     /**

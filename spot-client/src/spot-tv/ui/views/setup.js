@@ -3,15 +3,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setSetupCompleted } from 'common/app-state';
+import { getSpotServicesConfig, setSetupCompleted } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 
 import {
     CalendarAuth,
+    SelectMedia,
     SelectRoom,
-    Profile,
-    SelectMedia
+    SyncWithBackend,
+    PairRemote,
+    Profile
 } from './../components/setup';
 import { withCalendar } from './../loaders';
 
@@ -22,9 +24,9 @@ import { withCalendar } from './../loaders';
  */
 export class Setup extends React.Component {
     static propTypes = {
+        adminServiceUrl: PropTypes.string,
         dispatch: PropTypes.func,
-        history: PropTypes.object,
-        remoteControlService: PropTypes.object
+        history: PropTypes.object
     };
 
     /**
@@ -36,12 +38,19 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this.steps = [
-            SelectMedia,
-            CalendarAuth,
-            SelectRoom,
-            Profile
-        ];
+        this.steps = props.adminServiceUrl
+            ? [
+                SyncWithBackend,
+                SelectMedia,
+                PairRemote
+            ]
+            : [
+                CalendarAuth,
+                SelectRoom,
+                Profile,
+                SelectMedia,
+                PairRemote
+            ];
 
         this.state = {
             currentStep: this.steps[0]
@@ -60,12 +69,9 @@ export class Setup extends React.Component {
         const CurrentStep = this.state.currentStep;
 
         return (
-            <div className = 'container'>
-                <div className = 'setup'>
-                    <CurrentStep onSuccess = { this._onNextStep } />
-                </div>
+            <div className = 'setup'>
+                <CurrentStep onSuccess = { this._onNextStep } />
             </div>
-
         );
     }
 
@@ -130,4 +136,19 @@ export class Setup extends React.Component {
     }
 }
 
-export default withRouter(withCalendar(connect()(Setup)));
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code Setup}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    const { adminServiceUrl } = getSpotServicesConfig(state);
+
+    return {
+        adminServiceUrl
+    };
+}
+
+export default withRouter(withCalendar(connect(mapStateToProps)(Setup)));

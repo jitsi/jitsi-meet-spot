@@ -185,7 +185,7 @@ class SelectMedia extends React.Component {
                     <Button
                         appearance = 'subtle'
                         onClick = { this._onSkip }>
-                        Cancel
+                        Skip
                     </Button>
                 </div>
             </div>

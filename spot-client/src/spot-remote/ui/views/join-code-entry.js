@@ -13,10 +13,10 @@ import { ArrowForward } from 'common/icons';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { Loading, View } from 'common/ui';
+import { CodeInput, Loading, View } from 'common/ui';
 
 import { connectToSpotTV } from './../../app-state';
-import { CodeInput, NavButton, NavContainer } from './../components';
+import { NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
 /**
