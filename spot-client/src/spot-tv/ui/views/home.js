@@ -94,15 +94,20 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     render() {
+        const {
+            isSetupComplete: _isSetupComplete,
+            spotRoomName
+        } = this.props;
+
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
-                    { this.props.isSetupComplete
+                    { _isSetupComplete
                         && <div className = 'spot-home-footer'>
-                            { this.props.spotRoomName } | Sharing Key <JoinInfo />
+                            { spotRoomName && `${spotRoomName} | ` } Sharing Key <JoinInfo />
                         </div> }
                 </div>
                 <div className = 'admin-toolbar'>

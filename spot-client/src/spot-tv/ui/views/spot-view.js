@@ -50,7 +50,7 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { children } = this.props;
+        const { children, spotRoomName } = this.props;
         const childComponents = React.Children.map(children, child =>
             React.cloneElement(
                 child,
@@ -61,7 +61,7 @@ class SpotView extends React.Component {
             <View { ...this.props }>
                 { childComponents }
                 <div className = 'info-footer'>
-                    { this.props.spotRoomName } | Sharing Key <JoinInfo />
+                    { spotRoomName && `${spotRoomName} | ` } Sharing Key <JoinInfo />
                 </div>
             </View>
         );
