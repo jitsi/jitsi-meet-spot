@@ -19,7 +19,7 @@ const menuProps = {
  */
 export default class SimpleSelect extends React.Component {
     static defaultProps = {
-        placeholder: 'None',
+        placeholder: 'Please make a selection',
         value: ''
     };
 
@@ -53,11 +53,10 @@ export default class SimpleSelect extends React.Component {
     render() {
         let menuItems = [];
 
-        if (!this.props.value) {
-            menuItems.push(this._renderMenuItem({
-                label: this.props.placeholder,
-                value: ''
-            }));
+        const isValuePresent = this._isValuePresent();
+
+        if (!isValuePresent) {
+            menuItems.push(this._renderPlaceholderMenuItem());
         }
 
         menuItems = [
@@ -77,12 +76,22 @@ export default class SimpleSelect extends React.Component {
                     displayEmpty = { true }
                     input = { this._renderInput() }
                     onChange = { this._onChange }
-                    value = { this.props.value }
+                    value = { isValuePresent ? this.props.value : '' }
                     variant = 'filled'>
                     { menuItems }
                 </Select>
             </FormControl>
         );
+    }
+
+    /**
+     * Checks whether or not the passed in value is available in list of values.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isValuePresent() {
+        return this.props.options.find(option => option.value === this.props.value);
     }
 
     /**
@@ -121,10 +130,27 @@ export default class SimpleSelect extends React.Component {
     _renderMenuItem({ label, value }) {
         return (
             <MenuItem
-                disabled = { !value }
-                key = { value }
+                key = { label }
                 value = { value }>
                 { label || value }
+            </MenuItem>
+        );
+    }
+
+    /**
+     * Instantiates an instance of {@code MenuItem} to be shown and selected
+     * if there is no valid value.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderPlaceholderMenuItem() {
+        return (
+            <MenuItem
+                disabled = { true }
+                key = { this.props.placeholder }
+                value = { '' }>
+                { this.props.placeholder }
             </MenuItem>
         );
     }

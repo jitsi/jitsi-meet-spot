@@ -27,13 +27,6 @@ import { wiredScreenshareService } from './../../../../wired-screenshare-service
  * @extends React.Component
  */
 class SelectMedia extends React.Component {
-    static defaultProps = {
-        preferredCamera: '',
-        preferredMic: '',
-        selectedScreenshareDongle: '',
-        preferredSpeaker: ''
-    };
-
     static propTypes = {
         dispatch: PropTypes.func,
         onSuccess: PropTypes.func,
@@ -53,14 +46,11 @@ class SelectMedia extends React.Component {
         super(props);
 
         this.state = {
-            cameras: [],
-            mics: [],
-            screenshareDongles: [],
+            ...this._getDefaultDeviceListState(),
             selectedCamera: props.preferredCamera,
             selectedMic: props.preferredMic,
             selectedScreenshareDongle: props.preferredScreenshareDongle,
-            selectedSpeaker: props.preferredSpeaker,
-            speakers: []
+            selectedSpeaker: props.preferredSpeaker
         };
 
         this._onCameraChange = this._onCameraChange.bind(this);
@@ -209,6 +199,27 @@ class SelectMedia extends React.Component {
     }
 
     /**
+     * Returns the state keys and values to use for tracking selectable
+     * devices.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getDefaultDeviceListState() {
+        return {
+            cameras: [],
+            mics: [],
+            screenshareDongles: [
+                {
+                    label: 'None',
+                    value: ''
+                }
+            ],
+            speakers: []
+        };
+    }
+
+    /**
      * Callback invoked when the selected camera (videoinput) has changed.
      *
      * @param {string} label - The label of the selected device.
@@ -231,32 +242,29 @@ class SelectMedia extends React.Component {
      * @returns {void}
      */
     _onDeviceListChange(devices) {
-        const cameras = [];
-        const mics = [];
-        const screenshareDongles = [];
-        const speakers = [];
+        const newDeviceLists = this._getDefaultDeviceListState();
 
-        devices.forEach(device => {
-            switch (device.kind) {
+        devices.forEach(({ kind, label }) => {
+            const formatted = {
+                label,
+                value: label
+            };
+
+            switch (kind) {
             case 'videoinput':
-                cameras.push(device);
-                screenshareDongles.push(device);
+                newDeviceLists.cameras.push(formatted);
+                newDeviceLists.screenshareDongles.push(formatted);
                 break;
             case 'audioinput':
-                mics.push(device);
+                newDeviceLists.mics.push(formatted);
                 break;
             case 'audiooutput':
-                speakers.push(device);
+                newDeviceLists.speakers.push(formatted);
                 break;
             }
         });
 
-        this.setState({
-            cameras,
-            screenshareDongles,
-            mics,
-            speakers
-        });
+        this.setState(newDeviceLists);
     }
 
     /**
@@ -329,18 +337,23 @@ class SelectMedia extends React.Component {
             selectedSpeaker
         ));
 
-        const changeListener = wiredScreenshareService.getVideoChangeListener(
-            selectedScreenshareDongle);
+        if (selectedScreenshareDongle) {
+            const changeListener
+                = wiredScreenshareService.getVideoChangeListener(selectedScreenshareDongle);
 
-        changeListener.start()
-            .then(() => {
-                const value = changeListener.getCurrentValue();
+            changeListener.start()
+                .then(() => {
+                    const value = changeListener.getCurrentValue();
 
-                changeListener.destroy();
+                    changeListener.destroy();
 
-                this.props.dispatch(setWiredScreenshareInputLabel(selectedScreenshareDongle));
-                this.props.dispatch(setWiredScreenshareInputIdleValue(value));
-            });
+                    this.props.dispatch(setWiredScreenshareInputLabel(selectedScreenshareDongle));
+                    this.props.dispatch(setWiredScreenshareInputIdleValue(value));
+                });
+        } else {
+            this.props.dispatch(setWiredScreenshareInputLabel());
+            this.props.dispatch(setWiredScreenshareInputIdleValue());
+        }
 
         this.props.onSuccess();
     }
