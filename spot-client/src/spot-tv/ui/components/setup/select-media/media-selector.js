@@ -41,19 +41,12 @@ export default class MediaSelector extends React.Component {
             label: selectorLabel
         } = this.props;
 
-        const selections = devices.map(({ label }) => {
-            return {
-                label,
-                value: label
-            };
-        });
-
         return (
             <div className = 'selector'>
                 <div className = 'select-label'>{ selectorLabel }</div>
                 <SimpleSelect
                     onChange = { this._onChange }
-                    options = { selections }
+                    options = { devices }
                     placeholder = 'Please select a device'
                     qaId = { this.props.qaId }
                     value = { device } />
