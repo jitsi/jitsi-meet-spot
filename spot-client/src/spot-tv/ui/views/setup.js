@@ -15,7 +15,6 @@ import {
     PairRemote,
     Profile
 } from './../components/setup';
-import { withCalendar } from './../loaders';
 
 /**
  * Displays the Spot-TV setup flow.
@@ -151,4 +150,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(withCalendar(connect(mapStateToProps)(Setup)));
+export default withRouter(connect(mapStateToProps)(Setup));
