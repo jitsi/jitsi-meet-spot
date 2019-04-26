@@ -66,7 +66,7 @@ export default class App extends React.Component {
     }
 
     /**
-     * Clears the remote control url so it can be set again.
+     * Clears the Spot-Remote url so it can be set again.
      *
      * @private
      * @returns {void}
@@ -83,11 +83,10 @@ export default class App extends React.Component {
     }
 
     /**
-     * Stores the remote control url so it can be displayed in
+     * Stores the Spot-Remote url so it can be displayed in
      * {@code RemoteControl}.
      *
-     * @param {string} remoteControlUrl - The Spot remote control url to be
-     * displayed.
+     * @param {string} remoteControlUrl - The Spot-Remote url to display.
      * @returns {void}
      */
     _onSubmitEnteredUrl(remoteControlUrl) {

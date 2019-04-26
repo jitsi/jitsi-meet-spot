@@ -3,7 +3,10 @@ const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://localhost:8000';
 module.exports = {
     /**
      * The name of the video file which should be used by Chrome as the video
-     * to display while using a fake camera.
+     * to display while using a fake camera. A file with a static image is used
+     * so the fake camera source can be used as a screenshare dongle source
+     * without triggering Spot-TV's camera input change detection which would
+     * automatically start a meeting.
      */
     FAKE_SCREENSHARE_FILE_NAME: 'static-image.y4m',
 

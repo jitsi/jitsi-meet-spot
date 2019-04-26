@@ -237,7 +237,7 @@ class SelectMedia extends React.Component {
      * type and updates the known state of connected devices.
      *
      * @param {Array<Object>} devices - The list of MediaDeviceInfos instances
-     * as provied by enumerateDevices.
+     * as provided by enumerateDevices.
      * @private
      * @returns {void}
      */
@@ -318,7 +318,8 @@ class SelectMedia extends React.Component {
     }
 
     /**
-     * Callback invoked to proceed to the next step of setup.
+     * Callback invoked to proceed to the save changes to the selected devices
+     * and proceed to the next step of setup.
      *
      * @private
      * @returns {void}

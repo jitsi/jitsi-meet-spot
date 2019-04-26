@@ -9,7 +9,7 @@ import { Fullscreen, FullscreenExit } from 'common/icons';
  */
 export default class FullscreenToggle extends React.Component {
     /**
-     * Initializes a new {@code App} instance.
+     * Initializes a new {@code FullscreenToggle} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.

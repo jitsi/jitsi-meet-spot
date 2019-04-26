@@ -8,7 +8,8 @@ import {
 import { logger } from 'common/logger';
 
 /**
- * Hides the implementation details of transmitting ultrasound messages.
+ * Encapsulates the implementation details loading ultrasound and transmitting
+ * ultrasound messages.
  */
 class UltrasoundService {
     /**
@@ -27,15 +28,15 @@ class UltrasoundService {
 
         /**
          * The service plays ultrasound to transmit text and then enqueues
-         * another transmission to by trasmitted after a timeout. A timeout is
-         * used to have a consistent interval between messages.
+         * another transmission to be transmitted after a timeout. A timeout is
+         * used to have a consistent interval between message plays.
          *
          * @type {timeoutID}
          */
         this._nextTransmissionTimeout = null;
 
         /**
-         * The text to be transmitted through using ultrasonic frequencies.
+         * The text to be transmitted using ultrasonic frequencies.
          *
          * @type {ArrayBuffer|null}
          */
@@ -70,7 +71,7 @@ class UltrasoundService {
      * filename, for the memory file dynamically loaded by the emscripten.
      * @param {number} transmissionDelay - The amount of time in milliseconds to
      * wait between transmitting an ultrasound message.
-     * @returns {Promise} Resolves when the ultrasound libary is ready to use.
+     * @returns {Promise} Resolves when the ultrasound library is ready to use.
      */
     initialize(
             emscriptenPath,

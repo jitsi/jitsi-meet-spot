@@ -1,4 +1,4 @@
-For Spot to display a calendar, an integration application needs to be made so Spot can talk to the application in order to obtain calendar events.
+For Spot-TV to display a calendar, an integration application needs to be made so Spot-TV can talk to the application in order to obtain calendar events.
 
 ## Creating the Google API client for Google Calendar integration
 
@@ -25,7 +25,7 @@ For Spot to display a calendar, an integration application needs to be made so S
 1. Add the following delegated graph permissions: Calendars.Read, Calendars.Read.Shared, User.Read
 1. Save the changes.
 
-Note: The user which will be logged into the calendar integration should be a delegate of the room which will be connected to Spot. This can be set in the admin portal, https://admin.microsoft.com/AdminPortal/Home#/ResourceMailbox.
+Note: The user which will be logged into the calendar integration should be a delegate of the room which will be connected to Spot-TV. This can be set in the admin portal, https://admin.microsoft.com/AdminPortal/Home#/ResourceMailbox.
 1. Select the desired room.
 1. Set the Delegate.
 1. Also, Edit Exchange Settings and set the delegate in "mailbox delegation."

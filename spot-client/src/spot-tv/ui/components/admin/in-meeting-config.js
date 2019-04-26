@@ -6,7 +6,7 @@ import { getMeetingOptions, setMeetingToolbarVisible } from 'common/app-state';
 import { logger } from 'common/logger';
 
 /**
- * Changes some settings that determines he behavior of the Jitsi-Meet meeting.
+ * Changes some settings that determines the behavior of the Jitsi-Meet meeting.
  *
  * @extends ReactElement.Component
  */

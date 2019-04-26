@@ -6,7 +6,7 @@ const JOIN_CODE_INPUT = '[data-qa-id=join-code-input]';
 const SUBMIT_BUTTON = '[data-qa-id=join-code-submit]';
 
 /**
- * A page object for interacting with the join code entry view of Spot.
+ * A page object for interacting with the join code entry view of Spot-Remote.
  */
 class JoinCodePage extends PageObject {
     /**
@@ -39,7 +39,7 @@ class JoinCodePage extends PageObject {
     }
 
     /**
-     * Proceeds directly to the join code view of a remote control.
+     * Proceeds directly to the join code view of Spot-Remote.
      *
      * @param {Map} [queryParams] - Additional parameters to append to the join
      * code url.

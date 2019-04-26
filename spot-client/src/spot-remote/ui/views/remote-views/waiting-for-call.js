@@ -30,7 +30,7 @@ import {
 } from './../../components';
 
 /**
- * Returns the React Element to display while the Spot instance is not in a
+ * Returns the React Element to display while the Spot-TV instance is not in a
  * meeting. Displays controls for starting a meeting.
  *
  * @extends React.PureComponent
@@ -47,7 +47,7 @@ class WaitingForCallView extends React.Component {
     };
 
     /**
-     * Initializes a new {@code App} instance.
+     * Initializes a new {@code WaitingForCallView} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -121,7 +121,8 @@ class WaitingForCallView extends React.Component {
     }
 
     /**
-     * Returns the feature to based on the currently selected view from the nav.
+     * Returns the UI to display to based on the currently selected view from
+     * the nav.
      *
      * @private
      * @returns {ReactComponent}
@@ -199,9 +200,9 @@ class WaitingForCallView extends React.Component {
     }
 
     /**
-     * Automatically starts the wireless screensharing flow or displays the
-     * screenshare start content if both wireless and wired screensharing are
-     * supported.
+     * Automatically starts the wireless screensharing flow or, f both wireless
+     * and wired screensharing are supported, displays the screenshare start
+     * modal.
      *
      * @private
      * @returns {void}
@@ -221,7 +222,7 @@ class WaitingForCallView extends React.Component {
     }
 
     /**
-     * Updates the state to display screen share.
+     * Updates the state to display screenshare.
      *
      * @param {boolean} wireless - True for wireless or false for wired.
      * @private
@@ -251,7 +252,7 @@ function mapStateToProps(state) {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

@@ -8,7 +8,7 @@ const MEETING_IFRAME = '#jitsiConferenceFrame0';
 const MEETING_VIEW = '[data-qa-id=meeting-view]';
 
 /**
- * A page object for interacting with the in-meeting view of Spot TV.
+ * A page object for interacting with the in-meeting view of Spot-TV.
  */
 class MeetingPage extends PageObject {
     /**
@@ -23,7 +23,7 @@ class MeetingPage extends PageObject {
     }
 
     /**
-     * Checks the jitsi iFrame for the meeting name it is displaying.
+     * Checks the Jitsi-Meet iFrame for the meeting name it is displaying.
      *
      * @returns {string}
      */
@@ -36,7 +36,7 @@ class MeetingPage extends PageObject {
     }
 
     /**
-     * Waits for the jitsi meeting to be displayed.
+     * Waits for the Jitsi-Meet meeting to be displayed.
      *
      * @returns {void}
      */

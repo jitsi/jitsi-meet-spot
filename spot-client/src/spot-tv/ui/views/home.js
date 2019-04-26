@@ -24,8 +24,7 @@ import {
 import { withCalendar } from './../loaders';
 
 /**
- * A view of all known meetings in the calendar connected with Spot. Provides
- * the ability to join those meetings and open a remote control instance.
+ * A view of all known meetings in the calendar connected with Spot-TV.
  *
  * @extends React.Component
  */
@@ -188,7 +187,7 @@ export class Home extends React.Component {
     }
 
     /**
-     * Instantiates a ReactElement with a message stating calendar events could
+     * Instantiates a React Element with a message stating calendar events could
      * not be fetched.
      *
      * @private
@@ -206,8 +205,8 @@ export class Home extends React.Component {
     }
 
     /**
-     * Instantiates a ReactElement with a message stating there are no scheduled
-     * meetings on the calendar associated with the Spot.
+     * Instantiates a React Element with a message stating there are no
+     * scheduled meetings on the calendar associated with the Spot-TV.
      *
      * @private
      * @returns {ReactElement}
@@ -225,7 +224,7 @@ export class Home extends React.Component {
     }
 
     /**
-     * Instantiates a ReactElement with a message stating Spot should have a
+     * Instantiates a React Element with a message stating Spot-TV should have a
      * calendar connected.
      *
      * @private

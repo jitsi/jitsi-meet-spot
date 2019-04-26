@@ -12,7 +12,7 @@ const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
 
 
 /**
- * A page object for interacting with the in meeting view of Spot-Remote.
+ * A page object for interacting with the in-meeting view of Spot-Remote.
  */
 class SpotRemoteInMeetingPage extends PageObject {
     /**

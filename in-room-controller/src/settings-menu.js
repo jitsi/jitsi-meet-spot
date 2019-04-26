@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
         height: window.height,
         padding: 20,
         width: window.width
-
     }
 });
 
@@ -25,7 +24,7 @@ export default class SettingsMenu extends React.Component {
     };
 
     /**
-     * Implements React's {@link SettingsMenu#render()}.
+     * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
      * @returns {ReactElement}

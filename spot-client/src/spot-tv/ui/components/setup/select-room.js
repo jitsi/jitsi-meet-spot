@@ -138,7 +138,8 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Updates the known manually entered email for which to connect with Spot.
+     * Updates the known manually entered email for which Spot-TV should connect
+     * with.
      *
      * @param {Event} event - The change event for updating the entered email.
      * @private
@@ -151,8 +152,8 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Sets the email from which calendar events should be fetched by Spot and
-     * ends this setup step.
+     * Sets the email from which calendar events should be fetched by Spot-TV
+     * and ends this setup step.
      *
      * @returns {void}
      */
@@ -171,7 +172,7 @@ export class SelectRoom extends React.Component {
     }
 
     /**
-     * Sets the room from which calendar events should be fetched by Spot and
+     * Sets the room from which calendar events should be fetched by Spot-TV and
      * ends this setup step.
      *
      * @param {Object} room - The room to be used for calendar integration.

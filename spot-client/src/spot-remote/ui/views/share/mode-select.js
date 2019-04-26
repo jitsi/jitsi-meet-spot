@@ -5,7 +5,8 @@ import { ArrowForward, ScreenShare } from 'common/icons';
 import { NavButton } from './../../components';
 
 /**
- * Displays buttons for starting wireless screenshare or becoming a Spot-Remote.
+ * Displays buttons for starting wireless screenshare or becoming a full
+ * featured Spot-Remote.
  *
  * @extends React.Component
  */

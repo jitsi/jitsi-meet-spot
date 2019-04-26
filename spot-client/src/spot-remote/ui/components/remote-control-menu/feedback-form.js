@@ -17,7 +17,7 @@ const DEFAULT_INACTIVITY_TIMEOUT = 60 * 1000;
 
 /**
  * A React Component for inputting and submitting post-call feedback by leaving
- * a rating and a
+ * a rating and an explanation for the rating.
  *
  * @extends React.Component
  */
@@ -159,7 +159,7 @@ class FeedbackForm extends React.Component {
     }
 
     /**
-     * Sends the entered feedback to the Spot instance so it can be submitted.
+     * Sends the entered feedback to the Spot-TV instance so it can be submitted.
      *
      * @param {Event} event - The submit event passed through by the form.
      * @private
@@ -288,7 +288,7 @@ class FeedbackForm extends React.Component {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

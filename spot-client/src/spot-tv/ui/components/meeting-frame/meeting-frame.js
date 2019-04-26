@@ -12,7 +12,7 @@ import { parseMeetingUrl } from 'common/utils';
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
 /**
- * The iFrame used to to display a meeting hosted on a jitsi instance.
+ * The iFrame used to to display a Jitsi-Meet meeting.
  *
  * @extends React.Component
  */
@@ -51,9 +51,10 @@ export class MeetingFrame extends React.Component {
         super(props);
 
         /**
-         * The external api exposes toggle actions. Store various state to
-         * prevent execution of remote commands when the meeting is already in
-         * the desired state.
+         * The external api exposes toggle actions. Various states are stored
+         * locally so any command can be compared to the cached state to prevent
+         * calling a toggle action when the desired state has already been
+         * achieved.
          */
         this._isAudioMuted = false;
         this._isFilmstripVisible = true;
@@ -272,7 +273,6 @@ export class MeetingFrame extends React.Component {
         this.props.updateSpotTvState({ audioMuted: muted });
     }
 
-
     /**
      * Callback invoked when a Spot-Remote has sent this Spot-TV a message or
      * command that should be acted upon while in a meeting.
@@ -329,8 +329,8 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Sets the internal flag for the jitsi meeting having successfully been
-     * joined.
+     * Sets the internal flag for the Jitsi-Meet meeting having successfully
+     * been joined.
      *
      * @private
      * @returns {void}
@@ -350,7 +350,7 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Updates the known status of Spot to remote controllers.
+     * Informs Spot-Remotes the Spot-TV is no longer in a meeting.
      *
      * @private
      * @returns {void}
@@ -364,7 +364,7 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Called when Jitsi Meet displays the feedback prompt.
+     * Called when Jitsi-Meet displays the feedback prompt.
      *
      * @private
      * @returns {void}
@@ -444,7 +444,7 @@ export class MeetingFrame extends React.Component {
 
     /**
      * Callback invoked after screensharing is enabled or disabled within the
-     * jitsi meeting.
+     * Jitsi-Meet meeting.
      *
      * @param {Object} event - The screensharing change event.
      * @private
@@ -476,7 +476,8 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onScreenshareDeviceConnected() {
-        // FIXME: There can be clashing with the wireless screensharing.
+        // FIXME: There can be clashing with any wireless screensharing
+        // handshake in progress.
 
         if (!this._isScreensharing) {
             this._jitsiApi.executeCommand('toggleShareScreen');
@@ -491,7 +492,8 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onScreenshareDeviceDisconnected() {
-        // FIXME: There can be clashing with the wireless screensharing.
+        // FIXME: There can be clashing with the wireless screensharing being
+        // turned off due to a device being disconnected.
 
         if (this._isScreensharing) {
             this._jitsiApi.executeCommand('toggleShareScreen');
@@ -500,7 +502,7 @@ export class MeetingFrame extends React.Component {
 
     /**
      * Passes a message from {@code JitsiMeetExternalAPI} to a specified
-     * remote control.
+     * Spot-Remote
      *
      * @param {Object} event - The object holding information on what and how to
      * send the message.
@@ -538,7 +540,7 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Renders a text overlay which hides Jitsi Meet iFrame when it's asking for feedback.
+     * Renders a text overlay which hides Jitsi-Meet iFrame when it's asking for feedback.
      *
      * @returns {ReactNode}
      * @private
@@ -557,11 +559,11 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Sets the internal reference to the iFrame element displaying the jitsi
-     * meeting.
+     * Sets the internal reference to the iFrame element displaying the
+     * Jitsi-Meet meeting.
      *
      * @param {HTMLIFrameElement} ref - The HTMLIFrameElement displaying the
-     * jitsi meeting.
+     * Jitsi-Meet meeting.
      * @private
      * @returns {void}
      */
@@ -571,9 +573,9 @@ export class MeetingFrame extends React.Component {
 }
 
 /**
- * Creates actions which can update Redux state..
+ * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

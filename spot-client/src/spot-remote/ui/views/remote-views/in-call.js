@@ -22,7 +22,7 @@ import {
 import ScreenshareModal from './screenshare-modal';
 
 /**
- * A view for displaying ways to interact with the Spot while Spot is in a
+ * A view for displaying ways to interact with the Spot-TV while Spot-TV is in a
  * meeting.
  *
  * @extends React.Component
@@ -61,7 +61,7 @@ export class InCall extends React.Component {
     }
 
     /**
-     * Stops any wireless screensharing in progress with the Spot-Remote.
+     * Stops any wireless screensharing in progress from the Spot-Remote.
      *
      * @inheritdoc
      */
@@ -241,7 +241,7 @@ function mapStateToProps(state) {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */
@@ -268,7 +268,6 @@ function mapDispatchToProps(dispatch) {
         /**
          * Triggers wired screensharing to be enabled.
          *
-         * @private
          * @returns {void}
          */
         onStartWiredScreenshare() {

@@ -11,7 +11,7 @@ import {
 } from './../components';
 
 /**
- * A component for providing post-setup Spot configuration.
+ * A component for providing post-setup Spot-TV configuration.
  *
  * @extends React.Component
  */
@@ -48,7 +48,7 @@ export default class AdminView extends React.Component {
     }
 
     /**
-     * Returns the contents that should be displayed.
+     * Returns the contents of the view that should be displayed.
      *
      * @private
      * @returns {ReactElement}

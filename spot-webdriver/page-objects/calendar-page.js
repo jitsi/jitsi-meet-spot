@@ -23,7 +23,8 @@ class CalendarPage extends PageObject {
     }
 
     /**
-     * Scrapes the join code necessary for a Spot-Remote to connect to Spot-TV.
+     * Scrapes the UI for the join code necessary for a Spot-Remote to connect
+     * to Spot-TV.
      *
      * @returns {string}
      */

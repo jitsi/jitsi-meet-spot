@@ -3,12 +3,12 @@ const CalendarPage = require('../page-objects/calendar-page');
 const MeetingPage = require('../page-objects/meeting-page');
 
 /**
- * A model wrapping a browser driver that represents a Spot TV which is the main screen in
+ * A model wrapping a browser driver that represents a Spot-TV which is the main screen in
  * a conference room.
  */
 class SpotTV {
     /**
-     * Initializes a new {@code User} instance.
+     * Initializes a new {@code SpotTV} instance.
      *
      * @inheritdoc
      */

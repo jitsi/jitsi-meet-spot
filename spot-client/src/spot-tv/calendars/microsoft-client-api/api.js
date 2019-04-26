@@ -39,7 +39,7 @@ export default {
     },
 
     /**
-     * Performs an HTTP request to a given endpoint.
+     * Performs an HTTP request to a given API endpoint.
      *
      * @param {string} url - The api endpoint.
      * @param {Object} options - Additional details of how the request should
@@ -112,7 +112,9 @@ export default {
              * Callback with scope access to other variables that are part of
              * the sign in request.
              *
-             * @param {Object} event - The event from the post message.
+             * @param {Object} event - The event from the post message from the
+             * auth redirect, which should the redirect url and its access
+             * token.
              * @private
              * @returns {void}
              */

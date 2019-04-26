@@ -4,7 +4,9 @@ import { logger } from 'common/logger';
 import VideoChangeListener from './video-change-listener';
 
 /**
- * Encapsulates interacting with the wired screensharing feature.
+ * Encapsulates detection of when screensharing devices have significant change
+ * to their video feeds, which may be caused by a device being plugged into
+ * them.
  */
 export class WiredScreenshareService {
     /**
@@ -12,7 +14,7 @@ export class WiredScreenshareService {
      */
     constructor() {
         /**
-         * A mapping of device labels to VideoChangeLister instances.
+         * A mapping of device labels to {@code VideoChangeLister} instances.
          */
         this._videoChangeListeners = new Map();
     }
@@ -41,7 +43,7 @@ export class WiredScreenshareService {
      * a connection change has been detected.
      * @param {number} initialFrameValue - Optional value indicating the idle
      * frame from which to detect screenshare changes.
-     * @returns {Promise}
+     * @returns {void}
      */
     startListeningForConnection(deviceLabel, callback, initialFrameValue) {
         if (!deviceLabel) {
@@ -76,7 +78,7 @@ export class WiredScreenshareService {
      * screensharing device.
      * @param {Function} callback - The callback which was registered to be
      * notified when a connection change has been detected.
-     * @returns {Promise}
+     * @returns {void}
      */
     stopListeningForConnection(deviceLabel, callback) {
         const videoChangeListener = this._videoChangeListeners.get(deviceLabel);

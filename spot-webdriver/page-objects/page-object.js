@@ -61,8 +61,8 @@ class PageObject {
      *
      * @param {boolean} state - The state to wait for.
      * @param {Object} options - See each option for details.
-     * @param {string} options.onStateSelector - The element selector used for the thruthy state.
-     * @param {string} options.offStateSelector - The element's selector used for the not thruthy
+     * @param {string} options.onStateSelector - The element selector used for the truthy state.
+     * @param {string} options.offStateSelector - The element's selector used for the not truthy
      * state.
      * @param {number} options.waitTime - How long will the method wait for the state to change (in
      * milliseconds).

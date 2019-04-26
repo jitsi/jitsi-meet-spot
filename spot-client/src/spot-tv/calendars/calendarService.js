@@ -58,7 +58,7 @@ export class CalendarService extends EventEmitter {
     }
 
     /**
-     * Requests current calendar events for a provided room.
+     * Requests current calendar events for a provided resource.
      *
      * @param {Object} options - Options required for fetch the calendar events.
      * @param {string} options.email - The account email from which to request calendar
@@ -82,8 +82,8 @@ export class CalendarService extends EventEmitter {
     }
 
     /**
-     * Requests the rooms accessible by email linked to the currently active
-     * calendar integration.
+     * Requests the rooms accessible by the account linked to the currently
+     * active calendar integration.
      *
      * @returns {Promise<Array<Object>>}
      */
@@ -141,8 +141,8 @@ export class CalendarService extends EventEmitter {
      *
      * @param {Object} options - Options required for fetch the calendar events.
      * See {@code getCalendar} for details.
-     * @returns {void}
      * @private
+     * @returns {void}
      */
     _pollForEvents(options) {
         this.getCalendar(options)

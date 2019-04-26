@@ -7,7 +7,7 @@ const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const SHARE_CONTENT_BUTTON = '[data-qa-id=share-content]';
 
 /**
- * A page object for interacting with the remote control view of Spot.
+ * A page object for interacting with the waiting view of Spot-Remote.
  */
 class RemoteControlPage extends PageObject {
     /**

@@ -20,8 +20,9 @@ import { ElectronDesktopPickerModal } from './../components/electron-desktop-pic
 import { Feedback, InCall, WaitingForCall } from './remote-views';
 
 /**
- * Displays the remote control view for controlling a Spot instance from another
- * browser window.
+ * Displays the remote control view for controlling a Spot-TV instance from am
+ * instance of Spot-Remote. This view has sub-views for interactiog with
+ * Spot-TV in its different states.
  *
  * @extends React.PureComponent
  */
@@ -39,7 +40,7 @@ export class RemoteControl extends React.PureComponent {
 
     /**
      * Navigates away from the view {@code RemoteControl} when no longer
-     * connected to a Spot.
+     * connected to a Spot-TV.
      *
      * @inheritdoc
      */
@@ -51,7 +52,7 @@ export class RemoteControl extends React.PureComponent {
     }
 
     /**
-     * Clean up Spot and connection related state.
+     * Clean up connection related state.
      *
      * @inheritdoc
      */
@@ -127,7 +128,7 @@ function mapStateToProps(state) {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

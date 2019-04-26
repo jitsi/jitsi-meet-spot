@@ -14,7 +14,7 @@ export const AUTH_ENDPOINT
 export const MS_CONSUMER_TENANT = '9188040d-6c67-4c5b-b112-36a304b66dad';
 
 /**
- * Keys to use when interactingw ith persisted data.
+ * Keys for persisted data that must be stored and queried for authentication.
  */
 export const persistenceKeys = {
     DOMAIN: 'msUserDomainType',

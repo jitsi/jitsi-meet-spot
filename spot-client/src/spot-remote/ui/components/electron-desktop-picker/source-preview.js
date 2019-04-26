@@ -58,7 +58,7 @@ export default class SourcePreview extends React.Component {
     }
 
     /**
-     * Callback invoked when {@code SourcePreview} is singe clicked.
+     * Callback invoked when {@code SourcePreview} is single clicked.
      *
      * @private
      * @returns {void}

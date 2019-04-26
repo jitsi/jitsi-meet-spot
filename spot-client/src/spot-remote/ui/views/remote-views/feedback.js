@@ -5,7 +5,7 @@ import { Clock, RoomName } from 'common/ui';
 import { FeedbackForm } from './../../components';
 
 /**
- * A view for the remote that displays a feedback form for a meeting that has
+ * A view for Spot-Remote that displays a feedback form for a meeting that has
  * been exited.
  *
  * @extends React.PureComponent

@@ -32,7 +32,7 @@ import ModeSelect from './mode-select';
 import StopShare from './stop-share';
 
 /**
- * Controls what UI components display while in Share mode.
+ * Controls what UI components display while in share mode.
  *
  * @extends React.PureComponent
  */
@@ -70,7 +70,7 @@ export class Share extends React.PureComponent {
 
     /**
      * Automatically start the screensharing flow. It is assumed if
-     * {@code Share} is displayed for the first time it is to immediately
+     * {@code Share} is displayed for the first time it should immediately
      * start screensharing.
      *
      * @inheritdoc
@@ -172,7 +172,7 @@ export class Share extends React.PureComponent {
 
     /**
      * Stops any screensharing in progress and hangs up, as the assumption in
-     * share mode there is not a desire for Spot-TV in a meeting without having
+     * share mode there is no desire for Spot-TV in a meeting without having
      * screenshare be active.
      *
      * @private

@@ -6,8 +6,8 @@ import { getRandomMeetingName } from 'common/utils';
 import MeetingNameEntry from './meeting-name-entry';
 
 /**
- * The {@code MeetingNameEntry} component wrapped in a component which shows
- * a different placeholder after an inactivity timeout. The methods
+ * Wraps {@code MeetingNameEntry} in a component which shows a different
+ * placeholder after an inactivity timeout. The methods
  * _clearRandomMeetingNameProcess and _createGenerateMeetingNameTimeout are
  * called circularly to create the effect.
  *

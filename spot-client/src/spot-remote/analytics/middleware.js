@@ -103,7 +103,7 @@ MiddlewareRegistry.register(() => next => action => {
 });
 
 /**
- * Checks if an async action update is notifies that a request is pending.
+ * Checks if an async action update is notifying that a request is pending.
  *
  * @param {Object} action - The Redux action.
  * @private
