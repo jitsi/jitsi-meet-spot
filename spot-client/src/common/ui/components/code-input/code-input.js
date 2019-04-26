@@ -114,7 +114,7 @@ export default class CodeInput extends React.Component {
         if (nextInputBoxIndex < this.props.length) {
             this._inputRefs[nextInputBoxIndex].focus();
         } else {
-            this.props.onEntryComplete();
+            this.props.onEntryComplete && this.props.onEntryComplete(this._getEnteredText());
         }
     }
 
@@ -222,6 +222,16 @@ export default class CodeInput extends React.Component {
      * @returns {void}
      */
     _notifyOfChange() {
+        this.props.onChange && this.props.onChange(this._getEnteredText());
+    }
+
+    /**
+     * Returns the entered text based on the current state.
+     *
+     * @returns {string}
+     * @private
+     */
+    _getEnteredText() {
         const inputValuesWithSpaces = [];
 
         // Use a for-loop in case any values are "empty" and thus cannot be
@@ -230,7 +240,7 @@ export default class CodeInput extends React.Component {
             inputValuesWithSpaces.push(this.state.inputValues[i] || ' ');
         }
 
-        this.props.onChange(inputValuesWithSpaces.join(''));
+        return inputValuesWithSpaces.join('');
     }
 
     /**
