@@ -1,7 +1,8 @@
 /**
- * Extrapolates a url for a jitsi meeting from a given string.
+ * Extrapolates a url for a Jitsi-Meet meeting from a given string.
  *
- * @param {string} location - A string which may contains a jitsi meeting url.
+ * @param {string} location - A string which may contains a Jitsi-Meet meeting
+ * url.
  * @private
  * @returns {string}
  */

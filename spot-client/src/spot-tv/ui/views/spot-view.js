@@ -8,8 +8,8 @@ import { View } from 'common/ui';
 import { JoinInfo } from './../components';
 
 /**
- * A React Component representing a single screen in the Spot client. Wraps
- * {@code View} to include notifying remotes of the current displayed view.
+ * A React Component representing a single screen in Spot-TV. Wraps {@code View}
+ * to include notifying this component's parent of the current displayed view.
  *
  * @extends React.Component
  */
@@ -23,8 +23,7 @@ class SpotView extends React.Component {
     };
 
     /**
-     * Updates the {@code remoteControlService} with the currently displayed
-     * viewed name.
+     * Invokes notification of the currently displayed view name.
      *
      * @inheritdoc
      */
@@ -33,8 +32,7 @@ class SpotView extends React.Component {
     }
 
     /**
-     * Updates the {@code remoteControlService} with the currently displayed
-     * viewed name.
+     * Invokes notification of the currently displayed view name.
      *
      * @inheritdoc
      */
@@ -68,8 +66,8 @@ class SpotView extends React.Component {
     }
 
     /**
-     * Helper for informing remote controls of the current view displays on
-     * the Spot-TV.
+     * Helper for notification this component's parent of the currently
+     * displayed view name.
      *
      * @param {string} name - The name of the current view.
      * @private
@@ -96,7 +94,7 @@ function mapStateToProps(state) {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

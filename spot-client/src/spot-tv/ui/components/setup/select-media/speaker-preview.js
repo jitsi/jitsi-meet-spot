@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
- * Displays UI to play a sound, and does play the sound, from a selected
+ * Displays UI to play a sound, and actually play the sound, from a selected
  * speaker.
  *
  * @extends React.PureComponent

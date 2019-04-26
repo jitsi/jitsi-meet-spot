@@ -223,7 +223,7 @@ export class ScreensharePicker extends React.Component {
     }
 
     /**
-     * Renders a ReactElement to get confirmation for stopping a screenshare
+     * Renders a React Element to get confirmation for stopping a screenshare
      * in progress. The contents of the confirmation depends on the type of
      * screensharing in progress.
      *

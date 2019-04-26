@@ -1,8 +1,8 @@
 # Manual Test Plan
 
-This document is a manual QA test plan to run as needed. Also, it serves as a feature and behavior summary for spot-client.
+This document is a manual QA test plan to run as needed. Also, it serves as a feature and behavior summary for Spot.
 
-Note that some of the test cases should already be automated in spot-webdriver.
+Note that some of the test cases should already be automated in Spot-Webdriver.
 
 Pairing
 ------

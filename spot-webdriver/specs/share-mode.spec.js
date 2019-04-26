@@ -1,7 +1,7 @@
 const SpotSession = require('../user/spot-session');
 const userFactory = require('../user/user-factory');
 
-describe('In screenshare-only mode', () => {
+describe('In share mode', () => {
     const spotTV = userFactory.getSpotTV();
     const spotRemote = userFactory.getSpotRemote();
     const spotSession = new SpotSession(spotTV, spotRemote);

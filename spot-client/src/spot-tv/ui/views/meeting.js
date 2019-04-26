@@ -22,7 +22,7 @@ import { Loading } from 'common/ui';
 import { MeetingFrame } from './../components';
 
 /**
- * Displays the meeting url specified in the url.
+ * Displays a Jitsi-Meet meeting.
  *
  * @extends React.Component
  */
@@ -184,7 +184,7 @@ export class Meeting extends React.Component {
 
     /**
      * Callback invoked when the meeting ends. Attempts to redirect to the
-     * calendar.
+     * home view.
      *
      * @param {Object} leaveEvent - Details about why the current view is being
      * exited.

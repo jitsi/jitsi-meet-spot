@@ -6,8 +6,7 @@ import { getJoinCode } from 'common/app-state';
 import { windowHandler } from 'common/utils';
 
 /**
- * Displays information necessary to input a join code to become a remote
- * control for a Spot.
+ * Displays information about how a Spot-Remote can pair with a Spot-TV.
  *
  * @extends React.Component
  */

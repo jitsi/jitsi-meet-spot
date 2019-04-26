@@ -8,7 +8,6 @@ const SpotRemote = require('./spot-remote-user');
  * are wrapped in a user model and factory getter to abstract that detail from
  * the tests.
  */
-
 const spotRemote = new SpotRemote(remoteControlBrowser);
 const spotTV = new SpotTV(spotBrowser);
 

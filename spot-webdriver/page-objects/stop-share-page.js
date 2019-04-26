@@ -4,8 +4,8 @@ const STOP_SHARE_CTA = '[data-qa-id=stop-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share-button]';
 
 /**
- * A page object for interacting with the Share Mode view for stopping any
- * local wireless screenshare in progress.
+ * A page object for interacting with the Share Mode view of Spot-Remote for
+ * stopping any local wireless screenshare in progress.
  */
 class StopSharePage extends PageObject {
     /**

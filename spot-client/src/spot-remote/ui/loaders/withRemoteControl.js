@@ -71,7 +71,7 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Adds a listener for {@code remoteControlService} updates.
+     * Adds listeners for {@code remoteControlService} updates.
      *
      * @inheritdoc
      */
@@ -89,7 +89,7 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Clears the listener for {@code remoteControlService} updates.
+     * Clears the listeners for {@code remoteControlService} updates.
      *
      * @inheritdoc
      */

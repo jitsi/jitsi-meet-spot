@@ -42,7 +42,7 @@ export default class MicPreview extends React.PureComponent {
     }
 
     /**
-     * Updates which audio input device is being listend to for changes in
+     * Updates which audio input device is being listened to for changes in
      * volume.
      *
      * @inheritdoc

@@ -128,7 +128,7 @@ export default class DialPad extends React.Component {
     }
 
     /**
-     * Callback invoked to enter a jitsi meeting and invite the entered
+     * Callback invoked to enter a Jitsi-Meet meeting and invite the entered
      * phone number.
      *
      * @param {Event} event - The form submission event to proceed to the a

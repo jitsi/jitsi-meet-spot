@@ -5,12 +5,12 @@ const RemoteControlPage = require('../page-objects/remote-control-page');
 const StopSharePage = require('../page-objects/stop-share-page');
 
 /**
- * A model wrapping a browser driver representing a Spot Remote which acts as the remote
- * controller of a Spot TV.
+ * A model wrapping a browser driver representing a Spot-Remote which acts as the remote
+ * controller of a Spot-TV.
  */
 class SpotRemote {
     /**
-     * Initializes a new {@code User} instance.
+     * Initializes a new {@code SpotRemote} instance.
      *
      * @inheritdoc
      */
@@ -36,7 +36,7 @@ class SpotRemote {
 
     /**
      * Returns an instance of {@code JoinCodePage} which wraps interactions with the join code view
-     * in the remote control.
+     * in the Spot-Remote.
      *
      * @returns {JoinCodePage}
      */
@@ -56,7 +56,7 @@ class SpotRemote {
 
     /**
      * Returns an instance of {@code RemoteControlPage} which wraps interactions with the remote
-     * control view in Spot.
+     * control view in Spot-Remote.
      *
      * @returns {RemoteControlPage}
      */
@@ -66,7 +66,7 @@ class SpotRemote {
 
     /**
      * Returns an instance of {@code StopSharePage} which wraps interactions with stop sharing
-     * view in the remote control.
+     * view in Spot-Remote.
      *
      * @returns {StopSharePage}
      */

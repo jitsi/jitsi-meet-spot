@@ -12,7 +12,8 @@ import {
 import { Button, Input } from 'common/ui';
 
 /**
- * Prompts to set a display name and an avatar url for the current room.
+ * Prompts to set a display name and an avatar url for the Spot-TV to use during
+ * meetings.
  *
  * @extends React.Component
  */
@@ -104,7 +105,7 @@ export class Profile extends React.Component {
     }
 
     /**
-     * Callback invoked to update the current display name and avatar url.
+     * Callback invoked to save the entered display name and avatar url.
      *
      * @private
      * @returns {void}
@@ -139,7 +140,7 @@ function mapStateToProps(state) {
 /**
  * Creates actions which can update Redux state.
  *
- * @param {Object} dispatch - The Redux dispatch function to update state.
+ * @param {Function} dispatch - The Redux dispatch function to update state.
  * @private
  * @returns {Object}
  */

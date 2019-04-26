@@ -107,7 +107,7 @@ window.JitsiMeetSpotConfig = {
         SS_MAX_FPS: undefined,
 
         /**
-         * The minumum frames per second the browser should capture during
+         * The minimum frames per second the browser should capture during
          * wired and wireless screensharing.
          *
          * @type {number}
@@ -122,6 +122,8 @@ window.JitsiMeetSpotConfig = {
     MODE_DOMAINS: {
         /**
          * The domain which should trigger share mode for the Spot-Remote.
+         *
+         * @type {string}
          */
         SHARE: undefined
     },
@@ -149,7 +151,7 @@ window.JitsiMeetSpotConfig = {
 
         /**
          * A string to convert to regex which will be run against the user
-         * agent to determine if a remote control should play ultrasound.
+         * agent to determine if a Spot-Remote should play ultrasound.
          *
          * @type {string}
          */
@@ -167,11 +169,11 @@ window.JitsiMeetSpotConfig = {
     /**
      * This configuration is used to establish a connection with the XMPP
      * service used for jitsi deployments. The service is re-used to support
-     * communication between remote controlllers and Spot instances. More
+     * communication between Spot-Remote and Spot-TV instances. More
      * details about what these configuration values mean be found in the
      * lib-jitsi-meet repository, https://github.com/jitsi/lib-jitsi-meet. This
-     * configuration an essentially copy the configuration already being used by
-     * the jitsi UI.
+     * configuration is essentially a copy of the configuration already being
+     * used by jitsi-meet.
      */
     XMPP_CONFIG: {
         bosh: undefined,

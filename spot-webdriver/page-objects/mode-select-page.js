@@ -5,11 +5,11 @@ const REMOTE_CONTROL_BUTTON = '[data-qa-id=remote-control]';
 
 /**
  * A page object for interacting with the Share Mode view for choosing to
- * start sharing or enter the full Spot-Remote view.
+ * start screensharing or enter the full Spot-Remote view.
  */
 class ModeSelectPage extends PageObject {
     /**
-     * Initializes a new {@code ShareOnlyPage} instance.
+     * Initializes a new {@code ModeSelectPage} instance.
      *
      * @inheritdoc
      */
@@ -20,7 +20,7 @@ class ModeSelectPage extends PageObject {
     }
 
     /**
-     * Clicks the button to transition to the full remote control interface.
+     * Clicks the button to transition to the full Spot-Remote interface.
      *
      * @returns {void}
      */

@@ -18,7 +18,7 @@ import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
  * Responsible for listening for wired screenshare connection updates and
- * updating the rest of the app about the state.
+ * updating the rest of the app.
  *
  * @extends React.Component
  */
@@ -47,7 +47,7 @@ class WiredScreenshareDetector extends React.PureComponent {
 
     /**
      * Starts listening for the wired screensharing input to have a device be
-     * connected.
+     * connected or disconnected.
      *
      * @inheritdoc
      */
@@ -93,8 +93,8 @@ class WiredScreenshareDetector extends React.PureComponent {
     }
 
     /**
-     * Starts listening for the wired screensharing input to have a device be
-     * connected.
+     * Cleans up an listeners that have been registered for detecting wired
+     * screenshare changes.
      *
      * @inheritdoc
      */
@@ -123,7 +123,8 @@ class WiredScreenshareDetector extends React.PureComponent {
      * Updates known state of whether or not the selected screensharing device,
      * if any, is connected.
      *
-     * @param {Array<Object>} deviceList - Eats honey.
+     * @param {Array<Object>} deviceList - The list of available audio and
+     * devices devices.
      * @private
      * @returns {void}
      */

@@ -1,11 +1,11 @@
 const SpotSession = require('../user/spot-session');
 
-describe('A remote can connect to a Spot', () => {
+describe('A Spot-Remote can connect to a Spot-TV', () => {
     const userFactory = require('../user/user-factory');
     const spotTV = userFactory.getSpotTV();
     const spotRemote = userFactory.getSpotRemote();
 
-    it('from the remote control', () => {
+    it('using a code', () => {
         new SpotSession(spotTV, spotRemote).connectRemoteToTV();
     });
 });

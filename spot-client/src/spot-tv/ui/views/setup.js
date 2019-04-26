@@ -18,7 +18,7 @@ import {
 import { withCalendar } from './../loaders';
 
 /**
- * Displays the Spot setup flow.
+ * Displays the Spot-TV setup flow.
  *
  * @extends React.Component
  */

@@ -6,7 +6,8 @@ import { getJoinCode } from 'common/app-state';
 import { Button } from 'common/ui';
 
 /**
- * Displays a setup step showing a join code to connect a Spot-Remote
+ * Displays a setup step showing a join code for a Spot-Remote to use to connect
+ * to a Spot-TV.
  *
  * @extends React.Component
  */
@@ -77,7 +78,7 @@ export class PairRemote extends React.Component {
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code RoomName}.
+ * {@code PairRemote}.
  *
  * @param {Object} state - The Redux state.
  * @private

@@ -4,8 +4,7 @@ import React from 'react';
 import { logger } from 'common/logger';
 
 /**
- * Displays a button to navigate through the different views of the waiting
- * view.
+ * Displays a button with an icon and a label below.
  *
  * @extends React.Component
  */
@@ -119,7 +118,7 @@ export default class NavButton extends React.Component {
     }
 
     /**
-     * Callback invokvd when the component is clicked.
+     * Callback invoked when the component is clicked.
      *
      * @private
      * @returns {void}

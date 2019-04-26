@@ -1,6 +1,6 @@
 const SpotSession = require('../user/spot-session');
 
-describe('Can start a meeting of any name', () => {
+describe('Can start a meeting', () => {
     const userFactory = require('../user/user-factory');
     const spotTV = userFactory.getSpotTV();
     const spotRemote = userFactory.getSpotRemote();
@@ -10,7 +10,7 @@ describe('Can start a meeting of any name', () => {
         session.connectRemoteToTV();
     });
 
-    it('from the remote control', () => {
+    it('with any name', () => {
         const testMeetingName = session.joinMeeting();
 
         expect(spotTV.getMeetingName()).toBe(testMeetingName);

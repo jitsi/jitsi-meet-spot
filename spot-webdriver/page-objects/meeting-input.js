@@ -4,8 +4,8 @@ const INPUT = '[data-qa-id=meeting-name-input] input';
 const SUBMIT_BUTTON = '[data-qa-id=meeting-name-submit]';
 
 /**
- * A page object for interacting with the input field for entering a meeting
- * name to join.
+ * A page object for interacting with Spot-Remote's input field for entering a
+ * meeting name to join.
  */
 class MeetingInput extends PageObject {
     /**
@@ -22,8 +22,7 @@ class MeetingInput extends PageObject {
     /**
      * Sets the input value.
      *
-     * @param {string} meetingName - The text to enter into
-     * {@code MeetingInput}.
+     * @param {string} meetingName - Text to enter into {@code MeetingInput}.
      * @returns {void}
      */
     setMeetingName(meetingName) {
@@ -49,7 +48,7 @@ class MeetingInput extends PageObject {
      * A convenience method for going to the passed-in meeting name.
      *
      * @param {string} meetingName - The name of the meeting to type into the
-     * form.
+     * {@code MeetingInput}.
      * @returns {void}
      */
     submitMeetingName(meetingName) {

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 /**
- * A view for entering the remote control url to visit be default on application
+ * A view for entering the default Spot-Remote url to visit on application
  * launch.
  *
  * @extends React.Component
@@ -31,7 +31,7 @@ export default class Setup extends React.Component {
     };
 
     /**
-     * Initializes a new {@code App} instance.
+     * Initializes a new {@code Setup} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -70,8 +70,8 @@ export default class Setup extends React.Component {
     /**
      * Updates the known entered remote control url.
      *
-     * @param {string} enteredRemoteControlUrl - The Spot remote control url
-     * entered so far.
+     * @param {string} enteredRemoteControlUrl - The Spot-Remote url entered so
+     * far.
      * @private
      * @returns {void}
      */
@@ -80,8 +80,7 @@ export default class Setup extends React.Component {
     }
 
     /**
-     * Callback invoked when a Spot remote control url has been submitted for
-     * use.
+     * Callback invoked when a Spot-Remote url has been submitted for use.
      *
      * @private
      * @returns {void}

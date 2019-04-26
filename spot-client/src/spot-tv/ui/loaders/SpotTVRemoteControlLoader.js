@@ -26,7 +26,9 @@ export class SpotTVRemoteControlLoader extends React.Component {
     };
 
     /**
-     * Configures analytics to report events as a Spot-TV.
+     * Configures analytics to report events as a Spot-TV and starts the
+     * connection to the remote control service for sending updates and
+     * receiving commands.
      *
      * @inheritdoc
      */

@@ -40,7 +40,7 @@ export default {
     },
 
     /**
-     * Requests current Google calendar events for a provided room.
+     * Requests current Google calendar events for a provided resource.
      *
      * @param {string} email - The Google-provided id of a meeting room (which
      * looks like an email) or the account email from which to request calendar

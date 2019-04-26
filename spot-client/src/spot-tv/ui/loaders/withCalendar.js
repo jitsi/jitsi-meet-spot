@@ -43,7 +43,7 @@ export class CalendarLoader extends AbstractLoader {
     }
 
     /**
-     * Begins interactions with the {@code calendarService}.
+     * Registers listeners to act on updates from {@code calendarService}.
      *
      * @inheritdoc
      */
@@ -61,7 +61,7 @@ export class CalendarLoader extends AbstractLoader {
     }
 
     /**
-     * Stops the {@code calendarService}.
+     * Stops listening to {@code calendarService}.
      *
      * @inheritdoc
      */

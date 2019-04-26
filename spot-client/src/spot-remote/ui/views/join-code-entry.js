@@ -20,7 +20,7 @@ import { NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
 /**
- * Displays a view to enter a join code for connecting with a Spot instance.
+ * Displays a view to enter a join code for connecting with a Spot-TV instance.
  *
  * @extends React.Component
  */
@@ -64,8 +64,9 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Ensures no Spot connection is running while trying to connect to another
-     * instance of Spot.
+     * Ensures no Spot-TV connection is running while trying to connect to
+     * another instance of Spot-TV. Parses the URL for any additional
+     * functionality which should trigger automatically.
      *
      * @inheritdoc
      */
@@ -94,7 +95,7 @@ export class JoinCodeEntry extends React.Component {
 
     /**
      * Whether or not a successful connection to a Spot-TV should proceed into
-     * screenshare only mode.
+     * share mode.
      *
      * @private
      * @returns {boolean}
@@ -205,7 +206,7 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Callback invoked to validate the join code and connect to a Spot.
+     * Callback invoked to validate the join code and connect to a Spot-TV.
      *
      * @private
      * @returns {void}
@@ -215,9 +216,9 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Validates the passed in code and starts the connection to the Spot.
+     * Validates the passed in code and starts the connection to the Spot-TV
      *
-     * @param {string} code - The code for becoming a remote control to a Spot.
+     * @param {string} code - The code for becoming a remote to a Spot-TV.
      * @private
      * @returns {void}
      */
@@ -227,8 +228,9 @@ export class JoinCodeEntry extends React.Component {
         });
         const trimmedCode = code.trim().toLowerCase();
 
-        // Piggyback on the connect button tap as workaround for mobile Safari
-        // requiring a user action to autoplay any sound.
+        // Trigger ultrasound playing now to piggyback on the connect button tap
+        // as workaround for mobile Safari requiring a user action to autoplay
+        // any sound.
         this.props.ultrasoundService.setMessage(trimmedCode);
 
         submitPromise

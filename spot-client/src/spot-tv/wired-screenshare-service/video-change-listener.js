@@ -26,9 +26,9 @@ export default class VideoChangeListener extends EventEmitter {
      * @param {string} deviceLabel - The label associated with the video input
      * device to be monitored. The label is likely obtained from a call to
      * enumerateDevices.
-     * @param {number} initialFrameValue - The rgba sum to use as a standard
+     * @param {number} initialFrameValue - The rgba sum to use as a baseline
      * to detect when a device may have been plugged in. If not defined it
-     * will be calculated using the current stream.
+     * will be calculated using a frame in the input device's media stream.
      */
     constructor(deviceLabel, initialFrameValue) {
         super();
@@ -49,7 +49,7 @@ export default class VideoChangeListener extends EventEmitter {
 
         /**
          * Video frames are drawn onto a canvas and compared to the video frame
-         * when idle.
+         * when idle to detect change.
          *
          * @type {HTMLCanvasElement}
          */
@@ -126,7 +126,7 @@ export default class VideoChangeListener extends EventEmitter {
     }
 
     /**
-     * This is algorithm to score the current video frame. It returns a value
+     * Executes the algorithm to score the current video frame. It returns a value
      * which can be used to compare with results from previous calls to check
      * if a change has occurred in the video. Currently the algorithm uses a sum
      * of all RGB values on the canvas.
@@ -195,7 +195,6 @@ export default class VideoChangeListener extends EventEmitter {
      * assumes there is nothing connected or that an initial value has been
      * passed in to compare to.
      *
-     * @param {Function} callback - What?!
      * @returns {Promise}
      */
     start() {

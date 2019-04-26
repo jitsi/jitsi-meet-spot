@@ -153,7 +153,7 @@ export default class DesktopPicker extends React.Component {
     }
 
     /**
-     * Callback invoked when a {code SourcePreview} is double clicked. Selects
+     * Callback invoked when a {@code SourcePreview} is double clicked. Selects
      * the preview for use as a desktop sharing source.
      *
      * @param {string} id - The source id.

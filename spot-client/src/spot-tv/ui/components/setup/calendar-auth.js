@@ -8,8 +8,8 @@ import { Button } from 'common/ui';
 import { calendarService } from './../../../calendars';
 
 /**
- * Prompts to sign in to the calendar service and allow Spot to access calendar
- * events.
+ * Prompts to sign in to the calendar service and allow Spot-TV to access
+ * calendar events.
  *
  * @extends React.Component
  */
@@ -62,7 +62,7 @@ export class CalendarAuth extends React.Component {
 
     /**
      * Starts the authentication flow to sign in to a calendar integration and
-     * allow Spot to access calendar events.
+     * allow Spot-TV to access calendar events.
      *
      * @param {string} type - The constant for the calendar integration to
      * authenticate with.
@@ -84,7 +84,7 @@ export class CalendarAuth extends React.Component {
 
     /**
      * Starts the authentication flow to sign in to Google calendar integration
-     * and allow Spot to access calendar events.
+     * and allow Spot-TV to access calendar events.
      *
      * @private
      * @returns {Promise}
@@ -95,7 +95,7 @@ export class CalendarAuth extends React.Component {
 
     /**
      * Starts the authentication flow to sign in to Outlook calendar integration
-     * and allow Spot to access calendar events.
+     * and allow Spot-TV to access calendar events.
      *
      * @private
      * @returns {Promise}

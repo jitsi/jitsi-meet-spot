@@ -29,7 +29,7 @@ export default {
                 'Calendars.Read.Shared'
             ].join(' '),
 
-            // FIXME: Account for spot being hosted within a path.
+            // FIXME: Account for Spot-TV being hosted within a path.
             redirectUri: `${window.location.origin}${ROUTES.OUTLOOK_OAUTH}`
         });
     },
@@ -76,7 +76,7 @@ export default {
     },
 
     /**
-     * Requests the rooms accessible by the Outlook email currently
+     * Requests the rooms which are accessible by the Outlook email currently
      * authenticated with the Microsoft Graph Client.
      *
      * @returns {Promise<Array<Object>>}
