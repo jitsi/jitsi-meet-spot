@@ -249,7 +249,11 @@ export class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderSetupView() {
-        return this._renderSpotViewWithRemoteControl(Setup, 'setup');
+        return (
+            <SpotView name = { 'setup' }>
+                <Setup />
+            </SpotView>
+        );
     }
 
     /**
