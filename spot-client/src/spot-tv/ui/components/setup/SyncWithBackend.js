@@ -25,11 +25,6 @@ export class SyncWithBackend extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            enteredCode: ''
-        };
-
-        this._onCodeChange = this._onCodeChange.bind(this);
         this._onEntryComplete = this._onEntryComplete.bind(this);
     }
 
@@ -51,23 +46,10 @@ export class SyncWithBackend extends React.Component {
                     </div>
                 </div>
                 <div className = 'code-input'>
-                    <CodeInput
-                        onChange = { this._onCodeChange }
-                        onEntryComplete = { this._onEntryComplete } />
+                    <CodeInput onEntryComplete = { this._onEntryComplete } />
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Callback invoked to update the known entered join code.
-     *
-     * @param {string} enteredCode - The entered code so far.
-     * @private
-     * @returns {void}
-     */
-    _onCodeChange(enteredCode) {
-        this.setState({ enteredCode });
     }
 
     /**
