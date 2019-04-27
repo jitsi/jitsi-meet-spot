@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import 'common/css';
-import { AmplitudeHandler, analytics } from 'common/analytics';
+import { SegmentHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
 import { history } from 'common/history';
 import { LoggingService } from 'common/logger';
@@ -54,7 +54,7 @@ const deviceId = getDeviceId();
 const analyticsAppKey = getAnalyticsAppKey(reduxState);
 
 if (analyticsAppKey) {
-    analytics.addHandler(new AmplitudeHandler(deviceId, analyticsAppKey));
+    analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
 
 const loggingEndpoint = getLoggingEndpoint(reduxState);

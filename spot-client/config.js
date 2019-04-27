@@ -85,6 +85,12 @@ window.JitsiMeetSpotConfig = {
     LOGGING: {
 
         /**
+         * The application key provided by a third-party analytics integration
+         * to report UI events.
+         */
+        ANALYTICS_APP_KEY: undefined,
+
+        /**
          * The URL to which to post client logs. Currently logging is only
          * implemented to send logs to an endpoint as an array of objects.
          *

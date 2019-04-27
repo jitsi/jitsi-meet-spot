@@ -1,35 +1,35 @@
-import amplitude from 'amplitude-js';
+import { segment } from './libs';
 
 /**
- * Wraps the details of communicating with the Amplitude analytics service.
+ * Wraps the details of communicating with the Segment analytics service.
  */
-export default class AmplitudeHandler {
+export default class SegmentHandler {
     /**
-     * Initializes a new {@code AmplitudeHandler} instance.
+     * Initializes a new {@code SegmentHandler} instance.
      *
      * @param {string} deviceId - The user identifier for the current user.
      * @param {string} appKey - The key needed to associate events with a
-     * project in Amplitude.
+     * source in Segment.
      */
     constructor(deviceId, appKey) {
-        amplitude.getInstance().init(appKey);
-        amplitude.setUserId(deviceId);
+        segment.load(appKey);
+
+        segment.identify(deviceId);
     }
 
-
     /**
-     * Sends an event to the Amplitude project.
+     * Sends an event to the Segment.
      *
      * @param {string} eventName - The identifying name of the event.
      * @param {Object} eventProperties - Additional details about the event.
      * @returns {void}
      */
     log(eventName, eventProperties = null) {
-        amplitude.logEvent(eventName, eventProperties);
+        segment.track(eventName, eventProperties);
     }
 
     /**
-     * Adds a user property to the current Amplitude user to attach to events.
+     * Adds a user property to the current Segment user to attach to events.
      *
      * @param {string} propertyName - A key for a property to associate with
      * the current Spot instance sending events.
@@ -37,6 +37,6 @@ export default class AmplitudeHandler {
      * @returns {void}
      */
     updateProperty(propertyName, propertyValue) {
-        amplitude.setUserProperties({ [propertyName]: propertyValue });
+        segment.identify({ [propertyName]: propertyValue });
     }
 }
