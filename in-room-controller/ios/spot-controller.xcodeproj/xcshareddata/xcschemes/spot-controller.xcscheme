@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "mobile.app"
-               BlueprintName = "mobile"
-               ReferencedContainer = "container:mobile.xcodeproj">
+               BuildableName = "spot-controller.app"
+               BlueprintName = "spot-controller"
+               ReferencedContainer = "container:spot-controller.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobile.app"
-            BlueprintName = "mobile"
-            ReferencedContainer = "container:mobile.xcodeproj">
+            BuildableName = "spot-controller.app"
+            BlueprintName = "spot-controller"
+            ReferencedContainer = "container:spot-controller.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobile.app"
-            BlueprintName = "mobile"
-            ReferencedContainer = "container:mobile.xcodeproj">
+            BuildableName = "spot-controller.app"
+            BlueprintName = "spot-controller"
+            ReferencedContainer = "container:spot-controller.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobile.app"
-            BlueprintName = "mobile"
-            ReferencedContainer = "container:mobile.xcodeproj">
+            BuildableName = "spot-controller.app"
+            BlueprintName = "spot-controller"
+            ReferencedContainer = "container:spot-controller.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
