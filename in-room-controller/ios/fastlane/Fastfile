@@ -9,12 +9,12 @@ platform :ios do
     # Increment the build number by 1
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
-      xcodeproj: "mobile.xcodeproj"
+      xcodeproj: "spot-controller.xcodeproj"
     )
 
     # Actually build the app
     build_app(
-        scheme: "mobile",
+        scheme: "spot-controller",
         include_bitcode: false,
         include_symbols: true,
         export_xcargs: "-allowProvisioningUpdates")

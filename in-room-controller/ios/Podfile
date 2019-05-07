@@ -1,6 +1,6 @@
 platform :ios, '10.0'
 
-target 'mobile' do
+target 'spot-controller' do
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
       'Core',
           'CxxBridge',
