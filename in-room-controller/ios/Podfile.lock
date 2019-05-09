@@ -57,6 +57,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNCAsyncStorage (1.3.4):
+    - React
   - yoga (0.59.5.React)
 
 DEPENDENCIES:
@@ -74,6 +76,7 @@ DEPENDENCIES:
   - React/RCTSettings (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -91,6 +94,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -101,8 +106,9 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 90adac468c7b72bf1fa6c64bf230650f851a8388
   react-native-webview: dc712e0b176e761a5614726beb2ae89e43dd48c1
+  RNCAsyncStorage: 8e31405a9f12fbf42c2bb330e4560bfd79c18323
   yoga: 2e571f113e8cbeb0eb752aeebc86c1bfe7a8200c
 
-PODFILE CHECKSUM: 6227b19bc1a052f23b5eeb0c61ce27f5ad4cbcad
+PODFILE CHECKSUM: 0297271905a94e4cfcf256d11b939b075d8221f7
 
 COCOAPODS: 1.6.1
