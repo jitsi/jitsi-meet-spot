@@ -1,5 +1,5 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import { AsyncStorage } from 'react-native';
 import SideMenu from 'react-native-side-menu';
 
 import RemoteControl from './src/remote-control';
