@@ -1,6 +1,10 @@
 platform :ios, '10.0'
 
+workspace 'spot-controller'
+
 target 'spot-controller' do
+  project 'spot-controller.xcodeproj'
+
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
       'Core',
           'CxxBridge',
