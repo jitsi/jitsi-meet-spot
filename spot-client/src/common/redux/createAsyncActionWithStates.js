@@ -33,11 +33,16 @@ export function createAsyncActionWithStates( // eslint-disable-line max-params
     ));
 
     return request()
-        .then(() => dispatch(setRequestState(
-            requestType,
-            asyncActionRequestStates.DONE,
-            expectedValue
-        )), error => {
+        .then(result => {
+            dispatch(setRequestState(
+                requestType,
+                asyncActionRequestStates.DONE,
+                expectedValue
+            ));
+
+            return Promise.resolve(result);
+        })
+        .catch(error => {
             logger.error('Encountered error with async request', {
                 error,
                 expectedValue,
