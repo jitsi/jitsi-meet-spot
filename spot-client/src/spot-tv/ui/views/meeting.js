@@ -19,7 +19,7 @@ import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
-import { MeetingFrame } from './../components';
+import { MeetingFrame, MeetingStatus } from './../components';
 
 /**
  * Displays a Jitsi-Meet meeting.
@@ -129,6 +129,7 @@ export class Meeting extends React.Component {
                             <Loading />
                         </div>
                 }
+                <MeetingStatus />
                 {
 
                     /**
