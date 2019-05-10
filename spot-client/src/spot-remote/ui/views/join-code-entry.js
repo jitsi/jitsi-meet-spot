@@ -216,7 +216,7 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Validates the passed in code and starts the connection to the Spot-TV
+     * Validates the passed in code and starts the connection to the Spot-TV.
      *
      * @param {string} code - The code for becoming a remote to a Spot-TV.
      * @private
