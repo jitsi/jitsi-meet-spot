@@ -8,7 +8,7 @@ import React from 'react';
  */
 export default class StatusIcon extends React.Component {
     static propTypes = {
-        icon: PropTypes.node,
+        children: PropTypes.node,
         qaId: PropTypes.string
     };
 
@@ -23,7 +23,7 @@ export default class StatusIcon extends React.Component {
             <div
                 className = 'status-icon'
                 data-qa-id = { this.props.qaId }>
-                { this.props.icon }
+                { this.props.children }
             </div>
         );
     }

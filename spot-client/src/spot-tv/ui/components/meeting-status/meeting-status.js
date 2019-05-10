@@ -29,16 +29,16 @@ export class MeetingStatus extends React.Component {
             <div className = 'meeting-status'>
                 {
                     this.props.audioMuted && (
-                        <StatusIcon
-                            icon = { <MicOff /> }
-                            qaId = 'audio-muted-status' />
+                        <StatusIcon qaId = 'audio-muted-status'>
+                            <MicOff />
+                        </StatusIcon>
                     )
                 }
                 {
                     this.props.videoMuted && (
-                        <StatusIcon
-                            icon = { <VideocamOff /> }
-                            qaId = 'video-muted-status' />
+                        <StatusIcon qaId = 'video-muted-status'>
+                            <VideocamOff />
+                        </StatusIcon>
                     )
                 }
             </div>
