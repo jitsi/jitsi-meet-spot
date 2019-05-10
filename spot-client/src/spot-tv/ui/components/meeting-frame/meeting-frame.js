@@ -443,8 +443,8 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Callback invoked after screensharing is enabled or disabled within the
-     * Jitsi-Meet meeting.
+     * Callback invoked after screensharing is enabled or disabled from within
+     * the Jitsi-Meet meeting.
      *
      * @param {Object} event - The screensharing change event.
      * @private
@@ -502,7 +502,7 @@ export class MeetingFrame extends React.Component {
 
     /**
      * Passes a message from {@code JitsiMeetExternalAPI} to a specified
-     * Spot-Remote
+     * instance of Spot-Remote.
      *
      * @param {Object} event - The object holding information on what and how to
      * send the message.
@@ -559,11 +559,9 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
-     * Sets the internal reference to the iFrame element displaying the
-     * Jitsi-Meet meeting.
+     * Sets the internal reference to the iFrame displaying the Jitsi-Meet meeting.
      *
-     * @param {HTMLIFrameElement} ref - The HTMLIFrameElement displaying the
-     * Jitsi-Meet meeting.
+     * @param {HTMLIFrameElement} ref - The iFrame displaying the Jitsi-Meet meeting.
      * @private
      * @returns {void}
      */
