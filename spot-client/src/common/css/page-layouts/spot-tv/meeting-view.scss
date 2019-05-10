@@ -45,4 +45,22 @@
                 margin: 15px 0;
         }
     }
+
+    .meeting-status {
+        bottom: 50px;
+        left: 25px;
+        position: absolute;
+
+        .status-icon {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 1em;
+            padding: 1em;
+
+            svg {
+                font-size: $font-size-x-large;
+            }
+        }
+    }
 }

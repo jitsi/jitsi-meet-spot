@@ -15,26 +15,33 @@ describe('While in a meeting ', () => {
     });
 
     it('can toggle audio mute', () => {
-        const inMeetingPage = spotRemote.getInMeetingPage();
+        const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
+        const spotTVMeetingPage = spotTV.getMeetingPage();
 
-        inMeetingPage.muteAudio();
+        spotRemoteInMeetingPage.muteAudio();
 
-        inMeetingPage.waitForAudioMutedStateToBe(true);
+        spotRemoteInMeetingPage.waitForAudioMutedStateToBe(true);
+        spotTVMeetingPage.waitForAudioMutedStateToBe(true);
 
-        inMeetingPage.unmuteAudio();
+        spotRemoteInMeetingPage.unmuteAudio();
 
-        inMeetingPage.waitForAudioMutedStateToBe(false);
+        spotRemoteInMeetingPage.waitForAudioMutedStateToBe(false);
+        spotTVMeetingPage.waitForAudioMutedStateToBe(false);
     });
 
     it('can toggle video mute', () => {
-        const inMeetingPage = spotRemote.getInMeetingPage();
+        const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
+        const spotTVMeetingPage = spotTV.getMeetingPage();
 
-        inMeetingPage.muteVideo();
+        spotRemoteInMeetingPage.muteVideo();
 
-        inMeetingPage.waitForVideoMutedStateToBe(true);
+        spotRemoteInMeetingPage.waitForVideoMutedStateToBe(true);
+        spotTVMeetingPage.waitForVideoMutedStateToBe(true);
 
-        inMeetingPage.unmuteVideo();
+        spotRemoteInMeetingPage.unmuteVideo();
 
-        inMeetingPage.waitForVideoMutedStateToBe(false);
+        spotRemoteInMeetingPage.waitForVideoMutedStateToBe(false);
+        spotTVMeetingPage.waitForVideoMutedStateToBe(false);
+
     });
 });
