@@ -161,7 +161,7 @@ function createConnection(state) {
         }))
         .then(() => {
             return {
-                joinCode: finalJoinCode,
+                joinCode: finalJoinCode || remoteControlService.getJoinCode(),
                 jwt: finalJwt
             };
         });
