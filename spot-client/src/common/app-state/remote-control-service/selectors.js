@@ -46,6 +46,19 @@ export function isAudioMutePending(state) {
 }
 
 /**
+ * A selector which returns the whether or not {@code remoteControlService} is
+ * currently establishing a connection to a Spot-MUC.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isConnectionPending(state) {
+    const connect = state.remoteControlService.connect;
+
+    return Boolean(connect && connect.requestState === asyncActionRequestStates.PENDING);
+}
+
+/**
  * A selector which returns the whether or not {@code remoteControlService} has
  * a valid connection to a Spot-MUC.
  *

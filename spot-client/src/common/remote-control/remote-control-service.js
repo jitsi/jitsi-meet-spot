@@ -368,6 +368,16 @@ class RemoteControlService extends EventEmitter {
     }
 
     /**
+     * Returns whether or not there is a connection that is being established
+     * or is active.
+     *
+     * @returns {boolean}
+     */
+    hasConnection() {
+        return Boolean(this.xmppConnection);
+    }
+
+    /**
      * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
      * to pair with it.
      *
