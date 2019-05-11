@@ -1,5 +1,5 @@
 import { Client } from '@microsoft/microsoft-graph-client';
-import rs from 'jsrsasign';
+import jwtDecode from 'jwt-decode';
 
 import { generateGuid, persistence } from 'common/utils';
 
@@ -299,8 +299,7 @@ function getValidatedTokenParts(tokenInfo, guids, appId) {
         return null;
     }
 
-    const payload
-         = rs.KJUR.jws.JWS.readSafeJSONString(rs.b64utoutf8(tokenParts[1]));
+    const payload = jwtDecode(idToken);
 
     if (payload.nonce !== guids.authNonce
         || payload.aud !== appId
