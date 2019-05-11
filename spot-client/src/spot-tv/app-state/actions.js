@@ -20,6 +20,12 @@ import { generateRandomString } from 'common/utils';
  */
 export function createSpotTVRemoteControlConnection() {
     return (dispatch, getState) => {
+        if (remoteControlService.hasConnection()) {
+            logger.warn('Called to create connection while connection exists');
+
+            return;
+        }
+
         /**
          * Callback invoked when a connect has been successfully made with
          * {@code remoteControlService}.

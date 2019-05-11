@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { analytics } from 'common/analytics';
 import {
     isConnectionEstablished,
+    isConnectionPending,
     setIsSpot
 } from 'common/app-state';
 import { remoteControlService } from 'common/remote-control';
@@ -22,6 +23,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
     static propTypes = {
         children: PropTypes.node,
         dispatch: PropTypes.func,
+        isAttemptingConnection: PropTypes.bool,
         isConnected: PropTypes.bool
     };
 
@@ -39,7 +41,9 @@ export class SpotTVRemoteControlLoader extends React.Component {
 
         // TODO: Add some retry logic to error handling for when the initial
         // connection fails to be established.
-        this.props.dispatch(createSpotTVRemoteControlConnection());
+        if (!this.props.isConnected && !this.props.isAttemptingConnection) {
+            this.props.dispatch(createSpotTVRemoteControlConnection());
+        }
     }
 
     /**
@@ -83,6 +87,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        isAttemptingConnection: isConnectionPending(state),
         isConnected: isConnectionEstablished(state)
     };
 }
