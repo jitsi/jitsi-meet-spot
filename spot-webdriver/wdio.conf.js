@@ -1,13 +1,12 @@
 /* global __dirname */
 
 const path = require('path');
-const screen = require('screen-info');
 
 const constants = require('./constants');
+const screenInfo = require('./screen-info');
 
 const DESKTOP_SOURCE_NAME
-    = screen.all().length > 1 ? 'Screen 1' : 'Entire screen';
-
+    = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
 const PATH_TO_FAKE_VIDEO
     = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
