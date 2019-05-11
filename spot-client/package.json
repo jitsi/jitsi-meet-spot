@@ -21,6 +21,7 @@
         "babel-eslint": "10.0.1",
         "babel-jest": "24.7.1",
         "babel-loader": "8.0.5",
+        "babel-plugin-transform-react-remove-prop-types": "0.4.24",
         "bowser": "2.3.0",
         "circular-dependency-plugin": "5.0.2",
         "copy-webpack-plugin": "4.6.0",
