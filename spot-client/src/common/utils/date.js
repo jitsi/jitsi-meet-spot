@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 /**
  * A collection of helpers for working with the native {@code Date}.
@@ -12,11 +12,11 @@ export default {
      * @returns {string}
      */
     formatToCalendarDateWithDay(date) {
-        return moment(date).format('ddd, MMM D');
+        return dayjs(date).format('ddd, MMM D');
     },
 
     formatToCalendarDate(date) {
-        return moment(date).format('MMM D, Y');
+        return dayjs(date).format('MMM D, YYYY');
     },
 
     /**
@@ -26,7 +26,7 @@ export default {
      * @returns {string}
      */
     formatToTime(date) {
-        return moment(date).format('hh:mmA');
+        return dayjs(date).format('hh:mmA');
     },
 
     /**
@@ -45,7 +45,7 @@ export default {
      * @returns {Date}
      */
     getEndOfDate(date) {
-        return moment(date)
+        return dayjs(date)
             .endOf('day')
             .toDate();
     },
@@ -57,6 +57,6 @@ export default {
      * @returns {boolean}
      */
     isDateForToday(date) {
-        return moment(date).isSame(moment(), 'day');
+        return dayjs(date).isSame(dayjs(), 'day');
     }
 };
