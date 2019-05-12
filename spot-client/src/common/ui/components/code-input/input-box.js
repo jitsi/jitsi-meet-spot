@@ -74,6 +74,7 @@ export default class InputBox extends React.Component {
                 autoComplete = 'off'
                 autoFocus = { this.props.autoFocus }
                 className = 'box'
+                maxLength = { 1 }
                 onChange = { this._onChange }
                 onFocus = { this._onFocus }
                 onInput = { this._onInput }
