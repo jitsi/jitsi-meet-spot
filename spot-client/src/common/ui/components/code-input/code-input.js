@@ -133,7 +133,14 @@ export default class CodeInput extends React.Component {
             inputValues: this._replaceEnteredValue(index, value[0])
         }, () => {
             this._notifyOfChange();
-            this._focusOnNextInputBox(index);
+
+            // The Android software keyboard does not necessarily behave like
+            // a hardware keyboard and can instead set an empty string as the
+            // value when backspace is pressed. In that case do not bother going
+            // forward.
+            if (value) {
+                this._focusOnNextInputBox(index);
+            }
         });
     }
 
@@ -148,6 +155,10 @@ export default class CodeInput extends React.Component {
      * @returns {void}
      */
     _onKeyDown(index, event) {
+        // FIXME: Android software keyboards may not send the proper key code
+        // for various possible reasons such as supporting swiping to type. See
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=118639
+
         switch (event.keyCode) {
         case keyCodes.BACKSPACE_KEY:
             event.preventDefault();
