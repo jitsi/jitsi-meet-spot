@@ -3,7 +3,6 @@ const PageObject = require('./page-object');
 
 const JOIN_CODE_VIEW = '[data-qa-id=join-code-view]';
 const JOIN_CODE_INPUT = '[data-qa-id=join-code-input]';
-const SUBMIT_BUTTON = '[data-qa-id=join-code-submit]';
 
 /**
  * A page object for interacting with the join code entry view of Spot-Remote.
@@ -21,21 +20,17 @@ class JoinCodePage extends PageObject {
     }
 
     /**
-     * Enters a join code and attempts to submit it.
+     * Enters a join code.
      *
      * @param {string} code - The code to be entered.
      * @returns {void}
      */
-    submitCode(code) {
+    enterCode(code) {
         this.waitForElementDisplayed(JOIN_CODE_INPUT);
 
         Array.prototype.forEach.call(code, character => {
             this.driver.keys(character);
         });
-
-        const submitButton = this.waitForElementDisplayed(SUBMIT_BUTTON);
-
-        submitButton.click();
     }
 
     /**

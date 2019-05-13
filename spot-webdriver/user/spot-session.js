@@ -85,7 +85,7 @@ class SpotSession {
         const joinCodePage = this.spotRemote.getJoinCodePage();
 
         joinCodePage.visit(options.queryParams);
-        joinCodePage.submitCode(joinCode);
+        joinCodePage.enterCode(joinCode);
     }
 }
 
