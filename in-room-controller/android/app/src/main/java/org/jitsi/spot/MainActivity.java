@@ -1,4 +1,4 @@
-package com.mobile;
+package org.jitsi.spot;
 
 import com.facebook.react.ReactActivity;
 
