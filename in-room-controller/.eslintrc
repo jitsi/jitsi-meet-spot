@@ -4,6 +4,9 @@
         "eslint-config-jitsi/jsdoc",
         "eslint-config-jitsi/react"
     ],
+    "globals": {
+        "__DEV__": true
+    },
     "settings": {
         "react": {
             "version": "16.8.2"

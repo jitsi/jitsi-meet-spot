@@ -55,11 +55,18 @@ export default class App extends React.Component {
         const { remoteControlUrl } = this.state;
 
         if (remoteControlUrl) {
-            return (
-                <SideMenu menu = { this._renderSettingsMenu() }>
-                    <RemoteControl url = { remoteControlUrl } />
-                </SideMenu>
-            );
+            const remoteControlComponent = <RemoteControl url = { remoteControlUrl } />;
+
+            // The side menu for editing the URL is enabled only in the debug mode.
+            if (__DEV__) {
+                return (
+                    <SideMenu menu = { this._renderSettingsMenu() }>
+                        { remoteControlComponent }
+                    </SideMenu>
+                );
+            }
+
+            return remoteControlComponent;
         }
 
         return <Setup onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />;
