@@ -22,7 +22,7 @@ export default class RemoteControl extends React.PureComponent {
     _preventWebViewZoomScript = `
         var metaTag = document.getElementsByName('viewport')[0];
         if (metaTag) {
-            metaTag.setAttribute('content', 'initial-scale=1');
+            metaTag.setAttribute('content', 'initial-scale=1,user-scalable=no');
         }
 
         true;
