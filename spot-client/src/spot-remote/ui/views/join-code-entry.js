@@ -55,8 +55,6 @@ export class JoinCodeEntry extends React.Component {
 
         this._isShareModeEnabled = this._isInShareModeEnv();
 
-        this._submitButtonRef = React.createRef();
-
         this._onCodeChange = this._onCodeChange.bind(this);
         this._onEntryComplete = this._onEntryComplete.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
@@ -159,7 +157,6 @@ export class JoinCodeEntry extends React.Component {
                             label = 'Continue'
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
-                            ref = { this._submitButtonRef }
                             tabIndex = { 0 }>
                             <ArrowForward />
                         </NavButton>
@@ -181,13 +178,15 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Focuses on the submit button once a code has been entered.
+     * Callback invoked when the last character of the join code entry has
+     * been filled. Submits the join code for verification.
      *
+     * @param {string} enteredCode - The entered code so far.
      * @private
      * @returns {void}
      */
-    _onEntryComplete() {
-        this._submitButtonRef.current.focus();
+    _onEntryComplete(enteredCode) {
+        this.setState({ enteredCode }, this._onSubmit);
     }
 
     /**
