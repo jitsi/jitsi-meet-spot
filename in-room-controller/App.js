@@ -6,6 +6,9 @@ import RemoteControl from './src/remote-control';
 import SettingsMenu from './src/settings-menu';
 import Setup from './src/setup';
 
+// FIXME make it possible to configure default URL on the build time
+const DEFAULT_URL = 'https://spot.8x8.vc';
+
 /**
  * The entry point of the InRoomController application. Essentially acts as a
  * router and global state store.
@@ -23,7 +26,7 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
-            remoteControlUrl: null
+            remoteControlUrl: __DEV__ ? null : DEFAULT_URL
         };
 
         this._onClearRemoteUrl = this._onClearRemoteUrl.bind(this);
@@ -36,13 +39,14 @@ export default class App extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        AsyncStorage.getItem('remote-control-url')
-            .then(remoteControlUrl => {
-                // FIXME make it possible to configure default URL on the build time
-                this.setState({
-                    remoteControlUrl: remoteControlUrl === null ? 'https://spot.8x8.vc' : remoteControlUrl
+        if (__DEV__) {
+            AsyncStorage.getItem('remote-control-url')
+                .then(remoteControlUrl => {
+                    this.setState({
+                        remoteControlUrl: remoteControlUrl === null ? DEFAULT_URL : remoteControlUrl
+                    });
                 });
-            });
+        }
     }
 
     /**
