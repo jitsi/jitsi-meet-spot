@@ -38,7 +38,7 @@ export function isDesktopBrowser() {
 export function isWirelessScreenshareSupported() {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    return (jitsiBrowserDetection.isChrome()
-        && jitsiBrowserDetection.supportsGetDisplayMedia())
+    // Chrome on Android is detected by LJM to support getDisplayMedia, but then it always fails when called
+    return (isDesktopBrowser() && jitsiBrowserDetection.isChrome() && jitsiBrowserDetection.supportsGetDisplayMedia())
         || jitsiBrowserDetection.isElectron();
 }
