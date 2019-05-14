@@ -28,16 +28,19 @@
             justify-content: center;
             margin: auto;
 
-            @media #{$mq-xxsmall} {
-                flex-wrap: wrap;
+            /**
+             * Override box styles to support 6x1 grid of boxes, which works
+             * around the code entry implementation of having one input and
+             * mobile browsers auto-centering on focused inputs.
+             */
+            .box {
+                @media #{$mq-xxsmall} {
+                    margin: 5px;
+                }
 
-                // Hardcode some width that force a 3x2 code entry.
-                width: 65%;
-            }
-
-            @media #{$mq-tablet} {
-                flex-wrap: nowrap;
-                width: auto;
+                @media #{$mq-tablet} {
+                    margin: 15px;
+                }
             }
         }
 
