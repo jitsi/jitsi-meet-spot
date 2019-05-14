@@ -2,10 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getAdvertisementAppName, getJoinCode } from 'common/app-state';
+import { getAdvertisementAppName } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { Button } from 'common/ui';
-import { isDesktopBrowser, windowHandler } from 'common/utils';
 
 import { NavButton } from './../nav';
 
@@ -17,7 +16,6 @@ import { NavButton } from './../nav';
 export class ScreensharePicker extends React.Component {
     static propTypes = {
         advertisedAppName: PropTypes.string,
-        joinCode: PropTypes.string,
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
@@ -279,17 +277,8 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderWirelessScreenshareNotSupported() {
-        const { advertisedAppName, joinCode } = this.props;
-        const title = isDesktopBrowser()
-            ? 'Your browser is currently not supported. '
-                + 'To share content please use Chrome.'
-            : (
-                <span>
-                    To share go to <span className = 'share-url'>
-                        { `${windowHandler.getHost()}/${joinCode}` }
-                    </span>
-                </span>
-            );
+        const { advertisedAppName } = this.props;
+        const title = 'Your browser is currently not supported. To share content please use Chrome on desktop.';
         const advertisement = this.props.advertisedAppName && (
             <div>
                 or
@@ -329,8 +318,7 @@ export class ScreensharePicker extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        advertisedAppName: getAdvertisementAppName(state),
-        joinCode: getJoinCode(state)
+        advertisedAppName: getAdvertisementAppName(state)
     };
 }
 
