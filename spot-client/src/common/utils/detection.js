@@ -12,9 +12,11 @@ const browser = Bowser.getParser(window.navigator.userAgent);
  * @returns {boolean}
  */
 export function isAutoFocusSupported() {
-    const { model } = browser.getPlatform();
-
-    return model !== 'iPhone' && model !== 'iPad';
+    /**
+     * Even if autofocus is supported on a mobile browser it may not automatically
+     * display the software keyboard.
+     */
+    return isDesktopBrowser();
 }
 
 /**
