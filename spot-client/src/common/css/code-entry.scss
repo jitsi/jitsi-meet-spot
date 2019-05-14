@@ -2,6 +2,7 @@
 @import './variables.scss';
 
 .code-entry {
+    cursor: pointer;
     display: flex;
     outline: none;
     position: relative;
@@ -38,13 +39,13 @@
              */
             -webkit-appearance: none;
         }
-        &:hover {
-            cursor: pointer;
-        }
     }
 
     input {
+        font-size: $font-size-x-large;
+        height: 100%;
         left: 0;
+        letter-spacing: 2em;
 
         /**
          * Use opacity and pointer-events to effectively make the input
@@ -53,6 +54,6 @@
         opacity: 0;
         pointer-events: none;
         position: absolute;
-        top: 50%;
+        width: 100%;
     }
 }
