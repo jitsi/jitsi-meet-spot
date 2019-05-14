@@ -2,6 +2,7 @@
 @import './variables.scss';
 
 .code-entry {
+    display: flex;
     outline: none;
     position: relative;
 
@@ -18,7 +19,6 @@
         border: 1px solid var(--container-sub-content-font-color);
         border-radius: 5px;
         color: var(--container-content-font-color);
-        display: inline-block;
         font-size: $font-size-x-large;
         height: calc(#{$font-size-x-large} * 0.7);
         line-height: normal;
@@ -28,7 +28,7 @@
         text-transform: uppercase;
         width: calc(#{$font-size-x-large} * 0.5);
 
-        &:focus {
+        &.focused {
             border-color: var(--active);
             box-shadow: 0px 0px 0px 5px var(--active);
 
@@ -41,5 +41,18 @@
         &:hover {
             cursor: pointer;
         }
+    }
+
+    input {
+        left: 0;
+
+        /**
+         * Use opacity and pointer-events to effectively make the input
+         * invisible but still responsive to keyboard events.
+         */
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
     }
 }

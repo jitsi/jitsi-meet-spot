@@ -56,7 +56,6 @@ export class JoinCodeEntry extends React.Component {
         this._isShareModeEnabled = this._isInShareModeEnv();
 
         this._onCodeChange = this._onCodeChange.bind(this);
-        this._onEntryComplete = this._onEntryComplete.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -135,9 +134,7 @@ export class JoinCodeEntry extends React.Component {
                         <form
                             onSubmit = { this._onFormSubmit }>
                             <div data-qa-id = { 'join-code-input' }>
-                                <CodeInput
-                                    onChange = { this._onCodeChange }
-                                    onEntryComplete = { this._onEntryComplete } />
+                                <CodeInput onChange = { this._onCodeChange } />
                                 {
 
                                     /**
@@ -174,19 +171,11 @@ export class JoinCodeEntry extends React.Component {
      * @returns {void}
      */
     _onCodeChange(enteredCode) {
-        this.setState({ enteredCode });
-    }
-
-    /**
-     * Callback invoked when the last character of the join code entry has
-     * been filled. Submits the join code for verification.
-     *
-     * @param {string} enteredCode - The entered code so far.
-     * @private
-     * @returns {void}
-     */
-    _onEntryComplete(enteredCode) {
-        this.setState({ enteredCode }, this._onSubmit);
+        this.setState({ enteredCode }, () => {
+            if (enteredCode.length === 6) {
+                this._onSubmit();
+            }
+        });
     }
 
     /**

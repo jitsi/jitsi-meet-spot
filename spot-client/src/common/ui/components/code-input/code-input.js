@@ -3,14 +3,11 @@ import React from 'react';
 
 import { isAutoFocusSupported } from 'common/utils';
 
-import InputBox from './input-box';
-
 /**
  * A mapping of keyboard key names to keyboard key codes for readability while
  * processing key codes.
  */
 const keyCodes = {
-    BACKSPACE_KEY: 8,
     LEFT_ARROW_KEY: 37,
     UP_ARROW_KEY: 38,
     RIGHT_ARROW_KEY: 39,
@@ -18,7 +15,7 @@ const keyCodes = {
 };
 
 /**
- * A component for entering a code, with each character in a separate input.
+ * A component for entering a code, with each character in a separate box.
  *
  * @extends React.Component
  */
@@ -29,9 +26,7 @@ export default class CodeInput extends React.Component {
 
     static propTypes = {
         length: PropTypes.number,
-        onChange: PropTypes.func,
-        onEntryComplete: PropTypes.func,
-        value: PropTypes.string
+        onChange: PropTypes.func
     };
 
     /**
@@ -44,23 +39,17 @@ export default class CodeInput extends React.Component {
         super(props);
 
         this.state = {
-
-            /**
-             * The value held in each individual {@code InputBox}.
-             */
-            inputValues: []
+            isFocused: false,
+            value: ''
         };
 
+        this._inputRef = React.createRef();
         this._isAutoFocusSupported = isAutoFocusSupported();
 
-        /**
-         * A list of all the {@code InputBox} instances to control automatic
-         * traversal.
-         */
-        this._inputRefs = [];
-
+        this._onBlur = this._onBlur.bind(this);
         this._onChange = this._onChange.bind(this);
-        this._onKeyDown = this._onKeyDown.bind(this);
+        this._onFocus = this._onFocus.bind(this);
+        this._onRootClick = this._onRootClick.bind(this);
     }
 
     /**
@@ -70,203 +59,139 @@ export default class CodeInput extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const inputBoxes = [];
-
-        for (let i = 0; i < this.props.length; i++) {
-            inputBoxes.push(
-                this._renderInputBox(i, this.state.inputValues[i]));
-        }
-
         return (
-            <div className = 'code-entry'>
-                { inputBoxes }
+            <div
+                className = 'code-entry'
+                onClick = { this._onRootClick }>
+                { this._renderBoxes() }
+                { this._renderHiddenInput() }
             </div>
         );
     }
 
     /**
-     * Programmatically sets focus on the {@code InputBox} before the passed in
-     * index, if available.
+     * Callback invoked when the input has received focus. Hides the input
+     * cursor.
      *
-     * @param {number} currentIndex - The index of the {@code InputBox} which
-     * should lose focus so the box to the left can get focus.
      * @private
      * @returns {void}
      */
-    _focusOnPreviousInputBox(currentIndex) {
-        if (currentIndex > 0) {
-            this._inputRefs[currentIndex - 1].focus();
-        }
+    _onBlur() {
+        this.setState({ isFocused: false });
     }
 
     /**
-     * Programmatically sets focus on the {@code InputBox} after the passed in
-     * index, if available.
+     * Callback invoked when the entered value of the input has been updated.
      *
-     * @param {number} currentIndex - The index of the {@code InputBox} which
-     * should lose focus so the box to the right can get focus.
+     * @param {Object} event - The browser change event.
      * @private
      * @returns {void}
      */
-    _focusOnNextInputBox(currentIndex) {
-        const nextInputBoxIndex = currentIndex + 1;
-
-        if (nextInputBoxIndex < this.props.length) {
-            this._inputRefs[nextInputBoxIndex].focus();
-        } else {
-            this.props.onEntryComplete && this.props.onEntryComplete(this._getEnteredText());
-        }
-    }
-
-    /**
-     * Callback invoked when the value entered into an {@code InputBox} has
-     * been updated.
-     *
-     * @param {number} index - The index of the entered code the
-     * {@code InputBox} represents.
-     * @param {string} value - The new value entered in the box.
-     * @private
-     * @returns {void}
-     */
-    _onChange(index, value) {
-        this.setState({
-            inputValues: this._replaceEnteredValue(index, value[0])
-        }, () => {
-            this._notifyOfChange();
-
-            // The Android software keyboard does not necessarily behave like
-            // a hardware keyboard and can instead set an empty string as the
-            // value when backspace is pressed. In that case do not bother going
-            // forward.
-            if (value) {
-                this._focusOnNextInputBox(index);
-            }
+    _onChange(event) {
+        this.setState({ value: event.target.value }, () => {
+            this.props.onChange(this.state.value);
         });
     }
 
     /**
-     * Callback invoked when a key has been typed into an {@code InputBox}.
-     * Performs special navigation between the {@code InputBox} instances.
+     * Callback invoked when the input has received focus. Shows the cursor at
+     * the end of the input.
      *
-     * @param {number} index - The position of the index {@code InputBox} which
-     * received the keydown event.
+     * @private
+     * @returns {void}
+     */
+    _onFocus() {
+        // Prevent selection of the entire value when tabbed to focus
+        if (this._inputRef.current) {
+            this._inputRef.current.selectionStart
+                = this._inputRef.current.selectionEnd
+                = this.state.value.length;
+        }
+
+        this.setState({ isFocused: true });
+    }
+
+    /**
+     * Callback invoked when a key has been typed into the input element.
+     * Prevents cursor movement.
+     *
      * @param {string} event - The keyboard event itself.
      * @private
      * @returns {void}
      */
-    _onKeyDown(index, event) {
-        // FIXME: Android software keyboards may not send the proper key code
-        // for various possible reasons such as supporting swiping to type. See
-        // https://bugs.chromium.org/p/chromium/issues/detail?id=118639
-
+    _onKeyDown(event) {
         switch (event.keyCode) {
-        case keyCodes.BACKSPACE_KEY:
-            event.preventDefault();
-
-            if (this.state.inputValues[index]) {
-                // If a value exists then delete the value but keep focus on the
-                // current box.
-                this.setState({
-                    inputValues: this._replaceEnteredValue(index, '')
-                }, () => this._notifyOfChange());
-            } else {
-                this._focusOnPreviousInputBox(index);
-            }
-
-            break;
-
-        case keyCodes.LEFT_ARROW_KEY:
-            event.preventDefault();
-            this._focusOnPreviousInputBox(index);
-
-            break;
-
-        case keyCodes.RIGHT_ARROW_KEY:
-            event.preventDefault();
-            this._focusOnNextInputBox(index);
-
-            break;
-
-        case keyCodes.UP_ARROW_KEY:
         case keyCodes.DOWN_ARROW_KEY:
-            event.preventDefault();
-            break;
+        case keyCodes.LEFT_ARROW_KEY:
+        case keyCodes.RIGHT_ARROW_KEY:
+        case keyCodes.UP_ARROW_KEY:
 
-        default:
+            // Prevent moving the cursor.
+            event.preventDefault();
             break;
         }
     }
 
     /**
-     * Instantiates an instance of {@code InputBox} for displaying and entering
-     * a value.
+     * Callback invoked the {@code CodeInput} component is clicked so focus
+     * can be put onto the input.
      *
-     * @param {number} index - The index of the {@code InputBox} in relation to
-     * other {@code InputBox} instances.
-     * @param {string} value - The value to display in the {@code InputBox}.
      * @private
-     * @returns {InputBox}
+     * @returns {void}
      */
-    _renderInputBox(index, value = '') {
+    _onRootClick() {
+        if (!this.state.isFocused) {
+            this._inputRef.current.focus();
+        }
+    }
+
+    /**
+     * Instantiates instances of {@code InputBox} for displaying the entered
+     * code.
+     *
+     * @private
+     * @returns {Array<ReactElement>}
+     */
+    _renderBoxes() {
+        const boxes = [];
+        const focus = this.state.value.length;
+
+        for (let i = 0; i < this.props.length; i++) {
+            const className = `box ${focus === i && this.state.isFocused
+                ? 'focused' : ''}`;
+
+            boxes.push((
+                <div
+                    className = { className }
+                    key = { i }>
+                    { this.state.value[i] || '' }
+                </div>
+            ));
+        }
+
+        return boxes;
+    }
+
+    /**
+     * Instantiates an HTMLInputElement which will hold the entered value.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderHiddenInput() {
         return (
-            <InputBox
-                autoFocus = { this._isAutoFocusSupported && index === 0 }
-                index = { index }
-                key = { index }
+            <input
+                autoComplete = 'off'
+                autoFocus = { this._isAutoFocusSupported }
+                maxLength = { this.props.length }
+                onBlur = { this._onBlur }
                 onChange = { this._onChange }
                 onFocus = { this._onFocus }
                 onKeyDown = { this._onKeyDown }
-
-                // TODO FIX
-                // eslint-disable-next-line react/jsx-no-bind
-                ref = { ref => {
-                    this._inputRefs[index] = ref;
-                } }
-                value = { value } />
+                ref = { this._inputRef }
+                spellCheck = 'false'
+                type = 'text'
+                value = { this.state.value } />
         );
-    }
-
-    /**
-     * Formats the entered input and calls the {@code onChange} callback.
-     *
-     * @private
-     * @returns {void}
-     */
-    _notifyOfChange() {
-        this.props.onChange && this.props.onChange(this._getEnteredText());
-    }
-
-    /**
-     * Returns the entered text based on the current state.
-     *
-     * @returns {string}
-     * @private
-     */
-    _getEnteredText() {
-        const inputValuesWithSpaces = [];
-
-        // Use a for-loop in case any values are "empty" and thus cannot be
-        // iterated over.
-        for (let i = 0; i < this.props.length; i++) {
-            inputValuesWithSpaces.push(this.state.inputValues[i] || ' ');
-        }
-
-        return inputValuesWithSpaces.join('');
-    }
-
-    /**
-     * Replace a the value of an index in the inputValues state.
-     *
-     * @param {number} index - The index within inputValues to be updated.
-     * @param {string} character - The new value to be put into the index.
-     * @private
-     * @returns {void}
-     */
-    _replaceEnteredValue(index, character = '') {
-        const copyOfInputValues = [ ...this.state.inputValues ];
-
-        copyOfInputValues[index] = character;
-
-        return copyOfInputValues;
     }
 }

@@ -25,7 +25,7 @@ export class SyncWithBackend extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onEntryComplete = this._onEntryComplete.bind(this);
+        this._onChange = this._onChange.bind(this);
     }
 
     /**
@@ -46,7 +46,7 @@ export class SyncWithBackend extends React.Component {
                     </div>
                 </div>
                 <div className = 'code-input'>
-                    <CodeInput onEntryComplete = { this._onEntryComplete } />
+                    <CodeInput onChange = { this._onChange } />
                 </div>
             </div>
         );
@@ -55,11 +55,14 @@ export class SyncWithBackend extends React.Component {
     /**
      * Attempts validation of the entered code.
      *
+     * @param {string} value - The entered code.
      * @private
      * @returns {void}
      */
-    _onEntryComplete() {
-        this.props.onSuccess();
+    _onChange(value) {
+        if (value.length === 6) {
+            this.props.onSuccess();
+        }
     }
 }
 
