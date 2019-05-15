@@ -2,6 +2,7 @@ package org.jitsi.spot;
 
 import android.app.Application;
 
+import com.corbt.keepawake.KCKeepAwakePackage;
 import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new AsyncStoragePackage(),
+            new KCKeepAwakePackage(),
             new RNCWebViewPackage()
       );
     }

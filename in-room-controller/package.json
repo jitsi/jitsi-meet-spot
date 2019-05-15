@@ -24,6 +24,7 @@
     },
     "version": "0.0.1",
     "dependencies": {
-        "@react-native-community/async-storage": "1.3.4"
+        "@react-native-community/async-storage": "1.3.4",
+        "react-native-keep-awake": "4.0.0"
     }
 }

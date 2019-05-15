@@ -4,6 +4,7 @@ import {
     StyleSheet,
     View
 } from 'react-native';
+import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
 
 /**
@@ -37,6 +38,7 @@ export default class RemoteControl extends React.PureComponent {
     render() {
         return (
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
+                <KeepAwake />
                 <WebView
                     allowsInlineMediaPlayback = { true }
                     allowsLinkPreview = { false }
