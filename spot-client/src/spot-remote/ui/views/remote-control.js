@@ -12,7 +12,6 @@ import {
 import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
-import { NoSleep } from './../../no-sleep';
 
 import { withRemoteControl, withUltrasound } from './../loaders';
 import { ElectronDesktopPickerModal } from './../components/electron-desktop-picker';
@@ -71,12 +70,10 @@ export class RemoteControl extends React.PureComponent {
      */
     render() {
         return (
-            <NoSleep>
-                <View name = 'remoteControl'>
-                    { this._getView() }
-                    <ElectronDesktopPickerModal />
-                </View>
-            </NoSleep>
+            <View name = 'remoteControl'>
+                { this._getView() }
+                <ElectronDesktopPickerModal />
+            </View>
         );
     }
 
