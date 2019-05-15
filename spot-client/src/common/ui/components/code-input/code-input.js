@@ -103,9 +103,11 @@ export default class CodeInput extends React.Component {
     _onFocus() {
         // Prevent selection of the entire value when tabbed to focus
         if (this._inputRef.current) {
-            this._inputRef.current.selectionStart
-                = this._inputRef.current.selectionEnd
-                = this.state.value.length;
+            setTimeout(() => {
+                this._inputRef.current.selectionStart
+                    = this._inputRef.current.selectionEnd
+                    = this.state.value.length;
+            });
         }
 
         this.setState({ isFocused: true });
