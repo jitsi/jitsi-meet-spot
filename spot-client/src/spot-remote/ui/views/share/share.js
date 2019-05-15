@@ -21,7 +21,6 @@ import {
 } from 'common/utils';
 
 import { exitShareMode } from './../../../app-state';
-import { NoSleep } from './../../../no-sleep';
 
 import {
     ElectronDesktopPickerModal
@@ -100,12 +99,10 @@ export class Share extends React.PureComponent {
      */
     render() {
         return (
-            <NoSleep>
-                <View name = 'share-view'>
-                    { this._renderSubView() }
-                    <ElectronDesktopPickerModal />
-                </View>
-            </NoSleep>
+            <View name = 'share-view'>
+                { this._renderSubView() }
+                <ElectronDesktopPickerModal />
+            </View>
         );
     }
 
