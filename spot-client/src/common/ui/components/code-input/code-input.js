@@ -181,7 +181,9 @@ export default class CodeInput extends React.Component {
     _renderHiddenInput() {
         return (
             <input
+                autoCapitalize = 'off'
                 autoComplete = 'off'
+                autoCorrect = 'off'
                 autoFocus = { this._isAutoFocusSupported }
                 maxLength = { this.props.length }
                 onBlur = { this._onBlur }
@@ -189,8 +191,7 @@ export default class CodeInput extends React.Component {
                 onFocus = { this._onFocus }
                 onKeyDown = { this._onKeyDown }
                 ref = { this._inputRef }
-                spellCheck = 'false'
-                type = 'text'
+                spellCheck = { false }
                 value = { this.state.value } />
         );
     }

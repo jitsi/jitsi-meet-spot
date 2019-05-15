@@ -43,17 +43,23 @@
 
     input {
         font-size: $font-size-x-large;
-        height: 100%;
-        left: 0;
-        letter-spacing: 2em;
 
-        /**
-         * Use opacity and pointer-events to effectively make the input
-         * invisible but still responsive to keyboard events.
-         */
-        opacity: 0;
+        border: none;
+        caret-color: transparent;
+        color: transparent;
+        left: 0;
+        top: 50%;
+        letter-spacing: 2em;
+        background: transparent;
+        border: 0;
+
         pointer-events: none;
         position: absolute;
         width: 100%;
+        z-index: 0;
+
+        &:focus {
+            outline: none;
+        }
     }
 }
