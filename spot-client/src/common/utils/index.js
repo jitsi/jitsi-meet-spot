@@ -1,4 +1,3 @@
-export { default as backgroundService } from './background';
 export * from './cryptography';
 export { default as date } from './date';
 export * from './detection';
