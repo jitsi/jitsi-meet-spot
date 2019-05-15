@@ -44,13 +44,14 @@
     input {
         background: transparent;
         border: 0;
+        bottom: 0;
         caret-color: transparent;
         color: transparent;
         font-size: $font-size-x-large;
-        left: 0;
         letter-spacing: 2em;
         pointer-events: none;
         position: absolute;
+        top: 0;
         width: 100%;
         z-index: 0;
 
