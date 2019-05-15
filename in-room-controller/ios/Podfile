@@ -22,6 +22,7 @@ target 'spot-controller' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'react-native-keep-awake', :path => '../node_modules/react-native-keep-awake'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod "yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
 
