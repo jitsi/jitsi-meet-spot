@@ -42,17 +42,13 @@
     }
 
     input {
-        font-size: $font-size-x-large;
-
-        border: none;
-        caret-color: transparent;
-        color: transparent;
-        left: 0;
-        top: 50%;
-        letter-spacing: 2em;
         background: transparent;
         border: 0;
-
+        caret-color: transparent;
+        color: transparent;
+        font-size: $font-size-x-large;
+        left: 0;
+        letter-spacing: 2em;
         pointer-events: none;
         position: absolute;
         width: 100%;
@@ -60,6 +56,10 @@
 
         &:focus {
             outline: none;
+        }
+
+        &::selection {
+            background: transparent;
         }
     }
 }
