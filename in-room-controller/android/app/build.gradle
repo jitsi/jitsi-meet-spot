@@ -93,6 +93,12 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+// Use the number of seconds/10 since Jan 1 2019 as the versionCode.
+// This lets us upload a new build at most every 10 seconds for the
+// next ~680 years.
+// https://stackoverflow.com/a/38643838
+def vcode = (int)(((new Date().getTime()/1000) - 1546297200) / 10)
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -101,7 +107,7 @@ android {
         applicationId "org.jitsi.spot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode vcode
         versionName "1.0"
     }
     splits {
