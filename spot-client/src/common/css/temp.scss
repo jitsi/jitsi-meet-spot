@@ -155,6 +155,29 @@ body.using-mouse :focus {
   width: 100%;
 }
 
+.view-background-container {
+    background-size: cover;
+    height: 100vh;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+}
+
+.view-content-container {
+    height: 100vh;
+    overflow: auto;
+    position: relative;
+    width: 100vw;
+
+    .view-content-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+    }
+}
+
 .view-gradient {
   align-items: center;
   background-size: cover;
