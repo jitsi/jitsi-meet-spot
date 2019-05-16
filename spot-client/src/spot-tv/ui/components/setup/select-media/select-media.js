@@ -244,8 +244,9 @@ class SelectMedia extends React.Component {
     _onDeviceListChange(devices) {
         const newDeviceLists = this._getDefaultDeviceListState();
 
-        devices.forEach(({ kind, label }) => {
+        devices.forEach(({ deviceId, kind, label }) => {
             const formatted = {
+                deviceId,
                 label,
                 value: label
             };
