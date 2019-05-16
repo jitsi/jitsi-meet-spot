@@ -9,6 +9,13 @@ const classes = {
     underline: 'input-underline'
 };
 
+const inputProps = {
+    autoCapitalize: 'off',
+    autoComplete: 'off',
+    autoCorrect: 'off',
+    spellCheck: 'false'
+};
+
 /**
  * A component for a configured and styled {@code HTMLInputElement}.
  *
@@ -21,18 +28,16 @@ export default function Input(props) {
 
     return (
         <MaterialInput
-            autoComplete = 'off'
-            autoCorrect = 'off'
             className = { className }
             classes = { classes }
             data-qa-id = { props['data-qa-id'] }
             fullWidth = { true }
             id = { props.id }
+            inputProps = { inputProps }
             onBlur = { props.onBlur }
             onChange = { props.onChange }
             onFocus = { props.onFocus }
             placeholder = { props.placeholder }
-            spellCheck = 'false'
             value = { props.value } />
     );
 }
