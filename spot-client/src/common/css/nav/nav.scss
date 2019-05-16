@@ -3,36 +3,21 @@
 @import './../variables.scss';
 
 .nav-section {
-    padding: 0 0 20px;
-    text-align: center;
-
-    .nav-container {
-        display: inline-block;
-    }
-}
-
-.nav {
-    @include centered-content;
-
-    flex-wrap: wrap;
     margin-bottom: 20px;
-    text-align: center;
-    width: 200px;
+    padding: 0 0 20px;
+    width: auto;
+    display: flex;
+    justify-content: center;
 
-    @media #{$mq-tablet} {
-        flex-wrap: nowrap;
-        width: auto;
-    }
+    .nav {
+        text-align: center;
+        width: 200px;
 
-    .nav-button {
         @media #{$mq-tablet} {
-            margin: 10px 0;
-        }
-
-        &:not(:last-child) {
-            @media #{$mq-tablet} {
-                margin-right: 4em;
-            }
+            display: flex;
+            flex: 1;
+            flex-wrap: nowrap;
+            justify-content: space-around;
         }
     }
 }

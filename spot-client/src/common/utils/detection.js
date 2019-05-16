@@ -30,6 +30,15 @@ export function isDesktopBrowser() {
 }
 
 /**
+ * Returns true if the app os running in an electron wrapper, false otherwise.
+ *
+ * @returns {boolean}
+ */
+export function isElectron() {
+    return window && window.process && window.process.emit;
+}
+
+/**
  * Returns whether or not the current environment can support Spot-TV features.
  *
  * @returns {boolean}

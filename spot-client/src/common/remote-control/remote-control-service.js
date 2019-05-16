@@ -209,6 +209,17 @@ class RemoteControlService extends EventEmitter {
     }
 
     /**
+     * Requests a Spot-TV to change its audio level to a specific direction.
+     *
+     * @param {string} direction - The direction of the volume adjustment. One of 'up' or 'down'.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    adjustVolume(direction) {
+        return this.xmppConnection.sendCommand(
+            this._getSpotId(), COMMANDS.ADJUST_VOLUME, { direction });
+    }
+
+    /**
      * Stops any active {@code ScreenshareConnection}.
      *
      * @returns {void}

@@ -1,0 +1,19 @@
+@import './../theme-variables';
+@import './../variables.scss';
+
+.volume-modal {
+    align-items: center;
+    background-color: var(--container-bg-color);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 50px;
+
+    span {
+        background-color: var(--button-opaque);
+        border-radius: 6px;
+        display: inline-block;
+        margin: 16px;
+        padding: 6px;
+    }
+}

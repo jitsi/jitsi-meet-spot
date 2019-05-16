@@ -30,6 +30,7 @@
     },
     "version": "1.0.0",
     "dependencies": {
-        "lodash": "4.17.11"
+        "lodash": "4.17.11",
+        "node-osascript": "^2.1.0"
     }
 }

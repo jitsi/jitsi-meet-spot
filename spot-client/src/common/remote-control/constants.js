@@ -5,6 +5,11 @@
 export const COMMANDS = {
 
     /**
+     * Adjust the volume 'up' or 'down'.
+     */
+    ADJUST_VOLUME: 'adjustVolume',
+
+    /**
      * Proceed to a given meeting name or meeting URL.
      */
     GO_TO_MEETING: 'goToMeeting',

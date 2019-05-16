@@ -9,6 +9,8 @@ import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
+import { adjustVolume } from '../../../native-functions';
+
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
 /**
@@ -296,6 +298,10 @@ export class MeetingFrame extends React.Component {
         });
 
         switch (type) {
+        case COMMANDS.ADJUST_VOLUME:
+            adjustVolume(data.direction);
+
+            break;
         case COMMANDS.HANG_UP:
             this._jitsiApi.executeCommand('hangup');
 
