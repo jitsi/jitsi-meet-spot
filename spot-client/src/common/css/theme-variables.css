@@ -3,6 +3,7 @@
 
     --button-color: rgba(37, 138, 255);
     --button-active-color: #0074e0;
+    --button-opaque: rgba(0, 0, 0, 0.5);
 
     --container-bg-color: rgba(42, 58, 75, 0.7);
     --container-content-bg-color: rgba(42, 58, 75, 0.9);

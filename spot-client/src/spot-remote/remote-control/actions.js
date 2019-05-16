@@ -1,4 +1,21 @@
-import { SUBMIT_FEEDBACK } from './action-types';
+import { ADJUST_VOLUME, SUBMIT_FEEDBACK } from './action-types';
+
+/**
+ * Action to be dispatched when the volume of the spot instance should be adjusted up or down. This
+ * is only available for electron spot instances.
+ *
+ * @param {string} direction - One of 'up', 'down'.
+ * @returns {{
+ *     type: ADJUST_VOLUME,
+ *     direction: string
+ * }}
+ */
+export function adjustVolume(direction) {
+    return {
+        type: ADJUST_VOLUME,
+        direction
+    };
+}
 
 /**
  * The action dispatched when user submits the feedback or if idle timeout occurs (timeout === true)

@@ -1,3 +1,5 @@
+@import './media-queries';
+@import './theme-variables';
 @import './variables.scss';
 
 .button {
@@ -42,6 +44,43 @@
 
         &:hover {
             background-color: lightcoral;
+        }
+    }
+
+    &.menu {
+        background-color: var(--button-opaque);
+        border: 1px solid white;
+        border-radius: 5px;
+        color: white;
+        font-size: 1em;
+        height: 36px;
+
+        @media #{$mq-tablet} {
+            height: 48px;
+        }
+    }
+
+    &.volume {
+        background-color: var(--button-opaque);
+        height: calc(1em * 2);
+        width: calc(1em * 2);
+        border-radius: 50%;
+        border: 1px solid white;
+        font-size: 48px;
+        padding: 0;
+    
+        svg {
+            font-size: 48px;
+            fill: white;
+        }
+    }
+
+    &.touch-highlight:active {
+        border-color: var(--pending);
+        color: var(--pending);
+
+        svg {
+            fill: var(--pending);
         }
     }
 }

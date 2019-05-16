@@ -20,10 +20,8 @@ export default class NavContainer extends React.Component {
     render() {
         return (
             <div className = 'nav-section'>
-                <div className = 'nav-container'>
-                    <div className = 'nav'>
-                        { this.props.children }
-                    </div>
+                <div className = 'nav'>
+                    { this.props.children }
                 </div>
             </div>
         );

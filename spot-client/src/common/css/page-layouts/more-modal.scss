@@ -1,0 +1,9 @@
+@import './../variables.scss';
+
+.more-modal {
+    background-color: var(--container-bg-color);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 50px;
+}

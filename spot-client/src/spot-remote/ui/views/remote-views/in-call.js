@@ -9,7 +9,7 @@ import {
     startWiredScreensharing,
     stopScreenshare
 } from 'common/app-state';
-import { CallEnd, ScreenShare } from 'common/icons';
+import { CallEnd, MoreVert, ScreenShare } from 'common/icons';
 import { LoadingIcon, RoomName } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
@@ -20,6 +20,7 @@ import {
     VideoMuteButton
 } from './../../components/nav/buttons';
 
+import MoreModal from './more-modal';
 import ScreenshareModal from './screenshare-modal';
 
 /**
@@ -50,6 +51,7 @@ export class InCall extends React.Component {
         super(props);
 
         this.state = {
+            showMoreModal: false,
             showScreenshareModal: false
         };
 
@@ -58,6 +60,7 @@ export class InCall extends React.Component {
             = this._onCloseScreenshareModal.bind(this);
         this._onStopScreenshare
             = this._onStopScreenshare.bind(this);
+        this._onToggleMore = this._onToggleMore.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
     }
 
@@ -113,6 +116,11 @@ export class InCall extends React.Component {
                     </NavButton>
                     <TileViewButton />
                     <NavButton
+                        label = 'More'
+                        onClick = { this._onToggleMore }>
+                        <MoreVert />
+                    </NavButton>
+                    <NavButton
                         className = 'hangup'
                         label = 'Leave'
                         onClick = { this.props.onHangUp }>
@@ -135,6 +143,7 @@ export class InCall extends React.Component {
                             = { this._isWirelessScreenshareSupported } />
                 )
                 }
+                { this.state.showMoreModal && <MoreModal onClose = { this._onToggleMore } /> }
             </div>
         );
     }
@@ -168,6 +177,17 @@ export class InCall extends React.Component {
      */
     _onCloseScreenshareModal() {
         this.setState({ showScreenshareModal: false });
+    }
+
+    /**
+     * Toggles the "more" modal to be shown or hidden.
+     *
+     * @returns {void}
+     */
+    _onToggleMore() {
+        this.setState({
+            showMoreModal: !this.state.showMoreModal
+        });
     }
 
     /**
