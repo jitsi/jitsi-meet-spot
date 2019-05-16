@@ -10,7 +10,7 @@ import {
     IdleCursorDetector,
     Notifications
 } from 'common/ui';
-import { JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
+import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
     Admin,
     Home,
@@ -146,6 +146,9 @@ export class App extends React.Component {
                                  * Spot-Remote specific routes.
                                  */
                             }
+                            <Route
+                                component = { Help }
+                                path = { ROUTES.HELP } />
                             <Route
                                 component = { ShareView }
                                 path = { ROUTES.SHARE } />

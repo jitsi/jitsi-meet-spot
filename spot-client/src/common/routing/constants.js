@@ -4,6 +4,7 @@
 export const ROUTES = {
     ADMIN: '/admin',
     CODE: '/',
+    HELP: '/help',
     HOME: '/spot',
     LOADING: '/loading',
     MEETING: '/meeting',

@@ -1,0 +1,62 @@
+@import './media-queries';
+@import './mixins';
+@import './variables.scss';
+
+.help-view {
+  @include spot-remote-view-layout;
+
+  .title {
+    padding: 1.5em;
+    text-align: center;
+    font-size: $font-size-x-large;
+  }
+
+  .help-dialog {
+    @include centered-content;
+    display: block;
+
+    background-color: var(--container-bg-color);
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 32px 16px;
+    text-align: center;
+
+    @media #{$mq-xxsmall} {
+      width: 95%;
+    }
+
+    @media #{$mq-tablet} {
+      width: 60%;
+    }
+
+    .help-message {
+      font-size: $font-size-medium-plus;
+
+      .spot-home-link {
+        text-decoration: none;
+
+        &:link {
+          color: white;
+        }
+
+        &:visited {
+          color: white;
+        }
+
+        &:hover {
+          color: gray;
+          cursor: pointer;
+        }
+
+        &:active {
+          color: darkgray;
+        }
+      }
+    }
+
+    .ok-button {
+      margin-top: 32px;
+    }
+  }
+}

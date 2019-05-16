@@ -9,7 +9,7 @@ import {
     isConnectedToSpot,
     setJoinCode
 } from 'common/app-state';
-import { ArrowForward } from 'common/icons';
+import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
 import { remoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
@@ -56,6 +56,7 @@ export class JoinCodeEntry extends React.Component {
         this._isShareModeEnabled = this._isInShareModeEnv();
 
         this._onCodeChange = this._onCodeChange.bind(this);
+        this._onHelpIconClicked = this._onHelpIconClicked.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -158,9 +159,22 @@ export class JoinCodeEntry extends React.Component {
                             <ArrowForward />
                         </NavButton>
                     </NavContainer>
+                    <HelpOutline
+                        className = 'help-icon'
+                        onClick = { this._onHelpIconClicked } />
                 </div>
             </View>
         );
+    }
+
+    /**
+     * Redirects the user to the help page.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHelpIconClicked() {
+        this.props.history.push(ROUTES.HELP);
     }
 
     /**
