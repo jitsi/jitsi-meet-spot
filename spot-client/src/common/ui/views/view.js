@@ -52,10 +52,26 @@ class View extends React.Component {
         return (
             <div
                 className = 'view'
-                data-qa-id = { `${this.props.name}-view` }
-                style = { backgroundStyles }>
-                <div className = { gradientStyle }>
-                    { this.props.children }
+                data-qa-id = { `${this.props.name}-view` }>
+                <div
+                    className = 'view-background-container'
+                    style = { backgroundStyles }>
+                    <div className = { gradientStyle } />
+                </div>
+                {
+
+                    /**
+                     * The div with view-content-container will allow for
+                     * overflow while the div with view-content-center allows
+                     * for centering whatever the children might be. This is
+                     * done for cross browser support with safari and android
+                     * browsers.
+                     */
+                }
+                <div className = 'view-content-container'>
+                    <div className = 'view-content-center'>
+                        { this.props.children }
+                    </div>
                 </div>
             </div>
         );
