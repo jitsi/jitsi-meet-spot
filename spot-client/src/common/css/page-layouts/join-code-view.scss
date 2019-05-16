@@ -6,6 +6,7 @@
     @include spot-remote-view-layout;
 
     justify-content: space-between;
+    position: relative;
 
     .cta {
         padding: 2.5em;
@@ -48,6 +49,20 @@
             position: absolute;
             pointer-events: none;
             visibility: hidden;
+        }
+    }
+
+    .help-icon {
+        bottom: 5px;
+        position: absolute;
+        right: 5px;
+
+        @media #{$mq-xxsmall} {
+            font-size: 3.5em;
+        }
+
+        @media #{$mq-laptop} {
+            font-size: 2em;
         }
     }
 }

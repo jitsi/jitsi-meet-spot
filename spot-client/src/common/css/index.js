@@ -20,6 +20,7 @@ import './clock.scss';
 import './code-entry.scss';
 import './desktop-picker.scss';
 import './dial-pad.scss';
+import './help-view.scss';
 import './home-view.scss';
 import './idle-cursor.scss';
 import './input.scss';
