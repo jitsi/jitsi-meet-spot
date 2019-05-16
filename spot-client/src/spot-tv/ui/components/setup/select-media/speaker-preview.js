@@ -42,10 +42,8 @@ export default class SpeakerPreview extends React.PureComponent {
      *
      * @inheritdoc
      */
-    componentDidUpdate(prevProps) {
-        if (prevProps.label !== this.props.label) {
-            this._setAudioSink();
-        }
+    componentDidUpdate() {
+        this._setAudioSink();
     }
 
     /**
