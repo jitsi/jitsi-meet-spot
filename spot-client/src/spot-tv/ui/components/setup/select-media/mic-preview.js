@@ -47,8 +47,10 @@ export default class MicPreview extends React.PureComponent {
      *
      * @inheritdoc
      */
-    componentDidUpdate() {
-        this._createPreviewTrack();
+    componentDidUpdate(prevProps) {
+        if (this.props !== prevProps) {
+            this._createPreviewTrack();
+        }
     }
 
     /**
