@@ -156,6 +156,7 @@ body.using-mouse :focus {
 }
 
 .view-background-container {
+    background-position: center;
     background-size: cover;
     height: 100vh;
     pointer-events: none;
