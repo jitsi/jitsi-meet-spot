@@ -89,14 +89,19 @@ export default class MicPreview extends React.PureComponent {
      * @returns {void}
      */
     _createPreviewTrack() {
-        this._destroyPreviewTrack();
-
         const description = this.props.devices.find(device =>
             device.label === this.props.label);
 
         if (!description) {
             return;
         }
+
+        if (this._previewTrack
+            && this._previewTrack.getDeviceId() === description.deviceId) {
+            return;
+        }
+
+        this._destroyPreviewTrack();
 
         avUtils.createLocalAudioTrack(description.deviceId)
             .then(jitsiLocalTrack => {
