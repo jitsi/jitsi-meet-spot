@@ -37,7 +37,8 @@ export function isDesktopBrowser() {
 export function isSupportedSpotTVBrowser() {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    return isDesktopBrowser() && jitsiBrowserDetection.isChrome();
+    return isDesktopBrowser()
+        && (jitsiBrowserDetection.isChrome() || jitsiBrowserDetection.isElectron());
 }
 
 /**
