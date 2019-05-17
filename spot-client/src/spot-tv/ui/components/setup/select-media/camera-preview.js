@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 
 /**
@@ -23,7 +24,13 @@ export default class CameraPreview extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            statusMessage: null
+        };
+
         this._ref = React.createRef();
+
+        this._onPreviewPlaying = this._onPreviewPlaying.bind(this);
     }
 
     /**
@@ -40,8 +47,11 @@ export default class CameraPreview extends React.PureComponent {
      *
      * @inheritdoc
      */
-    componentDidUpdate() {
-        this._createPreviewTrack();
+    componentDidUpdate(prevProps) {
+        // Prevent state updates from trigger re-creation of the preview track.
+        if (this.props !== prevProps) {
+            this._createPreviewTrack();
+        }
     }
 
     /**
@@ -60,9 +70,15 @@ export default class CameraPreview extends React.PureComponent {
      */
     render() {
         return (
-            <video
-                autoPlay = { true }
-                ref = { this._ref } />
+            <div className = 'camera-preview'>
+                <video
+                    autoPlay = { true }
+                    onPlaying = { this._onPreviewPlaying }
+                    ref = { this._ref } />
+                <div className = { `error-cover ${this.state.statusMessage ? 'visible' : ''}` }>
+                    { this.state.statusMessage }
+                </div>
+            </div>
         );
     }
 
@@ -73,10 +89,26 @@ export default class CameraPreview extends React.PureComponent {
      * @returns {void}
      */
     _createPreviewTrack() {
+        if (!this.props.label) {
+            this._destroyPreviewTrack();
+
+            this.setState({
+                statusMessage: 'Preview Unavailable'
+            });
+
+            return;
+        }
+
         const description = this.props.devices.find(device =>
             device.label === this.props.label);
 
         if (!description) {
+            this._destroyPreviewTrack();
+
+            this.setState({
+                statusMessage: 'Preview Unavailable'
+            });
+
             return;
         }
 
@@ -87,12 +119,30 @@ export default class CameraPreview extends React.PureComponent {
 
         this._destroyPreviewTrack();
 
-        avUtils.createLocalVideoTrack(description.deviceId)
+        const setLoadingPromise = new Promise(resolve => this.setState({
+            statusMessage: 'loading'
+        }, resolve));
+
+        setLoadingPromise
+            .then(() => avUtils.createLocalVideoTrack(description.deviceId))
             .then(jitsiLocalTrack => {
+                if (jitsiLocalTrack.getDeviceId() !== description.deviceId) {
+                    jitsiLocalTrack.dispose();
+
+                    return Promise.reject('Wrong device id received');
+                }
+
                 this._previewTrack = jitsiLocalTrack;
 
                 this._ref.current.srcObject
                     = this._previewTrack.getOriginalStream();
+            })
+            .catch(error => {
+                logger.error('Camera preview failed', { error });
+
+                this.setState({
+                    statusMessage: 'Preview Unavailable'
+                });
             });
     }
 
@@ -107,5 +157,18 @@ export default class CameraPreview extends React.PureComponent {
             this._previewTrack.dispose();
             this._previewTrack = null;
         }
+    }
+
+    /**
+     * Callback invoked when the video preview begings to play video. Updates
+     * state so the video can be visible.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onPreviewPlaying() {
+        this.setState({
+            statusMessage: null
+        });
     }
 }
