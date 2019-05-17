@@ -152,7 +152,7 @@ class SelectMedia extends React.Component {
                     </div>
                     <div className = 'column'>
                         <div className = 'select-label'>Preview</div>
-                        <div className = 'camera-preview'>
+                        <div className = 'camera-preview-container'>
                             <CameraPreview
                                 devices = { cameras }
                                 label = { selectedCamera } />
