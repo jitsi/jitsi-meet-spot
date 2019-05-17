@@ -8,7 +8,7 @@ import { Redirect, Route } from 'react-router-dom';
  *
  * @extends Rect.Component
  */
-export default class BrowserRestrictedRoute extends React.Component {
+export default class RestrictedRoute extends React.Component {
     static propTypes = {
         canAccessRoute: PropTypes.func,
         redirectRoute: PropTypes.string
