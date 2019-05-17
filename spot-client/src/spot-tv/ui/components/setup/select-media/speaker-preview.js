@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
+
 /**
  * Displays UI to play a sound, and actually play the sound, from a selected
  * speaker.
@@ -24,6 +26,10 @@ export default class SpeakerPreview extends React.PureComponent {
         super(props);
 
         this._ref = React.createRef();
+
+        this.state = {
+            hasSetSinkId: true
+        };
 
         this._onPreview = this._onPreview.bind(this);
     }
@@ -55,7 +61,9 @@ export default class SpeakerPreview extends React.PureComponent {
         return (
             <div className = 'speaker-preview'>
                 <a
-                    className = 'speaker-preview-link'
+                    className = {
+                        `speaker-preview-link ${this.state.hasSetSinkId ? '' : 'disabled'}`
+                    }
                     onClick = { this._onPreview }>
                     Play a test sound
                 </a>
@@ -77,10 +85,26 @@ export default class SpeakerPreview extends React.PureComponent {
             device.label === this.props.label);
 
         if (!description) {
+            this.setState({
+                hasSetSinkId: false
+            });
+
             return;
         }
 
-        this._ref.current.setSinkId(description.deviceId);
+        this._ref.current.setSinkId(description.deviceId)
+            .then(() => {
+                this.setState({
+                    hasSetSinkId: true
+                });
+            })
+            .catch(error => {
+                logger.error('Speaker preview failed to set sink id', { error });
+
+                this.setState({
+                    hasSetSinkId: false
+                });
+            });
     }
 
     /**
@@ -90,6 +114,8 @@ export default class SpeakerPreview extends React.PureComponent {
      * @returns {void}
      */
     _onPreview() {
-        this._ref.current.play();
+        if (this.state.hasSetSinkId) {
+            this._ref.current.play();
+        }
     }
 }

@@ -96,9 +96,12 @@
         margin: 10px 0;
 
         .speaker-preview-link {
+            font-size: $font-size-small;
+        }
+
+        .speaker-preview-link:not(.disabled) {
             color: var(--mic-preview-active-background-color);
             cursor: pointer;
-            font-size: $font-size-small;
 
             &:active {
                 color: var(--button-active-color);
