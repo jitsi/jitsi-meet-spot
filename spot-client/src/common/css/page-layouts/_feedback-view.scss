@@ -1,7 +1,3 @@
-@import './../media-queries';
-@import './../mixins.scss';
-@import './../variables.scss';
-
 .feedback-view {
     @include spot-remote-view-layout;
 

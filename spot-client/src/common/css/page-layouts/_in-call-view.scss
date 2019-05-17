@@ -1,7 +1,3 @@
-@import './../media-queries';
-@import './../mixins.scss';
-@import './../variables.scss';
-
 .in-call {
     @include spot-remote-view-layout;
 
