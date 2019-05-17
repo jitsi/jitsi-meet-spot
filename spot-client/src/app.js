@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
+import { ROUTES, SpotTvRestrictedRoute } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
@@ -18,6 +18,7 @@ import {
     OutlookOauth,
     Setup,
     SpotView,
+    UnsupportedBrowser,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
@@ -54,6 +55,8 @@ export class App extends React.Component {
         this._renderHomeView = this._renderHomeView.bind(this);
         this._renderMeetingView = this._renderMeetingView.bind(this);
         this._renderSetupView = this._renderSetupView.bind(this);
+        this._renderUnsupportedBrowserView
+            = this._renderUnsupportedBrowserView.bind(this);
     }
 
     /**
@@ -124,21 +127,24 @@ export class App extends React.Component {
                                  * Spot-TV specific routes.
                                  */
                             }
-                            <Route
+                            <SpotTvRestrictedRoute
                                 path = { ROUTES.ADMIN }
                                 render = { this._renderAdminView } />
-                            <Route
+                            <SpotTvRestrictedRoute
                                 path = { ROUTES.MEETING }
                                 render = { this._renderMeetingView } />
-                            <Route
+                            <SpotTvRestrictedRoute
                                 path = { ROUTES.OUTLOOK_OAUTH }
                                 render = { this._renderOutlookOauthView } />
-                            <Route
+                            <SpotTvRestrictedRoute
                                 path = { ROUTES.SETUP }
                                 render = { this._renderSetupView } />
-                            <Route
+                            <SpotTvRestrictedRoute
                                 path = { ROUTES.HOME }
                                 render = { this._renderHomeView } />
+                            <Route
+                                path = { ROUTES.UNSUPPORTED_BROWSER }
+                                render = { this._renderUnsupportedBrowserView } />
 
                             {
 
@@ -278,6 +284,21 @@ export class App extends React.Component {
                     <View />
                 </SpotView>
             </SpotTVRemoteControlLoader>
+        );
+    }
+
+    /**
+     * Returns the Spot-TV view to message that Spot-TV will not run in the
+     * current environment.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderUnsupportedBrowserView() {
+        return (
+            <SpotView name = { 'unsupported' }>
+                <UnsupportedBrowser />
+            </SpotView>
         );
     }
 }

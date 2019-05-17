@@ -30,6 +30,18 @@ export function isDesktopBrowser() {
 }
 
 /**
+ * Returns whether or not the current environment can support Spot-TV features.
+ *
+ * @returns {boolean}
+ */
+export function isSupportedSpotTvBrowser() {
+    const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
+
+    return isDesktopBrowser()
+        && (jitsiBrowserDetection.isChrome() || jitsiBrowserDetection.isElectron());
+}
+
+/**
  * Returns whether or not the current environment supports wirelessly screensharing into a Spot.
  * Currently only Chrome works and the underlying implementation assumes getDisplayMedia is
  * available.
