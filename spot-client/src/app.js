@@ -3,14 +3,13 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { logger } from 'common/logger';
-import { ROUTES, RestrictedRoute } from 'common/routing';
+import { ROUTES, SpotTvRestrictedRoute } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
     IdleCursorDetector,
     Notifications
 } from 'common/ui';
-import { isSupportedSpotTVBrowser } from 'common/utils';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
     Admin,
@@ -128,7 +127,24 @@ export class App extends React.Component {
                                  * Spot-TV specific routes.
                                  */
                             }
-                            { this._createSpotTVRoutes() }
+                            <SpotTvRestrictedRoute
+                                path = { ROUTES.ADMIN }
+                                render = { this._renderAdminView } />
+                            <SpotTvRestrictedRoute
+                                path = { ROUTES.MEETING }
+                                render = { this._renderMeetingView } />
+                            <SpotTvRestrictedRoute
+                                path = { ROUTES.OUTLOOK_OAUTH }
+                                render = { this._renderOutlookOauthView } />
+                            <SpotTvRestrictedRoute
+                                path = { ROUTES.SETUP }
+                                render = { this._renderSetupView } />
+                            <SpotTvRestrictedRoute
+                                path = { ROUTES.HOME }
+                                render = { this._renderHomeView } />
+                            <Route
+                                path = { ROUTES.UNSUPPORTED_BROWSER }
+                                render = { this._renderUnsupportedBrowserView } />
 
                             {
 
@@ -151,55 +167,6 @@ export class App extends React.Component {
                 </IdleCursorDetector>
             </ErrorBoundary>
         );
-    }
-
-    /**
-     * Instantiates the route-handling components for all supported Spot-TV
-     * routes.
-     *
-     * @private
-     * @returns {Array<ReactComponent>}
-     */
-    _createSpotTVRoutes() {
-        const routeConfigs = [
-            {
-                path: ROUTES.ADMIN,
-                render: this._renderAdminView
-            },
-            {
-                path: ROUTES.MEETING,
-                render: this._renderMeetingView
-            },
-            {
-                path: ROUTES.OUTLOOK_OAUTH,
-                render: this._renderOutlookOauthView
-            },
-            {
-                path: ROUTES.SETUP,
-                render: this._renderSetupView
-            },
-            {
-                path: ROUTES.HOME,
-                render: this._renderHomeView
-            }
-        ];
-
-        const routes = routeConfigs.map(routeConfig => (
-            <RestrictedRoute
-                { ...routeConfig }
-                canAccessRoute = { isSupportedSpotTVBrowser }
-                key = { routeConfig.path }
-                redirectRoute = { ROUTES.UNSUPPORTED_BROWSER } />
-        ));
-
-        routes.push(
-            <Route
-                key = { ROUTES.UNSUPPORTED_BROWSER }
-                path = { ROUTES.UNSUPPORTED_BROWSER }
-                render = { this._renderUnsupportedBrowserView } />
-        );
-
-        return routes;
     }
 
     /**
