@@ -8,6 +8,7 @@ import './nav/nav.scss';
 import './nav/nav-button.scss';
 import './page-layouts/spot-tv/meeting-view.scss';
 import './page-layouts/spot-tv/setup-view.scss';
+import './page-layouts/spot-tv/unsupported-browser.scss';
 import './page-layouts/feedback-view.scss';
 import './page-layouts/in-call-view.scss';
 import './page-layouts/join-code-view.scss';

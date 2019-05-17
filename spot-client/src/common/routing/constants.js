@@ -11,5 +11,6 @@ export const ROUTES = {
     OUTLOOK_OAUTH: '/oauth',
     REMOTE_CONTROL: '/remote-control',
     SETUP: '/setup',
-    SHARE: '/share'
+    SHARE: '/share',
+    UNSUPPORTED_BROWSER: '/unsupported-browser'
 };

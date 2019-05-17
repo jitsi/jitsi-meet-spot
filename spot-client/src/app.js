@@ -3,13 +3,14 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
+import { ROUTES, RestrictedRoute } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
     IdleCursorDetector,
     Notifications
 } from 'common/ui';
+import { isSupportedSpotTVBrowser } from 'common/utils';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
     Admin,
@@ -18,6 +19,7 @@ import {
     OutlookOauth,
     Setup,
     SpotView,
+    UnsupportedBrowser,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
@@ -54,6 +56,8 @@ export class App extends React.Component {
         this._renderHomeView = this._renderHomeView.bind(this);
         this._renderMeetingView = this._renderMeetingView.bind(this);
         this._renderSetupView = this._renderSetupView.bind(this);
+        this._renderUnsupportedBrowserView
+            = this._renderUnsupportedBrowserView.bind(this);
     }
 
     /**
@@ -124,21 +128,7 @@ export class App extends React.Component {
                                  * Spot-TV specific routes.
                                  */
                             }
-                            <Route
-                                path = { ROUTES.ADMIN }
-                                render = { this._renderAdminView } />
-                            <Route
-                                path = { ROUTES.MEETING }
-                                render = { this._renderMeetingView } />
-                            <Route
-                                path = { ROUTES.OUTLOOK_OAUTH }
-                                render = { this._renderOutlookOauthView } />
-                            <Route
-                                path = { ROUTES.SETUP }
-                                render = { this._renderSetupView } />
-                            <Route
-                                path = { ROUTES.HOME }
-                                render = { this._renderHomeView } />
+                            { this._createSpotTVRoutes() }
 
                             {
 
@@ -161,6 +151,55 @@ export class App extends React.Component {
                 </IdleCursorDetector>
             </ErrorBoundary>
         );
+    }
+
+    /**
+     * Instantiates the route-handling components for all supported Spot-TV
+     * routes.
+     *
+     * @private
+     * @returns {Array<ReactComponent>}
+     */
+    _createSpotTVRoutes() {
+        const routeConfigs = [
+            {
+                path: ROUTES.ADMIN,
+                render: this._renderAdminView
+            },
+            {
+                path: ROUTES.MEETING,
+                render: this._renderMeetingView
+            },
+            {
+                path: ROUTES.OUTLOOK_OAUTH,
+                render: this._renderOutlookOauthView
+            },
+            {
+                path: ROUTES.SETUP,
+                render: this._renderSetupView
+            },
+            {
+                path: ROUTES.HOME,
+                render: this._renderHomeView
+            }
+        ];
+
+        const routes = routeConfigs.map(routeConfig => (
+            <RestrictedRoute
+                { ...routeConfig }
+                canAccessRoute = { isSupportedSpotTVBrowser }
+                key = { routeConfig.path }
+                redirectRoute = { ROUTES.UNSUPPORTED_BROWSER } />
+        ));
+
+        routes.push(
+            <Route
+                key = { ROUTES.UNSUPPORTED_BROWSER }
+                path = { ROUTES.UNSUPPORTED_BROWSER }
+                render = { this._renderUnsupportedBrowserView } />
+        );
+
+        return routes;
     }
 
     /**
@@ -278,6 +317,21 @@ export class App extends React.Component {
                     <View />
                 </SpotView>
             </SpotTVRemoteControlLoader>
+        );
+    }
+
+    /**
+     * Returns the Spot-TV view to message that Spot-TV will not run in the
+     * current environment.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderUnsupportedBrowserView() {
+        return (
+            <SpotView name = { 'unsupported' }>
+                <UnsupportedBrowser />
+            </SpotView>
         );
     }
 }
