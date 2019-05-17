@@ -119,6 +119,16 @@
         border-radius: 5px;
         height: 2px;
 
+        &.disabled {
+            background: repeating-linear-gradient(
+                45deg,
+                var(--mic-preview-background-color),
+                var(--mic-preview-background-color) 10px,
+                var(--mic-preview-background-disabled-color) 10px,
+                var(--mic-preview-background-disabled-color) 20px
+            );
+        }
+
         .mic-preview-level {
             background: var(--mic-preview-active-background-color);
             border-radius: 5px;

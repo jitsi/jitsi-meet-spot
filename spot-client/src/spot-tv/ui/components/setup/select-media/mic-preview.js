@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 
 /**
@@ -24,7 +25,8 @@ export default class MicPreview extends React.PureComponent {
         super(props);
 
         this.state = {
-            audioLevel: 0
+            audioLevel: 0,
+            micPreviewTrack: null
         };
 
         this._ref = React.createRef();
@@ -68,12 +70,18 @@ export default class MicPreview extends React.PureComponent {
      * @inheritdoc
      */
     render() {
+        const {
+            audioLevel,
+            loading,
+            micPreviewTrack
+        } = this.state;
+
         const audioMeterFill = {
-            width: `${Math.floor(this.state.audioLevel * 100)}%`
+            width: `${Math.floor(audioLevel * 100)}%`
         };
 
         return (
-            <div className = 'mic-preview' >
+            <div className = { `mic-preview ${micPreviewTrack || loading ? '' : 'disabled'}` } >
                 <div
                     className = 'mic-preview-level'
                     style = { audioMeterFill } />
@@ -93,6 +101,8 @@ export default class MicPreview extends React.PureComponent {
             device.label === this.props.label);
 
         if (!description) {
+            this._destroyPreviewTrack();
+
             return;
         }
 
@@ -101,16 +111,35 @@ export default class MicPreview extends React.PureComponent {
             return;
         }
 
-        this._destroyPreviewTrack();
+        const setLoadingPromise = new Promise(resolve =>
+            this.setState({ loading: true }, resolve));
 
-        avUtils.createLocalAudioTrack(description.deviceId)
+        setLoadingPromise
+            .then(() => this._destroyPreviewTrack())
+            .then(() => avUtils.createLocalAudioTrack(description.deviceId))
             .then(jitsiLocalTrack => {
-                this._previewTrack = jitsiLocalTrack;
+                if (jitsiLocalTrack.getDeviceId() !== description.deviceId) {
+                    jitsiLocalTrack.dispose();
 
-                this._previewTrack.on(
+                    return Promise.reject('Wrong device id received');
+                }
+
+                jitsiLocalTrack.on(
                     avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
                     this._updateAudioLevel
                 );
+
+                this.setState({
+                    micPreviewTrack: jitsiLocalTrack
+                });
+            })
+            .catch(error => {
+                logger.error('Mic preview failed', { error });
+            })
+            .then(() => {
+                this.setState({
+                    loading: false
+                });
             });
     }
 
@@ -118,17 +147,22 @@ export default class MicPreview extends React.PureComponent {
      * Cleans up the audio track used for previewing.
      *
      * @private
-     * @returns {void}
+     * @returns {Promise}
      */
     _destroyPreviewTrack() {
-        if (this._previewTrack) {
-            this._previewTrack.off(
-                avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
-                this._updateAudioLevel
-            );
-            this._previewTrack.dispose();
-            this._previewTrack = null;
+        const { micPreviewTrack } = this.state;
+
+        if (!micPreviewTrack) {
+            return Promise.resolve();
         }
+
+        micPreviewTrack.off(
+            avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
+            this._updateAudioLevel
+        );
+        micPreviewTrack.dispose();
+
+        return new Promise(resolve => this.setState({ micPreviewTrack: null }, resolve));
     }
 
     /**
