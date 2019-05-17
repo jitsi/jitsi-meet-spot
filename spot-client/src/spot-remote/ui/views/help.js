@@ -42,8 +42,6 @@ class Help extends React.Component {
      * @inheritdoc
      */
     render() {
-        const spotTvHomeUrl = Help._getSpotTvUrl();
-
         return (
             <View name = 'help'>
                 <div className = 'help-view'>
@@ -54,13 +52,8 @@ class Help extends React.Component {
                         <div className = 'help-message'>
                             This app is a remote controller for a conference room.
                             <div>
-                                Open&nbsp;
-                                <a
-                                    className = 'spot-home-link'
-                                    href = { spotTvHomeUrl } >
-                                    { spotTvHomeUrl }
-                                </a>
-                                &nbsp;in a browser to setup your conference room and obtain a share key.
+                                Open { Help._getSpotTvUrl() } in a browser to setup your conference room
+                                and obtain a share key.
                             </div>
                         </div>
                         <Button
