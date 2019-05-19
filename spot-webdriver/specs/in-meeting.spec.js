@@ -42,6 +42,20 @@ describe('While in a meeting ', () => {
 
         spotRemoteInMeetingPage.waitForVideoMutedStateToBe(false);
         spotTVMeetingPage.waitForVideoMutedStateToBe(false);
+    });
 
+    it('can toggle tile view', () => {
+        const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
+        const spotTVMeetingPage = spotTV.getMeetingPage();
+        const inTileView = spotTVMeetingPage.isInTileView();
+
+        // The tests use the current value of inTileView to toggle instead of
+        // assuming true/false in case some previous test already toggled tile
+        // view and so jitsi-meet has opened with tile view already enabled.
+        spotRemoteInMeetingPage.setTileView(!inTileView);
+        spotTVMeetingPage.waitForTileViewStateToBe(!inTileView);
+
+        spotRemoteInMeetingPage.setTileView(inTileView);
+        spotTVMeetingPage.waitForTileViewStateToBe(inTileView);
     });
 });

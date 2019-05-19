@@ -16,6 +16,7 @@ import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 import { NavButton, NavContainer } from '../../components';
 import {
     AudioMuteButton,
+    TileViewButton,
     VideoMuteButton
 } from './../../components/nav/buttons';
 
@@ -110,6 +111,7 @@ export class InCall extends React.Component {
                         subIcon = { this._renderScreenshareSubIcon() }>
                         <ScreenShare />
                     </NavButton>
+                    <TileViewButton />
                     <NavButton
                         className = 'hangup'
                         label = 'Leave'

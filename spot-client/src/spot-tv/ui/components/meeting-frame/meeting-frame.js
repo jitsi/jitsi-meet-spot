@@ -58,6 +58,7 @@ export class MeetingFrame extends React.Component {
          */
         this._isAudioMuted = false;
         this._isFilmstripVisible = true;
+        this._isInTileView = false;
         this._isScreensharing = false;
         this._isVideoMuted = false;
 
@@ -81,6 +82,7 @@ export class MeetingFrame extends React.Component {
             = this._onScreenshareDeviceDisconnected.bind(this);
         this._onSendMessageToRemoteControl
             = this._onSendMessageToRemoteControl.bind(this);
+        this._onTileViewChanged = this._onTileViewChanged.bind(this);
         this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
         this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
 
@@ -151,6 +153,9 @@ export class MeetingFrame extends React.Component {
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
+
+        this._jitsiApi.addListener(
+            'tileViewChanged', this._onTileViewChanged);
         this._jitsiApi.addListener(
             'videoConferenceJoined', this._onMeetingJoined);
         this._jitsiApi.addListener(
@@ -188,6 +193,7 @@ export class MeetingFrame extends React.Component {
             audioMuted: false,
             inMeeting: '',
             screensharingType: undefined,
+            tileView: false,
             videoMuted: false
         });
     }
@@ -308,6 +314,12 @@ export class MeetingFrame extends React.Component {
         case COMMANDS.SET_SCREENSHARING:
             if (this._isScreensharing !== data.on) {
                 this._jitsiApi.executeCommand('toggleShareScreen');
+            }
+            break;
+
+        case COMMANDS.SET_TILE_VIEW:
+            if (this._isInTileView !== data.tileView) {
+                this._jitsiApi.executeCommand('toggleTileView');
             }
             break;
 
@@ -519,6 +531,24 @@ export class MeetingFrame extends React.Component {
         });
 
         this.props.remoteControlService.sendMessageToRemoteControl(to, data);
+    }
+
+    /**
+     * Callback invoked after entering or exiting tile view layout mode.
+     *
+     * @param {Object} event - The tile view event from JitsiMeetExternalAPI.
+     * @private
+     * @returns {void}
+     */
+    _onTileViewChanged({ enabled }) {
+        logger.log('Tile view changed', {
+            from: this._isInTileView,
+            to: enabled
+        });
+
+        this._isInTileView = enabled;
+
+        this.props.updateSpotTvState({ tileView: enabled });
     }
 
     /**

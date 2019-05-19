@@ -25,6 +25,11 @@ export const COMMANDS = {
     SET_SCREENSHARING: 'setScreensharing',
 
     /**
+     * Enter or exit tile view layout.
+     */
+    SET_TILE_VIEW: 'setTileView',
+
+    /**
      * Set video mute on or off.
      */
     SET_VIDEO_MUTE: 'setVideoMute',

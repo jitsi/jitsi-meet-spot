@@ -7,6 +7,8 @@ const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
+const TILE_VIEW_ENABLE_BUTTON = '[data-qa-id=enter-tile-view]';
+const TILE_VIEW_DISABLE_BUTTON = '[data-qa-id=exit-tile-view]';
 const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
 const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
 
@@ -48,6 +50,29 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.waitForVideoMutedStateToBe(false);
 
         this.select(VIDEO_MUTE_BUTTON).click();
+    }
+
+    /**
+     * Enables or disable tile view layout.
+     *
+     * @param {boolean} enabled - Whether tile view should be enabled or
+     * disabled.
+     * @returns {void}
+     */
+    setTileView(enabled) {
+        const buttonToClick = enabled
+            ? TILE_VIEW_ENABLE_BUTTON
+            : TILE_VIEW_DISABLE_BUTTON;
+
+        this.waitForBooleanState(
+            enabled,
+            {
+                onStateSelector: TILE_VIEW_ENABLE_BUTTON,
+                offStateSelector: TILE_VIEW_DISABLE_BUTTON,
+                waitTime: constants.REMOTE_COMMAND_WAIT
+            });
+
+        this.select(buttonToClick).click();
     }
 
     /**
