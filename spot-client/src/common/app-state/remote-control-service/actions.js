@@ -14,6 +14,7 @@ import {
     JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
+    TILE_VIEW,
     VIDEO_MUTE
 } from './actionTypes';
 
@@ -143,6 +144,21 @@ export function setAudioMute(mute) {
         AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
+}
+
+/**
+ * Sends a command to Spot-TV to change its layout to enter or exit tile view.
+ *
+ * @param {boolean} tileView - Whether to tile view should be displayed.
+ * @returns {Function}
+ */
+export function setTileView(tileView) {
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlService.setTileView(tileView),
+        TILE_VIEW,
+        tileView
+    ).then(() => dispatch(setSpotTVState({ tileView })));
 }
 
 /**

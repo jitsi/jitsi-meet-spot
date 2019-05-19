@@ -447,6 +447,21 @@ class RemoteControlService extends EventEmitter {
     }
 
     /**
+     * Requests a Spot-TV to enter or exit tile view mode.
+     *
+     * @param {boolean} tileView - Whether or not Spot-TV should be in or not be
+     * in tile view.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    setTileView(tileView) {
+        return this.xmppConnection.sendCommand(
+            this._getSpotId(),
+            COMMANDS.SET_TILE_VIEW,
+            { tileView }
+        );
+    }
+
+    /**
      * Requests a Spot-TV to change its video mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be video muted.

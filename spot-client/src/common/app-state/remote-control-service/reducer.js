@@ -4,6 +4,7 @@ import {
     JOIN_WITH_SCREENSHARING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
+    TILE_VIEW,
     VIDEO_MUTE
 } from './actionTypes';
 
@@ -42,6 +43,9 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
 
     case SCREENSHARE:
         return updateStateForAsyncAction(state, 'screenshare', action);
+
+    case TILE_VIEW:
+        return updateStateForAsyncAction(state, 'tileView', action);
 
     case VIDEO_MUTE:
         return updateStateForAsyncAction(state, 'videoMute', action);

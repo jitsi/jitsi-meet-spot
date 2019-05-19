@@ -6,6 +6,8 @@ export {
     CallEnd,
     Fullscreen,
     FullscreenExit,
+    GridOff,
+    GridOn,
     HelpOutline,
     Mic,
     MicOff,
