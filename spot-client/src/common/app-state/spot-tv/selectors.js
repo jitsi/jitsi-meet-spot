@@ -57,3 +57,14 @@ export function getRemoteSpotTVRoomName(state) {
 export function isConnectedToSpot(state) {
     return Boolean(state.spotTv.spotId);
 }
+
+/**
+ * A selector which returns whether or not the Spot-TV has volume control
+ * support.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isVolumeControlSupported(state) {
+    return Boolean(state.spotTv.supportsOSFunctionality);
+}

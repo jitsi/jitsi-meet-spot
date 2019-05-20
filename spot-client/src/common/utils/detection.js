@@ -30,6 +30,18 @@ export function isDesktopBrowser() {
 }
 
 /**
+ * Returns whether or not the current Spot-TV environment has access to OS level
+ * functionality.
+ *
+ * @returns {boolean}
+ */
+export function isOSFunctionalitySupported() {
+    const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
+
+    return jitsiBrowserDetection.isElectron();
+}
+
+/**
  * Returns whether or not the current environment can support Spot-TV features.
  *
  * @returns {boolean}
