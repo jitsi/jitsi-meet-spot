@@ -24,6 +24,7 @@ import {
 import {
     getDeviceId,
     getPersistedState,
+    isElectron,
     setPersistedState
 } from 'common/utils';
 
@@ -35,6 +36,11 @@ const store = createStore(
     {
         config: {
             ...setDefaultValues(window.JitsiMeetSpotConfig)
+        },
+        spotTv: {
+
+            // Will get overridden on Spot-Remote by Spot-TV updates.
+            supportsOSFunctionality: isElectron()
         },
         ...getPersistedState()
     },

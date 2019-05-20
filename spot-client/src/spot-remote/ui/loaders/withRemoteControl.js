@@ -26,6 +26,7 @@ import { getRoomInfo } from './../../app-state';
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
     'screensharing',
+    'supportsOSFunctionality',
     'tileView',
     'videoMuted',
     'wiredScreensharingEnabled'
