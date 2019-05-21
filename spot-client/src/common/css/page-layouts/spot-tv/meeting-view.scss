@@ -48,15 +48,19 @@
 
     .meeting-status {
         bottom: 50px;
-        left: 25px;
+        left: 50%;
         position: absolute;
+        transform: translate(-50%, -50%);
 
         .status-icon {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 50%;
             display: inline-block;
-            margin-right: 1em;
             padding: 1em;
+
+            &:not(:last-child) {
+                margin-right: 1em;
+            }
 
             svg {
                 font-size: $font-size-x-large;
