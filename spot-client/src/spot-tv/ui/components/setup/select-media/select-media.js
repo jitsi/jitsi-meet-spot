@@ -190,12 +190,16 @@ class SelectMedia extends React.Component {
      * @returns {void}
      */
     _getDevices() {
-        avUtils.createLocalTracks()
-            .then(tracks => tracks.forEach(track => track.dispose()))
+        avUtils.hasDevicePermission()
+            .then(hasPermission => {
+                if (!hasPermission) {
+                    // Force device permission request.
+                    return avUtils.createLocalTracks()
+                        .then(tracks => tracks.forEach(track => track.dispose()));
+                }
+            })
             .then(() => avUtils.enumerateDevices())
-            .then(devices => {
-                this._onDeviceListChange(devices);
-            });
+            .then(this._onDeviceListChange);
     }
 
     /**

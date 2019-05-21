@@ -88,7 +88,7 @@ export default {
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         // TODO: implementing handling of gum permissions being denied
-        return JitsiMeetJS.mediaDevices.isDevicePermissionGranted()
+        return this.hasDevicePermission()
             .then(hasPermission => {
                 if (hasPermission) {
                     return Promise.resolve();
@@ -133,6 +133,18 @@ export default {
      */
     getTrackEvents() {
         return JitsiMeetJSProvider.get().events.track;
+    },
+
+    /**
+     * Returns whether or not permission has been granted to use audio and
+     * video.
+     *
+     * @returns {boolean}
+     */
+    hasDevicePermission() {
+        const JitsiMeetJS = JitsiMeetJSProvider.get();
+
+        return JitsiMeetJS.mediaDevices.isDevicePermissionGranted();
     },
 
     /**
