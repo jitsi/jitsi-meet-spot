@@ -4,6 +4,8 @@ import React from 'react';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 
+import PreviewTrack from './PreviewTrack';
+
 /**
  * Displays a volume meter for previewing the selected audio input device.
  *
@@ -106,8 +108,8 @@ export default class MicPreview extends React.PureComponent {
             return;
         }
 
-        if (this._previewTrack
-            && this._previewTrack.getDeviceId() === description.deviceId) {
+        if (this.state.micPreviewTrack
+            && this.state.micPreviewTrack.isMatchindDeviceId(description.deviceId)) {
             return;
         }
 
@@ -116,21 +118,19 @@ export default class MicPreview extends React.PureComponent {
 
         setLoadingPromise
             .then(() => this._destroyPreviewTrack())
-            .then(() => avUtils.createLocalAudioTrack(description.deviceId))
-            .then(jitsiLocalTrack => {
-                if (jitsiLocalTrack.getDeviceId() !== description.deviceId) {
-                    jitsiLocalTrack.dispose();
+            .then(() => {
+                const previewTrack = new PreviewTrack('audio', description.deviceId);
 
-                    return Promise.reject('Wrong device id received');
-                }
-
-                jitsiLocalTrack.on(
+                return previewTrack.createPreview();
+            })
+            .then(previewTrack => {
+                previewTrack.on(
                     avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
                     this._updateAudioLevel
                 );
 
                 this.setState({
-                    micPreviewTrack: jitsiLocalTrack
+                    micPreviewTrack: previewTrack
                 });
             })
             .catch(error => {
@@ -150,17 +150,11 @@ export default class MicPreview extends React.PureComponent {
      * @returns {Promise}
      */
     _destroyPreviewTrack() {
-        const { micPreviewTrack } = this.state;
-
-        if (!micPreviewTrack) {
+        if (!this.state.micPreviewTrack) {
             return Promise.resolve();
         }
 
-        micPreviewTrack.off(
-            avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
-            this._updateAudioLevel
-        );
-        micPreviewTrack.dispose();
+        this.state.micPreviewTrack.destroy();
 
         return new Promise(resolve => this.setState({ micPreviewTrack: null }, resolve));
     }

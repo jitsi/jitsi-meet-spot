@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { logger } from 'common/logger';
-import { avUtils } from 'common/media';
+
+import PreviewTrack from './PreviewTrack';
 
 /**
  * Displays a video element previewing the selected video input device.
@@ -113,7 +114,7 @@ export default class CameraPreview extends React.PureComponent {
         }
 
         if (this._previewTrack
-            && this._previewTrack.getDeviceId() === description.deviceId) {
+            && this._previewTrack.isMatchindDeviceId(description.deviceId)) {
             return;
         }
 
@@ -124,18 +125,15 @@ export default class CameraPreview extends React.PureComponent {
         }, resolve));
 
         setLoadingPromise
-            .then(() => avUtils.createLocalVideoTrack(description.deviceId))
-            .then(jitsiLocalTrack => {
-                if (jitsiLocalTrack.getDeviceId() !== description.deviceId) {
-                    jitsiLocalTrack.dispose();
+            .then(() => {
+                const previewTrack = new PreviewTrack('video', description.deviceId);
 
-                    return Promise.reject('Wrong device id received');
-                }
+                return previewTrack.createPreview();
+            })
+            .then(previewTrack => {
+                this._previewTrack = previewTrack;
 
-                this._previewTrack = jitsiLocalTrack;
-
-                this._ref.current.srcObject
-                    = this._previewTrack.getOriginalStream();
+                this._ref.current.srcObject = previewTrack.getOriginalStream();
             })
             .catch(error => {
                 logger.error('Camera preview failed', { error });
@@ -154,7 +152,7 @@ export default class CameraPreview extends React.PureComponent {
      */
     _destroyPreviewTrack() {
         if (this._previewTrack) {
-            this._previewTrack.dispose();
+            this._previewTrack.destroy();
             this._previewTrack = null;
         }
     }
