@@ -35,7 +35,7 @@ export function isDesktopBrowser() {
  * @returns {boolean}
  */
 export function isElectron() {
-    return window && window.process && window.process.emit;
+    return Boolean(window && window.process && window.process.emit);
 }
 
 /**
