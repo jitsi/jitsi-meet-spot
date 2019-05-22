@@ -99,6 +99,17 @@ class VolumeControl {
     }
 
     /**
+     * _getVolume for Windows.
+     *
+     * @returns {Promise<number>}
+     */
+    _getWin32Volume() {
+        const { speaker } = require('win-audio');
+
+        return new Promise(resolve => resolve(speaker.get()));
+    }
+
+    /**
      * _setVolume for mac.
      *
      * @param {number} value - The new volume level in [0..100].
@@ -110,6 +121,20 @@ class VolumeControl {
                 (error && reject(error)) || resolve();
             });
         });
+    }
+
+    /**
+     * _setVolume for Windows.
+     *
+     * @param {number} value - The new volume level in [0..100].
+     * @returns {Promise<void>}
+     */
+    _setWin32Volume(value) {
+        const { speaker } = require('win-audio');
+
+        speaker.set(value);
+
+        return Promise.resolve();
     }
 }
 
