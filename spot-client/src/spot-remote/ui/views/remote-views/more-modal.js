@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { isVolumeControlSupported } from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
 import { NavButton, TileViewButton } from '../../components';
@@ -9,10 +12,11 @@ import VolumeModal from './volume-modal';
 /**
  * Implements a modal to show some more buttons that are probably less often used as the main ones on the screen.
  */
-export default class MoreModal extends React.Component {
+export class MoreModal extends React.Component {
     static propTypes = {
-        onClose: PropTypes.func
-    }
+        onClose: PropTypes.func,
+        supportsVolumeControl: PropTypes.bool
+    };
 
     /**
      * Instantiates a new {@code Component}.
@@ -57,11 +61,15 @@ export default class MoreModal extends React.Component {
                     </button>
                     <div className = 'more-modal'>
                         <TileViewButton />
-                        <NavButton
-                            label = 'Volume control'
-                            onClick = { this._onToggleVolumeModal }>
-                            <VolumeUp />
-                        </NavButton>
+                        {
+                            this.props.supportsVolumeControl && (
+                                <NavButton
+                                    label = 'Volume control'
+                                    onClick = { this._onToggleVolumeModal }>
+                                    <VolumeUp />
+                                </NavButton>
+                            )
+                        }
                     </div>
                 </div>
             </div>
@@ -79,3 +87,19 @@ export default class MoreModal extends React.Component {
         });
     }
 }
+
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code MoreModal}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        supportsVolumeControl: isVolumeControlSupported(state)
+    };
+}
+
+export default connect(mapStateToProps)(MoreModal);

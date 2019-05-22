@@ -40,7 +40,7 @@ const store = createStore(
         spotTv: {
 
             // Will get overridden on Spot-Remote by Spot-TV updates.
-            supportsOSFunctionality: isElectron()
+            electron: isElectron()
         },
         ...getPersistedState()
     },

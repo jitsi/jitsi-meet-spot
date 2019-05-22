@@ -67,5 +67,5 @@ export function isConnectedToSpot(state) {
  * @returns {boolean}
  */
 export function isVolumeControlSupported(state) {
-    return Boolean(state.spotTv.supportsOSFunctionality);
+    return Boolean(state.spotTv.electron);
 }
