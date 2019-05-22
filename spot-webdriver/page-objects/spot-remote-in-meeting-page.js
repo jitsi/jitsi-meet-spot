@@ -4,6 +4,8 @@ const ScreensharePicker = require('./screenshare-picker');
 
 const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
 const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
+const MORE_BUTTON = '[data-qa-id=more]';
+const MORE_MODAL = '[data-qa-id=more-modal]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
@@ -53,6 +55,21 @@ class SpotRemoteInMeetingPage extends PageObject {
     }
 
     /**
+     * Displays the modal holder other nav buttons.
+     *
+     * @returns {void}
+     */
+    openMoreMenu() {
+        this.waitForElementDisplayed(MORE_BUTTON);
+
+        if (!this.select(MORE_MODAL).isExisting()) {
+            this.select(MORE_BUTTON).click();
+        }
+
+        this.waitForElementDisplayed(MORE_MODAL);
+    }
+
+    /**
      * Enables or disable tile view layout.
      *
      * @param {boolean} enabled - Whether tile view should be enabled or
@@ -60,6 +77,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @returns {void}
      */
     setTileView(enabled) {
+        this.openMoreMenu();
+
         const buttonToClick = enabled
             ? TILE_VIEW_ENABLE_BUTTON
             : TILE_VIEW_DISABLE_BUTTON;
