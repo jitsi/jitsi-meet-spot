@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { MenuButton } from '../../components/remote-control-menu';
+import { VolumeUp } from 'common/icons';
+import { NavButton, TileViewButton } from '../../components';
 
 import VolumeModal from './volume-modal';
 
@@ -43,7 +44,9 @@ export default class MoreModal extends React.Component {
         }
 
         return (
-            <div className = 'modal'>
+            <div
+                className = 'modal'
+                data-qa-id = 'more-modal'>
                 <div className = 'modal-shroud' />
                 <div className = 'modal-content'>
                     <button
@@ -53,9 +56,12 @@ export default class MoreModal extends React.Component {
                         x
                     </button>
                     <div className = 'more-modal'>
-                        <MenuButton
+                        <TileViewButton />
+                        <NavButton
                             label = 'Volume control'
-                            onClick = { this._onToggleVolumeModal } />
+                            onClick = { this._onToggleVolumeModal }>
+                            <VolumeUp />
+                        </NavButton>
                     </div>
                 </div>
             </div>

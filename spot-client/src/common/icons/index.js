@@ -19,7 +19,8 @@ export {
     Star,
     StarBorder,
     Videocam,
-    VideocamOff
+    VideocamOff,
+    VolumeUp
 } from '@material-ui/icons';
 export { default as WiredScreenshare } from './wired-screenshare-icon';
 export { default as WirelessScreenshare } from './wireless-screenshare-icon';
