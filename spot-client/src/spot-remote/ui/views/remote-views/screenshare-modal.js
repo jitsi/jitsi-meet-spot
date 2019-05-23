@@ -9,6 +9,7 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { Modal } from 'common/ui';
 import { isWirelessScreenshareSupported } from 'common/utils';
 
 import { ScreensharePicker } from './../../components';
@@ -49,31 +50,22 @@ export class ScreenshareModal extends React.Component {
      */
     render() {
         return (
-            <div className = 'modal'>
-                <div className = 'modal-shroud' />
-                <div className = 'modal-content'>
-                    <button
-                        className = 'close'
-                        onClick = { this.props.onHideModal }
-                        type = 'button'>
-                        x
-                    </button>
-                    <div className = 'share-select-view'>
-                        <ScreensharePicker
-                            onStartWiredScreenshare
-                                = { this.props.onStartWiredScreenshare }
-                            onStartWirelessScreenshare
-                                = { this.props.onStartWirelessScreenshare }
-                            onStopScreensharing
-                                = { this._onStopScreenshare }
-                            screensharingType = { this.props.screensharingType }
-                            wiredScreenshareEnabled
-                                = { this.props.wiredScreensharingEnabled }
-                            wirelessScreenshareEnabled
-                                = { this._isWirelessScreenshareSupported } />
-                    </div>
+            <Modal onClose = { this.props.onHideModal }>
+                <div className = 'share-select-view'>
+                    <ScreensharePicker
+                        onStartWiredScreenshare
+                            = { this.props.onStartWiredScreenshare }
+                        onStartWirelessScreenshare
+                            = { this.props.onStartWirelessScreenshare }
+                        onStopScreensharing
+                            = { this._onStopScreenshare }
+                        screensharingType = { this.props.screensharingType }
+                        wiredScreenshareEnabled
+                            = { this.props.wiredScreensharingEnabled }
+                        wirelessScreenshareEnabled
+                            = { this._isWirelessScreenshareSupported } />
                 </div>
-            </div>
+            </Modal>
         );
     }
 

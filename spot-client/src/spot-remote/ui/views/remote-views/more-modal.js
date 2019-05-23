@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { hideModal, isVolumeControlSupported } from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
+import { Modal } from 'common/ui';
 import { NavButton, TileViewButton } from '../../components';
 
 import VolumeModal from './volume-modal';
@@ -48,31 +49,22 @@ export class MoreModal extends React.Component {
         }
 
         return (
-            <div
-                className = 'modal'
-                data-qa-id = 'more-modal'>
-                <div className = 'modal-shroud' />
-                <div className = 'modal-content'>
-                    <button
-                        className = 'close'
-                        onClick = { this.props.onClose }
-                        type = 'button'>
-                        x
-                    </button>
-                    <div className = 'more-modal'>
-                        <TileViewButton />
-                        {
-                            this.props.supportsVolumeControl && (
-                                <NavButton
-                                    label = 'Volume control'
-                                    onClick = { this._onToggleVolumeModal }>
-                                    <VolumeUp />
-                                </NavButton>
-                            )
-                        }
-                    </div>
+            <Modal
+                onClose = { this.props.onClose }
+                qaId = 'more-modal'>
+                <div className = 'more-modal'>
+                    <TileViewButton />
+                    {
+                        this.props.supportsVolumeControl && (
+                            <NavButton
+                                label = 'Volume control'
+                                onClick = { this._onToggleVolumeModal }>
+                                <VolumeUp />
+                            </NavButton>
+                        )
+                    }
                 </div>
-            </div>
+            </Modal>
         );
     }
 
