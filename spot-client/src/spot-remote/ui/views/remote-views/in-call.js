@@ -176,6 +176,8 @@ export class InCall extends React.Component {
     _onToggleScreenshare() {
         if (this.props.isScreenshareModalOpen) {
             this.props.hideModal();
+
+            return;
         }
 
         // If only wireless sceensharing is available and there is no
