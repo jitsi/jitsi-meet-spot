@@ -10,7 +10,8 @@ export default class Modal extends React.PureComponent {
     static propTypes = {
         children: PropTypes.node,
         onClose: PropTypes.func,
-        qaId: PropTypes.string
+        qaId: PropTypes.string,
+        rootClassName: PropTypes.string
     };
 
     /**
@@ -22,7 +23,7 @@ export default class Modal extends React.PureComponent {
     render() {
         return (
             <div
-                className = 'modal'
+                className = { `modal ${this.props.rootClassName || ''}` }
                 data-qa-id = { this.props.qaId }>
                 <div className = 'modal-shroud' />
                 <div className = 'modal-content'>

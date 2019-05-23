@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Modal } from 'common/ui';
+
 import DesktopPicker from './desktop-picker';
 
 /**
@@ -59,18 +61,11 @@ export default class ElectronDesktopPickerModal extends React.Component {
         }
 
         return (
-            <div className = 'modal electron-desktop-picker-modal'>
-                <div className = 'modal-shroud' />
-                <div className = 'modal-content'>
-                    <button
-                        className = 'close'
-                        onClick = { this._onClose }
-                        type = 'button'>
-                        x
-                    </button>
-                    <DesktopPicker onSelect = { this._onClose } />
-                </div>
-            </div>
+            <Modal
+                onClose = { this._onClose }
+                rootClassName = 'electron-desktop-picker-modal'>
+                <DesktopPicker onSelect = { this._onClose } />
+            </Modal>
         );
     }
 
