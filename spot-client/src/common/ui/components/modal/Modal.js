@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
- * Yeah.
+ * Displays a modal dialog in the middle of the screen, above other UI elemnts.
  *
  * @extends React.Component
  */
