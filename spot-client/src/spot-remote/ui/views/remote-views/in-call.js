@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import {
     getInMeetingStatus,
     hangUp,
-    startWirelessScreensharing,
-    startWiredScreensharing,
-    stopScreenshare
+    isModalOpen,
+    showModal,
+    hideModal,
+    startWirelessScreensharing
 } from 'common/app-state';
 import { CallEnd, MoreVert, ScreenShare } from 'common/icons';
 import { LoadingIcon, RoomName } from 'common/ui';
@@ -30,11 +31,14 @@ import ScreenshareModal from './screenshare-modal';
  */
 export class InCall extends React.Component {
     static propTypes = {
+        hideModal: PropTypes.func,
         inMeeting: PropTypes.string,
+        isMoreModalOpen: PropTypes.bool,
+        isScreenshareModalOpen: PropTypes.bool,
         onHangUp: PropTypes.func,
-        onStartWiredScreenshare: PropTypes.func,
+        onShowMoreModal: PropTypes.func,
+        onShowScreenshareModal: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
-        onStopScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
         screensharingType: PropTypes.string,
         wiredScreensharingEnabled: PropTypes.bool
@@ -49,17 +53,9 @@ export class InCall extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            showMoreModal: false,
-            showScreenshareModal: false
-        };
-
         this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
-        this._onCloseScreenshareModal
-            = this._onCloseScreenshareModal.bind(this);
-        this._onStopScreenshare
-            = this._onStopScreenshare.bind(this);
-        this._onToggleMore = this._onToggleMore.bind(this);
+
+        this._onToggleMoreModal = this._onToggleMoreModal.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
     }
 
@@ -69,6 +65,8 @@ export class InCall extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
+        this.props.hideModal();
+
         this.props.remoteControlService.destroyWirelessScreenshareConnections();
     }
 
@@ -81,17 +79,17 @@ export class InCall extends React.Component {
     render() {
         const {
             inMeeting,
-            screensharingType,
-            wiredScreensharingEnabled
+            screensharingType
         } = this.props;
 
         if (!inMeeting) {
             return <LoadingIcon color = 'white' />;
         }
 
-        const { showScreenshareModal } = this.state;
-        const screenshareButtonStyles = `sharebutton ${showScreenshareModal
+        const { isScreenshareModalOpen, isMoreModalOpen } = this.props;
+        const screenshareButtonStyles = `sharebutton ${isScreenshareModalOpen
             || screensharingType ? 'active' : ''}`;
+        const moreButtonStyles = isMoreModalOpen ? 'active' : '';
         const { meetingName } = parseMeetingUrl(inMeeting);
 
         return (
@@ -114,8 +112,9 @@ export class InCall extends React.Component {
                         <ScreenShare />
                     </NavButton>
                     <NavButton
+                        className = { moreButtonStyles }
                         label = 'More'
-                        onClick = { this._onToggleMore }
+                        onClick = { this._onToggleMoreModal }
                         qaId = 'more'>
                         <MoreVert />
                     </NavButton>
@@ -126,23 +125,6 @@ export class InCall extends React.Component {
                         <CallEnd />
                     </NavButton>
                 </NavContainer>
-                { this.state.showScreenshareModal && (
-                    <ScreenshareModal
-                        onClose = { this._onCloseScreenshareModal }
-                        onStartWiredScreenshare
-                            = { this.props.onStartWiredScreenshare }
-                        onStartWirelessScreenshare
-                            = { this.props.onStartWirelessScreenshare }
-                        onStopScreensharing
-                            = { this._onStopScreenshare }
-                        screensharingType = { screensharingType }
-                        wiredScreenshareEnabled
-                            = { wiredScreensharingEnabled }
-                        wirelessScreenshareEnabled
-                            = { this._isWirelessScreenshareSupported } />
-                )
-                }
-                { this.state.showMoreModal && <MoreModal onClose = { this._onToggleMore } /> }
             </div>
         );
     }
@@ -170,23 +152,17 @@ export class InCall extends React.Component {
     }
 
     /**
-     * Sets the {@code ScreenshareModal} to be hidden.
+     * Displays the {@code MoreModal} or hides the currently displayed modal.
      *
+     * @private
      * @returns {void}
      */
-    _onCloseScreenshareModal() {
-        this.setState({ showScreenshareModal: false });
-    }
-
-    /**
-     * Toggles the "more" modal to be shown or hidden.
-     *
-     * @returns {void}
-     */
-    _onToggleMore() {
-        this.setState({
-            showMoreModal: !this.state.showMoreModal
-        });
+    _onToggleMoreModal() {
+        if (this.props.isMoreModalOpen) {
+            this.props.hideModal();
+        } else {
+            this.props.onShowMoreModal();
+        }
     }
 
     /**
@@ -198,6 +174,10 @@ export class InCall extends React.Component {
      * @returns {void}
      */
     _onToggleScreenshare() {
+        if (this.props.isScreenshareModalOpen) {
+            this.props.hideModal();
+        }
+
         // If only wireless sceensharing is available and there is no
         // screenshare occurring, then start the wireless screensharing flow.
         if (this._isWirelessScreenshareSupported
@@ -209,27 +189,7 @@ export class InCall extends React.Component {
         }
 
         // Otherwise defer all screensharing choices to the modal.
-        this.setState({
-            showScreenshareModal: !this.state.showScreenshareModal
-        });
-    }
-
-    /**
-     * Turns off any active screenshare.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onStopScreenshare() {
-        this.props.onStopScreenshare()
-            .then(() => {
-                // Special case to immediately close the modal when stopping
-                // screenshare while only wireless screenshare is available.
-                if (this._isWirelessScreenshareSupported
-                    && !this.props.wiredScreensharingEnabled) {
-                    this._onCloseScreenshareModal();
-                }
-            });
+        this.props.onShowScreenshareModal();
     }
 
     /**
@@ -255,7 +215,9 @@ export class InCall extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        ...getInMeetingStatus(state)
+        ...getInMeetingStatus(state),
+        isScreenshareModalOpen: isModalOpen(state, ScreenshareModal),
+        isMoreModalOpen: isModalOpen(state, MoreModal)
     };
 }
 
@@ -269,6 +231,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         /**
+         * Stop displaying all modals.
+         *
+         * @returns {void}
+         */
+        hideModal() {
+            dispatch(hideModal());
+        },
+
+        /**
          * Leaves the currently joined meeting.
          *
          * @returns {Promise}
@@ -278,30 +249,31 @@ function mapDispatchToProps(dispatch) {
         },
 
         /**
+         * Displays the {@code MoreModal} for additional in-meeting functions.
+         *
+         * @returns {void}
+         */
+        onShowMoreModal() {
+            return dispatch(showModal(MoreModal));
+        },
+
+        /**
+         * Displays the {@code ScreenshareModal} to interact with wired and/or
+         * wireless screensharing.
+         *
+         * @returns {void}
+         */
+        onShowScreenshareModal() {
+            dispatch(showModal(ScreenshareModal));
+        },
+
+        /**
          * Triggers the wireless screensharing flow to be started.
          *
          * @returns {Promise}
          */
         onStartWirelessScreenshare() {
             return dispatch(startWirelessScreensharing());
-        },
-
-        /**
-         * Triggers wired screensharing to be enabled.
-         *
-         * @returns {void}
-         */
-        onStartWiredScreenshare() {
-            dispatch(startWiredScreensharing());
-        },
-
-        /**
-         * Turns off any active screenshare.
-         *
-         * @returns {Promise}
-         */
-        onStopScreenshare() {
-            return dispatch(stopScreenshare());
         }
     };
 }

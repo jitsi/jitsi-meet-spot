@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isVolumeControlSupported } from 'common/app-state';
+import { hideModal, isVolumeControlSupported } from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
 import { NavButton, TileViewButton } from '../../components';
@@ -102,4 +102,24 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(MoreModal);
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Stop showing the {@code MoreModal}.
+         *
+         * @returns {void}
+         */
+        onClose() {
+            dispatch(hideModal());
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MoreModal);
