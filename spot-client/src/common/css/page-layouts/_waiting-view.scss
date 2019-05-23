@@ -1,7 +1,3 @@
-@import './../media-queries';
-@import './../mixins.scss';
-@import './../variables.scss';
-
 .waiting-view {
     @include spot-remote-view-layout;
 
