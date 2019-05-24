@@ -2,7 +2,12 @@ import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
-import { COMMANDS, MESSAGES } from './constants';
+import {
+    COMMANDS,
+    CONNECTION_EVENTS,
+    MESSAGES,
+    SERVICE_UPDATES
+} from './constants';
 import ScreenshareService from './screenshare-connection';
 
 /**
@@ -318,6 +323,66 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
                     'Failed to send screensharing message', { error }))
         });
     }
+
+    /**
+     * Implements {@link BaseRemoteControlService#_onPresenceReceived}.
+     *
+     * @inheritdoc
+     */
+    _onPresenceReceived(presence) {
+        const updateType = presence.getAttribute('type');
+
+        if (updateType === 'unavailable') {
+            const from = presence.getAttribute('from');
+
+            if (this._getSpotId() === from) {
+                // A Spot-Remote needs to be updated about no longer being
+                // connected to a Spot-TV.
+                this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
+            }
+
+            return;
+        }
+
+        if (updateType === 'error') {
+            logger.log(
+                'error presence received, interpreting as Spot-TV disconnect');
+            this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
+
+            return;
+        }
+
+        const status = Array.from(presence.children).map(child =>
+            [ child.tagName, child.textContent ])
+            .reduce((acc, current) => {
+                acc[current[0]] = current[1];
+
+                return acc;
+            }, {});
+
+        if (status.isSpot !== 'true') {
+            // Ignore presence from others not identified as a Spot-TV.
+            return;
+        }
+
+        const spotTvJid = presence.getAttribute('from');
+
+        // Redundantly update the known Spot-TV jid in case there are multiple
+        // due to ghosts left form disconnect, in which case the active Spot-TV
+        // should be emitting updates.
+        this._lastSpotState = {
+            ...status,
+            spotId: spotTvJid
+        };
+
+        this.emit(
+            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
+            {
+                updatedState: this._lastSpotState
+            }
+        );
+    }
+
 
     /**
      * Processes screenshare related updates from the Jitsi-Meet participant.

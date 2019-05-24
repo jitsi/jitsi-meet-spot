@@ -7,7 +7,6 @@ import { getJitterDelay } from 'common/utils';
 
 import {
     CONNECTION_EVENTS,
-    MESSAGES,
     SERVICE_UPDATES
 } from './constants';
 import XmppConnection from './xmpp-connection';
@@ -257,23 +256,6 @@ export class BaseRemoteControlService extends EventEmitter {
     }
 
     /**
-     * Emits an event that a message or command has been received from an
-     * instance of Spot Remote.
-     *
-     * @param {string} messageType - The constant of the message or command.
-     * @param {Object} data - Additional details about the message.
-     * @private
-     * @returns {void}
-     */
-    _notifySpotRemoteMessageReceived(messageType, data) {
-        this.emit(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
-            messageType,
-            data
-        );
-    }
-
-    /**
      * Callback invoked when {@code XmppConnection} connection receives a
      * message iq that needs processing.
      *
@@ -283,9 +265,6 @@ export class BaseRemoteControlService extends EventEmitter {
      * @returns {Object} An ack of the iq.
      */
     _onMessageReceived(iq) {
-        // TODO: _onCommandReceived and _onMessageReceived have a lot of
-        // duplication that may be remove-able.
-
         const from = iq.getAttribute('from');
         const message = iq.getElementsByTagName('message')[0];
         const messageType = message.getAttribute('type');
@@ -317,91 +296,14 @@ export class BaseRemoteControlService extends EventEmitter {
      * state, and Spot-TVs need to know about Spot-Remote disconnects for
      * screensharing.
      *
+     * @abstract
      * @param {Object} presence - The XML document representing the presence
      * update.
      * @private
      * @returns {Promise}
      */
-    _onPresenceReceived(presence) {
-        const updateType = presence.getAttribute('type');
-
-        if (updateType === 'unavailable') {
-            const from = presence.getAttribute('from');
-
-            if (this._isSpot) {
-                logger.log('presence update of a Spot-TV leaving', { from });
-
-                // A Spot-TV needs to inform at least the Jitsi meeting that
-                // a Spot-Remote has left, in case some cleanup of wireless
-                // screensharing is needed.
-                const iq = $iq({ type: 'set' })
-                    .c('jingle', {
-                        xmlns: 'urn:xmpp:jingle:1',
-                        action: 'unavailable'
-                    })
-                    .c('details')
-                    .t('unavailable')
-                    .up();
-
-                this._notifySpotRemoteMessageReceived(
-                    MESSAGES.SPOT_REMOTE_LEFT,
-                    {
-                        from,
-                        data: { iq: iq.toString() }
-                    }
-                );
-            } else if (this._getSpotId() === from) {
-                // A Spot-Remote needs to be updated about no longer being
-                // connected to a Spot-TV.
-                this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
-            }
-
-            return;
-        }
-
-        if (this._isSpot) {
-            // Spot-TV only needs to concern itself about leave events as its
-            // state is known locally and then updated for Spot-Remotes.
-            return;
-        }
-
-        if (updateType === 'error') {
-            logger.log(
-                'error presence received, interpreting as Spot-TV disconnect');
-            this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
-
-            return;
-        }
-
-        const status = Array.from(presence.children).map(child =>
-            [ child.tagName, child.textContent ])
-            .reduce((acc, current) => {
-                acc[current[0]] = current[1];
-
-                return acc;
-            }, {});
-
-        if (status.isSpot !== 'true') {
-            // Ignore presence from others not identified as a Spot-TV.
-            return;
-        }
-
-        const spotTvJid = presence.getAttribute('from');
-
-        // Redundantly update the known Spot-TV jid in case there are multiple
-        // due to ghosts left form disconnect, in which case the active Spot-TV
-        // should be emitting updates.
-        this._lastSpotState = {
-            ...status,
-            spotId: spotTvJid
-        };
-
-        this.emit(
-            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
-            {
-                updatedState: this._lastSpotState
-            }
-        );
+    _onPresenceReceived() {
+        throw new Error('_onPresenceReceived not implemented');
     }
 
     /**
