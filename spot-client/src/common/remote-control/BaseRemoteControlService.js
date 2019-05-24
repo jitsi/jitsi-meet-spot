@@ -25,7 +25,6 @@ export class BaseRemoteControlService extends EventEmitter {
     constructor() {
         super();
 
-        this._onCommandReceived = this._onCommandReceived.bind(this);
         this._onMessageReceived = this._onMessageReceived.bind(this);
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
 
@@ -62,6 +61,7 @@ export class BaseRemoteControlService extends EventEmitter {
 
         const {
             joinAsSpot,
+            onCommandReceived,
             roomInfo,
             joinCodeRefreshRate,
             serverConfig
@@ -75,7 +75,7 @@ export class BaseRemoteControlService extends EventEmitter {
 
         this.xmppConnection = new XmppConnection({
             configuration: serverConfig,
-            onCommandReceived: this._onCommandReceived,
+            onCommandReceived,
             onMessageReceived: this._onMessageReceived,
             onPresenceReceived: this._onPresenceReceived
         });
@@ -271,41 +271,6 @@ export class BaseRemoteControlService extends EventEmitter {
             messageType,
             data
         );
-    }
-
-    /**
-     * Callback invoked when Spot-TV receives a command to take an action from
-     * a Spot-Remove.
-     *
-     * @param {Object} iq -  The XML document representing the iq with the
-     * command.
-     * @private
-     * @returns {Object} An ack of the iq.
-     */
-    _onCommandReceived(iq) {
-        const from = iq.getAttribute('from');
-        const command = iq.getElementsByTagName('command')[0];
-        const commandType = command.getAttribute('type');
-
-        logger.log('remoteControlService received command', { commandType });
-
-        let data;
-
-        try {
-            data = JSON.parse(command.textContent);
-        } catch (e) {
-            logger.error('Failed to parse command data');
-
-            data = {};
-        }
-
-        this._notifySpotRemoteMessageReceived(commandType, data);
-
-        return $iq({
-            id: iq.getAttribute('id'),
-            type: 'result',
-            to: from
-        });
     }
 
     /**

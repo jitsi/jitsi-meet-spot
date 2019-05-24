@@ -1,4 +1,7 @@
+import { $iq } from 'strophe.js';
+
 import { globalDebugger } from 'common/debugging';
+import { logger } from 'common/logger';
 import { generateRandomString } from 'common/utils';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
@@ -17,6 +20,20 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
         super();
 
         this._nextJoinCodeUpdate = null;
+
+        this._onCommandReceived = this._onCommandReceived.bind(this);
+    }
+
+    /**
+     * Creates a connection to the remote control service.
+     *
+     * @inheritdoc
+     */
+    connect(options) {
+        return super.connect({
+            ...options,
+            onCommandReceived: this._onCommandReceived
+        });
     }
 
     /**
@@ -108,6 +125,42 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
         }
 
         this.xmppConnection.updateStatus(newStatus);
+    }
+
+
+    /**
+     * Callback invoked when Spot-TV receives a command to take an action from
+     * a Spot-Remote.
+     *
+     * @param {Object} iq -  The XML document representing the iq with the
+     * command.
+     * @private
+     * @returns {Object} An ack of the iq.
+     */
+    _onCommandReceived(iq) {
+        const from = iq.getAttribute('from');
+        const command = iq.getElementsByTagName('command')[0];
+        const commandType = command.getAttribute('type');
+
+        logger.log('remoteControlService received command', { commandType });
+
+        let data;
+
+        try {
+            data = JSON.parse(command.textContent);
+        } catch (e) {
+            logger.error('Failed to parse command data');
+
+            data = {};
+        }
+
+        this._notifySpotRemoteMessageReceived(commandType, data);
+
+        return $iq({
+            id: iq.getAttribute('id'),
+            type: 'result',
+            to: from
+        });
     }
 }
 
