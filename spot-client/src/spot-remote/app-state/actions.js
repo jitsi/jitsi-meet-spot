@@ -1,5 +1,5 @@
 import { getSpotServicesConfig } from 'common/app-state';
-import { remoteControlService } from 'common/remote-control';
+import { spotRemoteRemoteControlService } from 'common/remote-control';
 import { history } from 'common/history';
 
 import {
@@ -26,7 +26,7 @@ export function connectToSpotTV(joinCode, shareMode) {
 
         const { joinCodeServiceUrl } = getSpotServicesConfig(getState());
 
-        return remoteControlService.exchangeCode(joinCode, { joinCodeServiceUrl })
+        return spotRemoteRemoteControlService.exchangeCode(joinCode, { joinCodeServiceUrl })
             .then(roomInfo => {
                 dispatch({
                     type: SPOT_REMOTE_JOIN_CODE_VALID,

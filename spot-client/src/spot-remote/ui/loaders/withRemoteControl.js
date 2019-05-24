@@ -12,7 +12,7 @@ import {
 import { logger } from 'common/logger';
 import {
     SERVICE_UPDATES,
-    remoteControlService
+    spotRemoteRemoteControlService
 } from 'common/remote-control';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
@@ -73,34 +73,34 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Adds listeners for {@code remoteControlService} updates.
+     * Adds listeners for {@code spotRemoteRemoteControlService} updates.
      *
      * @inheritdoc
      */
     componentDidMount() {
         super.componentDidMount();
 
-        remoteControlService.addListener(
+        spotRemoteRemoteControlService.addListener(
             SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             this._onDisconnect
         );
-        remoteControlService.addListener(
+        spotRemoteRemoteControlService.addListener(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
             this._onSpotTVStateChange
         );
     }
 
     /**
-     * Clears the listeners for {@code remoteControlService} updates.
+     * Clears the listeners for {@code spotRemoteRemoteControlService} updates.
      *
      * @inheritdoc
      */
     componentWillUnmount() {
-        remoteControlService.removeListener(
+        spotRemoteRemoteControlService.removeListener(
             SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             this._onDisconnect
         );
-        remoteControlService.removeListener(
+        spotRemoteRemoteControlService.removeListener(
             SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
             this._onSpotTVStateChange
         );
@@ -114,7 +114,7 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     _getPropsForChildren() {
         return {
-            remoteControlService
+            remoteControlService: spotRemoteRemoteControlService
         };
     }
 
@@ -138,7 +138,7 @@ export class RemoteControlLoader extends AbstractLoader {
             return Promise.reject();
         }
 
-        return remoteControlService.connect({
+        return spotRemoteRemoteControlService.connect({
             autoReconnect: true,
             roomInfo,
             serverConfig: this.props.remoteControlConfiguration
@@ -158,7 +158,7 @@ export class RemoteControlLoader extends AbstractLoader {
     }
 
     /**
-     * Callback invoked when {@code remoteControlService} has an update about
+     * Callback invoked when {@code spotRemoteRemoteControlService} has an update about
      * the current state of a Spot-TV.
      *
      * @param {Object} data - Details of the Spot-TV's current state.
