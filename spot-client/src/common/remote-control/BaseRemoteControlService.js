@@ -3,7 +3,7 @@ import { $iq } from 'strophe.js';
 
 import { fetchRoomInfo } from 'common/backend/utils';
 import { logger } from 'common/logger';
-import { generateRandomString, getJitterDelay } from 'common/utils';
+import { getJitterDelay } from 'common/utils';
 
 import {
     CONNECTION_EVENTS,
@@ -89,12 +89,23 @@ export class BaseRemoteControlService extends EventEmitter {
 
         this.xmppConnectionPromise
             .then(() => {
-                if (joinAsSpot && joinCodeRefreshRate) {
+                if (joinAsSpot && joinCodeRefreshRate && this.refreshJoinCode) {
                     this.refreshJoinCode(joinCodeRefreshRate);
                 }
             });
 
         return this.xmppConnectionPromise;
+    }
+
+    /**
+     * Returns the current join code that is necessary to establish a connection
+     * to a Spot-TV.
+     *
+     * @abstract
+     * @returns {string}
+     */
+    getJoinCode() {
+        throw new Error();
     }
 
     /**
@@ -137,10 +148,7 @@ export class BaseRemoteControlService extends EventEmitter {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = getJitterDelay();
 
-        const previousJoinCode = this._isSpot
-            ? this.getJoinCode()
-            : (this._lastSpotState && this._lastSpotState.joinCode)
-                || this._options.joinCode;
+        const previousJoinCode = this.getJoinCode();
 
         this.disconnect()
             .catch(error => {
@@ -182,8 +190,6 @@ export class BaseRemoteControlService extends EventEmitter {
      */
     disconnect() {
         this._lastSpotState = null;
-
-        clearTimeout(this._nextJoinCodeUpdate);
 
         const destroyPromise = this.xmppConnection
             ? this.xmppConnection.destroy()
@@ -230,26 +236,6 @@ export class BaseRemoteControlService extends EventEmitter {
     }
 
     /**
-     * Returns the current join code that is necessary to establish a connection
-     * to a Spot-TV.
-     *
-     * @returns {string}
-     */
-    getJoinCode() {
-        const fullJid
-            = this.xmppConnection && this.xmppConnection.getRoomFullJid();
-
-        if (!fullJid) {
-            return '';
-        }
-
-        const roomName = fullJid.split('@')[0];
-        const roomLock = this.xmppConnection.getLock();
-
-        return `${roomName}${roomLock}`;
-    }
-
-    /**
      * Returns whether or not there is a connection that is being established
      * or is active.
      *
@@ -257,64 +243,6 @@ export class BaseRemoteControlService extends EventEmitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
-    }
-
-    /**
-     * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
-     * to pair with it.
-     *
-     * @param {number} nextRefreshTimeout - If defined will start an interval
-     * to automatically update join code.
-     * @returns {Promise<string>} Resolves with the new join code.
-     */
-    refreshJoinCode(nextRefreshTimeout) {
-        clearTimeout(this._nextJoinCodeUpdate);
-
-        const roomLock = generateRandomString(3);
-
-        this.xmppConnection.setLock(roomLock)
-            .then(() => {
-                this.emit(
-                    SERVICE_UPDATES.JOIN_CODE_CHANGE,
-                    { joinCode: this.getJoinCode() }
-                );
-
-                if (nextRefreshTimeout) {
-                    this._nextJoinCodeUpdate = setTimeout(() => {
-                        this.refreshJoinCode(nextRefreshTimeout);
-                    }, nextRefreshTimeout);
-                }
-            });
-    }
-
-    /**
-     * Sends a message to a Spot-Remote.
-     *
-     * @param {string} jid - The jid of the remote control which should receive
-     * the message.
-     * @param {Object} data - Information to pass to the remote control.
-     * @returns {Promise}
-     */
-    sendMessageToRemoteControl(jid, data) {
-        return this.xmppConnection.sendMessage(
-            jid, MESSAGES.JITSI_MEET_UPDATE, data);
-    }
-
-    /**
-     * To be called by Spot-TV to update self presence.
-     *
-     * @param {Object} newStatus - The new presence object that should be merged
-     * with existing presence.
-     * @returns {void}
-     */
-    updateStatus(newStatus = {}) {
-        // FIXME: these truthy checks also fix a condition where updateStatus
-        // is fired when the redux store is initialized.
-        if (!this.xmppConnection || !this._isSpot) {
-            return;
-        }
-
-        this.xmppConnection.updateStatus(newStatus);
     }
 
     /**
