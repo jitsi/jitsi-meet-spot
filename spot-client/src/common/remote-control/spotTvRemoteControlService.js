@@ -34,10 +34,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
             return this.xmppConnectionPromise;
         }
 
-        const connectionPromise = super.connect({
-            ...options,
-            onCommandReceived: this._onCommandReceived
-        });
+        const connectionPromise = super.connect(options);
 
         connectionPromise
             .then(() => {
@@ -161,10 +158,8 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
      * Callback invoked when Spot-TV receives a command to take an action from
      * a Spot-Remote.
      *
-     * @param {Object} iq -  The XML document representing the iq with the
-     * command.
-     * @private
-     * @returns {Object} An ack of the iq.
+     * @inheritdoc
+     * @override
      */
     _onCommandReceived(iq) {
         const from = iq.getAttribute('from');
@@ -248,7 +243,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
      * @override
      * @inheritdoc
      */
-    _reactToMessage(messageType, from, data) {
+    _processMessage(messageType, from, data) {
         switch (messageType) {
         case MESSAGES.REMOTE_CONTROL_UPDATE:
             // Spot-TV received a message from a Spot-Remote to send to the
