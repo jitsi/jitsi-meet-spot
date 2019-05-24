@@ -10,7 +10,10 @@ import {
 import { registerDevice } from 'common/backend';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
-import { SERVICE_UPDATES, remoteControlService } from 'common/remote-control';
+import {
+    SERVICE_UPDATES,
+    spotTvRemoteControlService
+} from 'common/remote-control';
 import { generateRandomString } from 'common/utils';
 
 /**
@@ -20,7 +23,7 @@ import { generateRandomString } from 'common/utils';
  */
 export function createSpotTVRemoteControlConnection() {
     return (dispatch, getState) => {
-        if (remoteControlService.hasConnection()) {
+        if (spotTvRemoteControlService.hasConnection()) {
             logger.warn('Called to create connection while connection exists');
 
             return;
@@ -28,7 +31,7 @@ export function createSpotTVRemoteControlConnection() {
 
         /**
          * Callback invoked when a connect has been successfully made with
-         * {@code remoteControlService}.
+         * {@code spotTvRemoteControlService}.
          *
          * @param {Object} result - Includes information specific about the
          * connection.
@@ -40,7 +43,7 @@ export function createSpotTVRemoteControlConnection() {
         }
 
         /**
-         * Callback invoked when {@code remoteControlService} has been
+         * Callback invoked when {@code spotTvRemoteControlService} has been
          * disconnected from an unrecoverable error. Tries to reconnect.
          *
          * @private
@@ -49,7 +52,7 @@ export function createSpotTVRemoteControlConnection() {
         function onDisconnect() {
             logger.error(
                 'Spot-TV disconnected from the remote control service.');
-            remoteControlService.disconnect()
+            spotTvRemoteControlService.disconnect()
                 .then(() => {
                     dispatch(setJoinCode(''));
 
@@ -58,8 +61,8 @@ export function createSpotTVRemoteControlConnection() {
         }
 
         /**
-         * Callback invoked when {@code remoteControlService} has changed the
-         * join code necessary to pair with the Spot-TV.
+         * Callback invoked when {@code spotTvRemoteControlService} has changed
+         * the join code necessary to pair with the Spot-TV.
          *
          * @param {Object} data - An object containing the update.
          * @private
@@ -84,11 +87,11 @@ export function createSpotTVRemoteControlConnection() {
             .catch(onDisconnect);
         }
 
-        remoteControlService.addListener(
+        spotTvRemoteControlService.addListener(
             SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             onDisconnect
         );
-        remoteControlService.addListener(
+        spotTvRemoteControlService.addListener(
             SERVICE_UPDATES.JOIN_CODE_CHANGE,
             onJoinCodeChange
         );
@@ -98,8 +101,8 @@ export function createSpotTVRemoteControlConnection() {
 }
 
 /**
- * Interacts with the {@code remoteControlService} to create a connection to be
- * consumed by a Spot-TV client.
+ * Interacts with the {@code spotTvRemoteControlService} to create a connection
+ * to be consumed by a Spot-TV client.
  *
  * @param {Object} state - The Redux state.
  * @returns {Promise<Object>} Resolves with an object containing the latest
@@ -138,7 +141,7 @@ function createConnection(state) {
             let getRoomInfoPromise;
 
             if (joinCodeServiceUrl) {
-                getRoomInfoPromise = remoteControlService.exchangeCode(
+                getRoomInfoPromise = spotTvRemoteControlService.exchangeCode(
                     joinCode,
                     {
                         joinCodeServiceUrl
@@ -155,7 +158,7 @@ function createConnection(state) {
 
             return getRoomInfoPromise;
         })
-        .then(roomInfo => remoteControlService.connect({
+        .then(roomInfo => spotTvRemoteControlService.connect({
             autoReconnect: true,
             joinAsSpot: true,
 
@@ -167,7 +170,8 @@ function createConnection(state) {
         }))
         .then(() => {
             return {
-                joinCode: finalJoinCode || remoteControlService.getJoinCode(),
+                joinCode:
+                    finalJoinCode || spotTvRemoteControlService.getJoinCode(),
                 jwt: finalJwt
             };
         });

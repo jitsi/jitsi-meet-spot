@@ -4,3 +4,5 @@ export { default as RemoteControlServiceSubscriber }
 export { default as remoteControlService } from './remote-control-service';
 export { default as spotRemoteRemoteControlService }
     from './spot-remote-remote-control-service';
+export { default as spotTvRemoteControlService }
+    from './spot-tv-remote-control-service';
