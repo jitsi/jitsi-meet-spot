@@ -53,7 +53,6 @@ export class BaseRemoteControlService extends EventEmitter {
 
         const {
             joinAsSpot,
-            onCommandReceived,
             roomInfo,
             serverConfig
         } = this._options;
@@ -64,7 +63,7 @@ export class BaseRemoteControlService extends EventEmitter {
 
         this.xmppConnection = new XmppConnection({
             configuration: serverConfig,
-            onCommandReceived,
+            onCommandReceived: this._onCommandReceived,
             onMessageReceived: this._onMessageReceived,
             onPresenceReceived: this._onPresenceReceived
         });
@@ -224,6 +223,19 @@ export class BaseRemoteControlService extends EventEmitter {
     }
 
     /**
+     * Callback invoked when receiving a command to take an action.
+     *
+     * @abstract
+     * @param {Object} iq -  The XML document representing the iq with the
+     * command.
+     * @private
+     * @returns {Object} An ack of the iq.
+     */
+    _onCommandReceived() {
+        throw new Error('_onCommandReceived not implemented');
+    }
+
+    /**
      * Callback invoked when {@code XmppConnection} connection receives a
      * message iq that needs processing.
      *
@@ -249,7 +261,7 @@ export class BaseRemoteControlService extends EventEmitter {
             data = {};
         }
 
-        this._reactToMessage(messageType, from, data);
+        this._processMessage(messageType, from, data);
 
         return $iq({
             id: iq.getAttribute('id'),
@@ -284,7 +296,7 @@ export class BaseRemoteControlService extends EventEmitter {
      * @private
      * @returns {void}
      */
-    _reactToMessage() {
+    _processMessage() {
         return;
     }
 }

@@ -404,7 +404,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
      * @override
      * @inheritdoc
      */
-    _reactToMessage(messageType, from, data) {
+    _processMessage(messageType, from, data) {
         switch (messageType) {
         case MESSAGES.JITSI_MEET_UPDATE:
             // The Spot-Remote has an update from the Jitsi participant.
