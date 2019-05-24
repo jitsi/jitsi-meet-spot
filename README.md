@@ -4,6 +4,7 @@ This is the mono-repo for jitsi meet's room integration, named Spot.
 
 in-room-controller/ contains the Android and iOS clients to be used as a permanent in-room remote
 spot-admin/ contains a mock server for testing integration between Spot and a backend service
+spot-controller/ contains the Android and iOS clients to be used as a permanent in-room remote
 spot-client/ contains the Spot code plus its remote control
 spot-electron/ contains the desktop application for displaying a Spot-TV
 spot-webdriver/ contains selenium webdriver tests for spot-client

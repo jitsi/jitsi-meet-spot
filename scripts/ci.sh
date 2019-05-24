@@ -7,7 +7,7 @@ npm run lint
 npm run test
 npm run build:prod
 
-cd ../in-room-controller
+cd ../spot-controller
 npm install
 npm run lint
 
