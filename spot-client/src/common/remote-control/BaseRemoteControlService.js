@@ -32,7 +32,6 @@ export class BaseRemoteControlService extends EventEmitter {
          * used by a Spot-TV.
          */
         this._isSpot = false;
-        this._lastSpotState = null;
 
         this._onDisconnect = this._onDisconnect.bind(this);
 
@@ -188,8 +187,6 @@ export class BaseRemoteControlService extends EventEmitter {
      * @returns {void}
      */
     disconnect() {
-        this._lastSpotState = null;
-
         const destroyPromise = this.xmppConnection
             ? this.xmppConnection.destroy()
             : Promise.resolve();
@@ -242,17 +239,6 @@ export class BaseRemoteControlService extends EventEmitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
-    }
-
-    /**
-     * Called internally by Spot-Remote to the Spot-TV jid for which to send
-     * commands and messages.
-     *
-     * @private
-     * @returns {string|null}
-     */
-    _getSpotId() {
-        return this._lastSpotState && this._lastSpotState.spotId;
     }
 
     /**
