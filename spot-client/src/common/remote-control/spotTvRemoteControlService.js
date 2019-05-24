@@ -162,6 +162,29 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
             to: from
         });
     }
+
+    /**
+     * Relays messages from Jitsi-Meet to the Spot-Remote.
+     *
+     * @override
+     * @inheritdoc
+     */
+    _reactToMessage(messageType, from, data) {
+        switch (messageType) {
+        case MESSAGES.REMOTE_CONTROL_UPDATE:
+            // Spot-TV received a message from a Spot-Remote to send to the
+            // Jitsi participant.
+            this._notifySpotRemoteMessageReceived(
+                MESSAGES.SPOT_REMOTE_PROXY_MESSAGE,
+                {
+                    data,
+                    from
+                }
+            );
+
+            break;
+        }
+    }
 }
 
 const remoteControlService = new SpotTvRemoteControlService();

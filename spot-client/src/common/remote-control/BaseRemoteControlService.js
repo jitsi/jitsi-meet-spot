@@ -302,29 +302,7 @@ export class BaseRemoteControlService extends EventEmitter {
             data = {};
         }
 
-        switch (messageType) {
-        case MESSAGES.JITSI_MEET_UPDATE:
-            // The Spot-Remote has an update from the Jitsi participant.
-            this._screenshareConnection
-                && this._screenshareConnection.processMessage({
-                    data,
-                    from
-                });
-            break;
-
-        case MESSAGES.REMOTE_CONTROL_UPDATE:
-            // Spot-TV received a message from a Spot-Remote to sent to the
-            // Jitsi participant.
-            this._notifySpotRemoteMessageReceived(
-                MESSAGES.SPOT_REMOTE_PROXY_MESSAGE,
-                {
-                    data,
-                    from
-                }
-            );
-
-            break;
-        }
+        this._reactToMessage(messageType, from, data);
 
         return $iq({
             id: iq.getAttribute('id'),
@@ -424,6 +402,20 @@ export class BaseRemoteControlService extends EventEmitter {
                 updatedState: this._lastSpotState
             }
         );
+    }
+
+    /**
+     * Callback to be overridden by subclass when a new message is received.
+     *
+     * @param {string} messageType - The constant which denotes the subject of
+     * the message.
+     * @param {string} from - The JID of the participant sending the message.
+     * @param {Object} data - Additional information attached to the message.
+     * @private
+     * @returns {void}
+     */
+    _reactToMessage() {
+        return;
     }
 }
 
