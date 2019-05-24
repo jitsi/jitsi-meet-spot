@@ -81,13 +81,25 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     /**
      * Stops the XMPP connection.
      *
+     * @inheritdoc
      * @override
-     * @returns {void}
      */
     disconnect() {
         this.destroyWirelessScreenshareConnections();
 
-        super.disconnect();
+        return super.disconnect();
+    }
+
+    /**
+     * Implements a way to get the current join code to connect to this Spot-TV
+     * instance.
+     *
+     * @inheritdoc
+     * @override
+     */
+    getJoinCode() {
+        return (this._lastSpotState && this._lastSpotState.joinCode)
+            || this._options.joinCode;
     }
 
     /**
