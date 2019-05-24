@@ -1,5 +1,5 @@
-import spotRemoteRemoteControlService from './spot-remote-remote-control-service';
-import spotTvRemoteControlService from './spot-tv-remote-control-service';
+import spotRemoteRemoteControlService from './spotRemoteRemoteControlService';
+import spotTvRemoteControlService from './spotTvRemoteControlService';
 
 /**
  * A class which automatically invokes {@code remoteControlService} methods as
