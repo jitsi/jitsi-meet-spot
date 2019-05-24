@@ -339,7 +339,21 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onCommand(iq) {
-        const ack = this.options.onCommandReceived(iq);
+        let ack;
+
+        if (this.options.onCommandReceived) {
+            ack = this.options.onCommandReceived(iq);
+        } else {
+            // FIXME: Correctly send back that command handling has not been
+            // initialized.
+            const from = iq.getAttribute('from');
+
+            ack = $iq({
+                id: iq.getAttribute('id'),
+                type: 'result',
+                to: from
+            });
+        }
 
         this.room.connection.send(ack);
 
