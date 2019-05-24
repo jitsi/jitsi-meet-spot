@@ -127,6 +127,22 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
         this.xmppConnection.updateStatus(newStatus);
     }
 
+    /**
+     * Emits an event that a message or command has been received from an
+     * instance of Spot Remote.
+     *
+     * @param {string} messageType - The constant of the message or command.
+     * @param {Object} data - Additional details about the message.
+     * @private
+     * @returns {void}
+     */
+    _notifySpotRemoteMessageReceived(messageType, data) {
+        this.emit(
+            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            messageType,
+            data
+        );
+    }
 
     /**
      * Callback invoked when Spot-TV receives a command to take an action from
@@ -161,6 +177,43 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
             type: 'result',
             to: from
         });
+    }
+
+    /**
+     * Implements {@link BaseRemoteControlService#_onPresenceReceived}.
+     *
+     * @inheritdoc
+     */
+    _onPresenceReceived(presence) {
+        const updateType = presence.getAttribute('type');
+
+        if (updateType === 'unavailable') {
+            const from = presence.getAttribute('from');
+
+            logger.log('presence update of a Spot-Remote leaving', { from });
+
+            // A Spot-TV needs to inform at least the Jitsi meeting that
+            // a Spot-Remote has left, in case some cleanup of wireless
+            // screensharing is needed.
+            const iq = $iq({ type: 'set' })
+                .c('jingle', {
+                    xmlns: 'urn:xmpp:jingle:1',
+                    action: 'unavailable'
+                })
+                .c('details')
+                .t('unavailable')
+                .up();
+
+            this._notifySpotRemoteMessageReceived(
+                MESSAGES.SPOT_REMOTE_LEFT,
+                {
+                    from,
+                    data: { iq: iq.toString() }
+                }
+            );
+
+            return;
+        }
     }
 
     /**
