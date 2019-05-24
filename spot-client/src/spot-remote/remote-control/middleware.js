@@ -1,5 +1,5 @@
 import { MiddlewareRegistry } from 'common/redux';
-import { remoteControlService } from 'common/remote-control';
+import { spotRemoteRemoteControlService } from 'common/remote-control';
 
 import { ADJUST_VOLUME, SUBMIT_FEEDBACK } from './action-types';
 
@@ -8,10 +8,10 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case ADJUST_VOLUME:
-        remoteControlService.adjustVolume(action.direction);
+        spotRemoteRemoteControlService.adjustVolume(action.direction);
         break;
     case SUBMIT_FEEDBACK: {
-        remoteControlService.submitFeedback({
+        spotRemoteRemoteControlService.submitFeedback({
             score: action.score,
             message: action.message
         });

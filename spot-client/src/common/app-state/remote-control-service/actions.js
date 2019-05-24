@@ -1,7 +1,7 @@
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 import { createAsyncActionWithStates } from 'common/redux';
-import { remoteControlService } from 'common/remote-control';
+import { spotRemoteRemoteControlService } from 'common/remote-control';
 
 import { setSpotTVState } from './../spot-tv/actions';
 
@@ -19,7 +19,7 @@ import {
 } from './actionTypes';
 
 /**
- * Requests a Spot to join a meeting with the screensharing turned on from the start.
+ * Requests a Spot-TV to join a meeting with the screensharing turned on from the start.
  *
  * @param {string} meetingName - The meeting to join.
  * @param {string} screensharingType - Either 'wired' or 'wireless'.
@@ -27,7 +27,7 @@ import {
  */
 export function joinWithScreensharing(meetingName, screensharingType) {
     return dispatch => {
-        remoteControlService
+        spotRemoteRemoteControlService
             .goToMeeting(
                 meetingName,
                 {
@@ -63,7 +63,7 @@ export function joinWithScreensharing(meetingName, screensharingType) {
  */
 export function joinScheduledMeeting(meetingName) {
     return dispatch => {
-        remoteControlService.goToMeeting(meetingName);
+        spotRemoteRemoteControlService.goToMeeting(meetingName);
         dispatch({
             type: JOIN_SCHEDULED_MEETING,
             meetingName
@@ -79,7 +79,7 @@ export function joinScheduledMeeting(meetingName) {
  */
 export function joinAdHocMeeting(meetingName) {
     return dispatch => {
-        remoteControlService.goToMeeting(meetingName);
+        spotRemoteRemoteControlService.goToMeeting(meetingName);
         dispatch({
             type: JOIN_AD_HOC_MEETING,
             meetingName
@@ -105,7 +105,7 @@ export function dialOut(meetingName, phoneNumber) {
     };
 
     return dispatch => {
-        remoteControlService.goToMeeting(meetingName, options);
+        spotRemoteRemoteControlService.goToMeeting(meetingName, options);
         dispatch({
             type: DIAL_OUT,
             meetingName,
@@ -123,7 +123,7 @@ export function dialOut(meetingName, phoneNumber) {
  */
 export function hangUp(skipFeedback) {
     return dispatch => {
-        remoteControlService.hangUp(skipFeedback);
+        spotRemoteRemoteControlService.hangUp(skipFeedback);
         dispatch({
             type: HANG_UP,
             skipFeedback
@@ -140,7 +140,7 @@ export function hangUp(skipFeedback) {
 export function setAudioMute(mute) {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setAudioMute(mute),
+        () => spotRemoteRemoteControlService.setAudioMute(mute),
         AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
@@ -155,7 +155,7 @@ export function setAudioMute(mute) {
 export function setTileView(tileView) {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setTileView(tileView),
+        () => spotRemoteRemoteControlService.setTileView(tileView),
         TILE_VIEW,
         tileView
     ).then(() => dispatch(setSpotTVState({ tileView })));
@@ -170,7 +170,7 @@ export function setTileView(tileView) {
 export function setVideoMute(mute) {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setVideoMute(mute),
+        () => spotRemoteRemoteControlService.setVideoMute(mute),
         VIDEO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ videoMuted: mute })));
@@ -184,7 +184,7 @@ export function setVideoMute(mute) {
 export function startWiredScreensharing() {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setScreensharing(true),
+        () => spotRemoteRemoteControlService.setScreensharing(true),
         SCREENSHARE,
         'wired');
 }
@@ -197,7 +197,7 @@ export function startWiredScreensharing() {
 export function startWirelessScreensharing() {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setWirelessScreensharing(
+        () => spotRemoteRemoteControlService.setWirelessScreensharing(
             true,
             { onClose: () => dispatch(stopScreenshare()) }
         ),
@@ -217,7 +217,7 @@ export function startWirelessScreensharing() {
 export function stopScreenshare() {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlService.setScreensharing(false),
+        () => spotRemoteRemoteControlService.setScreensharing(false),
         SCREENSHARE,
         undefined
     ).then(() => {

@@ -1,4 +1,5 @@
 import remoteControlService from './remote-control-service';
+import spotRemoteRemoteControlService from './spot-remote-remote-control-service';
 
 /**
  * A class which automatically invokes {@code remoteControlService} methods as
@@ -43,7 +44,7 @@ export default class RemoteControlServiceSubscriber {
 
         if (this._previousSpotTvState.inMeeting !== newSpotTvState.inMeeting
             && newSpotTvState.inMeeting) {
-            remoteControlService.startAnyDeferredWirelessScreenshare();
+            spotRemoteRemoteControlService.startAnyDeferredWirelessScreenshare();
         }
 
         this._previousRoomName = newRoomName;

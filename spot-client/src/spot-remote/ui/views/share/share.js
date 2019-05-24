@@ -43,8 +43,7 @@ export class Share extends React.PureComponent {
         isConnectedToSpot: PropTypes.bool,
         isScreenshareActiveRemotely: PropTypes.bool,
         isWirelessScreensharing: PropTypes.bool,
-        isWirelessScreensharingPending: PropTypes.bool,
-        remoteControlService: PropTypes.object
+        isWirelessScreensharingPending: PropTypes.bool
     };
 
     /**

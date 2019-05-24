@@ -28,7 +28,7 @@ import XmppConnection from './xmpp-connection';
  * Spot instance and remote controls join the same MUC and can get messages to
  * each other.
  */
-class RemoteControlService extends EventEmitter {
+export class RemoteControlService extends EventEmitter {
     /**
      * Initializes a new {@code RemoteControlService} instance.
      */

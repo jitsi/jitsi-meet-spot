@@ -42,7 +42,6 @@ class WaitingForCallView extends React.Component {
         _onJoinAdHocMeeting: PropTypes.func,
         _onJoinScheduledMeeting: PropTypes.func,
         events: PropTypes.array,
-        remoteControlService: PropTypes.object,
         wiredScreensharingEnabled: PropTypes.bool
     };
 

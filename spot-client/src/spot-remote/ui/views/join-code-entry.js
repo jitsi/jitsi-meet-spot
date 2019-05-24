@@ -11,7 +11,7 @@ import {
 } from 'common/app-state';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
-import { remoteControlService } from 'common/remote-control';
+import { spotRemoteRemoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { CodeInput, Loading, View } from 'common/ui';
 
@@ -71,7 +71,7 @@ export class JoinCodeEntry extends React.Component {
     componentDidMount() {
         this.props.ultrasoundService.setMessage('');
         this.props.dispatch(setJoinCode(''));
-        remoteControlService.disconnect();
+        spotRemoteRemoteControlService.disconnect();
 
         const { pathname } = this.props.location;
         const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
