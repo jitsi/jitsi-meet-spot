@@ -30,10 +30,23 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
      * @inheritdoc
      */
     connect(options) {
-        return super.connect({
+        if (this.hasConnection()) {
+            return this.xmppConnectionPromise;
+        }
+
+        const connectionPromise = super.connect({
             ...options,
             onCommandReceived: this._onCommandReceived
         });
+
+        connectionPromise
+            .then(() => {
+                if (options.joinCodeRefreshRate) {
+                    this.refreshJoinCode(options.joinCodeRefreshRate);
+                }
+            });
+
+        return connectionPromise;
     }
 
     /**
@@ -177,6 +190,19 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
             type: 'result',
             to: from
         });
+    }
+
+
+    /**
+     * Callback invoked when the xmpp connection is disconnected.
+     *
+     * @inheritdoc
+     * @override
+     */
+    _onDisconnect(...args) {
+        clearTimeout(this._nextJoinCodeUpdate);
+
+        super._onDisconnect(...args);
     }
 
     /**
