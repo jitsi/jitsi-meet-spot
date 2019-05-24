@@ -320,6 +320,25 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
+     * Processes screenshare related updates from the Jitsi-Meet participant.
+     *
+     * @override
+     * @inheritdoc
+     */
+    _reactToMessage(messageType, from, data) {
+        switch (messageType) {
+        case MESSAGES.JITSI_MEET_UPDATE:
+            // The Spot-Remote has an update from the Jitsi participant.
+            this._screenshareConnection
+                && this._screenshareConnection.processMessage({
+                    data,
+                    from
+                });
+            break;
+        }
+    }
+
+    /**
      * Begins the process of Spot-Remote creating a direct connection to the
      * local in-meeting Jitsi participant.
      *
