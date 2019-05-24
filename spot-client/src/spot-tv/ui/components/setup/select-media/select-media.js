@@ -8,6 +8,7 @@ import {
     getPreferredSpeaker,
     getWiredScreenshareInputLabel,
     setPreferredDevices,
+    setSpotTVState,
     setWiredScreenshareInputIdleValue,
     setWiredScreenshareInputLabel
 } from 'common/app-state';
@@ -360,6 +361,10 @@ class SelectMedia extends React.Component {
             this.props.dispatch(setWiredScreenshareInputLabel());
             this.props.dispatch(setWiredScreenshareInputIdleValue());
         }
+
+        this.props.dispatch(setSpotTVState({
+            wiredScreensharingEnabled: Boolean(selectedScreenshareDongle)
+        }));
 
         this.props.onSuccess();
     }
