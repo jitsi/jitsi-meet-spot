@@ -27,12 +27,6 @@ export class BaseRemoteControlService extends EventEmitter {
         this._onMessageReceived = this._onMessageReceived.bind(this);
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
 
-        /**
-         * Whether or not the instance of {@code RemoteControlService} will be
-         * used by a Spot-TV.
-         */
-        this._isSpot = false;
-
         this._onDisconnect = this._onDisconnect.bind(this);
 
         window.addEventListener('beforeunload', () => this.disconnect());
@@ -61,11 +55,8 @@ export class BaseRemoteControlService extends EventEmitter {
             joinAsSpot,
             onCommandReceived,
             roomInfo,
-            joinCodeRefreshRate,
             serverConfig
         } = this._options;
-
-        this._isSpot = joinAsSpot;
 
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
@@ -84,13 +75,6 @@ export class BaseRemoteControlService extends EventEmitter {
             roomLock: roomInfo.roomLock,
             onDisconnect: this._onDisconnect
         });
-
-        this.xmppConnectionPromise
-            .then(() => {
-                if (joinAsSpot && joinCodeRefreshRate && this.refreshJoinCode) {
-                    this.refreshJoinCode(joinCodeRefreshRate);
-                }
-            });
 
         return this.xmppConnectionPromise;
     }
@@ -114,8 +98,6 @@ export class BaseRemoteControlService extends EventEmitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        clearTimeout(this._nextJoinCodeUpdate);
-
         if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED
             || reason === 'not-authorized') {
             this.emit(SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason });
