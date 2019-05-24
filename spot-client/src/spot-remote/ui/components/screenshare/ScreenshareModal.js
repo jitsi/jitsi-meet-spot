@@ -12,7 +12,7 @@ import {
 import { Modal } from 'common/ui';
 import { isWirelessScreenshareSupported } from 'common/utils';
 
-import { ScreensharePicker } from './../../components';
+import ScreensharePicker from './ScreensharePicker';
 
 /**
  * Wraps {@code ScreensharePicker} so it can be displayed in a modal.

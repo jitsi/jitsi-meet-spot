@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import {
     getInMeetingStatus,
     hangUp,
-    isModalOpen,
-    showModal,
     hideModal,
     startWirelessScreensharing
 } from 'common/app-state';
-import { CallEnd, ScreenShare } from 'common/icons';
+
+import { CallEnd } from 'common/icons';
 import { LoadingIcon, RoomName } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
@@ -18,9 +17,8 @@ import { MoreButton, NavButton, NavContainer } from '../../components';
 import {
     AudioMuteButton,
     VideoMuteButton
-} from './../../components/nav/buttons';
-
-import ScreenshareModal from './screenshare-modal';
+} from './../../components/nav';
+import { ScreenshareButton } from './../../components/screenshare';
 
 /**
  * A view for displaying ways to interact with the Spot-TV while Spot-TV is in a
@@ -52,7 +50,7 @@ export class InCall extends React.Component {
 
         this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
 
-        this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
+        this._onOpenScreenshareModal = this._onOpenScreenshareModal.bind(this);
     }
 
     /**
@@ -74,17 +72,13 @@ export class InCall extends React.Component {
      */
     render() {
         const {
-            inMeeting,
-            screensharingType
+            inMeeting
         } = this.props;
 
         if (!inMeeting) {
             return <LoadingIcon color = 'white' />;
         }
 
-        const { isScreenshareModalOpen } = this.props;
-        const screenshareButtonStyles = `sharebutton ${isScreenshareModalOpen
-            || screensharingType ? 'active' : ''}`;
         const { meetingName } = parseMeetingUrl(inMeeting);
 
         return (
@@ -96,16 +90,8 @@ export class InCall extends React.Component {
                 <NavContainer>
                     <AudioMuteButton />
                     <VideoMuteButton />
-                    <NavButton
-                        className = { screenshareButtonStyles }
-                        label = 'Share Content'
-                        onClick = { this._onToggleScreenshare }
-                        qaId = {
-                            screensharingType ? 'stop-share' : 'start-share'
-                        }
-                        subIcon = { this._renderScreenshareSubIcon() }>
-                        <ScreenShare />
-                    </NavButton>
+                    <ScreenshareButton
+                        onWillOpenModal = { this._onOpenScreenshareModal } />
                     <MoreButton />
                     <NavButton
                         className = 'hangup'
@@ -146,15 +132,9 @@ export class InCall extends React.Component {
      * flow.
      *
      * @private
-     * @returns {void}
+     * @returns {boolean}
      */
-    _onToggleScreenshare() {
-        if (this.props.isScreenshareModalOpen) {
-            this.props.hideModal();
-
-            return;
-        }
-
+    _onOpenScreenshareModal() {
         // If only wireless sceensharing is available and there is no
         // screenshare occurring, then start the wireless screensharing flow.
         if (this._isWirelessScreenshareSupported
@@ -162,24 +142,11 @@ export class InCall extends React.Component {
             && !this.props.screensharingType) {
             this.props.onStartWirelessScreenshare();
 
-            return;
+            // Return false to prevent the modal from opening.
+            return false;
         }
 
-        // Otherwise defer all screensharing choices to the modal.
-        this.props.onShowScreenshareModal();
-    }
-
-    /**
-     * Renders the element on the screenshare button which shows screenshare is
-     * active.
-     *
-     * @private
-     * @returns {ReactElement | null}
-     */
-    _renderScreenshareSubIcon() {
-        return this.props.screensharingType
-            ? <div className = 'on-indicator' />
-            : null;
+        return true;
     }
 }
 
@@ -191,9 +158,16 @@ export class InCall extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const {
+        inMeeting,
+        screensharingType,
+        wiredScreensharingEnabled
+    } = getInMeetingStatus(state);
+
     return {
-        ...getInMeetingStatus(state),
-        isScreenshareModalOpen: isModalOpen(state, ScreenshareModal)
+        inMeeting,
+        screensharingType,
+        wiredScreensharingEnabled
     };
 }
 
@@ -222,16 +196,6 @@ function mapDispatchToProps(dispatch) {
          */
         onHangUp() {
             return dispatch(hangUp());
-        },
-
-        /**
-         * Displays the {@code ScreenshareModal} to interact with wired and/or
-         * wireless screensharing.
-         *
-         * @returns {void}
-         */
-        onShowScreenshareModal() {
-            dispatch(showModal(ScreenshareModal));
         },
 
         /**
