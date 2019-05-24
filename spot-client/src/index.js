@@ -19,7 +19,7 @@ import reducers, {
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,
-    remoteControlService
+    spotRemoteRemoteControlService
 } from 'common/remote-control';
 import {
     getDeviceId,
@@ -78,7 +78,7 @@ if (loggingEndpoint) {
     loggingService.start();
 }
 
-remoteControlService.configureWirelessScreensharing({
+spotRemoteRemoteControlService.configureWirelessScreensharing({
     desktopSharingFrameRate: getDesktopSharingFramerate(reduxState)
 });
 

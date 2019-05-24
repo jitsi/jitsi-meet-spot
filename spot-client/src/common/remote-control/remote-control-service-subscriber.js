@@ -1,5 +1,5 @@
-import remoteControlService from './remote-control-service';
 import spotRemoteRemoteControlService from './spot-remote-remote-control-service';
+import spotTvRemoteControlService from './spot-tv-remote-control-service';
 
 /**
  * A class which automatically invokes {@code remoteControlService} methods as
@@ -36,7 +36,7 @@ export default class RemoteControlServiceSubscriber {
             return;
         }
 
-        remoteControlService.updateStatus({
+        spotTvRemoteControlService.updateStatus({
             ...newSpotTvState,
             roomName: newRoomName,
             calendar: newCalendarEvents
