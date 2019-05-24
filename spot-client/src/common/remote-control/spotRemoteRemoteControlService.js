@@ -37,6 +37,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
          */
         this._goToMeetingPromise = null;
 
+        this._lastSpotState = null;
+
         this._wirelessScreensharingConfiguration = null;
     }
 
@@ -91,6 +93,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
      */
     disconnect() {
         this.destroyWirelessScreenshareConnections();
+        this._lastSpotState = null;
 
         return super.disconnect();
     }
@@ -322,6 +325,17 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
                 ).catch(error => logger.error(
                     'Failed to send screensharing message', { error }))
         });
+    }
+
+    /**
+     * Called internally by Spot-Remote to the Spot-TV jid for which to send
+     * commands and messages.
+     *
+     * @private
+     * @returns {string|null}
+     */
+    _getSpotId() {
+        return this._lastSpotState && this._lastSpotState.spotId;
     }
 
     /**
