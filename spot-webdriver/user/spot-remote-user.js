@@ -1,6 +1,7 @@
 const InMeetingPage = require('../page-objects/spot-remote-in-meeting-page');
 const JoinCodePage = require('../page-objects/join-code-page');
 const ModeSelectPage = require('../page-objects/mode-select-page');
+const Notifications = require('../page-objects/notifcations');
 const RemoteControlPage = require('../page-objects/remote-control-page');
 const StopSharePage = require('../page-objects/stop-share-page');
 
@@ -20,6 +21,7 @@ class SpotRemote {
         this.inMeetingPage = new InMeetingPage(this.driver);
         this.joinCodePage = new JoinCodePage(this.driver);
         this.modeSelectPage = new ModeSelectPage(this.driver);
+        this.notifications = new Notifications(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
         this.stopSharePage = new StopSharePage(this.driver);
     }
@@ -52,6 +54,16 @@ class SpotRemote {
      */
     getModeSelectPage() {
         return this.modeSelectPage;
+    }
+
+    /**
+     * Returns an instance of {@code Notifications} which wraps interactions
+     * with app notifications.
+     *
+     * @returns {Notifications}
+     */
+    getNotifications() {
+        return this.notifications;
     }
 
     /**

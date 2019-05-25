@@ -8,4 +8,16 @@ describe('A Spot-Remote can connect to a Spot-TV', () => {
     it('using a code', () => {
         new SpotSession(spotTV, spotRemote).connectRemoteToTV();
     });
+
+    describe('but when the code is invalid', () => {
+        it('an error notification is displayed', () => {
+            const joinCodePage = spotRemote.getJoinCodePage();
+
+            joinCodePage.visit();
+            joinCodePage.enterCode('0');
+            joinCodePage.submitCode();
+
+            spotRemote.getNotifications().waitForErrorToDisplay();
+        });
+    });
 });

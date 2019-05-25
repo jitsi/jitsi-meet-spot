@@ -45,7 +45,7 @@
     position: fixed;
     white-space: pre;
     width: 100%;
-    z-index: 10;
+    z-index: $z-index-foreground;
 
     pointer-events: none;
 
@@ -93,27 +93,6 @@
   background: rgb(27, 38, 56);
   height: 100%;
   width: 100%;
-}
-
-.notification-default {
-  background: white;
-}
-
-.notification-error {
-  background: red;
-}
-
-.notifications {
-  opacity: 0.5;
-  overflow: hidden;
-  position: fixed;
-  text-align: center;
-  top: 0;
-  width: 100%;
-}
-
-.notification {
-  padding: 5px;
 }
 
 body.using-mouse :focus {
