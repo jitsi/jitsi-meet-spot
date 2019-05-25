@@ -6,9 +6,11 @@ import { hideModal, isVolumeControlSupported } from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
 import { Modal } from 'common/ui';
-import { NavButton, TileViewButton } from '../../components';
 
-import VolumeModal from './volume-modal';
+import { NavButton } from './../nav';
+
+import TileViewButton from './TileViewButton';
+import VolumeModal from './VolumeModal';
 
 /**
  * Implements a modal to show some more buttons that are probably less often used as the main ones on the screen.

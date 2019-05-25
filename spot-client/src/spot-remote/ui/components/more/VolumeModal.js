@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { VolumeButton } from '../../components/remote-control-menu';
+import { VolumeButton } from '../remote-control-menu';
 
 /**
  * Implements a modal to adjust the volume of the spot tv remotely.
