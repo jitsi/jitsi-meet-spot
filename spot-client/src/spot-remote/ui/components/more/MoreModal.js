@@ -60,7 +60,8 @@ export class MoreModal extends React.Component {
                         this.props.supportsVolumeControl && (
                             <NavButton
                                 label = 'Volume control'
-                                onClick = { this._onToggleVolumeModal }>
+                                onClick = { this._onToggleVolumeModal }
+                                qaId = 'volume'>
                                 <VolumeUp />
                             </NavButton>
                         )
