@@ -1,6 +1,14 @@
 # Adding new font icons
 
-The spot client uses a mix of material design icons, custom icons, and maybe other icons. To enable the various icons to be used without loading each as an image, a font is created with ligatures enabled; this allows for icons to be displayed using specified icon names instead of css classes. This is done by using icomoon.io. To update the icons with new images (SVGs):
+The Spot application uses a mix of material design icons, custom icons, and maybe other icons.
+
+## Using material icons
+The material-ui dependency should have all material icons already available. To use an icon, find the icons feature folder and ensure to re-export the desired material icon. Then in the file which needs to use the icon, import the icon from the feature folder.
+
+## Using a custom icon
+Sometimes an icon is needed that is not part a standard material icon library. In such cases the app should first package it through a font file with other custom icons. The font file has ligatures enabled to allow for icons to be displayed using specified icon names instead of css classes.
+
+New custom icons are added to a font file using icomoon.io. To update the icon file with new icons (SVGs):
 
 1. Visit https://icomoon.io/app/#/select
 1. Click the hamburger menu > Manage Projects > Import Project. The file picker should display.
@@ -17,3 +25,5 @@ The spot client uses a mix of material design icons, custom icons, and maybe oth
 1. Replace all the font files with the newly generated font files.
 1. Check locally that the icons display okay.
 1. Commit selection.json and the font files.
+
+For consistency with how material icons are being used, the icon should then be wrapped in a React Component and exported from icon feature folder. That way the rest of the app will use material icons and custom icons in the same way, by importing from the icons feature.

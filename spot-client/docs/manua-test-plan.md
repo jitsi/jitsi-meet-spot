@@ -4,6 +4,10 @@ This document is a manual QA test plan to run as needed. Also, it serves as a fe
 
 Note that some of the test cases should already be automated in Spot-Webdriver.
 
+Hosting
+------
+- [ ] Spot-TV can only be opened from Chrome
+
 Pairing
 ------
 - [ ] Spot-Remote can pair with Spot-TV
@@ -11,6 +15,12 @@ Pairing
 Calendar
 ------
 - [ ] Spot-Remote sees Spot-TV's calendar events
+
+Setup
+------
+- [ ] Device selection is saved
+- [ ] Selected devices are used in a meeting
+- [ ] Wired screensharing can be enabled and disabled
 
 Home
 ------
@@ -28,9 +38,14 @@ Spot In Meeting
 - [ ] Spot-Remote toggles video mute
 - [ ] Spot-Remote toggles wireless screensharing
 - [ ] Spot-Remote toggles wired screensharing
-- [ ] Spot-remote hangs up
-- [ ] Spot-remote submits feedback
-- [ ] Spot proceeds to Home after feedback submission
+- [ ] Spot-TV automatically hides filmstrip when screensharing in a lonely call
+- [ ] Spot-TV automatically pins the latest screenshare
+- [ ] Spot-Remote toggles tile view layout
+- [ ] Spot-Remote can change Spot-TV volume when Spot-TV is hosted in Electron
+- [ ] Spot-Remote cannot change Spot-TV volume when Spot-TV is hosted in a browser
+- [ ] Spot-Remote hangs up
+- [ ] Spot-Remote submits feedback
+- [ ] Spot-TV and Spot-Remote proceed to Home after feedback submission
 
 Wireless SS
 ------
@@ -38,8 +53,9 @@ Wireless SS
 - [ ] Spot-Remote stops wireless SS by clicking the hangup button
 - [ ] Spot-Remote stops wireless SS by closing the browser window
 - [ ] Spot-Remote cancels screenshare picker
+- [ ] Spot-Remote cannot share wirelessly on any browser except Chrome
 
-Automatic Wired SS
+Automatic Wired Screensharing
 ------
 - [ ] Spot-TV at Home automatically joins a meeting with SS when connecting a device
 - [ ] Spot-TV in a meeting automatically starts SS when connecting a device
@@ -47,8 +63,10 @@ Automatic Wired SS
 
 Disconnects
 ------
-- [ ] Spot-TV reloads and Spot-Remote displays join code entry
+- [ ] Spot-TV reloads the page and Spot-Remote displays join code entry
 - [ ] Spot-Remote reconnects to a Spot-TV after disconnect
+- [ ] Spot-TV reestablishes its own connection to the backend after losing internet
+- [ ] Spot-Remote reestablishes its connection to the Spot-TV after losing internet
 
 Screenshare Selection
 ------
