@@ -6,13 +6,13 @@ import {
     addNotification,
     getCalendarEvents,
     getCurrentView,
-    isConnectedToSpot,
-    setCalendarEvents
+    isConnectedToSpot
 } from 'common/app-state';
 import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
 
+import { disconnectFromSpotTV } from './../../app-state';
 import { withRemoteControl, withUltrasound } from './../loaders';
 import { ElectronDesktopPickerModal } from './../components/electron-desktop-picker';
 
@@ -27,12 +27,11 @@ import { Feedback, InCall, WaitingForCall } from './remote-views';
  */
 export class RemoteControl extends React.PureComponent {
     static propTypes = {
-        dispatch: PropTypes.func,
         events: PropTypes.array,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
-        onClearCalendarEvents: PropTypes.func,
-        onDisconnected: PropTypes.func,
+        onDisconnect: PropTypes.func,
+        onUnexpectedDisconnected: PropTypes.func,
         remoteControlService: PropTypes.object,
         view: PropTypes.string
     };
@@ -45,7 +44,7 @@ export class RemoteControl extends React.PureComponent {
      */
     componentDidUpdate() {
         if (!this.props.isConnectedToSpot) {
-            this.props.onDisconnected();
+            this.props.onUnexpectedDisconnected();
             this.props.history.push('/');
         }
     }
@@ -56,11 +55,7 @@ export class RemoteControl extends React.PureComponent {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.disconnect();
-
-        // FIXME: clear calendar events as part of the disconnet logic instead
-        // of being a separate explicit call.
-        this.props.onClearCalendarEvents();
+        this.props.onDisconnect();
     }
 
     /**
@@ -132,12 +127,12 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         /**
-         * Resets the known calendar events associated with a Spot-TV.
+         * Stop any existing connection to a Spot-TV.
          *
          * @returns {void}
          */
-        onClearCalendarEvents() {
-            dispatch(setCalendarEvents([]));
+        onDisconnect() {
+            dispatch(disconnectFromSpotTV());
         },
 
         /**
@@ -145,7 +140,7 @@ function mapDispatchToProps(dispatch) {
          *
          * @returns {void}
          */
-        onDisconnected() {
+        onUnexpectedDisconnected() {
             dispatch(addNotification('error', 'Disconnected'));
         }
     };
