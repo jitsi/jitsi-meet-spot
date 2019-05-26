@@ -7,6 +7,7 @@ export const inCallEvents = {
     AUDIO_MUTE: 'audio-mute',
     HANG_UP: 'hang-up',
     SCREENSHARE_STOP: 'screenshare-stop',
+    TILE_VIEW_TOGGLE: 'toggled-tile-view',
     VIDEO_MUTE: 'video-mute',
     WIRED_SCREENSHARE_START: 'wired-screenshare',
     WIRELESS_SCREENSHARE_START: 'wireless-screenshare'
