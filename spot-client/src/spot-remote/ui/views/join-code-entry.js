@@ -6,16 +6,14 @@ import {
     addNotification,
     getRemoteControlServerConfig,
     getShareDomain,
-    isConnectedToSpot,
-    setJoinCode
+    isConnectedToSpot
 } from 'common/app-state';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
-import { spotRemoteRemoteControlService } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { CodeInput, Loading, View } from 'common/ui';
 
-import { connectToSpotTV } from './../../app-state';
+import { connectToSpotTV, disconnectFromSpotTV } from './../../app-state';
 import { NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
@@ -30,11 +28,13 @@ export class JoinCodeEntry extends React.Component {
     };
 
     static propTypes = {
-        dispatch: PropTypes.func,
         entryLength: PropTypes.number,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
         location: PropTypes.object,
+        onAddNotification: PropTypes.function,
+        onConnectToSpotTV: PropTypes.function,
+        onDisconnect: PropTypes.func,
         remoteControlConfiguration: PropTypes.object,
         shareDomain: PropTypes.string,
         ultrasoundService: PropTypes.object
@@ -70,8 +70,7 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidMount() {
         this.props.ultrasoundService.setMessage('');
-        this.props.dispatch(setJoinCode(''));
-        spotRemoteRemoteControlService.disconnect();
+        this.props.onDisconnect();
 
         const { pathname } = this.props.location;
         const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
@@ -236,7 +235,7 @@ export class JoinCodeEntry extends React.Component {
         this.props.ultrasoundService.setMessage(trimmedCode);
 
         submitPromise
-            .then(() => this.props.dispatch(connectToSpotTV(trimmedCode, this._isShareModeEnabled)))
+            .then(() => this.props.onConnectToSpotTV(trimmedCode, this._isShareModeEnabled))
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
@@ -248,7 +247,7 @@ export class JoinCodeEntry extends React.Component {
             })
             .catch(() => {
                 this.setState({ validating: false });
-                this.props.dispatch(addNotification('error', 'Something went wrong'));
+                this.props.onAddNotification('error', 'Something went wrong');
             });
     }
 }
@@ -269,4 +268,47 @@ function mapStateToProps(state) {
     };
 }
 
-export default withUltrasound(connect(mapStateToProps)(JoinCodeEntry));
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Display an app notification.
+         *
+         * @param {string} type - The type of the notification to display.
+         * @param {string} message - The text to display in the notification.
+         * @returns {void}
+         */
+        onAddNotification(type, message) {
+            dispatch(addNotification(type, message));
+        },
+
+        /**
+         * Attempts to establish a connection with a Spot-TV.
+         *
+         * @param {string} joinCode - The code necessary to pair with a Spot-TV.
+         * @param {boolean} shareMode - Whether or not the Spot-Remote should
+         * show the Share Mode UI after establishing a connection.
+         * @returns {Promise} Resolves when the connection is established.
+         */
+        onConnectToSpotTV(joinCode, shareMode = false) {
+            return dispatch(connectToSpotTV(joinCode, shareMode));
+        },
+
+        /**
+         * Stop any existing connection to a Spot-TV.
+         *
+         * @returns {void}
+         */
+        onDisconnect() {
+            dispatch(disconnectFromSpotTV());
+        }
+    };
+}
+
+export default withUltrasound(connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry));

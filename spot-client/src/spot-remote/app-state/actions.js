@@ -1,4 +1,8 @@
-import { getSpotServicesConfig } from 'common/app-state';
+import {
+    clearSpotTVState,
+    getSpotServicesConfig,
+    setCalendarEvents
+} from 'common/app-state';
 import { spotRemoteRemoteControlService } from 'common/remote-control';
 import { history } from 'common/history';
 
@@ -43,6 +47,20 @@ export function connectToSpotTV(joinCode, shareMode) {
 
                 throw error;
             });
+    };
+}
+
+/**
+ * Stops any connection to a Spot-TV and clears redux state about the Spot-TV.
+ *
+ * @returns {Function}
+ */
+export function disconnectFromSpotTV() {
+    return dispatch => {
+        spotRemoteRemoteControlService.disconnect();
+
+        dispatch(setCalendarEvents([]));
+        dispatch(clearSpotTVState());
     };
 }
 
