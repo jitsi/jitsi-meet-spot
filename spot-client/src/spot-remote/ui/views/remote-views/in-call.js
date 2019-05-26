@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    forceStopWirelessScreenshare,
     getInMeetingStatus,
     hangUp,
     hideModal,
@@ -30,7 +31,7 @@ export class InCall extends React.Component {
     static propTypes = {
         hideModal: PropTypes.func,
         inMeeting: PropTypes.string,
-        isScreenshareModalOpen: PropTypes.bool,
+        onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
@@ -61,7 +62,9 @@ export class InCall extends React.Component {
     componentWillUnmount() {
         this.props.hideModal();
 
-        this.props.remoteControlService.destroyWirelessScreenshareConnections();
+        // Force stop wireless screenshare in case there is a connection in
+        // flight, as only established connections get automatically cleaned up.
+        this.props.onForceStopWirelessScreenshare();
     }
 
     /**
@@ -187,6 +190,15 @@ function mapDispatchToProps(dispatch) {
          */
         hideModal() {
             dispatch(hideModal());
+        },
+
+        /**
+         * Immediately stops any wireless screensharing in progress.
+         *
+         * @returns {void}
+         */
+        onForceStopWirelessScreenshare() {
+            dispatch(forceStopWirelessScreenshare());
         },
 
         /**
