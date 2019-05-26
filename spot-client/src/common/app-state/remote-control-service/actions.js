@@ -210,6 +210,20 @@ export function startWirelessScreensharing() {
 }
 
 /**
+ * Cleans ups any wireless screensharing connection being established or already
+ * established.
+ *
+ * @returns {Function}
+ */
+export function forceStopWirelessScreenshare() {
+    return dispatch => {
+        spotRemoteRemoteControlService.destroyWirelessScreenshareConnections();
+
+        dispatch(setLocalWirelessScreensharing(false));
+    };
+}
+
+/**
  * Stops any screenshare in progress on the Spot-TV.
  *
  * @returns {Function}
