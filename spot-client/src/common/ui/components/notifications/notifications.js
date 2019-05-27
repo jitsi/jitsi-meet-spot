@@ -50,7 +50,9 @@ export class Notifications extends React.PureComponent {
      */
     render() {
         return (
-            <div className = 'notifications'>
+            <div
+                className = 'notifications'
+                data-qa-id = 'notifications'>
                 { this._renderNotifications() }
             </div>
         );

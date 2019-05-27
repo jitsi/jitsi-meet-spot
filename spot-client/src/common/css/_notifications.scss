@@ -1,0 +1,21 @@
+.notifications {
+    opacity: 0.5;
+    overflow: hidden;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: $z-index-foreground;
+
+    .notification {
+        padding: 5px;
+    }
+
+    .notification-default {
+        background: white;
+    }
+    
+    .notification-error {
+        background: red;
+    }
+}
