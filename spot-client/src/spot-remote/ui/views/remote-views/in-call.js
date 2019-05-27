@@ -10,17 +10,16 @@ import {
     hideModal,
     startWirelessScreensharing
 } from 'common/app-state';
-import { CallEnd, MoreVert, ScreenShare } from 'common/icons';
+import { CallEnd, ScreenShare } from 'common/icons';
 import { LoadingIcon, RoomName } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
-import { NavButton, NavContainer } from '../../components';
+import { MoreButton, NavButton, NavContainer } from '../../components';
 import {
     AudioMuteButton,
     VideoMuteButton
 } from './../../components/nav/buttons';
 
-import MoreModal from './more-modal';
 import ScreenshareModal from './screenshare-modal';
 
 /**
@@ -33,10 +32,8 @@ export class InCall extends React.Component {
     static propTypes = {
         hideModal: PropTypes.func,
         inMeeting: PropTypes.string,
-        isMoreModalOpen: PropTypes.bool,
         isScreenshareModalOpen: PropTypes.bool,
         onHangUp: PropTypes.func,
-        onShowMoreModal: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         remoteControlService: PropTypes.object,
@@ -55,7 +52,6 @@ export class InCall extends React.Component {
 
         this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
 
-        this._onToggleMoreModal = this._onToggleMoreModal.bind(this);
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
     }
 
@@ -86,10 +82,9 @@ export class InCall extends React.Component {
             return <LoadingIcon color = 'white' />;
         }
 
-        const { isScreenshareModalOpen, isMoreModalOpen } = this.props;
+        const { isScreenshareModalOpen } = this.props;
         const screenshareButtonStyles = `sharebutton ${isScreenshareModalOpen
             || screensharingType ? 'active' : ''}`;
-        const moreButtonStyles = isMoreModalOpen ? 'active' : '';
         const { meetingName } = parseMeetingUrl(inMeeting);
 
         return (
@@ -111,13 +106,7 @@ export class InCall extends React.Component {
                         subIcon = { this._renderScreenshareSubIcon() }>
                         <ScreenShare />
                     </NavButton>
-                    <NavButton
-                        className = { moreButtonStyles }
-                        label = 'More'
-                        onClick = { this._onToggleMoreModal }
-                        qaId = 'more'>
-                        <MoreVert />
-                    </NavButton>
+                    <MoreButton />
                     <NavButton
                         className = 'hangup'
                         label = 'Leave'
@@ -149,20 +138,6 @@ export class InCall extends React.Component {
                 </div>
             )
             : null;
-    }
-
-    /**
-     * Displays the {@code MoreModal} or hides the currently displayed modal.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleMoreModal() {
-        if (this.props.isMoreModalOpen) {
-            this.props.hideModal();
-        } else {
-            this.props.onShowMoreModal();
-        }
     }
 
     /**
@@ -218,8 +193,7 @@ export class InCall extends React.Component {
 function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
-        isScreenshareModalOpen: isModalOpen(state, ScreenshareModal),
-        isMoreModalOpen: isModalOpen(state, MoreModal)
+        isScreenshareModalOpen: isModalOpen(state, ScreenshareModal)
     };
 }
 
@@ -248,15 +222,6 @@ function mapDispatchToProps(dispatch) {
          */
         onHangUp() {
             return dispatch(hangUp());
-        },
-
-        /**
-         * Displays the {@code MoreModal} for additional in-meeting functions.
-         *
-         * @returns {void}
-         */
-        onShowMoreModal() {
-            return dispatch(showModal(MoreModal));
         },
 
         /**

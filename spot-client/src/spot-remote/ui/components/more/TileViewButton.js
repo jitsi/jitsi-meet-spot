@@ -10,7 +10,7 @@ import {
 } from 'common/app-state';
 import { GridOff, GridOn } from 'common/icons';
 
-import NavButton from './../nav-button';
+import { NavButton } from './../nav';
 
 /**
  * A component for displaying and changing the current audio mute of a Spot-TV.
