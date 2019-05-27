@@ -7,6 +7,7 @@ import {
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
     SCREENSHARE,
+    TILE_VIEW,
     VIDEO_MUTE
 } from 'common/app-state';
 import { MiddlewareRegistry, asyncActionRequestStates } from 'common/redux';
@@ -92,10 +93,17 @@ MiddlewareRegistry.register(() => next => action => {
         analytics.log(joinCodeEvents.SUBMIT, { shareMode: action.shareMode });
         break;
     }
+    case TILE_VIEW: {
+        if (isPendingAsyncAction(action)) {
+            analytics.log(inCallEvents.TILE_VIEW_TOGGLE, { enabled: action.expectedState });
+        }
+        break;
+    }
     case VIDEO_MUTE: {
         if (isPendingAsyncAction(action)) {
             analytics.log(inCallEvents.VIDEO_MUTE, { muting: action.expectedState });
         }
+        break;
     }
     }
 
