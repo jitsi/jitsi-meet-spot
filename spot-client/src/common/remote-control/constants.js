@@ -51,7 +51,7 @@ export const COMMANDS = {
 export const CONNECTION_EVENTS = {
 
     /**
-     * A {@code RemoteControlServer} has is no longer available.
+     * The {@code RemoteControlServer} is no longer available.
      */
     SERVER_DISCONNECTED: 'server-disconnected'
 };
@@ -89,8 +89,8 @@ export const MESSAGES = {
     CLIENT_LEFT: 'remote-control-client-left',
 
     /**
-     * A {@code RemoteControlClient} has sent a message pass into a Jitsi-Meet
-     * meeting.
+     * A {@code RemoteControlClient} has sent a message to a
+     * a {@code RemoteControlServer} to pass into a Jitsi-Meet meeting.
      */
     CLIENT_PROXY_MESSAGE: 'remote-control-client-message',
 
@@ -122,9 +122,10 @@ export const SERVICE_UPDATES = {
     CLIENT_MESSAGE_RECEIVED: 'message-received',
 
     /**
-     * The remote control service has received an updated Spot-TV state.
+     * The {@code RemoteControlClient} has received an updated state for the
+     * {@code RemoteControlServer}.
      */
-    SERVER_STATE_CHANGE: 'remote-control-server--state-change',
+    SERVER_STATE_CHANGE: 'remote-control-server-state-change',
 
     /**
      * The remote control service has lost the XMPP connection and cannot
