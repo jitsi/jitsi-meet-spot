@@ -13,7 +13,7 @@ const TILE_VIEW_ENABLE_BUTTON = '[data-qa-id=enter-tile-view]';
 const TILE_VIEW_DISABLE_BUTTON = '[data-qa-id=exit-tile-view]';
 const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
 const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
-
+const VOLUME_BUTTON = '[data-qa-id=volume]';
 
 /**
  * A page object for interacting with the in-meeting view of Spot-Remote.
@@ -30,6 +30,17 @@ class SpotRemoteInMeetingPage extends PageObject {
         this.screensharePicker = new ScreensharePicker(this.driver);
 
         this.rootSelector = REMOTE_CONTROL;
+    }
+
+    /**
+     * Check if the volume button is available for interaction.
+     *
+     * @returns {boolean}
+     */
+    hasVolumeControls() {
+        this.openMoreMenu();
+
+        return this.select(VOLUME_BUTTON).isExisting();
     }
 
     /**

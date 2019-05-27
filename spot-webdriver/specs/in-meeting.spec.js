@@ -58,4 +58,8 @@ describe('While in a meeting ', () => {
         spotRemoteInMeetingPage.setTileView(inTileView);
         spotTVMeetingPage.waitForTileViewStateToBe(inTileView);
     });
+
+    it('does not have volume control when Spot-TV is in a browser', () => {
+        expect(spotRemote.getInMeetingPage().hasVolumeControls()).toBe(false);
+    });
 });
