@@ -6,7 +6,7 @@ import { getAdvertisementAppName } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { Button } from 'common/ui';
 
-import { NavButton } from './../nav';
+import { NavButton } from '../nav';
 
 /**
  * Displays information and prompts to start screensharing.

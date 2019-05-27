@@ -4,3 +4,4 @@ export * from './meeting-name-entry';
 export * from './more';
 export * from './nav';
 export * from './remote-control-menu';
+export * from './screenshare';
