@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isVolumeControlSupported } from 'common/app-state';
+import { hideModal, isVolumeControlSupported } from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
+import { Modal } from 'common/ui';
 import { NavButton, TileViewButton } from '../../components';
 
 import VolumeModal from './volume-modal';
@@ -48,31 +49,22 @@ export class MoreModal extends React.Component {
         }
 
         return (
-            <div
-                className = 'modal'
-                data-qa-id = 'more-modal'>
-                <div className = 'modal-shroud' />
-                <div className = 'modal-content'>
-                    <button
-                        className = 'close'
-                        onClick = { this.props.onClose }
-                        type = 'button'>
-                        x
-                    </button>
-                    <div className = 'more-modal'>
-                        <TileViewButton />
-                        {
-                            this.props.supportsVolumeControl && (
-                                <NavButton
-                                    label = 'Volume control'
-                                    onClick = { this._onToggleVolumeModal }>
-                                    <VolumeUp />
-                                </NavButton>
-                            )
-                        }
-                    </div>
+            <Modal
+                onClose = { this.props.onClose }
+                qaId = 'more-modal'>
+                <div className = 'more-modal'>
+                    <TileViewButton />
+                    {
+                        this.props.supportsVolumeControl && (
+                            <NavButton
+                                label = 'Volume control'
+                                onClick = { this._onToggleVolumeModal }>
+                                <VolumeUp />
+                            </NavButton>
+                        )
+                    }
                 </div>
-            </div>
+            </Modal>
         );
     }
 
@@ -102,4 +94,24 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(MoreModal);
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Stop showing the {@code MoreModal}.
+         *
+         * @returns {void}
+         */
+        onClose() {
+            dispatch(hideModal());
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MoreModal);

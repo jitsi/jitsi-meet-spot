@@ -8,6 +8,7 @@ import {
     ErrorBoundary,
     FatalError,
     IdleCursorDetector,
+    ModalManager,
     Notifications
 } from 'common/ui';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
@@ -164,6 +165,7 @@ export class App extends React.Component {
                             <Route component = { JoinCodeEntry } />
                         </Switch>
                     </div>
+                    <ModalManager />
                 </IdleCursorDetector>
             </ErrorBoundary>
         );

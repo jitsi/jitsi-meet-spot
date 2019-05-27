@@ -5,6 +5,7 @@ export * from './error-boundary';
 export * from './idle-cursor-detector';
 export * from './input';
 export * from './loading-icon';
+export * from './modal';
 export * from './notifications';
 export * from './reset';
 export * from './room-name';
