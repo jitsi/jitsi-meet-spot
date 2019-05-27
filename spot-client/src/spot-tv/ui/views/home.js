@@ -42,7 +42,7 @@ export class Home extends React.Component {
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         joinCode: PropTypes.string,
-        remoteControlService: PropTypes.object,
+        remoteControlServer: PropTypes.object,
         spotRoomName: PropTypes.string
     };
 
@@ -69,8 +69,8 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        this.props.remoteControlService.addListener(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+        this.props.remoteControlServer.addListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onCommand
         );
     }
@@ -81,8 +81,8 @@ export class Home extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.remoteControlService.removeListener(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+        this.props.remoteControlServer.removeListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onCommand
         );
     }

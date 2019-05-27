@@ -8,13 +8,13 @@ import { BaseRemoteControlService } from './BaseRemoteControlService';
 import { MESSAGES, SERVICE_UPDATES } from './constants';
 
 /**
- * Communication service for the Spot-TV to talk to Spot-Remote.
+ * Communication service to send updates and receive commands.
  *
  * @extends BaseRemoteControlService
  */
-export class SpotTvRemoteControlService extends BaseRemoteControlService {
+export class RemoteControlServer extends BaseRemoteControlService {
     /**
-     * Initializes a new {@code SpotTvRemoteControlService} instance.
+     * Initializes a new {@code RemoteControlServer} instance.
      */
     constructor() {
         super();
@@ -25,7 +25,8 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Creates a connection to the remote control service.
+     * Creates a connection to XMPP service used for communication between
+     * server and remotes.
      *
      * @inheritdoc
      */
@@ -59,8 +60,8 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Implements a way to get the current join code to connect to this Spot-TV
-     * instance.
+     * Implements a way to get the current join code to connect to this instance
+     * of {@code RemoteControlServer}.
      *
      * @inheritdoc
      * @override
@@ -80,8 +81,8 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Method invoked by Spot-TV to generate a new join code for a Spot-Remote
-     * to pair with it.
+     * Method invoked to generate a new join code for instances of
+     * {@code RemoteControlClient} to pair with it.
      *
      * @param {number} nextRefreshTimeout - If defined will start an interval
      * to automatically update join code.
@@ -108,11 +109,11 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Sends a message to a Spot-Remote.
+     * Sends a message to a {@code RemoteControlClient}.
      *
-     * @param {string} jid - The jid of the remote control which should receive
-     * the message.
-     * @param {Object} data - Information to pass to the remote control.
+     * @param {string} jid - The jid of the {@code RemoteControlClient} which
+     * should receive the message.
+     * @param {Object} data - Information to pass to {@code RemoteControlClient}.
      * @returns {Promise}
      */
     sendMessageToRemoteControl(jid, data) {
@@ -121,7 +122,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * To be called by Spot-TV to update self presence.
+     * Update self presence for all {@code RemoteControlClient} to be notified.
      *
      * @param {Object} newStatus - The new presence object that should be merged
      * with existing presence.
@@ -139,7 +140,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
 
     /**
      * Emits an event that a message or command has been received from an
-     * instance of Spot Remote.
+     * instance of {@code RemoteControlClient}.
      *
      * @param {string} messageType - The constant of the message or command.
      * @param {Object} data - Additional details about the message.
@@ -148,15 +149,15 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
      */
     _notifySpotRemoteMessageReceived(messageType, data) {
         this.emit(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             messageType,
             data
         );
     }
 
     /**
-     * Callback invoked when Spot-TV receives a command to take an action from
-     * a Spot-Remote.
+     * Callback invoked when {@code RemoteControlServer} receives a command to
+     * take an action from a {@code RemoteControlClient}.
      *
      * @inheritdoc
      * @override
@@ -166,7 +167,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
         const command = iq.getElementsByTagName('command')[0];
         const commandType = command.getAttribute('type');
 
-        logger.log('remoteControlService received command', { commandType });
+        logger.log('RemoteControlServer received command', { commandType });
 
         let data;
 
@@ -189,7 +190,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
 
 
     /**
-     * Callback invoked when the xmpp connection is disconnected.
+     * Callback invoked when the XMPP connection is disconnected.
      *
      * @inheritdoc
      * @override
@@ -213,9 +214,9 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
 
             logger.log('presence update of a Spot-Remote leaving', { from });
 
-            // A Spot-TV needs to inform at least the Jitsi meeting that
-            // a Spot-Remote has left, in case some cleanup of wireless
-            // screensharing is needed.
+            // A {@code RemoteControlServer} needs to inform at least the
+            // Jitsi-Meet meeting that a {@code RemoteControlClient} has left,
+            // in case some cleanup of wireless screensharing is needed.
             const iq = $iq({ type: 'set' })
                 .c('jingle', {
                     xmlns: 'urn:xmpp:jingle:1',
@@ -226,7 +227,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
                 .up();
 
             this._notifySpotRemoteMessageReceived(
-                MESSAGES.SPOT_REMOTE_LEFT,
+                MESSAGES.CLIENT_LEFT,
                 {
                     from,
                     data: { iq: iq.toString() }
@@ -238,7 +239,7 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Relays messages from Jitsi-Meet to the Spot-Remote.
+     * Relays messages from Jitsi-Meet to the {@code RemoteControlClient}.
      *
      * @override
      * @inheritdoc
@@ -246,10 +247,10 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     _processMessage(messageType, from, data) {
         switch (messageType) {
         case MESSAGES.REMOTE_CONTROL_UPDATE:
-            // Spot-TV received a message from a Spot-Remote to send to the
-            // Jitsi participant.
+            // {@code RemoteControlServer} received a message from a
+            // {@code RemoteControlClient} to send to the Jitsi-Meet participant.
             this._notifySpotRemoteMessageReceived(
-                MESSAGES.SPOT_REMOTE_PROXY_MESSAGE,
+                MESSAGES.CLIENT_PROXY_MESSAGE,
                 {
                     data,
                     from
@@ -261,8 +262,8 @@ export class SpotTvRemoteControlService extends BaseRemoteControlService {
     }
 }
 
-const remoteControlService = new SpotTvRemoteControlService();
+const remoteControlServer = new RemoteControlServer();
 
-globalDebugger.register('spotTvRemoteControlService', remoteControlService);
+globalDebugger.register('remoteControlServer', remoteControlServer);
 
-export default remoteControlService;
+export default remoteControlServer;

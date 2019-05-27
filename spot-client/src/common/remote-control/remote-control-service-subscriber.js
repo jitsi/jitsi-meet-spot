@@ -1,9 +1,9 @@
-import spotRemoteRemoteControlService from './spotRemoteRemoteControlService';
-import spotTvRemoteControlService from './spotTvRemoteControlService';
+import remoteControlClient from './remoteControlClient';
+import remoteControlServer from './remoteControlServer';
 
 /**
- * A class which automatically invokes {@code remoteControlService} methods as
- * the state of Spot-TV changes.
+ * A class which automatically invokes {@code remoteControlClient} and
+ * {@code remoteControlServer} methods to sync with changes to the redux state.
  */
 export default class RemoteControlServiceSubscriber {
     /**
@@ -21,7 +21,7 @@ export default class RemoteControlServiceSubscriber {
      * meeting, trigger any deferred screenshares.
      *
      * @param {Object} store - The redux store from which to subscribe to
-     * app-state updates and notify the remoteControlService.
+     * app-state updates and notify the remote control services.
      * @returns {oid}
      */
     onUpdate(store) {
@@ -36,7 +36,7 @@ export default class RemoteControlServiceSubscriber {
             return;
         }
 
-        spotTvRemoteControlService.updateStatus({
+        remoteControlServer.updateStatus({
             ...newSpotTvState,
             roomName: newRoomName,
             calendar: newCalendarEvents
@@ -44,7 +44,7 @@ export default class RemoteControlServiceSubscriber {
 
         if (this._previousSpotTvState.inMeeting !== newSpotTvState.inMeeting
             && newSpotTvState.inMeeting) {
-            spotRemoteRemoteControlService.startAnyDeferredWirelessScreenshare();
+            remoteControlClient.startAnyDeferredWirelessScreenshare();
         }
 
         this._previousRoomName = newRoomName;

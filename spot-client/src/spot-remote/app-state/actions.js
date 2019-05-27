@@ -3,7 +3,7 @@ import {
     getSpotServicesConfig,
     setCalendarEvents
 } from 'common/app-state';
-import { spotRemoteRemoteControlService } from 'common/remote-control';
+import { remoteControlClient } from 'common/remote-control';
 import { history } from 'common/history';
 
 import {
@@ -30,7 +30,7 @@ export function connectToSpotTV(joinCode, shareMode) {
 
         const { joinCodeServiceUrl } = getSpotServicesConfig(getState());
 
-        return spotRemoteRemoteControlService.exchangeCode(joinCode, { joinCodeServiceUrl })
+        return remoteControlClient.exchangeCode(joinCode, { joinCodeServiceUrl })
             .then(roomInfo => {
                 dispatch({
                     type: SPOT_REMOTE_JOIN_CODE_VALID,
@@ -57,7 +57,7 @@ export function connectToSpotTV(joinCode, shareMode) {
  */
 export function disconnectFromSpotTV() {
     return dispatch => {
-        spotRemoteRemoteControlService.disconnect();
+        remoteControlClient.disconnect();
 
         dispatch(setCalendarEvents([]));
         dispatch(clearSpotTVState());

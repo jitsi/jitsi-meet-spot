@@ -35,7 +35,6 @@ export class InCall extends React.Component {
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
-        remoteControlService: PropTypes.object,
         screensharingType: PropTypes.string,
         wiredScreensharingEnabled: PropTypes.bool
     };

@@ -35,7 +35,7 @@ export class MeetingFrame extends React.Component {
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
         preferredSpeaker: PropTypes.string,
-        remoteControlService: PropTypes.object,
+        remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool,
         startWithScreenshare: PropTypes.bool,
@@ -168,8 +168,8 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
         this._jitsiApi.executeCommand('displayName', this.props.displayName);
 
-        this.props.remoteControlService.addListener(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+        this.props.remoteControlServer.addListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onMeetingCommand
         );
 
@@ -186,8 +186,8 @@ export class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
-        this.props.remoteControlService.removeListener(
-            SERVICE_UPDATES.SPOT_REMOTE_MESSAGE_RECEIVED,
+        this.props.remoteControlServer.removeListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onMeetingCommand
         );
 
@@ -339,8 +339,8 @@ export class MeetingFrame extends React.Component {
             this._jitsiApi.executeCommand('submitFeedback', data);
             break;
 
-        case MESSAGES.SPOT_REMOTE_LEFT:
-        case MESSAGES.SPOT_REMOTE_PROXY_MESSAGE:
+        case MESSAGES.CLIENT_LEFT:
+        case MESSAGES.CLIENT_PROXY_MESSAGE:
             this._jitsiApi.sendProxyConnectionEvent(data);
             break;
         }
@@ -536,7 +536,7 @@ export class MeetingFrame extends React.Component {
             data
         });
 
-        this.props.remoteControlService.sendMessageToRemoteControl(to, data);
+        this.props.remoteControlServer.sendMessageToRemoteControl(to, data);
     }
 
     /**

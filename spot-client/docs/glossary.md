@@ -23,7 +23,13 @@ The javascript library which contains XMPP, MUC, and WebRTC code used by Jitsi-M
 A library for ultrasound transmitting and decoding. The main library is lib-quiet, written in C, but the maintainer provides iOS, Android, and JS libraries to use lib-quiet. See Ultrasound.
 
 ### RCS, Remote Control Service
-The object which encapsulates setting up a connection between a Spot-Remote and a Spot-TV and encapsulates how they communicate with each other. Spot-TV and Spot-Remote have their own versions of the service, with Spot-Remote having more functionality around sending commands whereas Spot-TV has more functionality around processing commands and sending status updates.
+The objects which encapsulates setting up a connection between a Spot-Remote and a Spot-TV and encapsulates how they communicate with each other. Spot-TV and Spot-Remote have their own versions of the service, with Spot-Remote having more functionality around sending commands whereas Spot-TV has more functionality around processing commands and sending status updates.
+
+### Remote Control Client
+The name for the subclass of Remote Control Service used by Spot-Remote.
+
+### Remote Control Server
+The name for the subclass of Remote Control Service used by Spot-TV.
 
 ### Share Mode
 Spot-Remote supports a special UX flow where the UI is reduced mainly to starting and stopping wireless screensharing. 

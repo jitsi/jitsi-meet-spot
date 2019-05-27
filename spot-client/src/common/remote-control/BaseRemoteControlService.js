@@ -97,7 +97,7 @@ export class BaseRemoteControlService extends EventEmitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        if (reason === CONNECTION_EVENTS.SPOT_TV_DISCONNECTED
+        if (reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
             || reason === 'not-authorized') {
             this.emit(SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason });
 
@@ -249,7 +249,7 @@ export class BaseRemoteControlService extends EventEmitter {
         const message = iq.getElementsByTagName('message')[0];
         const messageType = message.getAttribute('type');
 
-        logger.log('remoteControlService received message', { messageType });
+        logger.log('RemoteControlService received message', { messageType });
 
         let data;
 
