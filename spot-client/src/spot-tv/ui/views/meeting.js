@@ -40,7 +40,7 @@ export class Meeting extends React.Component {
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
         preferredSpeaker: PropTypes.string,
-        remoteControlService: PropTypes.object,
+        remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showMeetingToolbar: PropTypes.bool
     };
@@ -99,7 +99,7 @@ export class Meeting extends React.Component {
             preferredCamera,
             preferredMic,
             preferredSpeaker,
-            remoteControlService,
+            remoteControlServer,
             screenshareDevice,
             showMeetingToolbar
         } = this.props;
@@ -118,7 +118,7 @@ export class Meeting extends React.Component {
                     preferredCamera = { preferredCamera }
                     preferredMic = { preferredMic }
                     preferredSpeaker = { preferredSpeaker }
-                    remoteControlService = { remoteControlService }
+                    remoteControlServer = { remoteControlServer }
                     screenshareDevice = { screenshareDevice }
                     showMeetingToolbar = { showMeetingToolbar }
                     startWithScreenshare = { screenshare }

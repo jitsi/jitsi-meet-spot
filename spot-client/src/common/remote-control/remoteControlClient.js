@@ -19,19 +19,21 @@ import ScreenshareService from './screenshare-connection';
 
 
 /**
- * Communication service for the Spot-Remote to talk to Spot-TV.
+ * Communication service to send commands and receive updates from an instance
+ * of {@code RemoteControlServer}.
  *
  * @extends BaseRemoteControlService
  */
-export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
+export class RemoteControlClient extends BaseRemoteControlService {
     /**
-     * Initializes a new {@code SpotRemoteRemoteControlService} instance.
+     * Initializes a new {@code RemoteControlClient} instance.
      */
     constructor() {
         super();
 
         /**
          * Prevents from triggering more than one go to meeting actions at the same time.
+         *
          * @type {Promise|null}
          * @private
          */
@@ -43,7 +45,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to change its audio level to a specific direction.
+     * Requests the {@code RemoteControlServer} to change its audio level to a
+     * specific direction.
      *
      * @param {string} direction - The direction of the volume adjustment.
      * One of 'up' or 'down'.
@@ -99,8 +102,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Implements a way to get the current join code to connect to this Spot-TV
-     * instance.
+     * Implements a way to get the current join code to connect to the
+     * {@code RemoteControlServer}.
      *
      * @inheritdoc
      * @override
@@ -111,7 +114,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot to join a meeting.
+     * Requests a {@code RemoteControlServer} to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
      * @param {GoToMeetingOptions} options - Additional details about how to join the
@@ -158,7 +161,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to leave a meeting in progress.
+     * Requests a {@code RemoteControlServer} to leave a meeting in progress.
      *
      * @param {boolean} skipFeedback - Whether or not to immediately navigate
      * out of the meeting instead of display feedback entry.
@@ -177,7 +180,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to change its audio mute status.
+     * Requests a {@code RemoteControlServer} to change its audio mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be audio muted.
      * @returns {Promise} Resolves if the command has been acknowledged.
@@ -188,12 +191,12 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to change its screensharing status. Turning on the
-     * screensharing will enable wired screensharing, while turning off applies
-     * to both wired and wireless screensharing.
+     * Requests a {@code RemoteControlServer} to change its screensharing status.
+     * Turning on the screensharing will enable wired screensharing, while
+     * turning off applies to both wired and wireless screensharing.
      *
-     * @param {boolean} screensharing - Whether or not Spot-TV should start or
-     * stop screensharing.
+     * @param {boolean} screensharing - Whether or not {@code RemoteControlServer}
+     * should start or stop screensharing.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setScreensharing(screensharing) {
@@ -205,10 +208,10 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to enter or exit tile view mode.
+     * Requests a {@code RemoteControlServer} to enter or exit tile view mode.
      *
-     * @param {boolean} tileView - Whether or not Spot-TV should be in or not be
-     * in tile view.
+     * @param {boolean} tileView - Whether or not {@code RemoteControlServer}
+     * should be in or not be in tile view.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setTileView(tileView) {
@@ -220,9 +223,10 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to change its video mute status.
+     * Requests a {@code RemoteControlServer} to change its video mute status.
      *
-     * @param {boolean} mute - Whether or not Spot should be video muted.
+     * @param {boolean} mute - Whether or not {@code RemoteControlServer} should
+     * be video muted.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setVideoMute(mute) {
@@ -231,8 +235,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Begins or stops the process for a Spot-Remote to connect to the local
-     * in-meeting Jitsi in order to directly share a local screen.
+     * Begins or stops the process for a {@code RemoteControlClient} to connect
+     * to the Jitsi-Meet participant in order to directly share a local screen.
      *
      * @param {boolean} enable - Whether to start ot stop screensharing.
      * @param {Object} options - Additional configuration to use for creating
@@ -247,8 +251,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
 
     /**
      * Triggers any stored wireless screesharing connections to start the
-     * process of establishing a connection to a a local Jitsi meeting
-     * participant.
+     * process of establishing a connection to a Jitsi-Meet meeting participant.
      *
      * @returns {void}
      */
@@ -267,7 +270,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a Spot-TV to submit post-meeting feedback.
+     * Requests a {@code RemoteControlServer} to submit post-meeting feedback.
      *
      * @param {Object} feedback - The feedback to submit.
      * @returns {Promise} Resolves if the command has been acknowledged.
@@ -278,8 +281,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Invoked by a Spot-Remote to initialize a new {@link ScreenshareService}
-     * instance.
+     * Initialize a new {@link ScreenshareService} instance.
      *
      * @param {Object} options - Additional configuration to use for creating
      * the screenshare connection.
@@ -309,10 +311,11 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
 
             /**
              * Callback invoked by {@code ScreenshareService} in order to
-             * communicate out to a Spot-TV an update about the screensharing
-             * connection.
+             * communicate out to a {@code RemoteControlServer} an update about
+             * the screensharing connection.
              *
-             * @param {string} to - The Spot-TV jid to send the message to.
+             * @param {string} to - The {@code RemoteControlServer} jid to send
+             * the message to.
              * @param {Object} data - A payload to send along with the
              * message.
              * @returns {Promise}
@@ -328,8 +331,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Called internally by Spot-Remote to the Spot-TV jid for which to send
-     * commands and messages.
+     * Get the {@code RemoteControlServer} jid for which to send commands and
+     * messages.
      *
      * @private
      * @returns {string|null}
@@ -350,9 +353,7 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
             const from = presence.getAttribute('from');
 
             if (this._getSpotId() === from) {
-                // A Spot-Remote needs to be updated about no longer being
-                // connected to a Spot-TV.
-                this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
+                this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
             }
 
             return;
@@ -360,8 +361,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
 
         if (updateType === 'error') {
             logger.log(
-                'error presence received, interpreting as Spot-TV disconnect');
-            this._onDisconnect(CONNECTION_EVENTS.SPOT_TV_DISCONNECTED);
+                'error presence received, interpreting as disconnect');
+            this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
 
             return;
         }
@@ -375,22 +376,23 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
             }, {});
 
         if (status.isSpot !== 'true') {
-            // Ignore presence from others not identified as a Spot-TV.
+            // Ignore presence from others not identified as a
+            // {@code RemoteControlServer}.
             return;
         }
 
         const spotTvJid = presence.getAttribute('from');
 
-        // Redundantly update the known Spot-TV jid in case there are multiple
-        // due to ghosts left form disconnect, in which case the active Spot-TV
-        // should be emitting updates.
+        // Redundantly update the known {@code RemoteControlServer} jid in case
+        // there are multiple due to ghosts left form disconnect, in which case
+        // the active {@code RemoteControlServer} should be emitting updates.
         this._lastSpotState = {
             ...status,
             spotId: spotTvJid
         };
 
         this.emit(
-            SERVICE_UPDATES.SPOT_TV_STATE_CHANGE,
+            SERVICE_UPDATES.SERVER_STATE_CHANGE,
             {
                 updatedState: this._lastSpotState
             }
@@ -407,7 +409,6 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     _processMessage(messageType, from, data) {
         switch (messageType) {
         case MESSAGES.JITSI_MEET_UPDATE:
-            // The Spot-Remote has an update from the Jitsi participant.
             this._screenshareConnection
                 && this._screenshareConnection.processMessage({
                     data,
@@ -418,13 +419,13 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Begins the process of Spot-Remote creating a direct connection to the
-     * local in-meeting Jitsi participant.
+     * Begins the process of creating a direct connection to the  Jitsi-Meet
+     * participant.
      *
      * @param {ScreenshareConnection} connection - Optionally use an existing
      * instance of ScreenshareConnection instead of instantiating one. This
      * would be used when creating a desktop track to stream first but the
-     * actual connection to the JItsi participant must occur later.
+     * actual connection to the Jitsi participant must occur later.
      * @param {Object} options - Additional configuration to use for creating
      * the screenshare connection.
      * @private
@@ -454,8 +455,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 
     /**
-     * Cleans up screensharing connections between the Spot-Remote and Jitsi
-     * participant that are pending or have successfully been made.
+     * Cleans up screensharing connections between the {@code RemoteControlClient}
+     * and Jitsi-Meet participant that are pending or have successfully been made.
      *
      * @private
      * @returns {Promise}
@@ -467,9 +468,8 @@ export class SpotRemoteRemoteControlService extends BaseRemoteControlService {
     }
 }
 
-const spotRemoteRemoteControlService = new SpotRemoteRemoteControlService();
+const remoteControlClient = new RemoteControlClient();
 
-globalDebugger.register(
-    'spotRemoteRemoteControlService', spotRemoteRemoteControlService);
+globalDebugger.register('remoteControlClient', remoteControlClient);
 
-export default spotRemoteRemoteControlService;
+export default remoteControlClient;

@@ -17,7 +17,7 @@ class SpotView extends React.Component {
     static propTypes = {
         children: PropTypes.any,
         name: PropTypes.string,
-        remoteControlService: PropTypes.object,
+        remoteControlServer: PropTypes.object,
         spotRoomName: PropTypes.string,
         updateSpotTvState: PropTypes.func
     };
@@ -48,11 +48,11 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { children, spotRoomName } = this.props;
+        const { children, remoteControlServer, spotRoomName } = this.props;
         const childComponents = React.Children.map(children, child =>
             React.cloneElement(
                 child,
-                { remoteControlService: this.props.remoteControlService }
+                { remoteControlServer }
             ));
 
         return (

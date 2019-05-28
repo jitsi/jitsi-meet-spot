@@ -1,6 +1,6 @@
 /**
- * An enumeration of supported commands Spot can processes. All values are from
- * events triggered by the jitsi meet iframe api.
+ * An enumeration of supported commands {@code RemoteControlServer} can process.
+ * All values are from events triggered by the Jitsi-Meet iFrame API.
  */
 export const COMMANDS = {
 
@@ -51,9 +51,9 @@ export const COMMANDS = {
 export const CONNECTION_EVENTS = {
 
     /**
-     * A Spot-TV has is no longer available.
+     * The {@code RemoteControlServer} is no longer available.
      */
-    SPOT_TV_DISCONNECTED: 'spot-tv-disconnected'
+    SERVER_DISCONNECTED: 'server-disconnected'
 };
 
 /**
@@ -78,26 +78,35 @@ export const IQ_NAMESPACES = {
 export const IQ_TIMEOUT = 5000;
 
 /**
- * An enumneration of supported messages that can be sent between Spot and
- * remote control instances.
+ * An enumeration of supported messages that can be sent between
+ * {@code RemoteControlServer} and {@code RemoteControlClient} instances.
  */
 export const MESSAGES = {
+    /**
+     * A {@code RemoteControlClient} is no longer connected to a
+     * {@code RemoteControlServer}.
+     */
+    CLIENT_LEFT: 'remote-control-client-left',
 
     /**
-     * A message about wireless screensharing from Jitsi-Meet to a remote
-     * control, sent by proxy by Spot.
+     * A {@code RemoteControlClient} has sent a message to a
+     * a {@code RemoteControlServer} to pass into a Jitsi-Meet meeting.
+     */
+    CLIENT_PROXY_MESSAGE: 'remote-control-client-message',
+
+    /**
+     * A message about wireless screensharing from Jitsi-Meet, to be sent to
+     * a {@code RemoteControlServer} which should resend to a
+     * {@code RemoteControlClient}.
      */
     JITSI_MEET_UPDATE: 'update-message-from-jitsi-meet',
 
     /**
-     * A message from a remote control to Spot that is intended for Spot to
-     * pass into the Jitsi-Meet meeting.
+     * A message from a {@code RemoteControlClient} to a
+     * {@code RemoteControlServer}, intended to be passed into the Jitsi-Meet
+     * meeting.
      */
-    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control',
-
-    SPOT_REMOTE_LEFT: 'spot-remote-left',
-
-    SPOT_REMOTE_PROXY_MESSAGE: 'spot-remote-message'
+    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control'
 };
 
 export const SERVICE_UPDATES = {
@@ -108,14 +117,15 @@ export const SERVICE_UPDATES = {
     JOIN_CODE_CHANGE: 'join-code-change',
 
     /**
-     * A command from a Spot-Remote has been received.
+     * A command from a {@code RemoteControlClient} has been received.
      */
-    SPOT_REMOTE_MESSAGE_RECEIVED: 'message-received',
+    CLIENT_MESSAGE_RECEIVED: 'message-received',
 
     /**
-     * The remote control service has received an updated Spot-TV state.
+     * The {@code RemoteControlClient} has received an updated state for the
+     * {@code RemoteControlServer}.
      */
-    SPOT_TV_STATE_CHANGE: 'spot-tv-state-change',
+    SERVER_STATE_CHANGE: 'remote-control-server-state-change',
 
     /**
      * The remote control service has lost the XMPP connection and cannot

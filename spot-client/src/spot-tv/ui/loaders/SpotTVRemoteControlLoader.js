@@ -8,7 +8,7 @@ import {
     isConnectionPending,
     setIsSpot
 } from 'common/app-state';
-import { spotTvRemoteControlService } from 'common/remote-control';
+import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
 
 import { createSpotTVRemoteControlConnection } from './../../app-state';
@@ -29,7 +29,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
 
     /**
      * Configures analytics to report events as a Spot-TV and starts the
-     * connection to the remote control service for sending updates and
+     * connection for the remote control server for sending sending updates and
      * receiving commands.
      *
      * @inheritdoc
@@ -72,7 +72,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
      */
     _getPropsForChildren() {
         return {
-            remoteControlService: spotTvRemoteControlService
+            remoteControlServer
         };
     }
 }

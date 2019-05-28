@@ -19,8 +19,8 @@ import { ElectronDesktopPickerModal } from './../components/electron-desktop-pic
 import { Feedback, InCall, WaitingForCall } from './remote-views';
 
 /**
- * Displays the remote control view for controlling a Spot-TV instance from am
- * instance of Spot-Remote. This view has sub-views for interactiog with
+ * Displays the remote control view for controlling a Spot-TV instance from an
+ * instance of Spot-Remote. This view has sub-views for interacting with
  * Spot-TV in its different states.
  *
  * @extends React.PureComponent
@@ -32,7 +32,6 @@ export class RemoteControl extends React.PureComponent {
         isConnectedToSpot: PropTypes.bool,
         onDisconnect: PropTypes.func,
         onUnexpectedDisconnected: PropTypes.func,
-        remoteControlService: PropTypes.object,
         view: PropTypes.string
     };
 
@@ -80,9 +79,7 @@ export class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     _getView() {
-        const { remoteControlService, view } = this.props;
-
-        switch (view) {
+        switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
         case 'feedback':
@@ -92,7 +89,7 @@ export class RemoteControl extends React.PureComponent {
         case 'home':
             return <WaitingForCall events = { this.props.events } />;
         case 'meeting':
-            return <InCall remoteControlService = { remoteControlService } />;
+            return <InCall />;
         case 'setup':
             return <div>currently in setup</div>;
         default:
