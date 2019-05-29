@@ -12,6 +12,7 @@
         "babel-eslint": "10.0.1",
         "electron": "5.0.1",
         "electron-builder": "20.40.2",
+        "electron-rebuild": "1.8.5",
         "eslint": "5.16.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
         "eslint-plugin-flowtype": "3.8.2",
@@ -26,15 +27,17 @@
         "dist": "electron-builder",
         "lint": "eslint .",
         "pack": "electron-builder --dir",
+        "postinstall": "electron-rebuild",
         "start": "electron ."
     },
     "version": "1.0.0",
     "dependencies": {
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "lodash": "4.17.11",
-        "node-osascript": "^2.1.0"
+        "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
-        "win-audio": "2.0.2"
+        "win-audio": "2.0.2",
+        "xpc-connect": "git+https://git@github.com/jitsi/xpc-connect.git#33fd79673c57f15167067778fc6ade0a4f46da07"
     }
 }
