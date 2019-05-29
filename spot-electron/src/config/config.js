@@ -20,7 +20,7 @@ class Config {
      * @param {?Object} defaults - The default config to be applied.
      */
     constructor(defaults) {
-        this._config = _.defaultsDeep(this._config, this._loadPersistedConfig() || defaults);
+        this._config = _.defaultsDeep(this._config, this._loadPersistedConfig(), defaults);
         this._throttledPersist = _.throttle(() => {
             this._persistConfig();
         }, 2000);

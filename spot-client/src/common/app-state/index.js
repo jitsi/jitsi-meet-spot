@@ -26,6 +26,7 @@ export * from './notifications/actions';
 export * from './remote-control-service/actions';
 export * from './setup/actions';
 export * from './spot-tv/actions';
+export * from './spot-tv/action-types';
 export * from './wired-screenshare/actions';
 
 export * from './remote-control-service/actionTypes';

@@ -8,6 +8,7 @@ const {
 } = require('../../config');
 
 const { config } = require('../config');
+const { logger } = require('../logger');
 
 /**
  * This is the reference for the main window. May be exposed from this scope later, but we don't have
@@ -58,6 +59,8 @@ function createApplicationWindow() {
     applicationWindow.on('exit-html-full-screen', _onHtmlFullScreenChange);
 
     applicationWindow.loadURL(defaultSpotURL);
+
+    logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 }
 
 /**
