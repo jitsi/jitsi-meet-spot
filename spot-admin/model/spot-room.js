@@ -11,17 +11,17 @@
 class SpotRoom {
     /**
      *
-     * @param {string} deviceId
+     * @param {string} id - The Spot room ID.
      * @param {SpotOptions} options
      * @constructor
      */
-    constructor(deviceId, options) {
-        this.deviceId = deviceId;
+    constructor(id, options) {
+        this.id = id;
         this.options = options;
     }
 
     toString() {
-        return `SpotRoom[deviceId: ${this.deviceId} options:${JSON.stringify(this.options)}]`;
+        return `SpotRoom[id: ${this.id} options:${JSON.stringify(this.options)}]`;
     }
 }
 
