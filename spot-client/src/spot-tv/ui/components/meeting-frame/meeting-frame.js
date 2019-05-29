@@ -77,6 +77,7 @@ export class MeetingFrame extends React.Component {
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onParticipantJoined = this._onParticipantJoined.bind(this);
         this._onParticipantLeft = this._onParticipantLeft.bind(this);
+        this._onReportDeviceError = this._onReportDeviceError.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onScreenshareDeviceConnected
             = this._onScreenshareDeviceConnected.bind(this);
@@ -140,11 +141,15 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.addListener(
+            'cameraError', this._onReportDeviceError);
+        this._jitsiApi.addListener(
             'feedbackSubmitted', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'feedbackPromptDisplayed', this._onFeedbackPromptDisplayed);
         this._jitsiApi.addListener(
             'filmstripDisplayChanged', this._onFilmstripDisplayChanged);
+        this._jitsiApi.addListener(
+            'micError', this._onReportDeviceError);
         this._jitsiApi.addListener(
             'participantJoined', this._onParticipantJoined);
         this._jitsiApi.addListener(
@@ -155,7 +160,6 @@ export class MeetingFrame extends React.Component {
             'readyToClose', this.props.onMeetingLeave);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
-
         this._jitsiApi.addListener(
             'tileViewChanged', this._onTileViewChanged);
         this._jitsiApi.addListener(
@@ -457,6 +461,21 @@ export class MeetingFrame extends React.Component {
         this._meetingLoaded = true;
         this.setState({
             feedbackDisplayed: false
+        });
+    }
+
+    /**
+     * Callback invoked when Jitsi-Meet failed to use a media device.
+     *
+     * @param {string} type - The type of the error.
+     * @param {string} message - Additional information about the error.
+     * @private
+     * @returns {void}
+     */
+    _onReportDeviceError(type, message) {
+        logger.log('device error occurred within the meeting', {
+            type,
+            message
         });
     }
 
