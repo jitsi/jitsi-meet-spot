@@ -65,16 +65,6 @@ class AdminPage extends PageObject {
 
         submitButton.click();
     }
-
-    /**
-     * Proceeds directly to the admin view of a Spot-TV.
-     *
-     * @returns {void}
-     */
-    visit() {
-        this.driver.url(constants.SPOT_TV_ADMIN_URL);
-        this.waitForVisible();
-    }
 }
 
 module.exports = AdminPage;

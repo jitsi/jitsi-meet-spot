@@ -1,8 +1,6 @@
 .more-modal {
     @include centered-content;
 
-    background-color: var(--container-bg-color);
     display: flex;
-    padding: 50px;
     justify-content: space-around;
 }

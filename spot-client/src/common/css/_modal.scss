@@ -16,7 +16,9 @@
     }
 
     .modal-content {
+        background-color: var(--container-bg-color);
         border-radius: 5px;
+        padding: 40px;
         pointer-events: all;
         position: relative;
         min-height: 300px;
@@ -24,12 +26,13 @@
 
         @media #{$mq-tablet} {
             height: auto;
-            width: 450px;
+            margin: 50px;
+            min-width: 500px;
+            width: unset;
         }
 
         @media #{$mq-laptop-l} {
-            
-            width: 500px;
+            min-width: 550px;
         }
 
         .close {

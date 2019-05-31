@@ -57,3 +57,13 @@
         }
     }
 }
+
+.checkbox-with-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    input {
+        margin-right: 7px;
+    }
+}

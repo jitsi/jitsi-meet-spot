@@ -74,3 +74,9 @@
         }
     }
 }
+
+.modal-open {
+    .spot-home {
+        @include modal-open
+    }
+}

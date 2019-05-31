@@ -13,6 +13,11 @@ const mapActionTypeToStyle = {
         color: 'primary',
         variant: 'contained'
     },
+    secondary: {
+        className: 'button secondary',
+        color: 'default',
+        variant: 'contained'
+    },
     subtle: {
         className: 'button subtle',
         color: 'default',

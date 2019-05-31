@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { getSpotServicesConfig, setSetupCompleted } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
+import { Modal } from 'common/ui';
 
 import {
     CalendarAuth,
@@ -69,7 +70,9 @@ export class Setup extends React.Component {
 
         return (
             <div className = 'setup'>
-                <CurrentStep onSuccess = { this._onNextStep } />
+                <Modal>
+                    <CurrentStep onSuccess = { this._onNextStep } />
+                </Modal>
             </div>
         );
     }

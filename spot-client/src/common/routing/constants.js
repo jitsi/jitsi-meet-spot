@@ -2,7 +2,6 @@
  * An enumeration of all configured routes.
  */
 export const ROUTES = {
-    ADMIN: '/admin',
     CODE: '/',
     HELP: '/help',
     HOME: '/spot',

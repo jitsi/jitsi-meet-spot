@@ -48,13 +48,8 @@ export default class ResetState extends React.Component {
         }
 
         return (
-            <div className = 'admin-container'>
-                <div className = 'admin-title'>
-                    Reset
-                </div>
-                <div className = 'admin-content'>
-                    { child }
-                </div>
+            <div className = 'admin-content'>
+                { child }
             </div>
         );
     }
@@ -84,12 +79,13 @@ export default class ResetState extends React.Component {
     _renderResetConfirm() {
         return (
             <div>
-                <div>Are you sure? The app will reload</div>
-                <Button onClick = { this._onShowResetButton }>
-                    Cancel
-                </Button>
                 <Button onClick = { this._onResetApp }>
                     Confirm
+                </Button>
+                <Button
+                    appearance = 'secondary'
+                    onClick = { this._onShowResetButton }>
+                    Cancel
                 </Button>
             </div>
         );
