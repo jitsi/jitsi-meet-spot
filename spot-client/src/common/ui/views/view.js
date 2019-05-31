@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getBackgroundUrl } from 'common/app-state';
+import { getBackgroundUrl, isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 
 /**
@@ -16,6 +16,7 @@ class View extends React.Component {
         backgroundUrl: PropTypes.string,
         children: PropTypes.node,
         hideBackground: PropTypes.bool,
+        isAnyModalOpen: PropTypes.bool,
         name: PropTypes.string
     };
 
@@ -46,12 +47,14 @@ class View extends React.Component {
             }
         }
 
+        const className = `view ${this.props.isAnyModalOpen ? 'modal-open' : ''}`;
+
         const gradientStyle
             = `view-gradient ${backgroundStyles ? 'visible' : ''}`;
 
         return (
             <div
-                className = 'view'
+                className = { className }
                 data-qa-id = { `${this.props.name}-view` }>
                 <div
                     className = 'view-background-container'
@@ -87,7 +90,8 @@ class View extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        backgroundUrl: getBackgroundUrl(state)
+        backgroundUrl: getBackgroundUrl(state),
+        isAnyModalOpen: isAnyModalOpen(state)
     };
 }
 
