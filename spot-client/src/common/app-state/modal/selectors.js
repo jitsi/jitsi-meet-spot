@@ -13,6 +13,16 @@ export function getCurrentModal(state) {
 }
 
 /**
+ * Returns true if any modal is open, false otherwise.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isAnyModalOpen(state) {
+    return Boolean(state.modal.modal);
+}
+
+/**
  * A selector which returns if the currently displayed modal, if any, matches
  * the provided component.
  *
