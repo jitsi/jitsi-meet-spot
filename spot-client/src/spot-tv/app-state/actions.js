@@ -15,7 +15,6 @@ import {
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
-import { generateRandomString } from 'common/utils';
 
 /**
  * Establishes a connection to an existing Spot-MUC using the provided join code.
@@ -151,25 +150,12 @@ function createConnection(state) {
             logger.log('Setting up the Spot TV url', { joinCode });
             finalJoinCode = joinCode;
 
-            let getRoomInfoPromise;
-
-            if (joinCodeServiceUrl) {
-                getRoomInfoPromise = remoteControlServer.exchangeCode(
+            return remoteControlServer.exchangeCode(
                     joinCode,
                     {
                         joinCodeServiceUrl
                     }
-                );
-            } else {
-                getRoomInfoPromise = Promise.resolve({
-                    // If there's no joinCode service then create a room and let the lock
-                    // be set later. Setting the lock on join will throw an error about
-                    // not being authorized..
-                    roomName: generateRandomString(3)
-                });
-            }
-
-            return getRoomInfoPromise;
+            );
         })
         .then(roomInfo => remoteControlServer.connect({
             autoReconnect: true,

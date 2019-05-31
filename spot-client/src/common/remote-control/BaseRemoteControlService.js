@@ -187,36 +187,47 @@ export class BaseRemoteControlService extends EventEmitter {
     }
 
     /**
+     * @typedef {Object} RoomInfo
+     * @property {string} roomName - the name of the room.
+     * @property {string} [roomLock] - the room's password (if any).
+     */
+    /**
      * Converts a join code to Spot-TV connection information so it can be
      * connected to by a Spot-Remote.
      *
      * @param {string} code - The join code to exchange for connection information.
      * @param {string} joinCodeServiceUrl - The URL pointing to the join code service.
-     * @returns {Promise<string>} Resolve with join information or an error.
+     * @returns {Promise<RoomInfo>} Resolve with join information or an error.
      */
     exchangeCode(code = '', { joinCodeServiceUrl }) {
         if (joinCodeServiceUrl) {
-            logger.log(`Will use ${joinCodeServiceUrl} to validate the join code...`);
-
-            return fetchRoomInfo(joinCodeServiceUrl, code)
-                .then(({ roomName, roomLock }) => {
-                    return {
-                        roomName,
-                        roomLock
-                    };
-                });
+            return this.exchangeCodeWithBackend(code.trim(), joinCodeServiceUrl);
         }
 
-        const enteredCode = code.trim();
+        return this.exchangeCodeWithXmpp(code.trim());
+    }
 
-        if (enteredCode.length === 6) {
-            return Promise.resolve({
-                roomName: enteredCode.substring(0, 3),
-                roomLock: enteredCode.substring(3, 6)
-            });
-        }
+    /**
+     * Converts a join code into XMPP MUC credentials using a backend service.
+     *
+     * @param {string} code - The join code to exchange for connection information.
+     * @param {string} joinCodeServiceUrl - The URL pointing to the join code service.
+     * @returns {Promise<RoomInfo>} Resolve with join information or an error.
+     */
+    exchangeCodeWithBackend(code, joinCodeServiceUrl) {
+        logger.log('Using backend to exchange the join code', { joinCodeServiceUrl });
 
-        return Promise.reject('Error with code.');
+        return fetchRoomInfo(joinCodeServiceUrl, code);
+    }
+
+    /**
+     * Converts a join code into XMPP MUC credentials.
+     *
+     * @param {string} code - The join code to exchange for connection information.
+     * @returns {Promise<RoomInfo>} Resolve with join information or an error.
+     */
+    exchangeCodeWithXmpp() {
+        throw new Error('Not implemented');
     }
 
     /**
