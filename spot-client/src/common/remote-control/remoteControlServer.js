@@ -60,6 +60,29 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Converts a join code to Spot-TV connection information so it can be connected to by
+     * a Spot-Remote.
+     *
+     * @param {string} code - The join code to exchange for connection information.
+     * @returns {Promise<RoomInfo>} Resolve with join information or an error.
+     */
+    exchangeCodeWithXmpp(code) {
+        if (code.length === 6) {
+            return Promise.resolve({
+                roomName: code.substring(0, 3),
+                roomLock: code.substring(3, 6)
+            });
+        }
+
+        return Promise.resolve({
+            // If there's no joinCode service then create a room and let the lock
+            // be set later. Setting the lock on join will throw an error about
+            // not being authorized..
+            roomName: generateRandomString(3)
+        });
+    }
+
+    /**
      * Implements a way to get the current join code to connect to this instance
      * of {@code RemoteControlServer}.
      *
