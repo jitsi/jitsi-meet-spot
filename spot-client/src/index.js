@@ -9,7 +9,7 @@ import 'common/css';
 import { SegmentHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
 import { history } from 'common/history';
-import { LoggingService } from 'common/logger';
+import { LoggingService, logger } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
@@ -62,6 +62,13 @@ const analyticsAppKey = getAnalyticsAppKey(reduxState);
 if (analyticsAppKey) {
     analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
+
+window.onerror = message => logger.error('Uncaught error', { message });
+
+window.onunhandledrejection = event => logger.error('Unhandled promise rejection', {
+    message: event.reason.message,
+    stack: event.reason.stack
+});
 
 const loggingEndpoint = getLoggingEndpoint(reduxState);
 
