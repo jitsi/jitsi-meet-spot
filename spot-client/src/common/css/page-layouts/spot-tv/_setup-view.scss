@@ -1,14 +1,7 @@
 .spot-setup {
-    background-color: var(--container-bg-color);
-    border-radius: 25px;
     color: var(--container-sub-content-font-color);
-    height: auto;
     justify-content: center;
-    max-height: 100%;
     overflow: auto;
-    padding: 16px 32px;
-    width: 500px;
-    min-width: 50%;
 
     .setup-buttons {
         margin-top: 34px;
@@ -62,6 +55,7 @@
         overflow: hidden;
 
         .camera-preview {
+            max-width: 420px;
             position: relative;
 
             video {

@@ -1,13 +1,10 @@
 .share-select-view {
     @include centered-content;
 
-    background-color: var(--container-bg-color);
-
     .screenshare-select {
         @include centered-content;
         flex-direction: column;
         text-align: center;
-        padding: 30px 40px;
         width: 100%;
 
         .title {

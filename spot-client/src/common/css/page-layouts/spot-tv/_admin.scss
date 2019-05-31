@@ -1,0 +1,13 @@
+.admin-entry {
+    align-items: center;
+    background-color: var(--container-content-bg-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 2px 0;
+    padding: 24px 35px;
+
+    .admin-entry-title {
+        font-weight: bold;
+    }
+}

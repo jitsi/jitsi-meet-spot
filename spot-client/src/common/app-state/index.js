@@ -37,6 +37,7 @@ export * from './config/selectors';
 export * from './notifications/selectors';
 export * from './remote-control-service/selectors';
 export * from './modal/selectors';
+export * from './route/actions';
 export * from './setup/selectors';
 export * from './spot-tv/selectors';
 export * from './wired-screenshare/selectors';

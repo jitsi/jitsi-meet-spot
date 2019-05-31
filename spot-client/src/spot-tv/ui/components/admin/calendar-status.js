@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { getCalendarEmail } from 'common/app-state';
 
+import AdminEntry from './admin-entry';
+
 /**
  * A component intended for displaying information about the calendar currently
  * configured for Spot.
@@ -14,16 +16,9 @@ import { getCalendarEmail } from 'common/app-state';
  */
 export function CalendarStatus(props) {
     return (
-        <div className = 'admin-container'>
-            <div className = 'admin-title'>
-                Calendar Status
-            </div>
-            <div className = 'admin-content'>
-                <div className = 'admin-detail'>
-                    Current Calendar: { props.calendarEmail }
-                </div>
-            </div>
-        </div>
+        <AdminEntry entryLabel = 'Calendar Status'>
+            Current Calendar: { props.calendarEmail || 'None' }
+        </AdminEntry>
     );
 }
 

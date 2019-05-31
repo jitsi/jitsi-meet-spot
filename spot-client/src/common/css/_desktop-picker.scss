@@ -5,19 +5,6 @@
         background-color: black;
         opacity: 0.7;
     }
-
-    .modal-content {
-        background-color: rgb(42, 58, 75);
-        padding: 20px;
-
-        button.close {
-            background-color: rgba(0, 0, 0, 0);
-        }
-
-        button.close:active {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-    }
 }
 
 .desktop-picker {

@@ -21,18 +21,20 @@ export default class Modal extends React.PureComponent {
      * @returns {ReactElement}
      */
     render() {
+        const { onClose } = this.props;
+
         return (
             <div
                 className = { `modal ${this.props.rootClassName || ''}` }
                 data-qa-id = { this.props.qaId }>
                 <div className = 'modal-shroud' />
                 <div className = 'modal-content'>
-                    <button
+                    { onClose && <button
                         className = 'close'
-                        onClick = { this.props.onClose }
+                        onClick = { onClose }
                         type = 'button'>
                         x
-                    </button>
+                    </button> }
                     { this.props.children }
                 </div>
             </div>

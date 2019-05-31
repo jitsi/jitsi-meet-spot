@@ -1,3 +1,5 @@
+import { ROUTE_CHANGED } from '../route/actionTypes';
+
 import { MODAL_HIDE, MODAL_SHOW } from './actionTypes';
 
 const DEFAULT_STATE = {
@@ -16,6 +18,7 @@ const DEFAULT_STATE = {
 const modal = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case MODAL_HIDE:
+    case ROUTE_CHANGED:
         return DEFAULT_STATE;
 
     case MODAL_SHOW:

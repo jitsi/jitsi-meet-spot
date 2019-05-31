@@ -14,6 +14,7 @@ import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
     getLoggingEndpoint,
+    routeChanged,
     setDefaultValues
 } from 'common/app-state';
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
@@ -87,6 +88,10 @@ if (loggingEndpoint) {
 
 remoteControlClient.configureWirelessScreensharing({
     desktopSharingFrameRate: getDesktopSharingFramerate(reduxState)
+});
+
+history.listen(location => {
+    store.dispatch(routeChanged(location));
 });
 
 render(

@@ -22,6 +22,10 @@
     font-size: inherit;
 }
 
+@mixin modal-open {
+    filter: brightness(50%) blur(2px);
+}
+
 @mixin spot-remote-view-layout {
     display: flex;
     flex-direction: column;
