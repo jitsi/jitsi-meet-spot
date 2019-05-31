@@ -31,6 +31,7 @@ export default class Modal extends React.PureComponent {
                 <div className = 'modal-content'>
                     { onClose && <button
                         className = 'close'
+                        data-qa-id = 'modal-close'
                         onClick = { onClose }
                         type = 'button'>
                         x
