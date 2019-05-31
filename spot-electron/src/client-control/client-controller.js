@@ -20,8 +20,6 @@ class ClientController extends EventEmitter {
         ipcMain.on('native-command', (event, message) => {
             self._handleClientMessage(event, message);
         });
-
-        this.on('adjustVolume', console.log);
     }
 
     /**
