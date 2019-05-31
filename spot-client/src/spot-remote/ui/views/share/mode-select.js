@@ -37,7 +37,7 @@ export class ModeSelect extends React.Component {
 
         if (!isWirelessScreenshareSupported) {
             disabled = true;
-            footerMessage = 'Your browser is currently not supported. '
+            footerMessage = 'This browser is currently not supported. '
                 + 'To share content please use Chrome.';
         } else if (isScreenshareActive) {
             disabled = true;
