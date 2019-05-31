@@ -473,7 +473,7 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onReportDeviceError(type, message) {
-        logger.log('device error occurred within the meeting', {
+        logger.error('device error occurred within the meeting', {
             type,
             message
         });
