@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getAdvertisementAppName } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { Button } from 'common/ui';
+import { isDesktopBrowser } from 'common/utils';
 
 import { NavButton } from '../nav';
 
@@ -278,7 +279,9 @@ export class ScreensharePicker extends React.Component {
      */
     _renderWirelessScreenshareNotSupported() {
         const { advertisedAppName } = this.props;
-        const title = 'Your browser is currently not supported. To share content please use Chrome on desktop.';
+        const title = 'Sharing content is currently not supported on this '
+            + `${isDesktopBrowser() ? 'browser' : 'device'}. `
+            + 'To share please use Chrome on desktop.';
         const advertisement = this.props.advertisedAppName && (
             <div>
                 or

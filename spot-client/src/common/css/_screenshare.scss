@@ -6,6 +6,7 @@
     .screenshare-select {
         @include centered-content;
         flex-direction: column;
+        text-align: center;
         padding: 30px 40px;
         width: 100%;
 
