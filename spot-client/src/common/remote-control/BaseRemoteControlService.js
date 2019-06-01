@@ -29,7 +29,11 @@ export class BaseRemoteControlService extends EventEmitter {
 
         this._onDisconnect = this._onDisconnect.bind(this);
 
-        window.addEventListener('beforeunload', () => this.disconnect());
+        window.addEventListener(
+            'beforeunload',
+            () => this.disconnect()
+                .catch(() => { /* swallow unload errors from bubbling up */ })
+        );
     }
 
     /**
