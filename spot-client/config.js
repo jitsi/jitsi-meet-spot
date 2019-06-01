@@ -122,6 +122,12 @@ window.JitsiMeetSpotConfig = {
     },
 
     /**
+     * A list of known domains that can host Jitsi-Meet meetings. Used at least
+     * to filter joinable events on the calendar.
+     */
+    MEETING_DOMAINS_WHITELIST: [],
+
+    /**
      * Domains which Spot can be hosted on which should place Spot into a
      * different UX mode.
      */

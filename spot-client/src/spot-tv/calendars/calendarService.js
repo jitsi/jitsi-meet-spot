@@ -54,7 +54,10 @@ export class CalendarService extends EventEmitter {
         this._calendarEvents = [];
         this._hasFetchedEvents = false;
 
-        return this._calendarIntegration.initialize(this.config[type]);
+        return this._calendarIntegration.initialize({
+            ...this.config[type],
+            knownDomains: this.knownDomains
+        });
     }
 
     /**
@@ -96,10 +99,13 @@ export class CalendarService extends EventEmitter {
      * calendar integrations.
      *
      * @param {Object} config - The calendar configuration objects.
+     * @param {Array<string>} knownDomains - A whitelist of meeting urls to
+     * search for when parsing meeting events.
      * @returns {void}
      */
-    setConfig(config) {
+    setConfig(config, knownDomains) {
         this.config = config;
+        this.knownDomains = knownDomains;
     }
 
     /**

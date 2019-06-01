@@ -19,6 +19,8 @@ export default {
      * @returns {Promise}
      */
     initialize(config) {
+        this.config = config;
+
         return microsoftClientApi.initialize({
             clientId: config.CLIENT_ID,
             scopes: [
@@ -63,7 +65,8 @@ export default {
 
                 return Promise.reject(formattedError);
             })
-            .then(events => filterJoinableEvents(events, email));
+            .then(events =>
+                filterJoinableEvents(events, this.config.knownDomains));
     },
 
     /**
@@ -105,12 +108,20 @@ export default {
  * Converts the passed in events into a standard format.
  *
  * @param {Array<Object>} events - The calendar events from the GET for events.
+ * @param {Array<string>} knownDomains - Whitelist of domains which can be used
+ * as meeting links.
  * @returns {Array<Object>}
  */
-function filterJoinableEvents(events) {
+function filterJoinableEvents(events, knownDomains) {
     return events.map(event => {
         const { attendees, end, id, location, start, subject } = event;
-        const meetingUrl = getMeetingUrl(location.displayName);
+        const meetingUrl = getMeetingUrl([
+            event.onlineMeetingUrl,
+            event.bodyPreview,
+            location.displayName,
+            event.subject,
+            event.webLink
+        ], knownDomains);
 
         return {
             end: end.dateTime,

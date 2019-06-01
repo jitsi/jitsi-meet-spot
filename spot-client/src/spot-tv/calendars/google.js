@@ -18,12 +18,16 @@ export default {
      * @param {Object} config - Values needed to properly initialize the API.
      * @param {string} config.CLIENT_ID - The Google application client ID used
      * to make API requests.
+     * @param {Array<string>} config.knownDomains - The whitelist of domains
+     * to search for when trying to extrapolate a meeting URL from an event.
      * @returns {Promise} Resolves when the Google API javascript has loaded.
      */
     initialize(config) {
         if (initPromise) {
             return initPromise;
         }
+
+        this.config = config;
 
         initPromise = new Promise(resolve =>
             gapi.load('client:auth2', () => resolve()));
@@ -76,7 +80,8 @@ export default {
 
                 return Promise.reject(formattedError);
             })
-            .then(events => filterJoinableEvents(events, email));
+            .then(events =>
+                filterJoinableEvents(events, email, this.config.knownDomains));
     },
 
     /**
@@ -129,12 +134,21 @@ export default {
  * @param {Array<Object>} events - The calendar events to filter.
  * @param {string} calendarEmail - The email of the calendar configured to
  * display.
+ * @param {Array<string>} knownDomains - Whitelist of domains which can be used
+ * as meeting links.
  * @returns {Array<Object>}
  */
-function filterJoinableEvents(events = [], calendarEmail) {
+function filterJoinableEvents(events = [], calendarEmail, knownDomains) {
     return events.map(event => {
-        const { attendees, location, end, id, start, summary } = event;
-        const meetingUrl = getMeetingUrl(location);
+        const { attendees, end, id, start, summary } = event;
+        const meetingUrl = getMeetingUrl([
+            event.title,
+            event.url,
+            event.location,
+            event.summary,
+            event.notes,
+            event.description
+        ], knownDomains);
 
         return {
             end: end.dateTime,
