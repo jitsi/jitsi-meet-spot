@@ -153,7 +153,7 @@ class WaitingForCallView extends React.Component {
             );
         case 'share':
             return (
-                <div className = 'share-select-view'>
+                <div className = 'share-select-view modal-content'>
                     <ScreensharePicker
                         onStartWiredScreenshare
                             = { this._onJoinWithWiredScreensharing }

@@ -1,39 +1,39 @@
 .share-select-view {
     @include centered-content;
+}
 
-    .screenshare-select {
-        @include centered-content;
-        flex-direction: column;
-        text-align: center;
-        width: 100%;
+.screenshare-select {
+    @include centered-content;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
 
-        .title {
-            margin-bottom: 30px;
-        }
+    .title {
+        margin-bottom: 30px;
+    }
 
-        .nav-label-container {
-            white-space: initial;
-        }
+    .nav-label-container {
+        white-space: initial;
+    }
 
-        .icon {
-            margin-bottom: 30px;
-        }
+    .icon {
+        margin-bottom: 30px;
+    }
 
-        .icon i {
-            font-size: $font-size-xx-large;
-        }
+    .icon i {
+        font-size: $font-size-xx-large;
+    }
 
-        .cta-button {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 10px;
-            padding: 0.3em 1em;
-        }
+    .cta-button {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        padding: 0.3em 1em;
+    }
 
-        .share-url {
-            color: var(--button-active-color);
-        }
+    .share-url {
+        color: var(--button-active-color);
     }
 }
 
