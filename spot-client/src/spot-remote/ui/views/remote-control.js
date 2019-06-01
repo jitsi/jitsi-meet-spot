@@ -8,7 +8,7 @@ import {
     getCurrentView,
     isConnectedToSpot
 } from 'common/app-state';
-import { LoadingIcon, View } from 'common/ui';
+import { LoadingIcon, ReconnectOverlay, View } from 'common/ui';
 
 import './../../analytics';
 
@@ -67,6 +67,7 @@ export class RemoteControl extends React.PureComponent {
             <View name = 'remoteControl'>
                 { this._getView() }
                 <ElectronDesktopPickerModal />
+                <ReconnectOverlay />
             </View>
         );
     }

@@ -65,10 +65,14 @@ if (analyticsAppKey) {
 
 window.onerror = message => logger.error('Uncaught error', { message });
 
-window.onunhandledrejection = event => logger.error('Unhandled promise rejection', {
-    message: event.reason.message,
-    stack: event.reason.stack
-});
+window.onunhandledrejection = event => {
+    const { message, stack } = event.reason || {};
+
+    logger.error('Unhandled promise rejection', {
+        message,
+        stack
+    });
+};
 
 const loggingEndpoint = getLoggingEndpoint(reduxState);
 

@@ -1,0 +1,14 @@
+.reconnect-overlay {
+    @include centered-content;
+    background: black;
+    display: flex;
+    height: 100%;
+    opacity: 0.8;
+    position: fixed;
+    width: 100%;
+
+    .reconnect-message {
+        color: white;
+        font-size: 2em;
+    }
+}
