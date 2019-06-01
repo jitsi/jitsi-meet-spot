@@ -18,9 +18,12 @@
     .modal-content {
         background-color: var(--container-bg-color);
         border-radius: 5px;
+        display: flex;
+        justify-content: center;
         padding: 40px;
         pointer-events: all;
         position: relative;
+        max-height: calc(100vh - 40px);
         min-height: 300px;
         width: 100%;
 
