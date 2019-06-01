@@ -2,6 +2,9 @@ import { Button as MaterialButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const classes = {
+    label: 'button-label'
+};
 const mapActionTypeToStyle = {
     'subtle-danger': {
         className: 'button subtle-danger',
@@ -39,6 +42,7 @@ export default function Button(props) {
         <MaterialButton
             { ...mappedProps }
             className = { `${mappedProps.className} ${props.className}` }
+            classes = { classes }
             data-qa-id = { props.qaId }
             disableRipple = { true }
             onClick = { props.onClick }
