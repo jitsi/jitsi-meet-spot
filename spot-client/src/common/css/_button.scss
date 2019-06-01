@@ -4,7 +4,6 @@
     cursor: pointer;
     font-size: $font-size-small;
     padding: 8px 32px;
-    text-transform: capitalize !important;
 
     &:focus {
         /**
@@ -89,5 +88,9 @@
 
     & + & {
         margin-left: 9px;
+    }
+
+    .button-label {
+        text-transform: capitalize;
     }
 }
