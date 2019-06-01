@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getAdvertisementAppName } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
-import { Button, Modal } from 'common/ui';
+import { Button } from 'common/ui';
 import { isDesktopBrowser } from 'common/utils';
 
 import { NavButton } from '../nav';
@@ -67,13 +67,11 @@ export class ScreensharePicker extends React.Component {
      */
     render() {
         return (
-            <Modal>
-                <div
-                    className = 'nav screenshare-select'
-                    data-qa-id = 'screenshare-picker'>
-                    { this._renderContent() }
-                </div>
-            </Modal>
+            <div
+                className = 'nav screenshare-select'
+                data-qa-id = 'screenshare-picker'>
+                { this._renderContent() }
+            </div>
         );
     }
 
