@@ -2,18 +2,31 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { showModal } from 'common/app-state';
+import { hideModal, isModalOpen, showModal } from 'common/app-state';
 import { Settings } from 'common/icons';
 
 import AdminModal from './admin';
 
 /**
- * A cog that directs to the settings view on click.
+ * A cog that controls displays of the admin settings.
  */
 class SettingsButton extends React.Component {
     static propTypes = {
-        onClose: PropTypes.func
+        isAdminModalOpen: PropTypes.bool,
+        onChangeModalDisplay: PropTypes.func
     };
+
+    /**
+     * Initializes a new {@code SettingsButton} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._onToggleAdminModal = this._onToggleAdminModal.bind(this);
+    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -25,11 +38,35 @@ class SettingsButton extends React.Component {
             <a
                 className = 'cog'
                 data-qa-id = 'admin-settings'
-                onClick = { this.props.onClose }>
+                onClick = { this._onToggleAdminModal }>
                 <Settings />
             </a>
         );
     }
+
+    /**
+     * Callback invoked to toggle the display of the {@code AdminModal}.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToggleAdminModal() {
+        this.props.onChangeModalDisplay(!this.props.isAdminModalOpen);
+    }
+}
+
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code SettingsButton}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        isAdminModalOpen: isModalOpen(state, AdminModal)
+    };
 }
 
 /**
@@ -42,14 +79,16 @@ class SettingsButton extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         /**
-         * Stop showing the {@code AdminModal}.
+         * Displays or hides the {@code AdminModal}.
          *
+         * @param {boolean} shouldShow - Whether the AdminModal should be
+         * displayed or hidden.
          * @returns {void}
          */
-        onClose() {
-            dispatch(showModal(AdminModal));
+        onChangeModalDisplay(shouldShow) {
+            dispatch(shouldShow ? showModal(AdminModal) : hideModal());
         }
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(SettingsButton);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsButton);
