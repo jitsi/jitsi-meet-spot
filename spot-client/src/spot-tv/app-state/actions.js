@@ -52,12 +52,8 @@ export function createSpotTVRemoteControlConnection() {
         function onDisconnect() {
             logger.error(
                 'Spot-TV disconnected from the remote control server.');
-            remoteControlServer.disconnect()
-                .then(() => {
-                    dispatch(setJoinCode(''));
-
-                    doConnect();
-                });
+            dispatch(setJoinCode(''));
+            doConnect();
         }
 
         /**

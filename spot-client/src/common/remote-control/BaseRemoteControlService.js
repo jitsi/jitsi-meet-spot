@@ -75,7 +75,8 @@ export class BaseRemoteControlService extends EventEmitter {
             onDisconnect: this._onDisconnect
         });
 
-        return this.xmppConnectionPromise;
+        return this.xmppConnectionPromise
+            .catch(error => this.disconnect().then(() => Promise.reject(error)));
     }
 
     /**
@@ -99,7 +100,9 @@ export class BaseRemoteControlService extends EventEmitter {
     _onDisconnect(reason) {
         if (reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
             || reason === 'not-authorized') {
-            this.emit(SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason });
+            this.disconnect()
+                .then(() => this.emit(
+                    SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason }));
 
             return;
         }
