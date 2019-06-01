@@ -122,6 +122,12 @@ export const SERVICE_UPDATES = {
     CLIENT_MESSAGE_RECEIVED: 'message-received',
 
     /**
+     * The remote control service has started or stopped the automatic
+     * reconnection flow.
+     */
+    RECONNECT_UPDATE: 'reconnect-update',
+
+    /**
      * The {@code RemoteControlClient} has received an updated state for the
      * {@code RemoteControlServer}.
      */

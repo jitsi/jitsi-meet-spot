@@ -7,6 +7,7 @@ export * from './input';
 export * from './loading-icon';
 export * from './modal';
 export * from './notifications';
+export * from './reconnect-overlay';
 export * from './reset';
 export * from './room-name';
 export * from './scheduled-meetings';

@@ -2,6 +2,7 @@ import {
     AUDIO_MUTE,
     CREATE_CONNECTION,
     JOIN_WITH_SCREENSHARING,
+    RECONNECTING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
@@ -9,6 +10,7 @@ import {
 } from './actionTypes';
 
 const DEFAULT_STATE = {
+    isReconnecting: false,
     isWirelessScreensharing: false
 };
 
@@ -39,6 +41,12 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             joinWithScreensharing: action.screensharingType
+        };
+
+    case RECONNECTING:
+        return {
+            ...state,
+            isReconnecting: action.isReconnecting
         };
 
     case SCREENSHARE:

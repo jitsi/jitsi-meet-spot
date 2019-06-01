@@ -129,7 +129,7 @@ export class BaseRemoteControlService extends EventEmitter {
             return;
         }
 
-        this._isReconnectQueued = true;
+        this._setReconnectQueued(true);
 
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = getJitterDelay();
@@ -158,12 +158,12 @@ export class BaseRemoteControlService extends EventEmitter {
             .then(() => {
                 logger.log('loaded');
 
-                this._isReconnectQueued = false;
+                this._setReconnectQueued(false);
             })
             .catch(error => {
                 logger.warn('failed to load', { error });
 
-                this._isReconnectQueued = false;
+                this._setReconnectQueued(false);
 
                 this._onDisconnect(error);
             });
@@ -305,6 +305,21 @@ export class BaseRemoteControlService extends EventEmitter {
      */
     _processMessage() {
         return;
+    }
+
+    /**
+     * Updates the internal flag denoting the remote control service is
+     * currently trying to re-establish an XMPP connection.
+     *
+     * @param {boolean} isReconnecting - Whether or not a reconnect is currently
+     * happening.
+     * @private
+     * @returns {void}
+     */
+    _setReconnectQueued(isReconnecting) {
+        this._isReconnectQueued = isReconnecting;
+
+        this.emit(SERVICE_UPDATES.RECONNECT_UPDATE, { isReconnecting });
     }
 }
 

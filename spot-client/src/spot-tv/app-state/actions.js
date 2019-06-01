@@ -4,7 +4,8 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     setJoinCode,
-    setJwt
+    setJwt,
+    setReconnectState
 } from 'common/app-state';
 
 import { registerDevice } from 'common/backend';
@@ -57,6 +58,18 @@ export function createSpotTVRemoteControlConnection() {
         }
 
         /**
+         * Callback invoked when {@code remoteControlServer} has started or
+         * stopped trying to re-establish a connection to the remote control
+         * service.
+         *
+         * @private
+         * @returns {void}
+         */
+        function onReconnectChange({ isReconnecting }) {
+            dispatch(setReconnectState(isReconnecting));
+        }
+
+        /**
          * Callback invoked when {@code remoteControlServer} has changed
          * the join code necessary to pair with the Spot-TV.
          *
@@ -90,6 +103,10 @@ export function createSpotTVRemoteControlConnection() {
         remoteControlServer.addListener(
             SERVICE_UPDATES.JOIN_CODE_CHANGE,
             onJoinCodeChange
+        );
+        remoteControlServer.addListener(
+            SERVICE_UPDATES.RECONNECT_UPDATE,
+            onReconnectChange
         );
 
         return doConnect();

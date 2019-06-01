@@ -86,6 +86,17 @@ export function isConnectionEstablished(state) {
 }
 
 /**
+ * A selector which returns the whether or not {@code remoteControlService} is
+ * currently being re-connected to.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isCurrentlyReconnecting(state) {
+    return Boolean(state.remoteControlService.isReconnecting);
+}
+
+/**
  * A selector which returns whether or a not a tile view change command
  * is currently in flight.
  *

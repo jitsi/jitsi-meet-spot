@@ -12,6 +12,7 @@ import {
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
+    RECONNECTING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
@@ -144,6 +145,20 @@ export function setAudioMute(mute) {
         AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
+}
+
+/**
+ * Sets whether or not a reconnect to the remote control service is in flight.
+ *
+ * @param {boolean} isReconnecting - Whether or not there currently is a
+ * reconnect attempt happening.
+ * @returns {Object}
+ */
+export function setReconnectState(isReconnecting) {
+    return {
+        type: RECONNECTING,
+        isReconnecting
+    };
 }
 
 /**

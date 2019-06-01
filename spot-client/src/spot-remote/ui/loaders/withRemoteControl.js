@@ -7,6 +7,7 @@ import {
     clearSpotTVState,
     getRemoteControlServerConfig,
     setCalendarEvents,
+    setReconnectState,
     setSpotTVState
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -69,6 +70,7 @@ export class RemoteControlLoader extends AbstractLoader {
         super(props, 'SpotRemote');
 
         this._onDisconnect = this._onDisconnect.bind(this);
+        this._onReconnectStatusChange = this._onReconnectStatusChange.bind(this);
         this._onSpotTVStateChange = this._onSpotTVStateChange.bind(this);
     }
 
@@ -85,6 +87,10 @@ export class RemoteControlLoader extends AbstractLoader {
             this._onDisconnect
         );
         remoteControlClient.addListener(
+            SERVICE_UPDATES.RECONNECT_UPDATE,
+            this._onReconnectStatusChange
+        );
+        remoteControlClient.addListener(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
             this._onSpotTVStateChange
         );
@@ -99,6 +105,10 @@ export class RemoteControlLoader extends AbstractLoader {
         remoteControlClient.removeListener(
             SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
             this._onDisconnect
+        );
+        remoteControlClient.removeListener(
+            SERVICE_UPDATES.RECONNECT_UPDATE,
+            this._onReconnectStatusChange
         );
         remoteControlClient.removeListener(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
@@ -155,6 +165,18 @@ export class RemoteControlLoader extends AbstractLoader {
 
             return Promise.reject(error);
         });
+    }
+
+    /**
+     * Callback invoked when {@code remoteControlClient} has started or stopped
+     * to recover a broken connection to the remote control service.
+     *
+     * @param {Object} param - Details of the reconnection event.
+     * @private
+     * @returns {void}
+     */
+    _onReconnectStatusChange({ isReconnecting }) {
+        this.props.dispatch(setReconnectState(isReconnecting));
     }
 
     /**
