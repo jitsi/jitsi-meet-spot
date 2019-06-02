@@ -85,10 +85,12 @@ export class CalendarService extends EventEmitter {
      * Requests the rooms accessible by the account linked to the currently
      * active calendar integration.
      *
+     * @param {string} roomNameFilter - A string to use for filtering rooms by
+     * name.
      * @returns {Promise<Array<Object>>}
      */
-    getRooms() {
-        return this._calendarIntegration.getRooms();
+    getRooms(roomNameFilter = '') {
+        return this._calendarIntegration.getRooms(roomNameFilter);
     }
 
     /**
