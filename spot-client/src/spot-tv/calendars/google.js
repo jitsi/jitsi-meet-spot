@@ -92,12 +92,17 @@ export default {
      * Requests the rooms accessible by the Google calendar of the email
      * currently authenticated with the Google API.
      *
+     * @param {string} roomNameFilter - Filter results so only room names that
+     * begin with the specified string are returned. Google only allows
+     * searching from the start of the room name and is case sensitive.
      * @returns {Promise<Array<Object>>}
      */
-    getRooms() {
+    getRooms(roomNameFilter = '') {
+        const escapedQuery = encodeURIComponent(`name:"${roomNameFilter}*"`);
         const roomsListEndpoint
             = 'https://www.googleapis.com/admin/directory/v1/customer/'
-                + 'my_customer/resources/calendars';
+                + 'my_customer/resources/calendars'
+                + `?maxResults=5&query=${escapedQuery}`;
 
         return gapi.client.request(roomsListEndpoint)
             .then(response => response.result.items.filter(

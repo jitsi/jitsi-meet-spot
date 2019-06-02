@@ -1,10 +1,11 @@
+import debounce from 'lodash.debounce';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
 import { setCalendar, setDisplayName } from 'common/app-state';
 import { logger } from 'common/logger';
-import { Button, Input, LoadingIcon } from 'common/ui';
+import { Button, Input } from 'common/ui';
 
 import { calendarService } from './../../../calendars';
 
@@ -29,15 +30,17 @@ export class SelectRoom extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            email: '',
+            rooms: []
+        };
+
+        this._fetchRooms = this._fetchRooms.bind(this);
+        this._debouncedFetchRooms = debounce(this._fetchRooms, 250);
+
         this._onEmailChange = this._onEmailChange.bind(this);
         this._onEmailSubmit = this._onEmailSubmit.bind(this);
         this._onRoomClick = this._onRoomClick.bind(this);
-
-        this.state = {
-            email: '',
-            rooms: [],
-            loading: true
-        };
     }
 
     /**
@@ -55,29 +58,30 @@ export class SelectRoom extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { loading, rooms } = this.state;
+        const content = this.state.rooms.map((room, index) => (
+            <div
+                className = 'room-selection'
+                key = { index }
 
-        let content;
-        let continueButton = null;
+                // eslint-disable-next-line react/jsx-no-bind
+                onClick = { () => this._onRoomClick(room) }
+                tabIndex = { 0 }>
+                { room.resourceName }
+            </div>
+        ));
 
-        if (loading) {
-            content = <LoadingIcon />;
-        } else if (rooms.length) {
-            content = rooms.map(room => (
-                <div key = { room.resourceName }>
-                    <Button
+        if (this.state.email) {
+            content.push(
+                <div
+                    className = 'room-selection'
+                    key = 'entered-value'
 
-                        // eslint-disable-next-line react/jsx-no-bind
-                        onClick = { () => this._onRoomClick(room) }>
-                        { room.resourceName }
-                    </Button>
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onClick = { () => this._onRoomClick(this.state.email) }
+                    tabIndex = { 0 }>
+                    use email: {this.state.email}
                 </div>
-            ));
-        } else {
-            content = <div>No rooms</div>;
-
-            continueButton
-                = <Button onClick = { this.props.onSuccess }>Continue</Button>;
+            );
         }
 
         return (
@@ -91,20 +95,16 @@ export class SelectRoom extends React.Component {
                         <form onSubmit = { this._onEmailSubmit }>
                             <Input
                                 onChange = { this._onEmailChange }
-                                placeholder = 'Enter an email'
+                                placeholder = 'Enter an email or room name (case-sensitive)'
                                 value = { this.state.email } />
-                            <Button type = 'accept'>Go</Button>
                         </form>
                     </div>
-                    <div>
-                        <h1>Or select a rooms:</h1>
-                        <div>
-                            { content }
-                        </div>
+                    <div className = 'room-list'>
+                        { content }
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
-                    { continueButton }
+                    <Button onClick = { this.props.onSuccess }>Skip</Button>
                 </div>
             </div>
         );
@@ -117,23 +117,17 @@ export class SelectRoom extends React.Component {
      * @returns {Promise<void>}
      */
     _fetchRooms() {
-        return calendarService.getRooms()
+        return calendarService.getRooms(this.state.email)
             .then(rooms => {
                 logger.log(
                     'fetched list of rooms', { count: rooms.length });
 
-                this.setState({
-                    loading: false,
-                    rooms
-                });
+                this.setState({ rooms });
             })
             .catch(error => {
                 logger.error('could not fetch list of rooms', { error });
 
-                this.setState({
-                    loading: false,
-                    rooms: []
-                });
+                this.setState({ rooms: [] });
             });
     }
 
@@ -147,8 +141,10 @@ export class SelectRoom extends React.Component {
      */
     _onEmailChange(event) {
         this.setState({
-            email: event.target.value
-        });
+            email: event.target.value,
+            rooms: this.state.rooms.filter(
+                room => room.resourceName.startsWith(event.target.value))
+        }, () => this._debouncedFetchRooms());
     }
 
     /**
