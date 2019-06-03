@@ -93,33 +93,31 @@ export function connectToSpotTV(joinCode, shareMode) {
         });
 
         const state = getState();
-        const { joinCodeServiceUrl } = getSpotServicesConfig(getState());
 
-        return remoteControlClient.exchangeCode(joinCode, { joinCodeServiceUrl })
-            .then(roomInfo => remoteControlClient.connect({
-                autoReconnect: true,
-                roomInfo,
-                serverConfig: getRemoteControlServerConfig(state)
-            }))
-            .then(() => {
-                dispatch({
-                    type: SPOT_REMOTE_JOIN_CODE_VALID,
-                    joinCode,
-                    shareMode
-                });
-            })
-            .catch(error => {
-                // FIXME emit another action when the connect fails due to error other than the invalid join code
-                dispatch({
-                    type: SPOT_REMOTE_JOIN_CODE_INVALID,
-                    joinCode,
-                    shareMode
-                });
-
-                _onDisconnected({ dispatch }, error);
-
-                throw error;
+        return remoteControlClient.connect({
+            autoReconnect: true,
+            joinCode,
+            joinCodeServiceUrl: getSpotServicesConfig(state).joinCodeServiceUrl,
+            serverConfig: getRemoteControlServerConfig(state)
+        }).then(() => {
+            dispatch({
+                type: SPOT_REMOTE_JOIN_CODE_VALID,
+                joinCode,
+                shareMode
             });
+        })
+        .catch(error => {
+            // FIXME emit another action when the connect fails due to error other than the invalid join code
+            dispatch({
+                type: SPOT_REMOTE_JOIN_CODE_INVALID,
+                joinCode,
+                shareMode
+            });
+
+            _onDisconnected({ dispatch }, error);
+
+            throw error;
+        });
     };
 }
 

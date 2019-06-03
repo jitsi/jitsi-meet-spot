@@ -1,9 +1,10 @@
 import EventEmitter from 'events';
 import { $iq } from 'strophe.js';
 
-import { fetchRoomInfo } from 'common/backend/utils';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
+
+import { fetchRoomInfo } from '../backend';
 
 import {
     CONNECTION_EVENTS,
@@ -44,6 +45,8 @@ export class BaseRemoteControlService extends EventEmitter {
      * being made by a Spot client.
      * @param {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
+     * @param {string} [options.joinCodeServiceUrl] - Optional URL pointing to the backend endpoint
+     * which is to be used to exchange join code for XMPP MUC address/password.
      * @param {number} [options.joinCodeRefreshRate] - A duration in
      * milliseconds. If provided, a join code will be created and an interval
      * created to automatically update the join code at the provided rate.
@@ -57,7 +60,8 @@ export class BaseRemoteControlService extends EventEmitter {
 
         const {
             joinAsSpot,
-            roomInfo,
+            joinCode,
+            joinCodeServiceUrl,
             serverConfig
         } = this._options;
 
@@ -72,12 +76,17 @@ export class BaseRemoteControlService extends EventEmitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        this.xmppConnectionPromise = this.xmppConnection.joinMuc({
+        this.xmppConnectionPromise = this.exchangeCode(
+            joinCode,
+            {
+                joinCodeServiceUrl
+            }
+        ).then(roomInfo => this.xmppConnection.joinMuc({
             joinAsSpot,
             roomName: roomInfo.roomName,
             roomLock: roomInfo.roomLock,
             onDisconnect: this._onDisconnect
-        });
+        }));
 
         return this.xmppConnectionPromise
             .catch(error => this.disconnect().then(() => Promise.reject(error)));
