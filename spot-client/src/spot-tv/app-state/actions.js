@@ -146,25 +146,15 @@ function createConnection(state) {
     logger.log('Attempting connection', { adminServiceUrl });
 
     return getJoinCodePromise
-        .then(joinCode => {
-            logger.log('Setting up the Spot TV url', { joinCode });
-            finalJoinCode = joinCode;
-
-            return remoteControlServer.exchangeCode(
-                    joinCode,
-                    {
-                        joinCodeServiceUrl
-                    }
-            );
-        })
-        .then(roomInfo => remoteControlServer.connect({
+        .then(joinCode => remoteControlServer.connect({
             autoReconnect: true,
             joinAsSpot: true,
 
             // FIXME join code refresh is disabled with the backend as the first step,
             // because there's no password set on the room and the JWT is used instead.
             joinCodeRefreshRate: !adminServiceUrl && joinCodeRefreshRate,
-            roomInfo,
+            joinCodeServiceUrl,
+            joinCode,
             serverConfig: remoteControlConfiguration
         }))
         .then(() => {
