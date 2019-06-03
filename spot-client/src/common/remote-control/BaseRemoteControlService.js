@@ -84,6 +84,16 @@ export class BaseRemoteControlService extends EventEmitter {
     }
 
     /**
+     * Returns a Promise which is to be resolved/rejected when the initial connection process is
+     * done.
+     *
+     * @returns {Promise}
+     */
+    getConnectPromise() {
+        return this.xmppConnectionPromise;
+    }
+
+    /**
      * Returns the current join code that is necessary to establish a connection
      * to a Spot-TV.
      *

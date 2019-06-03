@@ -245,9 +245,19 @@ export class JoinCodeEntry extends React.Component {
 
                 this.props.history.push(redirectTo);
             })
-            .catch(() => {
+            .catch(error => {
+                logger.error('Failed to connect to Spot TV', { error });
+
                 this.setState({ validating: false });
-                this.props.onAddNotification('error', 'Something went wrong');
+
+                // In the wrong password case return back to join code entry.
+                if (error === 'not-authorized') {
+                    this.props.onAddNotification('error', 'Invalid share key');
+                } else if (error === 'unrecoverable-error') {
+                    this.props.onAddNotification('error', 'Something went wrong');
+                }
+
+                this.props.history.push(ROUTES.CODE);
             });
     }
 }
