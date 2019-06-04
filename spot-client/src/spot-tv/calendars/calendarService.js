@@ -27,6 +27,28 @@ const calendarIntegrations = {
  */
 export class CalendarService extends EventEmitter {
     /**
+     * @typedef {Object} Event
+     *
+     * @property {string} id - The unique identifier for the event.
+     * @property {string} end - The date string for when the event will end.
+     * @property {string} meetingUrl - The Jitsi-Meet URL on which the meeting
+     * will occur.
+     * @property {Array<string>} meetingUrlFields - Strings which may contain
+     * the meeting url.
+     * @property {Array<Participant>} participants - The participants invited
+     * confirmed to join the event.
+     * @property {string} start - The date string for when the event will being.
+     * @property {string} title - The name of the event.
+     */
+
+    /**
+     * @typedef {Object} Participant
+     *
+     * @property {email} string - The email address associate with the user
+     * attending the event.
+     */
+
+    /**
      * Initializes a new {@code CalendarService} instance.
      */
     constructor() {
@@ -53,7 +75,15 @@ export class CalendarService extends EventEmitter {
 
         this._calendarIntegration = calendarIntegrations[type];
 
+        /**
+         * A cache of previously fetched events. Used for diffing with any new
+         * fetch to determine if a calendar change notification should be
+         * emitted.
+         *
+         * @type {Array<Event>}
+         */
         this._calendarEvents = [];
+
         this._hasFetchedEvents = false;
 
         return this._calendarIntegration.initialize(this.config[type]);
@@ -187,9 +217,9 @@ export class CalendarService extends EventEmitter {
      * with a meetingUrl field that has a link to a valid Jitsi-Meet meeting,
      * if available.
      *
-     * @param {Array<Object>} events - The calendar events.
+     * @param {Array<Event>} events - The calendar events.
      * @private
-     * @returns {Array<Object>} The calendar events with meeting urls as a field.
+     * @returns {Array<Event>} The calendar events with meeting urls as a field.
      */
     _updateMeetingUrlOnEvents(events) {
         return events.map(event => {

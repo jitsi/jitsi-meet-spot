@@ -133,7 +133,7 @@ export default {
  * @param {Array<Object>} events - The calendar events to filter.
  * @param {string} calendarEmail - The email of the calendar configured to
  * display.
- * @returns {Array<Object>}
+ * @returns {Array<Event>}
  */
 function filterJoinableEvents(events = [], calendarEmail) {
     return events.map(event => {
@@ -162,7 +162,7 @@ function filterJoinableEvents(events = [], calendarEmail) {
  * @param {Array<Object>} attendees - All participants in the event.
  * @param {string} currentCalendar - The email of the calendar configured to
  * display.
- * @returns {Array<Object>}
+ * @returns {Array<Participant>}
  */
 function filterAttendees(attendees = [], currentCalendar) {
     const otherAttendees = attendees.filter(attendee =>

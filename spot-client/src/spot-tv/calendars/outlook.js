@@ -103,12 +103,10 @@ export default {
  * Converts the passed in events into a standard format.
  *
  * @param {Array<Object>} events - The calendar events from the GET for events.
- * @returns {Array<Object>}
+ * @returns {Array<Event>}
  */
 function filterJoinableEvents(events) {
     return events.map(event => {
-        console.warn('updateMeetingUrlOnEvents', event);
-
         return {
             end: event.end.dateTime,
             id: event.id,
@@ -130,7 +128,7 @@ function filterJoinableEvents(events) {
  * Formats the attendees into a standard format.
  *
  * @param {Array<Object>} attendees - All participants in the meeting.
- * @returns {Array<Object>}
+ * @returns {Array<Participant>}
  */
 function formatAttendees(attendees) {
     return attendees.map(attendee => {
