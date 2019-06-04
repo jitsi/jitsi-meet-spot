@@ -2,6 +2,7 @@
     color: var(--container-sub-content-font-color);
     justify-content: center;
     overflow: auto;
+    width: 100%;
 
     .setup-buttons {
         margin-top: 34px;
@@ -16,18 +17,13 @@
         overflow: auto;
     }
     
-    .setup-roomList {
+    .room-list {
         /**
          * Define a set height to prevent the room list from causing the modal
          * to resize frequently.
          */
         height: 300px;
         overflow: auto;
-    }
-    
-    .setup-step {
-        display: flex;
-        flex-direction: column;
     }
 
     .setup-title {
