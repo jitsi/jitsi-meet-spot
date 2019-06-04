@@ -1,14 +1,7 @@
 .spot-setup {
-    background-color: var(--container-bg-color);
-    border-radius: 25px;
     color: var(--container-sub-content-font-color);
-    height: auto;
     justify-content: center;
-    max-height: 100%;
     overflow: auto;
-    padding: 16px 32px;
-    width: 500px;
-    min-width: 50%;
 
     .setup-buttons {
         margin-top: 34px;
@@ -24,6 +17,11 @@
     }
     
     .setup-roomList {
+        /**
+         * Define a set height to prevent the room list from causing the modal
+         * to resize frequently.
+         */
+        height: 300px;
         overflow: auto;
     }
     
@@ -36,6 +34,17 @@
         font-size: $font-size-medium-plus;
         margin-bottom: 34px;
         text-align: center;
+    }
+}
+
+.room-selection {
+    background-color: var(--container-content-bg-color);
+    cursor: pointer;
+    margin: 10px 0;
+    padding: 10px;
+
+    &:hover {
+        background-color: var(--container-content-bg-color-no-opacity);
     }
 }
 
@@ -62,6 +71,7 @@
         overflow: hidden;
 
         .camera-preview {
+            max-width: 420px;
             position: relative;
 
             video {
@@ -142,7 +152,6 @@
     text-align: center;
 
     .cta {
-        margin: -5em 0 5em;
         text-align: center;
 
         .title {

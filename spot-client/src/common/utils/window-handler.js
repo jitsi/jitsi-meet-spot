@@ -32,7 +32,9 @@ export default {
      * @returns {string}
      */
     getHost() {
-        return window.location.hostname;
+        const url = new URL(window.location);
+
+        return url.host;
     },
 
     /**

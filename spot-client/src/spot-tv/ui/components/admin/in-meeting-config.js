@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { getMeetingOptions, setMeetingToolbarVisible } from 'common/app-state';
 import { logger } from 'common/logger';
 
+import AdminEntry from './admin-entry';
+
 /**
  * Changes some settings that determines the behavior of the Jitsi-Meet meeting.
  *
@@ -35,21 +37,16 @@ export class InMeetingConfig extends React.Component {
      */
     render() {
         return (
-            <div className = 'admin-container'>
-                <div className = 'admin-title'>
-                    Meeting toggles
-                </div>
-                <div>
-                    <label>
-                        <input
-                            checked = { this.props.showMeetingToolbar }
-                            name = 'meeting-toolbar'
-                            onChange = { this._onShowToolbarChange }
-                            type = 'checkbox' />
-                            Show toolbar
-                    </label>
-                </div>
-            </div>
+            <AdminEntry entryLabel = 'Meeting toggles'>
+                <label className = 'checkbox-with-label'>
+                    <input
+                        checked = { this.props.showMeetingToolbar }
+                        name = 'meeting-toolbar'
+                        onChange = { this._onShowToolbarChange }
+                        type = 'checkbox' />
+                        Show toolbar
+                </label>
+            </AdminEntry>
         );
     }
 

@@ -31,10 +31,5 @@ module.exports = {
     /**
      * The direct URL to visit to for a browser to act as a Spot-TV.
      */
-    SPOT_URL: `${TEST_SERVER_URL}/spot`,
-
-    /**
-     * The direct URL to visit to display the configuration for Spot-TV.
-     */
-    SPOT_TV_ADMIN_URL: `${TEST_SERVER_URL}/admin`
+    SPOT_URL: `${TEST_SERVER_URL}/spot`
 };

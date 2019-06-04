@@ -51,20 +51,18 @@ export class ScreenshareModal extends React.Component {
     render() {
         return (
             <Modal onClose = { this.props.onHideModal }>
-                <div className = 'share-select-view'>
-                    <ScreensharePicker
-                        onStartWiredScreenshare
-                            = { this.props.onStartWiredScreenshare }
-                        onStartWirelessScreenshare
-                            = { this.props.onStartWirelessScreenshare }
-                        onStopScreensharing
-                            = { this._onStopScreenshare }
-                        screensharingType = { this.props.screensharingType }
-                        wiredScreenshareEnabled
-                            = { this.props.wiredScreensharingEnabled }
-                        wirelessScreenshareEnabled
-                            = { this._isWirelessScreenshareSupported } />
-                </div>
+                <ScreensharePicker
+                    onStartWiredScreenshare
+                        = { this.props.onStartWiredScreenshare }
+                    onStartWirelessScreenshare
+                        = { this.props.onStartWirelessScreenshare }
+                    onStopScreensharing
+                        = { this._onStopScreenshare }
+                    screensharingType = { this.props.screensharingType }
+                    wiredScreenshareEnabled
+                        = { this.props.wiredScreensharingEnabled }
+                    wirelessScreenshareEnabled
+                        = { this._isWirelessScreenshareSupported } />
             </Modal>
         );
     }

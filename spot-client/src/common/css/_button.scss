@@ -16,17 +16,24 @@
     &.primary {
         background-color: var(--button-color);
         border: 1px solid var(--button-color);
-        text-transform: initial;
 
         &:hover {
             background-color: var(--button-active-color);
+        }
+    }
+    &.secondary {
+        background-color: transparent;
+        border: 1px solid var(--secondary-white);
+        color: var(--secondary-white);
+
+        &:hover {
+            background-color: var(--container-content-highlight-bg-color);
         }
     }
 
     &.subtle {
         border: 1px solid white;
         color: white;
-        text-transform: initial;
 
         &:hover {
             background-color: var(--container-content-highlight-bg-color);
@@ -36,7 +43,6 @@
     &.subtle-danger {
         border-color: red;
         color: red;
-        text-transform: initial;
 
         &:hover {
             background-color: lightcoral;
@@ -78,5 +84,13 @@
         svg {
             fill: var(--pending);
         }
+    }
+
+    & + & {
+        margin-left: 9px;
+    }
+
+    .button-label {
+        text-transform: capitalize;
     }
 }

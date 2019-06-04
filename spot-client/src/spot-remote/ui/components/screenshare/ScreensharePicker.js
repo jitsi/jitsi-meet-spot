@@ -2,10 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getAdvertisementAppName } from 'common/app-state';
+import {
+    getAdvertisementAppName,
+    getJoinCode,
+    getShareDomain
+} from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { Button } from 'common/ui';
-import { isDesktopBrowser } from 'common/utils';
+import { windowHandler } from 'common/utils';
 
 import { NavButton } from '../nav';
 
@@ -17,10 +21,12 @@ import { NavButton } from '../nav';
 export class ScreensharePicker extends React.Component {
     static propTypes = {
         advertisedAppName: PropTypes.string,
+        joinCode: PropTypes.string,
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
         screensharingType: PropTypes.string,
+        shareDomain: PropTypes.string,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
     }
@@ -278,10 +284,14 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderWirelessScreenshareNotSupported() {
-        const { advertisedAppName } = this.props;
-        const title = 'Sharing content is currently not supported on this '
-            + `${isDesktopBrowser() ? 'browser' : 'device'}. `
-            + 'To share please use Chrome on desktop.';
+        const { advertisedAppName, joinCode, shareDomain } = this.props;
+        const title = (
+            <span>
+                To share, use Chrome desktop and go to <span className = 'share-url'>
+                    { `${shareDomain || windowHandler.getHost()}/${joinCode}` }
+                </span>
+            </span>
+        );
         const advertisement = this.props.advertisedAppName && (
             <div>
                 or
@@ -321,7 +331,9 @@ export class ScreensharePicker extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        advertisedAppName: getAdvertisementAppName(state)
+        advertisedAppName: getAdvertisementAppName(state),
+        joinCode: getJoinCode(state),
+        shareDomain: getShareDomain(state)
     };
 }
 

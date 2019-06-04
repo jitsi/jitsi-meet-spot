@@ -1,10 +1,9 @@
-const constants = require('../constants');
 const PageObject = require('./page-object');
 
 const ADMIN_VIEW = '[data-qa-id=admin-view]';
 const DEVICE_SELECTION_START_BUTTON = '[data-qa-id=device-selection-button]';
 const DEVICE_SELECTION_SUBMIT_BUTTON = '[data-qa-id=device-selection-submit]';
-const EXIT_BUTTON = '[data-qa-id=admin-exit]';
+const EXIT_BUTTON = '[data-qa-id=modal-close]';
 const SCREENSHARE_SELECTOR = '[data-qa-id=screenshare]';
 
 /**
@@ -64,16 +63,6 @@ class AdminPage extends PageObject {
             = this.waitForElementDisplayed(DEVICE_SELECTION_SUBMIT_BUTTON);
 
         submitButton.click();
-    }
-
-    /**
-     * Proceeds directly to the admin view of a Spot-TV.
-     *
-     * @returns {void}
-     */
-    visit() {
-        this.driver.url(constants.SPOT_TV_ADMIN_URL);
-        this.waitForVisible();
     }
 }
 

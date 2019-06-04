@@ -13,7 +13,6 @@ import {
 } from 'common/ui';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
-    Admin,
     Home,
     Meeting,
     OutlookOauth,
@@ -52,7 +51,6 @@ export class App extends React.Component {
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onTouchStart = this._onTouchStart.bind(this);
 
-        this._renderAdminView = this._renderAdminView.bind(this);
         this._renderHomeView = this._renderHomeView.bind(this);
         this._renderMeetingView = this._renderMeetingView.bind(this);
         this._renderSetupView = this._renderSetupView.bind(this);
@@ -128,9 +126,6 @@ export class App extends React.Component {
                                  * Spot-TV specific routes.
                                  */
                             }
-                            <SpotTvRestrictedRoute
-                                path = { ROUTES.ADMIN }
-                                render = { this._renderAdminView } />
                             <SpotTvRestrictedRoute
                                 path = { ROUTES.MEETING }
                                 render = { this._renderMeetingView } />
@@ -211,16 +206,6 @@ export class App extends React.Component {
      */
     _onTouchStart() {
         /** no-op */
-    }
-
-    /**
-     * Returns the Spot TV admin view.
-     *
-     * @private
-     * @returns {ReactComponent}
-     */
-    _renderAdminView() {
-        return this._renderSpotViewWithRemoteControl(Admin, 'admin');
     }
 
     /**
