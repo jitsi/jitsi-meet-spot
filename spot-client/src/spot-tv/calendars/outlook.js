@@ -1,9 +1,7 @@
 import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
-import { isValidMeetingUrl } from 'common/utils';
 
-import { getMeetingUrl } from './event-parsers';
 import { microsoftClientApi } from './microsoft-client-api';
 
 /**
@@ -19,8 +17,6 @@ export default {
      * @returns {Promise}
      */
     initialize(config) {
-        this.config = config;
-
         return microsoftClientApi.initialize({
             clientId: config.CLIENT_ID,
             scopes: [
@@ -65,8 +61,7 @@ export default {
 
                 return Promise.reject(formattedError);
             })
-            .then(events =>
-                filterJoinableEvents(events, this.config.knownDomains));
+            .then(events => filterJoinableEvents(events));
     },
 
     /**
@@ -108,30 +103,25 @@ export default {
  * Converts the passed in events into a standard format.
  *
  * @param {Array<Object>} events - The calendar events from the GET for events.
- * @param {Array<string>} knownDomains - Whitelist of domains which can be used
- * as meeting links.
  * @returns {Array<Object>}
  */
-function filterJoinableEvents(events, knownDomains) {
+function filterJoinableEvents(events) {
     return events.map(event => {
-        const { attendees, end, id, location, start, subject } = event;
-        const meetingUrl = getMeetingUrl([
-            event.onlineMeetingUrl,
-            event.bodyPreview,
-            location.displayName,
-            event.subject,
-            event.webLink
-        ], knownDomains);
+        console.warn('updateMeetingUrlOnEvents', event);
 
         return {
-            end: end.dateTime,
-            id,
-
-            // TODO: vet where the meeting URL is located in the payload
-            meetingUrl: isValidMeetingUrl(meetingUrl) ? meetingUrl : null,
-            participants: formatAttendees(attendees),
-            start: start.dateTime,
-            title: subject
+            end: event.end.dateTime,
+            id: event.id,
+            meetingUrlFields: [
+                event.onlineMeetingUrl,
+                event.bodyPreview,
+                event.location.displayName,
+                event.subject,
+                event.webLink
+            ],
+            participants: formatAttendees(event.attendees),
+            start: event.start.dateTime,
+            title: event.subject
         };
     });
 }

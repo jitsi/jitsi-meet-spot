@@ -7,6 +7,8 @@ import google from './google';
 import outlook from './outlook';
 import { hasUpdatedEvents } from './utils';
 
+import { getMeetingUrl } from './event-parsers';
+
 /**
  * A mapping of a {@code calendarTypes} enum with its associated calendar
  * integration implementation.
@@ -54,10 +56,7 @@ export class CalendarService extends EventEmitter {
         this._calendarEvents = [];
         this._hasFetchedEvents = false;
 
-        return this._calendarIntegration.initialize({
-            ...this.config[type],
-            knownDomains: this.knownDomains
-        });
+        return this._calendarIntegration.initialize(this.config[type]);
     }
 
     /**
@@ -154,7 +153,9 @@ export class CalendarService extends EventEmitter {
      */
     _pollForEvents(options) {
         this.getCalendar(options)
-            .then(events => {
+            .then(formattedEvents => {
+                const events = this._updateMeetingUrlOnEvents(formattedEvents);
+
                 if (!this._hasFetchedEvents
                     || hasUpdatedEvents(this._calendarEvents, events)) {
                     this._hasFetchedEvents = true;
@@ -179,6 +180,28 @@ export class CalendarService extends EventEmitter {
                     1000 * 60 * 5 // Try again in 5 minutes
                 );
             });
+    }
+
+    /**
+     * Modifies the passed in events by replacing the meetingUrlFields field
+     * with a meetingUrl field that has a link to a valid Jitsi-Meet meeting,
+     * if available.
+     *
+     * @param {Array<Object>} events - The calendar events.
+     * @private
+     * @returns {Array<Object>} The calendar events with meeting urls as a field.
+     */
+    _updateMeetingUrlOnEvents(events) {
+        return events.map(event => {
+            const fieldsToSearch = event.meetingUrlFields;
+
+            delete event.meetingUrlFields;
+
+            return {
+                ...event,
+                meetingUrl: getMeetingUrl(fieldsToSearch, this.knownDomains)
+            };
+        });
     }
 }
 
