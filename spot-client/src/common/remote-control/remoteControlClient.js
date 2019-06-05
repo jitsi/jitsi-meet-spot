@@ -116,7 +116,9 @@ export class RemoteControlClient extends BaseRemoteControlService {
             });
         }
 
-        return Promise.reject(`Invalid code: ${code}`);
+        // The 'not-authorized' error is returned by the server if the code is wrong.
+        // Return the same error if it's known that the code is invalid before submitting to the server.
+        return Promise.reject('not-authorized');
     }
 
     /**
