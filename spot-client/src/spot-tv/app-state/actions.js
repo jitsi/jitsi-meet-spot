@@ -147,7 +147,6 @@ function createConnection(state) {
 
     return getJoinCodePromise
         .then(joinCode => remoteControlServer.connect({
-            autoReconnect: true,
             joinAsSpot: true,
 
             // FIXME join code refresh is disabled with the backend as the first step,
