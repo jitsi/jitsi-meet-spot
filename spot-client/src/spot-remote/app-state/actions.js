@@ -95,7 +95,6 @@ export function connectToSpotTV(joinCode, shareMode) {
         const state = getState();
 
         return remoteControlClient.connect({
-            autoReconnect: true,
             joinCode,
             joinCodeServiceUrl: getSpotServicesConfig(state).joinCodeServiceUrl,
             serverConfig: getRemoteControlServerConfig(state)

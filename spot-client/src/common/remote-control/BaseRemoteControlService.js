@@ -130,9 +130,7 @@ export class BaseRemoteControlService extends EventEmitter {
             return;
         }
 
-        if (this._options.autoReconnect) {
-            this._reconnect();
-        }
+        this._reconnect();
     }
 
     /**
