@@ -253,7 +253,7 @@ export class JoinCodeEntry extends React.Component {
                 // In the wrong password case return back to join code entry.
                 if (error === 'not-authorized') {
                     this.props.onAddNotification('error', 'Invalid share key');
-                } else if (error === 'unrecoverable-error') {
+                } else {
                     this.props.onAddNotification('error', 'Something went wrong');
                 }
 
