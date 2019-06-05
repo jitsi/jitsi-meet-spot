@@ -42,7 +42,7 @@
         "jest": "24.7.1",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "jquery": "3.4.0",
-        "js-utils": "github:jitsi/js-utils#73a67a7a60d52f8e895f50939c8fcbd1f20fe7b5",
+        "js-utils": "github:jitsi/js-utils#4bab5934ff261d5b9c8593e11a2a169e54ffddee",
         "jsdoc": "3.5.5",
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#86e3badd5c04e1df72435205d28a58c8a64e343a",

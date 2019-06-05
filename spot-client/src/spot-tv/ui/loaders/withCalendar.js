@@ -6,6 +6,7 @@ import {
     getCalendarEmail,
     getCalendarType,
     getJwt,
+    getMeetingDomainsWhitelist,
     isSetupComplete,
     setCalendarEvents,
     setCalendarError
@@ -96,7 +97,10 @@ export class CalendarLoader extends AbstractLoader {
      * @override
      */
     _loadService() {
-        calendarService.setConfig(this.props.calendarConfig);
+        calendarService.setConfig(
+            this.props.calendarConfig,
+            this.props.meetingsDomainsWhitelist
+        );
 
         return calendarService.initialize(this.props.calendarType)
             .then(() => {
@@ -148,7 +152,8 @@ function mapStateToProps(state) {
         calendarEmail: getCalendarEmail(state),
         calendarType: getCalendarType(state),
         isSetupComplete: isSetupComplete(state),
-        jwt: getJwt(state)
+        jwt: getJwt(state),
+        meetingsDomainsWhitelist: getMeetingDomainsWhitelist(state)
     };
 }
 

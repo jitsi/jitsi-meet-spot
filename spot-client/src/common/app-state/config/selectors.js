@@ -100,6 +100,17 @@ export function getLoggingEndpoint(state) {
 }
 
 /**
+ * A selector which gets the list of meeting domains that are known to support
+ * meetings on Jitsi-Meet deployments.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getMeetingDomainsWhitelist(state) {
+    return state.config.MEETING_DOMAINS_WHITELIST;
+}
+
+/**
 * A selector which returns XMPP configuration information for creating XMPP
 * connections and joining MUCs.
 *

@@ -2,9 +2,7 @@
 
 import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
-import { date, isValidMeetingUrl } from 'common/utils';
-
-import { getMeetingUrl } from './event-parsers';
+import { date } from 'common/utils';
 
 let initPromise;
 
@@ -76,7 +74,8 @@ export default {
 
                 return Promise.reject(formattedError);
             })
-            .then(events => filterJoinableEvents(events, email));
+            .then(events =>
+                filterJoinableEvents(events, email));
     },
 
     /**
@@ -134,20 +133,24 @@ export default {
  * @param {Array<Object>} events - The calendar events to filter.
  * @param {string} calendarEmail - The email of the calendar configured to
  * display.
- * @returns {Array<Object>}
+ * @returns {Array<Event>}
  */
 function filterJoinableEvents(events = [], calendarEmail) {
     return events.map(event => {
-        const { attendees, location, end, id, start, summary } = event;
-        const meetingUrl = getMeetingUrl(location);
-
         return {
-            end: end.dateTime,
-            id,
-            meetingUrl: isValidMeetingUrl(meetingUrl) ? meetingUrl : null,
-            participants: filterAttendees(attendees, calendarEmail),
-            start: start.dateTime,
-            title: summary
+            end: event.end.dateTime,
+            id: event.id,
+            meetingUrlFields: [
+                event.title,
+                event.url,
+                event.location,
+                event.summary,
+                event.notes,
+                event.description
+            ],
+            participants: filterAttendees(event.attendees, calendarEmail),
+            start: event.start.dateTime,
+            title: event.summary
         };
     });
 }
@@ -159,7 +162,7 @@ function filterJoinableEvents(events = [], calendarEmail) {
  * @param {Array<Object>} attendees - All participants in the event.
  * @param {string} currentCalendar - The email of the calendar configured to
  * display.
- * @returns {Array<Object>}
+ * @returns {Array<Participant>}
  */
 function filterAttendees(attendees = [], currentCalendar) {
     const otherAttendees = attendees.filter(attendee =>

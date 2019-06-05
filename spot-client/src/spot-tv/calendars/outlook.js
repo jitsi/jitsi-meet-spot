@@ -1,9 +1,7 @@
 import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
-import { isValidMeetingUrl } from 'common/utils';
 
-import { getMeetingUrl } from './event-parsers';
 import { microsoftClientApi } from './microsoft-client-api';
 
 /**
@@ -63,7 +61,7 @@ export default {
 
                 return Promise.reject(formattedError);
             })
-            .then(events => filterJoinableEvents(events, email));
+            .then(events => filterJoinableEvents(events));
     },
 
     /**
@@ -105,22 +103,23 @@ export default {
  * Converts the passed in events into a standard format.
  *
  * @param {Array<Object>} events - The calendar events from the GET for events.
- * @returns {Array<Object>}
+ * @returns {Array<Event>}
  */
 function filterJoinableEvents(events) {
     return events.map(event => {
-        const { attendees, end, id, location, start, subject } = event;
-        const meetingUrl = getMeetingUrl(location.displayName);
-
         return {
-            end: end.dateTime,
-            id,
-
-            // TODO: vet where the meeting URL is located in the payload
-            meetingUrl: isValidMeetingUrl(meetingUrl) ? meetingUrl : null,
-            participants: formatAttendees(attendees),
-            start: start.dateTime,
-            title: subject
+            end: event.end.dateTime,
+            id: event.id,
+            meetingUrlFields: [
+                event.onlineMeetingUrl,
+                event.bodyPreview,
+                event.location.displayName,
+                event.subject,
+                event.webLink
+            ],
+            participants: formatAttendees(event.attendees),
+            start: event.start.dateTime,
+            title: event.subject
         };
     });
 }
@@ -129,7 +128,7 @@ function filterJoinableEvents(events) {
  * Formats the attendees into a standard format.
  *
  * @param {Array<Object>} attendees - All participants in the meeting.
- * @returns {Array<Object>}
+ * @returns {Array<Participant>}
  */
 function formatAttendees(attendees) {
     return attendees.map(attendee => {

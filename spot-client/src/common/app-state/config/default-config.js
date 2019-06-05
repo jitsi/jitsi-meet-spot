@@ -40,6 +40,11 @@ export default {
         SS_MIN_FPS: process.env.SS_MIN_FPS || 5
     },
 
+    MEETING_DOMAINS_WHITELIST: [
+        'beta.meet.jit.si',
+        'meet.jit.si'
+    ],
+
     MODE_DOMAINS: {
         SHARE: process.env.SHARE_DOMAIN
     },
