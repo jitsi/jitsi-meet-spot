@@ -1,5 +1,4 @@
-import EventEmitter from 'events';
-
+import { Emitter } from 'common/emitter';
 import { avUtils } from 'common/media';
 
 /**
@@ -7,9 +6,9 @@ import { avUtils } from 'common/media';
  * automatically destroyed if getUserMedia finishes after the model is
  * destroyed.
  *
- * @extends EventEmitter
+ * @extends Emitter
  */
-export default class PreviewTrack extends EventEmitter {
+export default class PreviewTrack extends Emitter {
     _createPromise = null;
 
     _destroyed = false;

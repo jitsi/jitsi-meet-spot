@@ -1,7 +1,5 @@
-import EventEmitter from 'events';
-
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
-
 import { avUtils } from 'common/media';
 
 const VIDEO_CHANGE_DETECTED = 'VIDEO_CHANGE_DETECTED';
@@ -19,7 +17,7 @@ const ELEMENT_WIDTH = 320;
  * wired screenshare input will emit a static frame when in an idle state and
  * that frame changes when a device is connected.
  */
-export default class VideoChangeListener extends EventEmitter {
+export default class VideoChangeListener extends Emitter {
     /**
      * Initializes a new {@code VideoChangeListener} instance.
      *

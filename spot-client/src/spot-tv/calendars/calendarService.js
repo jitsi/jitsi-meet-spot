@@ -1,5 +1,5 @@
-import EventEmitter from 'events';
 import { calendarTypes } from 'common/app-state';
+import { Emitter } from 'common/emitter';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';
@@ -25,7 +25,7 @@ const calendarIntegrations = {
 /**
  * The interface for interacting with a calendar integration.
  */
-export class CalendarService extends EventEmitter {
+export class CalendarService extends Emitter {
     /**
      * @typedef {Object} Event
      *
