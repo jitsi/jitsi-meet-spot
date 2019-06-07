@@ -1,13 +1,13 @@
 import {
     SPOT_TV_CLEAR_STATE,
-    SPOT_TV_SET_JOIN_CODE,
+    SPOT_TV_SET_REMOTE_JOIN_CODE,
     SPOT_TV_SET_STATE
 } from './action-types';
 
 const DEFAULT_STATE = {
     audioMuted: true,
     inMeeting: undefined,
-    joinCode: undefined,
+    remoteJoinCode: undefined,
     screensharingType: undefined,
     spotId: null,
     videoMuted: true,
@@ -32,10 +32,10 @@ const spotTv = (state = DEFAULT_STATE, action) => {
     case SPOT_TV_CLEAR_STATE:
         return DEFAULT_STATE;
 
-    case SPOT_TV_SET_JOIN_CODE:
+    case SPOT_TV_SET_REMOTE_JOIN_CODE:
         return {
             ...state,
-            joinCode: action.joinCode
+            remoteJoinCode: action.remoteJoinCode
         };
 
     case SPOT_TV_SET_STATE:

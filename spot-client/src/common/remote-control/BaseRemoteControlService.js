@@ -105,8 +105,7 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
-     * Returns the current join code that is necessary to establish a connection
-     * to a Spot-TV.
+     * Returns the current join code that is necessary to establish a connection with the service.
      *
      * @abstract
      * @returns {string}

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getJoinCode } from 'common/app-state';
+import { getRemoteJoinCode } from 'common/app-state';
 import { windowHandler } from 'common/utils';
 
 /**
@@ -12,7 +12,7 @@ import { windowHandler } from 'common/utils';
  */
 class JoinInfo extends React.Component {
     static propTypes = {
-        joinCode: PropTypes.string
+        remoteJoinCode: PropTypes.string
     };
 
     /**
@@ -33,9 +33,9 @@ class JoinInfo extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { joinCode } = this.props;
+        const { remoteJoinCode } = this.props;
 
-        if (!joinCode) {
+        if (!remoteJoinCode) {
             return null;
         }
 
@@ -46,7 +46,7 @@ class JoinInfo extends React.Component {
                 <span
                     className = 'info-code'
                     data-qa-id = 'info-code'>
-                    { this.props.joinCode.toUpperCase() }
+                    { this.props.remoteJoinCode.toUpperCase() }
                 </span>
             </div>
         );
@@ -59,7 +59,7 @@ class JoinInfo extends React.Component {
      * @returns {string}
      */
     _getSpotRemoteConnectUrl() {
-        return `${windowHandler.getBaseUrl()}/${this.props.joinCode.toUpperCase()}`;
+        return `${windowHandler.getBaseUrl()}/${this.props.remoteJoinCode.toUpperCase()}`;
     }
 
     /**
@@ -83,7 +83,7 @@ class JoinInfo extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        joinCode: getJoinCode(state)
+        remoteJoinCode: getRemoteJoinCode(state)
     };
 }
 

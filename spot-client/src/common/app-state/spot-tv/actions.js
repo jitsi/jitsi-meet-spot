@@ -1,6 +1,6 @@
 import {
     SPOT_TV_CLEAR_STATE,
-    SPOT_TV_SET_JOIN_CODE,
+    SPOT_TV_SET_REMOTE_JOIN_CODE,
     SPOT_TV_SET_STATE
 } from './action-types';
 
@@ -18,14 +18,14 @@ export function clearSpotTVState() {
 /**
 * Updates the known join code for connecting a Spot-Remote to a Spot-TV.
 *
-* @param {string} joinCode - The string necessary for a Spot-Remote to
+* @param {string} remoteJoinCode - The string necessary for a Spot-Remote to
 * connect to a Spot-TV.
 * @returns {Object}
 */
-export function setJoinCode(joinCode) {
+export function setRemoteJoinCode(remoteJoinCode) {
     return {
-        type: SPOT_TV_SET_JOIN_CODE,
-        joinCode
+        type: SPOT_TV_SET_REMOTE_JOIN_CODE,
+        remoteJoinCode
     };
 }
 

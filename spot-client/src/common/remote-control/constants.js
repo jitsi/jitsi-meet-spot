@@ -111,12 +111,6 @@ export const MESSAGES = {
 
 export const SERVICE_UPDATES = {
     /**
-     * An update to the room join code, triggered locally, has been successfully
-     * completed.
-     */
-    JOIN_CODE_CHANGE: 'join-code-change',
-
-    /**
      * A command from a {@code RemoteControlClient} has been received.
      */
     CLIENT_MESSAGE_RECEIVED: 'message-received',
@@ -126,6 +120,12 @@ export const SERVICE_UPDATES = {
      * reconnection flow.
      */
     RECONNECT_UPDATE: 'reconnect-update',
+
+    /**
+     * An update to the room join code, triggered locally, has been successfully
+     * completed.
+     */
+    REMOTE_JOIN_CODE_CHANGE: 'remote-join-code-change',
 
     /**
      * The {@code RemoteControlClient} has received an updated state for the

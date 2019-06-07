@@ -129,7 +129,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @override
      */
     getJoinCode() {
-        return (this._lastSpotState && this._lastSpotState.joinCode)
+        return (this._lastSpotState && this._lastSpotState.remoteJoinCode)
             || this._options.joinCode;
     }
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getJoinCode, getUltrasoundConfig } from 'common/app-state';
+import { getRemoteJoinCode, getUltrasoundConfig } from 'common/app-state';
 import { logger } from 'common/logger';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
@@ -15,7 +15,7 @@ import { ultrasoundService } from './../../ultrasound';
  */
 class WithUltrasound extends AbstractLoader {
     static propTypes = {
-        joinCode: PropTypes.string
+        remoteJoinCode: PropTypes.string
     };
 
     /**
@@ -34,8 +34,8 @@ class WithUltrasound extends AbstractLoader {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        if (this.props.joinCode !== prevProps.joinCode) {
-            this._setUltrasoundMessage(this.props.joinCode);
+        if (this.props.remoteJoinCode !== prevProps.remoteJoinCode) {
+            this._setUltrasoundMessage(this.props.remoteJoinCode);
         }
     }
 
@@ -73,7 +73,7 @@ class WithUltrasound extends AbstractLoader {
         return ultrasoundService.initialize(
             this.props.emscriptenPath,
             this.props.memoryInitializerPath)
-            .then(() => this._setUltrasoundMessage(this.props.joinCode))
+            .then(() => this._setUltrasoundMessage(this.props.remoteJoinCode))
             .catch(() => logger.error(
                 'Failed to initialize ultrasound. Continuing without.'));
     }
@@ -127,8 +127,8 @@ function mapStateToProps(state) {
     return {
         emscriptenPath: EMSCRIPTEN_PATH,
         envRegex: SUPPORTED_ENV_REGEX,
-        joinCode: getJoinCode(state),
-        memoryInitializerPath: MEM_INITIALIZER_PATH
+        memoryInitializerPath: MEM_INITIALIZER_PATH,
+        remoteJoinCode: getRemoteJoinCode(state)
     };
 }
 
