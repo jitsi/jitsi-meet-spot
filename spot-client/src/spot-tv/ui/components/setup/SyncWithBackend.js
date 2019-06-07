@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { addNotification } from 'common/app-state';
 import { CodeInput } from 'common/ui';
+import { logger } from 'common/logger';
+
+import { createSpotTVRemoteControlConnection } from '../../../app-state';
 
 /**
  * Displays the setup step for Spot-TV to enter a code to create a connection
@@ -61,7 +65,16 @@ export class SyncWithBackend extends React.Component {
      */
     _onChange(value) {
         if (value.length === 6) {
-            this.props.onSuccess();
+            this.props.dispatch(createSpotTVRemoteControlConnection({
+                pairingCode: value,
+                retry: false
+            }))
+                .then(
+                    this.props.onSuccess,
+                    error => {
+                        logger.error('connectSpotTvToBackend failed', { error });
+                        this.props.dispatch(addNotification('error', 'Something went wrong'));
+                    });
         }
     }
 }

@@ -1,11 +1,12 @@
 import {
     clearSpotTVState,
-    getSpotServicesConfig,
     getRemoteControlServerConfig,
+    getSpotServicesConfig,
     setCalendarEvents,
     setReconnectState,
     setSpotTVState
 } from 'common/app-state';
+import { isBackendEnabled, SpotBackendService } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
@@ -93,10 +94,18 @@ export function connectToSpotTV(joinCode, shareMode) {
         });
 
         const state = getState();
+        const backend
+            = isBackendEnabled(state)
+                ? new SpotBackendService(getSpotServicesConfig(state))
+                : null;
+
+        logger.log('Spot Remote attempting connection', {
+            backend: Boolean(backend)
+        });
 
         return remoteControlClient.connect({
             joinCode,
-            joinCodeServiceUrl: getSpotServicesConfig(state).joinCodeServiceUrl,
+            backend,
             serverConfig: getRemoteControlServerConfig(state)
         }).then(() => {
             dispatch({

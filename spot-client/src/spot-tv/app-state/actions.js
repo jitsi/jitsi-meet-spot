@@ -7,8 +7,7 @@ import {
     setJwt,
     setReconnectState
 } from 'common/app-state';
-
-import { registerDevice } from 'common/backend';
+import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
 import {
@@ -16,17 +15,26 @@ import {
     remoteControlServer
 } from 'common/remote-control';
 
+import {
+    setPermanentPairingCode,
+    SpotTvBackendService
+} from '../backend';
+
 /**
  * Establishes a connection to an existing Spot-MUC using the provided join code.
  *
+ * @param {string} [pairingCode] - A permanent pairing code to be used only with the backend integration where Spot TV
+ * needs a code in order to connect. Without the backend a Spot TV chooses a random code on it's own and sets it as
+ * a MUC lock.
+ * @param {boolean} retry - Whether the connection should be retried in case it fails initially. Without this option
+ * the remote control service should still reconnect after the first attempt succeeds and if later the connection is
+ * lost due to network issues.
  * @returns {Object}
  */
-export function createSpotTVRemoteControlConnection() {
+export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
     return (dispatch, getState) => {
         if (remoteControlServer.hasConnection()) {
-            logger.warn('Called to create connection while connection exists');
-
-            return;
+            return Promise.reject('Called to create connection while connection exists');
         }
 
         /**
@@ -37,23 +45,29 @@ export function createSpotTVRemoteControlConnection() {
          * connection.
          * @returns {void}
          */
-        function onSuccessfulConnect({ remoteJoinCode, jwt }) {
+        function onSuccessfulConnect({ remoteJoinCode, jwt, permanentPairingCode }) {
             dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
+            dispatch(setPermanentPairingCode(permanentPairingCode));
         }
 
         /**
          * Callback invoked when {@code remoteControlServer} has been
-         * disconnected from an unrecoverable error. Tries to reconnect.
+         * disconnected from an unrecoverable error.
          *
+         * @param {Error|string} error - The error returned by the {@code remoteControlServer}.
          * @private
-         * @returns {void}
+         * @returns {Promise}
          */
-        function onDisconnect() {
-            logger.error(
-                'Spot-TV disconnected from the remote control server.');
+        function onDisconnect(error) {
+            logger.error('Spot-TV disconnected from the remote control server.', { error });
             dispatch(setRemoteJoinCode(''));
-            doConnect();
+
+            if (retry) {
+                doConnect();
+            } else {
+                throw error;
+            }
         }
 
         /**
@@ -89,7 +103,7 @@ export function createSpotTVRemoteControlConnection() {
         function doConnect() {
             return createAsyncActionWithStates(
                 dispatch,
-                () => createConnection(getState()),
+                () => createConnection(getState(), pairingCode),
                 CREATE_CONNECTION
             ).then(onSuccessfulConnect)
             .catch(onDisconnect);
@@ -117,49 +131,39 @@ export function createSpotTVRemoteControlConnection() {
  * to be consumed by a Spot-TV client.
  *
  * @param {Object} state - The Redux state.
+ * @param {string} [permanentPairingCode] - This one is optional and used only in the backend scenario where Spot TV
+ * needs a permanent pairing code in order to connect to the service.
  * @returns {Promise<Object>} Resolves with an object containing the latest
  * join code and jwt.
  */
-function createConnection(state) {
-    const {
-        adminServiceUrl,
-        joinCodeServiceUrl
-    } = getSpotServicesConfig(state);
+function createConnection(state, permanentPairingCode) {
     const joinCodeRefreshRate = getJoinCodeRefreshRate(state);
     const remoteControlConfiguration = getRemoteControlServerConfig(state);
+    const backend
+        = isBackendEnabled(state)
+            ? new SpotTvBackendService(getSpotServicesConfig(state))
+            : null;
 
-    let finalJoinCode, finalJwt;
+    logger.log('Spot TV attempting connection', {
+        backend: Boolean(backend),
+        permanentPairingCode: Boolean(permanentPairingCode)
+    });
 
-    // FIXME 'registerDevice' should be retried forever because abstract loader
-    // no longer does that
-    const getJoinCodePromise = adminServiceUrl
-        ? registerDevice(adminServiceUrl)
-            .then(json => {
-                const { joinCode, jwt } = json;
+    if (backend && !permanentPairingCode) {
+        return Promise.reject('The pairing code is required when the backend is enabled');
+    }
 
-                finalJwt = jwt;
-
-                return joinCode;
-            })
-        : Promise.resolve();
-
-    logger.log('Attempting connection', { adminServiceUrl });
-
-    return getJoinCodePromise
-        .then(joinCode => remoteControlServer.connect({
-            joinAsSpot: true,
-
-            // FIXME join code refresh is disabled with the backend as the first step,
-            // because there's no password set on the room and the JWT is used instead.
-            joinCodeRefreshRate: !adminServiceUrl && joinCodeRefreshRate,
-            joinCodeServiceUrl,
-            joinCode,
-            serverConfig: remoteControlConfiguration
-        }))
-        .then(() => {
-            return {
-                remoteJoinCode: finalJoinCode || remoteControlServer.getRemoteJoinCode(),
-                jwt: finalJwt
-            };
-        });
+    return remoteControlServer.connect({
+        backend,
+        joinAsSpot: true,
+        joinCodeRefreshRate,
+        joinCode: permanentPairingCode,
+        serverConfig: remoteControlConfiguration
+    }).then(() => {
+        return {
+            permanentPairingCode,
+            remoteJoinCode: remoteControlServer.getRemoteJoinCode(),
+            jwt: backend ? backend.getJwt() : undefined
+        };
+    });
 }
