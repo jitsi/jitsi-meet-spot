@@ -1,5 +1,4 @@
 import { logger } from 'common/logger';
-import { getDeviceId } from 'common/utils/device-id';
 import { getJitterDelay } from 'common/utils/retry';
 
 /**
@@ -120,60 +119,163 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
 }
 
 /**
- * @typedef {Object} DeviceInfo
- * @property {string} joinCode
- * @property {string} jwt
+ * @typedef {Object} RemotePairingInfo - the short lived paring code.
+ * @property {Date} emitted - When the code has been emitted.
+ * @property {number} expiresIn - In how many milliseconds the code will expire.
+ * @property {string} remotePairingCode - A short lived remote pairing code to be used by Spot Remotes which connect
+ * only temporarily.
  */
 /**
- * Contacts the backend service in order to get the join code assigned to this device.
+ * Obtains a short lived paring code to be used by Spot Remotes which do not stay connected to Spot TV for long periods
+ * of time.
+ *
+ * @param {string} serviceEndpointUrl - The URL pointing to the backend endpoint which provides short lived pairing
+ * codes.
+ * @param {string} jwt - The access token used to authenticated with the service.
+ * @returns {Promise<RemotePairingInfo>}
+ */
+export function getRemotePairingCode(serviceEndpointUrl, jwt) {
+    if (!jwt) {
+        return Promise.reject('The JWT is required');
+    }
+
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors'
+    };
+
+    requestOptions.headers = new Headers({
+        'content-type': 'application/json; charset=UTF-8',
+        authorization: `Bearer ${jwt}`,
+        accept: 'application/json'
+    });
+
+    return fetchWithRetry({
+        operationName: 'get remote pairing code',
+        requestOptions,
+        url: serviceEndpointUrl
+    }).then(json => {
+        const { emitted, expiresIn, code } = json;
+
+        if (!emitted) {
+            throw new Error('No "emitted" in the response');
+        } else if (!expiresIn) {
+            throw new Error('No "expiresIn" in the response');
+        } else if (!code) {
+            throw new Error('No "code" in the response');
+        }
+
+        return {
+            emitted,
+            expiresIn,
+            code
+        };
+    });
+}
+
+/**
+ * @typedef {Object} SpotRegistration
+ * @property {string} accessToken - The authorization token to be used by a Spot TV
+ * instance for accessing other services.
+ * @property {Date} emitted - The date when the token has been emitted.
+ * @property {number} expiresIn - The amount of seconds (milliseconds?) after which the token will
+ * expire.
+ * @property {string} [refreshToken] - The token used to refresh the authorization. Present only in
+ * a permanent type of pairing.
+ *
+ * Example response:
+ *
+ * {
+ *  "accessToken": "string",
+ *  "emitted": "2019-05-28T18:02:31.576Z",
+ *  "expiresIn": 0,
+ *  "refreshToken": "string"
+ * }
+ */
+/**
+ * Authenticates with the backend service.
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the service.
- * @returns {Promise<DeviceInfo>}
+ * @param {string} pairingCode - The pairing code to be used to connect Spot TV and Spot Remote through the pairing
+ * service.
+ * @returns {Promise<SpotRegistration>}
  */
-export function registerDevice(serviceEndpointUrl) {
+export function registerDevice(serviceEndpointUrl, pairingCode) {
     const requestOptions = {
         headers: {
             'content-type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify({
-            deviceId: getDeviceId()
+            pairingCode
         }),
-        method: 'POST',
+        method: 'PUT',
         mode: 'cors'
     };
 
     return fetchWithRetry({
-        operationName: 'fetch the join code',
+        operationName: 'pair device',
         requestOptions,
         url: serviceEndpointUrl
     })
         .then(json => {
-            if (!json.remoteJoinCode) {
-                throw new Error(`No 'joinCode' in the response: ${JSON.stringify(json)}`);
+            const {
+                accessToken,
+                emitted,
+                expiresIn,
+                refreshToken
+            } = json;
+
+            if (!accessToken) {
+                throw new Error('No "accessToken" field in the response');
+            } else if (!emitted) {
+                throw new Error('No "emitted" field in the response');
+            } else if (!expiresIn) {
+                throw new Error('No "expiresIn" field in the response');
             }
 
             return {
-                remoteJoinCode: json.remoteJoinCode,
-                jwt: json.jwt
+                accessToken,
+                emitted,
+                expiresIn,
+                refreshToken
             };
         });
 }
 
 /**
- * @typedef {Object} SpotRoomInfo
- * @property {string} roomName - the name of the MUC room assigned for the Spot's join code which
+ * @typedef {Object} BackendRoomInfo
+ * @property {string} mucUrl - the name of the MUC room assigned for the Spot's join code which
  * tells where both Spot TV and Spot Remote have to go in order to establish the connection.
+ * @property {string} name - The Spot room's display name.
+ *
+ * {
+ *   "calendarAccountId": "string",
+ *   "customerId": "string",
+ *   "id": "string",
+ *   "location": "string",
+ *   "mucUrl": "string",
+ *   "name": "string",
+ *   "pairingCode": {
+ *     "code": "string",
+ *     "emitted": "2019-05-28T17:58:32.767Z",
+ *     "expiresIn": 0,
+ *     "id": "string",
+ *     "pairingType": "SHORT_LIVED",
+ *     "roomId": "string"
+ *   },
+ *   "resourceEmail": "string"
+ * }
  */
 /**
  * Contacts the backend service which assigns the MUC room names for Spot join codes.
  *
  * @param {string} serviceEndpointUrl - The URL which points to the service.
- * @param {string} joinCode - The join code for which the MUC room name is to be retrieved.
- * @returns {Promise<SpotRoomInfo>}
+ * @param {string} jwt - The access token used to authenticate with the backend.
+ * @returns {Promise<BackendRoomInfo>}
  */
-export function fetchRoomInfo(serviceEndpointUrl, joinCode) {
-    if (!joinCode) {
-        return Promise.reject('The \'joinCode\' argument is required');
+export function fetchRoomInfo(serviceEndpointUrl, jwt) {
+    if (!jwt) {
+        return Promise.reject('The \'jwt\' argument is required');
     }
 
     const requestOptions = {
@@ -181,18 +283,23 @@ export function fetchRoomInfo(serviceEndpointUrl, joinCode) {
         mode: 'cors'
     };
 
+    requestOptions.headers = new Headers({
+        authorization: `Bearer ${jwt}`,
+        accept: 'application/json'
+    });
+
     return fetchWithRetry({
         operationName: 'get room info',
         requestOptions,
-        url: `${serviceEndpointUrl}?joinCode=${joinCode}`
+        url: serviceEndpointUrl
     })
         .then(json => {
-            if (!json.roomName) {
-                throw new Error(`No 'roomName' in the response: ${JSON.stringify(json)}`);
+            if (!json.mucUrl) {
+                throw new Error('No "mucUrl" in the response');
             }
 
             return {
-                roomName: json.roomName
+                mucUrl: json.mucUrl
             };
         });
 }

@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getRemoteJoinCode } from 'common/app-state';
 import { Button } from 'common/ui';
+
+import { getPermanentPairingCode } from '../../../backend';
 
 /**
  * Displays a setup step showing a join code for a Spot-Remote to use to connect
@@ -14,7 +15,7 @@ import { Button } from 'common/ui';
 export class PairRemote extends React.Component {
     static propTypes = {
         onSuccess: PropTypes.func,
-        remoteJoinCode: PropTypes.string
+        permanentPairingCode: PropTypes.string
     };
 
     /**
@@ -46,7 +47,7 @@ export class PairRemote extends React.Component {
                         Would you like to pair a permanent remote control with this room?
                     </div>
                     <div className = 'join-code'>
-                        { this.props.remoteJoinCode }
+                        { this.props.permanentPairingCode }
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
@@ -86,7 +87,7 @@ export class PairRemote extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        remoteJoinCode: getRemoteJoinCode(state)
+        permanentPairingCode: getPermanentPairingCode(state)
     };
 }
 

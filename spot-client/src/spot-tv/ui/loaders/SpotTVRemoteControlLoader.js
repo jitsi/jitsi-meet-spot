@@ -8,10 +8,16 @@ import {
     isConnectionPending,
     setIsSpot
 } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
+import { history } from 'common/history';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
 
-import { createSpotTVRemoteControlConnection } from './../../app-state';
+import {
+    createSpotTVRemoteControlConnection
+} from './../../app-state';
+import { ROUTES } from '../../../common/routing/constants';
+
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -24,6 +30,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
         children: PropTypes.node,
         dispatch: PropTypes.func,
         isAttemptingConnection: PropTypes.bool,
+        isBackendEnabled: PropTypes.bool,
         isConnected: PropTypes.bool
     };
 
@@ -39,10 +46,16 @@ export class SpotTVRemoteControlLoader extends React.Component {
 
         analytics.updateProperty('spot-tv', true);
 
-        // TODO: Add some retry logic to error handling for when the initial
-        // connection fails to be established.
         if (!this.props.isConnected && !this.props.isAttemptingConnection) {
-            this.props.dispatch(createSpotTVRemoteControlConnection());
+            if (this.props.isBackendEnabled) {
+                // TODO: persist token/pairing code and try restoring the connection
+                // Connection in the backend mode is started by entering the pairing code on the setup screen
+                history.push(ROUTES.SETUP);
+            } else {
+                // In the no backend mode the connection logic loops forever, because as long as there are
+                // no network/config problems the connection must succeed.
+                this.props.dispatch(createSpotTVRemoteControlConnection({ retry: true }));
+            }
         }
     }
 
@@ -88,6 +101,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
 function mapStateToProps(state) {
     return {
         isAttemptingConnection: isConnectionPending(state),
+        isBackendEnabled: isBackendEnabled(state),
         isConnected: isConnectionEstablished(state)
     };
 }

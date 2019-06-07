@@ -93,6 +93,10 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @override
      */
     getJoinCode() {
+        if (this._options.backend) {
+            return this._options.joinCode;
+        }
+
         const fullJid
             = this.xmppConnection && this.xmppConnection.getRoomFullJid();
 
@@ -112,7 +116,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @returns {string}
      */
     getRemoteJoinCode() {
-        return this.getJoinCode();
+        const { backend } = this._options;
+
+        return backend ? backend.getShortLivedPairingCode() : this.getJoinCode();
     }
 
     /**
@@ -126,21 +132,45 @@ export class RemoteControlServer extends BaseRemoteControlService {
     refreshJoinCode(nextRefreshTimeout) {
         clearTimeout(this._nextJoinCodeUpdate);
 
+        const refreshCodePromise
+            = this._options.backend
+                ? this.refreshJoinCodeWithBackend()
+                : this.refreshJoinCodeWithXmpp();
+
+        refreshCodePromise.then(() => {
+            this.emit(
+                SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
+                { remoteJoinCode: this.getRemoteJoinCode() }
+            );
+
+            if (nextRefreshTimeout) {
+                this._nextJoinCodeUpdate = setTimeout(() => {
+                    this.refreshJoinCode(nextRefreshTimeout);
+                }, nextRefreshTimeout);
+            }
+        });
+    }
+
+    /**
+     * The backend way for refreshing remote join codes.
+     *
+     * @returns {Promise} - A Promise resolved when the code has been refreshed.
+     */
+    refreshJoinCodeWithBackend() {
+        const { backend } = this._options;
+
+        return backend.fetchShortLivedPairingCode();
+    }
+
+    /**
+     * The XMPP way for refreshing remote join codes.
+     *
+     * @returns {Promise} - A Promise resolved when the code has been refreshed.
+     */
+    refreshJoinCodeWithXmpp() {
         const roomLock = generateRandomString(3);
 
-        this.xmppConnection.setLock(roomLock)
-            .then(() => {
-                this.emit(
-                    SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
-                    { remoteJoinCode: this.getRemoteJoinCode() }
-                );
-
-                if (nextRefreshTimeout) {
-                    this._nextJoinCodeUpdate = setTimeout(() => {
-                        this.refreshJoinCode(nextRefreshTimeout);
-                    }, nextRefreshTimeout);
-                }
-            });
+        return this.xmppConnection.setLock(roomLock);
     }
 
     /**

@@ -4,8 +4,6 @@ import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
 
-import { fetchRoomInfo } from '../backend';
-
 import {
     CONNECTION_EVENTS,
     SERVICE_UPDATES
@@ -45,8 +43,7 @@ export class BaseRemoteControlService extends Emitter {
      * being made by a Spot client.
      * @param {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
-     * @param {string} [options.joinCodeServiceUrl] - Optional URL pointing to the backend endpoint
-     * which is to be used to exchange join code for XMPP MUC address/password.
+     * @param {SpotBackendService} [options.backend] - The optional backend service if configured.
      * @param {number} [options.joinCodeRefreshRate] - A duration in
      * milliseconds. If provided, a join code will be created and an interval
      * created to automatically update the join code at the provided rate.
@@ -61,7 +58,6 @@ export class BaseRemoteControlService extends Emitter {
         const {
             joinAsSpot,
             joinCode,
-            joinCodeServiceUrl,
             retryOnUnauthorized,
             serverConfig
         } = this._options;
@@ -77,18 +73,14 @@ export class BaseRemoteControlService extends Emitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        this.xmppConnectionPromise = this.exchangeCode(
-            joinCode,
-            {
-                joinCodeServiceUrl
-            }
-        ).then(roomInfo => this.xmppConnection.joinMuc({
-            joinAsSpot,
-            retryOnUnauthorized,
-            roomName: roomInfo.roomName,
-            roomLock: roomInfo.roomLock,
-            onDisconnect: this._onDisconnect
-        }));
+        this.xmppConnectionPromise = this.exchangeCode(joinCode)
+            .then(roomInfo => this.xmppConnection.joinMuc({
+                joinAsSpot,
+                retryOnUnauthorized,
+                roomName: roomInfo.roomName,
+                roomLock: roomInfo.roomLock,
+                onDisconnect: this._onDisconnect
+            }));
 
         return this.xmppConnectionPromise
             .catch(error => this.disconnect().then(() => Promise.reject(error)));
@@ -214,12 +206,11 @@ export class BaseRemoteControlService extends Emitter {
      * connected to by a Spot-Remote.
      *
      * @param {string} code - The join code to exchange for connection information.
-     * @param {string} joinCodeServiceUrl - The URL pointing to the join code service.
      * @returns {Promise<RoomInfo>} Resolve with join information or an error.
      */
-    exchangeCode(code = '', { joinCodeServiceUrl }) {
-        if (joinCodeServiceUrl) {
-            return this.exchangeCodeWithBackend(code.trim(), joinCodeServiceUrl);
+    exchangeCode(code = '') {
+        if (this._options.backend) {
+            return this.exchangeCodeWithBackend(code.trim());
         }
 
         return this.exchangeCodeWithXmpp(code.trim());
@@ -229,13 +220,15 @@ export class BaseRemoteControlService extends Emitter {
      * Converts a join code into XMPP MUC credentials using a backend service.
      *
      * @param {string} code - The join code to exchange for connection information.
-     * @param {string} joinCodeServiceUrl - The URL pointing to the join code service.
      * @returns {Promise<RoomInfo>} Resolve with join information or an error.
      */
-    exchangeCodeWithBackend(code, joinCodeServiceUrl) {
-        logger.log('Using backend to exchange the join code', { joinCodeServiceUrl });
+    exchangeCodeWithBackend(code) {
+        logger.log('Using backend to exchange the join code');
+        const backend = this._options.backend;
 
-        return fetchRoomInfo(joinCodeServiceUrl, code);
+        return backend
+            .register(code)
+            .then(() => backend.getRoomInfo());
     }
 
     /**
