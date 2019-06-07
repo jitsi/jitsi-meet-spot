@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
 import { $iq } from 'strophe.js';
 
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
 
@@ -18,7 +18,7 @@ import XmppConnection from './xmpp-connection';
  * Spot instance and remote controls join the same MUC and can get messages to
  * each other.
  */
-export class BaseRemoteControlService extends EventEmitter {
+export class BaseRemoteControlService extends Emitter {
     /**
      * Initializes a new {@code RemoteControlService} instance.
      */
