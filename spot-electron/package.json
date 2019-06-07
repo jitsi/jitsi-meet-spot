@@ -38,6 +38,6 @@
     },
     "optionalDependencies": {
         "win-audio": "2.0.2",
-        "xpc-connect": "git+https://git@github.com/jitsi/xpc-connect.git#33fd79673c57f15167067778fc6ade0a4f46da07"
+        "xpc-connect": "github:jongear/xpc-connect#fadfcdb1e43ed8c53fef781e792c73050df3d02d"
     }
 }
