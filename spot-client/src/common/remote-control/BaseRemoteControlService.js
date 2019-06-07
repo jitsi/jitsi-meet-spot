@@ -25,6 +25,8 @@ export class BaseRemoteControlService extends EventEmitter {
     constructor() {
         super();
 
+        this._joinCodeToRetry = null;
+
         this._onMessageReceived = this._onMessageReceived.bind(this);
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
 
@@ -123,6 +125,8 @@ export class BaseRemoteControlService extends EventEmitter {
     _onDisconnect(reason) {
         if (reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
             || reason === 'not-authorized') {
+            this._joinCodeToRetry = null;
+
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason }));
@@ -151,7 +155,7 @@ export class BaseRemoteControlService extends EventEmitter {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = getJitterDelay();
 
-        const previousJoinCode = this.getJoinCode();
+        this._joinCodeToRetry = this._joinCodeToRetry || this.getJoinCode();
 
         this.disconnect()
             .catch(error => {
@@ -161,12 +165,12 @@ export class BaseRemoteControlService extends EventEmitter {
                 );
             })
             .then(() => new Promise((resolve, reject) => {
-                this._reconnectTimeout = setTimeout(() => {
+                setTimeout(() => {
                     logger.log('attempting reconnect');
 
                     this.connect({
                         ...this._options,
-                        joinCode: previousJoinCode
+                        joinCode: this._joinCodeToRetry
                     })
                         .then(resolve)
                         .catch(reject);
@@ -176,6 +180,7 @@ export class BaseRemoteControlService extends EventEmitter {
                 logger.log('loaded');
 
                 this._setReconnectQueued(false);
+                this._joinCodeToRetry = null;
             })
             .catch(error => {
                 logger.warn('failed to load', { error });
