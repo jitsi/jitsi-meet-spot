@@ -54,6 +54,15 @@ export default {
         joinCodeServiceUrl: process.env.JOIN_CODE_SERVICE_URL
     },
 
+    UPDATES: {
+        START_HOUR: typeof process.env.UPDATE_START_HOUR === undefined
+            ? 2
+            : process.env.UPDATE_START_HOUR,
+        END_HOUR: typeof process.env.UPDATE_END_HOUR === undefined
+            ? 6
+            : process.env.UPDATE_END_HOUR
+    },
+
     ULTRASOUND: {
         EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH || '/dist/',
         MEM_INITIALIZER_PATH:

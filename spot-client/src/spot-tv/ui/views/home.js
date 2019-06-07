@@ -16,6 +16,7 @@ import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import {
+    AutoReload,
     FullscreenToggle,
     JoinInfo,
     SettingsButton,
@@ -101,6 +102,7 @@ export class Home extends React.Component {
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
+                <AutoReload />
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }

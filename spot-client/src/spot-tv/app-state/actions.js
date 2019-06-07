@@ -5,16 +5,19 @@ import {
     getSpotServicesConfig,
     setJoinCode,
     setJwt,
-    setReconnectState
+    setReconnectState,
+    setSpotTVState
 } from 'common/app-state';
 
 import { registerDevice } from 'common/backend';
+import { history } from 'common/history';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
 import {
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
+import { ROUTES } from 'common/routing';
 
 /**
  * Establishes a connection to an existing Spot-MUC using the provided join code.
@@ -128,20 +131,35 @@ function createConnection(state) {
     const joinCodeRefreshRate = getJoinCodeRefreshRate(state);
     const remoteControlConfiguration = getRemoteControlServerConfig(state);
 
-    let finalJoinCode, finalJwt;
+    let finalJoinCode, finalJwt, getJoinCodePromise;
 
-    // FIXME 'registerDevice' should be retried forever because abstract loader
-    // no longer does that
-    const getJoinCodePromise = adminServiceUrl
-        ? registerDevice(adminServiceUrl)
+    if (adminServiceUrl) {
+        // FIXME 'registerDevice' should be retried forever because abstract
+        // loader no longer does that.
+        getJoinCodePromise = registerDevice(adminServiceUrl)
             .then(json => {
                 const { joinCode, jwt } = json;
 
                 finalJwt = jwt;
 
                 return joinCode;
-            })
-        : Promise.resolve();
+            });
+    } else {
+        try {
+            const reloadConfigString = localStorage.getItem('spot-tv-reload');
+
+            localStorage.removeItem('spot-tv-reload');
+
+            const reloadConfig = JSON.parse(reloadConfigString);
+            const joinCode = Date.now() - reloadConfig.timestamp < 30000
+                ? reloadConfig.joinCode
+                : '';
+
+            getJoinCodePromise = Promise.resolve(joinCode);
+        } catch {
+            getJoinCodePromise = Promise.resolve();
+        }
+    }
 
     logger.log('Attempting connection', { adminServiceUrl });
 
@@ -162,4 +180,28 @@ function createConnection(state) {
                 jwt: finalJwt
             };
         });
+}
+
+/**
+ * Prepares and executes a page reload to force Spot-TV to download the latest
+ * assets.
+ *
+ * @returns {Function}
+ */
+export function scheduleSpotTVUpdate() {
+    return dispatch => {
+        localStorage.setItem('spot-tv-reload', JSON.stringify({
+            joinCode: remoteControlServer.getJoinCode(),
+            timestamp: Date.now()
+        }));
+
+        dispatch(setSpotTVState({ reloading: true }));
+
+        return remoteControlServer.disconnect()
+            .then(() => {
+                history.push(ROUTES.HOME);
+
+                window.location.reload(true);
+            });
+    };
 }

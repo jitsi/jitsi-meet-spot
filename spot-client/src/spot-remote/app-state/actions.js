@@ -18,7 +18,6 @@ import {
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
 
-
 /**
  * Presence attributes from Spot-TV to store as booleans in redux.
  *
@@ -182,6 +181,18 @@ function _onReconnectStatusChange({ dispatch }, { isReconnecting }) {
 }
 
 /**
+ * Callback invoked when the remote control client has recovered from a reload
+ * and the remote control should reload itself.
+ *
+ * @private
+ * @returns {void}
+ */
+function _onReloadSpotRemote(joinCode) {
+    // Purposefully use window.location to force a reload of the page
+    window.location = `${ROUTES.CODE}${joinCode}`;
+}
+
+/**
  * Callback invoked when {@code remoteControlClient} has an update about the current state of
  * a Spot-TV.
  *
@@ -243,6 +254,10 @@ function _setSubscriptions(store) {
     remoteControlClient.addListener(
         SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
         onDisconnectedHandler);
+
+    remoteControlClient.addListener(
+        SERVICE_UPDATES.SERVER_RECONNECTED,
+        _onReloadSpotRemote);
 }
 
 /**
@@ -272,6 +287,6 @@ export function exitShareMode() {
             type: SPOT_REMOTE_EXIT_SHARE_MODE
         });
 
-        history.push('/remote-control');
+        history.push(ROUTES.REMOTE_CONTROL);
     };
 }

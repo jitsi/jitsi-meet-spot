@@ -95,6 +95,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @override
      */
     disconnect() {
+        this._stopServerReconnectTimeout();
         this.destroyWirelessScreenshareConnections();
         this._lastSpotState = null;
 
@@ -362,6 +363,17 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Returns whether or not the client is waiting for the server to come back
+     * from a reload.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isAwaitingServerReconnect() {
+        return Boolean(this._serverReconnectTimeout);
+    }
+
+    /**
      * Implements {@link BaseRemoteControlService#_onPresenceReceived}.
      *
      * @inheritdoc
@@ -372,7 +384,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
         if (updateType === 'unavailable') {
             const from = presence.getAttribute('from');
 
-            if (this._getSpotId() === from) {
+            if (this._getSpotId() === from
+                && !this._isAwaitingServerReconnect()) {
                 this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
             }
 
@@ -401,6 +414,12 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
+        if (status.reloading) {
+            this._startServerReconnectTimeout();
+
+            return;
+        }
+
         const spotTvJid = presence.getAttribute('from');
 
         // Redundantly update the known {@code RemoteControlServer} jid in case
@@ -410,6 +429,11 @@ export class RemoteControlClient extends BaseRemoteControlService {
             ...status,
             spotId: spotTvJid
         };
+
+        if (this._isAwaitingServerReconnect() && status.joinCode) {
+            this._stopServerReconnectTimeout();
+            this.emit(SERVICE_UPDATES.SERVER_RECONNECTED, status.joinCode);
+        }
 
         this.emit(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
@@ -436,6 +460,25 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 });
             break;
         }
+    }
+
+    /**
+     * Starts a timeout to wait for the server to come back from a reload and
+     * will trigger disconnect if the server has not come back.
+     *
+     * @private
+     * @returns {void}
+     */
+    _startServerReconnectTimeout() {
+        if (this._serverReconnectTimeout) {
+            return;
+        }
+
+        this.emit(CONNECTION_EVENTS.SERVER_DISCONNECT_PENDING);
+
+        this._serverReconnectTimeout = setTimeout(() => {
+            this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
+        }, 30000);
     }
 
     /**
@@ -472,6 +515,17 @@ export class RemoteControlClient extends BaseRemoteControlService {
 
                 return Promise.reject(error);
             });
+    }
+
+    /**
+     * Clears any wait for a server to reconnect from a reload.
+     *
+     * @private
+     * @returns {void}
+     */
+    _stopServerReconnectTimeout() {
+        clearTimeout(this._serverReconnectTimeout);
+        this._serverReconnectTimeout = null;
     }
 
     /**

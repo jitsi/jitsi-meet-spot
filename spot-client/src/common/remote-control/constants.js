@@ -49,11 +49,22 @@ export const COMMANDS = {
  * An enumeration of custom connection-related events that can be emitted.
  */
 export const CONNECTION_EVENTS = {
+    /**
+     * There is an error with the {@code RemoteControlServer} and a wait will
+     * for a possible reconnect.
+     */
+    SERVER_DISCONNECT_PENDING: 'server-disconnect-pending',
 
     /**
      * The {@code RemoteControlServer} is no longer available.
      */
-    SERVER_DISCONNECTED: 'server-disconnected'
+    SERVER_DISCONNECTED: 'server-disconnected',
+
+    /**
+     * The {@code RemoteControlServer} has become available again after a
+     * pending disconnect.
+     */
+    SERVER_RECONNECTED: 'server-reconnected'
 };
 
 /**
