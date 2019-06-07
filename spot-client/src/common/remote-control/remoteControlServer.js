@@ -144,6 +144,15 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Returns the join code that is to be used by a Spot Remote in order to be paired with this Spot TV.
+     *
+     * @returns {string}
+     */
+    getRemoteJoinCode() {
+        return this.getJoinCode();
+    }
+
+    /**
      * Method invoked to generate a new join code for instances of
      * {@code RemoteControlClient} to pair with it.
      *
@@ -159,8 +168,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
         this.xmppConnection.setLock(roomLock)
             .then(() => {
                 this.emit(
-                    SERVICE_UPDATES.JOIN_CODE_CHANGE,
-                    { joinCode: this.getJoinCode() }
+                    SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
+                    { remoteJoinCode: this.getRemoteJoinCode() }
                 );
 
                 if (nextRefreshTimeout) {

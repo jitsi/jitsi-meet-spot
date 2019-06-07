@@ -7,7 +7,7 @@ import {
     getCalendarError,
     getCalendarEvents,
     getDisplayName,
-    getJoinCode,
+    getRemoteJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/app-state';
@@ -30,7 +30,7 @@ import { withCalendar } from './../loaders';
  */
 export class Home extends React.Component {
     static defaultProps = {
-        joinCode: ''
+        remoteJoinCode: ''
     };
 
     static propTypes = {
@@ -41,8 +41,8 @@ export class Home extends React.Component {
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
-        joinCode: PropTypes.string,
         remoteControlServer: PropTypes.object,
+        remoteJoinCode: PropTypes.string,
         spotRoomName: PropTypes.string
     };
 
@@ -241,7 +241,7 @@ export class Home extends React.Component {
                     </div>
                 </div>
                 {
-                    this.props.joinCode
+                    this.props.remoteJoinCode
                         && (
                             <div className = 'setup-join-code'>
                                 <JoinInfo />
@@ -267,7 +267,7 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
-        joinCode: getJoinCode(state),
+        remoteJoinCode: getRemoteJoinCode(state),
         spotRoomName: getDisplayName(state)
     };
 }

@@ -148,12 +148,12 @@ export function registerDevice(serviceEndpointUrl) {
         url: serviceEndpointUrl
     })
         .then(json => {
-            if (!json.joinCode) {
+            if (!json.remoteJoinCode) {
                 throw new Error(`No 'joinCode' in the response: ${JSON.stringify(json)}`);
             }
 
             return {
-                joinCode: json.joinCode,
+                remoteJoinCode: json.remoteJoinCode,
                 jwt: json.jwt
             };
         });

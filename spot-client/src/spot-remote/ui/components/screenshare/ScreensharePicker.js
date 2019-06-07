@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import {
     getAdvertisementAppName,
-    getJoinCode,
+    getRemoteJoinCode,
     getShareDomain
 } from 'common/app-state';
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
@@ -21,15 +21,15 @@ import { NavButton } from '../nav';
 export class ScreensharePicker extends React.Component {
     static propTypes = {
         advertisedAppName: PropTypes.string,
-        joinCode: PropTypes.string,
         onStartWiredScreenshare: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
         onStopScreensharing: PropTypes.func,
+        remoteJoinCode: PropTypes.string,
         screensharingType: PropTypes.string,
         shareDomain: PropTypes.string,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
-    }
+    };
 
     /**
      * Ensures the screenshare select view displays when transitioning from
@@ -284,11 +284,11 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderWirelessScreenshareNotSupported() {
-        const { advertisedAppName, joinCode, shareDomain } = this.props;
+        const { advertisedAppName, remoteJoinCode, shareDomain } = this.props;
         const title = (
             <span>
                 To share, use Chrome desktop and go to <span className = 'share-url'>
-                    { `${shareDomain || windowHandler.getHost()}/${joinCode}` }
+                    { `${shareDomain || windowHandler.getHost()}/${remoteJoinCode}` }
                 </span>
             </span>
         );
@@ -332,7 +332,7 @@ export class ScreensharePicker extends React.Component {
 function mapStateToProps(state) {
     return {
         advertisedAppName: getAdvertisementAppName(state),
-        joinCode: getJoinCode(state),
+        remoteJoinCode: getRemoteJoinCode(state),
         shareDomain: getShareDomain(state)
     };
 }

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getJoinCode } from 'common/app-state';
+import { getRemoteJoinCode } from 'common/app-state';
 import { Button } from 'common/ui';
 
 /**
@@ -13,8 +13,8 @@ import { Button } from 'common/ui';
  */
 export class PairRemote extends React.Component {
     static propTypes = {
-        joinCode: PropTypes.string,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        remoteJoinCode: PropTypes.string
     };
 
     /**
@@ -46,7 +46,7 @@ export class PairRemote extends React.Component {
                         Would you like to pair a permanent remote control with this room?
                     </div>
                     <div className = 'join-code'>
-                        { this.props.joinCode }
+                        { this.props.remoteJoinCode }
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
@@ -86,7 +86,7 @@ export class PairRemote extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        joinCode: getJoinCode(state)
+        remoteJoinCode: getRemoteJoinCode(state)
     };
 }
 

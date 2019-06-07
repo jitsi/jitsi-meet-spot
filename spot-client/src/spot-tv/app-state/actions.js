@@ -3,7 +3,7 @@ import {
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
-    setJoinCode,
+    setRemoteJoinCode,
     setJwt,
     setReconnectState
 } from 'common/app-state';
@@ -37,8 +37,8 @@ export function createSpotTVRemoteControlConnection() {
          * connection.
          * @returns {void}
          */
-        function onSuccessfulConnect({ joinCode, jwt }) {
-            dispatch(setJoinCode(joinCode));
+        function onSuccessfulConnect({ remoteJoinCode, jwt }) {
+            dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
         }
 
@@ -52,7 +52,7 @@ export function createSpotTVRemoteControlConnection() {
         function onDisconnect() {
             logger.error(
                 'Spot-TV disconnected from the remote control server.');
-            dispatch(setJoinCode(''));
+            dispatch(setRemoteJoinCode(''));
             doConnect();
         }
 
@@ -76,8 +76,8 @@ export function createSpotTVRemoteControlConnection() {
          * @private
          * @returns {void}
          */
-        function onJoinCodeChange(data) {
-            dispatch(setJoinCode(data.joinCode));
+        function onRemoteJoinCodeChange({ remoteJoinCode }) {
+            dispatch(setRemoteJoinCode(remoteJoinCode));
         }
 
         /**
@@ -100,8 +100,8 @@ export function createSpotTVRemoteControlConnection() {
             onDisconnect
         );
         remoteControlServer.addListener(
-            SERVICE_UPDATES.JOIN_CODE_CHANGE,
-            onJoinCodeChange
+            SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
+            onRemoteJoinCodeChange
         );
         remoteControlServer.addListener(
             SERVICE_UPDATES.RECONNECT_UPDATE,
@@ -158,7 +158,7 @@ function createConnection(state) {
         }))
         .then(() => {
             return {
-                joinCode: finalJoinCode || remoteControlServer.getJoinCode(),
+                remoteJoinCode: finalJoinCode || remoteControlServer.getRemoteJoinCode(),
                 jwt: finalJwt
             };
         });

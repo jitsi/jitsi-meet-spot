@@ -33,8 +33,8 @@ export function getInMeetingStatus(state) {
 * @param {Object} state - The Redux state.
 * @returns {string}
 */
-export function getJoinCode(state) {
-    return state.spotTv.joinCode;
+export function getRemoteJoinCode(state) {
+    return state.spotTv.remoteJoinCode;
 }
 
 /**

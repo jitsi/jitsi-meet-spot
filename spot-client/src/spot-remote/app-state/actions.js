@@ -40,7 +40,7 @@ const presenceToStoreAsBoolean = new Set([
  */
 const presenceToStoreAsString = new Set([
     'inMeeting',
-    'joinCode',
+    'remoteJoinCode',
     'roomName',
     'screensharingType',
     'spotId',
@@ -71,7 +71,7 @@ let onSpotStateChangedHandler = null;
 /**
  * Connects Spot Remote to Spot TV.
  *
- * @param {string} joinCode - The join code.
+ * @param {string} joinCode - The join code to be used by Spot Remote in order to be paired with a Spot TV.
  * @param {boolean} shareMode - Indicates whether the Spot Remote is running in the special screen share mode or not.
  * @returns {Function}
  */
