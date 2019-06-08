@@ -184,12 +184,14 @@ function _onReconnectStatusChange({ dispatch }, { isReconnecting }) {
  * Callback invoked when the remote control client has recovered from a reload
  * and the remote control should reload itself.
  *
+ * @param {string} remoteJoinCode - The Spot-TV join code that should be used
+ * after reloading the page.
  * @private
  * @returns {void}
  */
-function _onReloadSpotRemote(joinCode) {
+function _onReloadSpotRemote(remoteJoinCode) {
     // Purposefully use window.location to force a reload of the page
-    window.location = `${ROUTES.CODE}${joinCode}`;
+    window.location = `${ROUTES.CODE}${remoteJoinCode}`;
 }
 
 /**
