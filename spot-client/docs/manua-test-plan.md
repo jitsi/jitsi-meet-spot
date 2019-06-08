@@ -109,3 +109,9 @@ Share Mode
 - [ ] At mode select, clicking the "Remote Control" button takes Spot-Remote to the full remote control view
 - [ ] At mode select, unsupported browsers cannot start wireless screensharing
 - [ ] At mode select, Spot-Remote cannot start a wireless screenshare if Spot-TV is already screensharing
+
+Updating
+---
+- [ ] Spot-TV automatically reloads the page when the current time falls between the configured update window
+- [ ] Spot-TV does not automatically reload if a reload has already taken place. in the configured update window.
+- [ ] Spot-Remote automatically reloads the page after Spot-TV completes reload
