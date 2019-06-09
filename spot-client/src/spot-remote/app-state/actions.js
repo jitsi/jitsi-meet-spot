@@ -1,4 +1,5 @@
 import {
+    PASSWORD,
     clearSpotTVState,
     getSpotServicesConfig,
     getRemoteControlServerConfig,
@@ -8,6 +9,7 @@ import {
 } from 'common/app-state';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
+import { createAsyncActionWithStates } from 'common/redux';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 
@@ -27,6 +29,7 @@ import {
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
     'electron',
+    'needPassword',
     'screensharing',
     'tileView',
     'videoMuted',
@@ -274,4 +277,19 @@ export function exitShareMode() {
 
         history.push('/remote-control');
     };
+}
+
+/**
+ * Enters a password to be used to join a meeting.
+ *
+ * @param {string} password - The meeting password to use.
+ * @returns {Function}
+ */
+export function submitPassword(password) {
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlClient.submitPassword(password),
+        PASSWORD,
+        password
+    ).then(() => dispatch(setSpotTVState({ needPassword: false })));
 }

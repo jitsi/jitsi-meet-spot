@@ -77,6 +77,7 @@ export class MeetingFrame extends React.Component {
         this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
         this._onParticipantJoined = this._onParticipantJoined.bind(this);
         this._onParticipantLeft = this._onParticipantLeft.bind(this);
+        this._onPasswordRequired = this._onPasswordRequired.bind(this);
         this._onReportDeviceError = this._onReportDeviceError.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onScreenshareDeviceConnected
@@ -155,6 +156,8 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'participantLeft', this._onParticipantLeft);
         this._jitsiApi.addListener(
+            'passwordRequired', this._onPasswordRequired);
+        this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
         this._jitsiApi.addListener(
             'readyToClose', this.props.onMeetingLeave);
@@ -195,9 +198,11 @@ export class MeetingFrame extends React.Component {
             this._onMeetingCommand
         );
 
+        // TODO: create an action to reset the in-meeting state
         this.props.updateSpotTvState({
             audioMuted: false,
             inMeeting: '',
+            needPassword: false,
             screensharingType: undefined,
             tileView: false,
             videoMuted: false
@@ -304,8 +309,8 @@ export class MeetingFrame extends React.Component {
         switch (type) {
         case COMMANDS.ADJUST_VOLUME:
             adjustVolume(data.direction);
-
             break;
+
         case COMMANDS.HANG_UP:
             this._jitsiApi.executeCommand('hangup');
 
@@ -343,6 +348,11 @@ export class MeetingFrame extends React.Component {
             this._jitsiApi.executeCommand('submitFeedback', data);
             break;
 
+        case COMMANDS.SUBMIT_PASSWORD:
+            this._jitsiApi.executeCommand('password', data);
+
+            break;
+
         case MESSAGES.CLIENT_LEFT:
         case MESSAGES.CLIENT_PROXY_MESSAGE:
             this._jitsiApi.sendProxyConnectionEvent(data);
@@ -363,7 +373,8 @@ export class MeetingFrame extends React.Component {
         this.props.onMeetingStart(this._jitsiApi);
 
         this.props.updateSpotTvState({
-            inMeeting: this.props.meetingUrl
+            inMeeting: this.props.meetingUrl,
+            needPassword: false
         });
 
         if (this.props.invites && this.props.invites.length) {
@@ -447,6 +458,20 @@ export class MeetingFrame extends React.Component {
         this._participants.delete(id);
 
         this._maybeToggleFilmstripVisibility();
+    }
+
+    /**
+     * Callback invoked when a meeting fails to join because it is locked.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onPasswordRequired() {
+        logger.log('password required');
+
+        clearTimeout(this._assumeMeetingFailedTimeout);
+
+        this.props.updateSpotTvState({ needPassword: true });
     }
 
     /**
@@ -602,10 +627,10 @@ export class MeetingFrame extends React.Component {
      */
     _renderFeedbackHider() {
         return (
-            <div className = 'feedback-hider-overlay'>
-                <div className = 'feedback-hider-text-frame'>
+            <div className = 'status-overlay'>
+                <div className = 'status-overlay-text-frame'>
                     <h1>Thanks for using Spot!</h1>
-                    <div className = 'feedback-hider-text'>
+                    <div className = 'status-overlay-text'>
                         <div>You can use the remote control device to submit feedback now.</div>
                     </div>
                 </div>
