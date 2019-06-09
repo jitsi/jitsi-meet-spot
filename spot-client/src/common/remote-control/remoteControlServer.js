@@ -35,16 +35,19 @@ export class RemoteControlServer extends BaseRemoteControlService {
             return this.xmppConnectionPromise;
         }
 
-        const connectionPromise = super.connect(options);
+        super.connect({
+            ...options,
+            retryOnUnauthorized: !options.joinCodeServiceUrl
+        });
 
-        connectionPromise
+        this.xmppConnectionPromise = this.xmppConnectionPromise
             .then(() => {
                 if (options.joinCodeRefreshRate) {
                     this.refreshJoinCode(options.joinCodeRefreshRate);
                 }
             });
 
-        return connectionPromise;
+        return this.xmppConnectionPromise;
     }
 
     /**

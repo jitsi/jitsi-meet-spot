@@ -62,6 +62,7 @@ export class BaseRemoteControlService extends Emitter {
             joinAsSpot,
             joinCode,
             joinCodeServiceUrl,
+            retryOnUnauthorized,
             serverConfig
         } = this._options;
 
@@ -83,6 +84,7 @@ export class BaseRemoteControlService extends Emitter {
             }
         ).then(roomInfo => this.xmppConnection.joinMuc({
             joinAsSpot,
+            retryOnUnauthorized,
             roomName: roomInfo.roomName,
             roomLock: roomInfo.roomLock,
             onDisconnect: this._onDisconnect
@@ -151,7 +153,7 @@ export class BaseRemoteControlService extends Emitter {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = getJitterDelay();
 
-        const previousJoinCode = this.getJoinCode();
+        this._previousJoinCode = this.getJoinCode() || this._previousJoinCode;
 
         this.disconnect()
             .catch(error => {
@@ -166,7 +168,7 @@ export class BaseRemoteControlService extends Emitter {
 
                     this.connect({
                         ...this._options,
-                        joinCode: previousJoinCode
+                        joinCode: this._previousJoinCode
                     })
                         .then(resolve)
                         .catch(reject);
