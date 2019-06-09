@@ -46,6 +46,8 @@ export default class XmppConnection {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
+     * @param {boolean} [options.retryOnUnauthorized] - Whether or not to retry
+     * connection without a roomLock if an unauthorized error occurs.
      * @param {string} [options.roomLock] - The lock code to use when joining or
      * to set when creating a new MUC.
      * @param {Function} options.onDisconnect - Callback to invoke when the
@@ -54,7 +56,15 @@ export default class XmppConnection {
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
-    joinMuc({ joinAsSpot, roomLock, roomName, onDisconnect }) {
+    joinMuc(options) {
+        const {
+            joinAsSpot,
+            retryOnUnauthorized,
+            roomLock,
+            roomName,
+            onDisconnect
+        } = options;
+
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -120,23 +130,12 @@ export default class XmppConnection {
             null
         );
 
-        const joinPromise = new Promise((resolve, reject) => {
-            this.xmppConnection.xmpp.connection.addHandler(
-                () => {
-                    reject();
 
-                    return true;
-                },
-                null,
-                'presence',
-                'error',
-                null
-            );
+        const createJoinPromise = function () {
+            return new Promise((resolve, reject) => {
+                const { connection } = this.xmppConnection.xmpp;
 
-            // This is a generic presence handler that gets all presence,
-            // including error and unavailable.
-            this.xmppConnection.xmpp.connection.addHandler(
-                presence => {
+                const onSuccessConnect = presence => {
                     const errors = presence.getElementsByTagName('error');
 
                     if (errors.length) {
@@ -150,13 +149,38 @@ export default class XmppConnection {
                     resolve();
 
                     return this._onPresence(presence);
-                },
-                null,
-                'presence',
-                null, // null to get passed all presence types into callback
-                null
-            );
-        });
+                };
+
+                const onFailedConnect = reason => {
+                    connection.deleteHandler(onFailedConnect);
+                    connection.deleteHandler(onSuccessConnect);
+
+                    reject(reason);
+
+                    return true;
+                };
+
+                connection.addHandler(
+                    onFailedConnect,
+                    null,
+                    'presence',
+                    'error',
+                    null
+                );
+
+                // This is a generic presence handler that gets all presence,
+                // including error and unavailable.
+                connection.addHandler(
+                    onSuccessConnect,
+                    null,
+                    'presence',
+                    null, // null to get passed all presence types into callback
+                    null
+                );
+            });
+        }.bind(this);
+
+        const joinPromise = createJoinPromise();
 
         this.xmppConnection.connect();
 
@@ -175,7 +199,27 @@ export default class XmppConnection {
                 }
             })
             .then(() => this._joinMuc(roomLock))
-            .then(() => Promise.all([ joinPromise, mucJoinedPromise ]));
+            .then(() => joinPromise
+                .catch(reason => {
+                    logger.error('xmpp-connection connect failed', { reason });
+
+                    if (retryOnUnauthorized
+                        && Boolean(roomLock)
+                        && reason === 'not-authorized') {
+                        logger.log(
+                            'xmpp-connection retrying on not-authorized error');
+
+                        const newJoinPromise = createJoinPromise();
+
+                        this._joinMuc();
+
+                        return newJoinPromise;
+                    }
+
+                    return Promise.reject(reason);
+                })
+            )
+            .then(() => mucJoinedPromise);
 
         return this.initPromise;
     }
