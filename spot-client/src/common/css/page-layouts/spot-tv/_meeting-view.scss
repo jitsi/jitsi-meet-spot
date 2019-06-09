@@ -3,7 +3,7 @@
     min-height: 100vh;
     width: 100%;
 
-    .feedback-hider-overlay,
+    .status-overlay,
     .loading-curtain,
     .meetingMouseHider {
         height: 100%;
@@ -18,11 +18,11 @@
         pointer-events: none;
     }
 
-    .feedback-hider-overlay {
+    .status-overlay {
         background: rgb(27, 38, 56);
     }
       
-    .feedback-hider-text-frame {
+    .status-overlay-text-frame {
         display: block;
         width: 55%;
         background-color: var(--container-content-bg-color);
@@ -38,7 +38,7 @@
             font-size: $font-size-medium-plus;
         }
       
-        .feedback-hider-text {
+        .status-overlay-text {
                 color: var(--container-sub-content-font-color);
                 margin: 15px 0;
         }

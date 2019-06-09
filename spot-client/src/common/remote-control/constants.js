@@ -42,7 +42,12 @@ export const COMMANDS = {
     /**
      * Send the meeting rating and the entered feedback.
      */
-    SUBMIT_FEEDBACK: 'submitFeedback'
+    SUBMIT_FEEDBACK: 'submitFeedback',
+
+    /**
+     * Send the password needed to join a locked meeting.
+     */
+    SUBMIT_PASSWORD: 'submitPassword'
 };
 
 /**

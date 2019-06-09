@@ -8,6 +8,7 @@ import {
     getDefaultMeetingDomain,
     getDesktopSharingFramerate,
     getDisplayName,
+    getInMeetingStatus,
     getMeetingOptions,
     getPreferredCamera,
     getPreferredMic,
@@ -42,7 +43,8 @@ export class Meeting extends React.Component {
         preferredSpeaker: PropTypes.string,
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
-        showMeetingToolbar: PropTypes.bool
+        showMeetingToolbar: PropTypes.bool,
+        showPasswordPrompt: PropTypes.bool
     };
 
     /**
@@ -101,7 +103,8 @@ export class Meeting extends React.Component {
             preferredSpeaker,
             remoteControlServer,
             screenshareDevice,
-            showMeetingToolbar
+            showMeetingToolbar,
+            showPasswordPrompt
         } = this.props;
 
         return (
@@ -129,6 +132,7 @@ export class Meeting extends React.Component {
                             <Loading />
                         </div>
                 }
+                { showPasswordPrompt && this._renderPasswordPrompt() }
                 <MeetingStatus />
                 {
 
@@ -212,6 +216,26 @@ export class Meeting extends React.Component {
             meetingLoaded: true
         });
     }
+
+    /**
+     * Renders a text overlay which hides Jitsi-Meet iFrame when it's asking for
+     * a password.
+     *
+     * @returns {ReactNode}
+     * @private
+     */
+    _renderPasswordPrompt() {
+        return (
+            <div className = 'status-overlay'>
+                <div className = 'status-overlay-text-frame'>
+                    <h1>Password required to join</h1>
+                    <div className = 'status-overlay-text'>
+                        <div>You can use the remote control device to submit a password.</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 /**
@@ -236,6 +260,7 @@ function mapStateToProps(state) {
         displayName: getDisplayName(state),
         maxDesktopSharingFramerate,
         minDesktopSharingFramerate,
+        showPasswordPrompt: getInMeetingStatus(state).needPassword,
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),

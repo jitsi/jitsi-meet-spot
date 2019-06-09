@@ -11,15 +11,21 @@ import {
 } from 'common/app-state';
 
 import { CallEnd } from 'common/icons';
-import { LoadingIcon, RoomName } from 'common/ui';
+import { LoadingIcon, Modal, RoomName } from 'common/ui';
 import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
 
-import { MoreButton, NavButton, NavContainer } from '../../components';
+import {
+    submitPassword
+} from '../../../app-state';
 import {
     AudioMuteButton,
+    MoreButton,
+    NavButton,
+    NavContainer,
+    PasswordPrompt,
+    ScreenshareButton,
     VideoMuteButton
-} from './../../components/nav';
-import { ScreenshareButton } from './../../components/screenshare';
+} from '../../components';
 
 /**
  * A view for displaying ways to interact with the Spot-TV while Spot-TV is in a
@@ -35,7 +41,9 @@ export class InCall extends React.Component {
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
+        onSubmitPassword: PropTypes.func,
         screensharingType: PropTypes.string,
+        showPasswordPrompt: PropTypes.bool,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -74,8 +82,19 @@ export class InCall extends React.Component {
      */
     render() {
         const {
-            inMeeting
+            inMeeting,
+            showPasswordPrompt
         } = this.props;
+
+        if (showPasswordPrompt) {
+            return (
+                <Modal>
+                    <PasswordPrompt
+                        onCancel = { this.props.onHangUp }
+                        onSubmit = { this.props.onSubmitPassword } />
+                </Modal>
+            );
+        }
 
         if (!inMeeting) {
             return <LoadingIcon color = 'white' />;
@@ -162,6 +181,7 @@ export class InCall extends React.Component {
 function mapStateToProps(state) {
     const {
         inMeeting,
+        needPassword,
         screensharingType,
         wiredScreensharingEnabled
     } = getInMeetingStatus(state);
@@ -169,6 +189,7 @@ function mapStateToProps(state) {
     return {
         inMeeting,
         screensharingType,
+        showPasswordPrompt: needPassword,
         wiredScreensharingEnabled
     };
 }
@@ -216,6 +237,16 @@ function mapDispatchToProps(dispatch) {
          */
         onStartWirelessScreenshare() {
             return dispatch(startWirelessScreensharing());
+        },
+
+        /**
+         * Attempts to enter a locked meeting using the provided password.
+         *
+         * @param {string} password - The password to use to enter the meeting.
+         * @returns {Promise}
+         */
+        onSubmitPassword(password) {
+            return dispatch(submitPassword(password));
         }
     };
 }

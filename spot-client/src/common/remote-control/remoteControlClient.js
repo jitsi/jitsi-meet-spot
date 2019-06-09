@@ -301,6 +301,18 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Requests a {@code RemoteControlServer} to submit a password to attempt
+     * entry into a locked meeting.
+     *
+     * @param {string} password - The password to submit.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    submitPassword(password) {
+        return this.xmppConnection.sendCommand(
+            this._getSpotId(), COMMANDS.SUBMIT_PASSWORD, password);
+    }
+
+    /**
      * Initialize a new {@link ScreenshareService} instance.
      *
      * @param {Object} options - Additional configuration to use for creating
