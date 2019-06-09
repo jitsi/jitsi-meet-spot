@@ -35,56 +35,16 @@ export class RemoteControlServer extends BaseRemoteControlService {
             return this.xmppConnectionPromise;
         }
 
-        super.connect(options);
+        const connectionPromise = super.connect(options);
 
-        this.xmppConnectionPromise = this.xmppConnectionPromise
+        connectionPromise
             .then(() => {
                 if (options.joinCodeRefreshRate) {
                     this.refreshJoinCode(options.joinCodeRefreshRate);
                 }
-            })
-            .catch(error => {
-                logger.error('Remote control server connect error', { error });
-
-                /**
-                 * In the re-connect case, it could be that the MUC is still
-                 * around in which case the full join code should be used.
-                 * However, it could also be that the MUC is no longer around,
-                 * in which case attempting to use the full join code will cause
-                 * a "not-authorized" error so instead just the room name should
-                 * be used and a lock set later.
-                 *
-                 * This retry code is located here in "connect" to handle both
-                 * the reconnect flow with and without a page reload.
-                 */
-                if (error === 'not-authorized') {
-                    return this.disconnect()
-                        .then(() => {
-                            if (options.joinCode
-                                && options.joinCode.length === 6
-                                && !options.joinCodeServiceUrl) {
-                                logger.log('Retrying connect without lock');
-
-                                return this.connect({
-                                    ...options,
-                                    joinCode: options.joinCode.substring(0, 3)
-                                })
-                                .catch(retryError => {
-                                    // If that failed then break out of retrying
-                                    // the old join code. It's okay for Spot-TV
-                                    // to join a different MUC.
-                                    this._joinCodeToRetry = null;
-
-                                    return Promise.reject(retryError);
-                                });
-                            }
-                        });
-                }
-
-                return Promise.reject(error);
             });
 
-        return this.xmppConnectionPromise;
+        return connectionPromise;
     }
 
     /**
@@ -106,7 +66,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @param {string} code - The join code to exchange for connection information.
      * @returns {Promise<RoomInfo>} Resolve with join information or an error.
      */
-    exchangeCodeWithXmpp(code = '') {
+    exchangeCodeWithXmpp(code) {
         if (code.length === 6) {
             return Promise.resolve({
                 roomName: code.substring(0, 3),
@@ -117,8 +77,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
         return Promise.resolve({
             // If there's no joinCode service then create a room and let the lock
             // be set later. Setting the lock on join will throw an error about
-            // not being authorized.
-            roomName: code.length === 3 ? code : generateRandomString(3)
+            // not being authorized..
+            roomName: generateRandomString(3)
         });
     }
 

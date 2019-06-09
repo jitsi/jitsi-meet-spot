@@ -25,8 +25,6 @@ export class BaseRemoteControlService extends Emitter {
     constructor() {
         super();
 
-        this._joinCodeToRetry = null;
-
         this._onMessageReceived = this._onMessageReceived.bind(this);
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
 
@@ -125,8 +123,6 @@ export class BaseRemoteControlService extends Emitter {
     _onDisconnect(reason) {
         if (reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
             || reason === 'not-authorized') {
-            this._joinCodeToRetry = null;
-
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason }));
@@ -155,7 +151,7 @@ export class BaseRemoteControlService extends Emitter {
         // wait a little bit to retry to avoid a stampeding herd
         const jitter = getJitterDelay();
 
-        this._joinCodeToRetry = this._joinCodeToRetry || this.getJoinCode();
+        const previousJoinCode = this.getJoinCode();
 
         this.disconnect()
             .catch(error => {
@@ -165,12 +161,12 @@ export class BaseRemoteControlService extends Emitter {
                 );
             })
             .then(() => new Promise((resolve, reject) => {
-                setTimeout(() => {
+                this._reconnectTimeout = setTimeout(() => {
                     logger.log('attempting reconnect');
 
                     this.connect({
                         ...this._options,
-                        joinCode: this._joinCodeToRetry
+                        joinCode: previousJoinCode
                     })
                         .then(resolve)
                         .catch(reject);
@@ -180,7 +176,6 @@ export class BaseRemoteControlService extends Emitter {
                 logger.log('loaded');
 
                 this._setReconnectQueued(false);
-                this._joinCodeToRetry = null;
             })
             .catch(error => {
                 logger.warn('failed to load', { error });
