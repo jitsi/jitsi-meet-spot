@@ -10,7 +10,7 @@ PODS:
     - React/Core (= 0.59.5)
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-webview (5.7.1):
+  - react-native-webview (5.11.0):
     - React
   - React/Core (0.59.5):
     - yoga (= 0.59.5.React)
@@ -59,7 +59,7 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - RNCAsyncStorage (1.3.4):
+  - RNCAsyncStorage (1.4.2):
     - React
   - yoga (0.59.5.React)
 
@@ -111,8 +111,8 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 90adac468c7b72bf1fa6c64bf230650f851a8388
   react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
-  react-native-webview: dc712e0b176e761a5614726beb2ae89e43dd48c1
-  RNCAsyncStorage: 8e31405a9f12fbf42c2bb330e4560bfd79c18323
+  react-native-webview: 03bb6d5ef662f9909676e61ab940e4b8befad77f
+  RNCAsyncStorage: 285698b8a4f219573174d99e863a78b93f389272
   yoga: 2e571f113e8cbeb0eb752aeebc86c1bfe7a8200c
 
 PODFILE CHECKSUM: 2ed5df7782cef2629ad54ec10b3479e6e4493219
