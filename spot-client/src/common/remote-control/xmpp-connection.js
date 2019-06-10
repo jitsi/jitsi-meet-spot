@@ -46,6 +46,8 @@ export default class XmppConnection {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
+     * @param {string} options.jwt - The JWT token to be used with the XMPP
+     * connection.
      * @param {boolean} [options.retryOnUnauthorized] - Whether or not to retry
      * connection without a roomLock if an unauthorized error occurs.
      * @param {string} [options.roomLock] - The lock code to use when joining or
@@ -59,6 +61,7 @@ export default class XmppConnection {
     joinMuc(options) {
         const {
             joinAsSpot,
+            jwt,
             retryOnUnauthorized,
             roomLock,
             roomName,
@@ -73,7 +76,7 @@ export default class XmppConnection {
 
         this.xmppConnection = new JitsiMeetJS.JitsiConnection(
             null,
-            null,
+            jwt,
             {
                 p2p: {
                     useStunTurn: true

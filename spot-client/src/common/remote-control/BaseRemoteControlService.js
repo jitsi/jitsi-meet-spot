@@ -56,6 +56,7 @@ export class BaseRemoteControlService extends Emitter {
         this._options = options;
 
         const {
+            backend,
             joinAsSpot,
             joinCode,
             retryOnUnauthorized,
@@ -76,6 +77,7 @@ export class BaseRemoteControlService extends Emitter {
         this.xmppConnectionPromise = this.exchangeCode(joinCode)
             .then(roomInfo => this.xmppConnection.joinMuc({
                 joinAsSpot,
+                jwt: backend ? backend.getJwt() : null,
                 retryOnUnauthorized,
                 roomName: roomInfo.roomName,
                 roomLock: roomInfo.roomLock,
