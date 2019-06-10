@@ -1,10 +1,10 @@
 {
     "devDependencies": {
         "@wdio/cli": "5.8.3",
-        "@wdio/jasmine-framework": "5.8.1",
+        "@wdio/jasmine-framework": "5.9.4",
         "@wdio/local-runner": "5.8.3",
-        "@wdio/selenium-standalone-service": "5.8.0",
-        "@wdio/spec-reporter": "5.8.0",
+        "@wdio/selenium-standalone-service": "5.9.3",
+        "@wdio/spec-reporter": "5.9.3",
         "@wdio/sync": "5.8.1",
         "babel-eslint": "10.0.1",
         "eslint": "5.16.0",
