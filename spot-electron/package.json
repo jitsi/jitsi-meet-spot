@@ -10,14 +10,14 @@
     "description": "",
     "devDependencies": {
         "babel-eslint": "10.0.1",
-        "electron": "5.0.1",
-        "electron-builder": "20.40.2",
+        "electron": "5.0.3",
+        "electron-builder": "20.43.0",
         "electron-rebuild": "1.8.5",
         "eslint": "5.16.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
-        "eslint-plugin-flowtype": "3.8.2",
-        "eslint-plugin-import": "2.17.2",
-        "eslint-plugin-jsdoc": "4.8.4"
+        "eslint-plugin-flowtype": "3.10.1",
+        "eslint-plugin-import": "2.17.3",
+        "eslint-plugin-jsdoc": "7.2.3"
     },
     "license": "ISC",
     "main": "main.js",
