@@ -56,11 +56,5 @@ exports.config = {
     ],
 
     // Default wait time for all webdriverio wait-related functions.
-    waitforTimeout: 10000,
-
-    // Workaround for chrome and chromedriver instances not getting cleaned up
-    // automatically.
-    after: () => {
-        browser.deleteSession();
-    }
+    waitforTimeout: 10000
 };
