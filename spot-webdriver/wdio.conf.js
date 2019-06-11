@@ -45,6 +45,8 @@ exports.config = {
 
     logLevel: LOG_LEVEL,
 
+    maxInstances: process.env.MAX_INSTANCES || 1,
+
     reporters: [ 'spec' ],
 
     // Use selenium-standalone to automatically download and launch selenium.
