@@ -16,7 +16,7 @@
 7. Add backend endpoints in your .env file:
 
     ```
-    ADMIN_SERVICE_URL="http://localhost:8001/register-device"
+    PAIRING_SERVICE_URL="http://localhost:8001/pair"
     JOIN_CODE_SERVICE_URL="http://localhost:8001/room-info"
     CALENDAR_SERVICE_URL="http://localhost:8001/calendar?tzid={tzid}"
     ```

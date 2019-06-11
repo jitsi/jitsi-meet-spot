@@ -50,7 +50,7 @@ export default {
     },
 
     SPOT_SERVICES: {
-        adminServiceUrl: process.env.ADMIN_SERVICE_URL,
+        pairingServiceUrl: process.env.PAIRING_SERVICE_URL,
         joinCodeServiceUrl: process.env.JOIN_CODE_SERVICE_URL
     },
 
