@@ -51,7 +51,7 @@ export default {
 
     SPOT_SERVICES: {
         pairingServiceUrl: process.env.PAIRING_SERVICE_URL,
-        joinCodeServiceUrl: process.env.JOIN_CODE_SERVICE_URL
+        roomKeeperServiceUrl: process.env.ROOM_KEEPER_SERVICE_URL
     },
 
     ULTRASOUND: {

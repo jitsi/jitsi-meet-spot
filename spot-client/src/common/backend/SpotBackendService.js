@@ -3,8 +3,8 @@ import { fetchRoomInfo, registerDevice } from './utils';
 /**
  *
  * @typedef {Object} SpotBackendConfig
- * @property {string} pairingServiceUrl - The URL pointing to the service which manages Spot Rooms.
- * @property {string} joinCodeServiceUrl - The URL pointing to the pairing service.
+ * @property {string} pairingServiceUrl - The URL pointing to the pairing service.
+ * @property {string} roomKeeperServiceUrl - The URL pointing to the service which manages Spot Rooms.
  */
 /**
  * The class exposes backend functionality and stores backend related state.
@@ -15,15 +15,15 @@ export class SpotBackendService {
      *
      * @param {SpotBackendConfig} config - Spot backend configuration.
      */
-    constructor({ pairingServiceUrl, joinCodeServiceUrl }) {
+    constructor({ pairingServiceUrl, roomKeeperServiceUrl }) {
         if (!pairingServiceUrl) {
             throw Error('No "pairingServiceUrl"');
         }
-        if (!joinCodeServiceUrl) {
-            throw Error('No "joinCodeServiceUrl"');
+        if (!roomKeeperServiceUrl) {
+            throw Error('No "roomKeeperServiceUrl"');
         }
         this.pairingServiceUrl = pairingServiceUrl;
-        this.joinCodeServiceUrl = joinCodeServiceUrl;
+        this.roomKeeperServiceUrl = roomKeeperServiceUrl;
 
         /**
          *
@@ -47,7 +47,7 @@ export class SpotBackendService {
      * @returns {Promise<RoomInfo>}
      */
     getRoomInfo() {
-        return fetchRoomInfo(this.joinCodeServiceUrl, this.getJwt())
+        return fetchRoomInfo(this.roomKeeperServiceUrl, this.getJwt())
             .then(({ mucUrl }) => {
                 return {
                     roomName: mucUrl,

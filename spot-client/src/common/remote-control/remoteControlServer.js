@@ -37,7 +37,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
 
         super.connect({
             ...options,
-            retryOnUnauthorized: !options.joinCodeServiceUrl
+            retryOnUnauthorized: !options.backend
         });
 
         this.xmppConnectionPromise = this.xmppConnectionPromise
