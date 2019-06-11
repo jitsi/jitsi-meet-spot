@@ -8,6 +8,7 @@ import {
     isConnectionPending,
     setIsSpot
 } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
 
@@ -43,7 +44,9 @@ export class SpotTVRemoteControlLoader extends React.Component {
 
         analytics.updateProperty('spot-tv', true);
 
-        if (!this.props.isConnected && !this.props.isAttemptingConnection) {
+        if (!this.props.isConnected
+            && !this.props.isAttemptingConnection
+            && !this.props.isBackendEnabled) {
             // In the no backend mode the connection logic loops forever, because as long as there are
             // no network/config problems the connection must succeed.
             this.props.dispatch(createSpotTVRemoteControlConnection({ retry: true }));
@@ -92,6 +95,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
 function mapStateToProps(state) {
     return {
         isAttemptingConnection: isConnectionPending(state),
+        isBackendEnabled: isBackendEnabled(state),
         isConnected: isConnectionEstablished(state)
     };
 }
