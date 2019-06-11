@@ -23,13 +23,11 @@ const spot1 = new SpotRoom(spot1Id, {
     pairingCode: '123456',
     jwtToken: {
         accessToken: process.env.JWT,
-        emitted: new Date().toISOString(),
         expiresIn: 60 * 60 * 1000,
         refreshToken: 'refreshsfj3049ublabla325something'
     },
     shortLivedToken: {
         accessToken: process.env.JWT_SHORT_LIVED,
-        emitted: new Date().toISOString(),
         expiresIn: 10 * 60 * 1000
     },
     // It is unclear how the room name is to be retrieved yet. It might be part of the JWT.
