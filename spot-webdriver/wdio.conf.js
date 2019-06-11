@@ -45,6 +45,8 @@ exports.config = {
 
     logLevel: LOG_LEVEL,
 
+    maxInstances: process.env.MAX_INSTANCES || 1,
+
     reporters: [ 'spec' ],
 
     // Use selenium-standalone to automatically download and launch selenium.
@@ -56,11 +58,5 @@ exports.config = {
     ],
 
     // Default wait time for all webdriverio wait-related functions.
-    waitforTimeout: 10000,
-
-    // Workaround for chrome and chromedriver instances not getting cleaned up
-    // automatically.
-    after: () => {
-        browser.deleteSession();
-    }
+    waitforTimeout: 10000
 };
