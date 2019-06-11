@@ -134,7 +134,8 @@ export class App extends React.Component {
                                 render = { this._renderOutlookOauthView } />
                             <SpotTvRestrictedRoute
                                 path = { ROUTES.SETUP }
-                                render = { this._renderSetupView } />
+                                render = { this._renderSetupView }
+                                requireSetup = { false } />
                             <SpotTvRestrictedRoute
                                 path = { ROUTES.HOME }
                                 render = { this._renderHomeView } />
