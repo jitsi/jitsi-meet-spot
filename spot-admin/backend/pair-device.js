@@ -48,7 +48,7 @@ function registerDeviceController(spots, req, res) {
 
     const response = {
         accessToken: jwtStructure.accessToken,
-        emitted: jwtStructure.emitted,
+        emitted: new Date().toISOString(),
         expiresIn: jwtStructure.expiresIn
     };
 
