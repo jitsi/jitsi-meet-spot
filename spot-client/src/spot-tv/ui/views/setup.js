@@ -3,7 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { getSpotServicesConfig, setSetupCompleted } from 'common/app-state';
+import { setSetupCompleted } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Modal } from 'common/ui';
@@ -24,9 +25,9 @@ import {
  */
 export class Setup extends React.Component {
     static propTypes = {
-        adminServiceUrl: PropTypes.string,
         dispatch: PropTypes.func,
-        history: PropTypes.object
+        history: PropTypes.object,
+        isBackendEnabled: PropTypes.bool
     };
 
     /**
@@ -38,7 +39,7 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this.steps = props.adminServiceUrl
+        this.steps = props.isBackendEnabled
             ? [
                 SyncWithBackend,
                 SelectMedia,
@@ -146,10 +147,8 @@ export class Setup extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
-    const { adminServiceUrl } = getSpotServicesConfig(state);
-
     return {
-        adminServiceUrl
+        isBackendEnabled: isBackendEnabled(state)
     };
 }
 

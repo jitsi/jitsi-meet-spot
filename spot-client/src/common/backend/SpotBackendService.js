@@ -1,11 +1,9 @@
 import { fetchRoomInfo, registerDevice } from './utils';
 
 /**
- * TODO: rename adminServiceUrl to roomKeeperServiceUrl
- * TODO: rename joinCodeServiceUrl to pairingServiceUrl
  *
  * @typedef {Object} SpotBackendConfig
- * @property {string} adminServiceUrl - The URL pointing to the service which manages Spot Rooms.
+ * @property {string} pairingServiceUrl - The URL pointing to the service which manages Spot Rooms.
  * @property {string} joinCodeServiceUrl - The URL pointing to the pairing service.
  */
 /**
@@ -17,14 +15,14 @@ export class SpotBackendService {
      *
      * @param {SpotBackendConfig} config - Spot backend configuration.
      */
-    constructor({ adminServiceUrl, joinCodeServiceUrl }) {
-        if (!adminServiceUrl) {
-            throw Error('No "adminServiceUrl"');
+    constructor({ pairingServiceUrl, joinCodeServiceUrl }) {
+        if (!pairingServiceUrl) {
+            throw Error('No "pairingServiceUrl"');
         }
         if (!joinCodeServiceUrl) {
             throw Error('No "joinCodeServiceUrl"');
         }
-        this.adminServiceUrl = adminServiceUrl;
+        this.pairingServiceUrl = pairingServiceUrl;
         this.joinCodeServiceUrl = joinCodeServiceUrl;
 
         /**
@@ -65,7 +63,7 @@ export class SpotBackendService {
      * @returns {Promise<SpotRegistration>}
      */
     register(pairingCode) {
-        return registerDevice(`${this.adminServiceUrl}`, pairingCode)
+        return registerDevice(`${this.pairingServiceUrl}`, pairingCode)
             .then(registration => {
                 this.registration = registration;
 

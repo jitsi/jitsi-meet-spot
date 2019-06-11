@@ -7,5 +7,5 @@ import { getSpotServicesConfig } from '../app-state';
  * @returns {boolean}
  */
 export function isBackendEnabled(state) {
-    return Boolean(getSpotServicesConfig(state).adminServiceUrl);
+    return Boolean(getSpotServicesConfig(state).pairingServiceUrl);
 }
