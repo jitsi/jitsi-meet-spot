@@ -35,6 +35,11 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
+        /**
+         * A reference to all rejection functions for IQ requests in flight.
+         */
+        this._pendingIQRequestRejections = new Set();
+
         this._onCommand = this._onCommand.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
@@ -239,7 +244,11 @@ export default class XmppConnection {
         return leavePromise
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
-            .then(() => this.xmppConnection && this.xmppConnection.disconnect());
+            .then(() => this.xmppConnection && this.xmppConnection.disconnect())
+            .then(() => {
+                this._pendingIQRequestRejections.forEach(reject => reject());
+                this._pendingIQRequestRejections.clear();
+            });
     }
 
     /**
@@ -333,18 +342,12 @@ export default class XmppConnection {
         .t(JSON.stringify(data))
         .up();
 
-        return new Promise((resolve, reject) => {
-            this.room.connection.sendIQ(
-                iq,
-                responseIq => {
-                    const response = responseIq.getElementsByTagName('data')[0];
+        return this._sendIQ(iq)
+            .then(responseIq => {
+                const response = responseIq.getElementsByTagName('data')[0];
 
-                    resolve(response ? JSON.parse(response.textContent) : {});
-                },
-                reject,
-                IQ_TIMEOUT
-            );
-        });
+                return response ? JSON.parse(response.textContent) : {};
+            });
     }
 
     /**
@@ -368,14 +371,7 @@ export default class XmppConnection {
         .t(JSON.stringify(data))
         .up();
 
-        return new Promise((resolve, reject) => {
-            this.room.connection.sendIQ(
-                iq,
-                resolve,
-                reject,
-                IQ_TIMEOUT
-            );
-        });
+        return this._sendIQ(iq);
     }
 
     /**
@@ -486,6 +482,35 @@ export default class XmppConnection {
         this.options.onPresenceReceived(presence);
 
         return true;
+    }
+
+    /**
+     * Helper to encapsulate wrapping the IQ send in a promise. Stores a
+     * reference to the IQ request in case pending requests need to be cleared,
+     * which can happen when strophe disconnects but does not reject requests
+     * in flight.
+     *
+     * @param {Object} iq - The IQ to send.
+     * @private
+     * @returns {Promise}
+     */
+    _sendIQ(iq) {
+        return new Promise((resolve, reject) => {
+            this._pendingIQRequestRejections.add(reject);
+
+            this.room.connection.sendIQ(
+                iq,
+                (...args) => {
+                    this._pendingIQRequestRejections.delete(reject);
+                    resolve(...args);
+                },
+                (...args) => {
+                    this._pendingIQRequestRejections.delete(reject);
+                    reject(...args);
+                },
+                IQ_TIMEOUT
+            );
+        });
     }
 
     /**
