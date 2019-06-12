@@ -3,12 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
-import {
-    isConnectionEstablished,
-    isConnectionPending
-} from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { isSupportedSpotTvBrowser } from 'common/utils';
+
+import { getPermanentPairingCode } from 'spot-tv/backend';
 
 import { ROUTES } from './constants';
 
@@ -64,7 +62,7 @@ export class SpotTvRestrictedRoute extends React.PureComponent {
 function mapStateToProps(state) {
     return {
         isBackendSetupComplete: isBackendEnabled(state)
-            ? isConnectionPending(state) || isConnectionEstablished(state)
+            ? Boolean(getPermanentPairingCode(state))
             : true
     };
 }
