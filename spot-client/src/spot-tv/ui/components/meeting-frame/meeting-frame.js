@@ -27,6 +27,7 @@ export class MeetingFrame extends React.Component {
         avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
         invites: PropTypes.array,
+        jwt: PropTypes.string,
         maxDesktopSharingFramerate: PropTypes.number,
         meetingUrl: PropTypes.string,
         minDesktopSharingFramerate: PropTypes.number,
@@ -134,6 +135,7 @@ export class MeetingFrame extends React.Component {
                 ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
                 TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
+            jwt: this.props.jwt,
             onload: this._onMeetingLoaded,
             parentNode: this._meetingContainer,
             roomName: meetingName

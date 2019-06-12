@@ -9,6 +9,7 @@ import {
     getDesktopSharingFramerate,
     getDisplayName,
     getInMeetingStatus,
+    getJwt,
     getMeetingOptions,
     getPreferredCamera,
     getPreferredMic,
@@ -34,6 +35,7 @@ export class Meeting extends React.Component {
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
+        jwt: PropTypes.string,
         location: PropTypes.object,
         match: PropTypes.object,
         maxDesktopSharingFramerate: PropTypes.number,
@@ -96,6 +98,7 @@ export class Meeting extends React.Component {
         const {
             avatarUrl,
             displayName,
+            jwt,
             maxDesktopSharingFramerate,
             minDesktopSharingFramerate,
             preferredCamera,
@@ -113,6 +116,7 @@ export class Meeting extends React.Component {
                     avatarUrl = { avatarUrl }
                     displayName = { displayName }
                     invites = { invites }
+                    jwt = { jwt }
                     maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
                     meetingUrl = { location }
                     minDesktopSharingFramerate = { minDesktopSharingFramerate }
@@ -258,6 +262,7 @@ function mapStateToProps(state) {
         avatarUrl: getAvatarUrl(state),
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
+        jwt: getJwt(state),
         maxDesktopSharingFramerate,
         minDesktopSharingFramerate,
         showPasswordPrompt: getInMeetingStatus(state).needPassword,
