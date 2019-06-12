@@ -63,7 +63,12 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             logger.error('Spot-TV disconnected from the remote control server.', { error });
             dispatch(setRemoteJoinCode(''));
 
-            if (retry) {
+            if (pairingCode && error === 'unrecoverable-error') {
+                // Clear the permanent pairing code
+                dispatch(setPermanentPairingCode(''));
+
+                throw error;
+            } else if (retry) {
                 doConnect();
             } else {
                 throw error;
