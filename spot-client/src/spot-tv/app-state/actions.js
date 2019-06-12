@@ -3,6 +3,7 @@ import {
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
+    setDisplayName,
     setRemoteJoinCode,
     setJwt,
     setReconnectState
@@ -45,10 +46,18 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * connection.
          * @returns {void}
          */
-        function onSuccessfulConnect({ remoteJoinCode, jwt, permanentPairingCode }) {
+        function onSuccessfulConnect(result) {
+            const {
+                jwt,
+                permanentPairingCode,
+                remoteJoinCode,
+                roomProfile
+            } = result;
+
             dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
             dispatch(setPermanentPairingCode(permanentPairingCode));
+            dispatch(setDisplayName(roomProfile.name || ''));
         }
 
         /**
@@ -164,10 +173,11 @@ function createConnection(state, permanentPairingCode) {
         joinCodeRefreshRate,
         joinCode: permanentPairingCode,
         serverConfig: remoteControlConfiguration
-    }).then(() => {
+    }).then(roomProfile => {
         return {
             permanentPairingCode,
             remoteJoinCode: remoteControlServer.getRemoteJoinCode(),
+            roomProfile,
             jwt: backend ? backend.getJwt() : undefined
         };
     });

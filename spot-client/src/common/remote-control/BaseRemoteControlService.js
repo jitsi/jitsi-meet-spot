@@ -74,18 +74,25 @@ export class BaseRemoteControlService extends Emitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        this.xmppConnectionPromise = this.exchangeCode(joinCode)
-            .then(roomInfo => this.xmppConnection.joinMuc({
-                joinAsSpot,
-                jwt: backend ? backend.getJwt() : null,
-                retryOnUnauthorized,
-                roomName: roomInfo.roomName,
-                roomLock: roomInfo.roomLock,
-                onDisconnect: this._onDisconnect
-            }));
+        let roomProfile;
 
-        return this.xmppConnectionPromise
-            .catch(error => this.disconnect().then(() => Promise.reject(error)));
+        this.xmppConnectionPromise = this.exchangeCode(joinCode)
+            .then(roomInfo => {
+                roomProfile = { name: roomInfo.name };
+
+                return this.xmppConnection.joinMuc({
+                    joinAsSpot,
+                    jwt: backend ? backend.getJwt() : null,
+                    retryOnUnauthorized,
+                    roomName: roomInfo.roomName,
+                    roomLock: roomInfo.roomLock,
+                    onDisconnect: this._onDisconnect
+                });
+            })
+            .catch(error => this.disconnect().then(() => Promise.reject(error)))
+            .then(() => roomProfile);
+
+        return this.xmppConnectionPromise;
     }
 
     /**

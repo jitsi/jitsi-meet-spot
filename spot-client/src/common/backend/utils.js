@@ -299,7 +299,8 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
             }
 
             return {
-                mucUrl: json.mucUrl
+                mucUrl: json.mucUrl,
+                name: json.name
             };
         });
 }
