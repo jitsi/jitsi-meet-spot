@@ -57,11 +57,10 @@ export class SpotTVRemoteControlLoader extends React.Component {
             } else if (permanentPairingCode) {
                 logger.log('Restored permanent pairing code', { permanentPairingCode });
 
-                // TODO: retry as long as the backend will not say that the pairing code is invalid
                 this.props.dispatch(
                     createSpotTVRemoteControlConnection({
                         pairingCode: permanentPairingCode,
-                        retry: false
+                        retry: true
                     })
                 );
             }
