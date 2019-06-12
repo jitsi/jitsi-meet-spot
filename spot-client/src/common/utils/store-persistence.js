@@ -36,6 +36,7 @@ const keysToStore = [
     'setup.preferredMic',
     'setup.preferredSpeaker',
     'setup.showMeetingToolbar',
+    'spot-tv/backend.permanentPairingCode',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
 ];
@@ -89,6 +90,9 @@ function parsePersistedState(state) {
         wiredScreenshare: {
             deviceLabel: state.wiredScreenshare.deviceLabel,
             idleValue: state.wiredScreenshare.idleValue
+        },
+        'spot-tv/backend': {
+            permanentPairingCode: state['spot-tv/backend'].permanentPairingCode
         }
     };
 }

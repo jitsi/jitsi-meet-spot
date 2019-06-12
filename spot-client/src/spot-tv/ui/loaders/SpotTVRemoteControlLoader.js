@@ -9,12 +9,14 @@ import {
     setIsSpot
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
+import { logger } from 'common/logger';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
 
 import {
     createSpotTVRemoteControlConnection
 } from './../../app-state';
+import { getPermanentPairingCode } from '../../backend';
 
 
 /**
@@ -29,7 +31,8 @@ export class SpotTVRemoteControlLoader extends React.Component {
         dispatch: PropTypes.func,
         isAttemptingConnection: PropTypes.bool,
         isBackendEnabled: PropTypes.bool,
-        isConnected: PropTypes.bool
+        isConnected: PropTypes.bool,
+        permanentPairingCode: PropTypes.string
     };
 
     /**
@@ -40,16 +43,28 @@ export class SpotTVRemoteControlLoader extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        const { permanentPairingCode } = this.props;
+
         this.props.dispatch(setIsSpot(true));
 
         analytics.updateProperty('spot-tv', true);
 
-        if (!this.props.isConnected
-            && !this.props.isAttemptingConnection
-            && !this.props.isBackendEnabled) {
-            // In the no backend mode the connection logic loops forever, because as long as there are
-            // no network/config problems the connection must succeed.
-            this.props.dispatch(createSpotTVRemoteControlConnection({ retry: true }));
+        if (!this.props.isConnected && !this.props.isAttemptingConnection) {
+            if (!this.props.isBackendEnabled) {
+                // In the no backend mode the connection logic loops forever, because as long as there are
+                // no network/config problems the connection must succeed.
+                this.props.dispatch(createSpotTVRemoteControlConnection({ retry: true }));
+            } else if (permanentPairingCode) {
+                logger.log('Restored permanent pairing code', { permanentPairingCode });
+
+                // TODO: retry as long as the backend will not say that the pairing code is invalid
+                this.props.dispatch(
+                    createSpotTVRemoteControlConnection({
+                        pairingCode: permanentPairingCode,
+                        retry: false
+                    })
+                );
+            }
         }
     }
 
@@ -96,7 +111,8 @@ function mapStateToProps(state) {
     return {
         isAttemptingConnection: isConnectionPending(state),
         isBackendEnabled: isBackendEnabled(state),
-        isConnected: isConnectionEstablished(state)
+        isConnected: isConnectionEstablished(state),
+        permanentPairingCode: getPermanentPairingCode(state)
     };
 }
 
