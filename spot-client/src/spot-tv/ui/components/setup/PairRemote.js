@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getRemoteJoinCode } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { Button } from 'common/ui';
 
 import { getPermanentPairingCode } from '../../../backend';
@@ -14,8 +16,8 @@ import { getPermanentPairingCode } from '../../../backend';
  */
 export class PairRemote extends React.Component {
     static propTypes = {
-        onSuccess: PropTypes.func,
-        permanentPairingCode: PropTypes.string
+        code: PropTypes.string,
+        onSuccess: PropTypes.func
     };
 
     /**
@@ -47,7 +49,7 @@ export class PairRemote extends React.Component {
                         Would you like to pair a permanent remote control with this room?
                     </div>
                     <div className = 'join-code'>
-                        { this.props.permanentPairingCode }
+                        { this.props.code }
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
@@ -87,7 +89,9 @@ export class PairRemote extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        permanentPairingCode: getPermanentPairingCode(state)
+        code: isBackendEnabled(state)
+            ? getPermanentPairingCode(state)
+            : getRemoteJoinCode(state)
     };
 }
 
