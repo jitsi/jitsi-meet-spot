@@ -137,20 +137,26 @@ export default {
  */
 function filterJoinableEvents(events = [], calendarEmail) {
     return events.map(event => {
+        const isPrivate = event.visibility === 'private';
+
         return {
             end: event.end.dateTime,
             id: event.id,
-            meetingUrlFields: [
-                event.title,
-                event.url,
-                event.location,
-                event.summary,
-                event.notes,
-                event.description
-            ],
-            participants: filterAttendees(event.attendees, calendarEmail),
+            meetingUrlFields: isPrivate
+                ? []
+                : [
+                    event.title,
+                    event.url,
+                    event.location,
+                    event.summary,
+                    event.notes,
+                    event.description
+                ],
+            participants: isPrivate
+                ? []
+                : filterAttendees(event.attendees, calendarEmail),
             start: event.start.dateTime,
-            title: event.summary
+            title: isPrivate ? 'Private' : event.summary
         };
     });
 }

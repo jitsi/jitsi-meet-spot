@@ -107,19 +107,23 @@ export default {
  */
 function filterJoinableEvents(events) {
     return events.map(event => {
+        const isPrivate = event.sensitivity === 'private';
+
         return {
             end: event.end.dateTime,
             id: event.id,
-            meetingUrlFields: [
-                event.onlineMeetingUrl,
-                event.bodyPreview,
-                event.location.displayName,
-                event.subject,
-                event.webLink
-            ],
-            participants: formatAttendees(event.attendees),
+            meetingUrlFields: isPrivate
+                ? []
+                : [
+                    event.onlineMeetingUrl,
+                    event.bodyPreview,
+                    event.location.displayName,
+                    event.subject,
+                    event.webLink
+                ],
+            participants: isPrivate ? [] : formatAttendees(event.attendees),
             start: event.start.dateTime,
-            title: event.subject
+            title: isPrivate ? 'Private' : event.subject
         };
     });
 }
