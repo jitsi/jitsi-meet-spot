@@ -3,13 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    addNotification,
     getCalendarEvents,
-    getCurrentView,
-    isConnectedToSpot
+    getCurrentView
 } from 'common/app-state';
-import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
 import { LoadingIcon, ReconnectOverlay, View } from 'common/ui';
 
 import './../../analytics';
@@ -31,24 +27,9 @@ export class RemoteControl extends React.PureComponent {
     static propTypes = {
         events: PropTypes.array,
         history: PropTypes.object,
-        isConnectedToSpot: PropTypes.bool,
         onDisconnect: PropTypes.func,
-        onUnexpectedDisconnected: PropTypes.func,
         view: PropTypes.string
     };
-
-    /**
-     * Navigates away from the view {@code RemoteControl} when no longer
-     * connected to a Spot-TV.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate() {
-        if (!this.props.isConnectedToSpot) {
-            this.props.onUnexpectedDisconnected();
-            this.props.history.push(ROUTES.CODE);
-        }
-    }
 
     /**
      * Clean up connection related state.
@@ -112,7 +93,6 @@ export class RemoteControl extends React.PureComponent {
 function mapStateToProps(state) {
     return {
         events: getCalendarEvents(state),
-        isConnectedToSpot: isConnectedToSpot(state),
         view: getCurrentView(state)
     };
 }
@@ -133,16 +113,6 @@ function mapDispatchToProps(dispatch) {
          */
         onDisconnect() {
             dispatch(disconnectFromSpotTV());
-        },
-
-        /**
-         * Adds a notification that an unexpected disconnect has occurred.
-         *
-         * @returns {void}
-         */
-        onUnexpectedDisconnected() {
-            logger.log('onUnexpectedDisconnect');
-            dispatch(addNotification('error', 'Disconnected'));
         }
     };
 }
