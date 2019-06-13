@@ -62,7 +62,8 @@ class Help extends React.Component {
                         </div>
                         <Button
                             className = 'ok-button'
-                            onClick = { this._onOkButtonClicked } >
+                            onClick = { this._onOkButtonClicked }
+                            qaId = 'help-continue'>
                             Continue
                         </Button>
                     </div>

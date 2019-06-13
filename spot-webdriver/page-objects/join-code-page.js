@@ -53,6 +53,33 @@ class JoinCodePage extends PageObject {
      * @returns {void}
      */
     visit(queryParams) {
+        this.driver.url(this._getJoinCodePageUrl(queryParams));
+        this.waitForVisible();
+    }
+
+    /**
+     * Proceeds to the join code view of Spot-Remote but with a query param set
+     * to enable the onboarding feature.
+     *
+     * @returns {void}
+     */
+    visitWithOnboarding() {
+        const queryParams = new Map();
+
+        queryParams.set('enableOnboarding', true);
+
+        this.driver.url(this._getJoinCodePageUrl(queryParams));
+    }
+
+    /**
+     * Generates the URL to visit the join code page.
+     *
+     * @param {Map} [queryParams] - Additional parameters to append to the join
+     * code url.
+     * @private
+     * @returns {string}
+     */
+    _getJoinCodePageUrl(queryParams) {
         let joinCodePageUrl = constants.JOIN_CODE_ENTRY_URL;
 
         if (queryParams) {
@@ -63,8 +90,7 @@ class JoinCodePage extends PageObject {
             }
         }
 
-        this.driver.url(joinCodePageUrl);
-        this.waitForVisible();
+        return joinCodePageUrl;
     }
 }
 
