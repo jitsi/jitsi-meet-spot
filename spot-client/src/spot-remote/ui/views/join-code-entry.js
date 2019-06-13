@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import {
     addNotification,
     getRemoteControlServerConfig,
-    getShareDomain,
-    isConnectedToSpot
+    getShareDomain
 } from 'common/app-state';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
@@ -35,7 +34,6 @@ export class JoinCodeEntry extends React.Component {
         completedOnboarding: PropTypes.bool,
         entryLength: PropTypes.number,
         history: PropTypes.object,
-        isConnectedToSpot: PropTypes.bool,
         location: PropTypes.object,
         onAddNotification: PropTypes.func,
         onConnectToSpotTV: PropTypes.func,
@@ -299,7 +297,6 @@ export class JoinCodeEntry extends React.Component {
 function mapStateToProps(state) {
     return {
         completedOnboarding: isOnboardingComplete(state),
-        isConnectedToSpot: isConnectedToSpot(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state),
         shareDomain: getShareDomain(state)
     };
