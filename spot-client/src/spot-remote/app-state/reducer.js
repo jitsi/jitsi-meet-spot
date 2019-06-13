@@ -1,6 +1,7 @@
 import { ReducerRegistry } from 'common/redux';
 
 import {
+    SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
@@ -15,6 +16,11 @@ import {
  */
 ReducerRegistry.register('spotRemote', (state = { }, action) => {
     switch (action.type) {
+    case SPOT_REMOTE_COMPLETED_ONBOARDING:
+        return {
+            ...state,
+            completedOnboarding: true
+        };
     case SPOT_REMOTE_JOIN_CODE_VALID:
         return {
             ...state,

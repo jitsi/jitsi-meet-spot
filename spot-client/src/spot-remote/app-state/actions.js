@@ -15,6 +15,7 @@ import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 
 import {
+    SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
@@ -285,6 +286,17 @@ export function exitShareMode() {
         });
 
         history.push('/remote-control');
+    };
+}
+
+/**
+ * Notifies that the new user onboarding has been completed.
+ *
+ * @returns {Object}
+ */
+export function setHasCompletedOnboarding() {
+    return {
+        type: SPOT_REMOTE_COMPLETED_ONBOARDING
     };
 }
 

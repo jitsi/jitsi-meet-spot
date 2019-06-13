@@ -11,6 +11,11 @@ module.exports = {
     FAKE_SCREENSHARE_FILE_NAME: 'static-image.y4m',
 
     /**
+     * Direct URL to visible to see instructions on how to use Spot.
+     */
+    HELP_PAGE_URL: `${TEST_SERVER_URL}/help`,
+
+    /**
      * The direct URL to visit to start the flow for becoming a Spot-Remote for
      * a Spot-TV.
      */

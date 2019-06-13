@@ -37,6 +37,7 @@ const keysToStore = [
     'setup.preferredSpeaker',
     'setup.showMeetingToolbar',
     'spot-tv/backend.permanentPairingCode',
+    'spotRemote.completedOnboarding',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
 ];
@@ -93,6 +94,9 @@ function parsePersistedState(state) {
         },
         'spot-tv/backend': {
             permanentPairingCode: state['spot-tv/backend'].permanentPairingCode
+        },
+        spotRemote: {
+            completedOnboarding: state.spotRemote.completedOnboarding
         }
     };
 }
