@@ -36,6 +36,7 @@ const keysToStore = [
     'setup.preferredMic',
     'setup.preferredSpeaker',
     'setup.showMeetingToolbar',
+    'spotRemote.permanentPairingCode',
     'spot-tv/backend.permanentPairingCode',
     'spotRemote.completedOnboarding',
     'wiredScreenshare.deviceLabel',
@@ -92,11 +93,14 @@ function parsePersistedState(state) {
             deviceLabel: state.wiredScreenshare.deviceLabel,
             idleValue: state.wiredScreenshare.idleValue
         },
+
+        // TODO: either unify with Spot remote or move to Spot TV/app-state
         'spot-tv/backend': {
             permanentPairingCode: state['spot-tv/backend'].permanentPairingCode
         },
         spotRemote: {
-            completedOnboarding: state.spotRemote.completedOnboarding
+            completedOnboarding: state.spotRemote.completedOnboarding,
+            permanentPairingCode: state.spotRemote.permanentPairingCode
         }
     };
 }

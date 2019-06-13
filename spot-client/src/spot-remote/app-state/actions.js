@@ -19,8 +19,10 @@ import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
+import { getPermanentPairingCode } from './selectors';
 
 
 /**
@@ -78,34 +80,50 @@ export function connectToSpotTV(joinCode, shareMode) {
             shareMode
         });
 
-        _setSubscriptions({
-            dispatch,
-            getState
-        });
-
         const state = getState();
         const backend
             = isBackendEnabled(state)
                 ? new SpotBackendService(getSpotServicesConfig(state))
                 : null;
+        const serverConfig = getRemoteControlServerConfig(state);
 
-        logger.log('Spot Remote attempting connection', {
-            backend: Boolean(backend)
-        });
-
-        return remoteControlClient.connect({
-            joinCode,
-            backend,
-            serverConfig: getRemoteControlServerConfig(state)
-        }).then(() => {
+        /**
+         * The things done after successful connect.
+         *
+         * @returns {void}
+         */
+        function onSuccessfulConnect() {
             dispatch({
                 type: SPOT_REMOTE_JOIN_CODE_VALID,
                 joinCode,
                 shareMode
             });
-        })
-        .catch(error => {
-            // FIXME emit another action when the connect fails due to error other than the invalid join code
+
+            if (backend && backend.isPairingPermanent()) {
+                logger.log('This remote will be paired permanently');
+                dispatch(setPermanentPairingCode(joinCode));
+            } else {
+                dispatch(setPermanentPairingCode(''));
+            }
+        }
+
+        /**
+         * Things done when the connect attempt fails.
+         *
+         * @param {Error|string} error - What went wrong.
+         * @returns {Promise}
+         */
+        function onDisconnect(error) {
+            logger.error('On Spot Remote disconnect', { error });
+
+            // Retry for permanent pairing as long as the backend accepts the code
+            if (error !== 'unrecoverable-error' && getPermanentPairingCode(getState())) {
+
+                return doConnect();
+            }
+
+            dispatch(setPermanentPairingCode(''));
+
             dispatch({
                 type: SPOT_REMOTE_JOIN_CODE_INVALID,
                 joinCode,
@@ -115,7 +133,47 @@ export function connectToSpotTV(joinCode, shareMode) {
             _onDisconnected({ dispatch }, error);
 
             throw error;
-        });
+        }
+
+        /**
+         * Starts the connection and hooks up success/failure handlers.
+         *
+         * @private
+         * @returns {Promise}
+         */
+        function doConnect() {
+            logger.log('Spot Remote attempting connection');
+
+            return remoteControlClient.connect({
+                joinCode,
+                backend,
+                serverConfig
+            })
+                .then(onSuccessfulConnect)
+                .catch(onDisconnect);
+        }
+
+        const store = {
+            dispatch,
+            getState
+        };
+
+        rcsListeners.push(
+            remoteControlClient.addListener(
+                SERVICE_UPDATES.RECONNECT_UPDATE,
+                _onReconnectStatusChange.bind(null, store)));
+
+        rcsListeners.push(
+            remoteControlClient.addListener(
+                SERVICE_UPDATES.SERVER_STATE_CHANGE,
+                _onSpotTVStateChange.bind(null, store)));
+
+        rcsListeners.push(
+            remoteControlClient.addListener(
+                SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
+                onDisconnect.bind(null, store)));
+
+        return doConnect();
     };
 }
 
@@ -135,7 +193,7 @@ function _clearSubscriptions() {
 /**
  * Callback called when the remote control service connection is unrecoverable broken.
  *
- * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @param {Object} store - The Redux store.
  * @param {string} error - See {@link SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT}.
  * @private
  * @returns {void}
@@ -201,27 +259,20 @@ function _onSpotTVStateChange({ dispatch }, data) {
 }
 
 /**
- * Sets listeners on the remote control service.
+ * Stores the given permanent pairing code which is to be used Spot Remote to connect to the Spot TV next time the app
+ * is started.
  *
- * @param {Object} store - The Redux store.
- * @private
- * @returns {void}
+ * @param {string} permanentPairingCode - A permanent pairing code to be stored.
+ * @returns {{
+ *     type: SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
+ *     permanentPairingCode: string
+ * }}
  */
-function _setSubscriptions(store) {
-    rcsListeners.push(
-        remoteControlClient.addListener(
-            SERVICE_UPDATES.RECONNECT_UPDATE,
-            _onReconnectStatusChange.bind(null, store)));
-
-    rcsListeners.push(
-        remoteControlClient.addListener(
-            SERVICE_UPDATES.SERVER_STATE_CHANGE,
-            _onSpotTVStateChange.bind(null, store)));
-
-    rcsListeners.push(
-        remoteControlClient.addListener(
-            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-            _onDisconnected.bind(null, store)));
+function setPermanentPairingCode(permanentPairingCode) {
+    return {
+        type: SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
+        permanentPairingCode
+    };
 }
 
 /**

@@ -4,6 +4,7 @@ import {
     SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
 
@@ -31,6 +32,11 @@ ReducerRegistry.register('spotRemote', (state = { }, action) => {
         return {
             ...state,
             roomInfo: undefined
+        };
+    case SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE:
+        return {
+            ...state,
+            permanentPairingCode: action.permanentPairingCode
         };
 
     default:

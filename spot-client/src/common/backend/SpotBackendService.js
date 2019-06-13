@@ -58,6 +58,16 @@ export class SpotBackendService {
     }
 
     /**
+     * Returns true if the current pairing is permanent. This means that the backend has granted a refresh token which
+     * can be used to refresh an access token indefinitely.
+     *
+     * @returns {boolean}
+     */
+    isPairingPermanent() {
+        return Boolean(this.registration && this.registration.refreshToken);
+    }
+
+    /**
      * Registers with the backend and stores the access token.
      *
      * @param {string} pairingCode - The pairing code to be used for authentication with the backend service.
