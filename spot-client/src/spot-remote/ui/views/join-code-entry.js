@@ -15,6 +15,7 @@ import { CodeInput, Loading, View } from 'common/ui';
 import {
     connectToSpotTV,
     disconnectFromSpotTV,
+    getPermanentPairingCode,
     isOnboardingComplete
 } from './../../app-state';
 import { NavButton, NavContainer } from './../components';
@@ -38,6 +39,7 @@ export class JoinCodeEntry extends React.Component {
         onAddNotification: PropTypes.func,
         onConnectToSpotTV: PropTypes.func,
         onDisconnect: PropTypes.func,
+        permanentPairingCode: PropTypes.string,
         remoteControlConfiguration: PropTypes.object,
         shareDomain: PropTypes.string,
         ultrasoundService: PropTypes.object
@@ -84,6 +86,14 @@ export class JoinCodeEntry extends React.Component {
             const queryParams = new URLSearchParams(parts);
 
             code = queryParams.get('code');
+        }
+
+        if (!code) {
+            code = this.props.permanentPairingCode;
+
+            if (code) {
+                logger.log('Restored permanent pairing code');
+            }
         }
 
         if (code) {
@@ -297,6 +307,7 @@ export class JoinCodeEntry extends React.Component {
 function mapStateToProps(state) {
     return {
         completedOnboarding: isOnboardingComplete(state),
+        permanentPairingCode: getPermanentPairingCode(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state),
         shareDomain: getShareDomain(state)
     };
