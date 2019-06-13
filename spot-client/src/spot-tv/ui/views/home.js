@@ -12,6 +12,7 @@ import {
     isSetupComplete
 } from 'common/app-state';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
+import { ROUTES } from 'common/routing';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
@@ -152,7 +153,7 @@ export class Home extends React.Component {
     _onCommand(type, data) {
         switch (type) {
         case COMMANDS.GO_TO_MEETING: {
-            let path = `/meeting?location=${data.meetingName}`;
+            let path = `${ROUTES.MEETING}?location=${data.meetingName}`;
 
             if (data.invites) {
                 path += `&invites=${JSON.stringify(data.invites)}`;
@@ -183,7 +184,7 @@ export class Home extends React.Component {
         const meetingName = getRandomMeetingName();
 
         this.props.history.push(
-            `/meeting?location=${meetingName}&screenshare=true`);
+            `${ROUTES.MEETING}?location=${meetingName}&screenshare=true`);
     }
 
     /**

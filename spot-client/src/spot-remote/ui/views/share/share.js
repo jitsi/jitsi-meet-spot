@@ -14,6 +14,7 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { ROUTES } from 'common/routing';
 import { LoadingIcon, View } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -85,9 +86,10 @@ export class Share extends React.PureComponent {
      * @inheritdoc
      */
     componentDidUpdate() {
+        // FIXME same logic duplicated in remote-control
         if (!this.props.isConnectedToSpot) {
             this.props.dispatch(addNotification('error', 'Disconnected'));
-            this.props.history.push('/');
+            this.props.history.push(ROUTES.CODE);
         }
     }
 

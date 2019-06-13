@@ -284,7 +284,7 @@ export function exitShareMode() {
             type: SPOT_REMOTE_EXIT_SHARE_MODE
         });
 
-        history.push('/remote-control');
+        history.push(ROUTES.REMOTE_CONTROL);
     };
 }
 
