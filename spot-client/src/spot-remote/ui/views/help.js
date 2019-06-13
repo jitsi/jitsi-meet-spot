@@ -52,8 +52,8 @@ class Help extends React.Component {
                         <div className = 'help-message'>
                             This app is a remote controller for a conference room.
                             <div>
-                                Open { Help._getSpotTvUrl() } in a browser to setup your conference room
-                                and obtain a share key.
+                                Open { Help._getSpotTvUrl() } in a desktop Google Chrome browser in the conference room
+                                to set it up and obtain a share key. Next enter the 6-character share key in this app.
                             </div>
                         </div>
                         <Button
