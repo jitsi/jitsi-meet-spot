@@ -9,6 +9,7 @@ import {
 import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
 
+import LoadingScreen from './LoadingScreen';
 import styles from './styles';
 
 /**
@@ -60,7 +61,11 @@ export default class RemoteControl extends React.PureComponent {
         return (
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
                 <KeepAwake />
-                { this._renderWebViewContent() }
+                {
+                    this.state.webViewError
+                        ? this._renderWebviewError()
+                        : this._renderWebViewContent()
+                }
             </View>
         );
     }
@@ -92,33 +97,12 @@ export default class RemoteControl extends React.PureComponent {
     }
 
     /**
-     * Renders what should be shown in the place of the WebView. Either renders
-     * the WebView itself or an error message.
+     * Renders what should be shown in the place of the WebView.
      *
      * @private
      * @returns {ReactElement}
      */
     _renderWebViewContent() {
-        if (this.state.webViewError) {
-            return (
-                <View
-                    style = {{
-                        ...styles.fullScreen,
-                        ...styles.centeredContent
-                    }}>
-                    <Text style = { styles.headerText }>
-                        We're sorry, but something went wrong.
-                    </Text>
-                    <Text style = { styles.infoText }>
-                        Error detail: { this.state.webViewError }
-                    </Text>
-                    <Button
-                        onPress = { this._onRetryWebViewLoad }
-                        title = 'Retry' />
-                </View>
-            );
-        }
-
         return (
             <WebView
                 allowsInlineMediaPlayback = { true }
@@ -139,6 +123,8 @@ export default class RemoteControl extends React.PureComponent {
 
                 onError = { this._onWebViewLoadError }
 
+                renderLoading = { this._renderLoading }
+
                 // The default is true but being explicit to point out
                 // scrolling is necessary for iOS (starting on 12.2) to
                 // properly center focus on inputs.
@@ -148,7 +134,44 @@ export default class RemoteControl extends React.PureComponent {
                 showsHorizontalScrollIndicator = { false }
                 showsVerticalScrollIndicator = { false }
 
-                source = {{ uri: this.props.url }} />
+                source = {{ uri: this.props.url }}
+                startInLoadingState = { true } />
+        );
+    }
+
+    /**
+     * Renders a page showing a loading indicator.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderLoading() {
+        return <LoadingScreen />;
+    }
+
+    /**
+     * Displays an error message for when the webview cannot load properly.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderWebviewError() {
+        return (
+            <View
+                style = {{
+                    ...styles.fullScreen,
+                    ...styles.centeredContent
+                }}>
+                <Text style = { styles.headerText }>
+                    We're sorry, but something went wrong.
+                </Text>
+                <Text style = { styles.infoText }>
+                    Error detail: { this.state.webViewError }
+                </Text>
+                <Button
+                    onPress = { this._onRetryWebViewLoad }
+                    title = 'Retry' />
+            </View>
         );
     }
 }
