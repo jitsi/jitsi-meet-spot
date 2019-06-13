@@ -8,6 +8,8 @@ import {
     getCurrentView,
     isConnectedToSpot
 } from 'common/app-state';
+import { logger } from 'common/logger';
+import { ROUTES } from 'common/routing';
 import { LoadingIcon, ReconnectOverlay, View } from 'common/ui';
 
 import './../../analytics';
@@ -44,7 +46,7 @@ export class RemoteControl extends React.PureComponent {
     componentDidUpdate() {
         if (!this.props.isConnectedToSpot) {
             this.props.onUnexpectedDisconnected();
-            this.props.history.push('/');
+            this.props.history.push(ROUTES.CODE);
         }
     }
 
@@ -139,6 +141,7 @@ function mapDispatchToProps(dispatch) {
          * @returns {void}
          */
         onUnexpectedDisconnected() {
+            logger.log('onUnexpectedDisconnect');
             dispatch(addNotification('error', 'Disconnected'));
         }
     };
