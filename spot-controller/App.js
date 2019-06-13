@@ -59,7 +59,9 @@ export default class App extends React.Component {
         const { remoteControlUrl } = this.state;
 
         if (remoteControlUrl) {
-            const remoteControlComponent = <RemoteControl url = { remoteControlUrl } />;
+            const remoteControlComponent = (
+                <RemoteControl url = { `${remoteControlUrl}/?enableOnboarding=true` } />
+            );
 
             // The side menu for editing the URL is enabled only in the debug mode.
             if (__DEV__) {

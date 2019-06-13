@@ -13,7 +13,11 @@ import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { CodeInput, Loading, View } from 'common/ui';
 
-import { connectToSpotTV, disconnectFromSpotTV } from './../../app-state';
+import {
+    connectToSpotTV,
+    disconnectFromSpotTV,
+    isOnboardingComplete
+} from './../../app-state';
 import { NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
 
@@ -28,6 +32,7 @@ export class JoinCodeEntry extends React.Component {
     };
 
     static propTypes = {
+        completedOnboarding: PropTypes.bool,
         entryLength: PropTypes.number,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
@@ -87,6 +92,14 @@ export class JoinCodeEntry extends React.Component {
             logger.log('joinCodeEntry detected a join code');
 
             this._connectToSpot(code);
+
+            return;
+        }
+
+        if (this._shouldRedirectToHelp()) {
+            this.props.history.push(ROUTES.HELP);
+
+            return;
         }
     }
 
@@ -107,6 +120,19 @@ export class JoinCodeEntry extends React.Component {
         const queryParams = new URLSearchParams(this.props.location.search);
 
         return queryParams.get('share') === 'true';
+    }
+
+    /**
+     * Whether or not to exit from the {@code JoinCodeEntry} and instead show
+     * app help.
+     *
+     * @returns {boolean}
+     */
+    _shouldRedirectToHelp() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+
+        return queryParams.get('enableOnboarding') === 'true'
+            && !this.props.completedOnboarding;
     }
 
     /**
@@ -272,6 +298,7 @@ export class JoinCodeEntry extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        completedOnboarding: isOnboardingComplete(state),
         isConnectedToSpot: isConnectedToSpot(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state),
         shareDomain: getShareDomain(state)

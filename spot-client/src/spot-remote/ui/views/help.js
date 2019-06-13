@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { ROUTES } from 'common/routing';
 import { Button, View } from 'common/ui';
 import { windowHandler } from 'common/utils';
+
+import { setHasCompletedOnboarding } from '../../app-state';
 
 /**
  * Displays a view with basic usage instructions for Spot Remote.
@@ -12,6 +15,7 @@ import { windowHandler } from 'common/utils';
  */
 class Help extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         history: PropTypes.object
     };
 
@@ -59,7 +63,7 @@ class Help extends React.Component {
                         <Button
                             className = 'ok-button'
                             onClick = { this._onOkButtonClicked } >
-                            OK
+                            Continue
                         </Button>
                     </div>
                 </div>
@@ -74,8 +78,9 @@ class Help extends React.Component {
      * @returns {void}
      */
     _onOkButtonClicked() {
+        this.props.dispatch(setHasCompletedOnboarding());
         this.props.history.push(ROUTES.CODE);
     }
 }
 
-export default Help;
+export default connect()(Help);
