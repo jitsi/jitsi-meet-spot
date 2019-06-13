@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import SideMenu from 'react-native-side-menu';
 
+import LoadingScreen from './src/LoadingScreen';
 import RemoteControl from './src/remote-control';
 import SettingsMenu from './src/settings-menu';
 import Setup from './src/setup';
@@ -26,6 +27,7 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
+            loading: __DEV__,
             remoteControlUrl: __DEV__ ? null : DEFAULT_URL
         };
 
@@ -43,6 +45,7 @@ export default class App extends React.Component {
             AsyncStorage.getItem('remote-control-url')
                 .then(remoteControlUrl => {
                     this.setState({
+                        loading: false,
                         remoteControlUrl: remoteControlUrl === null ? DEFAULT_URL : remoteControlUrl
                     });
                 });
@@ -56,6 +59,10 @@ export default class App extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        if (this.state.loading) {
+            return <LoadingScreen />;
+        }
+
         const { remoteControlUrl } = this.state;
 
         if (remoteControlUrl) {
