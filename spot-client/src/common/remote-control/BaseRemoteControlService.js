@@ -36,6 +36,13 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
+     * @typedef {Object} RoomProfile - Public information about the Spot-TV
+     * and the physical room it is hosted in.
+     *
+     * @property {string} [name] - The name of psychical conference room
+     * which has the Spot-TV.
+     */
+    /**
      * Creates a connection to the remote control service.
      *
      * @param {Object} options - Information necessary for creating the MUC.
@@ -49,7 +56,7 @@ export class BaseRemoteControlService extends Emitter {
      * created to automatically update the join code at the provided rate.
      * @param {Object} options.serverConfig - Details on how the XMPP connection
      * should be made.
-     * @returns {Promise<string>}
+     * @returns {Promise<RoomProfile>}
      */
     connect(options) {
         // Keep a cache of the initial options for reference when reconnecting.
@@ -74,18 +81,25 @@ export class BaseRemoteControlService extends Emitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        this.xmppConnectionPromise = this.exchangeCode(joinCode)
-            .then(roomInfo => this.xmppConnection.joinMuc({
-                joinAsSpot,
-                jwt: backend ? backend.getJwt() : null,
-                retryOnUnauthorized,
-                roomName: roomInfo.roomName,
-                roomLock: roomInfo.roomLock,
-                onDisconnect: this._onDisconnect
-            }));
+        let roomProfile;
 
-        return this.xmppConnectionPromise
-            .catch(error => this.disconnect().then(() => Promise.reject(error)));
+        this.xmppConnectionPromise = this.exchangeCode(joinCode)
+            .then(roomInfo => {
+                roomProfile = { name: roomInfo.name };
+
+                return this.xmppConnection.joinMuc({
+                    joinAsSpot,
+                    jwt: backend ? backend.getJwt() : null,
+                    retryOnUnauthorized,
+                    roomName: roomInfo.roomName,
+                    roomLock: roomInfo.roomLock,
+                    onDisconnect: this._onDisconnect
+                });
+            })
+            .catch(error => this.disconnect().then(() => Promise.reject(error)))
+            .then(() => roomProfile);
+
+        return this.xmppConnectionPromise;
     }
 
     /**
@@ -200,7 +214,9 @@ export class BaseRemoteControlService extends Emitter {
 
     /**
      * @typedef {Object} RoomInfo
-     * @property {string} roomName - the name of the room.
+     * @property {string} [name] - The name of psychical conference room
+     * which has the Spot-TV.
+     * @property {string} roomName - the name of the MUC room.
      * @property {string} [roomLock] - the room's password (if any).
      */
     /**

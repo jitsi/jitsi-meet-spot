@@ -41,10 +41,12 @@ export class RemoteControlServer extends BaseRemoteControlService {
         });
 
         this.xmppConnectionPromise = this.xmppConnectionPromise
-            .then(() => {
+            .then(roomProfile => {
                 if (options.joinCodeRefreshRate) {
                     this.refreshJoinCode(options.joinCodeRefreshRate);
                 }
+
+                return roomProfile;
             });
 
         return this.xmppConnectionPromise;
