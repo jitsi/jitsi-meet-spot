@@ -3,18 +3,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    addNotification,
     getCurrentView,
     getInMeetingStatus,
     hangUp,
-    isConnectedToSpot,
     isWirelessScreensharingLocally,
     isWirelessScreensharingPending,
     joinWithScreensharing,
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
-import { ROUTES } from 'common/routing';
 import { LoadingIcon, View } from 'common/ui';
 import {
     getRandomMeetingName,
@@ -77,19 +74,6 @@ export class Share extends React.PureComponent {
     componentDidMount() {
         if (isWirelessScreenshareSupported()) {
             this._onStartWirelessScreenshare();
-        }
-    }
-
-    /**
-     * Navigates away from {@code Share} if not connected to a Spot-TV.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate() {
-        // FIXME same logic duplicated in remote-control
-        if (!this.props.isConnectedToSpot) {
-            this.props.dispatch(addNotification('error', 'Disconnected'));
-            this.props.history.push(ROUTES.CODE);
         }
     }
 
@@ -198,7 +182,6 @@ function mapStateToProps(state) {
 
     return {
         inMeeting: Boolean(inMeetingState.inMeeting),
-        isConnectedToSpot: isConnectedToSpot(state),
         isScreenshareActiveRemotely:
             !isWirelessScreensharing && Boolean(inMeetingState.screensharingType),
         isWirelessScreensharing,
