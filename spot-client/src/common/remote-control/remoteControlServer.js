@@ -19,8 +19,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
     constructor() {
         super();
 
-        this._nextJoinCodeUpdate = null;
-
         this._onCommandReceived = this._onCommandReceived.bind(this);
     }
 
@@ -35,33 +33,17 @@ export class RemoteControlServer extends BaseRemoteControlService {
             return this.xmppConnectionPromise;
         }
 
-        super.connect({
-            ...options,
-            retryOnUnauthorized: !options.backend
-        });
+        // TODO: add 'createConnectionPromise' to remove promise overwrite and duplicated check above
+        // This initializes this.xmppConnectionPromise
+        super.connect(options);
 
-        this.xmppConnectionPromise = this.xmppConnectionPromise
-            .then(roomProfile => {
-                if (options.joinCodeRefreshRate) {
-                    this.refreshJoinCode(options.joinCodeRefreshRate);
-                }
-
-                return roomProfile;
-            });
+        // Extend the connect promise with extra steps
+        this.xmppConnectionPromise
+            = this.xmppConnectionPromise
+                  .then(roomProfile => options.backend.fetchShortLivedPairingCode()
+                          .then(() => roomProfile));
 
         return this.xmppConnectionPromise;
-    }
-
-    /**
-     * Stops the XMPP connection.
-     *
-     * @inheritdoc
-     * @override
-     */
-    disconnect() {
-        clearTimeout(this._nextJoinCodeUpdate);
-
-        return super.disconnect();
     }
 
     /**
@@ -88,91 +70,12 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
-     * Implements a way to get the current join code to connect to this instance
-     * of {@code RemoteControlServer}.
-     *
-     * @inheritdoc
-     * @override
-     */
-    getJoinCode() {
-        if (this._options.backend) {
-            return this._options.joinCode;
-        }
-
-        const fullJid
-            = this.xmppConnection && this.xmppConnection.getRoomFullJid();
-
-        if (!fullJid) {
-            return '';
-        }
-
-        const roomName = fullJid.split('@')[0];
-        const roomLock = this.xmppConnection.getLock();
-
-        return `${roomName}${roomLock}`;
-    }
-
-    /**
      * Returns the join code that is to be used by a Spot Remote in order to be paired with this Spot TV.
      *
      * @returns {string}
      */
     getRemoteJoinCode() {
-        const { backend } = this._options;
-
-        return backend ? backend.getShortLivedPairingCode() : this.getJoinCode();
-    }
-
-    /**
-     * Method invoked to generate a new join code for instances of
-     * {@code RemoteControlClient} to pair with it.
-     *
-     * @param {number} nextRefreshTimeout - If defined will start an interval
-     * to automatically update join code.
-     * @returns {Promise<string>} Resolves with the new join code.
-     */
-    refreshJoinCode(nextRefreshTimeout) {
-        clearTimeout(this._nextJoinCodeUpdate);
-
-        const refreshCodePromise
-            = this._options.backend
-                ? this.refreshJoinCodeWithBackend()
-                : this.refreshJoinCodeWithXmpp();
-
-        refreshCodePromise.then(() => {
-            this.emit(
-                SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
-                { remoteJoinCode: this.getRemoteJoinCode() }
-            );
-
-            if (nextRefreshTimeout) {
-                this._nextJoinCodeUpdate = setTimeout(() => {
-                    this.refreshJoinCode(nextRefreshTimeout);
-                }, nextRefreshTimeout);
-            }
-        });
-    }
-
-    /**
-     * The backend way for refreshing remote join codes.
-     *
-     * @returns {Promise} - A Promise resolved when the code has been refreshed.
-     */
-    refreshJoinCodeWithBackend() {
-        const { backend } = this._options;
-
-        return backend.fetchShortLivedPairingCode();
-    }
-
-    /**
-     * The XMPP way for refreshing remote join codes.
-     *
-     * @returns {Promise} - A Promise resolved when the code has been refreshed.
-     */
-    refreshJoinCodeWithXmpp() {
-        const roomLock = generateRandomString(3);
-
-        return this.xmppConnection.setLock(roomLock);
+        return this._options.backend.getShortLivedPairingCode();
     }
 
     /**
@@ -255,18 +158,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
         });
     }
 
-
-    /**
-     * Callback invoked when the XMPP connection is disconnected.
-     *
-     * @inheritdoc
-     * @override
-     */
-    _onDisconnect(...args) {
-        clearTimeout(this._nextJoinCodeUpdate);
-
-        super._onDisconnect(...args);
-    }
 
     /**
      * Implements {@link BaseRemoteControlService#_onPresenceReceived}.

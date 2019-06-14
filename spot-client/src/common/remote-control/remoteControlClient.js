@@ -102,38 +102,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
-     * Converts a join code to Spot-TV connection information so it can be connected to by
-     * a Spot-Remote.
-     *
-     * @param {string} code - The join code to exchange for connection information.
-     * @returns {Promise<RoomInfo>} Resolve with join information or an error.
-     */
-    exchangeCodeWithXmpp(code) {
-        if (code.length === 6) {
-            return Promise.resolve({
-                roomName: code.substring(0, 3),
-                roomLock: code.substring(3, 6)
-            });
-        }
-
-        // The 'not-authorized' error is returned by the server if the code is wrong.
-        // Return the same error if it's known that the code is invalid before submitting to the server.
-        return Promise.reject('not-authorized');
-    }
-
-    /**
-     * Implements a way to get the current join code to connect to the
-     * {@code RemoteControlServer}.
-     *
-     * @inheritdoc
-     * @override
-     */
-    getJoinCode() {
-        return (this._lastSpotState && this._lastSpotState.remoteJoinCode)
-            || this._options.joinCode;
-    }
-
-    /**
      * Requests a {@code RemoteControlServer} to join a meeting.
      *
      * @param {string} meetingName - The meeting to join.
