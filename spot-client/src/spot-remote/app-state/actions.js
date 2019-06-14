@@ -53,25 +53,11 @@ const presenceToStoreAsString = new Set([
 ]);
 
 /**
- * {@link _onDisconnected} listener bound to the remote control service.
+ * An array which stores all listeners bound to the the remote control service.
  *
- * @type {function}
+ * @type {Array<Function>}
  */
-let onDisconnectedHandler = null;
-
-/**
- * {@link _onReconnectStatusChange} listener bound to the remote control service.
- *
- * @type {function}
- */
-let onReconnectStatusChangedHandler = null;
-
-/**
- * {@link _onSpotTVStateChange} listener bound to the remote control service.
- *
- * @type {function}
- */
-let onSpotStateChangedHandler = null;
+let rcsListeners = [];
 
 /**
  * Connects Spot Remote to Spot TV.
@@ -140,27 +126,10 @@ export function connectToSpotTV(joinCode, shareMode) {
  * @returns {void}
  */
 function _clearSubscriptions() {
-    if (onDisconnectedHandler) {
-        remoteControlClient.removeListener(
-            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-            onDisconnectedHandler
-        );
-        onDisconnectedHandler = null;
+    for (const removeListener of rcsListeners) {
+        removeListener();
     }
-    if (onReconnectStatusChangedHandler) {
-        remoteControlClient.removeListener(
-            SERVICE_UPDATES.RECONNECT_UPDATE,
-            onReconnectStatusChangedHandler
-        );
-        onReconnectStatusChangedHandler = null;
-    }
-    if (onSpotStateChangedHandler) {
-        remoteControlClient.removeListener(
-            SERVICE_UPDATES.SERVER_STATE_CHANGE,
-            onSpotStateChangedHandler
-        );
-        onSpotStateChangedHandler = null;
-    }
+    rcsListeners = [];
 }
 
 /**
@@ -239,23 +208,20 @@ function _onSpotTVStateChange({ dispatch }, data) {
  * @returns {void}
  */
 function _setSubscriptions(store) {
-    onReconnectStatusChangedHandler = _onReconnectStatusChange.bind(null, store);
+    rcsListeners.push(
+        remoteControlClient.addListener(
+            SERVICE_UPDATES.RECONNECT_UPDATE,
+            _onReconnectStatusChange.bind(null, store)));
 
-    remoteControlClient.addListener(
-        SERVICE_UPDATES.RECONNECT_UPDATE,
-        onReconnectStatusChangedHandler);
+    rcsListeners.push(
+        remoteControlClient.addListener(
+            SERVICE_UPDATES.SERVER_STATE_CHANGE,
+            _onSpotTVStateChange.bind(null, store)));
 
-    onSpotStateChangedHandler = _onSpotTVStateChange.bind(null, store);
-
-    remoteControlClient.addListener(
-        SERVICE_UPDATES.SERVER_STATE_CHANGE,
-        onSpotStateChangedHandler);
-
-    onDisconnectedHandler = _onDisconnected.bind(null, store);
-
-    remoteControlClient.addListener(
-        SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-        onDisconnectedHandler);
+    rcsListeners.push(
+        remoteControlClient.addListener(
+            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
+            _onDisconnected.bind(null, store)));
 }
 
 /**
