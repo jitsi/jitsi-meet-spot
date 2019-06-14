@@ -153,18 +153,20 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
 function createConnection(state, permanentPairingCode) {
     const joinCodeRefreshRate = getJoinCodeRefreshRate(state);
     const remoteControlConfiguration = getRemoteControlServerConfig(state);
-    const backend
-        = isBackendEnabled(state)
-            ? new SpotTvBackendService(getSpotServicesConfig(state))
-            : null;
+
+    if (!isBackendEnabled(state)) {
+        throw new Error('Backend config is required');
+    }
+
+    const backend = new SpotTvBackendService(getSpotServicesConfig(state));
 
     logger.log('Spot TV attempting connection', {
         backend: Boolean(backend),
         permanentPairingCode: Boolean(permanentPairingCode)
     });
 
-    if (backend && !permanentPairingCode) {
-        return Promise.reject('The pairing code is required when the backend is enabled');
+    if (!permanentPairingCode) {
+        return Promise.reject('The pairing code is required');
     }
 
     return remoteControlServer.connect({

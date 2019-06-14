@@ -8,7 +8,6 @@ import {
     isConnectionPending,
     setIsSpot
 } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
@@ -30,7 +29,6 @@ export class SpotTVRemoteControlLoader extends React.Component {
         children: PropTypes.node,
         dispatch: PropTypes.func,
         isAttemptingConnection: PropTypes.bool,
-        isBackendEnabled: PropTypes.bool,
         isConnected: PropTypes.bool,
         permanentPairingCode: PropTypes.string
     };
@@ -50,11 +48,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
         analytics.updateProperty('spot-tv', true);
 
         if (!this.props.isConnected && !this.props.isAttemptingConnection) {
-            if (!this.props.isBackendEnabled) {
-                // In the no backend mode the connection logic loops forever, because as long as there are
-                // no network/config problems the connection must succeed.
-                this.props.dispatch(createSpotTVRemoteControlConnection({ retry: true }));
-            } else if (permanentPairingCode) {
+            if (permanentPairingCode) {
                 logger.log('Restored permanent pairing code', { permanentPairingCode });
 
                 this.props.dispatch(
@@ -109,7 +103,6 @@ export class SpotTVRemoteControlLoader extends React.Component {
 function mapStateToProps(state) {
     return {
         isAttemptingConnection: isConnectionPending(state),
-        isBackendEnabled: isBackendEnabled(state),
         isConnected: isConnectionEstablished(state),
         permanentPairingCode: getPermanentPairingCode(state)
     };

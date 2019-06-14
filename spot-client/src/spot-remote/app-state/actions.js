@@ -84,10 +84,12 @@ export function connectToSpotTV(joinCode, shareMode) {
         });
 
         const state = getState();
-        const backend
-            = isBackendEnabled(state)
-                ? new SpotBackendService(getSpotServicesConfig(state))
-                : null;
+
+        if (!isBackendEnabled(state)) {
+            throw new Error('Backend config is required');
+        }
+
+        const backend = new SpotBackendService(getSpotServicesConfig(state));
 
         logger.log('Spot Remote attempting connection', {
             backend: Boolean(backend)

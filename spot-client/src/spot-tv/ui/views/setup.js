@@ -4,18 +4,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { setSetupCompleted } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Modal } from 'common/ui';
 
 import {
-    CalendarAuth,
     SelectMedia,
-    SelectRoom,
     SyncWithBackend,
-    PairRemote,
-    Profile
+    PairRemote
 } from './../components/setup';
 
 /**
@@ -26,8 +22,7 @@ import {
 export class Setup extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        history: PropTypes.object,
-        isBackendEnabled: PropTypes.bool
+        history: PropTypes.object
     };
 
     /**
@@ -39,19 +34,11 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this.steps = props.isBackendEnabled
-            ? [
-                SyncWithBackend,
-                SelectMedia,
-                PairRemote
-            ]
-            : [
-                CalendarAuth,
-                SelectRoom,
-                Profile,
-                SelectMedia,
-                PairRemote
-            ];
+        this.steps = [
+            SyncWithBackend,
+            SelectMedia,
+            PairRemote
+        ];
 
         this.state = {
             currentStep: this.steps[0]
@@ -139,17 +126,4 @@ export class Setup extends React.Component {
     }
 }
 
-/**
- * Selects parts of the Redux state to pass in with the props of {@code Setup}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    return {
-        isBackendEnabled: isBackendEnabled(state)
-    };
-}
-
-export default withRouter(connect(mapStateToProps)(Setup));
+export default withRouter(connect()(Setup));
