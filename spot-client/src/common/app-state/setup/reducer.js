@@ -11,7 +11,7 @@ import {
 const DEFAULT_STATE = {
     avatarUrl: '',
     completed: false,
-    displayName: '',
+    displayName: undefined,
     isSpot: false,
     preferredCamera: undefined,
     preferredMic: undefined,
