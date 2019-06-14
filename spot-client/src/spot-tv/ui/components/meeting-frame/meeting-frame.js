@@ -131,7 +131,7 @@ export class MeetingFrame extends React.Component {
             },
             interfaceConfigOverwrite: {
                 AUTO_PIN_LATEST_SCREEN_SHARE: true,
-                DEFAULT_LOCAL_DISPLAY_NAME: '',
+                DEFAULT_LOCAL_DISPLAY_NAME: MeetingFrame.defaultProps.displayName,
                 ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
                 TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
