@@ -13,16 +13,14 @@ import { adjustVolume } from '../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
+const DEFAULT_DISPLAY_NAME = 'Meeting Room';
+
 /**
  * The iFrame used to to display a Jitsi-Meet meeting.
  *
  * @extends React.Component
  */
 export class MeetingFrame extends React.Component {
-    static defaultProps = {
-        displayName: 'Meeting Room'
-    };
-
     static propTypes = {
         avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
@@ -131,7 +129,7 @@ export class MeetingFrame extends React.Component {
             },
             interfaceConfigOverwrite: {
                 AUTO_PIN_LATEST_SCREEN_SHARE: true,
-                DEFAULT_LOCAL_DISPLAY_NAME: MeetingFrame.defaultProps.displayName,
+                DEFAULT_LOCAL_DISPLAY_NAME: DEFAULT_DISPLAY_NAME,
                 ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
                 TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
             },
@@ -175,7 +173,10 @@ export class MeetingFrame extends React.Component {
             'videoMuteStatusChanged', this._onVideoMuteChange);
 
         this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
-        this._jitsiApi.executeCommand('displayName', this.props.displayName);
+        this._jitsiApi.executeCommand(
+            'displayName',
+            this.props.displayName || DEFAULT_DISPLAY_NAME
+        );
 
         this.props.remoteControlServer.addListener(
             SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
