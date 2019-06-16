@@ -55,10 +55,10 @@ export default {
     },
 
     ULTRASOUND: {
-        EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH || '/dist/',
+        EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH,
         MEM_INITIALIZER_PATH:
-            process.env.ULTRASOUND_MEM_INITIALIZER_PATH || '/dist/',
-        SUPPORTED_ENV_REGEX: process.env.ULTRASOUND_SUPPORT_ENV || 'ipad',
+            process.env.ULTRASOUND_MEM_INITIALIZER_PATH,
+        SUPPORTED_ENV_REGEX: process.env.ULTRASOUND_SUPPORT_ENV,
         TRANSMISSION_DELAY: undefined
     },
 

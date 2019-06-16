@@ -67,6 +67,8 @@ class WithUltrasound extends AbstractLoader {
      */
     _loadService() {
         if (!this._shouldPlayUltrasound()) {
+            logger.log('Skipped initialization of ultrasound.');
+
             return Promise.resolve();
         }
 
@@ -103,9 +105,21 @@ class WithUltrasound extends AbstractLoader {
      * @returns {boolean}
      */
     _shouldPlayUltrasound() {
-        const envRegex = new RegExp(this.props.envRegex);
+        const {
+            emscriptenPath,
+            envRegex,
+            memoryInitializerPath
+        } = this.props;
 
-        return envRegex.exec(window.navigator.userAgent.toLocaleLowerCase());
+        if (typeof emscriptenPath === 'undefined'
+            || typeof envRegex === 'undefined'
+            || typeof memoryInitializerPath === 'undefined') {
+            return;
+        }
+
+        const envCheckRegex = new RegExp(envRegex);
+
+        return envCheckRegex.exec(window.navigator.userAgent.toLocaleLowerCase());
     }
 }
 
