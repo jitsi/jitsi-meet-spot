@@ -200,22 +200,18 @@ export class ScreensharePicker extends React.Component {
     _renderStartWiredScreenshare() {
         return (
             <>
-                <div className = 'title'>
-                    {
-                        'To start sharing just plug the HDMI\n'
-                            + 'dongle into your computer.'
-                    }
-                </div>
-                <div className = 'options'>
+                <div className = 'content'>
                     <div className = 'icon'>
                         <i className = 'material-icons'>wired_screen_share</i>
                     </div>
+                    <div className = 'title'>
+                        Plug the HDMI dongle into your computer
+                    </div>
+                    <div className = 'subtitle'>
+                        If sharing doesn't start automatically click start sharing below.
+                    </div>
                 </div>
                 <div className = 'footer'>
-                    {
-                        'If sharing doesn\'t start automatically '
-                            + 'click start sharing below.'
-                    }
                     <Button
                         appearance = 'subtle'
                         className = 'cta-button'
@@ -254,16 +250,18 @@ export class ScreensharePicker extends React.Component {
 
         return (
             <>
-                <div className = 'title'>
-                    You are currently sharing content.
-                </div>
-                <div className = 'options'>
+                <div className = 'content'>
                     <div className = 'icon'>
                         <i className = 'material-icons'>{ icon }</i>
                     </div>
+                    <div className = 'title'>
+                        You're currently sharing content.
+                    </div>
+                    <div className = 'subtitle'>
+                        { ctaTitle }
+                    </div>
                 </div>
                 <div className = 'footer'>
-                    { ctaTitle }
                     <Button
                         appearance = 'subtle-danger'
                         className = 'cta-button'
@@ -284,37 +282,22 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderWirelessScreenshareNotSupported() {
-        const { advertisedAppName, remoteJoinCode, shareDomain } = this.props;
-        const title = (
-            <span>
-                To share, use Chrome desktop and go to <span className = 'share-url'>
-                    { `${shareDomain || windowHandler.getHost()}/${remoteJoinCode}` }
-                </span>
-            </span>
-        );
-        const advertisement = this.props.advertisedAppName && (
-            <div>
-                or
-                <div>
-                    use { advertisedAppName } to connect to the room directly
-                </div>
-            </div>
-        );
+        const { remoteJoinCode, shareDomain } = this.props;
 
         return (
             <>
-                <div className = 'title'>
-                    { title }
-                </div>
-                <div className = 'options'>
+                <div className = 'content'>
                     <div className = 'icon'>
                         <i className = 'material-icons'>
                             wireless_screen_share
                         </i>
                     </div>
-                </div>
-                <div className = 'footer'>
-                    { advertisement }
+                    <div className = 'title'>
+                        To share, use Chrome desktop and go to
+                    </div>
+                    <div className = 'share-url'>
+                        { `${shareDomain || windowHandler.getHost()}/${remoteJoinCode}` }
+                    </div>
                 </div>
             </>
         );
