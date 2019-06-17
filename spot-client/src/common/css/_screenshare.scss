@@ -1,6 +1,5 @@
 .share-select-view {
     @include centered-content;
-    align-items: initial;
 }
 
 .screenshare-select {
@@ -37,6 +36,7 @@
     .share-url {
         color: var(--secondary-link-color);
         font-size: $font-size-medium-plus;
+        font-weight: bold;
         margin-top: 1em;
     }
 
