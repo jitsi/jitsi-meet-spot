@@ -22,17 +22,13 @@
         @media #{$mq-tablet} {
             height: auto;
             margin: 50px;
-            min-width: 500px;
             width: unset;
-        }
-
-        @media #{$mq-laptop-l} {
-            min-width: 550px;
         }
 
         .close {
             @include button-reset;
 
+            background-color: transparent;
             border: 0;
             position: absolute;
             top: 10px;
@@ -46,7 +42,7 @@
 }
 
 .modal-content {
-    background-color: var(--container-bg-color);
+    background-color: var(--modal-bg-color);
     border-radius: 5px;
     display: flex;
     justify-content: center;

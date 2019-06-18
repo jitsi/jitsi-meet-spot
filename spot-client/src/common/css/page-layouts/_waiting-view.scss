@@ -40,7 +40,7 @@
 
     .share-select-view {
         @include centered-content;
-
+        align-items: initial;
         margin: auto;
         width: 100%;
 

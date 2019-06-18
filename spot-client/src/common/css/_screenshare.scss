@@ -5,27 +5,28 @@
 .screenshare-select {
     @include centered-content;
     flex-direction: column;
+    justify-content: space-between;
+    min-width: 360px;
     text-align: center;
     width: 100%;
 
-    .title {
-        margin-bottom: 30px;
+    .options {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
     }
 
     .nav-label-container {
         white-space: initial;
     }
 
-    .icon {
-        margin-bottom: 30px;
-    }
-
     .icon i {
-        font-size: $font-size-xx-large;
+        font-size: $font-size-xxx-large;
     }
 
     .cta-button {
         display: block;
+        font-size: $font-size-small;
         margin-left: auto;
         margin-right: auto;
         margin-top: 10px;
@@ -33,7 +34,15 @@
     }
 
     .share-url {
-        color: var(--button-active-color);
+        color: var(--secondary-link-color);
+        font-size: $font-size-medium-plus;
+        font-weight: bold;
+        margin-top: 1em;
+    }
+
+    .subtitle {
+        font-size: $font-size-small;
+        margin-top: 10px;
     }
 }
 
