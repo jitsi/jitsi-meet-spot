@@ -124,7 +124,7 @@ export default class MicPreview extends React.PureComponent {
                 return previewTrack.createPreview();
             })
             .then(previewTrack => {
-                previewTrack.on(
+                previewTrack.addListener(
                     avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
                     this._updateAudioLevel
                 );
