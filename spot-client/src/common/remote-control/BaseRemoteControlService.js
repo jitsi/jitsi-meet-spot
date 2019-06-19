@@ -209,6 +209,7 @@ export class BaseRemoteControlService extends Emitter {
             .then(() => {
                 this.xmppConnection = null;
                 this.xmppConnectionPromise = null;
+                this.options.backend && this.options.backend.stop();
             });
     }
 
