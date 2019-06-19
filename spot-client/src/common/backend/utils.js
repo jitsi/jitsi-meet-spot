@@ -96,6 +96,10 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
         return Promise.reject(`Missing {tzid} template in the URL: ${url}`);
     }
 
+    if (!jwt) {
+        return Promise.reject('JWT is required to request calendar events');
+    }
+
     // eslint-disable-next-line new-cap
     url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
@@ -104,12 +108,10 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
         mode: 'cors'
     };
 
-    if (jwt) {
-        requestOptions.headers = new Headers({
-            authorization: `Bearer ${jwt}`,
-            accept: 'application/json'
-        });
-    }
+    requestOptions.headers = new Headers({
+        authorization: `Bearer ${jwt}`,
+        accept: 'application/json'
+    });
 
     return fetchWithRetry({
         operationName: 'get calendar events',
