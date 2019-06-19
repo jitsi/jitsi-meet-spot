@@ -46,7 +46,7 @@ export default {
 
                     output.push({
                         id: i,
-                        meetingUrl: inputEvent.meetingLink,
+                        meetingUrlFields: [ inputEvent.meetingLink, inputEvent.summary ],
                         start: inputEvent.start,
                         title: inputEvent.summary
                     });
