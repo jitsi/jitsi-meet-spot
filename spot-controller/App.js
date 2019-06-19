@@ -28,10 +28,14 @@ export default class App extends React.Component {
 
         this.state = {
             loading: __DEV__,
-            remoteControlUrl: __DEV__ ? null : DEFAULT_URL
+            remoteControlUrl: __DEV__ ? null : DEFAULT_URL,
+            webViewKey: 0
         };
 
+        this._sideMenuRef = React.createRef();
+
         this._onClearRemoteUrl = this._onClearRemoteUrl.bind(this);
+        this._onResetApp = this._onResetApp.bind(this);
         this._onSubmitEnteredUrl = this._onSubmitEnteredUrl.bind(this);
     }
 
@@ -66,19 +70,20 @@ export default class App extends React.Component {
         const { remoteControlUrl } = this.state;
 
         if (remoteControlUrl) {
-            const remoteControlComponent
-                = <RemoteControl url = { `${remoteControlUrl}/?enableOnboarding=true` } />;
+            const remoteControlComponent = (
+                <RemoteControl
+                    key = { this.state.webViewKey }
+                    url = { `${remoteControlUrl}/?enableOnboarding=true` } />
+            );
 
-            // The side menu for editing the URL is enabled only in the debug mode.
-            if (__DEV__) {
-                return (
-                    <SideMenu menu = { this._renderSettingsMenu() }>
-                        { remoteControlComponent }
-                    </SideMenu>
-                );
-            }
-
-            return remoteControlComponent;
+            return (
+                <SideMenu
+                    menu = { this._renderSettingsMenu() }
+                    openMenuOffset = { 250 }
+                    ref = { this._sideMenuRef }>
+                    { remoteControlComponent }
+                </SideMenu>
+            );
         }
 
         return <Setup onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />;
@@ -127,7 +132,20 @@ export default class App extends React.Component {
      */
     _renderSettingsMenu() {
         return (
-            <SettingsMenu onClearRemoteUrl = { this._onClearRemoteUrl } />
+            <SettingsMenu
+                onClearRemoteUrl = { this._onClearRemoteUrl }
+                onResetApp = { this._onResetApp } />
         );
+    }
+
+    /**
+     * Ah shit.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onResetApp() {
+        this._sideMenuRef.current.openMenu(false);
+        this.setState({ webViewKey: this.state.webViewKey + 1 });
     }
 }
