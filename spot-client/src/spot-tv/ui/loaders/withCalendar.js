@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
+    calendarTypes,
     getCalendarConfig,
     getCalendarEmail,
     getCalendarType,
@@ -62,6 +63,15 @@ export class CalendarLoader extends AbstractLoader {
     }
 
     /**
+     * Tries to start the event polling if it has not been started already.
+     *
+     * @returns {void}
+     */
+    componentDidUpdate() {
+        this.maybeStartPolling();
+    }
+
+    /**
      * Stops listening to {@code calendarService}.
      *
      * @inheritdoc
@@ -104,13 +114,24 @@ export class CalendarLoader extends AbstractLoader {
 
         return calendarService.initialize(this.props.calendarType)
             .then(() => {
-                if (isSetupComplete && this.props.calendarEmail) {
-                    calendarService.startPollingForEvents({
-                        email: this.props.calendarEmail,
-                        jwt: this.props.jwt
-                    });
-                }
+                this.maybeStartPolling();
             });
+    }
+
+    /**
+     * Starts the events polling if all underlying conditions have been met.
+     *
+     * @returns {void}
+     */
+    maybeStartPolling() {
+        if (this.props.isSetupComplete && this.state.loaded) {
+            // Calling startPollingForEvents multiple times is ok, because the calendar service is smart
+            // and will no-op if the polling is running already
+            calendarService.startPollingForEvents({
+                email: this.props.calendarEmail,
+                jwt: this.props.jwt
+            });
+        }
     }
 
     /**
@@ -147,12 +168,19 @@ export class CalendarLoader extends AbstractLoader {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const calendarEmail = getCalendarEmail(state);
+    const calendarType = getCalendarType(state);
+    const jwt = getJwt(state);
+
     return {
         calendarConfig: getCalendarConfig(state),
-        calendarEmail: getCalendarEmail(state),
+        calendarEmail,
         calendarType: getCalendarType(state),
-        isSetupComplete: isSetupComplete(state),
-        jwt: getJwt(state),
+        isSetupComplete:
+            isSetupComplete(state)
+                && ((calendarType === calendarTypes.BACKEND && Boolean(jwt))
+                        || Boolean(calendarEmail)),
+        jwt,
         meetingsDomainsWhitelist: getMeetingDomainsWhitelist(state)
     };
 }
