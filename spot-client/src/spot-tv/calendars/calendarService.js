@@ -1,5 +1,6 @@
 import { calendarTypes } from 'common/app-state';
 import { Emitter } from 'common/emitter';
+import { logger } from 'common/logger';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';
@@ -203,6 +204,7 @@ export class CalendarService extends Emitter {
                 );
             })
             .catch(error => {
+                logger.error('Calendar _pollForEvents error: ', { error });
                 this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });
 
                 this._updateEventsTimeout = setTimeout(
