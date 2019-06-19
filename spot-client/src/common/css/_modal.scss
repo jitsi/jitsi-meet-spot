@@ -16,10 +16,16 @@
     }
 
     .modal-content {
+        background-color: var(--container-content-bg-color-no-opacity);
+        height: 100vh;
+        max-height: 100vh;
+        overflow: auto;
         pointer-events: all;
         position: relative;
 
+
         @media #{$mq-tablet} {
+            background-color: var(--container-bg-color);
             height: auto;
             margin: 50px;
             width: unset;
