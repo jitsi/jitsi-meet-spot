@@ -1,4 +1,14 @@
-import { fetchRoomInfo, registerDevice } from './utils';
+import { logger } from 'common/logger';
+
+import { persistence } from '../utils';
+
+import { fetchRoomInfo, refreshAccessToken, registerDevice } from './utils';
+
+const ONE_SECOND = 1000;
+const ONE_MINUTE = 60 * ONE_SECOND;
+const FIVE_MINUTES = 5 * ONE_MINUTE;
+
+const PERSISTENCE_KEY = 'spot-backend-registration';
 
 /**
  *
@@ -68,19 +78,124 @@ export class SpotBackendService {
     }
 
     /**
+     * Tries to refresh the backend registration.
+     *
+     * @returns {Promise<void>} - A promise resolved on success.
+     * @private
+     */
+    _refreshRegistration() {
+        const { pairingCode } = this.registration;
+
+        logger.log('Refreshing access token...', { pairingCode });
+
+        return refreshAccessToken(`${this.pairingServiceUrl}\\refresh`, this.registration)
+            .then(({ accessToken, emitted, expires }) => {
+                // copy the fields to preserve the refresh token
+                this._setRegistration(
+                    pairingCode, {
+                        ...this.registration,
+                        accessToken,
+                        emitted,
+                        expires
+                    });
+            });
+    }
+
+    /**
      * Registers with the backend and stores the access token.
      *
      * @param {string} pairingCode - The pairing code to be used for authentication with the backend service.
      * @returns {Promise<SpotRegistration>}
      */
     register(pairingCode) {
-        return registerDevice(`${this.pairingServiceUrl}`, pairingCode)
+        const storedRegistration = persistence.get(PERSISTENCE_KEY);
+        let usingStoredRegistration = false;
+        let registerDevicePromise;
+
+        if (storedRegistration && storedRegistration.pairingCode === pairingCode) {
+            logger.log('Restored previous backend registration', { pairingCode });
+
+            if (storedRegistration.refreshToken) {
+                registerDevicePromise = Promise.resolve(storedRegistration);
+                usingStoredRegistration = true;
+            }
+        }
+
+        if (!registerDevicePromise) {
+            logger.log('No stored registration');
+            registerDevicePromise = registerDevice(`${this.pairingServiceUrl}`, pairingCode);
+        }
+
+        return registerDevicePromise
             .then(registration => {
-                this.registration = registration;
+                this._setRegistration(pairingCode, registration);
 
                 if (!this.getJwt()) {
                     throw new Error('No JWT');
                 }
+            })
+            .catch(error => {
+                if (error === 'unrecoverable-error' && usingStoredRegistration) {
+                    persistence.set(PERSISTENCE_KEY, undefined);
+                }
+
+                throw error;
             });
+    }
+
+    /**
+     * Schedules next access token refresh.
+     *
+     * @private
+     * @returns {void}
+     */
+    _setRefreshTimeout() {
+        clearTimeout(this._refreshTimeout);
+
+        // Only long lived tokens can be refreshed
+        if (!this.registration.refreshToken) {
+            return;
+        }
+
+        // If the token is soon to be expired (in less than 5 minutes or has expired already) refresh in 1 second
+        const remainingMillis = this.registration.expires - new Date().getTime();
+        const delay = Math.max(remainingMillis - FIVE_MINUTES, ONE_SECOND);
+
+        logger.log(
+            `The access token will expire in ${remainingMillis / ONE_MINUTE} minutes,`
+            + `scheduling refresh to be done in ${delay / ONE_MINUTE} minutes`);
+
+        this._refreshTimeout = setTimeout(() => {
+            this._refreshRegistration();
+        }, delay);
+    }
+
+    /**
+     * Stores the current backend registration and the pairing code associated with that registration.
+     *
+     * @param {string} pairingCode - The pairing which was used to register with the backend.
+     * @param {SpotRegistration} registration - The backend registration structure to be stored.
+     * @private
+     * @returns {void}
+     */
+    _setRegistration(pairingCode, registration) {
+        this.registration = {
+            ...registration,
+            pairingCode
+        };
+
+        // Only long lived registrations are persisted
+        this.registration.refreshToken && persistence.set(PERSISTENCE_KEY, this.registration);
+
+        this._setRefreshTimeout();
+    }
+
+    /**
+     * Stops any pending timers that might have been scheduled.
+     *
+     * @returns {void}
+     */
+    stop() {
+        clearTimeout(this._refreshTimeout);
     }
 }

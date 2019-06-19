@@ -2,6 +2,26 @@ import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils/retry';
 
 /**
+ * Converts 'emitted' string date to a milliseconds date since the epoch and calculates the expiration date in
+ * milliseconds since the epoch based on given 'expiresIn' value.
+ *
+ * @param {string} emitted - ISO formatted string which is a date/time when a token/something has been emitted.
+ * @param {string|number} expiresIn - A string with a number of milliseconds which is validity period of a token.
+ * @returns {{
+ *     emitted: number,
+ *     expires: number
+ * }}
+ */
+function convertToEmittedAndExpires({ emitted, expiresIn }) {
+    const emittedMillis = Date.parse(emitted);
+
+    return {
+        emitted: emittedMillis,
+        expires: emittedMillis + Number(expiresIn)
+    };
+}
+
+/**
  * Sends HTTP request using {@code fetch} with retries on network and server errors.
  *
  * @param {Object} fetchOptions - Options related to the fetch request.
@@ -122,8 +142,10 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
 
 /**
  * @typedef {Object} RemotePairingInfo - the short lived paring code.
- * @property {Date} emitted - When the code has been emitted.
- * @property {number} expiresIn - In how many milliseconds the code will expire.
+ * @property {number} emitted - A date expressed in milliseconds since the epoch which indicates when
+ * the pairing code has been emitted.
+ * @property {number} expires - A date expressed in milliseconds since the epoch which indicates when
+ * the pairing code will expire.
  * @property {string} remotePairingCode - A short lived remote pairing code to be used by Spot Remotes which connect
  * only temporarily.
  */
@@ -168,20 +190,86 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
         }
 
         return {
-            emitted,
-            expiresIn,
-            code
+            code,
+            ...convertToEmittedAndExpires(json)
         };
     });
+}
+
+/**
+ * @typedef {Object} RefreshTokenResponse
+ * @property {string} accessToken - A new/refreshed access token.
+ * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when
+ * the token has been emitted.
+ * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
+ * the token will expire.
+ */
+/**
+ * Sends a token refresh request to get a fresh token, before the current one expires.
+ *
+ * @param {string} serviceEndpointUrl - URL pointing to the token refresh service.
+ * @param {string} accessToken -
+ * @param {string} refreshToken -
+ * @returns {Promise<RefreshTokenResponse>}
+ */
+export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshToken }) {
+    if (!accessToken) {
+        throw new Error('Access token is required');
+    }
+    if (!refreshToken) {
+        throw new Error('Refresh token is required');
+    }
+
+    const requestOptions = {
+        body: JSON.stringify({
+            refreshToken
+        }),
+        method: 'PUT',
+        mode: 'cors'
+    };
+
+    requestOptions.headers = new Headers({
+        'content-type': 'application/json; charset=UTF-8',
+        authorization: `Bearer ${accessToken}`,
+        accept: 'application/json'
+    });
+
+    return fetchWithRetry({
+        operationName: 'refresh token',
+        requestOptions,
+        url: serviceEndpointUrl
+    })
+        .then(json => {
+            const {
+                accessToken: newAccessToken,
+                emitted,
+                expiresIn
+            } = json;
+
+            if (!newAccessToken) {
+                throw new Error('No "accessToken" field in the response');
+            } else if (!emitted) {
+                throw new Error('No "emitted" field in the response');
+            } else if (!expiresIn) {
+                throw new Error('No "expiresIn" field in the response');
+            }
+
+            return {
+                accessToken: newAccessToken,
+                refreshToken,
+                ...convertToEmittedAndExpires(json)
+            };
+        });
 }
 
 /**
  * @typedef {Object} SpotRegistration
  * @property {string} accessToken - The authorization token to be used by a Spot TV
  * instance for accessing other services.
- * @property {Date} emitted - The date when the token has been emitted.
- * @property {number} expiresIn - The amount of seconds (milliseconds?) after which the token will
- * expire.
+ * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when
+ * the token has been emitted.
+ * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
+ * the token will expire.
  * @property {string} [refreshToken] - The token used to refresh the authorization. Present only in
  * a permanent type of pairing.
  *
@@ -237,9 +325,8 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
 
             return {
                 accessToken,
-                emitted,
-                expiresIn,
-                refreshToken
+                refreshToken,
+                ...convertToEmittedAndExpires(json)
             };
         });
 }
