@@ -42,6 +42,15 @@ export class RemoteControlClient extends BaseRemoteControlService {
         this._lastSpotState = null;
 
         this._wirelessScreensharingConfiguration = null;
+
+        /**
+         * A timeout triggered in "no backend" mode which will trigger a disconnect if Spot TV presence does not arrive
+         * within 5 seconds since the MUC has been joined.
+         *
+         * @type {number|null}
+         * @private
+         */
+        this._waitForSpotTvTimeout = null;
     }
 
     /**
@@ -69,6 +78,24 @@ export class RemoteControlClient extends BaseRemoteControlService {
      */
     configureWirelessScreensharing(configuration = {}) {
         this._wirelessScreensharingConfiguration = configuration;
+    }
+
+    /**
+     * Extends the connection promise with Spot Remote specific functionality.
+     *
+     * @param {ConnectOptions} options - Information necessary for creating the connection.
+     * @returns {Promise<RoomProfile>}
+     * @protected
+     */
+    _createConnectionPromise(options) {
+        return super._createConnectionPromise(options)
+            .then(roomProfile => {
+                if (!options.backend) {
+                    this._setWaitForSpotTvTimeout();
+                }
+
+                return roomProfile;
+            });
     }
 
     /**
@@ -255,6 +282,24 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Logic specific to the "no backend" mode.
+     *
+     * This sets a timeout which will trigger a disconnect if Spot TV presence does not arrive
+     * within 5 seconds since the MUC was joined by Spot Remote.
+     *
+     * @returns {void}
+     * @private
+     */
+    _setWaitForSpotTvTimeout() {
+        if (!this._getSpotId()) {
+            this._waitForSpotTvTimeout = setTimeout(() => {
+                logger.error('Spot TV never joined the MUC');
+                this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
+            }, 5 * 1000);
+        }
+    }
+
+    /**
      * Begins or stops the process for a {@code RemoteControlClient} to connect
      * to the Jitsi-Meet participant in order to directly share a local screen.
      *
@@ -385,6 +430,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
             const from = presence.getAttribute('from');
 
             if (this._getSpotId() === from) {
+                logger.log('Spot TV left the MUC');
                 this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
             }
 
@@ -422,6 +468,12 @@ export class RemoteControlClient extends BaseRemoteControlService {
             ...status,
             spotId: spotTvJid
         };
+
+        // This is "no backend" specific logic
+        if (this._waitForSpotTvTimeout) {
+            clearTimeout(this._waitForSpotTvTimeout);
+            this._waitForSpotTvTimeout = null;
+        }
 
         this.emit(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
