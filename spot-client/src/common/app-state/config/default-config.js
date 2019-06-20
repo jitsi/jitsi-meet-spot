@@ -62,6 +62,15 @@ export default {
         TRANSMISSION_DELAY: undefined
     },
 
+    UPDATES: {
+        START_HOUR: typeof process.env.UPDATE_START_HOUR === 'undefined'
+            ? 2
+            : process.env.UPDATE_START_HOUR,
+        END_HOUR: typeof process.env.UPDATE_END_HOUR === 'undefined'
+            ? 20
+            : process.env.UPDATE_END_HOUR
+    },
+
     XMPP_CONFIG: {
         bosh: process.env.XMPP_BOSH || 'https://meet.jit.si/http-bind',
         hosts: {

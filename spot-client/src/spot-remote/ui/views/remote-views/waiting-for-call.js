@@ -9,6 +9,8 @@ import {
     joinScheduledMeeting,
     joinWithScreensharing
 } from 'common/app-state';
+import { AutoUpdateChecker } from 'common/auto-update';
+import { isBackendEnabled } from 'common/backend';
 import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
 import { logger } from 'common/logger';
 import {
@@ -21,6 +23,10 @@ import {
     isWirelessScreenshareSupported
 } from 'common/utils';
 
+import {
+    getPermanentPairingCode,
+    updateSpotRemoteSource
+} from './../../../app-state';
 import {
     DialPad,
     NavButton,
@@ -38,9 +44,11 @@ import {
 class WaitingForCallView extends React.Component {
     static propTypes = {
         _dispatchJoinWithScreensharing: PropTypes.func,
+        _enableAutoUpdate: PropTypes.bool,
         _onDialOut: PropTypes.func,
         _onJoinAdHocMeeting: PropTypes.func,
         _onJoinScheduledMeeting: PropTypes.func,
+        _onUpdateAvailable: PropTypes.func,
         events: PropTypes.array,
         wiredScreensharingEnabled: PropTypes.bool
     };
@@ -80,6 +88,9 @@ class WaitingForCallView extends React.Component {
 
         return (
             <div className = 'waiting-view'>
+                { this.props._enableAutoUpdate
+                    && <AutoUpdateChecker
+                        onUpdateAvailable = { this.props._onUpdateAvailable } /> }
                 <div className = 'view-header'>
                     <Clock />
                     <RoomName />
@@ -244,7 +255,9 @@ class WaitingForCallView extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        ...getInMeetingStatus(state)
+        ...getInMeetingStatus(state),
+        _enableAutoUpdate: isBackendEnabled(state)
+            && Boolean(getPermanentPairingCode(state))
     };
 }
 
@@ -268,6 +281,9 @@ function mapDispatchToProps(dispatch) {
         },
         _onJoinAdHocMeeting(meetingName) {
             dispatch(joinAdHocMeeting(meetingName));
+        },
+        _onUpdateAvailable() {
+            dispatch(updateSpotRemoteSource());
         }
     };
 }

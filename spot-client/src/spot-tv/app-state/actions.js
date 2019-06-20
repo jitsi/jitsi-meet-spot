@@ -15,6 +15,7 @@ import {
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
+import { windowHandler } from 'common/utils';
 
 import {
     setPermanentPairingCode,
@@ -181,4 +182,15 @@ function createConnection(state, permanentPairingCode) {
             jwt: backend ? backend.getJwt() : undefined
         };
     });
+}
+
+/**
+ * Prepares and executes a page reload to force Spot-TV to download the latest
+ * assets.
+ *
+ * @returns {Function}
+ */
+export function updateSpotTVSource() {
+    return () => remoteControlServer.disconnect()
+        .then(() => windowHandler.reload());
 }

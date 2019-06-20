@@ -13,6 +13,7 @@ import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
+import { windowHandler } from 'common/utils';
 
 import {
     SPOT_REMOTE_COMPLETED_ONBOARDING,
@@ -331,3 +332,18 @@ export function submitPassword(password) {
         password
     ).then(() => dispatch(setSpotTVState({ needPassword: false })));
 }
+
+/**
+ * Callback invoked when the remote control client has recovered from a reload
+ * and the remote control should reload itself.
+ *
+ * @param {string} remoteJoinCode - The Spot-TV join code that should be used
+ * after reloading the page.
+ * @private
+ * @returns {void}
+ */
+export function updateSpotRemoteSource() {
+    return () => remoteControlClient.disconnect()
+        .then(() => windowHandler.reload());
+}
+
