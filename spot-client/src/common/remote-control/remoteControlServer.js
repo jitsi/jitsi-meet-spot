@@ -25,31 +25,23 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
-     * Creates a connection to XMPP service used for communication between
-     * server and remotes.
+     * Extends the connection promise with server specific functionality.
      *
-     * @inheritdoc
+     * @param {ConnectOptions} options - Information necessary for creating the connection.
+     * @returns {Promise<RoomProfile>}
+     * @protected
      */
-    connect(options) {
-        if (this.hasConnection()) {
-            return this.xmppConnectionPromise;
-        }
-
-        super.connect({
+    _createConnectionPromise(options) {
+        return super._createConnectionPromise({
             ...options,
             retryOnUnauthorized: !options.backend
+        }).then(roomProfile => {
+            if (options.joinCodeRefreshRate) {
+                this.refreshJoinCode(options.joinCodeRefreshRate);
+            }
+
+            return roomProfile;
         });
-
-        this.xmppConnectionPromise = this.xmppConnectionPromise
-            .then(roomProfile => {
-                if (options.joinCodeRefreshRate) {
-                    this.refreshJoinCode(options.joinCodeRefreshRate);
-                }
-
-                return roomProfile;
-            });
-
-        return this.xmppConnectionPromise;
     }
 
     /**

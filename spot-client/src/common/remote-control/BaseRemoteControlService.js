@@ -42,48 +42,64 @@ export class BaseRemoteControlService extends Emitter {
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
      */
+
+    /**
+     * @typedef {Object} ConnectOptions
+     * @property {boolean} options.joinAsSpot - Whether or not this connection is
+     * being made by a Spot client.
+     * @property {string} options.joinCode - The code to use when joining or to set
+     * when creating a new MUC.
+     * @property {SpotBackendService} [options.backend] - The optional backend service if configured.
+     * @property {number} [options.joinCodeRefreshRate] - A duration in
+     * milliseconds. If provided, a join code will be created and an interval
+     * created to automatically update the join code at the provided rate.
+     * @property {Object} options.serverConfig - Details on how the XMPP connection
+     * should be made.
+     */
     /**
      * Creates a connection to the remote control service.
      *
-     * @param {Object} options - Information necessary for creating the MUC.
-     * @param {boolean} options.joinAsSpot - Whether or not this connection is
-     * being made by a Spot client.
-     * @param {string} options.joinCode - The code to use when joining or to set
-     * when creating a new MUC.
-     * @param {SpotBackendService} [options.backend] - The optional backend service if configured.
-     * @param {number} [options.joinCodeRefreshRate] - A duration in
-     * milliseconds. If provided, a join code will be created and an interval
-     * created to automatically update the join code at the provided rate.
-     * @param {Object} options.serverConfig - Details on how the XMPP connection
-     * should be made.
+     * @param {ConnectOptions} options - Information necessary for creating the connection.
      * @returns {Promise<RoomProfile>}
      */
     connect(options) {
         // Keep a cache of the initial options for reference when reconnecting.
         this._options = options;
 
-        const {
-            backend,
-            joinAsSpot,
-            joinCode,
-            retryOnUnauthorized,
-            serverConfig
-        } = this._options;
-
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
 
         this.xmppConnection = new XmppConnection({
-            configuration: serverConfig,
+            configuration: this._options.serverConfig,
             onCommandReceived: this._onCommandReceived,
             onMessageReceived: this._onMessageReceived,
             onPresenceReceived: this._onPresenceReceived
         });
 
+        this.xmppConnectionPromise = this._createConnectionPromise(this._options);
+
+        return this.xmppConnectionPromise;
+    }
+
+    /**
+     * A method which creates the connection promise. Can be used by subclasses to extend the promise
+     * with extra functionality.
+     *
+     * @param {ConnectOptions} options - Information necessary for creating the connection.
+     * @returns {Promise<RoomProfile>}
+     * @protected
+     */
+    _createConnectionPromise(options) {
+        const {
+            backend,
+            joinAsSpot,
+            joinCode,
+            retryOnUnauthorized
+        } = options;
         let roomProfile;
 
-        this.xmppConnectionPromise = this.exchangeCode(joinCode)
+        return this.exchangeCode(joinCode)
             .then(roomInfo => {
                 roomProfile = { name: roomInfo.name };
 
@@ -98,8 +114,6 @@ export class BaseRemoteControlService extends Emitter {
             })
             .catch(error => this.disconnect().then(() => Promise.reject(error)))
             .then(() => roomProfile);
-
-        return this.xmppConnectionPromise;
     }
 
     /**
