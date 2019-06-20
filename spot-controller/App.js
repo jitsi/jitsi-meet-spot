@@ -29,6 +29,11 @@ export default class App extends React.Component {
         this.state = {
             loading: __DEV__,
             remoteControlUrl: __DEV__ ? null : DEFAULT_URL,
+
+            /**
+             * A key is used on the webview so changing it can cause the webview
+             * to re-render, which causes a reload back to the base url.
+             */
             webViewKey: 0
         };
 
@@ -139,7 +144,7 @@ export default class App extends React.Component {
     }
 
     /**
-     * Ah shit.
+     * Triggers the webview component to reset back to its initial state.
      *
      * @private
      * @returns {void}
