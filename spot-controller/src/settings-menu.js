@@ -1,15 +1,25 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const styles = StyleSheet.create({
+    button: {
+        marginVertical: 5,
+        padding: 13
+    },
     menu: {
-        backgroundColor: 'gray',
+        backgroundColor: 'white',
         flex: 1,
         height: window.height,
+        width: 250
+    },
+    title: {
+        backgroundColor: '#17A0DB',
+        color: 'white',
+        fontSize: 25,
         padding: 20,
-        width: window.width
+        textAlign: 'center'
     }
 });
 
@@ -20,7 +30,8 @@ const styles = StyleSheet.create({
  */
 export default class SettingsMenu extends React.Component {
     static propTypes = {
-        onClearRemoteUrl: PropTypes.func
+        onClearRemoteUrl: PropTypes.func,
+        onResetApp: PropTypes.func
     };
 
     /**
@@ -34,9 +45,21 @@ export default class SettingsMenu extends React.Component {
             <ScrollView
                 scrollsToTop = { false }
                 style = { styles.menu }>
-                <Text onPress = { this.props.onClearRemoteUrl }>
-                    Reset URL
+                <Text style = { styles.title }>
+                    Settings
                 </Text>
+                {
+                    __DEV__ && <View style = { styles.button }>
+                        <Button
+                            onPress = { this.props.onClearRemoteUrl }
+                            title = 'Reset URL' />
+                    </View>
+                }
+                <View style = { styles.button }>
+                    <Button
+                        onPress = { this.props.onResetApp }
+                        title = 'Reset' />
+                </View>
             </ScrollView>
         );
     }
