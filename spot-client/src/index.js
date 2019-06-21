@@ -23,6 +23,7 @@ import {
     remoteControlClient
 } from 'common/remote-control';
 import {
+    clearPersistedState,
     getDeviceId,
     getPersistedState,
     isElectron,
@@ -31,6 +32,12 @@ import {
 
 import App from './app';
 import PostToEndpoint from './common/logger/post-to-endpoint';
+
+const queryParams = new URLSearchParams(window.location.search);
+
+if (queryParams.get('reset') === 'true') {
+    clearPersistedState();
+}
 
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),
