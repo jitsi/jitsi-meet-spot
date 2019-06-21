@@ -11,6 +11,17 @@ const FIVE_MINUTES = 5 * ONE_MINUTE;
 const PERSISTENCE_KEY = 'spot-backend-registration';
 
 /**
+ * Returns how many milliseconds have left since now until given registration object expires.
+ *
+ * @param {SpotRegistration} registration - The registration instance to be checked.
+ * @param {number} expires - The expiration timestamp as defined by the {@link SpotRegistration} type.
+ * @returns {number}
+ */
+function getExpiresIn({ expires }) {
+    return expires - new Date().getTime();
+}
+
+/**
  *
  * @typedef {Object} SpotBackendConfig
  * @property {string} pairingServiceUrl - The URL pointing to the pairing service.
@@ -80,20 +91,21 @@ export class SpotBackendService {
     /**
      * Tries to refresh the backend registration.
      *
+     * @param {SpotRegistration} registration - The registration object to be used for the refresh.
      * @returns {Promise<void>} - A promise resolved on success.
      * @private
      */
-    _refreshRegistration() {
-        const { pairingCode } = this.registration;
+    _refreshRegistration(registration) {
+        const { pairingCode } = registration;
 
         logger.log('Refreshing access token...', { pairingCode });
 
-        return refreshAccessToken(`${this.pairingServiceUrl}\\refresh`, this.registration)
+        return refreshAccessToken(`${this.pairingServiceUrl}\\refresh`, registration)
             .then(({ accessToken, emitted, expires }) => {
                 // copy the fields to preserve the refresh token
                 this._setRegistration(
                     pairingCode, {
-                        ...this.registration,
+                        ...registration,
                         accessToken,
                         emitted,
                         expires
@@ -116,7 +128,11 @@ export class SpotBackendService {
             logger.log('Restored previous backend registration', { pairingCode });
 
             if (storedRegistration.refreshToken) {
-                registerDevicePromise = Promise.resolve(storedRegistration);
+                if (getExpiresIn(storedRegistration) < FIVE_MINUTES) {
+                    registerDevicePromise = this._refreshRegistration(storedRegistration);
+                } else {
+                    registerDevicePromise = Promise.resolve(storedRegistration);
+                }
                 usingStoredRegistration = true;
             }
         }
@@ -158,7 +174,7 @@ export class SpotBackendService {
         }
 
         // If the token is soon to be expired (in less than 5 minutes or has expired already) refresh in 1 second
-        const remainingMillis = this.registration.expires - new Date().getTime();
+        const remainingMillis = getExpiresIn(this.registration);
         const delay = Math.max(remainingMillis - FIVE_MINUTES, ONE_SECOND);
 
         logger.log(
