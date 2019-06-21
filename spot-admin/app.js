@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const jwtDecode = require('jwt-decode');
 const calendarRequestController = require('./backend/calendar');
 const pairDeviceController = require('./backend/pair-device');
 const remotePairingCodeController = require('./backend/remote-pairing-code');
@@ -18,11 +19,19 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const spots = new Map();
-const spot1Id = 'h7g394ytiohdf_rooom1';
+
+// Try to decode room ID from the token
+const jwt = process.env.JWT;
+const jwtPayload = jwtDecode(jwt);
+const roomIdFromJwt = jwtPayload && jwtPayload.spotRoomId;
+const spot1Id = roomIdFromJwt ? roomIdFromJwt : 'h7g394ytiohdf_rooom1';
+
+console.info('Spot room id: ' + spot1Id);
+
 const spot1 = new SpotRoom(spot1Id, {
     pairingCode: '123456',
     jwtToken: {
-        accessToken: process.env.JWT,
+        accessToken: jwt,
         expiresIn: 60 * 60 * 1000,
         refreshToken: 'refreshsfj3049ublabla325something'
     },
