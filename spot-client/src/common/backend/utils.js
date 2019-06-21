@@ -51,6 +51,13 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                             = `Failed to ${operationName}:`
                                 + `${response.statusText}, HTTP code: ${response.status}`;
 
+                        // Try to log response JSON for more details
+                        response.json().then(json => {
+                            logger.error(error, { json });
+                        }, () => {
+                            // Ignore json rejection
+                        });
+
                         if (response.status < 500 || response.status >= 600) {
                             // Break the retry chain
                             reject('unrecoverable-error');
