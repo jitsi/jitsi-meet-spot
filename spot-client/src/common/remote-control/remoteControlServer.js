@@ -35,13 +35,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
         return super._createConnectionPromise({
             ...options,
             retryOnUnauthorized: !options.backend
-        }).then(roomProfile => {
-            if (options.joinCodeRefreshRate) {
-                this.refreshJoinCode(options.joinCodeRefreshRate);
-            }
-
-            return roomProfile;
-        });
+        }).then(
+            roomProfile => this.refreshJoinCode()
+                .then(() => roomProfile));
     }
 
     /**
@@ -105,6 +101,21 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Gets next remote join code refresh interval expressed in milliseconds.
+     *
+     * @private
+     * @returns {number}
+     */
+    _getNextRefreshTimeout() {
+        const {
+            backend,
+            joinCodeRefreshRate
+        } = this._options;
+
+        return backend ? backend.getNextShortLivedPairingCodeRefresh() : joinCodeRefreshRate;
+    }
+
+    /**
      * Returns the join code that is to be used by a Spot Remote in order to be paired with this Spot TV.
      *
      * @returns {string}
@@ -119,11 +130,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * Method invoked to generate a new join code for instances of
      * {@code RemoteControlClient} to pair with it.
      *
-     * @param {number} nextRefreshTimeout - If defined will start an interval
-     * to automatically update join code.
-     * @returns {Promise<string>} Resolves with the new join code.
+     * @returns {Promise<string>} Resolved when the refresh is done.
      */
-    refreshJoinCode(nextRefreshTimeout) {
+    refreshJoinCode() {
         clearTimeout(this._nextJoinCodeUpdate);
 
         const refreshCodePromise
@@ -131,16 +140,23 @@ export class RemoteControlServer extends BaseRemoteControlService {
                 ? this.refreshJoinCodeWithBackend()
                 : this.refreshJoinCodeWithXmpp();
 
-        refreshCodePromise.then(() => {
+        logger.log('Refreshing remote join code...');
+
+        return refreshCodePromise.then(() => {
             this.emit(
                 SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
                 { remoteJoinCode: this.getRemoteJoinCode() }
             );
 
+            const nextRefreshTimeout = this._getNextRefreshTimeout();
+
             if (nextRefreshTimeout) {
+                logger.log(`Scheduling next remote join code refresh after ${nextRefreshTimeout / (60 * 1000)} min.`);
                 this._nextJoinCodeUpdate = setTimeout(() => {
-                    this.refreshJoinCode(nextRefreshTimeout);
+                    this.refreshJoinCode();
                 }, nextRefreshTimeout);
+            } else {
+                logger.warn('Remote join code will not be refreshed');
             }
         });
     }
