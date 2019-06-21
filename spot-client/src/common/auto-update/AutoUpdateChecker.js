@@ -6,10 +6,9 @@ import { getUpdateEndHour, getUpdateStartHour } from 'common/app-state';
 import { logger } from 'common/logger';
 import { date } from 'common/utils';
 
+import TimeRangePoller from './TimeRangePoller';
 
-const checkInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-const lastLoadTime = new Date();
+const lastLoadTime = date.getCurrentDate();
 
 /**
  * Periodically checks for when the last time the page was loaded and will
@@ -34,9 +33,16 @@ export class AutoUpdateChecker extends React.Component {
     constructor(props) {
         super(props);
 
-        this._updateCheckInterval = null;
+        this._onUpdateAvailable = this._onUpdateAvailable.bind(this);
 
-        this._checkIfUpdateReady = this._checkIfUpdateReady.bind(this);
+        this._poller = new TimeRangePoller({
+            endHour: props.updateEndHour,
+            startHour: props.updateStartHour,
+            frequency: 30000
+        });
+
+        this._unsubscribePollerListener = this._poller.addListener(
+            TimeRangePoller.CURRENT_TIME_WITHIN_RANGE, this._onUpdateAvailable);
     }
 
     /**
@@ -48,7 +54,7 @@ export class AutoUpdateChecker extends React.Component {
     componentDidMount() {
         logger.log('Starting auto update checks');
 
-        this._startUpdateChecks();
+        this._poller.start();
     }
 
     /**
@@ -60,7 +66,9 @@ export class AutoUpdateChecker extends React.Component {
     componentWillUnmount() {
         logger.log('Stopping auto update checks');
 
-        this._stopUpdateChecks();
+        this._unsubscribePollerListener();
+        this._poller.stop();
+        this._poller = null;
     }
 
     /**
@@ -74,47 +82,15 @@ export class AutoUpdateChecker extends React.Component {
     }
 
     /**
-     * Checks if it is time to reload and executes the reload.
+     * Triggers the passed in callback notifying that an update is ready.
      *
      * @private
      * @returns {void}
      */
-    _checkIfUpdateReady() {
-        const now = new Date();
-        const currentHour = now.getHours();
-
-        if (currentHour > this.props.updateStartHour
-            && currentHour < this.props.updateEndHour
-            && !date.isDateForToday(lastLoadTime)) {
+    _onUpdateAvailable() {
+        if (!date.isDateForToday(lastLoadTime)) {
             this.props.onUpdateAvailable();
         }
-    }
-
-    /**
-     * Starts an interval to check if the page should automatically update.
-     *
-     * @private
-     * @returns {void}
-     */
-    _startUpdateChecks() {
-        this._stopUpdateChecks();
-
-        this._updateCheckInterval = setInterval(
-            this._checkIfUpdateReady,
-            checkInterval
-        );
-    }
-
-    /**
-     * Stops any active interval to check if the page should automatically
-     * update.
-     *
-     * @private
-     * @returns {void}
-     */
-    _stopUpdateChecks() {
-        clearInterval(this._updateCheckInterval);
-        this._updateCheckInterval = null;
     }
 }
 
