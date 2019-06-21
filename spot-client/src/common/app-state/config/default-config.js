@@ -67,7 +67,7 @@ export default {
             ? 2
             : process.env.UPDATE_START_HOUR,
         END_HOUR: typeof process.env.UPDATE_END_HOUR === 'undefined'
-            ? 20
+            ? 4
             : process.env.UPDATE_END_HOUR
     },
 
