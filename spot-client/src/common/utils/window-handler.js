@@ -53,6 +53,6 @@ export default {
      * @returns {void}
      */
     reload() {
-        window.location = window.location.origin;
+        window.location.reload();
     }
 };

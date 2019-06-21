@@ -153,3 +153,25 @@ export function getSpotServicesConfig(state) {
 export function getUltrasoundConfig(state) {
     return state.config.ULTRASOUND;
 }
+
+/**
+ * A selector which returns the starting hour in the day when the app may reload
+ * itself to get updates.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getUpdateStartHour(state) {
+    return state.config.UPDATES.START_HOUR;
+}
+
+/**
+ * A selector which returns the ending hour in the day when the app may no
+ * longer reload itself to get updates.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getUpdateEndHour(state) {
+    return state.config.UPDATES.END_HOUR;
+}

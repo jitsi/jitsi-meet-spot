@@ -11,11 +11,15 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/app-state';
+import { AutoUpdateChecker } from 'common/auto-update';
+import { isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
+import { updateSpotTVSource } from '../../app-state';
+import { getPermanentPairingCode } from '../../backend';
 import {
     FullscreenToggle,
     JoinInfo,
@@ -37,11 +41,12 @@ export class Home extends React.Component {
     static propTypes = {
         calendarError: PropTypes.any,
         calendarService: PropTypes.object,
-        dispatch: PropTypes.func,
+        enableAutoUpdate: PropTypes.bool,
         events: PropTypes.array,
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
+        onUpdateAvailable: PropTypes.func,
         remoteControlServer: PropTypes.object,
         remoteJoinCode: PropTypes.string,
         spotRoomName: PropTypes.string
@@ -95,6 +100,7 @@ export class Home extends React.Component {
      */
     render() {
         const {
+            enableAutoUpdate,
             isSetupComplete: _isSetupComplete,
             spotRoomName
         } = this.props;
@@ -102,6 +108,9 @@ export class Home extends React.Component {
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
+                { enableAutoUpdate
+                    && <AutoUpdateChecker
+                        onUpdateAvailable = { this.props.onUpdateAvailable } /> }
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
@@ -265,6 +274,8 @@ export class Home extends React.Component {
 function mapStateToProps(state) {
     return {
         calendarError: getCalendarError(state),
+        enableAutoUpdate: isBackendEnabled(state)
+            && Boolean(getPermanentPairingCode(state)),
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
@@ -273,4 +284,20 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(withCalendar(connect(mapStateToProps)(Home)));
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        onUpdateAvailable() {
+            dispatch(updateSpotTVSource());
+        }
+    };
+}
+
+export default withRouter(withCalendar(
+    connect(mapStateToProps, mapDispatchToProps)(Home)));
