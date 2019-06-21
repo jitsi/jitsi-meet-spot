@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import {
     getCalendarEvents,
-    getCurrentView
+    getCurrentView,
+    isConnectedToSpot
 } from 'common/app-state';
 import { LoadingIcon, ReconnectOverlay, View } from 'common/ui';
 
@@ -27,6 +28,7 @@ export class RemoteControl extends React.PureComponent {
     static propTypes = {
         events: PropTypes.array,
         history: PropTypes.object,
+        isConnectedToSpot: PropTypes.bool,
         onDisconnect: PropTypes.func,
         view: PropTypes.string
     };
@@ -63,6 +65,10 @@ export class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     _getView() {
+        if (!this.props.isConnectedToSpot) {
+            return <div>Waiting for Spot TV to connect...</div>;
+        }
+
         switch (this.props.view) {
         case 'admin':
             return <div>currently in admin tools</div>;
@@ -93,7 +99,8 @@ export class RemoteControl extends React.PureComponent {
 function mapStateToProps(state) {
     return {
         events: getCalendarEvents(state),
-        view: getCurrentView(state)
+        view: getCurrentView(state),
+        isConnectedToSpot: isConnectedToSpot(state)
     };
 }
 
