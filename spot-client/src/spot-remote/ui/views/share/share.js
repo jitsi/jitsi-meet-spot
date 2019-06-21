@@ -6,6 +6,7 @@ import {
     getCurrentView,
     getInMeetingStatus,
     hangUp,
+    isConnectedToSpot,
     isWirelessScreensharingLocally,
     isWirelessScreensharingPending,
     joinWithScreensharing,
@@ -38,6 +39,7 @@ export class Share extends React.PureComponent {
         dispatch: PropTypes.func,
         history: PropTypes.object,
         inMeeting: PropTypes.bool,
+        isConnectedToSpot: PropTypes.bool,
         isScreenshareActiveRemotely: PropTypes.bool,
         isWirelessScreensharing: PropTypes.bool,
         isWirelessScreensharingPending: PropTypes.bool
@@ -71,7 +73,21 @@ export class Share extends React.PureComponent {
      * @inheritdoc
      */
     componentDidMount() {
-        if (isWirelessScreenshareSupported()) {
+        if (this.props.isConnectedToSpot) {
+            this._onStartWirelessScreenshare();
+        }
+    }
+
+    /**
+     * Navigates away from the view {@code RemoteControl} when no longer
+     * connected to a Spot-TV.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        if (!prevProps.isConnectedToSpot
+                && this.props.isConnectedToSpot
+                && this.state.autoPromptScreenshare) {
             this._onStartWirelessScreenshare();
         }
     }
@@ -107,7 +123,9 @@ export class Share extends React.PureComponent {
      * @returns {ReactComponent}
      */
     _renderSubView() {
-        if (this.props.isWirelessScreensharingPending) {
+        if (!this.props.isConnectedToSpot) {
+            return <div>Waiting for Spot TV to connect...</div>;
+        } else if (this.props.isWirelessScreensharingPending) {
             return <LoadingIcon color = 'white' />;
         }
 
@@ -137,7 +155,7 @@ export class Share extends React.PureComponent {
             autoPromptScreenshare: false
         });
 
-        if (this.props.isScreenshareActiveRemotely) {
+        if (!isWirelessScreenshareSupported() || this.props.isScreenshareActiveRemotely) {
 
             return;
         }
@@ -181,6 +199,7 @@ function mapStateToProps(state) {
 
     return {
         inMeeting: Boolean(inMeetingState.inMeeting),
+        isConnectedToSpot: isConnectedToSpot(state),
         isScreenshareActiveRemotely:
             !isWirelessScreensharing && Boolean(inMeetingState.screensharingType),
         isWirelessScreensharing,
