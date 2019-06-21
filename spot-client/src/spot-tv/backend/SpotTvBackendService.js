@@ -34,6 +34,23 @@ export class SpotTvBackendService extends SpotBackendService {
     }
 
     /**
+     * Tells how many milliseconds since now until the remote pairing code needs to be refreshed.
+     *
+     * @returns {number}
+     */
+    getNextShortLivedPairingCodeRefresh() {
+        const FIVE_MINUTES = 5 * 60 * 1000;
+        let nextRefresh = FIVE_MINUTES;
+
+        if (this.remotePairingInfo) {
+            // Refresh five minutes before the expiration, but not earlier than in 1 second
+            nextRefresh = Math.max(1000, this.remotePairingInfo.expires - new Date().getTime() - FIVE_MINUTES);
+        }
+
+        return nextRefresh;
+    }
+
+    /**
      * Returns a short lived remote pairing code which is to be used by Spot Remotes that connect to Spot TV only
      * temporarily.
      *
