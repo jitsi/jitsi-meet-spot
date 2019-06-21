@@ -27,6 +27,7 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
+            includeResetInUrl: false,
             loading: __DEV__,
             remoteControlUrl: __DEV__ ? null : DEFAULT_URL,
 
@@ -75,10 +76,12 @@ export default class App extends React.Component {
         const { remoteControlUrl } = this.state;
 
         if (remoteControlUrl) {
+            const url = `${remoteControlUrl}/?enableOnboarding=true&reset=${
+                this.state.includeResetInUrl}`;
             const remoteControlComponent = (
                 <RemoteControl
                     key = { this.state.webViewKey }
-                    url = { `${remoteControlUrl}/?enableOnboarding=true` } />
+                    url = { url } />
             );
 
             return (
@@ -151,6 +154,9 @@ export default class App extends React.Component {
      */
     _onResetApp() {
         this._sideMenuRef.current.openMenu(false);
-        this.setState({ webViewKey: this.state.webViewKey + 1 });
+        this.setState({
+            includeResetInUrl: true,
+            webViewKey: this.state.webViewKey + 1
+        });
     }
 }
