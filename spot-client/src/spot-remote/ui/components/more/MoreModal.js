@@ -7,9 +7,9 @@ import { hideModal, isVolumeControlSupported } from 'common/app-state';
 import { VolumeUp } from 'common/icons';
 import { Modal } from 'common/ui';
 
+import { TileViewButton } from './../remote-control-menu';
 import { NavButton } from './../nav';
 
-import TileViewButton from './TileViewButton';
 import VolumeModal from './VolumeModal';
 
 /**

@@ -33,12 +33,23 @@ class SpotRemoteInMeetingPage extends PageObject {
     }
 
     /**
+     * Check if the more button is available for interaction.
+     *
+     * @returns {boolean}
+     */
+    hasMoreButton() {
+        return this.select(MORE_BUTTON).isExisting();
+    }
+
+    /**
      * Check if the volume button is available for interaction.
      *
      * @returns {boolean}
      */
     hasVolumeControls() {
-        this.openMoreMenu();
+        if (this.hasMoreButton()) {
+            this.openMoreMenu();
+        }
 
         return this.select(VOLUME_BUTTON).isExisting();
     }
@@ -88,7 +99,9 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @returns {void}
      */
     setTileView(enabled) {
-        this.openMoreMenu();
+        if (this.hasMoreButton()) {
+            this.openMoreMenu();
+        }
 
         const buttonToClick = enabled
             ? TILE_VIEW_ENABLE_BUTTON
