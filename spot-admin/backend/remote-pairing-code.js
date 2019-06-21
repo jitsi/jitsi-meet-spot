@@ -32,7 +32,7 @@ function remotePairingCodeController(spots, req, res){
 
     sendJSON(res, {
         code: remotePairingCode.code,
-        emitted: remotePairingCode.emitted,
+        emitted: new Date().toISOString(),
         expiresIn: remotePairingCode.expiresIn,
         pairingType: "SHORT_LIVED"
     });

@@ -43,8 +43,7 @@ const spot1 = new SpotRoom(spot1Id, {
     mucUrl: spot1Id,
     remotePairingCode: {
         code: '112233',
-        emitted: new Date().toISOString(),
-        expiresIn: 60 * 60 * 1000
+        expiresIn: 6 * 60 * 1000
     }
 });
 
