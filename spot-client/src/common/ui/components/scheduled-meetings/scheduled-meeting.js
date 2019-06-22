@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { date } from 'common/date';
 import { logger } from 'common/logger';
-import { date } from 'common/utils';
 
 import { Button } from './../button';
 

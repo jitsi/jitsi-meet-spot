@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { date } from './../../../utils';
+import { date } from 'common/date';
 
 /**
  * Displays the current time and updates itself at an interval.

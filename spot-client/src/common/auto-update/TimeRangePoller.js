@@ -1,5 +1,5 @@
-import { Emitter } from 'common/emitter';
-import { date } from 'common/utils';
+import { date } from './../date';
+import { Emitter } from './../emitter';
 
 const defaultFrequency = 5 * 60 * 1000; // 5 minutes in milliseconds
 
@@ -75,7 +75,7 @@ export default class TimeRangePoller extends Emitter {
         const now = date.getCurrentDate();
         const currentHour = now.getHours();
 
-        if (currentHour > this._startHour && currentHour < this._endHour) {
+        if (currentHour >= this._startHour && currentHour < this._endHour) {
             this.emit(TimeRangePoller.CURRENT_TIME_WITHIN_RANGE);
         }
     }
