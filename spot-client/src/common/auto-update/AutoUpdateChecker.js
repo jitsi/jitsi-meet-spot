@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getUpdateEndHour, getUpdateStartHour } from 'common/app-state';
+import { date } from 'common/date';
 import { logger } from 'common/logger';
-import { date } from 'common/utils';
 
 import TimeRangePoller from './TimeRangePoller';
 

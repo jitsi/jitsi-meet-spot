@@ -1,5 +1,4 @@
 export * from './cryptography';
-export { default as date } from './date';
 export * from './detection';
 export * from './device-id';
 export * from './get-random-meeting-name';

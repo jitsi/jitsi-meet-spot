@@ -1,8 +1,8 @@
 /* global gapi */
 
 import { calendarTypes } from 'common/app-state';
+import { date } from 'common/date';
 import { logger } from 'common/logger';
-import { date } from 'common/utils';
 
 let initPromise;
 
