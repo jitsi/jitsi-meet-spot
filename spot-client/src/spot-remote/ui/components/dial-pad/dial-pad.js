@@ -172,6 +172,7 @@ export default class DialPad extends React.Component {
     _renderDialButton(main, sub) {
         return (
             <DialButton
+                id = { `dial-button-${main}` }
                 key = { main }
                 main = { main }
                 onClick = { this._onDialButtonClick }
