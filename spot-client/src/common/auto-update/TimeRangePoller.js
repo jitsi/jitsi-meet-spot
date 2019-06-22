@@ -75,7 +75,7 @@ export default class TimeRangePoller extends Emitter {
         const now = date.getCurrentDate();
         const currentHour = now.getHours();
 
-        if (currentHour > this._startHour && currentHour < this._endHour) {
+        if (currentHour >= this._startHour && currentHour < this._endHour) {
             this.emit(TimeRangePoller.CURRENT_TIME_WITHIN_RANGE);
         }
     }
