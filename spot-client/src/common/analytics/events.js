@@ -1,3 +1,9 @@
+export const eventStatusSuffixes = {
+    FAIL: '-fail',
+    PENDING: '-pending',
+    SUCCESS: '-success'
+};
+
 export const feedbackEvents = {
     SKIP: 'feedback-skip',
     SUBMIT: 'feedback-submit'

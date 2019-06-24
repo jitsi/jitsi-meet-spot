@@ -1,4 +1,11 @@
-import { analytics, feedbackEvents, inCallEvents, joinCodeEvents, meetingJoinEvents } from 'common/analytics';
+import {
+    analytics,
+    eventStatusSuffixes,
+    feedbackEvents,
+    inCallEvents,
+    joinCodeEvents,
+    meetingJoinEvents
+} from 'common/analytics';
 import {
     AUDIO_MUTE,
     DIAL_OUT,
@@ -8,7 +15,8 @@ import {
     JOIN_WITH_SCREENSHARING,
     SCREENSHARE,
     TILE_VIEW,
-    VIDEO_MUTE
+    VIDEO_MUTE,
+    requestStates
 } from 'common/app-state';
 import { MiddlewareRegistry, asyncActionRequestStates } from 'common/redux';
 
@@ -20,6 +28,23 @@ import {
 } from './../app-state';
 import { SUBMIT_FEEDBACK } from './../remote-control';
 import { shareModeEvents } from '../../common/analytics';
+
+const requestStateToEventSuffix = {
+    [requestStates.DONE]: eventStatusSuffixes.SUCCESS,
+    [requestStates.ERROR]: eventStatusSuffixes.FAIL,
+    [requestStates.PENDING]: eventStatusSuffixes.PENDING
+};
+
+/**
+ * Attaches a request state suffix to the given event name.
+ *
+ * @param {string} eventName - The base event name.
+ * @param {string} requestState - The current status of the async request.
+ * @returns {string}
+ */
+function addRequestStateSuffix(eventName, requestState) {
+    return `${eventName}${requestStateToEventSuffix[requestState] || ''}`;
+}
 
 MiddlewareRegistry.register(() => next => action => {
     const result = next(action);
@@ -36,7 +61,10 @@ MiddlewareRegistry.register(() => next => action => {
         break;
     }
     case JOIN_AD_HOC_MEETING: {
-        analytics.log(meetingJoinEvents.AD_HOC);
+        analytics.log(addRequestStateSuffix(
+            meetingJoinEvents.AD_HOC,
+            action.requestState
+        ));
         break;
     }
     case SPOT_REMOTE_EXIT_SHARE_MODE: {
@@ -53,7 +81,10 @@ MiddlewareRegistry.register(() => next => action => {
         break;
     }
     case JOIN_SCHEDULED_MEETING: {
-        analytics.log(meetingJoinEvents.SCHEDULED_MEETING_JOIN);
+        analytics.log(addRequestStateSuffix(
+            meetingJoinEvents.SCHEDULED_MEETING_JOIN,
+            action.requestState
+        ));
         break;
     }
     case JOIN_WITH_SCREENSHARING: {
