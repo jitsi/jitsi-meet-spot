@@ -8,7 +8,9 @@ import {
     setJwt,
     setReconnectState
 } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
+import {
+    isBackendEnabled
+} from 'common/backend';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
 import {
@@ -18,6 +20,9 @@ import {
 import { windowHandler } from 'common/utils';
 
 import {
+    SPOT_TV_PAIR_TO_BACKEND_PENDING,
+    SPOT_TV_PAIR_TO_BACKEND_FAIL,
+    SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
     setPermanentPairingCode,
     SpotTvBackendService
 } from '../backend';
@@ -38,6 +43,8 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         if (remoteControlServer.hasConnection()) {
             return Promise.reject('Called to create connection while connection exists');
         }
+
+        dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_PENDING });
 
         /**
          * Callback invoked when a connect has been successfully made with
@@ -137,7 +144,13 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             onReconnectChange
         );
 
-        return doConnect();
+        return doConnect()
+            .then(() => dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_SUCCESS }))
+            .catch(error => {
+                dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_FAIL });
+
+                return Promise.reject(error);
+            });
     };
 }
 
