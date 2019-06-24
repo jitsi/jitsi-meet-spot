@@ -63,13 +63,12 @@ export function joinWithScreensharing(meetingName, screensharingType) {
  * @returns {Function}
  */
 export function joinScheduledMeeting(meetingName) {
-    return dispatch => {
-        remoteControlClient.goToMeeting(meetingName);
-        dispatch({
-            type: JOIN_SCHEDULED_MEETING,
-            meetingName
-        });
-    };
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlClient.goToMeeting(meetingName),
+        JOIN_SCHEDULED_MEETING,
+        meetingName
+    );
 }
 
 /**
@@ -79,13 +78,12 @@ export function joinScheduledMeeting(meetingName) {
  * @returns {Function}
  */
 export function joinAdHocMeeting(meetingName) {
-    return dispatch => {
-        remoteControlClient.goToMeeting(meetingName);
-        dispatch({
-            type: JOIN_AD_HOC_MEETING,
-            meetingName
-        });
-    };
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlClient.goToMeeting(meetingName),
+        JOIN_AD_HOC_MEETING,
+        meetingName
+    );
 }
 
 /**
