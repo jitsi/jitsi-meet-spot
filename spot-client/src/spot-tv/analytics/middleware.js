@@ -1,9 +1,15 @@
 import { analytics } from 'common/analytics';
 import { MiddlewareRegistry } from 'common/redux';
 
-import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
+import {
+    SET_PERMANENT_PAIRING_CODE,
+    SPOT_TV_PAIR_TO_BACKEND_FAIL,
+    SPOT_TV_PAIR_TO_BACKEND_PENDING,
+    SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
+    getPermanentPairingCode
+} from '../backend';
 
-import { permanentPairingCodeEvents } from './events';
+import { backendPairingEvents, permanentPairingCodeEvents } from './events';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
 
@@ -23,6 +29,17 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         }
         break;
     }
+    case SPOT_TV_PAIR_TO_BACKEND_FAIL:
+        analytics.log(backendPairingEvents.VALIDATE_FAIL);
+        break;
+
+    case SPOT_TV_PAIR_TO_BACKEND_PENDING:
+        analytics.log(backendPairingEvents.SUBMIT);
+        break;
+
+    case SPOT_TV_PAIR_TO_BACKEND_SUCCESS:
+        analytics.log(backendPairingEvents.VALIDATE_SUCCESS);
+        break;
     }
 
     return next(action);
