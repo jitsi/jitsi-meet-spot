@@ -100,15 +100,20 @@ MiddlewareRegistry.register(() => next => action => {
     }
 
     case SCREENSHARE: {
-        if (isPendingAsyncAction(action)) {
-            if (action.expectedState === 'proxy') {
-                analytics.log(inCallEvents.WIRELESS_SCREENSHARE_START);
-            } else if (action.expectedState === 'wired') {
-                analytics.log(inCallEvents.WIRED_SCREENSHARE_START);
-            } else if (action.expectedState === undefined) {
-                analytics.log(inCallEvents.SCREENSHARE_STOP);
-            }
+        let eventName;
+
+        if (action.expectedState === 'proxy') {
+            eventName = inCallEvents.WIRELESS_SCREENSHARE_START;
+        } else if (action.expectedState === 'wired') {
+            eventName = inCallEvents.WIRED_SCREENSHARE_START;
+        } else if (action.expectedState === undefined) {
+            eventName = inCallEvents.SCREENSHARE_STOP;
         }
+
+        analytics.log(addRequestStateSuffix(
+            eventName,
+            action.requestState
+        ));
 
         break;
     }

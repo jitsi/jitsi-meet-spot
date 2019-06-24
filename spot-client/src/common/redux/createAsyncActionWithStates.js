@@ -49,7 +49,7 @@ export function createAsyncActionWithStates( // eslint-disable-line max-params
                 requestType
             });
 
-            dispatch(setRequestState(requestType, asyncActionRequestStates.ERROR));
+            dispatch(setRequestState(requestType, asyncActionRequestStates.ERROR, expectedValue));
 
             return Promise.reject(error);
         });
