@@ -23,6 +23,15 @@ import SpeakerPreview from './speaker-preview';
 import { wiredScreenshareService } from './../../../../wired-screenshare-service';
 
 /**
+ * @typedef {Object} Device
+ * @property {string} deviceId - The WebRTC device id for the device.
+ * @property {string} label - The WebRTC label for the device. To be displayed
+ * in dropdowns.
+ * @property {string} value - The value to be returned when the device is
+ * selected in a dropdown.
+ */
+
+/**
  * Displays a selector for choosing a media source.
  *
  * @extends React.Component
@@ -225,6 +234,22 @@ class SelectMedia extends React.Component {
     }
 
     /**
+     * Returns devices that do not match the selected camera.
+     *
+     * @param {Array<Device>} devices - The list of Device instances to filter
+     * through to remove the selected camera.
+     * @param {string} selectedCamera - The label of the camera which has been
+     * currently chosen for use.
+     * @returns {Array<Device>}
+     */
+    _getFilteredScreenshareDongles(devices, selectedCamera) {
+        return [
+            ...devices.filter(device =>
+                !selectedCamera || device.label !== selectedCamera)
+        ];
+    }
+
+    /**
      * Callback invoked when the selected camera (videoinput) has changed.
      *
      * @param {string} label - The label of the selected device.
@@ -233,7 +258,16 @@ class SelectMedia extends React.Component {
      */
     _onCameraChange(label) {
         this.setState({
-            selectedCamera: label
+            screenshareDongles: [
+                ...this._getDefaultDeviceListState().screenshareDongles,
+                ...this._getFilteredScreenshareDongles(
+                    this.state.cameras,
+                    label
+                )
+            ],
+            selectedCamera: label,
+            selectedScreenshareDongle: label === this.state.selectedScreenshareDongle
+                ? '' : this.state.selectedScreenshareDongle
         });
     }
 
@@ -259,7 +293,6 @@ class SelectMedia extends React.Component {
             switch (kind) {
             case 'videoinput':
                 newDeviceLists.cameras.push(formatted);
-                newDeviceLists.screenshareDongles.push(formatted);
                 break;
             case 'audioinput':
                 newDeviceLists.mics.push(formatted);
@@ -269,6 +302,14 @@ class SelectMedia extends React.Component {
                 break;
             }
         });
+
+        newDeviceLists.screenshareDongles = [
+            ...newDeviceLists.screenshareDongles,
+            ...this._getFilteredScreenshareDongles(
+                newDeviceLists.cameras,
+                this.state.selectedCamera
+            )
+        ];
 
         this.setState(newDeviceLists);
     }
@@ -295,7 +336,8 @@ class SelectMedia extends React.Component {
      */
     _onScreenshareChange(label) {
         this.setState({
-            selectedScreenshareDongle: label
+            selectedScreenshareDongle: this.state.selectedCamera === label
+                ? '' : label
         });
     }
 
