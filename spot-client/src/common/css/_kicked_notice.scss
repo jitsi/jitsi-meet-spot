@@ -1,0 +1,11 @@
+.kicked-notice {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+
+    .cta {
+        font-size: $font-size-medium-plus;
+    }
+}

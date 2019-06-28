@@ -1,5 +1,6 @@
 /* global JitsiMeetExternalAPI */
 
+import bindAll from 'lodash.bindall';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -65,29 +66,27 @@ export class MeetingFrame extends React.Component {
 
         this._participants = new Map();
 
-        this._onAudioMuteChange = this._onAudioMuteChange.bind(this);
-        this._onFeedbackPromptDisplayed
-            = this._onFeedbackPromptDisplayed.bind(this);
-        this._onFilmstripDisplayChanged
-            = this._onFilmstripDisplayChanged.bind(this);
-        this._onMeetingCommand = this._onMeetingCommand.bind(this);
-        this._onMeetingJoined = this._onMeetingJoined.bind(this);
-        this._onMeetingLeft = this._onMeetingLeft.bind(this);
-        this._onMeetingLoaded = this._onMeetingLoaded.bind(this);
-        this._onParticipantJoined = this._onParticipantJoined.bind(this);
-        this._onParticipantLeft = this._onParticipantLeft.bind(this);
-        this._onPasswordRequired = this._onPasswordRequired.bind(this);
-        this._onReportDeviceError = this._onReportDeviceError.bind(this);
-        this._onScreenshareChange = this._onScreenshareChange.bind(this);
-        this._onScreenshareDeviceConnected
-            = this._onScreenshareDeviceConnected.bind(this);
-        this._onScreenshareDeviceDisconnected
-            = this._onScreenshareDeviceDisconnected.bind(this);
-        this._onSendMessageToRemoteControl
-            = this._onSendMessageToRemoteControl.bind(this);
-        this._onTileViewChanged = this._onTileViewChanged.bind(this);
-        this._onVideoMuteChange = this._onVideoMuteChange.bind(this);
-        this._setMeetingContainerRef = this._setMeetingContainerRef.bind(this);
+        bindAll(this, [
+            '_onAudioMuteChange',
+            '_onFeedbackPromptDisplayed',
+            '_onFilmstripDisplayChanged',
+            '_onMeetingCommand',
+            '_onMeetingJoined',
+            '_onMeetingLeft',
+            '_onMeetingLoaded',
+            '_onParticipantJoined',
+            '_onParticipantKicked',
+            '_onParticipantLeft',
+            '_onPasswordRequired',
+            '_onReportDeviceError',
+            '_onScreenshareChange',
+            '_onScreenshareDeviceConnected',
+            '_onScreenshareDeviceDisconnected',
+            '_onSendMessageToRemoteControl',
+            '_onTileViewChanged',
+            '_onVideoMuteChange',
+            '_setMeetingContainerRef'
+        ]);
 
         this._jitsiApi = null;
         this._meetingContainer = null;
@@ -154,6 +153,8 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'participantJoined', this._onParticipantJoined);
         this._jitsiApi.addListener(
+            'participantKickedOut', this._onParticipantKicked);
+        this._jitsiApi.addListener(
             'participantLeft', this._onParticipantLeft);
         this._jitsiApi.addListener(
             'passwordRequired', this._onPasswordRequired);
@@ -205,6 +206,7 @@ export class MeetingFrame extends React.Component {
         this.props.updateSpotTvState({
             audioMuted: false,
             inMeeting: '',
+            kicked: false,
             needPassword: false,
             screensharingType: undefined,
             tileView: false,
@@ -446,6 +448,23 @@ export class MeetingFrame extends React.Component {
         this._participants.set(id, displayName);
 
         this._maybeToggleFilmstripVisibility();
+    }
+
+    /**
+     * Callback invoked when the local participant has been removed from the
+     * conference by another participant.
+     *
+     * @param {event} param0  - The event returned from the external api.
+     * @param {Object} kicked - The participant that was kicked.
+     * @private
+     * @returns {void}
+     */
+    _onParticipantKicked({ kicked }) {
+        if (kicked.local) {
+            this.props.updateSpotTvState({
+                kicked: true
+            });
+        }
     }
 
     /**

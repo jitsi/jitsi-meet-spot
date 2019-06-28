@@ -20,6 +20,7 @@ import {
 } from '../../../app-state';
 import {
     AudioMuteButton,
+    KickedNotice,
     MoreButton,
     NavButton,
     NavContainer,
@@ -39,6 +40,7 @@ export class InCall extends React.Component {
     static propTypes = {
         hideModal: PropTypes.func,
         inMeeting: PropTypes.string,
+        kicked: PropTypes.bool,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
@@ -86,9 +88,18 @@ export class InCall extends React.Component {
     render() {
         const {
             inMeeting,
+            kicked,
             showMoreButton,
             showPasswordPrompt
         } = this.props;
+
+        if (kicked) {
+            return (
+                <Modal>
+                    <KickedNotice onSubmit = { this.props.onHangUp } />
+                </Modal>
+            );
+        }
 
         if (showPasswordPrompt) {
             return (
@@ -185,6 +196,7 @@ export class InCall extends React.Component {
 function mapStateToProps(state) {
     const {
         inMeeting,
+        kicked,
         needPassword,
         screensharingType,
         wiredScreensharingEnabled
@@ -192,6 +204,7 @@ function mapStateToProps(state) {
 
     return {
         inMeeting,
+        kicked,
         screensharingType,
         showMoreButton: isVolumeControlSupported(state),
         showPasswordPrompt: needPassword,
