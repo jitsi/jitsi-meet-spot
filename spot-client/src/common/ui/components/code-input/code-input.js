@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { isAutoFocusSupported } from 'common/utils';
+import { isAutoFocusSupported } from 'common/detection';
 
 /**
  * A mapping of keyboard key names to keyboard key codes for readability while

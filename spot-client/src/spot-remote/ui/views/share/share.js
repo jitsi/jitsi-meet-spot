@@ -13,11 +13,9 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { isWirelessScreenshareSupported } from 'common/detection';
 import { LoadingIcon, View } from 'common/ui';
-import {
-    getRandomMeetingName,
-    isWirelessScreenshareSupported
-} from 'common/utils';
+import { getRandomMeetingName } from 'common/utils';
 
 import { exitShareMode } from './../../../app-state';
 
