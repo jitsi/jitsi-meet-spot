@@ -4,10 +4,10 @@ import { shallow } from 'enzyme';
 import Countdown from './Countdown';
 
 describe('Countdown', () => {
-    let countdown, callbackSpy;
+    let callbackSpy, countdown;
 
     beforeEach(() => {
-        jest.useFakeTimers()
+        jest.useFakeTimers();
 
         callbackSpy = jest.fn();
     });
@@ -37,7 +37,7 @@ describe('Countdown', () => {
 
         countdown.unmount();
 
-        jest.advanceTimersByTime(Countdown.defaultProps.startTime);
+        jest.advanceTimersByTime(Countdown.defaultProps.startTime * 1000);
 
         expect(callbackSpy).not.toHaveBeenCalled();
     });
