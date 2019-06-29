@@ -7,8 +7,13 @@ import React from 'react';
  * @extends React.Component
  */
 export default class Countdown extends React.Component {
+    static defaultProps = {
+        startTime: 20
+    };
+
     static propTypes = {
-        onCountdownComplete: PropTypes.func
+        onCountdownComplete: PropTypes.func,
+        startTime: PropTypes.number
     };
 
     /**
@@ -21,7 +26,7 @@ export default class Countdown extends React.Component {
         super(props);
 
         this.state = {
-            time: 20
+            time: props.startTime
         };
     }
 
