@@ -9,8 +9,8 @@ import {
     startWirelessScreensharing,
     stopScreenshare
 } from 'common/app-state';
+import { isWirelessScreenshareSupported } from 'common/detection';
 import { Modal } from 'common/ui';
-import { isWirelessScreenshareSupported } from 'common/utils';
 
 import ScreensharePicker from './ScreensharePicker';
 

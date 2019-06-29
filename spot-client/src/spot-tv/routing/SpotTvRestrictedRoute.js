@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
 import { isBackendEnabled } from 'common/backend';
-import { isSupportedSpotTvBrowser } from 'common/utils';
+import { ROUTES } from 'common/routing';
+import { isSupportedSpotTvBrowser } from 'common/detection';
 
-import { getPermanentPairingCode } from 'spot-tv/backend';
-
-import { ROUTES } from './constants';
+import { getPermanentPairingCode } from './../backend';
 
 /**
  * Creates a Route which only allows the view to be displayed if on a supported

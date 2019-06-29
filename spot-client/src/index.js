@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import 'common/css';
 import { SegmentHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
+import { isElectron } from 'common/detection';
 import { history } from 'common/history';
 import { LoggingService, logger } from 'common/logger';
 import reducers, {
@@ -26,7 +27,6 @@ import {
     clearPersistedState,
     getDeviceId,
     getPersistedState,
-    isElectron,
     setPersistedState
 } from 'common/utils';
 

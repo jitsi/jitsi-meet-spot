@@ -10,10 +10,10 @@ import {
     isVolumeControlSupported,
     startWirelessScreensharing
 } from 'common/app-state';
-
+import { isWirelessScreenshareSupported } from 'common/detection';
 import { CallEnd } from 'common/icons';
 import { LoadingIcon, Modal, RoomName } from 'common/ui';
-import { isWirelessScreenshareSupported, parseMeetingUrl } from 'common/utils';
+import { parseMeetingUrl } from 'common/utils';
 
 import {
     submitPassword

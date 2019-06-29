@@ -1,5 +1,5 @@
+import { isElectron } from 'common/detection';
 import { logger } from 'common/logger';
-import { isElectron } from 'common/utils';
 
 /**
  * Implements a controller that utilizes the event emitter of the native (Electron) process if available.

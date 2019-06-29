@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import { logger } from 'common/logger';
-import { ROUTES, SpotTvRestrictedRoute } from 'common/routing';
+import { ROUTES } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
@@ -22,6 +22,7 @@ import {
     WiredScreenshareDetector
 } from 'spot-tv/ui';
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
+import { SpotTvRestrictedRoute } from './spot-tv/routing';
 
 /**
  * The root of the application which determines what view should be displayed.
