@@ -89,6 +89,16 @@ export function getJoinCodeRefreshRate(state) {
 }
 
 /**
+ * A selector which returns domains for which the backend-provided JWT is valid.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Array<string>}
+ */
+export function getJwtDomains(state) {
+    return state.config.SPOT_SERVICES.jwtDomains;
+}
+
+/**
 * A selector which returns a unique id used for identifying the current client
 * in logs aggregations.
 *

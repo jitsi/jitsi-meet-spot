@@ -134,6 +134,8 @@ export default {
     /**
      * A list of known domains that can host Jitsi-Meet meetings. Used at least
      * to filter joinable events on the calendar.
+     *
+     * @type {Array<string>}
      */
     MEETING_DOMAINS_WHITELIST: [
         'beta.meet.jit.si',
@@ -155,7 +157,26 @@ export default {
     },
 
     SPOT_SERVICES: {
+        /**
+         * A list of known which the JWT, provided by the pairing service,
+         * is valid for and should be used with when joining meetings.
+         *
+         * @type {Array<string>}
+         */
+        jwtDomains: [],
+
+        /**
+         * The backend URL for registering Spot-TV and Spot-Remotes.
+         *
+         * @type {string}
+         */
         pairingServiceUrl: process.env.PAIRING_SERVICE_URL,
+
+        /**
+         * The backend service URL getting conference room information.
+         *
+         * @type {string}
+         */
         roomKeeperServiceUrl: process.env.ROOM_KEEPER_SERVICE_URL
     },
 
