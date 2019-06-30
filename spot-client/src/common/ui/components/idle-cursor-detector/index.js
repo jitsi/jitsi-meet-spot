@@ -1,1 +1,1 @@
-export { default as IdleCursorDetector } from './idle-cursor-detector';
+export { default as IdleCursorDetector } from './IdleCursorDetector';
