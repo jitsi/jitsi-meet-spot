@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getRemoteJoinCode } from 'common/app-state';
+import { getRemoteJoinCode, getShareDomain } from 'common/app-state';
 import { windowHandler } from 'common/utils';
 
 /**
@@ -12,7 +12,9 @@ import { windowHandler } from 'common/utils';
  */
 class JoinInfo extends React.Component {
     static propTypes = {
-        remoteJoinCode: PropTypes.string
+        remoteJoinCode: PropTypes.string,
+        shareDomain: PropTypes.string,
+        showDomain: PropTypes.bool
     };
 
     /**
@@ -46,9 +48,39 @@ class JoinInfo extends React.Component {
                 <span
                     className = 'info-code'
                     data-qa-id = 'info-code'>
-                    { this.props.remoteJoinCode.toUpperCase() }
+                    { this._getCopyToDisplay() }
                 </span>
             </div>
+        );
+    }
+
+    /**
+     * Returns the string to display for connecting as a Spot-Remote.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getCopyToDisplay() {
+        const { remoteJoinCode, shareDomain, showDomain } = this.props;
+
+        const codeToShow = remoteJoinCode.toUpperCase();
+        const codeElement = (
+            <span
+                className = 'info-code'
+                data-qa-id = 'info-code'>
+                { codeToShow }
+            </span>
+        );
+
+        if (!showDomain) {
+            return codeElement;
+        }
+
+        return (
+            <>
+                { `${shareDomain || windowHandler.getHost()}/` }
+                { codeElement }
+            </>
         );
     }
 
@@ -83,7 +115,8 @@ class JoinInfo extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        remoteJoinCode: getRemoteJoinCode(state)
+        remoteJoinCode: getRemoteJoinCode(state),
+        shareDomain: getShareDomain(state)
     };
 }
 

@@ -59,7 +59,8 @@ class SpotView extends React.Component {
             <View { ...this.props }>
                 { childComponents }
                 <div className = 'info-footer'>
-                    { spotRoomName && `${spotRoomName} | ` } Sharing Key <JoinInfo />
+                    { spotRoomName && `${spotRoomName} | ` }
+                    <JoinInfo showDomain = { true } />
                 </div>
                 <ReconnectOverlay />
             </View>
