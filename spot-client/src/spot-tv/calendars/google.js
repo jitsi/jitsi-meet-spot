@@ -3,6 +3,7 @@
 import { calendarTypes } from 'common/app-state';
 import { date } from 'common/date';
 import { logger } from 'common/logger';
+import { loadScript } from 'common/utils';
 
 let initPromise;
 
@@ -23,10 +24,10 @@ export default {
             return initPromise;
         }
 
-        initPromise = new Promise(resolve =>
-            gapi.load('client:auth2', () => resolve()));
-
-        return initPromise
+        initPromise = loadScript('https://apis.google.com/js/api.js')
+            .then(() => new Promise(resolve =>
+                gapi.load('client:auth2', () => resolve())
+            ))
             .then(() => gapi.client.init({
                 clientId: config.CLIENT_ID,
                 scope: [
@@ -35,6 +36,8 @@ export default {
                     'https://www.googleapis.com/auth/calendar.readonly'
                 ].join(' ')
             }));
+
+        return initPromise;
     },
 
     /**
