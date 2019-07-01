@@ -78,6 +78,16 @@ export function getDesktopSharingFramerate(state) {
 }
 
 /**
+ * A selector which returns the URL for loading the Jitsi Meet External Api.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getExternalApiUrl(state) {
+    return state.config.EXTERNAL_API_SRC;
+}
+
+/**
  * A selector which returns how often the Spot-TV should change its join code.
  *
  * @param {Object} state - The Redux state.

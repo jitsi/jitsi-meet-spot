@@ -14,6 +14,7 @@ import { LoggingService, logger } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
+    getExternalApiUrl,
     getLoggingEndpoint,
     routeChanged,
     setDefaultValues
@@ -27,6 +28,7 @@ import {
     clearPersistedState,
     getDeviceId,
     getPersistedState,
+    loadScript,
     setPersistedState
 } from 'common/utils';
 
@@ -105,11 +107,14 @@ history.listen(location => {
     store.dispatch(routeChanged(location));
 });
 
-render(
-    <Provider store = { store }>
-        <Router history = { history }>
-            <App />
-        </Router>
-    </Provider>,
-    document.getElementById('root')
-);
+loadScript(getExternalApiUrl(reduxState))
+    .then(() => {
+        render(
+            <Provider store = { store }>
+                <Router history = { history }>
+                    <App />
+                </Router>
+            </Provider>,
+            document.getElementById('root')
+        );
+    });
