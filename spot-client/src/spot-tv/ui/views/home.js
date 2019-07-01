@@ -114,10 +114,13 @@ export class Home extends React.Component {
                 <div className = 'spot-home'>
                     <Clock />
                     { this._getCalendarEventsView() }
-                    { _isSetupComplete
-                        && <div className = 'spot-home-footer'>
-                            { spotRoomName && `${spotRoomName} | ` } Sharing Key <JoinInfo />
-                        </div> }
+                    {
+                        _isSetupComplete
+                            && <div className = 'spot-home-footer'>
+                                { spotRoomName && `${spotRoomName} | ` }
+                                <JoinInfo showDomain = { _isSetupComplete } />
+                            </div>
+                    }
                 </div>
                 <div className = 'admin-toolbar'>
                     <FullscreenToggle />
