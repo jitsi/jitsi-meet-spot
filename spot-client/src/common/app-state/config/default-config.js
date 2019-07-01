@@ -87,6 +87,15 @@ export default {
     DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
 
     /**
+     * The URL from which to load the Jitsi Meet External API used for
+     * interacting with jitsi-meet deployments through an iFrame.
+     *
+     * @type {string}
+     */
+    EXTERNAL_API_SRC: process.env.EXTERNAL_API_SRC
+        || 'https://beta.meet.jit.si/external_api.js',
+
+    /**
      * Configuration object related to printing, collecting, and reporting of
      * event logs and errors.
      */
