@@ -2,6 +2,7 @@ export * from './cryptography';
 export * from './device-id';
 export * from './get-random-meeting-name';
 export * from './hash';
+export * from './loadScript';
 export * from './meeting';
 export { default as persistence } from './persistence';
 export * from './random';
