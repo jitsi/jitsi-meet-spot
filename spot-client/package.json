@@ -48,6 +48,7 @@
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#86e3badd5c04e1df72435205d28a58c8a64e343a",
         "lib-quiet-js": "github:virtuacoplenny/quiet-js#lenny/rewrite",
+        "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",
         "lodash.merge": "4.6.1",
         "lodash.throttle": "4.1.1",

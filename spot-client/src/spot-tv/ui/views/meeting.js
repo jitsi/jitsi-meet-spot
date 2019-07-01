@@ -22,7 +22,7 @@ import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
-import { MeetingFrame, MeetingStatus } from './../components';
+import { Countdown, MeetingFrame, MeetingStatus } from './../components';
 
 /**
  * Displays a Jitsi-Meet meeting.
@@ -47,6 +47,7 @@ export class Meeting extends React.Component {
         preferredSpeaker: PropTypes.string,
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
+        showKickedOverlay: PropTypes.bool,
         showMeetingToolbar: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool
     };
@@ -76,6 +77,7 @@ export class Meeting extends React.Component {
 
         this._onMeetingLeave = this._onMeetingLeave.bind(this);
         this._onMeetingStart = this._onMeetingStart.bind(this);
+        this._onRedirectToHome = this._onRedirectToHome.bind(this);
     }
 
     /**
@@ -116,6 +118,7 @@ export class Meeting extends React.Component {
             preferredSpeaker,
             remoteControlServer,
             screenshareDevice,
+            showKickedOverlay,
             showMeetingToolbar,
             showPasswordPrompt
         } = this.props;
@@ -147,6 +150,7 @@ export class Meeting extends React.Component {
                         </div>
                 }
                 { showPasswordPrompt && this._renderPasswordPrompt() }
+                { showKickedOverlay && this._renderKickedOverlay() }
                 <MeetingStatus />
                 {
 
@@ -216,7 +220,7 @@ export class Meeting extends React.Component {
             this.props.dispatch(addNotification('error', leaveEvent.error));
         }
 
-        this.props.history.push(ROUTES.HOME);
+        this._onRedirectToHome();
     }
 
     /**
@@ -229,6 +233,37 @@ export class Meeting extends React.Component {
         this.setState({
             meetingLoaded: true
         });
+    }
+
+    /**
+     * Changes the location to go back to the Spot-TV Home.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onRedirectToHome() {
+        this.props.history.push(ROUTES.HOME);
+    }
+
+    /**
+     * Renders a text overlay which hides Jitsi-Meet iFrame when the local
+     * participant has been removed from the meeting.
+     *
+     * @returns {ReactNode}
+     * @private
+     */
+    _renderKickedOverlay() {
+        return (
+            <div className = 'status-overlay'>
+                <div className = 'status-overlay-text-frame'>
+                    <h1>You have been removed from the conference</h1>
+                    <div className = 'status-overlay-text'>
+                        <div>The conference will be exited automatically in:</div>
+                        <Countdown onCountdownComplete = { this._onRedirectToHome } />
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     /**
@@ -267,6 +302,10 @@ function mapStateToProps(state) {
         max: maxDesktopSharingFramerate,
         min: minDesktopSharingFramerate
     } = getDesktopSharingFramerate(state);
+    const {
+        kicked,
+        needPassword
+    } = getInMeetingStatus(state);
 
     return {
         avatarUrl: getAvatarUrl(state),
@@ -276,7 +315,8 @@ function mapStateToProps(state) {
         jwtDomains: getJwtDomains(state),
         maxDesktopSharingFramerate,
         minDesktopSharingFramerate,
-        showPasswordPrompt: getInMeetingStatus(state).needPassword,
+        showKickedOverlay: kicked,
+        showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),

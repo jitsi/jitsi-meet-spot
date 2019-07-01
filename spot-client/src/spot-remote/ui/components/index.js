@@ -1,5 +1,6 @@
 export * from './dial-pad';
 export * from './electron-desktop-picker';
+export * from './kicked-notice';
 export * from './meeting-name-entry';
 export * from './more';
 export * from './nav';

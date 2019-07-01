@@ -34,6 +34,7 @@ import { getPermanentPairingCode } from './selectors';
 const presenceToStoreAsBoolean = new Set([
     'audioMuted',
     'electron',
+    'kicked',
     'needPassword',
     'screensharing',
     'tileView',

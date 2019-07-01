@@ -18,8 +18,9 @@ export function getInMeetingStatus(state) {
     return {
         audioMuted: state.spotTv.audioMuted,
         inMeeting: state.spotTv.inMeeting,
-        screensharingType: state.spotTv.screensharingType,
+        kicked: state.spotTv.kicked,
         needPassword: state.spotTv.needPassword,
+        screensharingType: state.spotTv.screensharingType,
         tileView: state.spotTv.tileView,
         videoMuted: state.spotTv.videoMuted,
         wiredScreensharingEnabled:
