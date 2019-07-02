@@ -5,7 +5,8 @@ import { getJitterDelay } from 'common/utils/retry';
  * Converts 'emitted' string date to a milliseconds date since the epoch and calculates the expiration date in
  * milliseconds since the epoch based on given 'expiresIn' value.
  *
- * @param {string} emitted - ISO formatted string which is a date/time when a token/something has been emitted.
+ * @param {string} emitted - A string with a number in milliseconds which is a date/time when a token/something
+ * has been emitted.
  * @param {string|number} expiresIn - A string with a number of milliseconds which is validity period of a token.
  * @returns {{
  *     emitted: number,
@@ -13,7 +14,7 @@ import { getJitterDelay } from 'common/utils/retry';
  * }}
  */
 function convertToEmittedAndExpires({ emitted, expiresIn }) {
-    const emittedMillis = Date.parse(emitted);
+    const emittedMillis = Number(emitted);
 
     return {
         emitted: emittedMillis,
