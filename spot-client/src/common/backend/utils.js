@@ -1,6 +1,8 @@
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils/retry';
 
+import { errorConstants } from './constants';
+
 /**
  * Converts 'emitted' string date to a milliseconds date since the epoch and calculates the expiration date in
  * milliseconds since the epoch based on given 'expiresIn' value.
@@ -61,7 +63,7 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
 
                         if (response.status < 500 || response.status >= 600) {
                             // Break the retry chain
-                            reject('unrecoverable-error');
+                            reject(errorConstants.REQUEST_FAILED);
 
                             return;
                         }
@@ -202,6 +204,20 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
             ...convertToEmittedAndExpires(json)
         };
     });
+}
+
+/**
+ * Returns whether or not the error is one in which a request cannot continue.
+ *
+ * @param {Error|string} error - The error object with details about the error
+ * or a string that identifies the error.
+ * @returns {boolean}
+ */
+export function isUnrecoverableError(error) {
+    const message = typeof error === 'object' ? error.message : error;
+
+    return message === errorConstants.REQUEST_FAILED
+        || message === errorConstants.NO_JWT;
 }
 
 /**

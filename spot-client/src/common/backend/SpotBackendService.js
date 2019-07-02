@@ -2,7 +2,13 @@ import { logger } from 'common/logger';
 
 import { persistence } from '../utils';
 
-import { fetchRoomInfo, refreshAccessToken, registerDevice } from './utils';
+import { errorConstants } from './constants';
+import {
+    fetchRoomInfo,
+    isUnrecoverableError,
+    refreshAccessToken,
+    registerDevice
+} from './utils';
 
 const ONE_SECOND = 1000;
 const ONE_MINUTE = 60 * ONE_SECOND;
@@ -147,11 +153,11 @@ export class SpotBackendService {
                 this._setRegistration(pairingCode, registration);
 
                 if (!this.getJwt()) {
-                    throw new Error('No JWT');
+                    throw new Error(errorConstants.NO_JWT);
                 }
             })
             .catch(error => {
-                if (error === 'unrecoverable-error' && usingStoredRegistration) {
+                if (isUnrecoverableError(error) && usingStoredRegistration) {
                     persistence.set(PERSISTENCE_KEY, undefined);
                 }
 
