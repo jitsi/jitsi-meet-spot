@@ -113,11 +113,13 @@ export class Home extends React.Component {
                         onUpdateAvailable = { this.props.onUpdateAvailable } /> }
                 <div className = 'spot-home'>
                     <Clock />
+                    <div className = 'room-name'>
+                        { spotRoomName && <div>{ spotRoomName }</div> }
+                    </div>
                     { this._getCalendarEventsView() }
                     {
                         _isSetupComplete
                             && <div className = 'spot-home-footer'>
-                                { spotRoomName && `${spotRoomName} | ` }
                                 <JoinInfo showDomain = { _isSetupComplete } />
                             </div>
                     }
