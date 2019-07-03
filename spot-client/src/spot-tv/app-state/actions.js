@@ -66,7 +66,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
             dispatch(setPermanentPairingCode(permanentPairingCode));
-            dispatch(setDisplayName(roomProfile.name));
+
+            if (isBackendEnabled(getState())) {
+                dispatch(setDisplayName(roomProfile.name));
+            }
         }
 
         /**
