@@ -144,7 +144,8 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        if (reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
+        if ((this._options.backend && this._options.backend.isUnrecoverableError(reason))
+            || reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
             || reason === 'not-authorized') {
             this.disconnect()
                 .then(() => this.emit(
