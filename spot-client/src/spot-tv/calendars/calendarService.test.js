@@ -150,5 +150,39 @@ describe('calendarService', () => {
                     expect(events[1].meetingUrl).toEqual(undefined);
                 });
         });
+
+        it('does not notify of old requests after multiple poll starts', () => {
+            const notExpectedEvents = [
+                {
+                    meetingUrlFields: [],
+                    testEvent: 1
+                }
+            ];
+            const expectedEvents = [
+                {
+                    meetingUrlFields: [],
+                    testEvent: 2
+                }
+            ];
+
+            jest.spyOn(calendarService, 'getCalendar').mockImplementation(options => {
+                if (options.testValue === 1) {
+                    return Promise.resolve(notExpectedEvents);
+                }
+
+                return Promise.resolve(expectedEvents);
+            });
+            const eventPromise = createOneTimeCalendarServiceListener(
+                SERVICE_UPDATES.EVENTS_UPDATED
+            );
+
+            // Queue up two polls immediately, expecting the first not to
+            // be honored.
+            calendarService.startPollingForEvents({ testValue: 1 });
+            calendarService.startPollingForEvents({ testValue: 2 });
+
+            return eventPromise
+                .then(({ events }) => expect(events).toEqual(expectedEvents));
+        });
     });
 });
