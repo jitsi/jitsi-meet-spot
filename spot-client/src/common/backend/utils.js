@@ -48,32 +48,36 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
     function internalFetchWithRetry() {
         return new Promise((resolve, reject) => {
             fetch(url, requestOptions)
-                .then(response => {
-                    if (!response.ok) {
-                        const error
-                            = `Failed to ${operationName}:`
-                                + `${response.statusText}, HTTP code: ${response.status}`;
+                .then(response => response.json()
+                    .catch(() => { /* Ignore json rejection */ })
+                    .then(json => {
+                        return {
+                            response,
+                            json
+                        };
+                    })
+                )
+                .then(({ response, json }) => {
+                    if (response.ok) {
+                        resolve(json);
 
-                        // Try to log response JSON for more details
-                        response.json().then(json => {
-                            logger.error(error, { json });
-                        }, () => {
-                            // Ignore json rejection
-                        });
-
-                        if (response.status < 500 || response.status >= 600) {
-                            // Break the retry chain
-                            reject(errorConstants.REQUEST_FAILED);
-
-                            return;
-                        }
-
-                        // Throw and retry
-                        throw Error(error);
+                        return;
                     }
 
-                    // Return result as JSON
-                    resolve(response.json());
+                    const error = `Failed to ${operationName}:`
+                        + `${response.statusText}, HTTP code: ${response.status}`;
+
+                    logger.error(error, { json });
+
+                    if (response.status < 500 || response.status >= 600) {
+                        // Break the retry chain early
+                        reject(errorConstants.REQUEST_FAILED);
+
+                        return;
+                    }
+
+                    // Throw and retry
+                    throw Error(error);
                 })
                 .catch(error => {
                     if (retry >= maxRetries) {
