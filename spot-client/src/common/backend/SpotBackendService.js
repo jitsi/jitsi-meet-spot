@@ -95,6 +95,17 @@ export class SpotBackendService {
     }
 
     /**
+     * Checks if the error is one that is fatal and should not be retried.
+     *
+     * @param {Error|string} error - The error object with details about the
+     * error or a string that identifies the error.
+     * @returns {boolean}
+     */
+    isUnrecoverableError(error) {
+        return isUnrecoverableError(error);
+    }
+
+    /**
      * Tries to refresh the backend registration.
      *
      * @param {SpotRegistration} registration - The registration object to be used for the refresh.
@@ -157,7 +168,7 @@ export class SpotBackendService {
                 }
             })
             .catch(error => {
-                if (isUnrecoverableError(error) && usingStoredRegistration) {
+                if (this.isUnrecoverableError(error) && usingStoredRegistration) {
                     persistence.set(PERSISTENCE_KEY, undefined);
                 }
 
