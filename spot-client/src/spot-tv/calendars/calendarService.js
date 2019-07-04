@@ -1,3 +1,5 @@
+import isEqual from 'lodash.isequal';
+
 import { calendarTypes } from 'common/app-state';
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
@@ -60,7 +62,9 @@ export class CalendarService extends Emitter {
          */
         this._calendarEvents = [];
 
+        this._currentCalendarPollingOptions = null;
         this._hasFetchedEvents = false;
+        this._updateEventsTimeout = null;
     }
 
     /**
@@ -148,11 +152,14 @@ export class CalendarService extends Emitter {
      * @returns {void}
      */
     startPollingForEvents(options) {
-        if (this._updateEventsTimeout) {
+        if (this._pollingOptionsAreEqual(options)) {
             return;
         }
 
-        this._pollForEvents(options);
+        this._currentCalendarPollingOptions = { ...options };
+
+        this.stopPollingForEvents();
+        this._pollForEvents(this._currentCalendarPollingOptions);
     }
 
     /**
@@ -175,6 +182,27 @@ export class CalendarService extends Emitter {
     }
 
     /**
+     * Sets a timeout for the next calendar polling.
+     *
+     * @param {Object} options - Options to use while fetching calendar events.
+     * @param {number} time - How long to wait until the next poll.
+     * @private
+     * @returns {void}
+     */
+    _enqueueNextCalendarPoll(options, time) {
+        if (!this._pollingOptionsAreEqual(options)) {
+            return;
+        }
+
+        this.stopPollingForEvents();
+
+        this._updateEventsTimeout = setTimeout(
+            () => this._pollForEvents(options),
+            time
+        );
+    }
+
+    /**
      * Fetches calendar events and sets an interval to fetch again.
      *
      * @param {Object} options - Options required for fetch the calendar events.
@@ -185,6 +213,10 @@ export class CalendarService extends Emitter {
     _pollForEvents(options) {
         this.getCalendar(options)
             .then(formattedEvents => {
+                if (!this._pollingOptionsAreEqual(options)) {
+                    return;
+                }
+
                 const events = this._updateMeetingUrlOnEvents(formattedEvents);
 
                 if (!this._hasFetchedEvents
@@ -198,20 +230,31 @@ export class CalendarService extends Emitter {
                     );
                 }
 
-                this._updateEventsTimeout = setTimeout(
-                    () => this._pollForEvents(options),
-                    60000 // Get new events in 60 seconds
-                );
-            })
-            .catch(error => {
+                // Try again in 1 minute
+                this._enqueueNextCalendarPoll(options, 1000 * 60);
+            }, error => {
+                if (!this._pollingOptionsAreEqual(options)) {
+                    return;
+                }
+
                 logger.error('Calendar _pollForEvents error: ', { error });
                 this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });
 
-                this._updateEventsTimeout = setTimeout(
-                    () => this._pollForEvents(options),
-                    1000 * 60 * 5 // Try again in 5 minutes
-                );
+                // Try again in 5 minutes
+                this._enqueueNextCalendarPoll(options, 1000 * 60 * 5);
             });
+    }
+
+    /**
+     * Compares calendar options, used for fetching calendar events, with
+     * previously used options.
+     *
+     * @param {Object} options - Options to use while fetching calendar events.
+     * @private
+     * @returns {boolean}
+     */
+    _pollingOptionsAreEqual(options) {
+        return isEqual(options, this._currentCalendarPollingOptions);
     }
 
     /**
