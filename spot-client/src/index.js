@@ -33,7 +33,8 @@ import {
 } from 'common/utils';
 
 import App from './app';
-import PostToEndpoint from './common/logger/post-to-endpoint';
+import PostToEndpoint from 'common/logger/post-to-endpoint';
+import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
 const queryParams = new URLSearchParams(window.location.search);
 
@@ -58,11 +59,23 @@ const store = createStore(
 );
 const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
+
+const externalApiSubscriber = new ExternalApiSubscriber(message => {
+    const externalListener = window.opener
+        || (window.parent === window ? null : window.parent);
+
+    externalListener && externalListener.postMessage(message, '*');
+});
+
 globalDebugger.register('store', store);
 
 store.subscribe(() => {
     setPersistedState(store);
-    remoteControlServiceSubscriber.onUpdate(store);
+
+    const newReduxState = store.getState();
+
+    remoteControlServiceSubscriber.onUpdate(newReduxState);
+    externalApiSubscriber.onUpdate(newReduxState);
 });
 
 const reduxState = store.getState();

@@ -11,7 +11,7 @@ const DEFAULT_STATE = {
     screensharingType: undefined,
     spotId: null,
     videoMuted: true,
-    view: null
+    view: undefined
 
     // FIXME: setting the default prevents wired screensharing from being
     // set to true.

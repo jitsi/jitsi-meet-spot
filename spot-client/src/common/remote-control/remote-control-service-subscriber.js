@@ -20,12 +20,11 @@ export default class RemoteControlServiceSubscriber {
      * update to all Spot-Remotes. For Spot-Remotes, when Spot-TV joins a
      * meeting, trigger any deferred screenshares.
      *
-     * @param {Object} store - The redux store from which to subscribe to
+     * @param {Object} state - The redux state from which to subscribe to
      * app-state updates and notify the remote control services.
      * @returns {oid}
      */
-    onUpdate(store) {
-        const state = store.getState();
+    onUpdate(state) {
         const newSpotTvState = state.spotTv;
         const newCalendarEvents = state.calendars.events || [];
         const newRoomName = state.setup.displayName;
