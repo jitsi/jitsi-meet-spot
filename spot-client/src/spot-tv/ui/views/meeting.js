@@ -20,9 +20,9 @@ import {
 import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
-import { Loading } from 'common/ui';
+import { Countdown, Loading } from 'common/ui';
 
-import { Countdown, MeetingFrame, MeetingStatus } from './../components';
+import { MeetingFrame, MeetingStatus } from './../components';
 
 /**
  * Displays a Jitsi-Meet meeting.
