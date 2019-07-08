@@ -20,6 +20,7 @@ const reducers = {
 
 export default reducers;
 
+export * from './api';
 export * from './calendars/actions';
 export * from './modal/actions';
 export * from './notifications/actions';

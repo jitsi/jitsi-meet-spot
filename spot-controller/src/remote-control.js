@@ -9,6 +9,9 @@ import {
 import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
 
+import api from './api';
+import { BeaconOverlay } from './beacons';
+
 import LoadingScreen from './LoadingScreen';
 import styles from './styles';
 
@@ -38,6 +41,7 @@ export default class RemoteControl extends React.PureComponent {
 
         this._onRetryWebViewLoad = this._onRetryWebViewLoad.bind(this);
         this._onWebViewLoadError = this._onWebViewLoadError.bind(this);
+        this._setRef = this._setRef.bind(this);
     }
 
     // Override the meta tag with values that are known not allow this app to
@@ -104,38 +108,45 @@ export default class RemoteControl extends React.PureComponent {
      */
     _renderWebViewContent() {
         return (
-            <WebView
-                allowsInlineMediaPlayback = { true }
-                allowsLinkPreview = { false }
+            <View style = { styles.webView }>
+                <WebView
+                    allowsInlineMediaPlayback = { true }
+                    allowsLinkPreview = { false }
 
-                // Prevents moving the webview up and down.
-                bounces = { false }
+                    // Prevents moving the webview up and down.
+                    bounces = { false }
 
-                // Do not cache so any reloads can pick up the latest.
-                cacheEnabled = { false }
+                    // Do not cache so any reloads can pick up the latest.
+                    cacheEnabled = { false }
 
-                directionalLockEnabled = { true }
+                    directionalLockEnabled = { true }
 
-                injectedJavaScript = { this._preventWebViewZoomScript }
+                    injectedJavaScript = { this._preventWebViewZoomScript }
 
-                // Allow immediate playing of any media, like ultrasound.
-                mediaPlaybackRequiresUserAction = { false }
+                    // Allow immediate playing of any media, like ultrasound.
+                    mediaPlaybackRequiresUserAction = { false }
 
-                onError = { this._onWebViewLoadError }
+                    onError = { this._onWebViewLoadError }
 
-                renderLoading = { this._renderLoading }
+                    onMessage = { api._onMessage }
 
-                // The default is true but being explicit to point out
-                // scrolling is necessary for iOS (starting on 12.2) to
-                // properly center focus on inputs.
-                scrollEnabled = { true }
+                    ref = { this._setRef }
 
-                // In general the WebView should not need to scroll.
-                showsHorizontalScrollIndicator = { false }
-                showsVerticalScrollIndicator = { false }
+                    renderLoading = { this._renderLoading }
 
-                source = {{ uri: this.props.url }}
-                startInLoadingState = { true } />
+                    // The default is true but being explicit to point out
+                    // scrolling is necessary for iOS (starting on 12.2) to
+                    // properly center focus on inputs.
+                    scrollEnabled = { true }
+
+                    // In general the WebView should not need to scroll.
+                    showsHorizontalScrollIndicator = { false }
+                    showsVerticalScrollIndicator = { false }
+
+                    source = {{ uri: this.props.url }}
+                    startInLoadingState = { true } />
+                <BeaconOverlay />
+            </View>
         );
     }
 
@@ -173,5 +184,15 @@ export default class RemoteControl extends React.PureComponent {
                     title = 'Retry' />
             </View>
         );
+    }
+
+    /**
+     * Updates the web view reference when it gets rendered.
+     *
+     * @param {Reactelement} ref - The web view reference.
+     * @returns {void}
+     */
+    _setRef(ref) {
+        api.setReference(ref);
     }
 }

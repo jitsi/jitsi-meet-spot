@@ -59,7 +59,11 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativeBeaconsManager (1.1.0):
+    - React
   - RNCAsyncStorage (1.4.2):
+    - React
+  - RNSVG (9.5.1):
     - React
   - yoga (0.59.9.React)
 
@@ -79,7 +83,9 @@ DEPENDENCIES:
   - React/RCTSettings (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativeBeaconsManager (from `../node_modules/react-native-beacons-manager`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - RNSVG (from `../node_modules/react-native-svg`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -99,8 +105,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keep-awake"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  ReactNativeBeaconsManager:
+    :path: "../node_modules/react-native-beacons-manager"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -112,9 +122,11 @@ SPEC CHECKSUMS:
   React: a86b92f00edbe1873a63e4a212c29b7a7ad5224f
   react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
   react-native-webview: 03bb6d5ef662f9909676e61ab940e4b8befad77f
+  ReactNativeBeaconsManager: dd0b01841445881989af5be9ab83153d1cdaa6b7
   RNCAsyncStorage: 285698b8a4f219573174d99e863a78b93f389272
+  RNSVG: 0eb087cfb5d7937be93c45b163b26352a647e681
   yoga: 03ff42a6f223fb88deeaed60249020d80c3091ee
 
-PODFILE CHECKSUM: 2ed5df7782cef2629ad54ec10b3479e6e4493219
+PODFILE CHECKSUM: e3e8bb10163a637c2d10705d8107914485a19df2
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.7.2

@@ -1,4 +1,14 @@
 /**
+ * A selector which returns the last received join code from the external API.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getApiReceivedJoinCode(state) {
+    return state.spotRemote.apiReceivedJoinCode;
+}
+
+/**
  * Returns the permanent pairing code if any is currently stored.
  *
  * @param {Object} state - The current Redux state.

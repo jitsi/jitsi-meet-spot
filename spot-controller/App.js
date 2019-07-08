@@ -1,11 +1,18 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import { MiddlewareRegistry, ReducerRegistry } from 'jitsi-meet-redux';
 import React from 'react';
 import SideMenu from 'react-native-side-menu';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
 import LoadingScreen from './src/LoadingScreen';
+import { appMounted, appWillUnmount } from './src/app';
 import RemoteControl from './src/remote-control';
 import SettingsMenu from './src/settings-menu';
 import Setup from './src/setup';
+
+// Modules that doesn't necesarily export anything, but must be imported to function
+import './src/beacons';
 
 // FIXME make it possible to configure default URL on the build time
 const DEFAULT_URL = 'https://spot.8x8.vc';
@@ -39,6 +46,7 @@ export default class App extends React.Component {
         };
 
         this._sideMenuRef = React.createRef();
+        this.store = createStore(ReducerRegistry.combineReducers(), {}, MiddlewareRegistry.applyMiddleware());
 
         this._onClearRemoteUrl = this._onClearRemoteUrl.bind(this);
         this._onResetApp = this._onResetApp.bind(this);
@@ -46,11 +54,13 @@ export default class App extends React.Component {
     }
 
     /**
-     * Fetches a previously saved remoteControlUrl and uses it, if available.
+     * Implements {@code Component#componentDidMount}.
      *
      * @inheritdoc
      */
     componentDidMount() {
+        this.store.dispatch(appMounted());
+
         if (__DEV__) {
             AsyncStorage.getItem('remote-control-url')
                 .then(remoteControlUrl => {
@@ -60,6 +70,15 @@ export default class App extends React.Component {
                     });
                 });
         }
+    }
+
+    /**
+     * Implements {@code Component#componentWillUnmount}.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.store.dispatch(appWillUnmount());
     }
 
     /**
@@ -75,26 +94,12 @@ export default class App extends React.Component {
 
         const { remoteControlUrl } = this.state;
 
-        if (remoteControlUrl) {
-            const url = `${remoteControlUrl}/?enableOnboarding=true&reset=${
-                this.state.includeResetInUrl}`;
-            const remoteControlComponent = (
-                <RemoteControl
-                    key = { this.state.webViewKey }
-                    url = { url } />
-            );
-
-            return (
-                <SideMenu
-                    menu = { this._renderSettingsMenu() }
-                    openMenuOffset = { 250 }
-                    ref = { this._sideMenuRef }>
-                    { remoteControlComponent }
-                </SideMenu>
-            );
-        }
-
-        return <Setup onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />;
+        return (
+            <Provider store = { this.store }>
+                { remoteControlUrl && this._renderRemoteControl() }
+                { !remoteControlUrl && this._renderSetup() }
+            </Provider>
+        );
     }
 
     /**
@@ -133,6 +138,27 @@ export default class App extends React.Component {
     }
 
     /**
+     * Returns a the React Component for the remote control.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderRemoteControl() {
+        const { includeResetInUrl, remoteControlUrl } = this.state;
+
+        return (
+            <SideMenu
+                menu = { this._renderSettingsMenu() }
+                openMenuOffset = { 250 }
+                ref = { this._sideMenuRef }>
+                <RemoteControl
+                    key = { this.state.webViewKey }
+                    url = { `${remoteControlUrl}/?enableOnboarding=true&reset=${includeResetInUrl}` } />
+            </SideMenu>
+        );
+    }
+
+    /**
      * Returns a the React Component for the side menu contents.
      *
      * @private
@@ -158,5 +184,17 @@ export default class App extends React.Component {
             includeResetInUrl: true,
             webViewKey: this.state.webViewKey + 1
         });
+    }
+
+    /**
+     * Returns a the React Component for the setup contents.
+     *
+     * @private
+     * @returns {ReactComponent}
+     */
+    _renderSetup() {
+        return (
+            <Setup onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />
+        );
     }
 }

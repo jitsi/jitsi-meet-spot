@@ -21,5 +21,9 @@ export default {
 
     infoText: {
         color: TEXT_COLOR
+    },
+
+    webView: {
+        flex: 1
     }
 };
