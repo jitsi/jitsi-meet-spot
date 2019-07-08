@@ -22,6 +22,18 @@ const DEFAULT_DISPLAY_NAME = 'Meeting Room';
  * @extends React.Component
  */
 export class MeetingFrame extends React.Component {
+    static defaultProps = {
+
+        /**
+         * Ensure params set for the external api are defined or else a
+         * harmless error message will logged by jitsi-meet.
+         */
+        preferredCamera: '',
+        preferredMic: '',
+        preferredSpeaker: '',
+        screenshareDevice: ''
+    };
+
     static propTypes = {
         avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
