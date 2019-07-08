@@ -10,6 +10,7 @@ const daemon = require('./daemon');
  * Represents a soft-beacon emulated by the computer running Spot TV
  */
 class BTBeacon {
+    remoteJoinCode;
 
     /**
      * Instantiates a new instance of the class.
@@ -19,8 +20,8 @@ class BTBeacon {
 
         if (daemon && this.region) {
             daemon.connect().then(() => {
-                clientController.on('updateJoinCode', ({ joinCode }) => {
-                    this.joinCodeUpdated(joinCode);
+                clientController.on('updateJoinCode', ({ remoteJoinCode }) => {
+                    this.joinCodeUpdated(remoteJoinCode);
                 });
             });
         } else {
@@ -31,22 +32,22 @@ class BTBeacon {
     /**
      * Updates the beacon to emit the newly received join code.
      *
-     * @param {string} joinCode - The join code to use as major and minor version for the beacon.
+     * @param {string} remoteJoinCode - The join code to use as major and minor version for the beacon.
      * @returns {void}
      */
-    joinCodeUpdated(joinCode) {
-        if (this.joinCode === joinCode) {
+    joinCodeUpdated(remoteJoinCode) {
+        if (this.remoteJoinCode === remoteJoinCode) {
             return;
         }
 
         logger.info('Updating BT beacon...');
-        if (joinCode) {
-            const majorMinorVersion = joinCodeToVersion(joinCode);
+        if (remoteJoinCode) {
+            const majorMinorVersion = joinCodeToVersion(remoteJoinCode);
 
             daemon.stopBeacon().then(() => {
                 daemon.startBeacon(this.region, majorMinorVersion[0], majorMinorVersion[1]).then(() => {
-                    this.joinCode = joinCode;
-                    logger.info(`BT Beacon updated with join code ${joinCode}`);
+                    this.joinCode = remoteJoinCode;
+                    logger.info(`BT Beacon updated with join code ${remoteJoinCode}`);
                 });
             });
         } else {

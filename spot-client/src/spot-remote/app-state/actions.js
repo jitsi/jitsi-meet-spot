@@ -20,6 +20,7 @@ import { ROUTES } from 'common/routing';
 import { windowHandler } from 'common/utils';
 
 import {
+    SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
     SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
@@ -180,6 +181,19 @@ export function connectToSpotTV(joinCode, shareMode) {
                 onDisconnect.bind(null, store)));
 
         return doConnect();
+    };
+}
+
+/**
+ * Notifies the app that a join code is received through the external api.
+ *
+ * @param {string} joinCode - The join code recived.
+ * @returns {Object}
+ */
+export function setAPiReceivedJoinCode(joinCode) {
+    return {
+        type: SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
+        joinCode
     };
 }
 

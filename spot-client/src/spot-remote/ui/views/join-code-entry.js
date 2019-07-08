@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import {
     addNotification,
     getRemoteControlServerConfig,
-    getShareDomain
+    getShareDomain,
+    sendApiMessage
 } from 'common/app-state';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
@@ -14,9 +15,11 @@ import { CodeInput, Loading, View } from 'common/ui';
 
 import {
     connectToSpotTV,
+    getApiReceivedJoinCode,
     disconnectFromSpotTV,
     getPermanentPairingCode,
-    isOnboardingComplete
+    isOnboardingComplete,
+    setAPiReceivedJoinCode
 } from './../../app-state';
 import { NavButton, NavContainer } from './../components';
 import { withUltrasound } from './../loaders';
@@ -32,6 +35,8 @@ export class JoinCodeEntry extends React.Component {
     };
 
     static propTypes = {
+        apiReceivedJoinCode: PropTypes.string,
+        clearApiReceivedJoinCode: PropTypes.func,
         completedOnboarding: PropTypes.bool,
         entryLength: PropTypes.number,
         history: PropTypes.object,
@@ -42,7 +47,8 @@ export class JoinCodeEntry extends React.Component {
         permanentPairingCode: PropTypes.string,
         remoteControlConfiguration: PropTypes.object,
         shareDomain: PropTypes.string,
-        ultrasoundService: PropTypes.object
+        ultrasoundService: PropTypes.object,
+        updateReadyStatus: PropTypes.func
     };
 
     /**
@@ -58,8 +64,6 @@ export class JoinCodeEntry extends React.Component {
             enteredCode: ''
         };
 
-        this._isShareModeEnabled = this._isInShareModeEnv();
-
         this._onCodeChange = this._onCodeChange.bind(this);
         this._onHelpIconClicked = this._onHelpIconClicked.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
@@ -74,6 +78,7 @@ export class JoinCodeEntry extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
+        this.props.updateReadyStatus(true);
         this.props.ultrasoundService.setMessage('');
         this.props.onDisconnect();
 
@@ -112,22 +117,28 @@ export class JoinCodeEntry extends React.Component {
     }
 
     /**
-     * Whether or not a successful connection to a Spot-TV should proceed into
-     * share mode.
+     * Implements {@code React#componentDidUpdate}.
      *
-     * @private
-     * @returns {boolean}
+     * @inheritdoc
      */
-    _isInShareModeEnv() {
-        const isShareDomain = this.props.shareDomain && window.location.host.includes(this.props.shareDomain);
+    componentDidUpdate(prevProps) {
+        const { apiReceivedJoinCode } = this.props;
 
-        if (isShareDomain) {
-            return true;
+        if (apiReceivedJoinCode && prevProps.apiReceivedJoinCode !== apiReceivedJoinCode) {
+            // remove the code, we don't need it anymore
+            this.props.clearApiReceivedJoinCode();
+
+            this._connectToSpot(apiReceivedJoinCode);
         }
+    }
 
-        const queryParams = new URLSearchParams(this.props.location.search);
-
-        return queryParams.get('share') === 'true';
+    /**
+     * Implements {@code Component#componentWillUnmount}.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.updateReadyStatus(false);
     }
 
     /**
@@ -198,6 +209,25 @@ export class JoinCodeEntry extends React.Component {
                 </div>
             </View>
         );
+    }
+
+    /**
+     * Whether or not a successful connection to a Spot-TV should proceed into
+     * share mode.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isInShareModeEnv() {
+        const isShareDomain = this.props.shareDomain && window.location.host.includes(this.props.shareDomain);
+
+        if (isShareDomain) {
+            return true;
+        }
+
+        const queryParams = new URLSearchParams(this.props.location.search);
+
+        return queryParams.get('share') === 'true';
     }
 
     /**
@@ -306,6 +336,7 @@ export class JoinCodeEntry extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        apiReceivedJoinCode: getApiReceivedJoinCode(state),
         completedOnboarding: isOnboardingComplete(state),
         permanentPairingCode: getPermanentPairingCode(state),
         remoteControlConfiguration: getRemoteControlServerConfig(state),
@@ -323,6 +354,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         /**
+         * Clears the API code received through the API.
+         *
+         * @returns {void}
+         */
+        clearApiReceivedJoinCode() {
+            dispatch(setAPiReceivedJoinCode());
+        },
+
+        /**
          * Display an app notification.
          *
          * @param {string} type - The type of the notification to display.
@@ -337,12 +377,10 @@ function mapDispatchToProps(dispatch) {
          * Attempts to establish a connection with a Spot-TV.
          *
          * @param {string} joinCode - The code necessary to pair with a Spot-TV.
-         * @param {boolean} shareMode - Whether or not the Spot-Remote should
-         * show the Share Mode UI after establishing a connection.
          * @returns {Promise} Resolves when the connection is established.
          */
-        onConnectToSpotTV(joinCode, shareMode = false) {
-            return dispatch(connectToSpotTV(joinCode, shareMode));
+        onConnectToSpotTV(joinCode) {
+            return dispatch(connectToSpotTV(joinCode));
         },
 
         /**
@@ -352,6 +390,17 @@ function mapDispatchToProps(dispatch) {
          */
         onDisconnect() {
             dispatch(disconnectFromSpotTV());
+        },
+
+        /**
+         * Updates the ready status of the app, telling the API (embedder) that we're ready to receive
+         * a join code.
+         *
+         * @param {boolean} ready - True if the app is ready to receive a join code through the API.
+         * @returns {void}
+         */
+        updateReadyStatus(ready) {
+            dispatch(sendApiMessage('joinReady', ready));
         }
     };
 }

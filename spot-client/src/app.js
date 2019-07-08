@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import { apiMessageReceived } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
@@ -31,6 +33,7 @@ import { SpotTvRestrictedRoute } from './spot-tv/routing';
  */
 export class App extends React.Component {
     static propTypes = {
+        dispatch: PropTypes.func,
         location: PropTypes.object
     };
 
@@ -50,6 +53,7 @@ export class App extends React.Component {
         this._onCursorIdleChange = this._onCursorIdleChange.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
         this._onMouseDown = this._onMouseDown.bind(this);
+        this._onPostMessage = this._onPostMessage.bind(this);
         this._onTouchStart = this._onTouchStart.bind(this);
 
         this._renderHomeView = this._renderHomeView.bind(this);
@@ -90,6 +94,12 @@ export class App extends React.Component {
          * outline the focused element.
          */
         document.body.addEventListener('keydown', this._onKeyDown);
+
+        /**
+         * Instructions can be received through the iframe postMessage
+         * event to instruct the remote or the spot TV to do something.
+         */
+        window.addEventListener('message', this._onPostMessage);
     }
 
     /**
@@ -201,6 +211,27 @@ export class App extends React.Component {
     }
 
     /**
+     * Callback invoked on window 'message' event.
+     *
+     * @param {Object} event - The message event posted.
+     * @returns {void}
+     */
+    _onPostMessage({ data }) {
+        try {
+            const parsedMessage = typeof data === 'object' ? data : JSON.parse(data);
+
+            // A Jitsi API message needs to have a messageType and a messageData field, otherwise we ignore
+            // handling it. Those messages may have arrived from other integrations, such as webpack.
+
+            const { messageData, messageType } = parsedMessage;
+
+            messageData && messageType && this.props.dispatch(apiMessageReceived(messageType, messageData));
+        } catch (error) {
+            logger.warn(`Unknown message received: '${data}'`, error);
+        }
+    }
+
+    /**
      * Callback invoked on touch event.
      *
      * @private
@@ -292,4 +323,4 @@ export class App extends React.Component {
     }
 }
 
-export default withRouter(App);
+export default connect()(withRouter(App));

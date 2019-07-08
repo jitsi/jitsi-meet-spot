@@ -20,10 +20,14 @@ target 'spot-controller' do
 
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod "yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
+
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  pod 'ReactNativeBeaconsManager', :path => '../node_modules/react-native-beacons-manager'
   pod 'react-native-keep-awake', :path => '../node_modules/react-native-keep-awake'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-  pod "yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
+  
 
 end
