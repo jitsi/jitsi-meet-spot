@@ -14,6 +14,8 @@ import { adjustVolume } from '../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
+import { FeedbackHider } from './FeedbackHider';
+
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 
 /**
@@ -222,7 +224,7 @@ export class MeetingFrame extends React.Component {
     render() {
         return (
             <>
-                { this.state.feedbackDisplayed && this._renderFeedbackHider() }
+                { this.state.feedbackDisplayed && <FeedbackHider /> }
                 <WiredScreenshareChangeListener
                     onDeviceConnected
                         = { this._onScreenshareDeviceConnected }
@@ -639,25 +641,6 @@ export class MeetingFrame extends React.Component {
         this._isVideoMuted = muted;
 
         this.props.updateSpotTvState({ videoMuted: muted });
-    }
-
-    /**
-     * Renders a text overlay which hides Jitsi-Meet iFrame when it's asking for feedback.
-     *
-     * @returns {ReactNode}
-     * @private
-     */
-    _renderFeedbackHider() {
-        return (
-            <div className = 'status-overlay'>
-                <div className = 'status-overlay-text-frame'>
-                    <h1>Thanks for using Spot!</h1>
-                    <div className = 'status-overlay-text'>
-                        <div>You can use the remote control device to submit feedback now.</div>
-                    </div>
-                </div>
-            </div>
-        );
     }
 
     /**
