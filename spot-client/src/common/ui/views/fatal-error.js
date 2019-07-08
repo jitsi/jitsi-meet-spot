@@ -1,6 +1,11 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { Button, ResetState } from './../components';
+import { isSpot } from 'common/app-state';
+import { ROUTES } from 'common/routing';
+
+import { Countdown, StatusOverlay } from './../components';
 
 import View from './view';
 
@@ -10,9 +15,13 @@ import View from './view';
  *
  * @returns {ReactElement}
  */
-export default class FatalError extends React.Component {
+export class FatalError extends React.Component {
+    static propTypes = {
+        isSpotTV: PropTypes.bool
+    };
+
     /**
-     * Initializes a new {@code App} instance.
+     * Initializes a new {@code FatalError} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -20,7 +29,7 @@ export default class FatalError extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onReloadToHome = this._onReloadToHome.bind(this);
+        this._onReload = this._onReload.bind(this);
     }
 
     /**
@@ -34,15 +43,12 @@ export default class FatalError extends React.Component {
             <View
                 hideBackground = { true }
                 name = 'error'>
-                <div className = 'container'>
-                    <div className = 'admin'>
-                        <div>Whoops, something went wrong.</div>
-                        <Button onClick = { this._onReloadToHome }>
-                            Reload
-                        </Button>
-                        <ResetState />
-                    </div>
-                </div>
+                <StatusOverlay title = 'An unexpected error occurred'>
+                    <div>We will redirect you to home in</div>
+                    <Countdown
+                        onCountdownComplete = { this._onReload }
+                        startTime = { 10 } />
+                </StatusOverlay>
             </View>
         );
     }
@@ -53,7 +59,22 @@ export default class FatalError extends React.Component {
      * @private
      * @returns {void}
      */
-    _onReloadToHome() {
-        window.location.reload();
+    _onReload() {
+        window.location = this.props.isSpotTV ? ROUTES.HOME : ROUTES.CODE;
     }
 }
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code FatalError}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        isSpotTV: isSpot(state)
+    };
+}
+
+export default connect(mapStateToProps)(FatalError);
