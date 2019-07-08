@@ -20,9 +20,9 @@ import {
 import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
-import { Countdown, Loading } from 'common/ui';
+import { Loading } from 'common/ui';
 
-import { MeetingFrame, MeetingStatus } from './../components';
+import { KickedOverlay, MeetingFrame, MeetingStatus } from './../components';
 
 /**
  * Displays a Jitsi-Meet meeting.
@@ -150,7 +150,10 @@ export class Meeting extends React.Component {
                         </div>
                 }
                 { showPasswordPrompt && this._renderPasswordPrompt() }
-                { showKickedOverlay && this._renderKickedOverlay() }
+                {
+                    showKickedOverlay
+                        && <KickedOverlay onRedirect = { this._onRedirectToHome } />
+                }
                 <MeetingStatus />
                 {
 
@@ -243,27 +246,6 @@ export class Meeting extends React.Component {
      */
     _onRedirectToHome() {
         this.props.history.push(ROUTES.HOME);
-    }
-
-    /**
-     * Renders a text overlay which hides Jitsi-Meet iFrame when the local
-     * participant has been removed from the meeting.
-     *
-     * @returns {ReactNode}
-     * @private
-     */
-    _renderKickedOverlay() {
-        return (
-            <div className = 'status-overlay'>
-                <div className = 'status-overlay-text-frame'>
-                    <h1>You have been removed from the conference</h1>
-                    <div className = 'status-overlay-text'>
-                        <div>The conference will be exited automatically in:</div>
-                        <Countdown onCountdownComplete = { this._onRedirectToHome } />
-                    </div>
-                </div>
-            </div>
-        );
     }
 
     /**
