@@ -26,6 +26,12 @@ export function createAsyncActionWithStates( // eslint-disable-line max-params
         request,
         requestType,
         expectedValue) {
+    const start = new Date().getTime();
+
+    logger.log('ASYNC ACTION ', {
+        requestType,
+        expectedValue
+    });
     dispatch(setRequestState(
         requestType,
         asyncActionRequestStates.PENDING,
@@ -34,6 +40,11 @@ export function createAsyncActionWithStates( // eslint-disable-line max-params
 
     return request()
         .then(result => {
+            logger.log('ASYNC ACTION DONE', {
+                requestType,
+                expectedValue,
+                time: new Date().getTime() - start
+            });
             dispatch(setRequestState(
                 requestType,
                 asyncActionRequestStates.DONE,
@@ -43,6 +54,11 @@ export function createAsyncActionWithStates( // eslint-disable-line max-params
             return Promise.resolve(result);
         })
         .catch(error => {
+            logger.log('ASYNC ACTION FAILED', {
+                requestType,
+                expectedValue,
+                time: new Date().getTime() - start
+            });
             logger.error('Encountered error with async request', {
                 error,
                 expectedValue,
