@@ -62,8 +62,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     adjustVolume(direction) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.ADJUST_VOLUME, { direction });
+        return this._sendCommand(COMMANDS.ADJUST_VOLUME, { direction });
     }
 
     /**
@@ -187,8 +186,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
 
         this._goToMeetingPromise
             = preGoToMeeting
-                .then(() => this.xmppConnection.sendCommand(
-                        this._getSpotId(),
+                .then(() => this._sendCommand(
                         COMMANDS.GO_TO_MEETING,
                         {
                             startWithScreensharing: startWithScreensharing === 'wired',
@@ -217,8 +215,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
     hangUp(skipFeedback = false) {
         this.destroyWirelessScreenshareConnections();
 
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
+        return this._sendCommand(
             COMMANDS.HANG_UP,
             {
                 skipFeedback
@@ -245,6 +242,17 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Sends RCS command.
+     *
+     * @param {string} command - The RCs command type as defined in {@link COMMANDS}.
+     * @param {Object} data - Any extra command data to be sent.
+     * @returns {Promise<Object>}
+     */
+    _sendCommand(command, data) {
+        return this.xmppConnection.sendCommand(this._getSpotId(), command, data);
+    }
+
+    /**
      * Requests a {@code RemoteControlServer} to send touch tones into a meeting.
      * This is intended for interaction with an IVR requesting additional
      * conference details for dialing in.
@@ -254,8 +262,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     sendTouchTones(tones) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
+        return this._sendCommand(
             COMMANDS.SEND_TOUCH_TONES,
             { tones }
         );
@@ -268,8 +275,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setAudioMute(mute) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.SET_AUDIO_MUTE, { mute });
+        return this._sendCommand(COMMANDS.SET_AUDIO_MUTE, { mute });
     }
 
     /**
@@ -282,8 +288,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setScreensharing(screensharing) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
+        return this._sendCommand(
             COMMANDS.SET_SCREENSHARING,
             { on: screensharing }
         );
@@ -297,11 +302,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setTileView(tileView) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(),
-            COMMANDS.SET_TILE_VIEW,
-            { tileView }
-        );
+        return this._sendCommand(COMMANDS.SET_TILE_VIEW, { tileView });
     }
 
     /**
@@ -312,8 +313,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setVideoMute(mute) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.SET_VIDEO_MUTE, { mute });
+        return this._sendCommand(COMMANDS.SET_VIDEO_MUTE, { mute });
     }
 
     /**
@@ -377,8 +377,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      */
     submitFeedback(feedback) {
         return this.xmppConnection
-            ? this.xmppConnection.sendCommand(
-                this._getSpotId(), COMMANDS.SUBMIT_FEEDBACK, feedback)
+            ? this._sendCommand(COMMANDS.SUBMIT_FEEDBACK, feedback)
             : Promise.reject('No server connection for feedback');
     }
 
@@ -390,8 +389,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     submitPassword(password) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.SUBMIT_PASSWORD, password);
+        return this._sendCommand(COMMANDS.SUBMIT_PASSWORD, password);
     }
 
     /**
