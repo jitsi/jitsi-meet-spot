@@ -399,6 +399,7 @@ export default class XmppConnection {
         }
 
         this.room.connection.send(ack);
+        this.room.connection.flush();
 
         return true;
     }
@@ -510,6 +511,7 @@ export default class XmppConnection {
                 },
                 IQ_TIMEOUT
             );
+            this.room.connection.flush();
         });
     }
 
