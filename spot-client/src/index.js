@@ -86,14 +86,32 @@ if (analyticsAppKey) {
     analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
 
-window.onerror = message => logger.error('Uncaught error', { message });
+// eslint-disable-next-line max-params
+window.onerror = (message, url, lineNo, columnNo, error) => {
+    logger.error('Uncaught error', {
+        columnNo,
+        lineNo,
+        message,
+        error: error.stack,
+        url
+    });
+};
 
 window.onunhandledrejection = event => {
-    const { message, stack } = event.reason || {};
+    if (event.reason instanceof Error) {
+        const { message, stack } = event.reason;
+
+        logger.error('Unhandled promise rejection', {
+            message,
+            stack
+        });
+
+        return;
+    }
 
     logger.error('Unhandled promise rejection', {
-        message,
-        stack
+        message: event.reason,
+        stack: 'n/a'
     });
 };
 
