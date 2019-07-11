@@ -8,6 +8,7 @@ import { Modal } from 'common/ui';
 import { SelectMedia } from '../setup';
 
 import CalendarStatus from './calendar-status';
+import DeviceId from './DeviceId';
 import InMeetingConfig from './in-meeting-config';
 import PreferredDevices from './preferred-devices';
 import ResetApp from './reset-app';
@@ -73,6 +74,7 @@ class AdminModal extends React.Component {
         default:
             return [
                 <CalendarStatus key = 'key-calendarStatus' />,
+                <DeviceId key = 'device-id' />,
                 <PreferredDevices
                     key = 'key=preferredDevices'
                     onClick = { this._onChangeDevices } />,
