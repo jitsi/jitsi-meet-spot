@@ -115,7 +115,12 @@ export default {
          *
          * @type {string}
          */
-        ENDPOINT: process.env.LOGGING_ENDPOINT || ''
+        ENDPOINT: process.env.LOGGING_ENDPOINT || '',
+
+        /**
+         * The application name to provide Jitsi-Meet analytics.
+         */
+        JITSI_APP_NAME: 'Jitsi Meet Spot Development'
     },
 
     /**

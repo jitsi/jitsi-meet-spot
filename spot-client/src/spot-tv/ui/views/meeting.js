@@ -9,6 +9,7 @@ import {
     getDesktopSharingFramerate,
     getDisplayName,
     getInMeetingStatus,
+    getJitsiAppName,
     getJwt,
     getJwtDomains,
     getMeetingOptions,
@@ -36,6 +37,7 @@ export class Meeting extends React.Component {
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
+        jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
         jwtDomains: PropTypes.array,
         location: PropTypes.object,
@@ -110,6 +112,7 @@ export class Meeting extends React.Component {
         const {
             avatarUrl,
             displayName,
+            jitsiAppName,
             jwt,
             maxDesktopSharingFramerate,
             minDesktopSharingFramerate,
@@ -129,6 +132,7 @@ export class Meeting extends React.Component {
                     avatarUrl = { avatarUrl }
                     displayName = { displayName }
                     invites = { invites }
+                    jitsiAppName = { jitsiAppName }
                     jwt = { this._useJwt ? jwt : undefined }
                     maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
                     meetingUrl = { location }
@@ -293,6 +297,7 @@ function mapStateToProps(state) {
         avatarUrl: getAvatarUrl(state),
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
+        jitsiAppName: getJitsiAppName(state),
         jwt: getJwt(state),
         jwtDomains: getJwtDomains(state),
         maxDesktopSharingFramerate,
