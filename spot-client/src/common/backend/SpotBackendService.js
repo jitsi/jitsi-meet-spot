@@ -75,8 +75,9 @@ export class SpotBackendService {
      */
     getRoomInfo() {
         return fetchRoomInfo(this.roomKeeperServiceUrl, this.getJwt())
-            .then(({ mucUrl, name }) => {
+            .then(({ id, mucUrl, name }) => {
                 return {
+                    id,
                     name,
                     roomName: mucUrl,
                     roomLock: undefined

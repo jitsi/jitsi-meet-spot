@@ -101,7 +101,10 @@ export class BaseRemoteControlService extends Emitter {
 
         return this.exchangeCode(joinCode)
             .then(roomInfo => {
-                roomProfile = { name: roomInfo.name };
+                roomProfile = {
+                    id: roomInfo.id,
+                    name: roomInfo.name
+                };
 
                 return this.xmppConnection.joinMuc({
                     joinAsSpot,

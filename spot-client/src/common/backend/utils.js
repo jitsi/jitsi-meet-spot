@@ -416,6 +416,7 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
             }
 
             return {
+                id: json.id,
                 mucUrl: json.mucUrl,
                 name: json.name
             };

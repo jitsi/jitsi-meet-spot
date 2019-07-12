@@ -6,7 +6,8 @@ import {
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
-    setReconnectState
+    setReconnectState,
+    setRoomId
 } from 'common/app-state';
 import {
     isBackendEnabled,
@@ -68,6 +69,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setPermanentPairingCode(permanentPairingCode));
 
             if (isBackendEnabled(getState())) {
+                dispatch(setRoomId(roomProfile.id));
                 dispatch(setDisplayName(roomProfile.name));
             }
         }

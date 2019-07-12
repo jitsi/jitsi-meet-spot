@@ -5,6 +5,7 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
+    SET_ROOM_ID,
     SET_SHOW_MEETING_TOOLBAR
 } from './action-types';
 
@@ -78,6 +79,20 @@ export function setPreferredDevices(cameraLabel, micLabel, speakerLabel) {
         cameraLabel,
         micLabel,
         speakerLabel
+    };
+}
+
+/**
+ * Updates the known id provided to the room by the backend for which Spot is
+ * integrated with.
+ *
+ * @param {string} id - The room id.
+ * @returns {Object}
+ */
+export function setRoomId(id) {
+    return {
+        type: SET_ROOM_ID,
+        id
     };
 }
 
