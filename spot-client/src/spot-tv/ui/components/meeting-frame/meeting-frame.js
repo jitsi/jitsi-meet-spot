@@ -40,6 +40,7 @@ export class MeetingFrame extends React.Component {
         avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
         invites: PropTypes.array,
+        jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
         maxDesktopSharingFramerate: PropTypes.number,
         meetingUrl: PropTypes.string,
@@ -141,6 +142,7 @@ export class MeetingFrame extends React.Component {
                 videoInput: this.props.preferredCamera
             },
             interfaceConfigOverwrite: {
+                APP_NAME: this.props.jitsiAppName,
                 AUTO_PIN_LATEST_SCREEN_SHARE: true,
                 DEFAULT_LOCAL_DISPLAY_NAME: DEFAULT_DISPLAY_NAME,
                 ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,

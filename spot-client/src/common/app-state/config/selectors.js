@@ -21,6 +21,17 @@ export function getAnalyticsAppKey(state) {
 }
 
 /**
+ * A selector which returns the application name for Jitsi-Meet to use for its
+ * analytics logging.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getJitsiAppName(state) {
+    return state.config.LOGGING.JITSI_APP_NAME;
+}
+
+/**
  * A selector which returns the configured background image to display.
  *
  * @param {Object} state - The Redux state.
