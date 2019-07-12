@@ -25,7 +25,7 @@ export default {
      */
     log(eventName, eventProperties) {
         this._handlers.forEach(handler =>
-            handler.log(eventName, eventProperties));
+            handler.log(`spot-${eventName}`, eventProperties));
     },
 
     /**
