@@ -293,6 +293,7 @@ describe('utils', () => {
 
     describe('fetchRoomInfo', () => {
         const MOCK_RESPONSE = {
+            id: '123',
             mucUrl: 'url',
             name: 'name'
         };

@@ -14,7 +14,7 @@ export default class SegmentHandler {
     constructor(deviceId, appKey) {
         segment.load(appKey);
 
-        segment.identify(deviceId);
+        this.setId(deviceId);
     }
 
     /**
@@ -26,6 +26,16 @@ export default class SegmentHandler {
      */
     log(eventName, eventProperties = null) {
         segment.track(eventName, eventProperties);
+    }
+
+    /**
+     * Updates the known id of the user.
+     *
+     * @param {string} deviceId - The user identifier for the current user.
+     * @returns {void}
+     */
+    setId(deviceId) {
+        segment.identify(deviceId);
     }
 
     /**

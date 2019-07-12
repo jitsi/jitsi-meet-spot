@@ -29,6 +29,16 @@ export default {
     },
 
     /**
+     * Sets the new local analytics user id on all handlers.
+     *
+     * @param {string} newId - The new unique id for the local user.
+     * @returns {void}
+     */
+    updateId(newId) {
+        this._handlers.forEach(handler => handler.setId(newId));
+    },
+
+    /**
      * Modifies the meta data to associate with the sender of events.
      *
      * @param {string} propertyName - A key for a property to associate with
