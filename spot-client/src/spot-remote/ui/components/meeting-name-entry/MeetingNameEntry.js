@@ -14,7 +14,6 @@ export class MeetingNameEntry extends React.Component {
         onBlur: PropTypes.func,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
-        onNameChange: PropTypes.func,
         onSubmit: PropTypes.func,
         placeholder: PropTypes.string
     };

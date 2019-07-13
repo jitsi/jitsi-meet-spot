@@ -3,7 +3,7 @@ import React from 'react';
 
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
-import MeetingNameEntry from './meeting-name-entry';
+import MeetingNameEntry from './MeetingNameEntry';
 
 /**
  * Wraps {@code MeetingNameEntry} in a component which shows a different
