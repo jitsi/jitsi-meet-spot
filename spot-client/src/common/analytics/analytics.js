@@ -1,8 +1,13 @@
 /**
  * Service for sending analytics events to an analytics endpoint.
  */
-export default {
-    _handlers: new Set(),
+export class Analytics {
+    /**
+     * Initializes a new {@code Analytics} instance.
+     */
+    constructor() {
+        this._handlers = new Set();
+    }
 
     /**
      * Sets a handler to intercept and process log events.
@@ -12,7 +17,7 @@ export default {
      */
     addHandler(handler) {
         this._handlers.add(handler);
-    },
+    }
 
     /**
      * Sends an event to be logged.
@@ -26,7 +31,7 @@ export default {
     log(eventName, eventProperties) {
         this._handlers.forEach(handler =>
             handler.log(`spot-${eventName}`, eventProperties));
-    },
+    }
 
     /**
      * Sets the new local analytics user id on all handlers.
@@ -36,7 +41,7 @@ export default {
      */
     updateId(newId) {
         this._handlers.forEach(handler => handler.setId(newId));
-    },
+    }
 
     /**
      * Modifies the meta data to associate with the sender of events.
@@ -50,4 +55,6 @@ export default {
         this._handlers.forEach(handler =>
             handler.updateProperty(propertyName, propertyValue));
     }
-};
+}
+
+export default new Analytics();
