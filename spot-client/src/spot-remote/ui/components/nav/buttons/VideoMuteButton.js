@@ -10,7 +10,7 @@ import {
 } from 'common/app-state';
 import { Videocam, VideocamOff } from 'common/icons';
 
-import NavButton from './../nav-button';
+import NavButton from '../nav-button';
 
 /**
  * A component for displaying and changing the current video mute of a Spot-TV.
@@ -57,7 +57,7 @@ export class VideoMuteButton extends React.Component {
         return (
             <NavButton
                 active = { changePending ? !videoMuted : videoMuted }
-                className = { changePending ? 'pending' : '' }
+                className = { `video-mute-button ${changePending ? 'pending' : ''}` }
                 label = { label }
                 onClick = { this._onToggleVideoMute }
                 qaId = { qaId }>
