@@ -13,8 +13,15 @@ import MeetingNameEntry from './MeetingNameEntry';
  *
  * @extends React.Component
  */
-class SelfFillingNameEntry extends React.Component {
+export class SelfFillingNameEntry extends React.Component {
+    static defaultProps = {
+        animationRevealRate: 100,
+        animationStartDelay: 5000
+    };
+
     static propTypes = {
+        animationRevealRate: PropTypes.number,
+        animationStartDelay: PropTypes.number,
         onSubmit: PropTypes.func
     };
 
@@ -128,7 +135,7 @@ class SelfFillingNameEntry extends React.Component {
 
         this._generateRoomNameTimeout = setTimeout(() => {
             this._createAnimatingPlaceholderInterval();
-        }, 5000);
+        }, this.props.animationStartDelay);
     }
 
     /**
@@ -160,7 +167,7 @@ class SelfFillingNameEntry extends React.Component {
             });
 
             currentLengthToShow += 1;
-        }, 100);
+        }, this.props.animationRevealRate);
     }
 
     /**
