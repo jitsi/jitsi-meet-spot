@@ -423,12 +423,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
      *
      * @inheritdoc
      */
-    _onPresenceReceived(presence) {
-        const updateType = presence.getAttribute('type');
-
-        if (updateType === 'unavailable') {
-            const from = presence.getAttribute('from');
-
+    _onPresenceReceived({ from, type, state }) {
+        if (type === 'unavailable') {
             if (this._getSpotId() === from) {
                 logger.log('Spot TV left the MUC');
                 if (this._options.backend) {
@@ -450,7 +446,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
-        if (updateType === 'error') {
+        if (type === 'error') {
             logger.log(
                 'error presence received, interpreting as disconnect');
             this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
@@ -458,28 +454,18 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
-        const status = Array.from(presence.children).map(child =>
-            [ child.tagName, child.textContent ])
-            .reduce((acc, current) => {
-                acc[current[0]] = current[1];
-
-                return acc;
-            }, {});
-
-        if (status.isSpot !== 'true') {
+        if (state.isSpot !== 'true') {
             // Ignore presence from others not identified as a
             // {@code RemoteControlServer}.
             return;
         }
 
-        const spotTvJid = presence.getAttribute('from');
-
         // Redundantly update the known {@code RemoteControlServer} jid in case
         // there are multiple due to ghosts left form disconnect, in which case
         // the active {@code RemoteControlServer} should be emitting updates.
         this._lastSpotState = {
-            ...status,
-            spotId: spotTvJid
+            ...state,
+            spotId: from
         };
 
         // This is "no backend" specific logic

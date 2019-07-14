@@ -281,12 +281,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
      *
      * @inheritdoc
      */
-    _onPresenceReceived(presence) {
-        const updateType = presence.getAttribute('type');
-
-        if (updateType === 'unavailable') {
-            const from = presence.getAttribute('from');
-
+    _onPresenceReceived({ from, type }) {
+        if (type === 'unavailable') {
             logger.log('presence update of a Spot-Remote leaving', { from });
 
             // A {@code RemoteControlServer} needs to inform at least the
