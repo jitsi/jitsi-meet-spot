@@ -479,7 +479,9 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onPresence(presence) {
-        this.options.onPresenceReceived(presence);
+        this.options.onPresenceReceived(
+            XmppConnection.convertXMLPresenceToObject(presence)
+        );
 
         return true;
     }
@@ -521,5 +523,25 @@ export default class XmppConnection {
      */
     _sendPresence() {
         this.room && this.room.sendPresence();
+    }
+
+    /**
+     * Converts a presence IQ into a plain JS object.
+     *
+     * @param {XML} presence - The presence to convert.
+     * @returns {Object}
+     */
+    static convertXMLPresenceToObject(presence) {
+        return {
+            from: presence.getAttribute('from'),
+            type: presence.getAttribute('type'),
+            state: Array.from(presence.children)
+                .map(child => [ child.tagName, child.textContent ])
+                .reduce((acc, current) => {
+                    acc[current[0]] = current[1];
+
+                    return acc;
+                }, {})
+        };
     }
 }
