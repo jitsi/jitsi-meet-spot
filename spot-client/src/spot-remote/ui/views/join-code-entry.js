@@ -299,13 +299,13 @@ export class JoinCodeEntry extends React.Component {
         this.props.ultrasoundService.setMessage(trimmedCode);
 
         submitPromise
-            .then(() => this.props.onConnectToSpotTV(trimmedCode, this._isShareModeEnabled))
+            .then(() => this.props.onConnectToSpotTV(trimmedCode, this._isInShareModeEnv()))
             .then(() => {
                 logger.log('joinCodeEntry code is valid');
 
                 this.setState({ validating: false });
 
-                const redirectTo = this._isShareModeEnabled ? ROUTES.SHARE : ROUTES.REMOTE_CONTROL;
+                const redirectTo = this._isInShareModeEnv() ? ROUTES.SHARE : ROUTES.REMOTE_CONTROL;
 
                 this.props.history.push(redirectTo);
             })
