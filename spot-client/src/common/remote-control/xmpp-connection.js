@@ -536,9 +536,14 @@ export default class XmppConnection {
             from: presence.getAttribute('from'),
             type: presence.getAttribute('type'),
             state: Array.from(presence.children)
-                .map(child => [ child.tagName, child.textContent ])
-                .reduce((acc, current) => {
-                    acc[current[0]] = current[1];
+                .reduce((acc, child) => {
+                    let value = child.textContent;
+
+                    if (value === 'true' || value === 'false') {
+                        value = value === 'true';
+                    }
+
+                    acc[child.tagName] = value;
 
                     return acc;
                 }, {})

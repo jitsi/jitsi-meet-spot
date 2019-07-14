@@ -32,33 +32,25 @@ import { getPermanentPairingCode } from './selectors';
 
 
 /**
- * Presence attributes from Spot-TV to store as booleans in redux.
+ * Presence attributes from Spot-TV to store in redux.
  *
  * @type {Set}
  */
-const presenceToStoreAsBoolean = new Set([
+const presenceToStore = new Set([
     'audioMuted',
     'electron',
+    'inMeeting',
     'kicked',
     'needPassword',
-    'screensharing',
-    'tileView',
-    'videoMuted',
-    'wiredScreensharingEnabled'
-]);
-
-/**
- * Presence attributes from Spot-TV to store as strings in redux.
- *
- * @type {Set}
- */
-const presenceToStoreAsString = new Set([
-    'inMeeting',
     'remoteJoinCode',
     'roomName',
+    'screensharing',
     'screensharingType',
     'spotId',
-    'view'
+    'tileView',
+    'videoMuted',
+    'view',
+    'wiredScreensharingEnabled'
 ]);
 
 /**
@@ -255,9 +247,7 @@ function _onSpotTVStateChange({ dispatch }, data) {
     const { updatedState } = data;
 
     Object.keys(updatedState).forEach(key => {
-        if (presenceToStoreAsBoolean.has(key)) {
-            newState[key] = updatedState[key] === 'true';
-        } else if (presenceToStoreAsString.has(key)) {
+        if (presenceToStore.has(key)) {
             newState[key] = updatedState[key];
         }
     });

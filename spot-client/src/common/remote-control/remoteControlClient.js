@@ -454,7 +454,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
-        if (state.isSpot !== 'true') {
+        if (!state.isSpot) {
             // Ignore presence from others not identified as a
             // {@code RemoteControlServer}.
             return;
