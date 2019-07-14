@@ -20,8 +20,8 @@ describe('XmppConnection', () => {
                 .toEqual({
                     from: 'localPart2@domainPart2/resource2',
                     state: {
-                        isSpot: 'true',
-                        videoMuted: 'true'
+                        isSpot: true,
+                        videoMuted: true
                     },
                     type: 'unavailable'
                 });
