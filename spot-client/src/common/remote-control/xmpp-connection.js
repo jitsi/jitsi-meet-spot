@@ -411,7 +411,15 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onMessage(iq) {
-        const ack = this.options.onMessageReceived(iq);
+        const parsedIq = XmppConnection.convertXMLMessageToObject(iq);
+
+        this.options.onMessageReceived(parsedIq);
+
+        const ack = $iq({
+            id: parsedIq.id,
+            to: parsedIq.from,
+            type: 'result'
+        });
 
         this.room.connection.send(ack);
 
@@ -526,10 +534,61 @@ export default class XmppConnection {
     }
 
     /**
+     * @typedef {Object} Message - Information sent from one user to another.
+     * This flow is currently used during proxy communication between the
+     * participant in the Jitsi-Meet meeting and the Spot-Remote.
+     *
+     * @property {Object} data - The information of the message.
+     * @property {string} from - The jid of the user sending the message.
+     * @property {string} id - The message id attached to the message by prosody.
+     * @property {string} messageType - The category of the message. Should be
+     * one of the enumerated constants in {@code MESSAGES}.
+     */
+
+    /**
+     * Converts a message embedded into an IQ into a plain JS object.
+     *
+     * @param {XML} messageIq - The message to convert.
+     * @returns {Message}
+     */
+    static convertXMLMessageToObject(messageIq) {
+        const from = messageIq.getAttribute('from');
+        const id = messageIq.getAttribute('id');
+        const message = messageIq.getElementsByTagName('message')[0];
+        const messageType = message.getAttribute('type');
+        let data;
+
+        try {
+            data = JSON.parse(message.textContent);
+        } catch (e) {
+            logger.error('Failed to parse message data');
+
+            data = {};
+        }
+
+        return {
+            data,
+            from,
+            id,
+            messageType
+        };
+    }
+
+    /**
+     * @typedef {Object} Presence - Public information about a Spot-TV or
+     * Spot-Remotes current status.
+     *
+     * @property {string} from - The jid of the user with the presence.
+     * @property {string} type - The current overall status of the user. Examples
+     * include "unavailable" and "error."
+     * @property {Object} state - Current application state of the user.
+     */
+
+    /**
      * Converts a presence IQ into a plain JS object.
      *
      * @param {XML} presence - The presence to convert.
-     * @returns {Object}
+     * @returns {Presence}
      */
     static convertXMLPresenceToObject(presence) {
         return {
