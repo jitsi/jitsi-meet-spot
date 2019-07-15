@@ -118,7 +118,7 @@ export class SpotBackendService {
 
         logger.log('Refreshing access token...', { pairingCode });
 
-        return refreshAccessToken(`${this.pairingServiceUrl}\\refresh`, registration)
+        return refreshAccessToken(`${this.pairingServiceUrl}/regenerate`, registration)
             .then(({ accessToken, emitted, expires }) => {
                 // copy the fields to preserve the refresh token
                 this._setRegistration(
