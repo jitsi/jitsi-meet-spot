@@ -200,7 +200,7 @@ export class SpotBackendService {
             + `scheduling refresh to be done in ${delay / ONE_MINUTE} minutes`);
 
         this._refreshTimeout = setTimeout(() => {
-            this._refreshRegistration();
+            this._refreshRegistration(this.registration);
         }, delay);
     }
 
