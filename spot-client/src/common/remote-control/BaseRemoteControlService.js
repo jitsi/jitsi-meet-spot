@@ -1,5 +1,3 @@
-import { $iq } from 'strophe.js';
-
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
@@ -303,37 +301,16 @@ export class BaseRemoteControlService extends Emitter {
 
     /**
      * Callback invoked when {@code XmppConnection} connection receives a
-     * message iq that needs processing.
+     * message that needs processing.
      *
-     * @param {Object} iq - The XML document representing the iq with the
-     * message.
+     * @param {Message} message - The message received from another user.
      * @private
-     * @returns {Object} An ack of the iq.
+     * @returns {void}
      */
-    _onMessageReceived(iq) {
-        const from = iq.getAttribute('from');
-        const message = iq.getElementsByTagName('message')[0];
-        const messageType = message.getAttribute('type');
-
+    _onMessageReceived({ data, from, messageType }) {
         logger.log('RemoteControlService received message', { messageType });
 
-        let data;
-
-        try {
-            data = JSON.parse(message.textContent);
-        } catch (e) {
-            logger.error('Failed to parse message data');
-
-            data = {};
-        }
-
         this._processMessage(messageType, from, data);
-
-        return $iq({
-            id: iq.getAttribute('id'),
-            to: from,
-            type: 'result'
-        });
     }
 
     /**
@@ -343,10 +320,9 @@ export class BaseRemoteControlService extends Emitter {
      * screensharing.
      *
      * @abstract
-     * @param {Object} presence - The XML document representing the presence
-     * update.
+     * @param {Presence} presence - The XML presence parsed into a plain object.
      * @private
-     * @returns {Promise}
+     * @returns {void}
      */
     _onPresenceReceived() {
         throw new Error('_onPresenceReceived not implemented');
