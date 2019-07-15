@@ -96,8 +96,11 @@ export default class App extends React.Component {
 
         return (
             <Provider store = { this.store }>
-                { remoteControlUrl && this._renderRemoteControl() }
-                { !remoteControlUrl && this._renderSetup() }
+                {
+                    remoteControlUrl
+                        ? this._renderRemoteControl()
+                        : this._renderSetup()
+                }
             </Provider>
         );
     }
