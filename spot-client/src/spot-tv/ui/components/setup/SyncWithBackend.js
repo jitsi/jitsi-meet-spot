@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { addNotification } from 'common/app-state';
-import { CodeInput } from 'common/ui';
+import { CodeInput, LoadingIcon } from 'common/ui';
 import { logger } from 'common/logger';
 
 import { createSpotTVRemoteControlConnection } from '../../../app-state';
@@ -16,8 +16,9 @@ import { createSpotTVRemoteControlConnection } from '../../../app-state';
  */
 export class SyncWithBackend extends React.Component {
     static propTypes = {
-        dispatch: PropTypes.func,
-        onSuccess: PropTypes.func
+        onAttemptSync: PropTypes.func,
+        onSuccess: PropTypes.func,
+        onSyncError: PropTypes.func
     };
 
     /**
@@ -28,6 +29,10 @@ export class SyncWithBackend extends React.Component {
      */
     constructor(props) {
         super(props);
+
+        this.state = {
+            loading: false
+        };
 
         this._onChange = this._onChange.bind(this);
     }
@@ -49,8 +54,9 @@ export class SyncWithBackend extends React.Component {
                         Enter your pairing code and start your setup
                     </div>
                 </div>
-                <div className = 'code-input'>
+                <div className = { `code-input ${this.state.loading ? 'with-loading' : ''}` }>
                     <CodeInput onChange = { this._onChange } />
+                    <LoadingIcon />
                 </div>
             </div>
         );
@@ -64,19 +70,51 @@ export class SyncWithBackend extends React.Component {
      * @returns {void}
      */
     _onChange(value) {
-        if (value.length === 6) {
-            this.props.dispatch(createSpotTVRemoteControlConnection({
-                pairingCode: value,
-                retry: false
-            }))
-                .then(
-                    this.props.onSuccess,
-                    error => {
-                        logger.error('connectSpotTvToBackend failed', { error });
-                        this.props.dispatch(addNotification('error', 'Something went wrong'));
-                    });
+        if (value.length !== 6) {
+            return;
         }
+
+        const setLoadingPromise = new Promise(resolve => {
+            this.setState({
+                loading: true
+            }, resolve);
+        });
+
+        setLoadingPromise
+            .then(() => this.props.onAttemptSync(value))
+            .then(
+                this.props.onSuccess,
+                error => {
+                    this.setState({
+                        loading: false
+                    });
+
+                    logger.error('connectSpotTvToBackend failed', { error });
+                    this.props.onSyncError();
+                });
     }
 }
 
-export default connect()(SyncWithBackend);
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        onAttemptSync(pairingCode) {
+            return dispatch(createSpotTVRemoteControlConnection({
+                pairingCode,
+                retry: false
+            }));
+        },
+
+        onSyncError() {
+            dispatch(addNotification('error', 'Something went wrong'));
+        }
+    };
+}
+
+export default connect(undefined, mapDispatchToProps)(SyncWithBackend);

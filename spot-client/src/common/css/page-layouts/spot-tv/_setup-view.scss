@@ -147,6 +147,31 @@
 .setup-sync-with-backend {
     text-align: center;
 
+    .code-input {
+        position: relative;
+
+        .loading-icon {
+            bottom: 0;
+
+            display: none;
+            left: 0;
+
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        &.with-loading {
+            .code-entry {
+                opacity: 0.5;
+            }
+
+            .loading-icon {
+                display: block;
+            }
+        }
+    }
+
     .cta {
         text-align: center;
 
