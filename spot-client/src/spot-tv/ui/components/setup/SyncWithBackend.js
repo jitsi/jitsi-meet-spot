@@ -56,7 +56,7 @@ export class SyncWithBackend extends React.Component {
                 </div>
                 <div className = { `code-input ${this.state.loading ? 'with-loading' : ''}` }>
                     <CodeInput onChange = { this._onChange } />
-                    <LoadingIcon />
+                    { this.state.loading && <LoadingIcon /> }
                 </div>
             </div>
         );
