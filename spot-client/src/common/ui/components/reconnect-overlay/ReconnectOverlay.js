@@ -30,7 +30,7 @@ export class ReconnectOverlay extends React.PureComponent {
         return (
             <div className = 'reconnect-overlay'>
                 <div className = 'reconnect-message'>
-                    <LoadingIcon color = 'white' />
+                    <LoadingIcon />
                 </div>
             </div>
         );

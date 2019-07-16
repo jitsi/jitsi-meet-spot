@@ -14,7 +14,7 @@ export default function Loading() {
     return (
         <View name = 'loading'>
             <div className = 'loading'>
-                <LoadingIcon color = 'white' />
+                <LoadingIcon />
             </div>
         </View>
     );

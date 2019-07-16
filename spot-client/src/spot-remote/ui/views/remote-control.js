@@ -83,7 +83,7 @@ export class RemoteControl extends React.PureComponent {
         case 'setup':
             return <div>currently in setup</div>;
         default:
-            return <LoadingIcon color = 'white' />;
+            return <LoadingIcon />;
         }
     }
 }

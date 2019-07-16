@@ -112,7 +112,7 @@ export class InCall extends React.Component {
         }
 
         if (!inMeeting) {
-            return <LoadingIcon color = 'white' />;
+            return <LoadingIcon />;
         }
 
         const { meetingName } = parseMeetingUrl(inMeeting);

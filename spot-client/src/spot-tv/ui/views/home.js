@@ -153,7 +153,7 @@ export class Home extends React.Component {
                 : this._renderNoEventsMessage();
         }
 
-        return <LoadingIcon color = 'black' />;
+        return <LoadingIcon />;
     }
 
     /**

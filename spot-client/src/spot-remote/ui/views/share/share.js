@@ -124,7 +124,7 @@ export class Share extends React.PureComponent {
         if (!this.props.isConnectedToSpot) {
             return <div>Waiting for Spot TV to connect...</div>;
         } else if (this.props.isWirelessScreensharingPending) {
-            return <LoadingIcon color = 'white' />;
+            return <LoadingIcon />;
         }
 
         if (this.props.isWirelessScreensharing) {
