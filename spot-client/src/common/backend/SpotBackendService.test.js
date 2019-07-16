@@ -25,8 +25,9 @@ describe('SpotBackendService', () => {
             };
 
             beforeEach(() => {
+                jest.useFakeTimers();
                 jest.spyOn(persistence, 'get').mockReturnValue(null);
-                fetch.mockResponseOnce(JSON.stringify(MOCK_RESPONSE));
+                fetch.mockResponse(JSON.stringify(MOCK_RESPONSE));
             });
 
             it('sets the registration', () =>
@@ -42,19 +43,37 @@ describe('SpotBackendService', () => {
                     })
             );
 
-            it('refreshes the token automatically', () => {
-                jest.useFakeTimers();
-                fetch.mockResponseOnce(JSON.stringify(MOCK_RESPONSE));
-
-                return spotBackendService.register(MOCK_PAIRING_CODE)
+            it('refreshes the token automatically', () =>
+                spotBackendService.register(MOCK_PAIRING_CODE)
                     .then(() => {
+
                         jest.advanceTimersByTime(1000);
 
                         expect(fetch).toHaveBeenCalledWith(
                             `${PAIRING_SERVICE_URL}/regenerate`,
                             expect.any(Object)
                         );
-                    });
+                    })
+            );
+
+            it('notifies listeners of the token refresh', () => {
+                jest.useFakeTimers();
+
+                const onUpdateCallback = jest.fn();
+
+                spotBackendService.addListener(
+                    SpotBackendService.REGISTRATION_UPDATED,
+                    onUpdateCallback
+                );
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => {
+                        jest.runAllTimers();
+
+                        // Advance other async operations
+                        return new Promise(resolve => process.nextTick(resolve));
+                    })
+                    .then(() => expect(onUpdateCallback).toHaveBeenCalled());
             });
         });
     });

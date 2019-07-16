@@ -1,3 +1,4 @@
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 
 import { persistence } from '../utils';
@@ -36,13 +37,17 @@ function getExpiresIn({ expires }) {
 /**
  * The class exposes backend functionality and stores backend related state.
  */
-export class SpotBackendService {
+export class SpotBackendService extends Emitter {
+    static REGISTRATION_UPDATED = 'registration-updated';
+
     /**
      * Creates new {@link SpotBackendService}.
      *
      * @param {SpotBackendConfig} config - Spot backend configuration.
      */
     constructor({ pairingServiceUrl, roomKeeperServiceUrl }) {
+        super();
+
         if (!pairingServiceUrl) {
             throw Error('No "pairingServiceUrl"');
         }
@@ -200,7 +205,8 @@ export class SpotBackendService {
             + `scheduling refresh to be done in ${delay / ONE_MINUTE} minutes`);
 
         this._refreshTimeout = setTimeout(() => {
-            this._refreshRegistration(this.registration);
+            this._refreshRegistration(this.registration)
+                .then(() => this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() }));
         }, delay);
     }
 

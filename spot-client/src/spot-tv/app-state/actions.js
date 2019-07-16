@@ -111,6 +111,21 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         }
 
         /**
+         * Callback invoked when {@code remoteControlServer} has updated its
+         * connection state with the backend.
+         *
+         * @param {Object} pairingInfo - Information necessary to establish and
+         * maintain a connection tot he server.
+         * @param {string} pairingInfo.jwt - The latest valid jwt for
+         * communicating with other backend services.
+         * @private
+         * @returns {void}
+         */
+        function onRegistrationChange({ jwt }) {
+            dispatch(setJwt(jwt));
+        }
+
+        /**
          * Callback invoked when {@code remoteControlServer} has changed
          * the join code necessary to pair with the Spot-TV.
          *
@@ -148,6 +163,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         remoteControlServer.addListener(
             SERVICE_UPDATES.RECONNECT_UPDATE,
             onReconnectChange
+        );
+        remoteControlServer.addListener(
+            SERVICE_UPDATES.REGISTRATION_UPDATED,
+            onRegistrationChange
         );
 
         return doConnect()
