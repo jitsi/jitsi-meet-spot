@@ -127,6 +127,12 @@ export const SERVICE_UPDATES = {
     RECONNECT_UPDATE: 'reconnect-update',
 
     /**
+     * The spot backend service received an updated profile for the connected
+     * room.
+     */
+    REGISTRATION_UPDATED: 'registration-update',
+
+    /**
      * An update to the room join code, triggered locally, has been successfully
      * completed.
      */
