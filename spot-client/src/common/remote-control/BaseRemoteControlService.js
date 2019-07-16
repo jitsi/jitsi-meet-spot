@@ -290,10 +290,9 @@ export class BaseRemoteControlService extends Emitter {
      * Callback invoked when receiving a command to take an action.
      *
      * @abstract
-     * @param {Object} iq -  The XML document representing the iq with the
-     * command.
+     * @param {Command} command - An order received to perform an action.
      * @private
-     * @returns {Object} An ack of the iq.
+     * @returns {void}
      */
     _onCommandReceived() {
         throw new Error('_onCommandReceived not implemented');

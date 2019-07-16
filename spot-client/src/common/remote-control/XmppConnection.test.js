@@ -1,12 +1,43 @@
 import XmppConnection from './xmpp-connection';
 
 describe('XmppConnection', () => {
+    const IQ_FROM = 'localPart2@domainPart2/resource2';
+    const IQ_TO = 'localPart1@domainPart1/resource1';
+
+    describe('convertXMLCommandToObject', () => {
+        it('transforms an IQ into a js object', () => {
+            const commandString = `
+                <iq
+                    from = "${IQ_FROM}"
+                    id = "message-id"
+                    to = "${IQ_TO}">
+                    <command type = "setAudioMute">
+                        {"mute":true}
+                    </command>
+                </iq>
+            `;
+            const commandIq = new DOMParser()
+                .parseFromString(commandString, 'text/xml')
+                .documentElement;
+
+            expect(XmppConnection.convertXMLCommandToObject(commandIq))
+                .toEqual({
+                    commandType: 'setAudioMute',
+                    data: {
+                        mute: true
+                    },
+                    from: IQ_FROM,
+                    id: 'message-id'
+                });
+        });
+    });
+
     describe('convertXMLPresenceToObject', () => {
         it('transforms an IQ into a js object', () => {
             const presenceString = `
                 <presence
-                    from = "localPart2@domainPart2/resource2"
-                    to = "localPart1@domainPart1/resource1"
+                    from = "${IQ_FROM}"
+                    to = "${IQ_TO}"
                     type = "unavailable">
                     <videoMuted>true</videoMuted>
                     <isSpot>true</isSpot>
@@ -18,7 +49,7 @@ describe('XmppConnection', () => {
 
             expect(XmppConnection.convertXMLPresenceToObject(presenceIq))
                 .toEqual({
-                    from: 'localPart2@domainPart2/resource2',
+                    from: IQ_FROM,
                     state: {
                         isSpot: true,
                         videoMuted: true
@@ -31,9 +62,9 @@ describe('XmppConnection', () => {
         it('transforms an IQ into a js object', () => {
             const messageString = `
                 <iq
-                    from = "localPart2@domainPart2/resource2"
+                    from = "${IQ_FROM}"
                     id = "message-id"
-                    to = "localPart1@domainPart1/resource1"
+                    to = "${IQ_TO}"
                     type = "set">
                     <message type = "update-message-from-remote-control">
                         {"key":"value"}
@@ -50,7 +81,7 @@ describe('XmppConnection', () => {
                         key: 'value'
                     },
                     id: 'message-id',
-                    from: 'localPart2@domainPart2/resource2',
+                    from: IQ_FROM,
                     messageType: 'update-message-from-remote-control'
                 });
         });

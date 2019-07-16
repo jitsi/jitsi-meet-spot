@@ -382,21 +382,18 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onCommand(iq) {
-        let ack;
+        const command = XmppConnection.convertXMLCommandToObject(iq);
 
+        // FIXME: Correctly send back that command handling has not been initialized.
         if (this.options.onCommandReceived) {
-            ack = this.options.onCommandReceived(iq);
-        } else {
-            // FIXME: Correctly send back that command handling has not been
-            // initialized.
-            const from = iq.getAttribute('from');
-
-            ack = $iq({
-                id: iq.getAttribute('id'),
-                type: 'result',
-                to: from
-            });
+            this.options.onCommandReceived(command);
         }
+
+        const ack = $iq({
+            id: command.id,
+            type: 'result',
+            to: command.from
+        });
 
         this.room.connection.send(ack);
 
@@ -531,6 +528,47 @@ export default class XmppConnection {
      */
     _sendPresence() {
         this.room && this.room.sendPresence();
+    }
+
+    /**
+     * @typedef {Object} Command - An request sent from one user to another to
+     * perform an action.
+     *
+     * @property {string} commandType - The category of the command. Should be
+     * one of the enumerated constants in {@code COMMANDS}.
+     * @property {Object} data - Details about how to perform the command.
+     * @property {string} from - The jid of the user sending the command.
+     * @property {string} id - The command id attached to the iq by prosody.
+     */
+
+    /**
+     * Converts a command embedded into an IQ into a plain JS object.
+     *
+     * @param {XML} commandIq - The command to convert.
+     * @returns {Command}
+     */
+    static convertXMLCommandToObject(commandIq) {
+        const from = commandIq.getAttribute('from');
+        const id = commandIq.getAttribute('id');
+        const command = commandIq.getElementsByTagName('command')[0];
+        const commandType = command.getAttribute('type');
+
+        let data;
+
+        try {
+            data = JSON.parse(command.textContent);
+        } catch (e) {
+            logger.error('Failed to parse command data');
+
+            data = {};
+        }
+
+        return {
+            commandType,
+            data,
+            from,
+            id
+        };
     }
 
     /**
