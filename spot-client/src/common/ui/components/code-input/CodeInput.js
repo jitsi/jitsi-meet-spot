@@ -155,8 +155,9 @@ export default class CodeInput extends React.Component {
      * @returns {Array<ReactElement>}
      */
     _renderBoxes() {
+        // Show focus on the next empty or keep focus on the last box
+        const focus = Math.min(this.state.value.length, this.props.length - 1);
         const boxes = [];
-        const focus = this.state.value.length;
 
         for (let i = 0; i < this.props.length; i++) {
             const className = `box ${focus === i && this.state.isFocused
