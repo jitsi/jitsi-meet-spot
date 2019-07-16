@@ -237,30 +237,10 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @inheritdoc
      * @override
      */
-    _onCommandReceived(iq) {
-        const from = iq.getAttribute('from');
-        const command = iq.getElementsByTagName('command')[0];
-        const commandType = command.getAttribute('type');
-
+    _onCommandReceived({ commandType, data }) {
         logger.log('RemoteControlServer received command', { commandType });
 
-        let data;
-
-        try {
-            data = JSON.parse(command.textContent);
-        } catch (e) {
-            logger.error('Failed to parse command data');
-
-            data = {};
-        }
-
         this._notifySpotRemoteMessageReceived(commandType, data);
-
-        return $iq({
-            id: iq.getAttribute('id'),
-            type: 'result',
-            to: from
-        });
     }
 
 
