@@ -260,7 +260,7 @@ export default class XmppConnection {
      * the MUC participant.
      * @returns {Object} The instance of the created muc.
      */
-    _createMuc(roomName, resourceName = '') {
+    _createMuc(roomName, resourceName) {
         if (this.room) {
             return this.room;
         }
@@ -270,7 +270,7 @@ export default class XmppConnection {
             {
                 disableFocus: true
             },
-            () => resourceName
+            resourceName ? () => resourceName : undefined
         );
 
         return this.room;
