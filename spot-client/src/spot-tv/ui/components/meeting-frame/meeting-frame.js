@@ -132,6 +132,7 @@ export class MeetingFrame extends React.Component {
                     max: this.props.maxDesktopSharingFramerate,
                     min: this.props.minDesktopSharingFramerate
                 },
+                disableDeepLinking: true,
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
                 startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
