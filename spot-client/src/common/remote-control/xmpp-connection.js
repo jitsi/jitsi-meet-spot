@@ -195,7 +195,7 @@ export default class XmppConnection {
         let mucJoinedPromise;
 
         this.initPromise = connectionPromise
-            .then(() => this._createMuc(roomName))
+            .then(() => this._createMuc(roomName, joinAsSpot && 'spot-tv'))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
                     room.addEventListener('xmpp.muc_joined', resolve);
@@ -256,14 +256,22 @@ export default class XmppConnection {
      * with each other.
      *
      * @param {string} roomName - The name of the muc to create.
+     * @param {string} [resourceName] - An additional identifier to attach to
+     * the MUC participant.
      * @returns {Object} The instance of the created muc.
      */
-    _createMuc(roomName) {
+    _createMuc(roomName, resourceName) {
         if (this.room) {
             return this.room;
         }
 
-        this.room = this.xmppConnection.xmpp.createRoom(roomName, { disableFocus: true });
+        this.room = this.xmppConnection.xmpp.createRoom(
+            roomName,
+            {
+                disableFocus: true
+            },
+            resourceName ? () => resourceName : undefined
+        );
 
         return this.room;
     }
