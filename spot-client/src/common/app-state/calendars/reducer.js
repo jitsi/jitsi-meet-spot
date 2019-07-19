@@ -5,11 +5,12 @@ import {
 } from './action-types';
 
 const DEFAULT_STATE = {
-    name: undefined,
+    calendarType: undefined,
     displayName: undefined,
+    email: undefined,
     error: undefined,
     events: [],
-    hasCalendarBeenFetch: false
+    hasSetEvents: false
 };
 
 /**
