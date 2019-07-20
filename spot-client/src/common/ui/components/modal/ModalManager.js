@@ -15,7 +15,7 @@ export class ModalManager extends React.PureComponent {
     };
 
     static propTypes = {
-        modal: PropTypes.object,
+        modal: PropTypes.oneOfType([ PropTypes.object, PropTypes.func ]),
         modalProps: PropTypes.object
     };
 
