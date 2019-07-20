@@ -6,10 +6,16 @@ import {
 
 const DEFAULT_STATE = {
     audioMuted: true,
+    electron: false,
     inMeeting: undefined,
+    kicked: false,
+    needPassword: false,
     remoteJoinCode: undefined,
+    roomName: undefined,
+    screensharing: false,
     screensharingType: undefined,
-    spotId: null,
+    spotId: undefined,
+    tileView: false,
     videoMuted: true,
     view: undefined
 
@@ -32,6 +38,7 @@ const spotTv = (state = DEFAULT_STATE, action) => {
     case SPOT_TV_CLEAR_STATE:
         return DEFAULT_STATE;
 
+    // FIXME: remove the redundancy with SPOT_TV_SET_STATE.
     case SPOT_TV_SET_REMOTE_JOIN_CODE:
         return {
             ...state,
