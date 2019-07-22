@@ -1,5 +1,5 @@
 import { logger } from 'common/logger';
-import { getJitterDelay } from 'common/utils/retry';
+import { getJitterDelay } from 'common/utils';
 
 import { errorConstants } from './constants';
 
@@ -22,6 +22,26 @@ function convertToEmittedAndExpires({ emitted, expiresIn }) {
         emitted: emittedMillis,
         expires: emittedMillis + Number(expiresIn)
     };
+}
+
+/**
+ * Helper for creating a Headers instance for a request.
+ *
+ * @param {string} [jwt] - Options authorization to add to the request.
+ * @private
+ * @returns {Headers}
+ */
+function createHeaders(jwt) {
+    const headerOptions = {
+        accept: 'application/json',
+        'content-type': 'application/json; charset=UTF-8'
+    };
+
+    if (jwt) {
+        headerOptions.authorization = `Bearer ${jwt}`;
+    }
+
+    return new Headers(headerOptions);
 }
 
 /**
@@ -138,14 +158,10 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
     url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     const requestOptions = {
+        headers: createHeaders(jwt),
         method: 'GET',
         mode: 'cors'
     };
-
-    requestOptions.headers = new Headers({
-        authorization: `Bearer ${jwt}`,
-        accept: 'application/json'
-    });
 
     return fetchWithRetry({
         operationName: 'get calendar events',
@@ -178,15 +194,10 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
     }
 
     const requestOptions = {
+        headers: createHeaders(jwt),
         method: 'POST',
         mode: 'cors'
     };
-
-    requestOptions.headers = new Headers({
-        'content-type': 'application/json; charset=UTF-8',
-        authorization: `Bearer ${jwt}`,
-        accept: 'application/json'
-    });
 
     return fetchWithRetry({
         operationName: 'get remote pairing code',
@@ -252,15 +263,10 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
         body: JSON.stringify({
             refreshToken
         }),
+        headers: createHeaders(accessToken),
         method: 'PUT',
         mode: 'cors'
     };
-
-    requestOptions.headers = new Headers({
-        'content-type': 'application/json; charset=UTF-8',
-        authorization: `Bearer ${accessToken}`,
-        accept: 'application/json'
-    });
 
     return fetchWithRetry({
         operationName: 'refresh token',
@@ -320,9 +326,7 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
  */
 export function registerDevice(serviceEndpointUrl, pairingCode) {
     const requestOptions = {
-        headers: {
-            'content-type': 'application/json; charset=UTF-8'
-        },
+        headers: createHeaders(),
         body: JSON.stringify({
             pairingCode
         }),
@@ -396,14 +400,10 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
     }
 
     const requestOptions = {
+        headers: createHeaders(jwt),
         method: 'GET',
         mode: 'cors'
     };
-
-    requestOptions.headers = new Headers({
-        authorization: `Bearer ${jwt}`,
-        accept: 'application/json'
-    });
 
     return fetchWithRetry({
         operationName: 'get room info',
