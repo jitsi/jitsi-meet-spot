@@ -25,7 +25,7 @@ describe('VideoMuteButton', () => {
 
     describe('when not muted', () => {
         it('displays UI showing no mute', () => {
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Mute Video');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('Stop Camera');
             expect(videoMuteButton.find(Videocam).length).toBe(1);
             expect(videoMuteButton.find(VideocamOff).length).toBe(0);
         });
@@ -39,7 +39,7 @@ describe('VideoMuteButton', () => {
         it('displays pending state when unmute is still processing', () => {
             videoMuteButton.setProps({ changePending: true });
 
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Unmuting...');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('Starting...');
             expect(videoMuteButton.find(Videocam).length).toBe(1);
             expect(videoMuteButton.find(VideocamOff).length).toBe(0);
         });
@@ -51,7 +51,7 @@ describe('VideoMuteButton', () => {
         });
 
         it('displays UI showing mute', () => {
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Unmute Video');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('Start Camera');
             expect(videoMuteButton.find(Videocam).length).toBe(0);
             expect(videoMuteButton.find(VideocamOff).length).toBe(1);
         });
@@ -65,7 +65,7 @@ describe('VideoMuteButton', () => {
         it('displays pending state when mute is still processing', () => {
             videoMuteButton.setProps({ changePending: true });
 
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Muting...');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('Stopping...');
             expect(videoMuteButton.find(Videocam).length).toBe(0);
             expect(videoMuteButton.find(VideocamOff).length).toBe(1);
         });
