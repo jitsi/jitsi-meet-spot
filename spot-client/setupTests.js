@@ -9,5 +9,5 @@ jest.mock('./src/common/logger');
 global.fetch = require('jest-fetch-mock');
 
 global.crypto = {
-    getRandomValues: buffer => crypto.randomFillSync(buffer)
+    getRandomValues: buffer => crypto.randomBytes(buffer.length)
 };
