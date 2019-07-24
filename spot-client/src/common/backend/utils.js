@@ -1,5 +1,5 @@
 import { logger } from 'common/logger';
-import { getJitterDelay } from 'common/utils';
+import { generateGuid, getJitterDelay } from 'common/utils';
 
 import { errorConstants } from './constants';
 
@@ -34,7 +34,8 @@ function convertToEmittedAndExpires({ emitted, expiresIn }) {
 function createHeaders(jwt) {
     const headerOptions = {
         accept: 'application/json',
-        'content-type': 'application/json; charset=UTF-8'
+        'content-type': 'application/json; charset=UTF-8',
+        'request-id': generateGuid()
     };
 
     if (jwt) {
