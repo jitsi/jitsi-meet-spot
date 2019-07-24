@@ -1,1 +1,1 @@
-export { default as Clock } from './clock';
+export { default as Clock } from './Clock';
