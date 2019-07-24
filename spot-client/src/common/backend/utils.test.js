@@ -1,6 +1,11 @@
 import * as utils from './utils';
 import { errorConstants } from './constants';
 
+jest.mock('common/utils', () => ({
+    ...jest.requireActual('common/utils'),
+    generateGuid: jest.fn()
+}));
+
 describe('utils', () => {
     const MOCK_JWT = 'mock-jwt';
     const MOCK_SERVICE_ENDPOINT = 'access-token-refresh';
