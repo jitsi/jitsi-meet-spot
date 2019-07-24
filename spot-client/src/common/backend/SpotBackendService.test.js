@@ -1,10 +1,12 @@
 import { SpotBackendService } from './SpotBackendService';
 import { persistence } from 'common/utils';
 
-jest.mock('common/utils', () => ({
-    ...jest.requireActual('common/utils'),
-    generateGuid: jest.fn()
-}));
+jest.mock('common/utils', () => {
+    return {
+        ...jest.requireActual('common/utils'),
+        generateGuid: jest.fn()
+    };
+});
 
 describe('SpotBackendService', () => {
     const PAIRING_SERVICE_URL = 'test/pairing/url';
