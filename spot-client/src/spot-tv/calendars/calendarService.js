@@ -152,7 +152,8 @@ export class CalendarService extends Emitter {
      * @returns {void}
      */
     startPollingForEvents(options) {
-        if (this._pollingOptionsAreEqual(options)) {
+        // No-op if already polling with the provided options.
+        if (this._updateEventsTimeout && this._pollingOptionsAreEqual(options)) {
             return;
         }
 

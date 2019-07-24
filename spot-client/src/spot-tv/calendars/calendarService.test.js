@@ -184,5 +184,56 @@ describe('calendarService', () => {
             return eventPromise
                 .then(({ events }) => expect(events).toEqual(expectedEvents));
         });
+
+        it('notifies of new events after a restart', () => {
+            jest.useFakeTimers();
+
+            const firstEvents = [
+                {
+                    meetingUrlFields: [],
+                    title: 1
+                }
+            ];
+            const secondEvents = [
+                {
+                    meetingUrlFields: [],
+                    title: 2
+                }
+            ];
+            const options = {};
+            let hasFetched = false;
+
+            jest.spyOn(calendarService, 'getCalendar').mockImplementation(() => {
+                if (!hasFetched) {
+                    hasFetched = true;
+
+                    return Promise.resolve(firstEvents);
+                }
+
+                return Promise.resolve(secondEvents);
+            });
+
+            const firstEventsPromise = createOneTimeCalendarServiceListener(
+                SERVICE_UPDATES.EVENTS_UPDATED
+            );
+
+            calendarService.startPollingForEvents(options);
+
+            return firstEventsPromise
+                .then(({ events }) => expect(events).toEqual(firstEvents))
+                .then(() => {
+                    calendarService.stopPollingForEvents();
+
+                    const secondEventsPromise = createOneTimeCalendarServiceListener(
+                        SERVICE_UPDATES.EVENTS_UPDATED
+                    );
+
+                    calendarService.startPollingForEvents(options);
+                    jest.runAllTimers();
+
+                    return secondEventsPromise;
+                })
+                .then(({ events }) => expect(events).toEqual(secondEvents));
+        });
     });
 });
