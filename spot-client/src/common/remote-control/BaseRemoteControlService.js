@@ -28,8 +28,10 @@ export class BaseRemoteControlService extends Emitter {
 
         window.addEventListener(
             'beforeunload',
-            () => this.disconnect()
-                .catch(() => { /* swallow unload errors from bubbling up */ })
+            event => {
+                this.disconnect(event)
+                    .catch(() => { /* swallow unload errors from bubbling up */ });
+            }
         );
     }
 
@@ -214,11 +216,13 @@ export class BaseRemoteControlService extends Emitter {
     /**
      * Stops the XMPP connection.
      *
-     * @returns {void}
+     * @param {Object} [event] - Optionally, the event which triggered the
+     * necessity to disconnect from the XMPP server.
+     * @returns {Promise}
      */
-    disconnect() {
+    disconnect(event) {
         const destroyPromise = this.xmppConnection
-            ? this.xmppConnection.destroy()
+            ? this.xmppConnection.destroy(event)
             : Promise.resolve();
 
         return destroyPromise
