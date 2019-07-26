@@ -53,7 +53,6 @@ exports.config = {
     services: [ 'selenium-standalone' ],
 
     specs: [
-        path.resolve(__dirname, 'specs', 'helpers', '**/*.js'),
         path.resolve(__dirname, 'specs', '**/*.spec.js')
     ],
 
