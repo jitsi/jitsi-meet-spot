@@ -56,7 +56,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @inheritdoc
      * @override
      */
-    disconnect() {
+    disconnect(event) {
         clearTimeout(this._nextJoinCodeUpdate);
 
         if (this._options.backend) {
@@ -66,7 +66,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
             );
         }
 
-        return super.disconnect();
+        return super.disconnect(event);
     }
 
     /**

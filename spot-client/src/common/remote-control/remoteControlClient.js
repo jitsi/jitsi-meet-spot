@@ -121,11 +121,11 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @inheritdoc
      * @override
      */
-    disconnect() {
+    disconnect(event) {
         this.destroyWirelessScreenshareConnections();
         this._lastSpotState = null;
 
-        return super.disconnect();
+        return super.disconnect(event);
     }
 
     /**

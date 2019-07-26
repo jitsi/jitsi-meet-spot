@@ -235,16 +235,18 @@ export default class XmppConnection {
     /**
      * Disconnects from any joined MUC and disconnects the XMPP connection.
      *
+     * @param {Object} [event] - Optionally, the event which triggered the
+     * necessity to disconnect from the XMPP server.
      * @returns {Promise}
      */
-    destroy() {
-        const leavePromise = this.room ? this.room.leave() : Promise.resolve();
+    destroy(event) {
+        const leavePromise = this.xmppConnection
+            ? this.xmppConnection.disconnect(event)
+            : Promise.resolve();
 
-        // FIXME: The leave promise always times out.
         return leavePromise
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
-            .then(() => this.xmppConnection && this.xmppConnection.disconnect())
             .then(() => {
                 this._pendingIQRequestRejections.forEach(reject => reject());
                 this._pendingIQRequestRejections.clear();
