@@ -25,6 +25,7 @@ const DEFAULT_DISPLAY_NAME = 'Meeting Room';
  */
 export class MeetingFrame extends React.Component {
     static defaultProps = {
+        displayName: DEFAULT_DISPLAY_NAME,
 
         /**
          * Ensure params set for the external api are defined or else a
@@ -133,7 +134,7 @@ export class MeetingFrame extends React.Component {
                     min: this.props.minDesktopSharingFramerate
                 },
                 disableDeepLinking: true,
-                displayName: this.props.displayName || DEFAULT_DISPLAY_NAME,
+                displayName: this.props.displayName,
                 enableDisplayNameInStats: true,
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
@@ -195,7 +196,7 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
         this._jitsiApi.executeCommand(
             'displayName',
-            this.props.displayName || DEFAULT_DISPLAY_NAME
+            this.props.displayName
         );
 
         this.props.remoteControlServer.addListener(
