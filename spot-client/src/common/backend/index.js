@@ -4,6 +4,5 @@ export * from './SpotBackendService';
 export {
     fetchCalendarEvents,
     getRemotePairingCode,
-    isUnrecoverableError,
     refreshAccessToken
 } from './utils';

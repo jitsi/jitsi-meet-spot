@@ -223,20 +223,6 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
 }
 
 /**
- * Returns whether or not the error is one in which a request cannot continue.
- *
- * @param {Error|string} error - The error object with details about the error
- * or a string that identifies the error.
- * @returns {boolean}
- */
-export function isUnrecoverableError(error) {
-    const message = typeof error === 'object' ? error.message : error;
-
-    return message === errorConstants.REQUEST_FAILED
-        || message === errorConstants.NO_JWT;
-}
-
-/**
  * @typedef {Object} RefreshTokenResponse
  * @property {string} accessToken - A new/refreshed access token.
  * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when

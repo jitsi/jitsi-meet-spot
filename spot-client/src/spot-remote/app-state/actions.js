@@ -7,11 +7,7 @@ import {
     setReconnectState,
     setSpotTVState
 } from 'common/app-state';
-import {
-    isBackendEnabled,
-    isUnrecoverableError,
-    SpotBackendService
-} from 'common/backend';
+import { isBackendEnabled, SpotBackendService } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
@@ -116,7 +112,8 @@ export function connectToSpotTV(joinCode, shareMode) {
             logger.error('On Spot Remote disconnect', { error });
 
             // Retry for permanent pairing as long as the backend accepts the code
-            if (!isUnrecoverableError(error) && getPermanentPairingCode(getState())) {
+            if (getPermanentPairingCode(getState())
+                && !remoteControlClient.isUnrecoverableRequestError(error)) {
 
                 return doConnect();
             }
