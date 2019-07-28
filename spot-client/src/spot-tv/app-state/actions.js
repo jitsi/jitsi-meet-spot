@@ -9,10 +9,7 @@ import {
     setReconnectState,
     setRoomId
 } from 'common/app-state';
-import {
-    isBackendEnabled,
-    isUnrecoverableError
-} from 'common/backend';
+import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { createAsyncActionWithStates } from 'common/redux';
 import {
@@ -86,7 +83,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             logger.error('Spot-TV disconnected from the remote control server.', { error });
             dispatch(setRemoteJoinCode(''));
 
-            if (pairingCode && isUnrecoverableError(error)) {
+            if (pairingCode && remoteControlServer.isUnrecoverableRequestError(error)) {
                 // Clear the permanent pairing code
                 dispatch(setPermanentPairingCode(''));
 

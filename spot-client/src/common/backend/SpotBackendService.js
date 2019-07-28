@@ -6,7 +6,6 @@ import { persistence } from '../utils';
 import { errorConstants } from './constants';
 import {
     fetchRoomInfo,
-    isUnrecoverableError,
     refreshAccessToken,
     registerDevice
 } from './utils';
@@ -107,8 +106,11 @@ export class SpotBackendService extends Emitter {
      * error or a string that identifies the error.
      * @returns {boolean}
      */
-    isUnrecoverableError(error) {
-        return isUnrecoverableError(error);
+    isUnrecoverableRequestError(error) {
+        const message = typeof error === 'object' ? error.message : error;
+
+        return message === errorConstants.REQUEST_FAILED
+            || message === errorConstants.NO_JWT;
     }
 
     /**

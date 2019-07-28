@@ -138,6 +138,20 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
+     * Returns whether or not the error is one in which a backend request cannot
+     * be completed due a serious error, like missing authentication.
+     *
+     * @param {Error|string} error - The error object with details about the error
+     * or a string that identifies the error.
+     * @returns {boolean}
+     */
+    isUnrecoverableRequestError(error) {
+        return error === 'not-authorized'
+            || error === 'connection.passwordRequired'
+            || (Boolean(this._options.backend) && this._options.backend.isUnrecoverableError(error));
+    }
+
+    /**
      * Callback invoked when the xmpp connection is disconnected.
      *
      * @param {string} reason - The name of the disconnect event.
@@ -145,9 +159,8 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        if ((this._options.backend && this._options.backend.isUnrecoverableError(reason))
-            || reason === CONNECTION_EVENTS.SERVER_DISCONNECTED
-            || reason === 'not-authorized') {
+        if (this.isUnrecoverableRequestError(reason)
+            || reason === CONNECTION_EVENTS.SERVER_DISCONNECTED) {
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason }));
