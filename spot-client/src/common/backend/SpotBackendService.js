@@ -86,7 +86,7 @@ export class SpotBackendService extends Emitter {
                     roomName: mucUrl,
                     roomLock: undefined
                 };
-            });
+            }, error => this._maybeClearRegistration(error));
     }
 
     /**
@@ -114,6 +114,24 @@ export class SpotBackendService extends Emitter {
     }
 
     /**
+     * This is the error handler to be used on all backend requests. It will check if the access token has been rejected
+     * by the backend and clear the stored registration.
+     *
+     * @param {Error|string} error - Error thrown by the backend request function.
+     * @private
+     * @returns {void}
+     */
+    _maybeClearRegistration(error) {
+        if (this.isUnrecoverableRequestError(error)) {
+            persistence.set(PERSISTENCE_KEY, undefined);
+            this.registration = undefined;
+            logger.log('Cleared backend registration');
+        }
+
+        throw error;
+    }
+
+    /**
      * Tries to refresh the backend registration.
      *
      * @param {SpotRegistration} registration - The registration object to be used for the refresh.
@@ -135,7 +153,7 @@ export class SpotBackendService extends Emitter {
                         emitted,
                         expires
                     });
-            });
+            }, error => this._maybeClearRegistration(error));
     }
 
     /**
@@ -146,7 +164,6 @@ export class SpotBackendService extends Emitter {
      */
     register(pairingCode) {
         const storedRegistration = persistence.get(PERSISTENCE_KEY);
-        let usingStoredRegistration = false;
         let registerDevicePromise;
 
         if (storedRegistration && storedRegistration.pairingCode === pairingCode) {
@@ -158,7 +175,6 @@ export class SpotBackendService extends Emitter {
                 } else {
                     registerDevicePromise = Promise.resolve(storedRegistration);
                 }
-                usingStoredRegistration = true;
             }
         }
 
@@ -174,14 +190,7 @@ export class SpotBackendService extends Emitter {
                 if (!this.getJwt()) {
                     throw new Error(errorConstants.NO_JWT);
                 }
-            })
-            .catch(error => {
-                if (this.isUnrecoverableRequestError(error) && usingStoredRegistration) {
-                    persistence.set(PERSISTENCE_KEY, undefined);
-                }
-
-                throw error;
-            });
+            }, error => this._maybeClearRegistration(error));
     }
 
     /**

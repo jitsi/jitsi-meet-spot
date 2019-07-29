@@ -82,6 +82,22 @@ describe('SpotBackendService', () => {
                     })
                     .then(() => expect(onUpdateCallback).toHaveBeenCalled());
             });
+
+            it('clears the registration on room info error', () =>
+                spotBackendService.register(MOCK_PAIRING_CODE).then(() => {
+                    expect(spotBackendService.isPairingPermanent()).toBe(true);
+
+                    fetch.mockResponseOnce(null,
+                        {
+                            status: 401,
+                            ok: false
+                        });
+
+                    return spotBackendService.getRoomInfo().catch(() => {
+                        expect(spotBackendService.isPairingPermanent()).toBe(false);
+                    });
+                })
+            );
         });
     });
 });
