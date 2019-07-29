@@ -88,7 +88,10 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                     const error = `Failed to ${operationName}:`
                         + `${response.statusText}, HTTP code: ${response.status}`;
 
-                    logger.error(error, { json });
+                    logger.error(error, {
+                        json,
+                        requestId: requestOptions.headers.get('request-id')
+                    });
 
                     if (response.status < 500 || response.status >= 600) {
                         // Break the retry chain early
