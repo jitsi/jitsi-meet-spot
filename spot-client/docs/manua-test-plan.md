@@ -4,6 +4,17 @@ This document is a manual QA test plan to run as needed. Also, it serves as a fe
 
 Note that some of the test cases should already be automated in Spot-Webdriver.
 
+Environments supported as a Spot-Remote
+------
+- [ ] Latest Firefox
+- [ ] Latest Chrome (has wireless screenshare support)
+- [ ] Latest Safari
+- [ ] Latest iOS Safari
+- [ ] Latest Android Chrome
+- [ ] iOS 10.x iPad
+- [ ] iOS 11.x iPad
+- [ ] iOS 12.x iPad
+
 Hosting
 ------
 - [ ] Spot-TV can only be opened from Chrome
@@ -21,6 +32,7 @@ Setup
 - [ ] Device selection is saved
 - [ ] Selected devices are used in a meeting
 - [ ] Wired screensharing can be enabled and disabled
+- [ ] Room name is saved and displayed in the app and meeting
 
 Home
 ------
@@ -61,10 +73,18 @@ Automatic Wired Screensharing
 - [ ] Spot-TV in a meeting automatically starts SS when connecting a device
 - [ ] Spot-TV in a meeting automatically stops SS when disconnecting a device
 
-Disconnects
+Disconnects - Open source flow
 ------
 - [ ] Spot-TV reloads the page and Spot-Remote displays join code entry
 - [ ] Spot-Remote reconnects to a Spot-TV after disconnect
+- [ ] Spot-TV reestablishes its own connection to the backend after losing internet
+- [ ] Spot-Remote reestablishes its connection to the Spot-TV after losing internet
+
+Disconnects - Backend flow
+------
+- [ ] Spot-TV exits the browser and Spot-Remote remains waiting for the Spot-TV
+- [ ] Spot-TV automatically rejoins with existing setup when re-opening the browser
+- [ ] Spot-Remote reconnects automatically to the Spot-TV after the Spot-TV reconnects
 - [ ] Spot-TV reestablishes its own connection to the backend after losing internet
 - [ ] Spot-Remote reestablishes its connection to the Spot-TV after losing internet
 
@@ -109,3 +129,7 @@ Share Mode
 - [ ] At mode select, clicking the "Remote Control" button takes Spot-Remote to the full remote control view
 - [ ] At mode select, unsupported browsers cannot start wireless screensharing
 - [ ] At mode select, Spot-Remote cannot start a wireless screenshare if Spot-TV is already screensharing
+
+Auto-updates - Backend flow only
+------
+- [ ] Automatically reloads the page at the configured time (default 2am)
