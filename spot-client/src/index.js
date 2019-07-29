@@ -92,7 +92,7 @@ window.onerror = (message, url, lineNo, columnNo, error) => {
         columnNo,
         lineNo,
         message,
-        error: error.stack,
+        error: error && error.stack,
         url
     });
 };
