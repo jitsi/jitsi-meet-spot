@@ -176,7 +176,7 @@ export class SpotBackendService extends Emitter {
                 }
             })
             .catch(error => {
-                if (this.isUnrecoverableError(error) && usingStoredRegistration) {
+                if (this.isUnrecoverableRequestError(error) && usingStoredRegistration) {
                     persistence.set(PERSISTENCE_KEY, undefined);
                 }
 
