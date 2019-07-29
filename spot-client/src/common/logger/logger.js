@@ -20,7 +20,21 @@ function formatMessage(level, message, context) {
     };
 
     if (context) {
-        formattedMessage.context = context;
+        const contextCopy = { ...context };
+
+        for (const key in contextCopy) {
+            if (contextCopy.hasOwnProperty(key)
+                && contextCopy[key] instanceof Error) {
+                const error = contextCopy[key];
+
+                contextCopy[key] = JSON.stringify(
+                    error,
+                    Object.getOwnPropertyNames(error)
+                );
+            }
+        }
+
+        formattedMessage.context = contextCopy;
     }
 
     return formattedMessage;
