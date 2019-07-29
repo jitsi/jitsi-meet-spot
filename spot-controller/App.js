@@ -13,6 +13,7 @@ import Setup from './src/setup';
 
 // Modules that doesn't necesarily export anything, but must be imported to function
 import './src/beacons';
+import './src/notifications';
 
 // FIXME make it possible to configure default URL on the build time
 const DEFAULT_URL = 'https://spot.8x8.vc';

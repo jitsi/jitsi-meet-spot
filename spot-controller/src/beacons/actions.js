@@ -1,4 +1,17 @@
-import { UPDATE_BEACONS, UPDATE_JOIN_READY } from './actionTypes';
+import { RESET_BEACON_NOTIFICATION_FLAG, UPDATE_BEACONS, UPDATE_JOIN_READY } from './actionTypes';
+
+/**
+ * Action to reset the beacon notification flag.
+ *
+ * @returns {{
+ *     type: RESET_BEACON_NOTIFICATION_FLAG
+ * }}
+ */
+export function resetBeaconNotificationFlag() {
+    return {
+        type: RESET_BEACON_NOTIFICATION_FLAG
+    };
+}
 
 /**
  * Action to signal the reception of an updated beacon list.

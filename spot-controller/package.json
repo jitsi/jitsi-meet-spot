@@ -15,7 +15,7 @@
         "react": "16.8.6",
         "react-native": "0.59.9",
         "react-native-side-menu": "1.1.3",
-        "react-native-webview": "5.11.0"
+        "react-native-webview": "6.3.1"
     },
     "name": "spot-controller",
     "private": true,
@@ -28,8 +28,9 @@
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "jitsi-meet-redux": "github:jitsi/jitsi-meet-redux#bdc108e3857d5649bea16ffbf60e5a367c820b5c",
         "lodash": "4.17.11",
-        "react-native-beacons-manager": "github:jitsi/react-native-beacons-manager#55f466a2e5f7ba507da9f225e09d3ec427acd40f",
+        "react-native-beacons-manager": "github:jitsi/react-native-beacons-manager#86847b7de89dc3c1142d68b1ce24c9ff32d734e0",
         "react-native-keep-awake": "4.0.0",
+        "react-native-push-notification": "github:zo0r/react-native-push-notification#4e53d8cbbf5fe0f623b3ca6b58e0ef097834b48b",
         "react-native-svg": "9.5.1",
         "react-native-svg-transformer": "0.13.0",
         "react-redux": "7.1.0",

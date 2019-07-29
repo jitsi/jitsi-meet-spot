@@ -20,6 +20,9 @@ target 'spot-controller' do
 
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'RCTPushNotification',
+  ]
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod "yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
 

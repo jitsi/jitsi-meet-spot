@@ -1,16 +1,21 @@
 import { MiddlewareRegistry } from 'jitsi-meet-redux';
-import { PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import Beacons from 'react-native-beacons-manager';
 
 import api from '../api';
 import { APP_MOUNTED, APP_WILL_UNMOUNT } from '../app';
 import { logger } from '../logger';
+import { cancelLocalNotification, sendLocalNotification } from '../notifications';
 
 import { updateBeacons, updateJoinReady } from './actions';
-import { BEACON_IDENTIFIER, BEACON_REGION } from './constants';
-import { isEqual, parseBeaconJoinCode } from './functions';
+import { BEACON_REGION } from './constants';
+import { getIntegerUuid, isEqual, parseBeaconJoinCode } from './functions';
 
-const AUTH_REQUIRED = 'authorizedWhenInUse';
+// Auth statuses.
+const AUTH_ALWAYS = 'authorizedAlways';
+const AUTH_GRANTED = 'granted'; // Android
+const AUTH_NOT_DETERMINED = 'notDetermined';
+const AUTH_WHEN_IN_USE = 'authorizedWhenInUse';
 
 /**
  * The redux middleware for the beacons feature.
@@ -22,6 +27,8 @@ const AUTH_REQUIRED = 'authorizedWhenInUse';
  * @returns {Function}
  */
 MiddlewareRegistry.register(store => next => action => {
+    const result = next(action);
+
     switch (action.type) {
     case APP_MOUNTED:
         _initBeacons(store);
@@ -32,8 +39,59 @@ MiddlewareRegistry.register(store => next => action => {
         break;
     }
 
-    return next(action);
+    return result;
 });
+
+/**
+ * Callback to be invoked when we get an authorization update from the OS.
+ *
+ * @param {string} auth - The new auth status.
+ * @param {Object} store - The Redux store.
+ * @returns {void}
+ */
+function _authUpdate(auth) {
+    logger.info('Beacon detection authorization', auth);
+
+    switch (auth) {
+    case AUTH_ALWAYS:
+    case AUTH_GRANTED:
+        // We can do both monitoring and ranging.
+        logger.info('Starting region monitoring and ranging.', auth);
+        Beacons.startMonitoringForRegion(BEACON_REGION);
+        Beacons.startRangingBeaconsInRegion(BEACON_REGION);
+        break;
+    case AUTH_WHEN_IN_USE:
+        // We can only do ranging.
+        logger.info('Starting region ranging.', auth);
+        Beacons.startRangingBeaconsInRegion(BEACON_REGION);
+        break;
+    case AUTH_NOT_DETERMINED:
+        logger.info('Beacon permission is not determined, asking for permission...');
+        Beacons.requestAlwaysAuthorization();
+        break;
+    }
+}
+
+/**
+ * Callback to handle the beaconsDidRange event.
+ *
+ * @param {Object} data - The raw beacon data.
+ * @param {Object} store - The Redux store.
+ * @returns {void}
+ */
+function _beaconsDidRange(data, { dispatch, getState }) {
+    const beacons = ((data && data.beacons) || []).map(beaconData => {
+        return {
+            joinCode: parseBeaconJoinCode(beaconData.major, beaconData.minor),
+            proximity: beaconData.proximity
+        };
+    }).filter(beacon => beacon.proximity !== 'unknown');
+
+    if (!isEqual(getState().beacons.beacons, beacons)) {
+        dispatch(updateBeacons(beacons));
+        logger.info('Beacon detected', beacons);
+    }
+}
 
 /**
  * Initiates the beacon functionality.
@@ -42,32 +100,46 @@ MiddlewareRegistry.register(store => next => action => {
  * @returns {void}
  */
 function _initBeacons(store) {
-    Beacons.BeaconsEventEmitter.addListener('authorizationStatusDidChange', auth => {
-        logger.info('Beacon detection authorization', auth);
+    // Setting up event listeners
+    Beacons.BeaconsEventEmitter.addListener('authorizationStatusDidChange', auth => _authUpdate(auth, store));
+    Beacons.BeaconsEventEmitter.addListener('beaconsDidRange', data => _beaconsDidRange(data, store));
+    Beacons.BeaconsEventEmitter.addListener('regionDidEnter', data => _regionDidEnter(data, store));
+    Beacons.BeaconsEventEmitter.addListener('regionDidExit', data => _regionDidExit(data, store));
 
-        if (auth === AUTH_REQUIRED) {
-            _startScanning(store);
-        }
-    });
-
-    if (Beacons.getAuthorizationStatus) {
-        // iOS flow is different
-        Beacons.getAuthorizationStatus(auth => {
-            logger.info('Beacon detection authorization', auth);
-
-            if (auth === AUTH_REQUIRED) {
-                _startScanning(store);
-            } else {
-                Beacons.requestWhenInUseAuthorization();
-            }
-        });
+    // Init permissions
+    if (Platform.OS === 'ios') {
+        Beacons.getAuthorizationStatus(auth => _authUpdate(auth, store));
     } else {
-        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then(auth => {
-            if (auth === 'granted') {
-                _startScanning(store);
-            }
-        });
+        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+        .then(auth => _authUpdate(auth, store));
     }
+}
+
+/**
+ * Callback to handle the regionDidEnter event.
+ *
+ * @param {Object} data - The raw region data.
+ * @param {Object} store - The Redux store.
+ * @returns {void}
+ */
+function _regionDidEnter(data, { dispatch }) {
+    logger.info(`Beacon region entered: ${data.uuid}`);
+    dispatch(sendLocalNotification(
+        getIntegerUuid(data.uuid),
+        'Nearby Spot TV',
+        'There is a nearby Spot TV. Press the notification to connect.'));
+}
+
+/**
+ * Callback to handle the regionDidExit event.
+ *
+ * @param {Object} data - The raw region data.
+ * @param {Object} store - The Redux store.
+ * @returns {void}
+ */
+function _regionDidExit(data, { dispatch }) {
+    logger.info(`Beacon region exited: ${data.uuid}`);
+    dispatch(cancelLocalNotification(data.uuid));
 }
 
 /**
@@ -78,37 +150,8 @@ function _initBeacons(store) {
 function _shutDownBeacons() {
     logger.info('Shutting down beacon scanning.');
 
-    Beacons.stopRangingBeaconsInRegion({
-        identifier: BEACON_IDENTIFIER,
-        uuid: BEACON_REGION
-    });
-}
-
-/**
- * Starts the beacon scanning.
- *
- * @param {Object} store - The Redux store.
- * @returns {void}
- */
-function _startScanning({ dispatch, getState }) {
-    Beacons.BeaconsEventEmitter.addListener('beaconsDidRange', data => {
-        const beacons = ((data && data.beacons) || []).map(beaconData => {
-            return {
-                joinCode: parseBeaconJoinCode(beaconData.major, beaconData.minor),
-                proximity: beaconData.proximity
-            };
-        });
-
-        if (!isEqual(getState().beacons.beacons, beacons)) {
-            dispatch(updateBeacons(beacons));
-            logger.info('Beacon detected', beacons);
-        }
-    });
-
-    Beacons.startRangingBeaconsInRegion({
-        identifier: BEACON_IDENTIFIER,
-        uuid: BEACON_REGION
-    });
+    // We only shut down ranging, as monitoring should continue in the background and when the app is killed.
+    Beacons.stopRangingBeaconsInRegion(BEACON_REGION);
 }
 
 /**

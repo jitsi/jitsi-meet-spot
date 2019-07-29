@@ -14,6 +14,9 @@ import cast from '../../../assets/icons/cast.svg';
 
 import api from '../../api';
 import { Icon } from '../../icons';
+import { logger } from '../../logger';
+
+import { resetBeaconNotificationFlag } from '../actions';
 
 import styles from './styles';
 
@@ -26,7 +29,9 @@ import styles from './styles';
 class BeaconOverlay extends React.PureComponent {
     static propTypes = {
         beacons: PropTypes.array,
-        joinReady: PropTypes.bool
+        dispatch: PropTypes.func,
+        joinReady: PropTypes.bool,
+        notificationReceived: PropTypes.bool
     };
 
     /**
@@ -44,6 +49,22 @@ class BeaconOverlay extends React.PureComponent {
         this._keyExtractor = this._keyExtractor.bind(this);
         this._onTogglePicker = this._onTogglePicker.bind(this);
         this._renderItem = this._renderItem.bind(this);
+    }
+
+    /**
+     * Implements {@code Component#componentDidUpdate}.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        if (!prevProps.notificationReceived && this.props.notificationReceived) {
+            logger.info('Rendering the overlay from a notification tap.');
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({
+                pickerVisible: true
+            });
+            this.props.dispatch(resetBeaconNotificationFlag());
+        }
     }
 
     /**
@@ -140,15 +161,18 @@ class BeaconOverlay extends React.PureComponent {
  *
  * @param {Object} state - The Redux state.
  * @returns {{
- *     hasBeacons: boolean
+ *     beacons: Array<Object>,
+ *     joinReady: boolean,
+ *     notificationReceived: boolean
  * }}
  */
 function _mapStateToProps(state) {
-    const { beacons, joinReady } = state.beacons;
+    const { beacons, joinReady, notificationReceived } = state.beacons;
 
     return {
         beacons,
-        joinReady
+        joinReady,
+        notificationReceived
     };
 }
 
