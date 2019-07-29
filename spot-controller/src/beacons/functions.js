@@ -1,6 +1,16 @@
 import _ from 'lodash';
 
 /**
+ * Converts an UUID to an integer to be used as a numeric ID.
+ *
+ * @param {string} uuid - The string UUID to convert.
+ * @returns {number}
+ */
+export function getIntegerUuid(uuid = '') {
+    return parseInt(uuid.replace(/\W/g, ''), 16);
+}
+
+/**
  * Compares two list of detected beacons and returns true if they are equal.
  *
  * @param {Array<Object>} previousDetection - The previously detected list of beaconos.

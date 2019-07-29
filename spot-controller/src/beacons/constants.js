@@ -1,16 +1,10 @@
-
-/**
- * The Jitsi Meet identifier for beacons.
- *
- * Since it's not supported by all of the platforms and BT versions, we don't use it. Still
- * we need to define it, bc it's used in code.
- */
-export const BEACON_IDENTIFIER = '';
-
 /**
  * The Jitsi Meet region for beacons.
  */
-export const BEACON_REGION = 'bf23c311-24ae-414b-b153-cf097836947f';
+export const BEACON_REGION = {
+    identifier: '',
+    uuid: 'bf23c311-24ae-414b-b153-cf097836947f'
+};
 
 /**
  * Closest proximity constant.
