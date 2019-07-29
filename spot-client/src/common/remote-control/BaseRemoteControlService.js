@@ -148,7 +148,7 @@ export class BaseRemoteControlService extends Emitter {
     isUnrecoverableRequestError(error) {
         return error === 'not-authorized'
             || error === 'connection.passwordRequired'
-            || (Boolean(this._options.backend) && this._options.backend.isUnrecoverableError(error));
+            || (Boolean(this._options.backend) && this._options.backend.isUnrecoverableRequestError(error));
     }
 
     /**
