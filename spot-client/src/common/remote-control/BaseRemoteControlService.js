@@ -78,6 +78,7 @@ export class BaseRemoteControlService extends Emitter {
         });
 
         this.xmppConnectionPromise = this._createConnectionPromise(this._options);
+        this.xmppConnectionPromise.catch(error => this.disconnect().then(() => Promise.reject(error)));
 
         return this.xmppConnectionPromise;
     }
@@ -115,7 +116,6 @@ export class BaseRemoteControlService extends Emitter {
                     onDisconnect: this._onDisconnect
                 });
             })
-            .catch(error => this.disconnect().then(() => Promise.reject(error)))
             .then(() => roomProfile);
     }
 
