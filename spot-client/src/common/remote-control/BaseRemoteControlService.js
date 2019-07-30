@@ -81,8 +81,9 @@ export class BaseRemoteControlService extends Emitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
-        this.xmppConnectionPromise = this._createConnectionPromise(this._options);
-        this.xmppConnectionPromise.catch(error => this.disconnect().then(() => Promise.reject(error)));
+        this.xmppConnectionPromise
+            = this._createConnectionPromise(this._options)
+                    .catch(error => this.disconnect().then(() => Promise.reject(error)));
 
         return this.xmppConnectionPromise;
     }
