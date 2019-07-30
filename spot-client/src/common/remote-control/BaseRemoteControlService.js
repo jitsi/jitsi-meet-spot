@@ -2,6 +2,8 @@ import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
 
+import { errorConstants } from '../backend/constants';
+
 import {
     CONNECTION_EVENTS,
     SERVICE_UPDATES
@@ -20,6 +22,8 @@ export class BaseRemoteControlService extends Emitter {
      */
     constructor() {
         super();
+
+        this._onBackendRegistrationUpdated = this._onBackendRegistrationUpdated.bind(this);
 
         this._onMessageReceived = this._onMessageReceived.bind(this);
         this._onPresenceReceived = this._onPresenceReceived.bind(this);
@@ -116,7 +120,16 @@ export class BaseRemoteControlService extends Emitter {
                     onDisconnect: this._onDisconnect
                 });
             })
-            .then(() => roomProfile);
+            .then(() => {
+                if (backend) {
+                    backend.addListener(
+                        backend.constructor.REGISTRATION_UPDATED,
+                        this._onBackendRegistrationUpdated
+                    );
+                }
+
+                return roomProfile;
+            });
     }
 
     /**
@@ -234,6 +247,15 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {Promise}
      */
     disconnect(event) {
+        const backend = this._options && this._options.backend;
+
+        if (backend) {
+            backend.removeListener(
+                backend.constructor.REGISTRATION_UPDATED,
+                this._onBackendRegistrationUpdated
+            );
+        }
+
         const destroyPromise = this.xmppConnection
             ? this.xmppConnection.destroy(event)
             : Promise.resolve();
@@ -242,7 +264,7 @@ export class BaseRemoteControlService extends Emitter {
             .then(() => {
                 this.xmppConnection = null;
                 this.xmppConnectionPromise = null;
-                this._options && this._options.backend && this._options.backend.stop();
+                backend && backend.stop();
             });
     }
 
@@ -301,6 +323,24 @@ export class BaseRemoteControlService extends Emitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
+    }
+
+    /**
+     * Callback invoked when the backend service has updated the information
+     * needed to maintain and establish a connection to the backend.
+     *
+     * @param {Object} pairingInfo - The new connection information.
+     * @param {string} pairingInfo.jwt - The latest valid jwt for
+     * communicating with other backend services.
+     * @private
+     * @returns {void}
+     */
+    _onBackendRegistrationUpdated(pairingInfo) {
+        if (pairingInfo.jwt) {
+            this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, pairingInfo);
+        } else {
+            this._onDisconnect(errorConstants.NO_JWT);
+        }
     }
 
     /**

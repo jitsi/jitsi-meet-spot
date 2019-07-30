@@ -217,7 +217,14 @@ export class SpotBackendService extends Emitter {
 
         this._refreshTimeout = setTimeout(() => {
             this._refreshRegistration(this.registration)
-                .then(() => this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() }));
+                .then(
+                    () => this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() }),
+                    error => {
+                        logger.error('Access token refresh failed', { error });
+
+                        // Emit event with empty jwt which means the backend registration is lost
+                        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: undefined });
+                    });
         }, delay);
     }
 
