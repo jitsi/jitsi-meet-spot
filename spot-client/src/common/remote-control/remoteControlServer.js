@@ -21,8 +21,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
 
         this._nextJoinCodeUpdate = null;
 
-        this._onBackendRegistrationUpdated
-            = this._onBackendRegistrationUpdated.bind(this);
         this._onCommandReceived = this._onCommandReceived.bind(this);
     }
 
@@ -37,17 +35,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
         return super._createConnectionPromise({
             ...options,
             retryOnUnauthorized: !options.backend
-        }).then(roomProfile => {
-            if (options.backend) {
-                options.backend.addListener(
-                    options.backend.constructor.REGISTRATION_UPDATED,
-                    this._onBackendRegistrationUpdated
-                );
-            }
-
-            return this.refreshJoinCode()
-                .then(() => roomProfile);
-        });
+        }).then(roomProfile => this.refreshJoinCode().then(() => roomProfile));
     }
 
     /**
@@ -58,13 +46,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
      */
     disconnect(event) {
         clearTimeout(this._nextJoinCodeUpdate);
-
-        if (this._options.backend) {
-            this._options.backend.removeListener(
-                this._options.backend.constructor.REGISTRATION_UPDATED,
-                this._onBackendRegistrationUpdated
-            );
-        }
 
         return super.disconnect(event);
     }
@@ -245,20 +226,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
             messageType,
             data
         );
-    }
-
-    /**
-     * Callback invoked when the backend service has updated the information
-     * needed to maintain and establish a connection to the backend.
-     *
-     * @param {Object} pairingInfo - The new connection information.
-     * @param {string} pairingInfo.jwt - The latest valid jwt for
-     * communicating with other backend services.
-     * @private
-     * @returns {void}
-     */
-    _onBackendRegistrationUpdated(pairingInfo) {
-        this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, pairingInfo);
     }
 
     /**
