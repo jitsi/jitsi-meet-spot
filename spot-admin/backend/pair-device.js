@@ -48,8 +48,10 @@ function registerDeviceController(spots, req, res) {
 
     const response = {
         accessToken: jwtStructure.accessToken,
-        emitted: new Date().toISOString(),
-        expiresIn: jwtStructure.expiresIn
+        emitted: Date.now(),
+        expiresIn: jwtStructure.expiresIn,
+        id: spotRoom.id,
+        refreshToken: shortLived ? undefined : jwtStructure.refreshToken
     };
 
     sendJSON(res, response);

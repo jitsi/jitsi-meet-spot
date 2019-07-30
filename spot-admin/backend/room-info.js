@@ -40,6 +40,7 @@ function roomInfoController(spots, req, res){
     }
 
     sendJSON(res, {
+        id: spotRoom.id,
         mucUrl: spotRoom.options.mucUrl
     });
 }
