@@ -1,3 +1,4 @@
+import bootstrap from './bootstrap/reducer';
 import calendars from './calendars/reducer';
 import config from './config/reducer';
 import modal from './modal/reducer';
@@ -8,6 +9,7 @@ import spotTv from './spot-tv/reducer';
 import wiredScreenshare from './wired-screenshare/reducer';
 
 const reducers = {
+    bootstrap,
     calendars,
     config,
     modal,
@@ -21,6 +23,7 @@ const reducers = {
 export default reducers;
 
 export * from './api';
+export * from './bootstrap';
 export * from './calendars/actions';
 export * from './modal/actions';
 export * from './notifications/actions';

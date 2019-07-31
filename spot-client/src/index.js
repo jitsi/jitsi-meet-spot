@@ -17,6 +17,7 @@ import reducers, {
     getExternalApiUrl,
     getLoggingEndpoint,
     routeChanged,
+    setBootstrapStarted,
     setDefaultValues
 } from 'common/app-state';
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
@@ -77,6 +78,8 @@ store.subscribe(() => {
     remoteControlServiceSubscriber.onUpdate(newReduxState);
     externalApiSubscriber.onUpdate(newReduxState);
 });
+
+store.dispatch(setBootstrapStarted());
 
 const reduxState = store.getState();
 const deviceId = getDeviceId();
