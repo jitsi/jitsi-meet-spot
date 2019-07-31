@@ -7,10 +7,10 @@ import {
     setReconnectState,
     setSpotTVState
 } from 'common/app-state';
+import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled, SpotBackendService } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
-import { createAsyncActionWithStates } from 'common/redux';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { windowHandler } from 'common/utils';

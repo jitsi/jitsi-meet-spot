@@ -1,6 +1,6 @@
+import { createAsyncActionWithStates } from 'common/async-actions';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
-import { createAsyncActionWithStates } from 'common/redux';
 import { remoteControlClient } from 'common/remote-control';
 
 import { setSpotTVState } from './../spot-tv/actions';
