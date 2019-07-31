@@ -1,5 +1,4 @@
 export * from './cryptography';
-export * from './device-id';
 export * from './get-random-meeting-name';
 export * from './hash';
 export * from './loadScript';
