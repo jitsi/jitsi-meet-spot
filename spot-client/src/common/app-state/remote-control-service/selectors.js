@@ -1,4 +1,4 @@
-import { asyncActionRequestStates } from 'common/redux';
+import { asyncActionRequestStates } from 'common/async-actions';
 
 import { getInMeetingStatus } from '../spot-tv/selectors';
 

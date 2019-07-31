@@ -9,9 +9,9 @@ import {
     setReconnectState,
     setRoomId
 } from 'common/app-state';
+import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
-import { createAsyncActionWithStates } from 'common/redux';
 import {
     SERVICE_UPDATES,
     remoteControlServer

@@ -18,7 +18,8 @@ import {
     VIDEO_MUTE,
     requestStates
 } from 'common/app-state';
-import { MiddlewareRegistry, asyncActionRequestStates } from 'common/redux';
+import { asyncActionRequestStates } from 'common/async-actions';
+import { MiddlewareRegistry } from 'common/redux';
 
 import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
