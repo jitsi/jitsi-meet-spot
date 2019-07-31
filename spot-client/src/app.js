@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { apiMessageReceived } from 'common/app-state';
+import { apiMessageReceived, setBootstrapComplete } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
@@ -100,6 +100,8 @@ export class App extends React.Component {
          * event to instruct the remote or the spot TV to do something.
          */
         window.addEventListener('message', this._onPostMessage);
+
+        this.props.dispatch(setBootstrapComplete());
     }
 
     /**
