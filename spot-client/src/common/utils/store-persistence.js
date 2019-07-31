@@ -29,6 +29,7 @@ const keysToStore = [
     'calendars.calendarType',
     'calendars.email',
     'calendars.displayName',
+    'deviceId.deviceId',
     'setup.avatarUrl',
     'setup.completed',
     'setup.displayName',
@@ -76,6 +77,9 @@ function parsePersistedState(state) {
             calendarType: state.calendars.calendarType,
             displayName: state.calendars.displayName,
             email: state.calendars.email
+        },
+        deviceId: {
+            deviceId: state.deviceId.deviceId
         },
         setup: {
             avatarUrl: state.setup.avatarUrl,

@@ -1,4 +1,17 @@
 /**
+ * Generates a random 8 character long string.
+ *
+ * @returns {string}
+ */
+export function generate8Characters() {
+    const buf = new Uint16Array(2);
+
+    window.crypto.getRandomValues(buf);
+
+    return `${s4(buf[0])}${s4(buf[1])}`;
+}
+
+/**
  * Generate a likely-to-be-unique guid.
  *
  * @private

@@ -14,6 +14,7 @@ import { LoggingService, logger } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
+    getDeviceId,
     getExternalApiUrl,
     getLoggingEndpoint,
     routeChanged,
@@ -27,7 +28,6 @@ import {
 } from 'common/remote-control';
 import {
     clearPersistedState,
-    getDeviceId,
     getPersistedState,
     loadScript,
     setPersistedState
@@ -82,7 +82,7 @@ store.subscribe(() => {
 store.dispatch(setBootstrapStarted());
 
 const reduxState = store.getState();
-const deviceId = getDeviceId();
+const deviceId = getDeviceId(reduxState);
 const analyticsAppKey = getAnalyticsAppKey(reduxState);
 
 if (analyticsAppKey) {

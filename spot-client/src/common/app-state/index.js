@@ -1,6 +1,7 @@
 import bootstrap from './bootstrap/reducer';
 import calendars from './calendars/reducer';
 import config from './config/reducer';
+import deviceId from './device-id/reducer';
 import modal from './modal/reducer';
 import notifications from './notifications/reducer';
 import remoteControlService from './remote-control-service/reducer';
@@ -12,6 +13,7 @@ const reducers = {
     bootstrap,
     calendars,
     config,
+    deviceId,
     modal,
     notifications,
     remoteControlService,
@@ -25,6 +27,7 @@ export default reducers;
 export * from './api';
 export * from './bootstrap';
 export * from './calendars/actions';
+export * from './device-id';
 export * from './modal/actions';
 export * from './notifications/actions';
 export * from './remote-control-service/actions';
