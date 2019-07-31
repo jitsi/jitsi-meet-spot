@@ -40,6 +40,24 @@ export default class LoggingService {
     }
 
     /**
+     * Updates the device ID which is used to identify this client instance by the logging service.
+     *
+     * @param {string} deviceId - The new device ID to be used.
+     * @returns {void}
+     */
+    updateDeviceId(deviceId) {
+        // Push all cached logs to the old endpoint which is device ID based (new logs will end up in different place).
+        this._logCollector.flush();
+
+        // Tries to update device Id if a handler supports it.
+        for (const handler of this._handlers) {
+            if (typeof handler.setDeviceId === 'function') {
+                handler.setDeviceId(deviceId);
+            }
+        }
+    }
+
+    /**
      * Callback invoked by jitsi-meet-logger to detect if cached logs should be
      * passed into the storeLogs callback.
      *
