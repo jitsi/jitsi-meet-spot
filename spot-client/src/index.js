@@ -10,13 +10,12 @@ import { SegmentHandler, analytics } from 'common/analytics';
 import { globalDebugger } from 'common/debugging';
 import { isElectron } from 'common/detection';
 import { history } from 'common/history';
-import { LoggingService, logger } from 'common/logger';
+import { logger } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
     getDeviceId,
     getExternalApiUrl,
-    getLoggingEndpoint,
     routeChanged,
     setBootstrapStarted,
     setDefaultValues
@@ -34,7 +33,6 @@ import {
 } from 'common/utils';
 
 import App from './app';
-import PostToEndpoint from 'common/logger/post-to-endpoint';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
 const queryParams = new URLSearchParams(window.location.search);
@@ -117,21 +115,6 @@ window.onunhandledrejection = event => {
         stack: 'n/a'
     });
 };
-
-const loggingEndpoint = getLoggingEndpoint(reduxState);
-
-if (loggingEndpoint) {
-    const loggingService = new LoggingService(loggingEndpoint);
-
-    loggingService.addHandler(
-        new PostToEndpoint({
-            deviceId,
-            endpointUrl: loggingEndpoint
-        })
-    );
-
-    loggingService.start();
-}
 
 remoteControlClient.configureWirelessScreensharing({
     desktopSharingFrameRate: getDesktopSharingFramerate(reduxState)

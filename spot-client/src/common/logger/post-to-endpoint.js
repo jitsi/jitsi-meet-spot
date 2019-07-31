@@ -178,4 +178,14 @@ export default class PostToEndpoint {
             }
         });
     }
+
+    /**
+     * Sets a new device ID which from now on will identify this client.
+     *
+     * @param {string} deviceId - A unique identifier for this client.
+     * @returns {void}
+     */
+    setDeviceId(deviceId) {
+        this._deviceId = deviceId;
+    }
 }
