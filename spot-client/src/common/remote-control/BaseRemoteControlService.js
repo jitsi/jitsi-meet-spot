@@ -2,8 +2,6 @@ import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { getJitterDelay } from 'common/utils';
 
-import { errorConstants } from '../backend/constants';
-
 import {
     CONNECTION_EVENTS,
     SERVICE_UPDATES
@@ -126,6 +124,10 @@ export class BaseRemoteControlService extends Emitter {
                     backend.addListener(
                         backend.constructor.REGISTRATION_UPDATED,
                         this._onBackendRegistrationUpdated
+                    );
+                    backend.addListener(
+                        backend.constructor.REGISTRATION_LOST,
+                        this._onDisconnect
                     );
                 }
 
@@ -337,11 +339,7 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onBackendRegistrationUpdated(pairingInfo) {
-        if (pairingInfo.jwt) {
-            this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, pairingInfo);
-        } else {
-            this._onDisconnect(errorConstants.NO_JWT);
-        }
+        this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, pairingInfo);
     }
 
     /**
