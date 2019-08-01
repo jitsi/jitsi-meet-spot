@@ -5,6 +5,7 @@ import {
     getSpotServicesConfig,
     setCalendarEvents,
     setReconnectState,
+    setRoomId,
     setSpotTVState
 } from 'common/app-state';
 import { createAsyncActionWithStates } from 'common/async-actions';
@@ -85,9 +86,10 @@ export function connectToSpotTV(joinCode, shareMode) {
         /**
          * The things done after successful connect.
          *
+         * @param {RoomProfile} roomProfile - Information about the room to which the Spot Remote has been connected to.
          * @returns {void}
          */
-        function onSuccessfulConnect() {
+        function onSuccessfulConnect(roomProfile) {
             dispatch({
                 type: SPOT_REMOTE_JOIN_CODE_VALID,
                 joinCode,
@@ -100,6 +102,10 @@ export function connectToSpotTV(joinCode, shareMode) {
             } else {
                 dispatch(setPermanentPairingCode(''));
             }
+
+            const roomId = roomProfile && roomProfile.id;
+
+            roomId && dispatch(setRoomId(roomId));
         }
 
         /**
