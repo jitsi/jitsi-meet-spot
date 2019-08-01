@@ -3,6 +3,7 @@ require('dotenv').config();
 const jwtDecode = require('jwt-decode');
 const calendarRequestController = require('./backend/calendar');
 const pairDeviceController = require('./backend/pair-device');
+const refreshController = require('./backend/refresh-code');
 const remotePairingCodeController = require('./backend/remote-pairing-code');
 const roomInfoController = require('./backend/room-info');
 
@@ -32,7 +33,7 @@ const spot1 = new SpotRoom(spot1Id, {
     pairingCode: '123456',
     jwtToken: {
         accessToken: jwt,
-        expiresIn: 60 * 60 * 1000,
+        expiresIn: 6 * 60 * 1000,
         refreshToken: 'refreshsfj3049ublabla325something'
     },
     shortLivedToken: {
@@ -51,6 +52,7 @@ spots.set(spot1.id, spot1);
 
 app.put('/pair', pairDeviceController.bind(null, spots));
 app.post('/pair/code', remotePairingCodeController.bind(null, spots));
+app.put('/pair/regenerate', refreshController.bind(null, spots));
 app.get('/room/info', roomInfoController.bind(null, spots));
 app.get('/calendar', calendarRequestController);
 
