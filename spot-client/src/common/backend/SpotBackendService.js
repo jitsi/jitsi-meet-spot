@@ -37,6 +37,11 @@ function getExpiresIn({ expires }) {
  * The class exposes backend functionality and stores backend related state.
  */
 export class SpotBackendService extends Emitter {
+    /**
+     * The spot backend service has lost the registration with the backend by not being able to use
+     * the refresh token to renew the access token.
+     */
+    static REGISTRATION_LOST = 'registration-lost';
     static REGISTRATION_UPDATED = 'registration-updated';
 
     /**
@@ -109,8 +114,7 @@ export class SpotBackendService extends Emitter {
     isUnrecoverableRequestError(error) {
         const message = typeof error === 'object' ? error.message : error;
 
-        return message === errorConstants.REQUEST_FAILED
-            || message === errorConstants.NO_JWT;
+        return message === errorConstants.REQUEST_FAILED;
     }
 
     /**
@@ -227,7 +231,7 @@ export class SpotBackendService extends Emitter {
                         logger.error('Access token refresh failed', { error });
 
                         // Emit event with empty jwt which means the backend registration is lost
-                        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: undefined });
+                        this.emit(SpotBackendService.REGISTRATION_LOST, error);
                     });
         }, delay);
     }
