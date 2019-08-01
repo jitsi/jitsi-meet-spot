@@ -6,7 +6,7 @@ import { getRemoteJoinCode } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { Button } from 'common/ui';
 
-import { getPermanentPairingCode } from '../../../backend';
+import { getLongLivedPairingCodeInfo } from '../../../backend';
 
 /**
  * Displays a setup step showing a join code for a Spot-Remote to use to connect
@@ -90,7 +90,7 @@ export class PairRemote extends React.Component {
 function mapStateToProps(state) {
     return {
         code: isBackendEnabled(state)
-            ? getPermanentPairingCode(state)
+            ? (getLongLivedPairingCodeInfo(state) || {}).code
             : getRemoteJoinCode(state)
     };
 }
