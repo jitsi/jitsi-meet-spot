@@ -126,7 +126,11 @@ export function connectToSpotTV(joinCode, shareMode) {
                 shareMode
             });
 
-            _onDisconnected({ dispatch }, error);
+            _clearSubscriptions();
+
+            dispatch(clearSpotTVState());
+
+            history.push(ROUTES.CODE);
 
             throw error;
         }
@@ -167,7 +171,7 @@ export function connectToSpotTV(joinCode, shareMode) {
         rcsListeners.push(
             remoteControlClient.addListener(
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-                onDisconnect.bind(null, store)));
+                onDisconnect));
 
         return doConnect();
     };
@@ -197,24 +201,6 @@ function _clearSubscriptions() {
         removeListener();
     }
     rcsListeners = [];
-}
-
-/**
- * Callback called when the remote control service connection is unrecoverable broken.
- *
- * @param {Object} store - The Redux store.
- * @param {string} error - See {@link SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT}.
- * @private
- * @returns {void}
- */
-function _onDisconnected({ dispatch }, error) {
-    logger.error('Spot-Remote lost connection to remote control service', { error });
-
-    _clearSubscriptions();
-
-    dispatch(clearSpotTVState());
-
-    history.push(ROUTES.CODE);
 }
 
 /**
