@@ -8,8 +8,23 @@ jest.mock('common/utils', () => {
     };
 });
 
+/**
+ * Creates a matcher for refresh request for given params.
+ *
+ * @param {string} refreshToken - The refresh token.
+ * @returns {*}
+ */
+function refreshRequestMatcher(refreshToken) {
+    return expect.objectContaining({
+        body: `{"refreshToken":"${refreshToken}"}`,
+        method: 'PUT',
+        mode: 'cors'
+    });
+}
+
 describe('SpotBackendService', () => {
     const PAIRING_SERVICE_URL = 'test/pairing/url';
+    const REFRESH_SERVICE_URL = `${PAIRING_SERVICE_URL}/regenerate`;
     const ROOM_KEEPER_SERVICE_URL = 'test/keeper/url';
     let spotBackendService;
 
@@ -22,18 +37,19 @@ describe('SpotBackendService', () => {
 
     describe('register', () => {
         const MOCK_PAIRING_CODE = '123456';
+        const MOCK_RESPONSE = {
+            accessToken: 'new-access-token',
+            emitted: Date.now(),
+            expiresIn: 10 * 60 * 1000,
+            refreshToken: 'new-refresh-token'
+        };
 
         describe('without stored registration', () => {
-            const MOCK_RESPONSE = {
-                accessToken: 'new-access-token',
-                emitted: '1',
-                expiresIn: '2',
-                refreshToken: 'new-refresh-token'
-            };
 
             beforeEach(() => {
                 jest.useFakeTimers();
                 jest.spyOn(persistence, 'get').mockReturnValue(null);
+                fetch.resetMocks();
                 fetch.mockResponse(JSON.stringify(MOCK_RESPONSE));
             });
 
@@ -54,11 +70,11 @@ describe('SpotBackendService', () => {
                 spotBackendService.register(MOCK_PAIRING_CODE)
                     .then(() => {
 
-                        jest.advanceTimersByTime(1000);
+                        jest.advanceTimersByTime(MOCK_RESPONSE.expiresIn);
 
                         expect(fetch).toHaveBeenCalledWith(
-                            `${PAIRING_SERVICE_URL}/regenerate`,
-                            expect.any(Object)
+                            REFRESH_SERVICE_URL,
+                            refreshRequestMatcher(MOCK_RESPONSE.refreshToken)
                         );
                     })
             );
@@ -97,6 +113,58 @@ describe('SpotBackendService', () => {
                         expect(spotBackendService.isPairingPermanent()).toBe(false);
                     });
                 })
+            );
+        });
+
+        describe('with stored registration', () => {
+            let dateSpy = null;
+            const MOCK_REGISTRATION = {
+                ...MOCK_RESPONSE,
+                pairingCode: MOCK_PAIRING_CODE,
+                expiresIn: undefined,
+                expires: MOCK_RESPONSE.emitted + MOCK_RESPONSE.expiresIn
+            };
+
+            beforeEach(() => {
+                if (dateSpy) {
+                    dateSpy.mockRestore();
+                    dateSpy = null;
+                }
+                jest.useFakeTimers();
+                jest.spyOn(persistence, 'get')
+                    .mockReturnValue(MOCK_REGISTRATION);
+                fetch.resetMocks();
+                fetch.mockResponse(JSON.stringify(MOCK_RESPONSE));
+            });
+
+            it('refresh the registration initially if starts with expired (or almost expired) token', () => {
+                dateSpy = jest.spyOn(Date, 'now');
+                dateSpy.mockReturnValue(Date.now() + MOCK_RESPONSE.expiresIn);
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => {
+                        expect(fetch)
+                            .toHaveBeenCalledWith(
+                                REFRESH_SERVICE_URL,
+                                refreshRequestMatcher(MOCK_RESPONSE.refreshToken)
+                            );
+
+                        expect(spotBackendService.getJwt())
+                            .toBe(MOCK_RESPONSE.accessToken);
+                        expect(spotBackendService.isPairingPermanent())
+                            .toBe(true);
+                    });
+            });
+            it('does NOT refresh the registration initially if lots of time left until the expiration', () =>
+                spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => {
+                        expect(fetch).not.toHaveBeenCalled();
+
+                        expect(spotBackendService.getJwt())
+                            .toBe(MOCK_RESPONSE.accessToken);
+                        expect(spotBackendService.isPairingPermanent())
+                            .toBe(true);
+                    })
             );
         });
     });

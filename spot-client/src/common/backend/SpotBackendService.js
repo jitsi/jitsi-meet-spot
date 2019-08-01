@@ -24,7 +24,7 @@ const PERSISTENCE_KEY = 'spot-backend-registration';
  * @returns {number}
  */
 function getExpiresIn({ expires }) {
-    return expires - new Date().getTime();
+    return expires - Date.now();
 }
 
 /**
@@ -135,7 +135,7 @@ export class SpotBackendService extends Emitter {
      * Tries to refresh the backend registration.
      *
      * @param {SpotRegistration} registration - The registration object to be used for the refresh.
-     * @returns {Promise<void>} - A promise resolved on success.
+     * @returns {Promise<SpotRegistration>} - A promise resolved on success.
      * @private
      */
     _refreshRegistration(registration) {
@@ -146,13 +146,12 @@ export class SpotBackendService extends Emitter {
         return refreshAccessToken(`${this.pairingServiceUrl}/regenerate`, registration)
             .then(({ accessToken, emitted, expires }) => {
                 // copy the fields to preserve the refresh token
-                this._setRegistration(
-                    pairingCode, {
-                        ...registration,
-                        accessToken,
-                        emitted,
-                        expires
-                    });
+                return {
+                    ...registration,
+                    accessToken,
+                    emitted,
+                    expires
+                };
             }, error => this._maybeClearRegistration(error));
     }
 
@@ -160,7 +159,7 @@ export class SpotBackendService extends Emitter {
      * Registers with the backend and stores the access token.
      *
      * @param {string} pairingCode - The pairing code to be used for authentication with the backend service.
-     * @returns {Promise<SpotRegistration>}
+     * @returns {Promise<void>}
      */
     register(pairingCode) {
         const storedRegistration = persistence.get(PERSISTENCE_KEY);
@@ -170,7 +169,9 @@ export class SpotBackendService extends Emitter {
             logger.log('Restored previous backend registration', { pairingCode });
 
             if (storedRegistration.refreshToken) {
-                if (getExpiresIn(storedRegistration) < FIVE_MINUTES) {
+                const expiresIn = getExpiresIn(storedRegistration);
+
+                if (expiresIn < FIVE_MINUTES) {
                     registerDevicePromise = this._refreshRegistration(storedRegistration);
                 } else {
                     registerDevicePromise = Promise.resolve(storedRegistration);
@@ -180,17 +181,15 @@ export class SpotBackendService extends Emitter {
 
         if (!registerDevicePromise) {
             logger.log('No stored registration');
-            registerDevicePromise = registerDevice(`${this.pairingServiceUrl}`, pairingCode);
+            registerDevicePromise
+                = registerDevice(`${this.pairingServiceUrl}`, pairingCode)
+                    .catch(error => this._maybeClearRegistration(error));
         }
 
         return registerDevicePromise
             .then(registration => {
                 this._setRegistration(pairingCode, registration);
-
-                if (!this.getJwt()) {
-                    throw new Error(errorConstants.NO_JWT);
-                }
-            }, error => this._maybeClearRegistration(error));
+            });
     }
 
     /**
@@ -216,9 +215,14 @@ export class SpotBackendService extends Emitter {
             + `scheduling refresh to be done in ${delay / ONE_MINUTE} minutes`);
 
         this._refreshTimeout = setTimeout(() => {
+            const { pairingCode } = this.registration;
+
             this._refreshRegistration(this.registration)
                 .then(
-                    () => this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() }),
+                    registration => {
+                        this._setRegistration(pairingCode, registration);
+                        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() });
+                    },
                     error => {
                         logger.error('Access token refresh failed', { error });
 
@@ -235,12 +239,17 @@ export class SpotBackendService extends Emitter {
      * @param {SpotRegistration} registration - The backend registration structure to be stored.
      * @private
      * @returns {void}
+     * @throws Throws {@link errorConstants.NO_JWT} if the new registration does not contain an access token.
      */
     _setRegistration(pairingCode, registration) {
         this.registration = {
             ...registration,
             pairingCode
         };
+
+        if (!this.getJwt()) {
+            throw new Error(errorConstants.NO_JWT);
+        }
 
         // Only long lived registrations are persisted
         this.registration.refreshToken && persistence.set(PERSISTENCE_KEY, this.registration);

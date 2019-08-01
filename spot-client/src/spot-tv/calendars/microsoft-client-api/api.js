@@ -178,7 +178,7 @@ export default {
      * @returns {boolean}
      */
     _isTokenExpired() {
-        const now = new Date().getTime();
+        const now = Date.now();
         const tokenExpireDate = persistence.get(persistenceKeys.EXPIRY);
         const tokenExpires = parseInt(tokenExpireDate, 10);
 
