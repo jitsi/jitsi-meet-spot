@@ -44,7 +44,7 @@ export class SpotTvBackendService extends SpotBackendService {
 
         if (this.remotePairingInfo) {
             // Refresh five minutes before the expiration, but not earlier than in 1 second
-            nextRefresh = Math.max(1000, this.remotePairingInfo.expires - new Date().getTime() - FIVE_MINUTES);
+            nextRefresh = Math.max(1000, this.remotePairingInfo.expires - Date.now() - FIVE_MINUTES);
         }
 
         return nextRefresh;
