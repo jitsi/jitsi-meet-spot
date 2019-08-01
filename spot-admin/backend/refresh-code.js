@@ -1,8 +1,12 @@
-const { send400Error, send500Error, sendJSON } = require('./utils');
+const { send400Error, send401Error, send500Error, sendJSON } = require('./utils');
 
 const refreshCodeFailureRate = process.env.REFRESH_CODE_FAILURE_RATE;
 
 console.info('refresh-code failure rate: ' + refreshCodeFailureRate);
+
+const refreshCodeRejectRate = process.env.REFRESH_CODE_REJECT_RATE;
+
+console.info('refresh-code reject rate: ' + refreshCodeRejectRate);
 
 function refreshController(spots, req, res) {
     const { refreshToken } = req.body;
@@ -29,6 +33,12 @@ function refreshController(spots, req, res) {
     // Note that there are no checks for roomName duplication
     if (!jwtToken) {
         send401Error(res, 'Invalid refresh token');
+
+        return;
+    }
+
+    if (refreshCodeRejectRate && Math.random() < refreshCodeRejectRate) {
+        send401Error(res, "Randomly denied /regenerate");
 
         return;
     }
