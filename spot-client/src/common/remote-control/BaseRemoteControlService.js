@@ -41,6 +41,7 @@ export class BaseRemoteControlService extends Emitter {
      * @typedef {Object} RoomProfile - Public information about the Spot-TV
      * and the physical room it is hosted in.
      *
+     * @property {string} [id] - The room ID.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
      */
