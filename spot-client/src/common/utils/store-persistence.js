@@ -38,6 +38,7 @@ const keysToStore = [
     'setup.preferredSpeaker',
     'setup.showMeetingToolbar',
     'spotRemote.permanentPairingCode',
+    'spot-tv/backend.longLivedPairingCodeInfo',
     'spot-tv/backend.permanentPairingCode',
     'spotRemote.completedOnboarding',
     'wiredScreenshare.deviceLabel',
@@ -100,6 +101,7 @@ function parsePersistedState(state) {
 
         // TODO: either unify with Spot remote or move to Spot TV/app-state
         'spot-tv/backend': {
+            longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo,
             permanentPairingCode: state['spot-tv/backend'].permanentPairingCode
         },
         spotRemote: {
