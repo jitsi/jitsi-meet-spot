@@ -179,7 +179,7 @@ export class BaseRemoteControlService extends Emitter {
             || reason === CONNECTION_EVENTS.SERVER_DISCONNECTED) {
             this.disconnect()
                 .then(() => this.emit(
-                    SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, { reason }));
+                    SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
 
             return;
         }
