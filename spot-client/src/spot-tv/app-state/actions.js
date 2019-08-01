@@ -22,6 +22,8 @@ import {
     SPOT_TV_PAIR_TO_BACKEND_PENDING,
     SPOT_TV_PAIR_TO_BACKEND_FAIL,
     SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
+    getLongLivedPairingCodeInfo,
+    setLongLivedPairingCodeInfo,
     setPermanentPairingCode,
     SpotTvBackendService
 } from '../backend';
@@ -217,6 +219,37 @@ function createConnection(state, permanentPairingCode) {
             jwt: backend ? backend.getJwt() : undefined
         };
     });
+}
+
+/**
+ * Requests a new long lived pairing code be created.
+ *
+ * @returns {Function}
+ */
+export function generateLongLivedPairingCode() {
+    return dispatch => remoteControlServer.generateLongLivedPairingCode()
+        .then(longLivedPairingCodeInfo =>
+            dispatch(setLongLivedPairingCodeInfo(longLivedPairingCodeInfo)));
+}
+
+/**
+ * Checks if the currently known long lived pairing code, if any, has expired,
+ * and gets a new code if expired. The new code will be dispatched as an action.
+ *
+ * @returns {Function}
+ */
+export function generateLongLivedPairingCodeIfExpired() {
+    return (dispatch, getState) => {
+        const info = getLongLivedPairingCodeInfo(getState());
+
+        const oneHour = 1000 * 60 * 60;
+
+        if (!info || info.expires - Date.now() < oneHour) {
+            return dispatch(generateLongLivedPairingCode());
+        }
+
+        return Promise.resolve();
+    };
 }
 
 /**

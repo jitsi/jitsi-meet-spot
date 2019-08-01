@@ -74,6 +74,21 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Returns a pairing code which can be used to set up "permanent" pairing
+     * of a Spot-Remote to a Spot-TV.
+     *
+     * @returns {Promise<Object>} Resolves with information about the pairing
+     * code.
+     */
+    generateLongLivedPairingCode() {
+        if (!this._options || !this._options.backend) {
+            return Promise.reject('no backend configured');
+        }
+
+        return this._options.backend.generateLongLivedPairingCode();
+    }
+
+    /**
      * Implements a way to get the current join code to connect to this instance
      * of {@code RemoteControlServer}.
      *

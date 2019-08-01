@@ -6,7 +6,10 @@ import { addNotification } from 'common/app-state';
 import { CodeInput, LoadingIcon } from 'common/ui';
 import { logger } from 'common/logger';
 
-import { createSpotTVRemoteControlConnection } from '../../../app-state';
+import {
+    createSpotTVRemoteControlConnection,
+    generateLongLivedPairingCode
+} from '../../../app-state';
 
 /**
  * Displays the setup step for Spot-TV to enter a code to create a connection
@@ -108,7 +111,8 @@ function mapDispatchToProps(dispatch) {
             return dispatch(createSpotTVRemoteControlConnection({
                 pairingCode,
                 retry: false
-            }));
+            }))
+            .then(() => dispatch(generateLongLivedPairingCode()));
         },
 
         onSyncError() {

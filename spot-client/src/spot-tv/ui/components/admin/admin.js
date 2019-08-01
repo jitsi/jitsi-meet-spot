@@ -3,12 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { Modal } from 'common/ui';
 
 import { SelectMedia } from '../setup';
 
 import CalendarStatus from './calendar-status';
 import InMeetingConfig from './in-meeting-config';
+import PermanentPairingCode from './PermanentPairingCode';
 import PreferredDevices from './preferred-devices';
 import ResetApp from './reset-app';
 import SetupWizard from './setup-wizard';
@@ -20,6 +22,7 @@ import SetupWizard from './setup-wizard';
  */
 class AdminModal extends React.Component {
     static propTypes = {
+        isBackendEnabled: PropTypes.bool,
         onClose: PropTypes.func
     };
 
@@ -73,6 +76,9 @@ class AdminModal extends React.Component {
         default:
             return [
                 <CalendarStatus key = 'key-calendarStatus' />,
+                this.props.isBackendEnabled
+                    ? <PermanentPairingCode key = 'permanent-pairing-code' />
+                    : null,
                 <PreferredDevices
                     key = 'key=preferredDevices'
                     onClick = { this._onChangeDevices } />,
@@ -107,6 +113,20 @@ class AdminModal extends React.Component {
 }
 
 /**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code AdminModal}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        isBackendEnabled: isBackendEnabled(state)
+    };
+}
+
+/**
  * Creates actions which can update Redux state.
  *
  * @param {Function} dispatch - The Redux dispatch function to update state.
@@ -126,4 +146,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(AdminModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminModal);

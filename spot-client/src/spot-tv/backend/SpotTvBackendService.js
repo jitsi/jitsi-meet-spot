@@ -25,12 +25,22 @@ export class SpotTvBackendService extends SpotBackendService {
             return Promise.reject('Spot TV backend is not registered - no JWT');
         }
 
-        return getRemotePairingCode(`${this.pairingServiceUrl}/code`, this.getJwt())
+        return this._fetchPairingCode()
             .then(remotePairingInfo => {
                 this.remotePairingInfo = remotePairingInfo;
 
                 return this.getShortLivedPairingCode();
             });
+    }
+
+    /**
+     * Gets long lived pairing code information to be used by Spot-Remotes that
+     * connect long-term to a Spot-TV.
+     *
+     * @returns {Promise<Object>}
+     */
+    generateLongLivedPairingCode() {
+        return this._fetchPairingCode('LONG_LIVED');
     }
 
     /**
@@ -58,6 +68,20 @@ export class SpotTvBackendService extends SpotBackendService {
      */
     getShortLivedPairingCode() {
         return this.remotePairingInfo.code;
+    }
+
+    /**
+     * Helper to encapsulate requesting the backend api for a pairing code.
+     *
+     * @param {string} type - Should be either "SHORT_LIVED" or "LONG_LIVED".
+     * @private
+     * @returns {Promise<Object>}
+     */
+    _fetchPairingCode(type = 'SHORT_LIVED') {
+        return getRemotePairingCode(
+            `${this.pairingServiceUrl}/code?pairingType=${type}`,
+            this.getJwt()
+        );
     }
 }
 
