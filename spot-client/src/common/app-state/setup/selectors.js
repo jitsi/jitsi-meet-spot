@@ -31,18 +31,6 @@ export function getJwt(state) {
 }
 
 /**
- * A selector which returns the UI configuration for the Jitsi-Meet meeting.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function getMeetingOptions(state) {
-    return {
-        showMeetingToolbar: state.setup.showMeetingToolbar
-    };
-}
-
-/**
  * A selector which returns the label for the camera device that should be
  * attempted to be used when starting a call.
  *

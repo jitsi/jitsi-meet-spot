@@ -5,8 +5,7 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
-    SET_ROOM_ID,
-    SET_SHOW_MEETING_TOOLBAR
+    SET_ROOM_ID
 } from './action-types';
 
 /**
@@ -105,19 +104,5 @@ export function setRoomId(id) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
-    };
-}
-
-/**
- * Updates the setting for whether or not the Jitsi-Meeting should show a
- * toolbar. The toolbar may be useful to show for debugging the meeting.
- *
- * @param {boolean} visible - Whether or not the toolbar should be displayed.
- * @returns {Object}
- */
-export function setMeetingToolbarVisible(visible) {
-    return {
-        type: SET_SHOW_MEETING_TOOLBAR,
-        visible
     };
 }

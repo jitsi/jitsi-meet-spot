@@ -53,7 +53,6 @@ export class MeetingFrame extends React.Component {
         preferredSpeaker: PropTypes.string,
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
-        showMeetingToolbar: PropTypes.bool,
         startWithScreenshare: PropTypes.bool,
         startWithVideoMuted: PropTypes.bool,
         updateSpotTvState: PropTypes.func
@@ -150,7 +149,7 @@ export class MeetingFrame extends React.Component {
                 AUTO_PIN_LATEST_SCREEN_SHARE: true,
                 DEFAULT_LOCAL_DISPLAY_NAME: DEFAULT_DISPLAY_NAME,
                 ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
-                TOOLBAR_BUTTONS: this.props.showMeetingToolbar ? undefined : []
+                TOOLBAR_BUTTONS: []
             },
             jwt: this.props.jwt,
             onload: this._onMeetingLoaded,

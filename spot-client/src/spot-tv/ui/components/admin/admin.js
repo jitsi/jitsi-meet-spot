@@ -8,7 +8,6 @@ import { Modal } from 'common/ui';
 
 import { SelectMedia } from '../setup';
 
-import InMeetingConfig from './in-meeting-config';
 import PermanentPairingCode from './PermanentPairingCode';
 import PreferredDevices from './preferred-devices';
 import ResetApp from './reset-app';
@@ -80,7 +79,6 @@ class AdminModal extends React.Component {
                 <PreferredDevices
                     key = 'key=preferredDevices'
                     onClick = { this._onChangeDevices } />,
-                <InMeetingConfig key = 'key-inMeetingConfig' />,
                 this.props.isBackendEnabled
                     ? null
                     : <SetupWizard key = 'key-setupWizard' />,
