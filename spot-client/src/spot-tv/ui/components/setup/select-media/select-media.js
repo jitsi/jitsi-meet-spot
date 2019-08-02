@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    addNotification,
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
@@ -12,6 +13,7 @@ import {
     setWiredScreenshareInputIdleValue,
     setWiredScreenshareInputLabel
 } from 'common/app-state';
+import { logger } from 'common/logger';
 import { Button } from 'common/ui';
 import { avUtils } from 'common/media';
 
@@ -57,6 +59,7 @@ class SelectMedia extends React.Component {
 
         this.state = {
             ...this._getDefaultDeviceListState(),
+            saving: false,
             selectedCamera: props.preferredCamera,
             selectedMic: props.preferredMic,
             selectedScreenshareDongle: props.preferredScreenshareDongle,
@@ -178,12 +181,14 @@ class SelectMedia extends React.Component {
                 </div>
                 <div className = 'setup-buttons'>
                     <Button
+                        disabled = { this.state.saving }
                         onClick = { this._onSubmit }
                         qaId = 'device-selection-submit'>
                         Next
                     </Button>
                     <Button
                         appearance = 'subtle'
+                        disabled = { this.state.saving }
                         onClick = { this._onSkip }>
                         Skip
                     </Button>
@@ -380,35 +385,48 @@ class SelectMedia extends React.Component {
             selectedSpeaker
         } = this.state;
 
-        this.props.dispatch(setPreferredDevices(
-            selectedCamera,
-            selectedMic,
-            selectedSpeaker
-        ));
+        const showSavingStatePromise = new Promise(resolve =>
+            this.setState({ saving: true }, resolve));
 
-        if (selectedScreenshareDongle) {
-            const changeListener
-                = wiredScreenshareService.getVideoChangeListener(selectedScreenshareDongle);
+        showSavingStatePromise
+            .then(() => {
+                if (selectedScreenshareDongle) {
+                    const changeListener
+                        = wiredScreenshareService.getVideoChangeListener(selectedScreenshareDongle);
 
-            changeListener.start()
-                .then(() => {
-                    const value = changeListener.getCurrentValue();
+                    return changeListener.start()
+                        .then(() => {
+                            const value = changeListener.getCurrentValue();
 
-                    changeListener.destroy();
+                            changeListener.destroy();
 
-                    this.props.dispatch(setWiredScreenshareInputLabel(selectedScreenshareDongle));
-                    this.props.dispatch(setWiredScreenshareInputIdleValue(value));
-                });
-        } else {
-            this.props.dispatch(setWiredScreenshareInputLabel());
-            this.props.dispatch(setWiredScreenshareInputIdleValue());
-        }
+                            this.props.dispatch(setWiredScreenshareInputLabel(selectedScreenshareDongle));
+                            this.props.dispatch(setWiredScreenshareInputIdleValue(value));
+                        });
+                }
 
-        this.props.dispatch(setSpotTVState({
-            wiredScreensharingEnabled: Boolean(selectedScreenshareDongle)
-        }));
+                this.props.dispatch(setWiredScreenshareInputLabel());
+                this.props.dispatch(setWiredScreenshareInputIdleValue());
+            })
+            .then(() => {
+                this.props.dispatch(setPreferredDevices(
+                    selectedCamera,
+                    selectedMic,
+                    selectedSpeaker
+                ));
 
-        this.props.onSuccess();
+                this.props.dispatch(setSpotTVState({
+                    wiredScreensharingEnabled: Boolean(selectedScreenshareDongle)
+                }));
+            })
+            .then(() => this.props.onSuccess())
+            .catch(error => {
+                logger.error('Error while saving preferred devices', { error });
+
+                this.props.dispatch(addNotification('error', 'Could not save preferences'));
+
+                this.setState({ saving: false });
+            });
     }
 }
 

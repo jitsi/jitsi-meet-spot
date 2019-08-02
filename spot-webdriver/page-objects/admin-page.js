@@ -63,6 +63,10 @@ class AdminPage extends PageObject {
             = this.waitForElementDisplayed(DEVICE_SELECTION_SUBMIT_BUTTON);
 
         submitButton.click();
+
+        // Wait for the screenshare selector to be hidden to signal submission
+        // complete.
+        this.waitForElementHidden(SCREENSHARE_SELECTOR);
     }
 }
 
