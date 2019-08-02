@@ -243,7 +243,6 @@ export class SpotBackendService extends Emitter {
      * @param {SpotRegistration} registration - The backend registration structure to be stored.
      * @private
      * @returns {void}
-     * @throws Throws {@link errorConstants.NO_JWT} if the new registration does not contain an access token.
      */
     _setRegistration(pairingCode, registration) {
         this.registration = {
@@ -252,7 +251,7 @@ export class SpotBackendService extends Emitter {
         };
 
         if (!this.getJwt()) {
-            throw new Error(errorConstants.NO_JWT);
+            throw new Error('no-jwt');
         }
 
         // Only long lived registrations are persisted
