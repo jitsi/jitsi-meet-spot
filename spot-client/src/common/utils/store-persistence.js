@@ -36,7 +36,6 @@ const keysToStore = [
     'setup.preferredCamera',
     'setup.preferredMic',
     'setup.preferredSpeaker',
-    'setup.showMeetingToolbar',
     'spotRemote.permanentPairingCode',
     'spot-tv/backend.longLivedPairingCodeInfo',
     'spot-tv/backend.permanentPairingCode',
@@ -91,8 +90,7 @@ function parsePersistedState(state) {
             preferredSpeaker: state.setup.preferredSpeaker,
             screenshareDevice: state.setup.screenshareDevice,
             screenshareDeviceIdleValue:
-                state.setup.screenshareDeviceIdleValue,
-            showMeetingToolbar: state.setup.showMeetingToolbar
+                state.setup.screenshareDeviceIdleValue
         },
         wiredScreenshare: {
             deviceLabel: state.wiredScreenshare.deviceLabel,

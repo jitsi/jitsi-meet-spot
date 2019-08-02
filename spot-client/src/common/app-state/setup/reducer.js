@@ -4,8 +4,7 @@ import {
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
     SET_JWT,
-    SET_PREFERRED_DEVICES,
-    SET_SHOW_MEETING_TOOLBAR
+    SET_PREFERRED_DEVICES
 } from './action-types';
 
 const DEFAULT_STATE = {
@@ -15,8 +14,7 @@ const DEFAULT_STATE = {
     isSpot: false,
     preferredCamera: undefined,
     preferredMic: undefined,
-    preferredSpeaker: undefined,
-    showMeetingToolbar: false
+    preferredSpeaker: undefined
 };
 
 /**
@@ -65,12 +63,6 @@ const setup = (state = DEFAULT_STATE, action) => {
             preferredCamera: action.cameraLabel,
             preferredMic: action.micLabel,
             preferredSpeaker: action.speakerLabel
-        };
-
-    case SET_SHOW_MEETING_TOOLBAR:
-        return {
-            ...state,
-            showMeetingToolbar: action.visible
         };
 
     default:

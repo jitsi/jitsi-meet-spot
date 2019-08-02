@@ -12,7 +12,6 @@ import {
     getJitsiAppName,
     getJwt,
     getJwtDomains,
-    getMeetingOptions,
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
@@ -50,7 +49,6 @@ export class Meeting extends React.Component {
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
-        showMeetingToolbar: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool
     };
 
@@ -122,7 +120,6 @@ export class Meeting extends React.Component {
             remoteControlServer,
             screenshareDevice,
             showKickedOverlay,
-            showMeetingToolbar,
             showPasswordPrompt
         } = this.props;
 
@@ -144,7 +141,6 @@ export class Meeting extends React.Component {
                     preferredSpeaker = { preferredSpeaker }
                     remoteControlServer = { remoteControlServer }
                     screenshareDevice = { screenshareDevice }
-                    showMeetingToolbar = { showMeetingToolbar }
                     startWithScreenshare = { screenshare }
                     startWithVideoMuted = { startWithVideoMuted } />
                 {
@@ -307,8 +303,7 @@ function mapStateToProps(state) {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),
-        screenshareDevice: getWiredScreenshareInputLabel(state),
-        showMeetingToolbar: getMeetingOptions(state).showMeetingToolbar
+        screenshareDevice: getWiredScreenshareInputLabel(state)
     };
 }
 

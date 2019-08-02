@@ -58,16 +58,4 @@ describe('setup state', () => {
         expect(selectors.getPreferredMic(state)).toEqual(micLabel);
         expect(selectors.getPreferredSpeaker(state)).toEqual(speakerLabel);
     });
-
-    it('saves the preference for in-meeting toolbar visibility', () => {
-        dispatch(actions.setMeetingToolbarVisible(true));
-        expect(selectors.getMeetingOptions(getState())).toEqual({
-            showMeetingToolbar: true
-        });
-
-        dispatch(actions.setMeetingToolbarVisible(false));
-        expect(selectors.getMeetingOptions(getState())).toEqual({
-            showMeetingToolbar: false
-        });
-    });
 });
