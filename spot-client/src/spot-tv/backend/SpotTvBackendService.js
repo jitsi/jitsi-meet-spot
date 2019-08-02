@@ -22,10 +22,6 @@ export class SpotTvBackendService extends SpotBackendService {
      * @returns {Promise<string>}
      */
     fetchShortLivedPairingCode() {
-        if (!this.getJwt()) {
-            return Promise.reject('Spot TV backend is not registered - no JWT');
-        }
-
         return this._fetchPairingCode()
             .then(remotePairingInfo => {
                 this.remotePairingInfo = remotePairingInfo;
@@ -81,6 +77,10 @@ export class SpotTvBackendService extends SpotBackendService {
      * @returns {Promise<Object>}
      */
     _fetchPairingCode(type = 'SHORT_LIVED') {
+        if (!this.getJwt()) {
+            return Promise.reject('Spot TV backend is not registered - no JWT');
+        }
+
         return getRemotePairingCode(
             `${this.pairingServiceUrl}/code?pairingType=${type}`,
             this.getJwt()
