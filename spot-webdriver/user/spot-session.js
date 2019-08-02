@@ -1,3 +1,5 @@
+const constants = require('./../constants');
+
 /**
  * Represents a session/connection between SpotTV and SpotRemote instances.
  */
@@ -43,6 +45,40 @@ class SpotSession {
     }
 
     /**
+     * Disconnects the Spot-TV from the underlying MUC. This method is used to
+     * avoid page-load stalls caused by the Spot-TV reusing the same JID
+     * between tests and waiting for JID conflicts to resolve.
+     *
+     * @returns {void}
+     */
+    forceDisconnectSpotTV() {
+        this.spotTV.driver.executeAsync(done => {
+            try {
+                window.spot.remoteControlServer.disconnect()
+                    .then(done, done);
+            } catch (e) {
+                done();
+            }
+        });
+    }
+
+    /**
+     * Disconnects the Spot-Remote from the underlying MUC.
+     *
+     * @returns {void}
+     */
+    forceDisconnectSpotRemote() {
+        this.spotRemote.driver.executeAsync(done => {
+            try {
+                window.spot.remoteControlClient.disconnect()
+                    .then(done, done);
+            } catch (e) {
+                done();
+            }
+        });
+    }
+
+    /**
      * The {@code SpotRemote} makes the TV join a meeting with the given name. If a name is not
      * provided the session selects a random one.
      *
@@ -67,6 +103,16 @@ class SpotSession {
     }
 
     /**
+     * Disconnects the Spot-Remote and Spot-TV from the underlying MUC.
+     *
+     * @returns {void}
+     */
+    resetConnection() {
+        this.forceDisconnectSpotTV();
+        this.forceDisconnectSpotRemote();
+    }
+
+    /**
      * Orchestrates the interactions for obtaining the join code from the {@code SpotTV}
      * and submitting it on the join code page of the {@code SpotRemote}.
      *
@@ -77,8 +123,11 @@ class SpotSession {
      */
     _submitJoinCode(options = {}) {
         const calendarPage = this.spotTV.getCalendarPage();
+        const queryParams = new Map();
 
-        calendarPage.visit();
+        queryParams.set('testPermanentPairingCode', constants.BACKEND_PAIRING_CODE || '');
+
+        calendarPage.visit(queryParams, constants.MAX_PAGE_LOAD_WAIT);
 
         const joinCode = calendarPage.getJoinCode();
 

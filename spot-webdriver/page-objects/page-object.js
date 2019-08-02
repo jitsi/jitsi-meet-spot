@@ -82,12 +82,14 @@ class PageObject {
     /**
      * Waits for this page object to be visible on the browser.
      *
+     * @param {number} [timeout] - An override of the number of milliseconds to
+     * wait for the element to exist.
      * @returns {void}
      */
-    waitForVisible() {
+    waitForVisible(timeout) {
         const rootElement = this.select(this.rootSelector);
 
-        rootElement.waitForExist();
+        rootElement.waitForExist(timeout);
     }
 }
 

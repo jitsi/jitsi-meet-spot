@@ -43,6 +43,14 @@ exports.config = {
 
     framework: 'jasmine',
 
+    jasmineNodeOpts: {
+
+        // When running tests against the backend integration, Spot-TVs might
+        // encounter JID conflicts while loading the app, so give ample time to
+        // recover from them.
+        defaultTimeoutInterval: 90000
+    },
+
     logLevel: LOG_LEVEL,
 
     maxInstances: process.env.MAX_INSTANCES || 1,
