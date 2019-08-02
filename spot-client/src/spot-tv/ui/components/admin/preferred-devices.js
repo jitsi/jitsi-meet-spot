@@ -18,7 +18,7 @@ export default function PreferredDevices(props) {
             <Button
                 onClick = { props.onClick }
                 qaId = 'device-selection-button'>
-                Setup
+                Change
             </Button>
         </AdminEntry>
     );
