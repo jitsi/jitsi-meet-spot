@@ -114,7 +114,8 @@ export class SpotBackendService extends Emitter {
     isUnrecoverableRequestError(error) {
         const message = typeof error === 'object' ? error.message : error;
 
-        return message === errorConstants.REQUEST_FAILED;
+        return message === errorConstants.REQUEST_FAILED
+            || message === errorConstants.NOT_AUTHORIZED;
     }
 
     /**
