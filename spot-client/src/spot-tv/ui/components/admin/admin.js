@@ -8,7 +8,6 @@ import { Modal } from 'common/ui';
 
 import { SelectMedia } from '../setup';
 
-import CalendarStatus from './calendar-status';
 import InMeetingConfig from './in-meeting-config';
 import PermanentPairingCode from './PermanentPairingCode';
 import PreferredDevices from './preferred-devices';
@@ -75,7 +74,6 @@ class AdminModal extends React.Component {
         case 'all':
         default:
             return [
-                <CalendarStatus key = 'key-calendarStatus' />,
                 this.props.isBackendEnabled
                     ? <PermanentPairingCode key = 'permanent-pairing-code' />
                     : null,
