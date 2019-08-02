@@ -45,6 +45,7 @@ export default function Button(props) {
             classes = { classes }
             data-qa-id = { props.qaId }
             disableRipple = { true }
+            disabled = { props.disabled }
             onClick = { props.onClick }
             type = { props.type } >
             { props.children }
@@ -55,6 +56,7 @@ export default function Button(props) {
 Button.defaultProps = {
     appearance: 'primary',
     className: '',
+    disabled: false,
     type: 'button'
 };
 
@@ -63,6 +65,7 @@ Button.propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,
     'data-qa-id': PropTypes.string,
+    disabled: PropTypes.bool,
     onClick: PropTypes.func,
     qaId: PropTypes.string,
     type: PropTypes.string
