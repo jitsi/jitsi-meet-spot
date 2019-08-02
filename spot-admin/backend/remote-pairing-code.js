@@ -1,4 +1,7 @@
-const { send401Error, send404Error, sendJSON } = require('./utils');
+const { send400Error, send401Error, send404Error, sendJSON } = require('./utils');
+
+const LONG_LIVED_PAIRING_TYPE = 'LONG_LIVED';
+const SHORT_LIVED_PAIRING_TYPE = 'SHORT_LIVED';
 
 function remotePairingCodeController(spots, req, res){
     const authorization = req.headers['authorization'];
@@ -11,6 +14,14 @@ function remotePairingCodeController(spots, req, res){
     }
 
     const jwt = authorization.substring(7);
+
+    const pairingType = (req.query['pairingType'] ? req.query['pairingType'] : SHORT_LIVED_PAIRING_TYPE).toUpperCase();
+
+    if (pairingType !== SHORT_LIVED_PAIRING_TYPE && pairingType !== LONG_LIVED_PAIRING_TYPE) {
+        send400Error(res, 'Invalid pairing type');
+
+        return;
+    }
 
     let spotRoom = null;
 
@@ -28,13 +39,16 @@ function remotePairingCodeController(spots, req, res){
         return;
     }
 
-    const remotePairingCode = spotRoom.options.remotePairingCode;
+    const remotePairingCode
+        = pairingType === SHORT_LIVED_PAIRING_TYPE
+            ? spotRoom.options.remotePairingCode
+            : spotRoom.options.pairingCode;
 
     sendJSON(res, {
         code: remotePairingCode.code,
         emitted: Date.now(),
         expiresIn: remotePairingCode.expiresIn,
-        pairingType: "SHORT_LIVED"
+        pairingType
     });
 }
 

@@ -22,7 +22,7 @@ function registerDeviceController(spots, req, res) {
     let shortLived = false;
     let spotRoom = null;
     for (const spot of spots.values()) {
-        if (spot.options.pairingCode === pairingCode) {
+        if (spot.options.pairingCode.code === pairingCode) {
             spotRoom = spot;
         }
     }

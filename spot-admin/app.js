@@ -30,7 +30,10 @@ const spot1Id = roomIdFromJwt ? roomIdFromJwt : 'h7g394ytiohdf_rooom1';
 console.info('Spot room id: ' + spot1Id);
 
 const spot1 = new SpotRoom(spot1Id, {
-    pairingCode: '123456',
+    pairingCode: {
+        code: '123456',
+        expiresIn: 60 * 60 * 1000
+    },
     jwtToken: {
         accessToken: jwt,
         expiresIn: 6 * 60 * 1000,
