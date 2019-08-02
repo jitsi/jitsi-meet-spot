@@ -222,6 +222,21 @@ function createConnection(state, permanentPairingCode) {
 }
 
 /**
+ * The action kills the Spot TV remote control service connection if one exists.
+ *
+ * @returns {Function}
+ */
+export function disconnectSpotTvRemoteControl() {
+    return () => {
+        if (!remoteControlServer.hasConnection()) {
+            return Promise.resolve();
+        }
+
+        return remoteControlServer.disconnect();
+    };
+}
+
+/**
  * Requests a new long lived pairing code be created.
  *
  * @returns {Function}

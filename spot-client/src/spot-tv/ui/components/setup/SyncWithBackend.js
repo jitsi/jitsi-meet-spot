@@ -8,6 +8,7 @@ import { logger } from 'common/logger';
 
 import {
     createSpotTVRemoteControlConnection,
+    disconnectSpotTvRemoteControl,
     generateLongLivedPairingCode
 } from '../../../app-state';
 
@@ -112,7 +113,19 @@ function mapDispatchToProps(dispatch) {
                 pairingCode,
                 retry: false
             }))
-            .then(() => dispatch(generateLongLivedPairingCode()));
+            .then(
+                () => dispatch(generateLongLivedPairingCode())
+                    .catch(error => {
+
+                        // This intentionally disconnects only on the generateLongLivedPairingCode failure, because
+                        // it's not part of the connect promise and will not cause disconnect, causing the connection
+                        // to be left behind.
+                        logger.error('Failed to generate long lived pairing code', { error });
+                        dispatch(disconnectSpotTvRemoteControl());
+
+                        throw error;
+                    })
+            );
         },
 
         onSyncError() {
