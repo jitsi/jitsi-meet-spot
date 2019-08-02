@@ -93,7 +93,11 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                         requestId: requestOptions.headers.get('request-id')
                     });
 
-                    if (response.status < 500 || response.status >= 600) {
+                    if (response.status === 401) {
+                        reject(errorConstants.NOT_AUTHORIZED);
+
+                        return;
+                    } else if (response.status < 500 || response.status >= 600) {
                         // Break the retry chain early
                         reject(errorConstants.REQUEST_FAILED);
 
