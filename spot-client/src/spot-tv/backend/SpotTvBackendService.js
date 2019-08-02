@@ -1,4 +1,5 @@
 import { getRemotePairingCode, SpotBackendService } from 'common/backend';
+import { logger } from 'common/logger';
 
 /**
  * An extension of {@link SpotBackendService} by functionality used only in Spot TV.
@@ -40,6 +41,8 @@ export class SpotTvBackendService extends SpotBackendService {
      * @returns {Promise<Object>}
      */
     generateLongLivedPairingCode() {
+        logger.log('Fetching long lived pairing code...');
+
         return this._fetchPairingCode('LONG_LIVED');
     }
 

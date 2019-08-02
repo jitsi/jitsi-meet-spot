@@ -243,8 +243,11 @@ export function generateLongLivedPairingCodeIfExpired() {
         const info = getLongLivedPairingCodeInfo(getState());
 
         const oneHour = 1000 * 60 * 60;
+        const expiresIn = info && (info.expires - Date.now());
 
-        if (!info || info.expires - Date.now() < oneHour) {
+        if (!info || expiresIn < oneHour) {
+            logger.log('Long lived pairing code does not exist or expired already', { expiresIn });
+
             return dispatch(generateLongLivedPairingCode());
         }
 
