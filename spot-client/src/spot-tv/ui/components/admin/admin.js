@@ -81,7 +81,9 @@ class AdminModal extends React.Component {
                     key = 'key=preferredDevices'
                     onClick = { this._onChangeDevices } />,
                 <InMeetingConfig key = 'key-inMeetingConfig' />,
-                <SetupWizard key = 'key-setupWizard' />,
+                this.props.isBackendEnabled
+                    ? null
+                    : <SetupWizard key = 'key-setupWizard' />,
                 <ResetApp key = 'key-resetState' />
             ];
         }
