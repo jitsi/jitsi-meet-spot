@@ -14,6 +14,10 @@ describe('In share mode', () => {
         stopSharePage.waitForVisible();
     });
 
+    afterEach(() => {
+        spotSession.resetConnection();
+    });
+
     it('Spot-Remote automatically starts sharing on connection', () => {
         const meetingPage = spotTV.getMeetingPage();
 

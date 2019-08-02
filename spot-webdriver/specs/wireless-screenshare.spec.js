@@ -74,6 +74,10 @@ describe('A Spot-Remote can screenshare wirelessly', () => {
         spotSession.connectRemoteToTV();
     });
 
+    afterEach(() => {
+        spotSession.resetConnection();
+    });
+
     describe('with no wired screenshare setup', () => {
         it('from the waiting screen', () => {
             startScreenshareFromHome(false);

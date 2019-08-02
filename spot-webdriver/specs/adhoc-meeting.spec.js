@@ -10,6 +10,10 @@ describe('Can start a meeting', () => {
         session.connectRemoteToTV();
     });
 
+    afterEach(() => {
+        session.resetConnection();
+    });
+
     it('with any name', () => {
         const testMeetingName = session.joinMeeting();
 

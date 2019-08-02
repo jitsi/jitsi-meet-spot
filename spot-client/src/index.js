@@ -18,7 +18,8 @@ import reducers, {
     getExternalApiUrl,
     routeChanged,
     setBootstrapStarted,
-    setDefaultValues
+    setDefaultValues,
+    setSetupCompleted
 } from 'common/app-state';
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
 import {
@@ -31,9 +32,10 @@ import {
     loadScript,
     setPersistedState
 } from 'common/utils';
+import { ExternalApiSubscriber } from 'spot-remote/external-api';
+import { setPermanentPairingCode } from 'spot-tv/backend';
 
 import App from './app';
-import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
 const queryParams = new URLSearchParams(window.location.search);
 
@@ -56,6 +58,7 @@ const store = createStore(
     },
     MiddlewareRegistry.applyMiddleware(thunk)
 );
+
 const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
 
@@ -76,6 +79,12 @@ store.subscribe(() => {
     remoteControlServiceSubscriber.onUpdate(newReduxState);
     externalApiSubscriber.onUpdate(newReduxState);
 });
+
+// Allow selenium tests to skip the setup flow.
+if (queryParams.get('testPermanentPairingCode')) {
+    store.dispatch(setPermanentPairingCode(queryParams.get('testPermanentPairingCode')));
+    store.dispatch(setSetupCompleted());
+}
 
 store.dispatch(setBootstrapStarted());
 

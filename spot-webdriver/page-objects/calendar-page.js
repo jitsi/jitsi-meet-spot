@@ -53,11 +53,24 @@ class CalendarPage extends PageObject {
     /**
      * Proceeds directly to the calendar view of Spot-TV.
      *
+     * @param {Map} [queryParams] - Query parameters to add to the URL.
+     * @param {number} [visibilityWait] - Override for how long page load should
+     * wait for before reporting the page as having failed to load.
      * @returns {void}
      */
-    visit() {
-        this.driver.url(constants.SPOT_URL);
-        this.waitForVisible();
+    visit(queryParams, visibilityWait) {
+        let calendarPageUrl = constants.SPOT_URL;
+
+        if (queryParams) {
+            calendarPageUrl += '?';
+
+            for (const [ key, value ] of queryParams) {
+                calendarPageUrl += `${key}=${value}&`;
+            }
+        }
+
+        this.driver.url(calendarPageUrl);
+        this.waitForVisible(visibilityWait);
     }
 }
 

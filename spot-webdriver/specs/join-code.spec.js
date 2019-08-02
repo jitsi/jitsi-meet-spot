@@ -6,7 +6,10 @@ describe('A Spot-Remote can connect to a Spot-TV', () => {
     const spotRemote = userFactory.getSpotRemote();
 
     it('using a code', () => {
-        new SpotSession(spotTV, spotRemote).connectRemoteToTV();
+        const session = new SpotSession(spotTV, spotRemote);
+
+        session.connectRemoteToTV();
+        session.forceDisconnectSpotRemote();
     });
 
     describe('but when the code is invalid', () => {

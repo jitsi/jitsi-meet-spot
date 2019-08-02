@@ -14,6 +14,10 @@ describe('While in a meeting ', () => {
             .waitForVisible();
     });
 
+    afterEach(() => {
+        spotSession.resetConnection();
+    });
+
     it('can toggle audio mute', () => {
         const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
         const spotTVMeetingPage = spotTV.getMeetingPage();
