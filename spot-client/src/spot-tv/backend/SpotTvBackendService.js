@@ -81,10 +81,12 @@ export class SpotTvBackendService extends SpotBackendService {
             return Promise.reject('Spot TV backend is not registered - no JWT');
         }
 
-        return getRemotePairingCode(
+        const requestCreator = () => getRemotePairingCode(
             `${this.pairingServiceUrl}/code?pairingType=${type}`,
             this.getJwt()
         );
+
+        return this._wrapJwtBackendRequest(requestCreator);
     }
 }
 

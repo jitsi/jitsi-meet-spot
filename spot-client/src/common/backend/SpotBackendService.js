@@ -83,7 +83,12 @@ export class SpotBackendService extends Emitter {
      * @returns {Promise<RoomInfo>}
      */
     getRoomInfo() {
-        return fetchRoomInfo(this.roomKeeperServiceUrl, this.getJwt())
+        const requestCreator = () => fetchRoomInfo(
+            this.roomKeeperServiceUrl,
+            this.getJwt()
+        );
+
+        return this._wrapJwtBackendRequest(requestCreator)
             .then(({ id, mucUrl, name }) => {
                 return {
                     id,
@@ -268,5 +273,34 @@ export class SpotBackendService extends Emitter {
      */
     stop() {
         clearTimeout(this._refreshTimeout);
+    }
+
+    /**
+     * Executes a request and will retry one time with a renewed auth token.
+     * Used for automatically renewing authorization or retrying on random
+     * backend unauthorized errors.
+     *
+     * @param {Function<Promise>} requestCreator - A function to invoke which
+     * makes a request to the backend using a jwt.
+     * @protected
+     * @returns {Promise} Resolves when the backend request has succeeded
+     * initially or after a retry on failed authorization.
+     */
+    _wrapJwtBackendRequest(requestCreator) {
+        let promiseChain = Promise.resolve();
+
+        if (getExpiresIn(this.registration) < 0) {
+            promiseChain = this._refreshRegistration(this.registration);
+        }
+
+        return promiseChain.then(
+            () => requestCreator().catch(error => {
+                if (error !== errorConstants.NOT_AUTHORIZED) {
+                    throw error;
+                }
+
+                return this._refreshRegistration(this.registration).then(() => requestCreator());
+            })
+        );
     }
 }
