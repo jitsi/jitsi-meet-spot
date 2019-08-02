@@ -363,7 +363,7 @@ describe('utils', () => {
             });
 
             it('does not retry when the server returns an error', () => {
-                fetch.mockResponseOnce('', { status: 401 });
+                fetch.mockResponseOnce('', { status: 400 });
 
                 return utils.fetchRoomInfo(MOCK_SERVICE_ENDPOINT, MOCK_JWT)
                     .then(
