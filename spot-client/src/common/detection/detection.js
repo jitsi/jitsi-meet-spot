@@ -39,6 +39,15 @@ export function isElectron() {
 }
 
 /**
+ * Returns true it the app is running the Spot-Controller native app.
+ *
+ * @returns {boolean}
+ */
+export function isSpotControllerApp() {
+    return Boolean(window.ReactNativeWebView);
+}
+
+/**
  * Returns whether or not the current environment can support Spot-TV features.
  *
  * @returns {boolean}
