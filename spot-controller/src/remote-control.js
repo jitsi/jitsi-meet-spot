@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
+import url from 'url';
 
 import api from './api';
 import { BeaconOverlay } from './beacons';
@@ -107,6 +108,8 @@ export default class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     _renderWebViewContent() {
+        const urlParts = url.parse(this.props.url);
+
         return (
             <View style = { styles.webView }>
                 <WebView
@@ -129,6 +132,14 @@ export default class RemoteControl extends React.PureComponent {
                     onError = { this._onWebViewLoadError }
 
                     onMessage = { api._onMessage }
+
+                    /**
+                     * Prevent any non-spot URLs from displaying in the webview,
+                     * as there would be no navigation available to go back to
+                     * spot. URLs which do not match the whitelist are handled
+                     * by the device.
+                     */
+                    originWhitelist = { [ `*${urlParts.host}*` ] }
 
                     ref = { this._setRef }
 
