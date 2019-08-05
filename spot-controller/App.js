@@ -8,7 +8,7 @@ import { createStore } from 'redux';
 import LoadingScreen from './src/LoadingScreen';
 import { appMounted, appWillUnmount } from './src/app';
 import RemoteControl from './src/remote-control';
-import SettingsMenu from './src/settings-menu';
+import { SettingsMenu } from './src/settings-menu';
 import Setup from './src/setup';
 
 // Modules that doesn't necesarily export anything, but must be imported to function
