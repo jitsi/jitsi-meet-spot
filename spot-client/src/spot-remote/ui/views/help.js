@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { isSpotControllerApp } from 'common/detection';
 import { ROUTES } from 'common/routing';
 import { Button, View } from 'common/ui';
 import { windowHandler } from 'common/utils';
@@ -67,8 +68,38 @@ class Help extends React.Component {
                             Continue
                         </Button>
                     </div>
+                    {
+                        isSpotControllerApp()
+                            ? null
+                            : this._renderLegalLinks()
+                    }
                 </div>
             </View>
+        );
+    }
+
+    /**
+     * Creates links to legal documents related to using Spot.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderLegalLinks() {
+        return (
+            <div className = 'legal-links'>
+                <a
+                    href = 'https://www.8x8.com/terms-and-conditions/privacy-policy'
+                    rel = 'noopener noreferrer'
+                    target = '_blank'>
+                    Privacy Policy
+                </a>
+                <a
+                    href = 'https://www.8x8.com/terms-and-conditions/8x8-end-user-terms-of-use'
+                    rel = 'noopener noreferrer'
+                    target = '_blank'>
+                    Terms and Conditions
+                </a>
+            </div>
         );
     }
 

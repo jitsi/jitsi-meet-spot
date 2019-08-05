@@ -55,4 +55,20 @@
       margin-top: 32px;
     }
   }
+
+  .legal-links {
+    align-items: flex-end;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding: 20px;
+
+    a {
+      color: var(--container-content-font-color);
+
+      &:not(:last-child) {
+        margin-right: 15px;
+      }
+    }
+  }
 }
