@@ -34,6 +34,7 @@
         "react-native-svg": "9.5.1",
         "react-native-svg-transformer": "0.13.0",
         "react-redux": "7.1.0",
-        "redux": "4.0.1"
+        "redux": "4.0.1",
+        "url": "0.11.0"
     }
 }
