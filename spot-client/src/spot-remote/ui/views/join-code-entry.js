@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 
 import {
     addNotification,
-    getRemoteControlServerConfig,
     getShareDomain,
     sendApiMessage
 } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
+import { isSpotControllerApp } from 'common/detection';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
@@ -31,21 +32,20 @@ import { withUltrasound } from './../loaders';
  */
 export class JoinCodeEntry extends React.Component {
     static defaultProps = {
-        entryLength: 6
+        codeLength: 8
     };
 
     static propTypes = {
         apiReceivedJoinCode: PropTypes.string,
         clearApiReceivedJoinCode: PropTypes.func,
+        codeLength: PropTypes.number,
         completedOnboarding: PropTypes.bool,
-        entryLength: PropTypes.number,
         history: PropTypes.object,
         location: PropTypes.object,
         onAddNotification: PropTypes.func,
         onConnectToSpotTV: PropTypes.func,
         onDisconnect: PropTypes.func,
         permanentPairingCode: PropTypes.string,
-        remoteControlConfiguration: PropTypes.object,
         shareDomain: PropTypes.string,
         ultrasoundService: PropTypes.object,
         updateReadyStatus: PropTypes.func
@@ -83,7 +83,7 @@ export class JoinCodeEntry extends React.Component {
         this.props.onDisconnect();
 
         const { pathname } = this.props.location;
-        const codeMatch = pathname.match(new RegExp('^/(\\w{6})$'));
+        const codeMatch = pathname.match(new RegExp(`^/(\\w{${this.props.codeLength}})$`));
         let code = codeMatch && codeMatch[1];
 
         if (!code && this.props.location.hash && this.props.location.hash.includes('#/?')) {
@@ -175,11 +175,13 @@ export class JoinCodeEntry extends React.Component {
                             Your key is visible on the Spot TV
                         </div>
                     </div>
-                    <div className = 'code-entry-wrapper'>
+                    <div className = { `code-entry-wrapper boxes-${this.props.codeLength}` }>
                         <form
                             onSubmit = { this._onFormSubmit }>
                             <div data-qa-id = { 'join-code-input' }>
-                                <CodeInput onChange = { this._onCodeChange } />
+                                <CodeInput
+                                    length = { this.props.codeLength }
+                                    onChange = { this._onCodeChange } />
                                 {
 
                                     /**
@@ -249,7 +251,7 @@ export class JoinCodeEntry extends React.Component {
      */
     _onCodeChange(enteredCode) {
         this.setState({ enteredCode }, () => {
-            if (enteredCode.length === 6) {
+            if (enteredCode.length === this.props.codeLength) {
                 this._onSubmit();
             }
         });
@@ -337,9 +339,9 @@ export class JoinCodeEntry extends React.Component {
 function mapStateToProps(state) {
     return {
         apiReceivedJoinCode: getApiReceivedJoinCode(state),
+        codeLength: isSpotControllerApp(state) && isBackendEnabled(state) ? 8 : 6,
         completedOnboarding: isOnboardingComplete(state),
         permanentPairingCode: getPermanentPairingCode(state),
-        remoteControlConfiguration: getRemoteControlServerConfig(state),
         shareDomain: getShareDomain(state)
     };
 }

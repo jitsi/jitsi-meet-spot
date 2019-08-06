@@ -20,8 +20,25 @@
     .code-entry-wrapper {
         @include centered-content;
 
+        &.boxes-8 .code-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+
+            @media #{$mq-tablet} {
+                display: flex;
+            }
+        }
+        &.boxes-6 .code-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+
+
+            @media #{$mq-tablet} {
+                display: flex;
+            }
+        }
+
         .code-entry {
-            display: flex;
             justify-content: center;
             margin: auto;
 

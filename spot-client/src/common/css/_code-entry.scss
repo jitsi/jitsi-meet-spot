@@ -38,7 +38,7 @@
         }
     }
 
-    input {
+    textarea {
         background: transparent;
         border: 0;
         bottom: 0;
@@ -47,8 +47,10 @@
         font-size: $font-size-x-large;
         left: 0;
         letter-spacing: 2em;
+        overflow: hidden;
         pointer-events: none;
         position: absolute;
+        resize: none;
         top: 0;
         width: 100%;
         z-index: $z-index-base;

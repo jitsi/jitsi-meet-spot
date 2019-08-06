@@ -21,7 +21,7 @@ describe('CodeInput', () => {
      * @returns {void}
      */
     function setValue(value) {
-        const input = codeInput.find('input');
+        const input = codeInput.find('.hidden-user-input');
 
         input.at(0).instance().value = value;
         input.simulate('change');
