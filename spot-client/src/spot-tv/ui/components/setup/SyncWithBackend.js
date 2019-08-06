@@ -59,7 +59,9 @@ export class SyncWithBackend extends React.Component {
                     </div>
                 </div>
                 <div className = { `code-input ${this.state.loading ? 'with-loading' : ''}` }>
-                    <CodeInput onChange = { this._onChange } />
+                    <CodeInput
+                        length = { 8 }
+                        onChange = { this._onChange } />
                     { this.state.loading && <LoadingIcon /> }
                 </div>
             </div>
@@ -74,7 +76,7 @@ export class SyncWithBackend extends React.Component {
      * @returns {void}
      */
     _onChange(value) {
-        if (value.length !== 6) {
+        if (value.length !== 8) {
             return;
         }
 

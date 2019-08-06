@@ -6,6 +6,7 @@ import { LoadingIcon } from 'common/ui';
 import { SyncWithBackend } from './SyncWithBackend';
 
 describe('SyncWithBackend', () => {
+    const MOCK_JOIN_CODE = '12345678';
     let onAttemptSyncSpy, onSuccessSpy, onSyncErrorSpy, syncWithBackend;
 
     beforeEach(() => {
@@ -29,7 +30,7 @@ describe('SyncWithBackend', () => {
      * @returns {void}
      */
     function setValue(joinCode) {
-        const input = syncWithBackend.find('input');
+        const input = syncWithBackend.find('textarea');
 
         input.at(0).instance().value = joinCode;
         input.simulate('change');
@@ -40,7 +41,7 @@ describe('SyncWithBackend', () => {
 
         expect(syncWithBackend.find(LoadingIcon).length).toBe(0);
 
-        setValue('123456');
+        setValue(MOCK_JOIN_CODE);
 
         expect(syncWithBackend.find(LoadingIcon).length).toBe(1);
     });
@@ -48,7 +49,7 @@ describe('SyncWithBackend', () => {
     it('calls the success callback', () => {
         onAttemptSyncSpy.mockImplementation(() => Promise.resolve());
 
-        setValue('123456');
+        setValue(MOCK_JOIN_CODE);
 
         const runSyncPromise = new Promise(resolve => process.nextTick(resolve));
 
@@ -59,7 +60,7 @@ describe('SyncWithBackend', () => {
     it('calls the error callback', () => {
         onAttemptSyncSpy.mockImplementation(() => Promise.reject());
 
-        setValue('123456');
+        setValue(MOCK_JOIN_CODE);
 
         const runSyncPromise = new Promise(resolve => process.nextTick(resolve));
 

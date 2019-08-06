@@ -31,7 +31,7 @@ console.info('Spot room id: ' + spot1Id);
 
 const spot1 = new SpotRoom(spot1Id, {
     pairingCode: {
-        code: '123456',
+        code: '12345678',
         expiresIn: 60 * 60 * 1000
     },
     jwtToken: {

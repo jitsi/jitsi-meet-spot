@@ -183,11 +183,12 @@ export default class CodeInput extends React.Component {
      */
     _renderHiddenInput() {
         return (
-            <input
+            <textarea
                 autoCapitalize = 'off'
                 autoComplete = 'off'
                 autoCorrect = 'off'
                 autoFocus = { this._isAutoFocusSupported }
+                className = 'hidden-user-input'
                 maxLength = { this.props.length }
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }

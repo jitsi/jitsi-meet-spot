@@ -6,6 +6,7 @@ import {
     getPrivacyPolicyURL,
     getTermsAndConditionsURL
 } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { isSpotControllerApp } from 'common/detection';
 import { history } from 'common/history';
 import { ROUTES } from 'common/routing';
@@ -21,6 +22,7 @@ import { setHasCompletedOnboarding } from '../../app-state';
  */
 class Help extends React.Component {
     static propTypes = {
+        codeLength: PropTypes.number,
         onContinue: PropTypes.func,
         privacyPolicyURL: PropTypes.string,
         termsAndConditionsURL: PropTypes.string
@@ -53,7 +55,8 @@ class Help extends React.Component {
                             This app is a remote controller for a conference room.
                             <div>
                                 Open { Help._getSpotTvUrl() } in a desktop Google Chrome browser in the conference room
-                                to set it up and obtain a share key. Next enter the 6-character share key in this app.
+                                to set it up and obtain a share key. Next enter the { this.props.codeLength }-character
+                                share key in this app.
                             </div>
                         </div>
                         <Button
@@ -108,6 +111,7 @@ class Help extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        codeLength: isSpotControllerApp(state) && isBackendEnabled(state) ? 8 : 6,
         privacyPolicyURL: getPrivacyPolicyURL(state),
         termsAndConditionsURL: getTermsAndConditionsURL(state)
     };
