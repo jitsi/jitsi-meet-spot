@@ -142,6 +142,16 @@ export function getMeetingDomainsWhitelist(state) {
 }
 
 /**
+ * A selector which returns the URL for the privacy policy of the app.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getPrivacyPolicyURL(state) {
+    return state.config.EXTERNAL_LINKS.PRIVACY;
+}
+
+/**
 * A selector which returns XMPP configuration information for creating XMPP
 * connections and joining MUCs.
 *
@@ -172,6 +182,17 @@ export function getShareDomain(state) {
  */
 export function getSpotServicesConfig(state) {
     return state.config.SPOT_SERVICES;
+}
+
+
+/**
+ * A selector which returns the URL for the terms and conditions of the app.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getTermsAndConditionsURL(state) {
+    return state.config.EXTERNAL_LINKS.TERMS;
 }
 
 /**

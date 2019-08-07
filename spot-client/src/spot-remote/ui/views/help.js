@@ -2,7 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {
+    getPrivacyPolicyURL,
+    getTermsAndConditionsURL
+} from 'common/app-state';
 import { isSpotControllerApp } from 'common/detection';
+import { history } from 'common/history';
 import { ROUTES } from 'common/routing';
 import { Button, View } from 'common/ui';
 import { windowHandler } from 'common/utils';
@@ -16,8 +21,9 @@ import { setHasCompletedOnboarding } from '../../app-state';
  */
 class Help extends React.Component {
     static propTypes = {
-        dispatch: PropTypes.func,
-        history: PropTypes.object
+        onContinue: PropTypes.func,
+        privacyPolicyURL: PropTypes.string,
+        termsAndConditionsURL: PropTypes.string
     };
 
     /**
@@ -28,17 +34,6 @@ class Help extends React.Component {
      */
     static _getSpotTvUrl() {
         return `${windowHandler.getBaseUrl()}${ROUTES.HOME}`;
-    }
-
-    /**
-     * Initializes a new {@code Help} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onOkButtonClicked = this._onOkButtonClicked.bind(this);
     }
 
     /**
@@ -63,7 +58,7 @@ class Help extends React.Component {
                         </div>
                         <Button
                             className = 'ok-button'
-                            onClick = { this._onOkButtonClicked }
+                            onClick = { this.props.onContinue }
                             qaId = 'help-continue'>
                             Continue
                         </Button>
@@ -88,13 +83,13 @@ class Help extends React.Component {
         return (
             <div className = 'legal-links'>
                 <a
-                    href = 'https://www.8x8.com/terms-and-conditions/privacy-policy'
+                    href = { this.props.privacyPolicyURL }
                     rel = 'noopener noreferrer'
                     target = '_blank'>
                     Privacy Policy
                 </a>
                 <a
-                    href = 'https://www.8x8.com/terms-and-conditions/8x8-end-user-terms-of-use'
+                    href = { this.props.termsAndConditionsURL }
                     rel = 'noopener noreferrer'
                     target = '_blank'>
                     Terms and Conditions
@@ -102,17 +97,36 @@ class Help extends React.Component {
             </div>
         );
     }
-
-    /**
-     * Takes the user to the join code entry page.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onOkButtonClicked() {
-        this.props.dispatch(setHasCompletedOnboarding());
-        this.props.history.push(ROUTES.CODE);
-    }
 }
 
-export default connect()(Help);
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code Help}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        privacyPolicyURL: getPrivacyPolicyURL(state),
+        termsAndConditionsURL: getTermsAndConditionsURL(state)
+    };
+}
+
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        onContinue() {
+            dispatch(setHasCompletedOnboarding());
+            history.push(ROUTES.CODE);
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Help);
