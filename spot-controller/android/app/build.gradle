@@ -96,7 +96,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode vcode
-        versionName System.env.SPOT_VERSION ?: "1.0"
+        versionName System.env.SPOT_VERSION ?: "2019.08.07"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
