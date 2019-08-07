@@ -92,7 +92,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "org.jitsi.spot"
+        applicationId system.env.SPOT_APP_ID ?: "org.jitsi.spot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode vcode
