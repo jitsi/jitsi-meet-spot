@@ -96,6 +96,26 @@ export default {
         || 'https://beta.meet.jit.si/external_api.js',
 
     /**
+     * Configuration object for websites which can be opened from the app.
+     */
+    EXTERNAL_LINKS: {
+
+        /**
+         * The URL which has the privacy policy for the app.
+         *
+         * @type {string}
+         */
+        PRIVACY: 'https://www.8x8.com/terms-and-conditions/privacy-policy',
+
+        /**
+         * The URL which has the terms and conditions for the app.
+         *
+         * @type {string}
+         */
+        TERMS: 'https://www.8x8.com/terms-and-conditions/8x8-end-user-terms-of-use'
+    },
+
+    /**
      * Configuration object related to printing, collecting, and reporting of
      * event logs and errors.
      */
