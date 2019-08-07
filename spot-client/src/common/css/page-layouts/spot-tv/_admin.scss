@@ -14,4 +14,8 @@
     .admin-entry-content {
         margin-left: 100px;
     }
+
+    .pairing-code {
+        @include join-code;
+    }
 }

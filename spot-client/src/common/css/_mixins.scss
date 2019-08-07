@@ -22,6 +22,11 @@
     font-size: inherit;
 }
 
+@mixin join-code {
+    font-family: var(--code-font);
+    text-transform: uppercase;
+}
+
 @mixin modal-open {
     filter: brightness(50%) blur(2px);
 }
