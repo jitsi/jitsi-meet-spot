@@ -46,7 +46,7 @@ class JoinInfo extends React.Component {
                 className = 'join-info'
                 onClick = { this._onOpenSpotRemote }>
                 <span
-                    className = 'info-code'
+                    className = 'info-code-container'
                     data-qa-id = 'info-code'>
                     { this._getCopyToDisplay() }
                 </span>

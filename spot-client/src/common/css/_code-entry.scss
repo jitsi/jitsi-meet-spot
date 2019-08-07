@@ -5,7 +5,8 @@
     position: relative;
 
     .box {
-        @include  centered-content;
+        @include centered-content;
+        @include join-code;
 
         /**
          * Using initial-box sizing is important for mobile Safari to properly
@@ -23,7 +24,6 @@
         margin: 15px;
         padding: 0;
         text-align: center;
-        text-transform: uppercase;
         width: calc(#{$font-size-x-large} * 0.5);
 
         &.focused {

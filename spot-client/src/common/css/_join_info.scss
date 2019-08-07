@@ -1,0 +1,7 @@
+.join-info {
+    .info-code-container {
+        .info-code {
+            @include join-code;
+        }
+    }
+}
