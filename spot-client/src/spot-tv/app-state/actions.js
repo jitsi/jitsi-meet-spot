@@ -9,9 +9,9 @@ import {
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
-    setReconnectState,
-    setRoomId
+    setReconnectState
 } from 'common/app-state';
+import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
@@ -71,7 +71,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setPermanentPairingCode(permanentPairingCode));
 
             if (isBackendEnabled(getState())) {
-                dispatch(setRoomId(roomProfile.id));
+                dispatch(setSpotInstanceInfo({
+                    isPairingPermanent: true,
+                    isSpotTv: true,
+                    roomId: roomProfile.id
+                }));
                 dispatch(setDisplayName(roomProfile.name));
             }
         }

@@ -5,9 +5,9 @@ import {
     getSpotServicesConfig,
     setCalendarEvents,
     setReconnectState,
-    setRoomId,
     setSpotTVState
 } from 'common/app-state';
+import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled, SpotBackendService } from 'common/backend';
 import { history } from 'common/history';
@@ -105,7 +105,11 @@ export function connectToSpotTV(joinCode, shareMode) {
 
             const roomId = roomProfile && roomProfile.id;
 
-            roomId && dispatch(setRoomId(roomId));
+            roomId && dispatch(setSpotInstanceInfo({
+                roomId,
+                isSpotTv: false,
+                isPairingPermanent: backend && backend.isPairingPermanent()
+            }));
         }
 
         /**
