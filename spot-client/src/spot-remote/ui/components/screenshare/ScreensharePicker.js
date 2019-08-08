@@ -296,7 +296,8 @@ export class ScreensharePicker extends React.Component {
                         To share, use Chrome desktop and go to
                     </div>
                     <div className = 'share-url'>
-                        { `${shareDomain || windowHandler.getHost()}/${remoteJoinCode}` }
+                        { `${shareDomain || windowHandler.getHost()}/` }
+                        <span className = 'join-code'>{ remoteJoinCode }</span>
                     </div>
                 </div>
             </>
