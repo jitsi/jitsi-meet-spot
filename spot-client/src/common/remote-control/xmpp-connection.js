@@ -53,6 +53,7 @@ export default class XmppConnection {
      * being made by a Spot client.
      * @param {string} options.jwt - The JWT token to be used with the XMPP
      * connection.
+     * @param {string} [options.resourceName] - The resource part of the MUC JID to be used(optional).
      * @param {boolean} [options.retryOnUnauthorized] - Whether or not to retry
      * connection without a roomLock if an unauthorized error occurs.
      * @param {string} [options.roomLock] - The lock code to use when joining or
@@ -67,6 +68,7 @@ export default class XmppConnection {
         const {
             joinAsSpot,
             jwt,
+            resourceName,
             retryOnUnauthorized,
             roomLock,
             roomName,
@@ -195,7 +197,7 @@ export default class XmppConnection {
         let mucJoinedPromise;
 
         this.initPromise = connectionPromise
-            .then(() => this._createMuc(roomName, joinAsSpot && 'spot-tv'))
+            .then(() => this._createMuc(roomName, resourceName))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
                     room.addEventListener('xmpp.muc_joined', resolve);

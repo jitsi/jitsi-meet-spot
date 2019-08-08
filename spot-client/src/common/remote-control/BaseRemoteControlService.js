@@ -1,6 +1,6 @@
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
-import { getJitterDelay } from 'common/utils';
+import { generate8Characters, getJitterDelay } from 'common/utils';
 
 import {
     CONNECTION_EVENTS,
@@ -114,6 +114,7 @@ export class BaseRemoteControlService extends Emitter {
                 return this.xmppConnection.joinMuc({
                     joinAsSpot,
                     jwt: backend ? backend.getJwt() : null,
+                    resourceName: this._getMucResourceName(),
                     retryOnUnauthorized,
                     roomName: roomInfo.roomName,
                     roomLock: roomInfo.roomLock,
@@ -154,6 +155,33 @@ export class BaseRemoteControlService extends Emitter {
      */
     getJoinCode() {
         throw new Error();
+    }
+
+    /**
+     * Figures out the resource part of the MUC JID to be used.
+     *
+     * @returns {string|undefined}
+     * @private
+     */
+    _getMucResourceName() {
+        const {
+            backend,
+            joinAsSpot
+        } = this._options;
+
+        if (joinAsSpot) {
+
+            // There's no random part added to Spot TV resource part which will result in conflict error returned if
+            // there's a Spot TV already in the MUC. This is expected.
+            return 'spot-tv';
+        } else if (backend) {
+            const prefix = backend.isPairingPermanent() ? 'remote-perm' : 'remote-temp';
+
+            // Append a random part to allow multiple remotes per type join one XMPP MUC.
+            return `${prefix}-${generate8Characters()}`;
+        }
+
+        return undefined;
     }
 
     /**
