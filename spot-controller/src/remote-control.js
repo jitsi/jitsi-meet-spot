@@ -37,12 +37,15 @@ export default class RemoteControl extends React.PureComponent {
         super(props);
 
         this.state = {
+            resolvedUrl: null,
             webViewError: null
         };
 
         this._onRetryWebViewLoad = this._onRetryWebViewLoad.bind(this);
         this._onWebViewLoadError = this._onWebViewLoadError.bind(this);
         this._setRef = this._setRef.bind(this);
+
+        this._resolveUrl();
     }
 
     // Override the meta tag with values that are known not allow this app to
@@ -63,6 +66,10 @@ export default class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     render() {
+        if (!this.state.resolvedUrl) {
+            return this._renderLoading();
+        }
+
         return (
             <View style = {{ ...StyleSheet.absoluteFillObject }}>
                 <KeepAwake />
@@ -108,7 +115,8 @@ export default class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     _renderWebViewContent() {
-        const urlParts = url.parse(this.props.url);
+        const { resolvedUrl } = this.state;
+        const urlParts = url.parse(resolvedUrl);
 
         return (
             <View style = { styles.webView }>
@@ -139,7 +147,7 @@ export default class RemoteControl extends React.PureComponent {
                      * spot. URLs which do not match the whitelist are handled
                      * by the device.
                      */
-                    originWhitelist = { [ `*${urlParts.host}*` ] }
+                    originWhitelist = { [ `*${urlParts.hostname}*` ] }
 
                     ref = { this._setRef }
 
@@ -154,7 +162,7 @@ export default class RemoteControl extends React.PureComponent {
                     showsHorizontalScrollIndicator = { false }
                     showsVerticalScrollIndicator = { false }
 
-                    source = {{ uri: this.props.url }}
+                    source = {{ uri: resolvedUrl }}
                     startInLoadingState = { true } />
                 <BeaconOverlay />
             </View>
@@ -195,6 +203,29 @@ export default class RemoteControl extends React.PureComponent {
                     title = 'Retry' />
             </View>
         );
+    }
+
+    /**
+     * Resolve the initial URL, in case it was redirected.
+     *
+     * @returns {Promise}
+     */
+    async _resolveUrl() {
+        let resolvedUrl = this.props.url;
+
+        try {
+            const response = await fetch(this.props.url, { method: 'HEAD' });
+
+            if (response.ok) {
+                // fetch() follows redirects, and the response will contain the
+                // updated URL.
+                resolvedUrl = response.url;
+            }
+        } catch (e) {
+            // Hope everything goes ok with the supplied URL.
+        }
+
+        this.setState({ resolvedUrl });
     }
 
     /**
