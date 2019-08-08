@@ -1,1 +1,3 @@
 export const SET_DEVICE_ID = 'SET_DEVICE_ID';
+
+export const SET_SPOT_INSTANCE_INFO = 'SET_SPOT_INSTANCE_INFO';
