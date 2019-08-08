@@ -59,6 +59,11 @@
 
         flex-grow: 1;
         margin: auto;
+
+        /**
+         * Workaround for Safari cutting off text.
+         */
+        position: relative;
         white-space: nowrap;
         width: calc(#{$font-size-large} * 2.5);
     }
