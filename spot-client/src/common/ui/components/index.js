@@ -9,6 +9,7 @@ export * from './loading-icon';
 export * from './modal';
 export * from './notifications';
 export * from './reconnect-overlay';
+export * from './remote-join-code';
 export * from './reset';
 export * from './room-name';
 export * from './scheduled-meetings';

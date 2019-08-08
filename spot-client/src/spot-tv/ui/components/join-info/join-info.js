@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { getRemoteJoinCode, getShareDomain } from 'common/app-state';
 import { windowHandler } from 'common/utils';
+import { RemoteJoinCode } from 'common/ui';
 
 /**
  * Displays information about how a Spot-Remote can pair with a Spot-TV.
@@ -45,9 +46,7 @@ class JoinInfo extends React.Component {
             <div
                 className = 'join-info'
                 onClick = { this._onOpenSpotRemote }>
-                <span
-                    className = 'info-code-container'
-                    data-qa-id = 'info-code'>
+                <span className = 'info-code-container'>
                     { this._getCopyToDisplay() }
                 </span>
             </div>
@@ -61,16 +60,9 @@ class JoinInfo extends React.Component {
      * @returns {string}
      */
     _getCopyToDisplay() {
-        const { remoteJoinCode, shareDomain, showDomain } = this.props;
+        const { shareDomain, showDomain } = this.props;
 
-        const codeToShow = remoteJoinCode.toUpperCase();
-        const codeElement = (
-            <span
-                className = 'info-code'
-                data-qa-id = 'info-code'>
-                { codeToShow }
-            </span>
-        );
+        const codeElement = <RemoteJoinCode data-qa-id = 'info-code' />;
 
         if (!showDomain) {
             return codeElement;
