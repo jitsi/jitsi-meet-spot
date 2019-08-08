@@ -83,8 +83,8 @@ export class JoinCodeEntry extends React.Component {
         this.props.onDisconnect();
 
         const { pathname } = this.props.location;
-        const codeMatch = pathname.match(new RegExp(`^/(\\w{${this.props.codeLength}})$`));
-        let code = codeMatch && codeMatch[1];
+        const codeMatch = pathname.match(new RegExp('^/(\\w{8})|(\\w{6})$'));
+        let code = codeMatch && (codeMatch[1] || codeMatch[2]);
 
         if (!code && this.props.location.hash && this.props.location.hash.includes('#/?')) {
             const parts = this.props.location.hash.substr(3);
