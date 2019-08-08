@@ -116,6 +116,18 @@ export const MESSAGES = {
 
 export const SERVICE_UPDATES = {
     /**
+     * A {@code RemoteControlClient} has established a new connection with
+     * a {@code RemoteControlServer}.
+     */
+    CLIENT_JOINED: 'remote-control-client-joined',
+
+    /**
+     * A {@code RemoteControlClient} is no longer connected to a
+     * {@code RemoteControlServer}.
+     */
+    CLIENT_LEFT: 'remote-control-client-left',
+
+    /**
      * A command from a {@code RemoteControlClient} has been received.
      */
     CLIENT_MESSAGE_RECEIVED: 'message-received',

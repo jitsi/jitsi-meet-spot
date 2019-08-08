@@ -181,7 +181,7 @@ export class BaseRemoteControlService extends Emitter {
             return `${prefix}-${generate8Characters()}`;
         }
 
-        return undefined;
+        return `remote-${generate8Characters()}`;
     }
 
     /**
@@ -355,6 +355,25 @@ export class BaseRemoteControlService extends Emitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
+    }
+
+    /**
+     * Helper for determining the type of the Spot client based on its jid.
+     *
+     * @param {string} jid - The jid which contains identifying information
+     * about the client.
+     * @private
+     * @returns {string}
+     */
+    _getTypeFromResource(jid) {
+        if (jid.includes('/spot-tv')) {
+            return 'spot-tv';
+        } else if (jid.includes('remote-perm')) {
+            return 'permanent-remote';
+        }
+
+        // Both "remote-temp" and "remote-" are considered temporary.
+        return 'temporary-remote';
     }
 
     /**
