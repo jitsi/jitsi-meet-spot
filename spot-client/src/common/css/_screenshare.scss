@@ -38,6 +38,10 @@
         font-size: $font-size-medium-plus;
         font-weight: bold;
         margin-top: 1em;
+
+        .join-code {
+            @include join-code;
+        }
     }
 
     .subtitle {
