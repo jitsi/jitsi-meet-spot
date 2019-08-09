@@ -1,3 +1,9 @@
+export const CLIENT_TYPES = {
+    SPOT_TV: 'spot-tv',
+    SPOT_REMOTE_PERMANENT: 'remote-perm',
+    SPOT_REMOTE_TEMPORARY: 'remote-temp'
+};
+
 /**
  * An enumeration of supported commands {@code RemoteControlServer} can process.
  * All values are from events triggered by the Jitsi-Meet iFrame API.
@@ -115,6 +121,18 @@ export const MESSAGES = {
 };
 
 export const SERVICE_UPDATES = {
+    /**
+     * A {@code RemoteControlClient} has established a new connection with
+     * a {@code RemoteControlServer}.
+     */
+    CLIENT_JOINED: 'remote-control-client-joined',
+
+    /**
+     * A {@code RemoteControlClient} is no longer connected to a
+     * {@code RemoteControlServer}.
+     */
+    CLIENT_LEFT: 'remote-control-client-left',
+
     /**
      * A command from a {@code RemoteControlClient} has been received.
      */

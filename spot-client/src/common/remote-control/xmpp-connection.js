@@ -35,6 +35,8 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
+        this._participants = new Set();
+
         /**
          * A reference to all rejection functions for IQ requests in flight.
          */
@@ -250,6 +252,7 @@ export default class XmppConnection {
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
             .then(() => {
+                this._participants.clear();
                 this._pendingIQRequestRejections.forEach(reject => reject());
                 this._pendingIQRequestRejections.clear();
             });
@@ -496,9 +499,16 @@ export default class XmppConnection {
      * @returns {boolean}
      */
     _onPresence(presence) {
-        this.options.onPresenceReceived(
-            XmppConnection.convertXMLPresenceToObject(presence)
-        );
+        const parsedPresence = this.convertXMLPresenceToObject(presence);
+
+        // Update internal knowledge of participants
+        if (parsedPresence.type === 'join') {
+            this._participants.add(parsedPresence.from);
+        } else if (parsedPresence.type === 'unavailable') {
+            this._participants.delete(parsedPresence.from);
+        }
+
+        this.options.onPresenceReceived(parsedPresence);
 
         return true;
     }
@@ -640,10 +650,17 @@ export default class XmppConnection {
      * @param {XML} presence - The presence to convert.
      * @returns {Presence}
      */
-    static convertXMLPresenceToObject(presence) {
+    convertXMLPresenceToObject(presence) {
+        const from = presence.getAttribute('from');
+        let type = presence.getAttribute('type');
+
+        if (!this._participants.has(from) && !type) {
+            type = 'join';
+        }
+
         return {
-            from: presence.getAttribute('from'),
-            type: presence.getAttribute('type'),
+            from,
+            localUpdate: from === this.getRoomFullJid(),
             state: Array.from(presence.children)
                 .reduce((acc, child) => {
                     let value = child.textContent;
@@ -655,7 +672,8 @@ export default class XmppConnection {
                     acc[child.tagName] = value;
 
                     return acc;
-                }, {})
+                }, {}),
+            type
         };
     }
 }

@@ -1,8 +1,11 @@
 import {
     CREATE_CONNECTION,
+    addPairedRemote,
+    clearAllPairedRemotes,
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
+    removePairedRemote,
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
@@ -74,6 +77,28 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         }
 
         /**
+         * Callback invoked when a new Spot-Remote has connected to with the
+         * {@code remoteControlServer}.
+         *
+         * @param {Object} remote - Identifying about the Spot-Remote.
+         * @returns {void}
+         */
+        function onRemoteConnected({ id, type }) {
+            dispatch(addPairedRemote(id, type));
+        }
+
+        /**
+         * Callback invoked when a Spot-Remote has disconnected to with the
+         * {@code remoteControlServer}.
+         *
+         * @param {Object} remote - Identifying about the Spot-Remote.
+         * @returns {void}
+         */
+        function onRemoteDisconnected({ id }) {
+            dispatch(removePairedRemote(id));
+        }
+
+        /**
          * Callback invoked when {@code remoteControlServer} has been
          * disconnected from an unrecoverable error.
          *
@@ -84,6 +109,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         function onDisconnect(error) {
             logger.error('Spot-TV disconnected from the remote control server.', { error });
             dispatch(setRemoteJoinCode(''));
+            dispatch(clearAllPairedRemotes());
 
             if (pairingCode && remoteControlServer.isUnrecoverableRequestError(error)) {
                 // Clear the permanent pairing code
@@ -166,6 +192,14 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         remoteControlServer.addListener(
             SERVICE_UPDATES.REGISTRATION_UPDATED,
             onRegistrationChange
+        );
+        remoteControlServer.addListener(
+            SERVICE_UPDATES.CLIENT_JOINED,
+            onRemoteConnected
+        );
+        remoteControlServer.addListener(
+            SERVICE_UPDATES.CLIENT_LEFT,
+            onRemoteDisconnected
         );
 
         return doConnect()

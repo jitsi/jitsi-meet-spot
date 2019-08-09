@@ -4,6 +4,7 @@ import config from './config/reducer';
 import deviceId from './device-id/reducer';
 import modal from './modal/reducer';
 import notifications from './notifications/reducer';
+import pairedRemotes from './paired-remotes/reducer';
 import remoteControlService from './remote-control-service/reducer';
 import setup from './setup/reducer';
 import spotTv from './spot-tv/reducer';
@@ -16,6 +17,7 @@ const reducers = {
     deviceId,
     modal,
     notifications,
+    pairedRemotes,
     remoteControlService,
     setup,
     spotTv,
@@ -30,6 +32,7 @@ export * from './calendars/actions';
 export * from './device-id';
 export * from './modal/actions';
 export * from './notifications/actions';
+export * from './paired-remotes/actions';
 export * from './remote-control-service/actions';
 export * from './setup/actions';
 export * from './setup/action-types';
@@ -45,6 +48,7 @@ export * from './remote-control-service/constants';
 export * from './calendars/selectors';
 export * from './config/selectors';
 export * from './notifications/selectors';
+export * from './paired-remotes/selectors';
 export * from './remote-control-service/selectors';
 export * from './modal/selectors';
 export * from './route/actions';

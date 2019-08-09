@@ -274,7 +274,11 @@ export class RemoteControlServer extends BaseRemoteControlService {
      *
      * @inheritdoc
      */
-    _onPresenceReceived({ from, type }) {
+    _onPresenceReceived({ from, localUpdate, type }) {
+        if (localUpdate) {
+            return;
+        }
+
         if (type === 'unavailable') {
             logger.log('presence update of a Spot-Remote leaving', { from });
 
@@ -295,6 +299,25 @@ export class RemoteControlServer extends BaseRemoteControlService {
                 {
                     from,
                     data: { iq: iq.toString() }
+                }
+            );
+
+            this.emit(
+                SERVICE_UPDATES.CLIENT_LEFT,
+                {
+                    id: from
+                }
+            );
+
+            return;
+        }
+
+        if (type === 'join') {
+            this.emit(
+                SERVICE_UPDATES.CLIENT_JOINED,
+                {
+                    id: from,
+                    type: this._getTypeFromResource(from)
                 }
             );
 

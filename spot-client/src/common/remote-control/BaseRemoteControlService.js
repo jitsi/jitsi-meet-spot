@@ -3,6 +3,7 @@ import { logger } from 'common/logger';
 import { generate8Characters, getJitterDelay } from 'common/utils';
 
 import {
+    CLIENT_TYPES,
     CONNECTION_EVENTS,
     SERVICE_UPDATES
 } from './constants';
@@ -173,15 +174,15 @@ export class BaseRemoteControlService extends Emitter {
 
             // There's no random part added to Spot TV resource part which will result in conflict error returned if
             // there's a Spot TV already in the MUC. This is expected.
-            return 'spot-tv';
-        } else if (backend) {
-            const prefix = backend.isPairingPermanent() ? 'remote-perm' : 'remote-temp';
-
-            // Append a random part to allow multiple remotes per type join one XMPP MUC.
-            return `${prefix}-${generate8Characters()}`;
+            return CLIENT_TYPES.SPOT_TV;
         }
 
-        return undefined;
+        const type = backend && backend.isPairingPermanent()
+            ? CLIENT_TYPES.SPOT_REMOTE_PERMANENT
+            : CLIENT_TYPES.SPOT_REMOTE_TEMPORARY;
+
+        // Append a random part to allow multiple remotes per type join one XMPP MUC.
+        return `${type}-${generate8Characters()}`;
     }
 
     /**
@@ -355,6 +356,24 @@ export class BaseRemoteControlService extends Emitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
+    }
+
+    /**
+     * Helper for determining the type of the Spot client based on its jid.
+     *
+     * @param {string} jid - The jid which contains identifying information
+     * about the client.
+     * @private
+     * @returns {string}
+     */
+    _getTypeFromResource(jid) {
+        if (jid.includes(`/${CLIENT_TYPES.SPOT_TV}`)) {
+            return CLIENT_TYPES.SPOT_TV;
+        } else if (jid.includes(`/${CLIENT_TYPES.SPOT_REMOTE_PERMANENT}`)) {
+            return CLIENT_TYPES.SPOT_REMOTE_PERMANENT;
+        }
+
+        return CLIENT_TYPES.SPOT_REMOTE_TEMPORARY;
     }
 
     /**

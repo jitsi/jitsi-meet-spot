@@ -47,9 +47,12 @@ describe('XmppConnection', () => {
                 .parseFromString(presenceString, 'text/xml')
                 .documentElement;
 
-            expect(XmppConnection.convertXMLPresenceToObject(presenceIq))
+            const xmppConnection = new XmppConnection();
+
+            expect(xmppConnection.convertXMLPresenceToObject(presenceIq))
                 .toEqual({
                     from: IQ_FROM,
+                    localUpdate: false,
                     state: {
                         isSpot: true,
                         videoMuted: true
