@@ -373,7 +373,6 @@ export class BaseRemoteControlService extends Emitter {
             return CLIENT_TYPES.SPOT_REMOTE_PERMANENT;
         }
 
-        // Both "remote-temp" and "remote-" are considered temporary.
         return CLIENT_TYPES.SPOT_REMOTE_TEMPORARY;
     }
 
