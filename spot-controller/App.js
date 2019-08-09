@@ -95,11 +95,8 @@ export default class App extends React.Component {
 
         return (
             <Provider store = { this.store }>
-                {
-                    this.state.showSetup
-                        ? this._renderSetup()
-                        : this._renderRemoteControl()
-                }
+                { this._renderRemoteControl() }
+                { this.state.showSetup && this._renderSetup() }
             </Provider>
         );
     }
@@ -117,6 +114,7 @@ export default class App extends React.Component {
             remoteControlUrl
         ).then(() => {
             this.setState({
+                includeResetInUrl: false,
                 showSetup: false,
                 remoteControlUrl
             });
