@@ -9,36 +9,60 @@ import * as selectors from './selectors';
 describe('paired remotes state', () => {
     let dispatch, getState;
 
+    /**
+     * Test helper to check if the redux state contains the expected number
+     * of permanent and temporary Spot-Remotes.
+     *
+     * @param {number} permanentRemotes - The expected number of permanently
+     * paired Spot-Remotes.
+     * @param {number} temporaryRemotes - The expected number of temporarily
+     * paired Spot-Remotes.
+     * @private
+     * @returns {void}
+     */
+    function validateRemoteCounts(permanentRemotes, temporaryRemotes) {
+        const state = getState();
+
+        expect(selectors.getPermanentPairedRemotesCount(state))
+            .toEqual(permanentRemotes);
+        expect(selectors.getPairedRemotesCount(state))
+            .toEqual(permanentRemotes + temporaryRemotes);
+    }
+
     beforeEach(() => {
         ({
             dispatch,
             getState
         } = createStore(combineReducers({ pairedRemotes: pairedRemotesReducer })));
-        const permanentRemoveType = CLIENT_TYPES.SPOT_REMOTE_PERMANENT;
 
-        dispatch(actions.addPairedRemote(1, permanentRemoveType));
-        dispatch(actions.addPairedRemote(2, permanentRemoveType));
-        dispatch(actions.addPairedRemote(3, permanentRemoveType));
+        dispatch(actions.addPairedRemote(1, CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
+        dispatch(actions.addPairedRemote(2, CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
+        dispatch(actions.addPairedRemote(3, CLIENT_TYPES.SPOT_REMOTE_TEMPORARY));
     });
 
     it('saves reference to a new remote', () => {
-        expect(selectors.getPermanentRemotesCount(getState())).toEqual(3);
+        validateRemoteCounts(2, 1);
     });
 
     it('removes references to a saved remote', () => {
+        validateRemoteCounts(2, 1);
+
         dispatch(actions.removePairedRemote(3));
-        expect(selectors.getPermanentRemotesCount(getState())).toEqual(2);
+
+        validateRemoteCounts(2, 0);
 
         dispatch(actions.removePairedRemote(2));
-        expect(selectors.getPermanentRemotesCount(getState())).toEqual(1);
+
+        validateRemoteCounts(1, 0);
 
         dispatch(actions.removePairedRemote(1));
-        expect(selectors.getPermanentRemotesCount(getState())).toEqual(0);
+
+        validateRemoteCounts(0, 0);
     });
 
     it('removes all references to saved remotes', () => {
         dispatch(actions.clearAllPairedRemotes());
 
-        expect(selectors.getPermanentRemotesCount(getState())).toEqual(0);
+        validateRemoteCounts(0, 0);
     });
 });
