@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getRemoteJoinCode } from 'common/app-state';
+import {
+    getPairedRemotesCount,
+    getPermanentPairedRemotesCount,
+    getRemoteJoinCode
+} from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { Button } from 'common/ui';
 
@@ -17,19 +21,19 @@ import { getLongLivedPairingCodeInfo } from '../../../backend';
 export class PairRemote extends React.Component {
     static propTypes = {
         code: PropTypes.string,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        permanentRemotesCount: PropTypes.number
     };
 
     /**
-     * Initializes a new {@code PairRemote} instance.
+     * Completes this setup step if a permanent remote has been paired.
      *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
+     * @inheritdoc
      */
-    constructor(props) {
-        super(props);
-
-        this._onNext = this._onNext.bind(this);
+    componentDidUpdate(prevProps) {
+        if (this.props.permanentRemotesCount > prevProps.permanentRemotesCount) {
+            this.props.onSuccess();
+        }
     }
 
     /**
@@ -54,28 +58,13 @@ export class PairRemote extends React.Component {
                 </div>
                 <div className = 'setup-buttons'>
                     <Button
-                        onClick = { this._onNext }
-                        qaId = 'device-selection-submit'>
-                        Next
-                    </Button>
-                    <Button
                         appearance = 'subtle'
-                        onClick = { this._onNext }>
+                        onClick = { this.props.onSuccess }>
                         Skip
                     </Button>
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Completes the current setup step.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onNext() {
-        this.props.onSuccess();
     }
 }
 
@@ -91,7 +80,10 @@ function mapStateToProps(state) {
     return {
         code: isBackendEnabled(state)
             ? (getLongLivedPairingCodeInfo(state) || {}).code
-            : getRemoteJoinCode(state)
+            : getRemoteJoinCode(state),
+        permanentRemotesCount: isBackendEnabled(state)
+            ? getPermanentPairedRemotesCount(state)
+            : getPairedRemotesCount(state)
     };
 }
 
