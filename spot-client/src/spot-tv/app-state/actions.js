@@ -32,6 +32,42 @@ import {
 } from '../backend';
 
 /**
+ * Action dispatched by the UI in order to pair Spot TV with the backend.
+ *
+ * @param {string} pairingCode - The backend pairing code.
+ * @returns {Function}
+ */
+export function pairWithBackend(pairingCode) {
+    return dispatch => {
+        dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_PENDING });
+
+        return dispatch(createSpotTVRemoteControlConnection({
+            pairingCode,
+            retry: false
+        }))
+            .then(() => dispatch(generateLongLivedPairingCode())
+                .catch(error => {
+
+                    // This intentionally disconnects only on the generateLongLivedPairingCode failure, because
+                    // it's not part of the connect promise and will not cause disconnect, causing the connection
+                    // to be left behind.
+                    logger.error('Failed to generate long lived pairing code', { error });
+                    dispatch(disconnectSpotTvRemoteControl());
+
+                    throw error;
+                })
+            )
+            .then(
+                () => dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_SUCCESS }),
+                error => {
+                    dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_FAIL });
+
+                    throw error;
+                });
+    };
+}
+
+/**
  * Establishes a connection to an existing Spot-MUC using the provided join code.
  *
  * @param {string} [pairingCode] - A permanent pairing code to be used only with the backend integration where Spot TV
@@ -47,8 +83,6 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         if (remoteControlServer.hasConnection()) {
             return Promise.reject('Called to create connection while connection exists');
         }
-
-        dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_PENDING });
 
         /**
          * Callback invoked when a connect has been successfully made with
@@ -206,13 +240,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             onRemoteDisconnected
         );
 
-        return doConnect()
-            .then(() => dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_SUCCESS }))
-            .catch(error => {
-                dispatch({ type: SPOT_TV_PAIR_TO_BACKEND_FAIL });
-
-                return Promise.reject(error);
-            });
+        return doConnect();
     };
 }
 
