@@ -379,10 +379,11 @@ function mapDispatchToProps(dispatch) {
          * Attempts to establish a connection with a Spot-TV.
          *
          * @param {string} joinCode - The code necessary to pair with a Spot-TV.
+         * @param {boolean} shareMode - If is in the special screensharing mode.
          * @returns {Promise} Resolves when the connection is established.
          */
-        onConnectToSpotTV(joinCode) {
-            return dispatch(connectToSpotTV(joinCode));
+        onConnectToSpotTV(joinCode, shareMode) {
+            return dispatch(connectToSpotTV(joinCode, shareMode));
         },
 
         /**
