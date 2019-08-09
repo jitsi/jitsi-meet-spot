@@ -1,5 +1,7 @@
 import { combineReducers, createStore } from 'redux';
 
+import { CLIENT_TYPES } from 'common/remote-control';
+
 import * as actions from './actions';
 import pairedRemotesReducer from './reducer';
 import * as selectors from './selectors';
@@ -12,7 +14,7 @@ describe('paired remotes state', () => {
             dispatch,
             getState
         } = createStore(combineReducers({ pairedRemotes: pairedRemotesReducer })));
-        const permanentRemoveType = 'permanent-remote';
+        const permanentRemoveType = CLIENT_TYPES.SPOT_REMOTE_PERMANENT;
 
         dispatch(actions.addPairedRemote(1, permanentRemoveType));
         dispatch(actions.addPairedRemote(2, permanentRemoveType));

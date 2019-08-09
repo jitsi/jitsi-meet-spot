@@ -3,6 +3,7 @@ import { logger } from 'common/logger';
 import { generate8Characters, getJitterDelay } from 'common/utils';
 
 import {
+    CLIENT_TYPES,
     CONNECTION_EVENTS,
     SERVICE_UPDATES
 } from './constants';
@@ -173,15 +174,15 @@ export class BaseRemoteControlService extends Emitter {
 
             // There's no random part added to Spot TV resource part which will result in conflict error returned if
             // there's a Spot TV already in the MUC. This is expected.
-            return 'spot-tv';
+            return CLIENT_TYPES.SPOT_TV;
         }
 
-        const type = backend && backend.isPairingPermanent() ? 'perm' : 'temp';
+        const type = backend && backend.isPairingPermanent()
+            ? CLIENT_TYPES.SPOT_REMOTE_PERMANENT
+            : CLIENT_TYPES.SPOT_REMOTE_TEMPORARY;
 
         // Append a random part to allow multiple remotes per type join one XMPP MUC.
-        const suffix = generate8Characters();
-
-        return `remote-${type}-${suffix}`;
+        return `${type}-${generate8Characters()}`;
     }
 
     /**
@@ -366,14 +367,14 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {string}
      */
     _getTypeFromResource(jid) {
-        if (jid.includes('/spot-tv')) {
-            return 'spot-tv';
-        } else if (jid.includes('remote-perm')) {
-            return 'permanent-remote';
+        if (jid.includes(`/${CLIENT_TYPES.SPOT_TV}`)) {
+            return CLIENT_TYPES.SPOT_TV;
+        } else if (jid.includes(`/${CLIENT_TYPES.SPOT_REMOTE_PERMANENT}`)) {
+            return CLIENT_TYPES.SPOT_REMOTE_PERMANENT;
         }
 
         // Both "remote-temp" and "remote-" are considered temporary.
-        return 'temporary-remote';
+        return CLIENT_TYPES.SPOT_REMOTE_TEMPORARY;
     }
 
     /**

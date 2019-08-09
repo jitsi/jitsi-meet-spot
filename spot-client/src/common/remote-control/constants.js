@@ -1,3 +1,9 @@
+export const CLIENT_TYPES = {
+    SPOT_TV: 'spot-tv',
+    SPOT_REMOTE_PERMANENT: 'remote-perm',
+    SPOT_REMOTE_TEMPORARY: 'remote-temp'
+};
+
 /**
  * An enumeration of supported commands {@code RemoteControlServer} can process.
  * All values are from events triggered by the Jitsi-Meet iFrame API.
