@@ -1,6 +1,5 @@
 import {
-    SET_LONG_LIVED_PAIRING_CODE_INFO,
-    SET_PERMANENT_PAIRING_CODE
+    SET_LONG_LIVED_PAIRING_CODE_INFO
 } from './actionTypes';
 
 /**
@@ -15,22 +14,5 @@ export function setLongLivedPairingCodeInfo(longLivedPairingCodeInfo) {
     return {
         type: SET_LONG_LIVED_PAIRING_CODE_INFO,
         longLivedPairingCodeInfo
-    };
-}
-
-/**
- * Stores a permanent pairing code to be used by Spot TV and Spot Remotes which are to say connected to the backend
- * permanently.
- *
- * @param {string} permanentPairingCode - The code.
- * @returns {{
- *     type: SET_PERMANENT_PAIRING_CODE,
- *     permanentPairingCode: string
- * }}
- */
-export function setPermanentPairingCode(permanentPairingCode) {
-    return {
-        type: SET_PERMANENT_PAIRING_CODE,
-        permanentPairingCode
     };
 }

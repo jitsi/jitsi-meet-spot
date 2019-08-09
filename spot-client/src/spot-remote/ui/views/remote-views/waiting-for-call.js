@@ -10,7 +10,7 @@ import {
     joinWithScreensharing
 } from 'common/app-state';
 import { AutoUpdateChecker } from 'common/auto-update';
-import { isBackendEnabled } from 'common/backend';
+import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
 import { logger } from 'common/logger';
@@ -22,7 +22,6 @@ import {
 import { getRandomMeetingName } from 'common/utils';
 
 import {
-    getPermanentPairingCode,
     updateSpotRemoteSource
 } from './../../../app-state';
 import {

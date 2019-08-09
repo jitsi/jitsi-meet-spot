@@ -29,6 +29,7 @@ const keysToStore = [
     'calendars.calendarType',
     'calendars.email',
     'calendars.displayName',
+    'backend.permanentPairingCode',
     'deviceId.deviceId',
     'setup.avatarUrl',
     'setup.completed',
@@ -36,9 +37,7 @@ const keysToStore = [
     'setup.preferredCamera',
     'setup.preferredMic',
     'setup.preferredSpeaker',
-    'spotRemote.permanentPairingCode',
     'spot-tv/backend.longLivedPairingCodeInfo',
-    'spot-tv/backend.permanentPairingCode',
     'spotRemote.completedOnboarding',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
@@ -73,6 +72,9 @@ function hasUpdateOfInterest(oldState, newState) {
  */
 function parsePersistedState(state) {
     return {
+        backend: {
+            permanentPairingCode: state.backend.permanentPairingCode
+        },
         calendars: {
             calendarType: state.calendars.calendarType,
             displayName: state.calendars.displayName,
@@ -97,14 +99,11 @@ function parsePersistedState(state) {
             idleValue: state.wiredScreenshare.idleValue
         },
 
-        // TODO: either unify with Spot remote or move to Spot TV/app-state
         'spot-tv/backend': {
-            longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo,
-            permanentPairingCode: state['spot-tv/backend'].permanentPairingCode
+            longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo
         },
         spotRemote: {
-            completedOnboarding: state.spotRemote.completedOnboarding,
-            permanentPairingCode: state.spotRemote.permanentPairingCode
+            completedOnboarding: state.spotRemote.completedOnboarding
         }
     };
 }
@@ -125,7 +124,38 @@ export function clearPersistedState() {
  * @returns {Object}
  */
 export function getPersistedState() {
-    return persistence.get(STORE_PERSISTENCE_KEY) || {};
+    const restoredState = persistence.get(STORE_PERSISTENCE_KEY) || {};
+
+    return _restoreLegacyPermanentCode(restoredState);
+}
+
+/**
+ * Shenanigans necessary to restore a permanent pairing code stored on older version of the client.
+ *
+ * @param {Object} state - Restored Redux state.
+ * @returns {Object}
+ * @private
+ */
+function _restoreLegacyPermanentCode(state) {
+    if (!state || (state.backend && state.backend.permanentPairingCode)) {
+        return state;
+    }
+
+    const legacyPermanentCode
+        = (state['spot-tv/backend'] && state['spot-tv/backend'].permanentPairingCode)
+            || (state.spotRemote && state.spotRemote.permanentPairingCode);
+
+    if (!legacyPermanentCode) {
+        return state;
+    }
+
+    return {
+        ...state,
+        backend: {
+            ...state.backend,
+            permanentPairingCode: legacyPermanentCode
+        }
+    };
 }
 
 /**

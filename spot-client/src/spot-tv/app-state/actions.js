@@ -13,7 +13,7 @@ import {
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
-import { isBackendEnabled } from 'common/backend';
+import { isBackendEnabled, setPermanentPairingCode } from 'common/backend';
 import { logger } from 'common/logger';
 import {
     SERVICE_UPDATES,
@@ -27,7 +27,6 @@ import {
     SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
     getLongLivedPairingCodeInfo,
     setLongLivedPairingCodeInfo,
-    setPermanentPairingCode,
     SpotTvBackendService
 } from '../backend';
 
