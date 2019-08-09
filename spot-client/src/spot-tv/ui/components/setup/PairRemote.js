@@ -2,12 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    getPairedRemotesCount,
-    getPermanentPairedRemotesCount,
-    getRemoteJoinCode
-} from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
+import { getPermanentPairedRemotesCount } from 'common/app-state';
 import { Button } from 'common/ui';
 
 import { getLongLivedPairingCodeInfo } from '../../../backend';
@@ -78,12 +73,8 @@ export class PairRemote extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        code: isBackendEnabled(state)
-            ? (getLongLivedPairingCodeInfo(state) || {}).code
-            : getRemoteJoinCode(state),
-        permanentRemotesCount: isBackendEnabled(state)
-            ? getPermanentPairedRemotesCount(state)
-            : getPairedRemotesCount(state)
+        code: (getLongLivedPairingCodeInfo(state) || {}).code,
+        permanentRemotesCount: getPermanentPairedRemotesCount(state)
     };
 }
 
