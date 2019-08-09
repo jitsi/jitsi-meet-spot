@@ -174,14 +174,14 @@ export class BaseRemoteControlService extends Emitter {
             // There's no random part added to Spot TV resource part which will result in conflict error returned if
             // there's a Spot TV already in the MUC. This is expected.
             return 'spot-tv';
-        } else if (backend) {
-            const prefix = backend.isPairingPermanent() ? 'remote-perm' : 'remote-temp';
-
-            // Append a random part to allow multiple remotes per type join one XMPP MUC.
-            return `${prefix}-${generate8Characters()}`;
         }
 
-        return `remote-${generate8Characters()}`;
+        const type = backend && backend.isPairingPermanent() ? 'perm' : 'temp';
+
+        // Append a random part to allow multiple remotes per type join one XMPP MUC.
+        const suffix = generate8Characters();
+
+        return `remote-${type}-${suffix}`;
     }
 
     /**
