@@ -60,6 +60,17 @@ export default class RemoteControl extends React.PureComponent {
     `;
 
     /**
+     * Re-resolves the initial url if it has been updated.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        if (prevProps.url !== this.props.url) {
+            this._resolveUrl();
+        }
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
