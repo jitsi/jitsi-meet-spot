@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
 import { setSetupCompleted } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Modal } from 'common/ui';
+import { withCalendar } from '../loaders';
 
 import {
     CalendarAuth,
@@ -152,4 +152,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(connect(mapStateToProps)(Setup));
+export default withRouter(withCalendar(connect(mapStateToProps)(Setup)));
