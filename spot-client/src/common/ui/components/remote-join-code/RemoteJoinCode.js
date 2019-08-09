@@ -14,7 +14,7 @@ import { getRemoteJoinCode } from 'common/app-state';
 export function RemoteJoinCode(props) {
     const {
         remoteJoinCode,
-        ...rest
+        qaId
     } = props;
 
     if (!remoteJoinCode) {
@@ -23,14 +23,15 @@ export function RemoteJoinCode(props) {
 
     return (
         <span
-            { ...rest }
-            className = 'join-code'>
+            className = 'join-code'
+            data-qa-id = { qaId }>
             { remoteJoinCode }
         </span>
     );
 }
 
 RemoteJoinCode.propTypes = {
+    qaId: PropTypes.string,
     remoteJoinCode: PropTypes.string
 };
 
