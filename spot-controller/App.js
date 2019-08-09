@@ -36,8 +36,9 @@ export default class App extends React.Component {
 
         this.state = {
             includeResetInUrl: false,
-            loading: __DEV__,
-            remoteControlUrl: __DEV__ ? null : DEFAULT_URL,
+            loading: true,
+            remoteControlUrl: null,
+            showSetup: false,
 
             /**
              * A key is used on the webview so changing it can cause the webview
@@ -49,8 +50,9 @@ export default class App extends React.Component {
         this._sideMenuRef = React.createRef();
         this.store = createStore(ReducerRegistry.combineReducers(), {}, MiddlewareRegistry.applyMiddleware());
 
-        this._onClearRemoteUrl = this._onClearRemoteUrl.bind(this);
+        this._onHideSetup = this._onHideSetup.bind(this);
         this._onResetApp = this._onResetApp.bind(this);
+        this._onShowSetup = this._onShowSetup.bind(this);
         this._onSubmitEnteredUrl = this._onSubmitEnteredUrl.bind(this);
     }
 
@@ -62,15 +64,13 @@ export default class App extends React.Component {
     componentDidMount() {
         this.store.dispatch(appMounted());
 
-        if (__DEV__) {
-            AsyncStorage.getItem('remote-control-url')
-                .then(remoteControlUrl => {
-                    this.setState({
-                        loading: false,
-                        remoteControlUrl: remoteControlUrl === null ? DEFAULT_URL : remoteControlUrl
-                    });
+        AsyncStorage.getItem('remote-control-url')
+            .then(remoteControlUrl => {
+                this.setState({
+                    loading: false,
+                    remoteControlUrl: remoteControlUrl === null ? DEFAULT_URL : remoteControlUrl
                 });
-        }
+            });
     }
 
     /**
@@ -93,34 +93,15 @@ export default class App extends React.Component {
             return <LoadingScreen />;
         }
 
-        const { remoteControlUrl } = this.state;
-
         return (
             <Provider store = { this.store }>
                 {
-                    remoteControlUrl
-                        ? this._renderRemoteControl()
-                        : this._renderSetup()
+                    this.state.showSetup
+                        ? this._renderSetup()
+                        : this._renderRemoteControl()
                 }
             </Provider>
         );
-    }
-
-    /**
-     * Clears the Spot-Remote url so it can be set again.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onClearRemoteUrl() {
-        AsyncStorage.setItem(
-            'remote-control-url',
-            ''
-        ).then(() => {
-            this.setState({
-                remoteControlUrl: ''
-            });
-        });
     }
 
     /**
@@ -134,10 +115,11 @@ export default class App extends React.Component {
         AsyncStorage.setItem(
             'remote-control-url',
             remoteControlUrl
-        );
-
-        this.setState({
-            remoteControlUrl
+        ).then(() => {
+            this.setState({
+                showSetup: false,
+                remoteControlUrl
+            });
         });
     }
 
@@ -171,9 +153,20 @@ export default class App extends React.Component {
     _renderSettingsMenu() {
         return (
             <SettingsMenu
-                onClearRemoteUrl = { this._onClearRemoteUrl }
-                onResetApp = { this._onResetApp } />
+                onResetApp = { this._onResetApp }
+                onShowSetup = { this._onShowSetup } />
         );
+    }
+
+    /**
+     * Stops showing the dev setup screen.
+     *
+     * @returns {void}
+     */
+    _onHideSetup() {
+        this.setState({
+            showSetup: false
+        });
     }
 
     /**
@@ -191,6 +184,18 @@ export default class App extends React.Component {
     }
 
     /**
+     * Shows the dev setup screen.
+     *
+     * @returns {void}
+     */
+    _onShowSetup() {
+        this.setState({
+            includeResetInUrl: false,
+            showSetup: true
+        });
+    }
+
+    /**
      * Returns a the React Component for the setup contents.
      *
      * @private
@@ -198,7 +203,9 @@ export default class App extends React.Component {
      */
     _renderSetup() {
         return (
-            <Setup onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />
+            <Setup
+                onCancel = { this._onHideSetup }
+                onSubmitEnteredUrl = { this._onSubmitEnteredUrl } />
         );
     }
 }
