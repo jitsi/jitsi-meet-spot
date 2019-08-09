@@ -62,7 +62,7 @@ class JoinInfo extends React.Component {
     _getCopyToDisplay() {
         const { shareDomain, showDomain } = this.props;
 
-        const codeElement = <RemoteJoinCode data-qa-id = 'info-code' />;
+        const codeElement = <RemoteJoinCode qaId = 'info-code' />;
 
         if (!showDomain) {
             return codeElement;
