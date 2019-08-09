@@ -1,21 +1,41 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
+    Button,
     StyleSheet,
+    Text,
     TextInput,
     View
 } from 'react-native';
+import url from 'url';
+
+import { logger } from './logger';
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#F5FCFF',
-        flex: 1
+        alignItems: 'center',
+        backgroundColor: 'black',
+        flex: 1,
+        paddingTop: '20%'
     },
     input: {
-        borderColor: 'gray',
+        backgroundColor: 'transparent',
+        borderColor: 'white',
+        borderRadius: 4,
         borderWidth: 1,
-        flexDirection: 'row',
-        height: 40
+        color: 'white',
+        fontSize: 23,
+        height: 50,
+        padding: 4,
+        marginBottom: 30,
+        textAlign: 'center',
+        width: '75%'
+    },
+    title: {
+        color: 'white',
+        fontSize: 36,
+        padding: 30,
+        textAlign: 'center'
     }
 });
 
@@ -27,6 +47,7 @@ const styles = StyleSheet.create({
  */
 export default class Setup extends React.Component {
     static propTypes = {
+        onCancel: PropTypes.func,
         onSubmitEnteredUrl: PropTypes.func
     };
 
@@ -57,12 +78,21 @@ export default class Setup extends React.Component {
     render() {
         return (
             <View style = { styles.container }>
+                <Text style = { styles.title }>
+                    Please enter the URL for the Spot deployment
+                </Text>
                 <TextInput
                     autoCorrect = { false }
                     onChangeText = { this._onEnteredUrlChange }
                     onSubmitEditing = { this._onSubmitEnteredUrl }
+                    placeholder = 'Spot URL'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.3)'
                     style = { styles.input }
                     value = { this.state.enteredRemoteControlUrl } />
+                <Button
+                    color = 'white'
+                    onPress = { this.props.onCancel }
+                    title = 'Cancel' />
             </View>
         );
     }
@@ -86,6 +116,14 @@ export default class Setup extends React.Component {
      * @returns {void}
      */
     _onSubmitEnteredUrl() {
-        this.props.onSubmitEnteredUrl(this.state.enteredRemoteControlUrl);
+        try {
+            const urlParts = url.parse(this.state.enteredRemoteControlUrl);
+
+            if (/localhost|jitsi.net|8x8.vc/.exec(urlParts.hostname)) {
+                this.props.onSubmitEnteredUrl(this.state.enteredRemoteControlUrl);
+            }
+        } catch (e) {
+            logger.error(e);
+        }
     }
 }

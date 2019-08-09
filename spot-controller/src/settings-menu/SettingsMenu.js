@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
  */
 export default class SettingsMenu extends React.Component {
     static propTypes = {
-        onClearRemoteUrl: PropTypes.func,
-        onResetApp: PropTypes.func
+        onResetApp: PropTypes.func,
+        onShowSetup: PropTypes.func
     };
 
     /**
@@ -66,13 +66,11 @@ export default class SettingsMenu extends React.Component {
                     iconColor = 'black'
                     onPress = { this._onOpenPrivacyPolicy }
                     text = 'Privacy' />
-                {
-                    __DEV__ && <SettingsMenuButton
-                        icon = { warning }
-                        iconColor = 'red'
-                        onPress = { this.props.onClearRemoteUrl }
-                        text = 'Reset URL' />
-                }
+                <SettingsMenuButton
+                    icon = { warning }
+                    iconColor = 'red'
+                    onPress = { this.props.onShowSetup }
+                    text = 'Spot Deployment' />
             </ScrollView>
         );
     }
