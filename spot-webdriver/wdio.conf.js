@@ -11,6 +11,8 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
 const PATH_TO_FAKE_VIDEO
     = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
 
+const spotSessionStore = require('./user/spotSessionStore');
+
 exports.config = {
     // How many fails should trigger stopping the tests. Zero skips stopping.
     bail: 0,
@@ -63,6 +65,10 @@ exports.config = {
     specs: [
         path.resolve(__dirname, 'specs', '**/*.spec.js')
     ],
+
+    afterTest: () => {
+        spotSessionStore.clearSessions();
+    },
 
     // Default wait time for all webdriverio wait-related functions.
     waitforTimeout: 10000

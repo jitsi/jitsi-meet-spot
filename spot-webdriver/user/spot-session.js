@@ -79,6 +79,24 @@ class SpotSession {
     }
 
     /**
+     * Returns the Spot-TV associated with the session.
+     *
+     * @returns {SpotTV}
+     */
+    getSpotTV() {
+        return this.spotTV;
+    }
+
+    /**
+     * Returns the Spot-Remove associated with the session.
+     *
+     * @returns {SpotRemote}
+     */
+    getSpotRemote() {
+        return this.spotRemote;
+    }
+
+    /**
      * The {@code SpotRemote} makes the TV join a meeting with the given name. If a name is not
      * provided the session selects a random one.
      *

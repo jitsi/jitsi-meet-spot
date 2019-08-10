@@ -1,12 +1,11 @@
 const constants = require('../constants');
 
-const SpotSession = require('../user/spot-session');
+const spotSessionStore = require('../user/spotSessionStore');
 
 describe('A Spot-Remote can screenshare wirelessly', () => {
-    const userFactory = require('../user/user-factory');
-    const spotTV = userFactory.getSpotTV();
-    const spotRemote = userFactory.getSpotRemote();
-    const spotSession = new SpotSession(spotTV, spotRemote);
+    const session = spotSessionStore.createSession();
+    const spotTV = session.getSpotTV();
+    const spotRemote = session.getSpotRemote();
 
     /**
      * Goes through the flow for starting a wireless screenshare session
@@ -71,11 +70,7 @@ describe('A Spot-Remote can screenshare wirelessly', () => {
     }
 
     beforeEach(() => {
-        spotSession.connectRemoteToTV();
-    });
-
-    afterEach(() => {
-        spotSession.resetConnection();
+        session.connectRemoteToTV();
     });
 
     describe('with no wired screenshare setup', () => {

@@ -1,20 +1,14 @@
-const SpotSession = require('../user/spot-session');
+const spotSessionStore = require('../user/spotSessionStore');
 
 describe('Can start a meeting', () => {
-    const userFactory = require('../user/user-factory');
-    const spotTV = userFactory.getSpotTV();
-    const spotRemote = userFactory.getSpotRemote();
-    const session = new SpotSession(spotTV, spotRemote);
+    const session = spotSessionStore.createSession();
 
     beforeEach(() => {
         session.connectRemoteToTV();
     });
 
-    afterEach(() => {
-        session.resetConnection();
-    });
-
     it('with any name', () => {
+        const spotTV = session.getSpotTV();
         const testMeetingName = session.joinMeeting();
 
         expect(spotTV.getMeetingName()).toBe(testMeetingName);

@@ -1,21 +1,16 @@
-const SpotSession = require('../user/spot-session');
-const userFactory = require('../user/user-factory');
+const spotSessionStore = require('../user/spotSessionStore');
 
 describe('In share mode', () => {
-    const spotTV = userFactory.getSpotTV();
-    const spotRemote = userFactory.getSpotRemote();
-    const spotSession = new SpotSession(spotTV, spotRemote);
+    const session = spotSessionStore.createSession();
+    const spotTV = session.getSpotTV();
+    const spotRemote = session.getSpotRemote();
 
     beforeEach(() => {
-        spotSession.connectScreeshareOnlyRemoteToTV();
+        session.connectScreeshareOnlyRemoteToTV();
 
         const stopSharePage = spotRemote.getStopSharePage();
 
         stopSharePage.waitForVisible();
-    });
-
-    afterEach(() => {
-        spotSession.resetConnection();
     });
 
     it('Spot-Remote automatically starts sharing on connection', () => {
