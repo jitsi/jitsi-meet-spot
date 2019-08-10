@@ -5,11 +5,17 @@
         background-color: black;
         opacity: 0.7;
     }
+
+    .desktop-picker {
+        width: 100%;
+
+        @media #{$mq-tablet} {
+            width: 50vw;
+        }
+    }
 }
 
 .desktop-picker {
-    width: 100%;
-
     .picker-tabs {
         button {
             @include button-reset;
@@ -31,7 +37,7 @@
         overflow: auto;
         padding: 10px;
     }
-    
+
     .picker-choice {
         @include button-reset;
         background-color: rgba(0, 0, 0, 0);
@@ -44,7 +50,7 @@
             background-color: var(--container-content-highlight-bg-color);
         }
     }
-    
+
     .picker-choice-thumbnail {
         height: auto;
         padding: 10px;
@@ -63,6 +69,15 @@
     &.left-most-tab {
         .picker-choices  {
             border-top-left-radius: 0px;
+        }
+    }
+
+    .picker-footer {
+        margin-top: 34px;
+        text-align: center;
+
+        .button:not(:last-child) {
+            margin-right: 10px;
         }
     }
 }

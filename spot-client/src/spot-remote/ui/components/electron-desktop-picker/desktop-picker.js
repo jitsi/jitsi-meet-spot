@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { logger } from 'common/logger';
+import { Button } from 'common/ui';
 
 import SourcePreview from './source-preview';
 
@@ -13,6 +14,7 @@ import SourcePreview from './source-preview';
  */
 export default class DesktopPicker extends React.Component {
     static propTypes = {
+        onCancel: PropTypes.func,
         onSelect: PropTypes.func
     };
 
@@ -47,6 +49,7 @@ export default class DesktopPicker extends React.Component {
         this._onDoubleClick = this._onDoubleClick.bind(this);
         this._onShowScreenPreviews = this._onShowScreenPreviews.bind(this);
         this._onShowWindowPreviews = this._onShowWindowPreviews.bind(this);
+        this._onSubmit = this._onSubmit.bind(this);
         this._updateSources = this._updateSources.bind(this);
     }
 
@@ -97,6 +100,18 @@ export default class DesktopPicker extends React.Component {
                 </div>
                 <div className = 'picker-choices'>
                     { this._renderPreviews() }
+                </div>
+                <div className = 'picker-footer'>
+                    <Button
+                        appearance = 'subtle'
+                        onClick = { this.props.onCancel }>
+                        Cancel
+                    </Button>
+                    <Button
+                        disabled = { !this.state.selected.id }
+                        onClick = { this._onSubmit }>
+                        Select
+                    </Button>
                 </div>
             </div>
         );
@@ -189,6 +204,21 @@ export default class DesktopPicker extends React.Component {
             selected: this._getSelectedSource(this.state.sources, 'window'),
             tab: 'window'
         });
+    }
+
+    /**
+     * Callback invoked when a screensharing source has been selected.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onSubmit() {
+        const {
+            id,
+            type
+        } = this.state.selected;
+
+        this.props.onSelect(id, type);
     }
 
     /**
