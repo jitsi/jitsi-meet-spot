@@ -124,6 +124,8 @@ export default class RemoteControl extends React.PureComponent {
                     allowsInlineMediaPlayback = { true }
                     allowsLinkPreview = { false }
 
+                    applicationNameForUserAgent = 'SpotController/1'
+
                     // Prevents moving the webview up and down.
                     bounces = { false }
 
