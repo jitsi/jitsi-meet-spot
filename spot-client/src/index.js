@@ -28,7 +28,6 @@ import {
     remoteControlClient
 } from 'common/remote-control';
 import {
-    clearPersistedState,
     getPersistedState,
     loadScript,
     setPersistedState
@@ -38,10 +37,6 @@ import { ExternalApiSubscriber } from 'spot-remote/external-api';
 import App from './app';
 
 const queryParams = new URLSearchParams(window.location.search);
-
-if (queryParams.get('reset') === 'true') {
-    clearPersistedState();
-}
 
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),

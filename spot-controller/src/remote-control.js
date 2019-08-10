@@ -88,6 +88,22 @@ export default class RemoteControl extends React.PureComponent {
     }
 
     /**
+     * Clears all local storage, which would generally be used to save app
+     * state, and reloads the page.
+     *
+     * @returns {void}
+     */
+    clearStorageAndReload() {
+        if (this._ref) {
+            this._ref.injectJavaScript(`
+                localStorage.clear();
+                true;
+            `);
+            this._ref.reload();
+        }
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -255,16 +271,21 @@ export default class RemoteControl extends React.PureComponent {
             // Hope everything goes ok with the supplied URL.
         }
 
-        this.setState({ resolvedUrl });
+        this.setState({
+            resolvedUrl,
+            webViewError: null
+        });
     }
 
     /**
      * Updates the web view reference when it gets rendered.
      *
-     * @param {Reactelement} ref - The web view reference.
+     * @param {ReactElement} ref - The web view reference.
      * @returns {void}
      */
     _setRef(ref) {
+        this._ref = ref;
+
         api.setReference(ref);
     }
 }
