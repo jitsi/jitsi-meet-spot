@@ -64,7 +64,9 @@ export default class ElectronDesktopPickerModal extends React.Component {
             <Modal
                 onClose = { this._onClose }
                 rootClassName = 'electron-desktop-picker-modal'>
-                <DesktopPicker onSelect = { this._onClose } />
+                <DesktopPicker
+                    onCancel = { this._onClose }
+                    onSelect = { this._onClose } />
             </Modal>
         );
     }
