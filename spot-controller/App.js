@@ -11,7 +11,7 @@ import RemoteControl from './src/remote-control';
 import { SettingsMenu } from './src/settings-menu';
 import Setup from './src/setup';
 
-// Modules that doesn't necesarily export anything, but must be imported to function
+// Modules that doesn't necessarily export anything, but must be imported to function
 import './src/beacons';
 import './src/notifications';
 
@@ -35,18 +35,12 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
-            includeResetInUrl: false,
             loading: true,
             remoteControlUrl: null,
-            showSetup: false,
-
-            /**
-             * A key is used on the webview so changing it can cause the webview
-             * to re-render, which causes a reload back to the base url.
-             */
-            webViewKey: 0
+            showSetup: false
         };
 
+        this._remoteControlViewRef = React.createRef();
         this._sideMenuRef = React.createRef();
         this.store = createStore(ReducerRegistry.combineReducers(), {}, MiddlewareRegistry.applyMiddleware());
 
@@ -128,7 +122,7 @@ export default class App extends React.Component {
      * @returns {ReactComponent}
      */
     _renderRemoteControl() {
-        const { includeResetInUrl, remoteControlUrl } = this.state;
+        const { remoteControlUrl } = this.state;
 
         return (
             <SideMenu
@@ -136,8 +130,8 @@ export default class App extends React.Component {
                 openMenuOffset = { 250 }
                 ref = { this._sideMenuRef }>
                 <RemoteControl
-                    key = { this.state.webViewKey }
-                    url = { `${remoteControlUrl}/?enableOnboarding=true&reset=${includeResetInUrl}` } />
+                    ref = { this._remoteControlViewRef }
+                    url = { remoteControlUrl } />
             </SideMenu>
         );
     }
@@ -175,10 +169,8 @@ export default class App extends React.Component {
      */
     _onResetApp() {
         this._sideMenuRef.current.openMenu(false);
-        this.setState({
-            includeResetInUrl: true,
-            webViewKey: this.state.webViewKey + 1
-        });
+
+        this._remoteControlViewRef.current.clearStorageAndReload();
     }
 
     /**
