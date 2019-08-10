@@ -1,21 +1,16 @@
-const SpotSession = require('../user/spot-session');
+const spotSessionStore = require('../user/spotSessionStore');
 
 describe('While in a meeting ', () => {
-    const userFactory = require('../user/user-factory');
-    const spotTV = userFactory.getSpotTV();
-    const spotRemote = userFactory.getSpotRemote();
-    const spotSession = new SpotSession(spotTV, spotRemote);
+    const session = spotSessionStore.createSession();
+    const spotTV = session.getSpotTV();
+    const spotRemote = session.getSpotRemote();
 
     beforeEach(() => {
-        spotSession.connectRemoteToTV();
-        spotSession.joinMeeting();
+        session.connectRemoteToTV();
+        session.joinMeeting();
         spotRemote
             .getInMeetingPage()
             .waitForVisible();
-    });
-
-    afterEach(() => {
-        spotSession.resetConnection();
     });
 
     it('can toggle audio mute', () => {

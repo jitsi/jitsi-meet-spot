@@ -8,8 +8,7 @@ const SpotRemote = require('./spot-remote-user');
  * are wrapped in a user model and factory getter to abstract that detail from
  * the tests.
  */
-const spotRemote = new SpotRemote(remoteControlBrowser);
-const spotTV = new SpotTV(spotBrowser);
+let spotRemote, spotTV;
 
 module.exports = {
     /**
@@ -18,6 +17,10 @@ module.exports = {
      * @returns {SpotTV}
      */
     getSpotTV() {
+        if (!spotTV) {
+            spotTV = new SpotTV(spotBrowser);
+        }
+
         return spotTV;
     },
 
@@ -28,6 +31,10 @@ module.exports = {
      * @returns {SpotRemote}
      */
     getSpotRemote() {
+        if (!spotRemote) {
+            spotRemote = new SpotRemote(remoteControlBrowser);
+        }
+
         return spotRemote;
     }
 };
