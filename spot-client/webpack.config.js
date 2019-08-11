@@ -8,9 +8,6 @@ const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
 
-const mode = process.env.NODE_ENV === 'production'
-    ? 'production' : 'development';
-
 module.exports = {
     devServer: {
         compress: true,
@@ -20,8 +17,9 @@ module.exports = {
         port: 8000,
         publicPath: '/dist/'
     },
+    devtool: 'source-map',
     entry: './src/index.js',
-    mode,
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     module: {
         rules: [
             {
