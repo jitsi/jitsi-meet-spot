@@ -9,7 +9,12 @@ import {
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
-import { isBackendEnabled, SpotBackendService } from 'common/backend';
+import {
+    getPermanentPairingCode,
+    isBackendEnabled,
+    setPermanentPairingCode,
+    SpotBackendService
+} from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
@@ -22,11 +27,8 @@ import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
-    SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
-import { getPermanentPairingCode } from './selectors';
-
 
 /**
  * Presence attributes from Spot-TV to store in redux.
@@ -259,23 +261,6 @@ function _onSpotTVStateChange({ dispatch }, data) {
             );
         }
     }
-}
-
-/**
- * Stores the given permanent pairing code which is to be used Spot Remote to connect to the Spot TV next time the app
- * is started.
- *
- * @param {string} permanentPairingCode - A permanent pairing code to be stored.
- * @returns {{
- *     type: SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
- *     permanentPairingCode: string
- * }}
- */
-function setPermanentPairingCode(permanentPairingCode) {
-    return {
-        type: SPOT_REMOTE_SET_PERMANENT_PAIRING_CODE,
-        permanentPairingCode
-    };
 }
 
 /**

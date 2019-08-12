@@ -8,7 +8,7 @@ import {
     isConnectionPending,
     setIsSpot
 } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
+import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
@@ -16,7 +16,6 @@ import { Loading } from 'common/ui';
 import {
     createSpotTVRemoteControlConnection
 } from './../../app-state';
-import { getPermanentPairingCode } from '../../backend';
 
 
 /**

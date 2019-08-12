@@ -7,7 +7,7 @@ import {
     getShareDomain,
     sendApiMessage
 } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
+import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isSpotControllerApp } from 'common/detection';
 import { ArrowForward, HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
@@ -18,7 +18,6 @@ import {
     connectToSpotTV,
     getApiReceivedJoinCode,
     disconnectFromSpotTV,
-    getPermanentPairingCode,
     isOnboardingComplete,
     setAPiReceivedJoinCode
 } from './../../app-state';

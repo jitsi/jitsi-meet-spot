@@ -3,11 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
-import { isBackendEnabled } from 'common/backend';
+import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { ROUTES } from 'common/routing';
 import { isSupportedSpotTvBrowser } from 'common/detection';
-
-import { getPermanentPairingCode } from './../backend';
 
 /**
  * Creates a Route which only allows the view to be displayed if on a supported

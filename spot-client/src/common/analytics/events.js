@@ -33,6 +33,19 @@ export const meetingJoinEvents = {
     WIRELESS_SCREENSHARE: 'wireless-screenshare-meeting-start'
 };
 
+export const permanentPairingCodeEvents = {
+    /**
+     * When backend pairing is lost.
+     */
+    PAIRING_FAIL: 'permanent-pairing-code-fail',
+
+    /**
+     * When backend pairing is established.
+     */
+    PAIRING_SUCCESS: 'permanent-pairing-code-success'
+};
+
+
 export const shareModeEvents = {
     ENTER_SHARE_MODE: 'enter-share-mode',
     EXIT_SHARE_MODE: 'exit-share-mode'

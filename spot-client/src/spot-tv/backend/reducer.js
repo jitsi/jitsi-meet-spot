@@ -1,8 +1,7 @@
 import { ReducerRegistry } from '../../common/redux';
 
 import {
-    SET_LONG_LIVED_PAIRING_CODE_INFO,
-    SET_PERMANENT_PAIRING_CODE
+    SET_LONG_LIVED_PAIRING_CODE_INFO
 } from './actionTypes';
 
 ReducerRegistry.register('spot-tv/backend', (state = { }, action) => {
@@ -11,12 +10,6 @@ ReducerRegistry.register('spot-tv/backend', (state = { }, action) => {
         return {
             ...state,
             longLivedPairingCodeInfo: action.longLivedPairingCodeInfo
-        };
-
-    case SET_PERMANENT_PAIRING_CODE:
-        return {
-            ...state,
-            permanentPairingCode: action.permanentPairingCode
         };
 
     default:
