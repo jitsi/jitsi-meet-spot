@@ -9,5 +9,4 @@ export {
     refreshAccessToken
 } from './utils';
 
-import './middleware';
 import './reducer';
