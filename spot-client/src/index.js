@@ -21,6 +21,7 @@ import reducers, {
     setDefaultValues,
     setSetupCompleted
 } from 'common/app-state';
+import { setPermanentPairingCode } from 'common/backend';
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,
@@ -33,7 +34,6 @@ import {
     setPersistedState
 } from 'common/utils';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
-import { setPermanentPairingCode } from 'spot-tv/backend';
 
 import App from './app';
 

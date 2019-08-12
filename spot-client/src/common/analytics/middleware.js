@@ -4,7 +4,7 @@ import { SET_DEVICE_ID } from '../app-state/device-id';
 import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
 
 import analytics from './analytics';
-import { permanentPairingCodeEvents } from './analyticsEvents';
+import { permanentPairingCodeEvents } from './events';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
