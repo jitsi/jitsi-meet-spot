@@ -22,6 +22,13 @@ const { AppInfo } = NativeModules;
 /* global __DEV__ */
 
 /**
+ * The constant is included into the user agent part to allow feature detection in future.
+ *
+ * @type {string}
+ */
+const SPOT_CLIENT_FEATURE_VERSION = 'SpotController/1';
+
+/**
  * A view for showing Spot-Remote within a WebView. A WebView is being used
  * until the needs of Spot-Remote cannot be satisfied with a WebView.
  *
@@ -54,8 +61,8 @@ export default class RemoteControl extends React.PureComponent {
 
         this.userAgentString
             = __DEV__
-                ? 'SpotController/development'
-                : `${AppInfo.name}/${AppInfo.version}(${AppInfo.buildNumber})`;
+                ? SPOT_CLIENT_FEATURE_VERSION
+                : `${SPOT_CLIENT_FEATURE_VERSION} ${AppInfo.name}/${AppInfo.version}(${AppInfo.buildNumber})`;
     }
 
     // Override the meta tag with values that are known not allow this app to
