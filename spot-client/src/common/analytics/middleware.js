@@ -1,5 +1,7 @@
 import { MiddlewareRegistry } from 'common/redux';
 
+import { getSpotClientVersion } from '../app-state';
+import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
 import { SET_DEVICE_ID } from '../app-state/device-id';
 import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
 
@@ -8,6 +10,10 @@ import { permanentPairingCodeEvents } from './events';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
+    case BOOTSTRAP_COMPLETE:
+        analytics.updateProperty('spotClientVersion', getSpotClientVersion(getState()));
+
+        break;
     case SET_DEVICE_ID:
         analytics.updateId(action.deviceId);
 
