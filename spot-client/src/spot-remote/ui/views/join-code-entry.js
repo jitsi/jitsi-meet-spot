@@ -96,12 +96,12 @@ export class JoinCodeEntry extends React.Component {
             code = this.props.permanentPairingCode;
 
             if (code) {
-                logger.log('Restored permanent pairing code');
+                logger.log('Restored permanent pairing code', { code });
             }
         }
 
         if (code) {
-            logger.log('joinCodeEntry detected a join code');
+            logger.log('joinCodeEntry detected a join code', { code });
 
             this._connectToSpot(code);
 
@@ -302,7 +302,7 @@ export class JoinCodeEntry extends React.Component {
         submitPromise
             .then(() => this.props.onConnectToSpotTV(trimmedCode, this._isInShareModeEnv()))
             .then(() => {
-                logger.log('joinCodeEntry code is valid');
+                logger.log('joinCodeEntry code is valid', { code: trimmedCode });
 
                 this.setState({ validating: false });
 
@@ -311,7 +311,10 @@ export class JoinCodeEntry extends React.Component {
                 this.props.history.push(redirectTo);
             })
             .catch(error => {
-                logger.error('Failed to connect to Spot TV', { error });
+                logger.error('Failed to connect to Spot TV', {
+                    code: trimmedCode,
+                    error
+                });
 
                 this.setState({ validating: false });
 

@@ -133,9 +133,9 @@ export class SpotBackendService extends Emitter {
      */
     _maybeClearRegistration(error) {
         if (this.isUnrecoverableRequestError(error)) {
+            this.getJwt() && logger.log('Cleared backend registration');
             persistence.set(PERSISTENCE_KEY, undefined);
             this.registration = undefined;
-            logger.log('Cleared backend registration');
         }
 
         throw error;
