@@ -174,6 +174,16 @@ export function getShareDomain(state) {
 }
 
 /**
+ * Returns the current version of this Spot client build.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getSpotClientVersion(state) {
+    return state.config.SPOT_CLIENT_VERSION;
+}
+
+/**
  * A selector which returns configuration for Spot related services like the join code service and
  * the admin service URLs.
  *

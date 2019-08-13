@@ -190,6 +190,11 @@ export default {
         SHARE: process.env.SHARE_DOMAIN
     },
 
+    /**
+     * The Spot client's version(release tag).
+     */
+    SPOT_CLIENT_VERSION: process.env.SPOT_CLIENT_VERSION || 'development',
+
     SPOT_SERVICES: {
         /**
          * A list of known which the JWT, provided by the pairing service,

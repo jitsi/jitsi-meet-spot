@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { apiMessageReceived, setBootstrapComplete } from 'common/app-state';
+import { apiMessageReceived, getSpotClientVersion, setBootstrapComplete } from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
@@ -34,7 +34,8 @@ import { SpotTvRestrictedRoute } from './spot-tv/routing';
 export class App extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        location: PropTypes.object
+        location: PropTypes.object,
+        spotClientVersion: PropTypes.string
     };
 
     /**
@@ -71,7 +72,8 @@ export class App extends React.Component {
     componentDidMount() {
         logger.log('App mounted', {
             duration: window.performance.now(),
-            userAgent: window.navigator.userAgent
+            userAgent: window.navigator.userAgent,
+            spotClientVersion: this.props.spotClientVersion
         });
 
         /**
@@ -325,4 +327,17 @@ export class App extends React.Component {
     }
 }
 
-export default connect()(withRouter(App));
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code App}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        spotClientVersion: getSpotClientVersion(state)
+    };
+}
+
+export default connect(mapStateToProps)(withRouter(App));
