@@ -44,7 +44,44 @@ export function isElectron() {
  * @returns {boolean}
  */
 export function isSpotControllerApp() {
-    return Boolean(window.ReactNativeWebView);
+    return _hasReactNativeOnlyAttributes()
+        || _isIOSWebView()
+        || _isAndroidWebView();
+}
+
+/**
+ * Encapsulates checking the current environment for features that should only
+ * exist in the Spot-Controller (React-Native) app.
+ *
+ * @returns {boolean}
+ */
+function _hasReactNativeOnlyAttributes() {
+    return Boolean(window.ReactNativeWebView)
+        || window.navigator.userAgent.includes('SpotController');
+}
+
+/**
+ * Encapsulates checks for determining if the environment is the Spot-Controller
+ * app but it is using an older version with explicit attributes set on the
+ * environment.
+ *
+ * @returns {boolean}
+ */
+function _isAndroidWebView() {
+    return browser.getBrowserName() === 'Chrome'
+        && window.navigator.userAgent.includes('wv');
+}
+
+/**
+ * Encapsulates checks for determining if the environment is the Spot-Controller
+ * app but it is using an older version with explicit attributes set on the
+ * environment.
+ *
+ * @returns {boolean}
+ */
+function _isIOSWebView() {
+    return browser.getBrowserName() === 'Safari'
+        && !browser.getBrowserVersion();
 }
 
 /**
