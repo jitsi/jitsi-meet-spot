@@ -5,6 +5,9 @@ import android.app.Application;
 import com.corbt.keepawake.KCKeepAwakePackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactApplication;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.ViewManager;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -14,7 +17,9 @@ import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
 import com.mackentoch.beaconsandroid.BeaconsAndroidPackage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -27,13 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
+      return Arrays.asList(
           new MainReactPackage(),
             new AsyncStoragePackage(),
             new BeaconsAndroidPackage(),
             new KCKeepAwakePackage(),
             new RNCWebViewPackage(),
             new ReactNativePushNotificationPackage(),
+            new SpotControllerPackage(),
             new SvgPackage()
       );
     }

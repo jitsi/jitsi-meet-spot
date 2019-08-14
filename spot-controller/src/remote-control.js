@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {
     Button,
+    NativeModules,
     StyleSheet,
     Text,
     View
@@ -15,6 +16,17 @@ import { BeaconOverlay } from './beacons';
 
 import LoadingScreen from './LoadingScreen';
 import styles from './styles';
+
+const { AppInfo } = NativeModules;
+
+/* global __DEV__ */
+
+/**
+ * The constant is included into the user agent part to allow feature detection in future.
+ *
+ * @type {string}
+ */
+const SPOT_CLIENT_FEATURE_VERSION = 'SpotController/1';
 
 /**
  * A view for showing Spot-Remote within a WebView. A WebView is being used
@@ -46,6 +58,11 @@ export default class RemoteControl extends React.PureComponent {
         this._setRef = this._setRef.bind(this);
 
         this._resolveUrl();
+
+        this.userAgentString
+            = __DEV__
+                ? SPOT_CLIENT_FEATURE_VERSION
+                : `${SPOT_CLIENT_FEATURE_VERSION} ${AppInfo.name}/${AppInfo.version}(${AppInfo.buildNumber})`;
     }
 
     // Override the meta tag with values that are known not allow this app to
@@ -135,7 +152,7 @@ export default class RemoteControl extends React.PureComponent {
                     allowsInlineMediaPlayback = { true }
                     allowsLinkPreview = { false }
 
-                    applicationNameForUserAgent = 'SpotController/1'
+                    applicationNameForUserAgent = { this.userAgentString }
 
                     // Prevents moving the webview up and down.
                     bounces = { false }
