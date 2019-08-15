@@ -1,4 +1,3 @@
-const HelpPage = require('../page-objects/help-page');
 const InMeetingPage = require('../page-objects/spot-remote-in-meeting-page');
 const JoinCodePage = require('../page-objects/join-code-page');
 const ModeSelectPage = require('../page-objects/mode-select-page');
@@ -19,23 +18,12 @@ class SpotRemote {
     constructor(driver) {
         this.driver = driver;
 
-        this.helpPage = new HelpPage(this.driver);
         this.inMeetingPage = new InMeetingPage(this.driver);
         this.joinCodePage = new JoinCodePage(this.driver);
         this.modeSelectPage = new ModeSelectPage(this.driver);
         this.notifications = new Notifications(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
         this.stopSharePage = new StopSharePage(this.driver);
-    }
-
-    /**
-     * Returns an instance of {@code HelpPage} which wraps interactions with the
-     * application help view in the Spot-Remote.
-     *
-     * @returns {HelpPage}
-     */
-    getHelpPage() {
-        return this.helpPage;
     }
 
     /**

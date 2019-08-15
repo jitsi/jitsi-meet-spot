@@ -147,10 +147,7 @@ export class JoinCodeEntry extends React.Component {
      * @returns {boolean}
      */
     _shouldRedirectToHelp() {
-        const queryParams = new URLSearchParams(this.props.location.search);
-
-        return queryParams.get('enableOnboarding') === 'true'
-            && !this.props.completedOnboarding;
+        return isSpotControllerApp() && !this.props.completedOnboarding;
     }
 
     /**
