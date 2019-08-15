@@ -58,20 +58,6 @@ class JoinCodePage extends PageObject {
     }
 
     /**
-     * Proceeds to the join code view of Spot-Remote but with a query param set
-     * to enable the onboarding feature.
-     *
-     * @returns {void}
-     */
-    visitWithOnboarding() {
-        const queryParams = new Map();
-
-        queryParams.set('enableOnboarding', true);
-
-        this.driver.url(this._getJoinCodePageUrl(queryParams));
-    }
-
-    /**
      * Generates the URL to visit the join code page.
      *
      * @param {Map} [queryParams] - Additional parameters to append to the join
