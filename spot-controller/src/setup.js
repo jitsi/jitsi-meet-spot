@@ -7,7 +7,6 @@ import {
     TextInput,
     View
 } from 'react-native';
-import url from 'url';
 
 import { logger } from './logger';
 
@@ -17,6 +16,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         flex: 1,
         paddingTop: '20%'
+    },
+    error: {
+        color: 'lightcoral',
+        fontSize: 23,
+        marginBottom: 20
     },
     input: {
         backgroundColor: 'transparent',
@@ -62,6 +66,8 @@ export default class Setup extends React.Component {
 
         this.state = {
             enteredRemoteControlUrl: '',
+            errorLoadingConfig: false,
+            loading: false,
             remoteControlUrl: ''
         };
 
@@ -81,8 +87,14 @@ export default class Setup extends React.Component {
                 <Text style = { styles.title }>
                     Please enter the URL for the Spot deployment
                 </Text>
+                {
+                    this.state.errorLoadingConfig
+                        ? <Text style = { styles.error }>An error occurred</Text>
+                        : null
+                }
                 <TextInput
                     autoCorrect = { false }
+                    editable = { !this.state.loading }
                     onChangeText = { this._onEnteredUrlChange }
                     onSubmitEditing = { this._onSubmitEnteredUrl }
                     placeholder = 'Spot URL'
@@ -91,6 +103,7 @@ export default class Setup extends React.Component {
                     value = { this.state.enteredRemoteControlUrl } />
                 <Button
                     color = 'white'
+                    disabled = { this.state.loading }
                     onPress = { this.props.onCancel }
                     title = 'Cancel' />
             </View>
@@ -116,14 +129,36 @@ export default class Setup extends React.Component {
      * @returns {void}
      */
     _onSubmitEnteredUrl() {
-        try {
-            const urlParts = url.parse(this.state.enteredRemoteControlUrl);
+        const setLoading = new Promise(resolve => {
+            this.setState({
+                errorLoadingConfig: false,
+                loading: true
+            }, resolve);
+        });
 
-            if (/localhost|jitsi.net|8x8.vc/.exec(urlParts.hostname)) {
-                this.props.onSubmitEnteredUrl(this.state.enteredRemoteControlUrl);
-            }
-        } catch (e) {
-            logger.error(e);
-        }
+        setLoading
+            .then(() => fetch(`${this.state.enteredRemoteControlUrl}/dist/config/config.js`))
+            .then(response => {
+                if (response.status === 200) {
+                    return response.responseText || response.text();
+                }
+
+                return Promise.reject(response.statusText);
+            })
+            .then(responseText => {
+                if (responseText.includes('JitsiMeetSpotConfig')) {
+                    return this.props.onSubmitEnteredUrl(this.state.enteredRemoteControlUrl);
+                }
+
+                return Promise.reject('no config found');
+            })
+            .catch(error => {
+                logger.error(error);
+
+                this.setState({
+                    errorLoadingConfig: true,
+                    loading: false
+                });
+            });
     }
 }
