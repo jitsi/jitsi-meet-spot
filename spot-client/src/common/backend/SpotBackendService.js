@@ -149,6 +149,10 @@ export class SpotBackendService extends Emitter {
      * @private
      */
     _refreshRegistration(registration) {
+        if (!registration) {
+            throw new Error('No registration object passed to _refreshRegistration');
+        }
+
         const { pairingCode } = registration;
 
         logger.log('Refreshing access token...', { pairingCode });
@@ -225,6 +229,12 @@ export class SpotBackendService extends Emitter {
             + `scheduling refresh to be done in ${delay / ONE_MINUTE} minutes`);
 
         this._refreshTimeout = setTimeout(() => {
+            if (!this.registration) {
+                logger.error('Unable to refresh access token - no registration');
+
+                return;
+            }
+
             const { pairingCode } = this.registration;
 
             this._refreshRegistration(this.registration)
