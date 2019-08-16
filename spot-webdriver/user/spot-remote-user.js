@@ -3,20 +3,21 @@ const JoinCodePage = require('../page-objects/join-code-page');
 const ModeSelectPage = require('../page-objects/mode-select-page');
 const Notifications = require('../page-objects/notifcations');
 const RemoteControlPage = require('../page-objects/remote-control-page');
+const SpotUser = require('./spot-user');
 const StopSharePage = require('../page-objects/stop-share-page');
 
 /**
  * A model wrapping a browser driver representing a Spot-Remote which acts as the remote
  * controller of a Spot-TV.
  */
-class SpotRemote {
+class SpotRemote extends SpotUser {
     /**
      * Initializes a new {@code SpotRemote} instance.
      *
      * @inheritdoc
      */
     constructor(driver) {
-        this.driver = driver;
+        super(driver);
 
         this.inMeetingPage = new InMeetingPage(this.driver);
         this.joinCodePage = new JoinCodePage(this.driver);
