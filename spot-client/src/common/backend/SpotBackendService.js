@@ -133,9 +133,14 @@ export class SpotBackendService extends Emitter {
      */
     _maybeClearRegistration(error) {
         if (this.isUnrecoverableRequestError(error)) {
-            this.getJwt() && logger.log('Cleared backend registration');
-            persistence.set(PERSISTENCE_KEY, undefined);
-            this.registration = undefined;
+            if (this.registration) {
+                logger.log('Cleared backend registration');
+                persistence.set(PERSISTENCE_KEY, undefined);
+                this.registration = undefined;
+
+                // Emit event with empty jwt which means the backend registration is lost
+                this.emit(SpotBackendService.REGISTRATION_LOST, error);
+            }
         }
 
         throw error;
@@ -150,7 +155,7 @@ export class SpotBackendService extends Emitter {
      */
     _refreshRegistration(registration) {
         if (!registration) {
-            throw new Error('No registration object passed to _refreshRegistration');
+            return Promise.reject('No registration object passed to _refreshRegistration');
         }
 
         const { pairingCode } = registration;
@@ -241,13 +246,9 @@ export class SpotBackendService extends Emitter {
                 .then(
                     registration => {
                         this._setRegistration(pairingCode, registration);
-                        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() });
                     },
                     error => {
                         logger.error('Access token refresh failed', { error });
-
-                        // Emit event with empty jwt which means the backend registration is lost
-                        this.emit(SpotBackendService.REGISTRATION_LOST, error);
                     });
         }, delay);
     }
@@ -272,6 +273,8 @@ export class SpotBackendService extends Emitter {
 
         // Only long lived registrations are persisted
         this.registration.refreshToken && persistence.set(PERSISTENCE_KEY, this.registration);
+
+        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() });
 
         this._setRefreshTimeout();
     }
