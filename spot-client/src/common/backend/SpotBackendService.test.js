@@ -79,6 +79,18 @@ describe('SpotBackendService', () => {
                     })
             );
 
+            it('notifies listeners of the token refresh - on the initial registration', () => {
+                const onUpdateCallback = jest.fn();
+
+                spotBackendService.addListener(
+                    SpotBackendService.REGISTRATION_UPDATED,
+                    onUpdateCallback
+                );
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => expect(onUpdateCallback).toHaveBeenCalled());
+            });
+
             it('notifies listeners of the token refresh', () => {
                 jest.useFakeTimers();
 
@@ -155,6 +167,20 @@ describe('SpotBackendService', () => {
                             .toBe(true);
                     });
             });
+            it('notifies the listeners of JWT update - when starting with the registration expired', () => {
+                dateSpy = jest.spyOn(Date, 'now');
+                dateSpy.mockReturnValue(Date.now() + MOCK_RESPONSE.expiresIn);
+
+                const onUpdateCallback = jest.fn();
+
+                spotBackendService.addListener(
+                    SpotBackendService.REGISTRATION_UPDATED,
+                    onUpdateCallback
+                );
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => expect(onUpdateCallback).toHaveBeenCalled());
+            });
             it('does NOT refresh the registration initially if lots of time left until the expiration', () =>
                 spotBackendService.register(MOCK_PAIRING_CODE)
                     .then(() => {
@@ -210,6 +236,43 @@ describe('SpotBackendService', () => {
                             });
                         });
                     }));
+
+            it('will not emit registration lost when 401 is returned to get room info', () => {
+                const registrationLostCallback = jest.fn();
+
+                spotBackendService.addListener(
+                    SpotBackendService.REGISTRATION_LOST,
+                    registrationLostCallback
+                );
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => {
+                        // Mock the initial request to get room info
+                        fetch.once('', {
+                            status: 401,
+                            ok: false
+                        });
+
+                        // Mock the refreshing of the token
+                        fetch.once(JSON.stringify(MOCK_RESPONSE));
+
+                        // Mock the request to get room info
+                        fetch.once(JSON.stringify({
+                            id: 'mock-id',
+                            mucUrl: 'muc-url',
+                            name: 'mock-muc-name'
+                        }));
+
+                        return spotBackendService.getRoomInfo().then(roomInfo => {
+                            expect(roomInfo).toEqual({
+                                id: 'mock-id',
+                                name: 'mock-muc-name',
+                                roomName: 'muc-url'
+                            });
+                            expect(registrationLostCallback).not.toHaveBeenCalled();
+                        });
+                    });
+            });
         });
     });
 });
