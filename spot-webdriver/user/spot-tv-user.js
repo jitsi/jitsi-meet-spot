@@ -1,19 +1,20 @@
 const AdminPage = require('../page-objects/admin-page');
 const CalendarPage = require('../page-objects/calendar-page');
 const MeetingPage = require('../page-objects/meeting-page');
+const SpotUser = require('./spot-user');
 
 /**
  * A model wrapping a browser driver that represents a Spot-TV which is the main screen in
  * a conference room.
  */
-class SpotTV {
+class SpotTV extends SpotUser {
     /**
      * Initializes a new {@code SpotTV} instance.
      *
      * @inheritdoc
      */
     constructor(driver) {
-        this.driver = driver;
+        super(driver);
 
         this.adminPage = new AdminPage(this.driver);
         this.calendarPage = new CalendarPage(this.driver);
