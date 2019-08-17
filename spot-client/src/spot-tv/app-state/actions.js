@@ -6,6 +6,7 @@ import {
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
+    getTemporaryRemoteIds,
     removePairedRemote,
     setDisplayName,
     setRemoteJoinCode,
@@ -287,6 +288,22 @@ function createConnection(state, permanentPairingCode) {
             jwt: backend ? backend.getJwt() : undefined
         };
     });
+}
+
+/**
+ * To be called by the Spot-TV to cause all known temporary Spot-Remotes to
+ * become disconnected.
+ *
+ * @returns {Function} A function which returns a Promise that resolves if all
+ * removal requests were successfully sent.
+ */
+export function disconnectAllTemporaryRemotes() {
+    return (dispatch, getState) => {
+        const disconnectPromises = getTemporaryRemoteIds(getState())
+            .map(remoteId => remoteControlServer.disconnectRemoteControl(remoteId));
+
+        return Promise.all(disconnectPromises);
+    };
 }
 
 /**

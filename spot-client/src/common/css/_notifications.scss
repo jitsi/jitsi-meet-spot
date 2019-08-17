@@ -13,9 +13,16 @@
 
     .notification-default {
         background: white;
+        color: black;
     }
     
     .notification-error {
         background: red;
+        color: white;
+    }
+
+    .notification-message {
+        background: green;
+        color: white;
     }
 }

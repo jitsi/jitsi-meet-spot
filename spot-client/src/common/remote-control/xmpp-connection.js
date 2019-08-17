@@ -1,4 +1,4 @@
-import { $iq } from 'strophe.js';
+import { Strophe, $iq } from 'strophe.js';
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
@@ -28,9 +28,9 @@ export default class XmppConnection {
      * @param {Object} options.configuration - Details of endpoints to use for
      * creating the XMPP connection.
      * @param {string} options.configuration.bosh - The bosh url to use for
-     * long-polling witht the XMPP service.
+     * long-polling with the XMPP service.
      * @param {Object} options.configuration.hosts - Details of endpoints to use
-     * for where to reate the MUC.
+     * for where to create the MUC.
      * @param {string} options.configuration.hosts.domain - The overall domain
      * for which sub routes will be defined.
      * @param {string} options.configuration.hosts.muc - Specifically the url
@@ -457,6 +457,35 @@ export default class XmppConnection {
     }
 
     /**
+     * Removes a specified MUC participant.
+     *
+     * @param {string} jid - The full jid of the participant to be removed.
+     * @param {reason} [reason] - Additional information about why the removal
+     * is occurring.
+     * @returns {Promise}
+     */
+    kick(jid, reason = 'kicked') {
+        const kickIQ = $iq({
+            to: this.room.roomjid,
+            type: 'set'
+        })
+            .c('query', {
+                xmlns: 'http://jabber.org/protocol/muc#admin'
+            })
+                .c('item', {
+                    nick: Strophe.getResourceFromJid(jid),
+                    role: 'none'
+                })
+                    .c('reason')
+                        .t(reason)
+                    .up()
+                .up()
+            .up();
+
+        return this._sendIQ(kickIQ);
+    }
+
+    /**
      * The identifier for the local user in the MUC. Returns the full jid, which
      * has user@domain/resource.
      *
@@ -657,21 +686,39 @@ export default class XmppConnection {
      */
     convertXMLPresenceToObject(presence) {
         const from = presence.getAttribute('from');
+        const statusCodes = Array.from(presence.getElementsByTagName('status'))
+            .map(statusEl => statusEl.getAttribute('code'));
         let type = presence.getAttribute('type');
 
+        // Assume unknown participant presence indicates a join.
         if (!this._participants.has(from) && !type) {
             type = 'join';
         }
 
-        let state;
+        const parsedPresence = {
+            from,
+            localUpdate: statusCodes.includes('110'),
+            state: undefined,
+            type,
+            unavailableReason: undefined
+        };
+
+        if (type === 'unavailable') {
+            if (statusCodes.includes('307')) {
+                parsedPresence.unavailableReason = 'kicked';
+            }
+
+            return parsedPresence;
+        }
+
         const statusElement = presence.getElementsByTagNameNS('https://jitsi.org/spot', 'spot-status')[0];
 
         // eslint-disable-next-line no-negated-condition
         if (!statusElement) {
-            state = this._legacyConvertXMLPresenceToObject(presence);
+            parsedPresence.state = this._legacyConvertXMLPresenceToObject(presence);
         } else {
             try {
-                state = statusElement ? JSON.parse(statusElement.textContent) : { };
+                parsedPresence.state = statusElement ? JSON.parse(statusElement.textContent) : { };
             } catch (error) {
                 logger.error('Failed to parse presence', {
                     from,
@@ -682,12 +729,7 @@ export default class XmppConnection {
             }
         }
 
-        return {
-            from,
-            localUpdate: from === this.getRoomFullJid(),
-            state,
-            type
-        };
+        return parsedPresence;
     }
 
     /**

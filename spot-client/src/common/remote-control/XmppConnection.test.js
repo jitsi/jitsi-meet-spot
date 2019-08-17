@@ -41,8 +41,7 @@ describe('XmppConnection', () => {
             const presenceString = `
                 <presence
                     from = "${IQ_FROM}"
-                    to = "${IQ_TO}"
-                    type = "unavailable">
+                    to = "${IQ_TO}">
                     <spot-status xmlns="https://jitsi.org/spot">
                         ${spotStatus}                    
                     </spot-status>
@@ -62,9 +61,11 @@ describe('XmppConnection', () => {
                         isSpot: true,
                         videoMuted: true
                     },
-                    type: 'unavailable'
+                    type: 'join',
+                    unavailableReason: undefined
                 });
         });
+
         it('transforms legacy MUC presence into a js object', () => {
             const calendarArray = [ {
                 name: 'name1',
@@ -77,8 +78,7 @@ describe('XmppConnection', () => {
             const presenceString = `
                 <presence
                     from = "${IQ_FROM}"
-                    to = "${IQ_TO}"
-                    type = "unavailable">
+                    to = "${IQ_TO}">
                     <videoMuted>true</videoMuted>
                     <isSpot>true</isSpot>
                     <calendar>${JSON.stringify(calendarArray)}</calendar>
@@ -94,18 +94,45 @@ describe('XmppConnection', () => {
                 .toEqual({
                     from: IQ_FROM,
                     localUpdate: false,
+                    type: 'join',
                     state: {
+                        calendar: calendarArray,
                         isSpot: true,
-                        videoMuted: true,
-                        calendar: calendarArray
+                        videoMuted: true
                     },
-                    type: 'unavailable'
+                    unavailableReason: undefined
                 });
 
             // Legacy handling is expected to be removed after 04/01/2020 @ 12:00am (UTC)
             expect(Date.now()).toBeLessThan(1585699200000);
         });
+
+        it('provides a reason for being unavailable when kicked', () => {
+            const presenceString = `
+                <presence
+                    from = "${IQ_FROM}"
+                    to = "${IQ_TO}"
+                    type = "unavailable">
+                    <status code="307" />
+                </presence>
+            `;
+            const presenceIq = new DOMParser()
+                .parseFromString(presenceString, 'text/xml')
+                .documentElement;
+
+            const xmppConnection = new XmppConnection();
+
+            expect(xmppConnection.convertXMLPresenceToObject(presenceIq))
+                .toEqual({
+                    from: IQ_FROM,
+                    localUpdate: false,
+                    type: 'unavailable',
+                    state: undefined,
+                    unavailableReason: 'kicked'
+                });
+        });
     });
+
     describe('convertXMLMessageToObject', () => {
         it('transforms an IQ into a js object', () => {
             const messageString = `

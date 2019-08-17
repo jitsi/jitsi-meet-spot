@@ -126,7 +126,8 @@ export class InCall extends React.Component {
                     <NavButton
                         className = 'hangup'
                         label = 'Leave'
-                        onClick = { this._onHangup }>
+                        onClick = { this._onHangup }
+                        qaId = 'hangup'>
                         <CallEnd />
                     </NavButton>
                 </NavContainer>

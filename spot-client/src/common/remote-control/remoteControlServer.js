@@ -116,6 +116,16 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Disconnects a remote control client from the remote control server.
+     *
+     * @param {string} jid - The id associated with the client to be removed.
+     * @returns {Promise}
+     */
+    disconnectRemoteControl(jid) {
+        return this.xmppConnection.kick(jid);
+    }
+
+    /**
      * Gets next remote join code refresh interval expressed in milliseconds.
      *
      * @private

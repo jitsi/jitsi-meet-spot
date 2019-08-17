@@ -13,4 +13,27 @@ describe('Can start a meeting', () => {
 
         expect(spotTV.getMeetingName()).toBe(testMeetingName);
     });
+
+    xit('and disconnects the remote on meeting end', () => {
+        if (!session.isBackendEnabled()) {
+            pending();
+
+            return;
+        }
+
+        const spotTV = session.getSpotTV();
+        const spotRemote = session.getSpotRemote();
+
+        session.joinMeeting();
+
+        spotTV.getMeetingPage().waitForVisible();
+
+        const inMeetingPage = spotRemote.getInMeetingPage();
+
+        inMeetingPage.waitForVisible();
+        inMeetingPage.hangUp();
+        inMeetingPage.skipFeedback();
+
+        spotRemote.getJoinCodePage().waitForVisible();
+    });
 });

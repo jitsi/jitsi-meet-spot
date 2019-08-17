@@ -21,31 +21,25 @@ describe('In share mode', () => {
         const stopSharePage = spotRemote.getStopSharePage();
 
         stopSharePage.stopScreensharing();
-
-        const modeSelectPage = spotRemote.getModeSelectPage();
-
-        modeSelectPage.waitForVisible();
-
-        const calendarPage = spotTV.getCalendarPage();
-
-        calendarPage.waitForVisible();
     });
 
-    it('Spot-Remote can enter full remote control mode', () => {
+    xit('Spot-Remote is disconnected on share end', () => {
+        if (!session.isBackendEnabled()) {
+            pending();
+
+            return;
+        }
+
+        const meetingPage = spotTV.getMeetingPage();
+
+        meetingPage.waitForMeetingJoined();
+
         const stopSharePage = spotRemote.getStopSharePage();
 
         stopSharePage.stopScreensharing();
 
-        const modeSelectPage = spotRemote.getModeSelectPage();
+        const joinCodePage = spotRemote.getJoinCodePage();
 
-        modeSelectPage.waitForVisible();
-
-        modeSelectPage.selectFullRemoteControlMode();
-
-        const remoteControlPage = spotRemote.getRemoteControlPage();
-
-        remoteControlPage.waitForVisible();
-
-        remoteControlPage.waitWaitingForCallViewToDisplay();
+        joinCodePage.waitForVisible();
     });
 });
