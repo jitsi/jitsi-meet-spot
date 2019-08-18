@@ -117,14 +117,6 @@ export default class XmppConnection {
         });
 
         this.xmppConnection.xmpp.connection.addHandler(
-            this._onPresence,
-            null,
-            'presence',
-            'unavailable',
-            null
-        );
-
-        this.xmppConnection.xmpp.connection.addHandler(
             this._onCommand,
             IQ_NAMESPACES.COMMAND,
             'iq',
