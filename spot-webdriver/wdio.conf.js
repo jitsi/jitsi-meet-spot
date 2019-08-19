@@ -50,7 +50,7 @@ exports.config = {
         // When running tests against the backend integration, Spot-TVs might
         // encounter JID conflicts while loading the app, so give ample time to
         // recover from them.
-        defaultTimeoutInterval: 90000
+        defaultTimeoutInterval: constants.MAX_PAGE_LOAD_WAIT + 30000
     },
 
     logLevel: LOG_LEVEL,
