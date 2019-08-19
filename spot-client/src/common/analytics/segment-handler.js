@@ -29,6 +29,17 @@ export default class SegmentHandler {
     }
 
     /**
+     * Records a "page" event in Segment.
+     *
+     * @param {string} name - The name of the viewed page.
+     * @param {Object} properties - Additional details about the event.
+     * @returns {void}
+     */
+    page(name, properties) {
+        segment.page(name, properties);
+    }
+
+    /**
      * Updates the known id of the user.
      *
      * @param {string} deviceId - The user identifier for the current user.

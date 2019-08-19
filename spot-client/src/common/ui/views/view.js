@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { analytics } from 'common/analytics';
 import { getBackgroundUrl, isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 
@@ -27,6 +28,7 @@ class View extends React.Component {
      */
     componentDidMount() {
         logger.log('View mounted', { name: this.props.name });
+        analytics.page(this.props.name);
     }
 
     /**
