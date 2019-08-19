@@ -35,7 +35,7 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
-        this._hasJoinedMuc = true;
+        this._hasJoinedMuc = false;
         this._participants = new Set();
 
         /**
