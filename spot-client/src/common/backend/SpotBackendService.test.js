@@ -22,6 +22,40 @@ function refreshRequestMatcher(refreshToken) {
     });
 }
 
+/**
+ * A test scenario where 401 error is returned to the get room info request and the the backend service is supposed to
+ * do the token refresh and retry the get room info again.
+ *
+ * @param {SpotBackendService} spotBackendService - The backend instance to run the scenario with.
+ * @param {RefreshTokenResponse} refreshTokenResponse - The token refresh response object.
+ * @returns {Promise<RoomInfo>}
+ */
+function checkRetryOn401ToGetRoomInfo(spotBackendService, refreshTokenResponse) {
+    // Mock the initial request to get room info
+    fetch.once('', {
+        status: 401,
+        ok: false
+    });
+
+    // Mock the refreshing of the token
+    fetch.once(JSON.stringify(refreshTokenResponse));
+
+    // Mock the request to get room info
+    fetch.once(JSON.stringify({
+        id: 'mock-id',
+        mucUrl: 'muc-url',
+        name: 'mock-muc-name'
+    }));
+
+    return spotBackendService.getRoomInfo().then(roomInfo => {
+        expect(roomInfo).toEqual({
+            id: 'mock-id',
+            name: 'mock-muc-name',
+            roomName: 'muc-url'
+        });
+    });
+}
+
 describe('SpotBackendService', () => {
     const PAIRING_SERVICE_URL = 'test/pairing/url';
     const REFRESH_SERVICE_URL = `${PAIRING_SERVICE_URL}/regenerate`;
@@ -211,31 +245,8 @@ describe('SpotBackendService', () => {
 
             it('refresh the token if get room info on expired', () =>
                 spotBackendService.register(MOCK_PAIRING_CODE)
-                    .then(() => {
-                        // Mock the initial request to get room info
-                        fetch.once('', {
-                            status: 401,
-                            ok: false
-                        });
-
-                        // Mock the refreshing of the token
-                        fetch.once(JSON.stringify(MOCK_RESPONSE));
-
-                        // Mock the request to get room info
-                        fetch.once(JSON.stringify({
-                            id: 'mock-id',
-                            mucUrl: 'muc-url',
-                            name: 'mock-muc-name'
-                        }));
-
-                        return spotBackendService.getRoomInfo().then(roomInfo => {
-                            expect(roomInfo).toEqual({
-                                id: 'mock-id',
-                                name: 'mock-muc-name',
-                                roomName: 'muc-url'
-                            });
-                        });
-                    }));
+                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService, MOCK_RESPONSE))
+            );
 
             it('will not emit registration lost when 401 is returned to get room info', () => {
                 const registrationLostCallback = jest.fn();
@@ -246,32 +257,11 @@ describe('SpotBackendService', () => {
                 );
 
                 return spotBackendService.register(MOCK_PAIRING_CODE)
-                    .then(() => {
-                        // Mock the initial request to get room info
-                        fetch.once('', {
-                            status: 401,
-                            ok: false
-                        });
-
-                        // Mock the refreshing of the token
-                        fetch.once(JSON.stringify(MOCK_RESPONSE));
-
-                        // Mock the request to get room info
-                        fetch.once(JSON.stringify({
-                            id: 'mock-id',
-                            mucUrl: 'muc-url',
-                            name: 'mock-muc-name'
-                        }));
-
-                        return spotBackendService.getRoomInfo().then(roomInfo => {
-                            expect(roomInfo).toEqual({
-                                id: 'mock-id',
-                                name: 'mock-muc-name',
-                                roomName: 'muc-url'
-                            });
+                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService, MOCK_RESPONSE)
+                        .then(() => {
                             expect(registrationLostCallback).not.toHaveBeenCalled();
-                        });
-                    });
+                        })
+                    );
             });
         });
     });
