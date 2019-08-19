@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { getBackgroundUrl, isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 
+import { viewDisplayed } from '../actions';
+
 /**
  * A React Component representing a single screen in the single-page application
  * and is responsible for basic layout.
@@ -15,6 +17,7 @@ class View extends React.Component {
     static propTypes = {
         backgroundUrl: PropTypes.string,
         children: PropTypes.node,
+        dispatch: PropTypes.func,
         hideBackground: PropTypes.bool,
         isAnyModalOpen: PropTypes.bool,
         name: PropTypes.string
@@ -27,6 +30,7 @@ class View extends React.Component {
      */
     componentDidMount() {
         logger.log('View mounted', { name: this.props.name });
+        this.props.dispatch(viewDisplayed(this.props.name));
     }
 
     /**

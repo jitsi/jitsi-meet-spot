@@ -34,6 +34,19 @@ export class Analytics {
     }
 
     /**
+     * Logs a page/view being displayed.
+     *
+     * @param {string} name - A name which describes and identifies the page to be logged.
+     * @param {Object} [properties] - Additional information to log which describe the page event in greater detail.
+     * @returns {void}
+     */
+    page(name, properties) {
+        this._handlers.forEach(handler => {
+            handler.page && handler.page(name, properties);
+        });
+    }
+
+    /**
      * Sets the new local analytics user id on all handlers.
      *
      * @param {string} newId - The new unique id for the local user.

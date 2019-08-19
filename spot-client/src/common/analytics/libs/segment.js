@@ -135,5 +135,16 @@ export default {
      */
     track(event, properties) {
         window.analytics.track(event, properties);
+    },
+
+    /**
+     * Records a "page" event in Segment.
+     *
+     * @param {string} name - The name of the viewed page.
+     * @param {Object} properties - Additional details about the event.
+     * @returns {void}
+     */
+    page(name, properties) {
+        window.analytics.page(/* category */ undefined, name, properties);
     }
 };

@@ -1,0 +1,2 @@
+
+export const VIEW_DISPLAYED = 'VIEW_DISPLAYED';
