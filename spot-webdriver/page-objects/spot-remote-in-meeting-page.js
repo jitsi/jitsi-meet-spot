@@ -25,11 +25,9 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
+        super(driver, REMOTE_CONTROL);
 
         this.screensharePicker = new ScreensharePicker(this.driver);
-
-        this.rootSelector = REMOTE_CONTROL;
     }
 
     /**

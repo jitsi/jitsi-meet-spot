@@ -21,9 +21,7 @@ class MeetingPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = MEETING_VIEW;
+        super(driver, MEETING_VIEW);
     }
 
     /**

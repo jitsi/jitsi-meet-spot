@@ -15,9 +15,7 @@ class ScreensharePicker extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = SCREENSHARE_PICKER;
+        super(driver, SCREENSHARE_PICKER);
     }
 
     /**

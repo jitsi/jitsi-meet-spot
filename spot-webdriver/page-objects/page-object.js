@@ -8,9 +8,12 @@ class PageObject {
      *
      * @param {Object} driver - The webdriver.io browser instance which can
      * interact with Spot.
+     * @param {string} rootSelector - The selector to locate the root element of the new page
+     * object.
      */
-    constructor(driver) {
+    constructor(driver, rootSelector) {
         this.driver = driver;
+        this.rootSelector = rootSelector;
     }
 
     /**

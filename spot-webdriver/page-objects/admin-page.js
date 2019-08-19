@@ -16,9 +16,7 @@ class AdminPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = ADMIN_VIEW;
+        super(driver, ADMIN_VIEW);
     }
 
     /**

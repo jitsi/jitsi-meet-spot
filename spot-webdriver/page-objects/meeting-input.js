@@ -14,9 +14,7 @@ class MeetingInput extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = INPUT;
+        super(driver, INPUT);
     }
 
     /**

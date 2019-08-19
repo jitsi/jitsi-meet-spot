@@ -16,12 +16,10 @@ class RemoteControlPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
+        super(driver, REMOTE_CONTROL);
 
         this.meetingInput = new MeetingInput(this.driver);
         this.screensharePicker = new ScreensharePicker(this.driver);
-
-        this.rootSelector = REMOTE_CONTROL;
     }
 
     /**

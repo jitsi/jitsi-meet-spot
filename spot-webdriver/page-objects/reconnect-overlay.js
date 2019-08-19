@@ -14,9 +14,7 @@ class ReconnectOverlay extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = RECONNECT_OVERLAY;
+        super(driver, RECONNECT_OVERLAY);
     }
 
     /**

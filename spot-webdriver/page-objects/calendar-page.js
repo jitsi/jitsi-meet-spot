@@ -16,10 +16,9 @@ class CalendarPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
+        super(driver, CALENDAR_VIEW);
 
         this.meetingInput = new MeetingInput(this.driver);
-        this.rootSelector = CALENDAR_VIEW;
     }
 
     /**
