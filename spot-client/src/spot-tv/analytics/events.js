@@ -6,3 +6,7 @@ export const backendPairingEvents = {
     VALIDATE_FAIL: 'backend-pairing-code-validation-fail',
     VALIDATE_SUCCESS: 'backend-pairing-code-validation-success'
 };
+
+export const calendarEvents = {
+    CALENDAR_ERROR: 'calendar-error'
+};

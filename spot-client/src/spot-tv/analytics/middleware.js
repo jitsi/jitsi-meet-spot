@@ -1,4 +1,5 @@
 import { analytics } from 'common/analytics';
+import { CALENDAR_SET_ERROR } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
 import {
@@ -7,10 +8,13 @@ import {
     SPOT_TV_PAIR_TO_BACKEND_SUCCESS
 } from '../backend';
 
-import { backendPairingEvents } from './events';
+import { backendPairingEvents, calendarEvents } from './events';
 
 MiddlewareRegistry.register(() => next => action => {
     switch (action.type) {
+    case CALENDAR_SET_ERROR:
+        analytics.log(calendarEvents.CALENDAR_ERROR, { error: action.error });
+        break;
     case SPOT_TV_PAIR_TO_BACKEND_FAIL:
         analytics.log(backendPairingEvents.VALIDATE_FAIL);
         break;

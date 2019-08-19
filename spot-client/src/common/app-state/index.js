@@ -40,6 +40,7 @@ export * from './spot-tv/actions';
 export * from './spot-tv/action-types';
 export * from './wired-screenshare/actions';
 
+export * from './calendars/action-types';
 export * from './remote-control-service/actionTypes';
 
 export * from './calendars/constants';
