@@ -35,7 +35,7 @@ class ReconnectOverlay extends PageObject {
      * @returns {void}
      */
     waitForOverlayToDisappear(timeToWait) {
-        this.waitForElementHidden(RECONNECT_OVERLAY, timeToWait);
+        this.waitForHidden(timeToWait);
     }
 }
 

@@ -83,6 +83,18 @@ class PageObject {
     }
 
     /**
+     * Wait for this page object to be hidden.
+     *
+     * @param {number} timeToWait - How many seconds to wait before failing the test.
+     * @returns {PageObject} - Returns this instance for calls chaining.
+     */
+    waitForHidden(timeToWait) {
+        this.waitForElementHidden(this.rootSelector, timeToWait);
+
+        return this;
+    }
+
+    /**
      * Waits for this page object to be visible on the browser.
      *
      * @param {number} [timeout] - An override of the number of milliseconds to
