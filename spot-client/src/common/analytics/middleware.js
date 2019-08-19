@@ -4,6 +4,7 @@ import { getSpotClientVersion } from '../app-state';
 import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
 import { SET_DEVICE_ID } from '../app-state/device-id';
 import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
+import { VIEW_DISPLAYED } from '../ui/actionTypes';
 
 import analytics from './analytics';
 import { permanentPairingCodeEvents } from './events';
@@ -20,6 +21,10 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         break;
     case SET_PERMANENT_PAIRING_CODE:
         return _permanentPairingAnalytics({ getState }, next, action);
+    case VIEW_DISPLAYED:
+        analytics.page(action.name);
+
+        break;
     }
 
     return next(action);
