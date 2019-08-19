@@ -35,6 +35,7 @@ export default class XmppConnection {
 
         this.initPromise = null;
 
+        this._hasJoinedMuc = false;
         this._participants = new Set();
 
         /**
@@ -120,7 +121,7 @@ export default class XmppConnection {
             this._onPresence,
             null,
             'presence',
-            'unavailable',
+            null,
             null
         );
 
@@ -147,6 +148,13 @@ export default class XmppConnection {
             return new Promise((resolve, reject) => {
                 const { connection } = this.xmppConnection.xmpp;
 
+                /**
+                 * Callback invoked on the initial presence received from the MUC
+                 * to determine a successful join.
+                 *
+                 * @param {Object} presence - The initial XML presence update.
+                 * @returns {boolean} False to unregister the handler from strophe.
+                 */
                 const onSuccessConnect = presence => {
                     const errors = presence.getElementsByTagName('error');
 
@@ -155,30 +163,15 @@ export default class XmppConnection {
 
                         reject(error);
 
-                        return true;
+                        return false;
                     }
+
+                    this._hasJoinedMuc = true;
 
                     resolve();
 
-                    return this._onPresence(presence);
+                    return false;
                 };
-
-                const onFailedConnect = reason => {
-                    connection.deleteHandler(onFailedConnect);
-                    connection.deleteHandler(onSuccessConnect);
-
-                    reject(reason);
-
-                    return true;
-                };
-
-                connection.addHandler(
-                    onFailedConnect,
-                    null,
-                    'presence',
-                    'error',
-                    null
-                );
 
                 // This is a generic presence handler that gets all presence,
                 // including error and unavailable.
@@ -500,6 +493,12 @@ export default class XmppConnection {
      */
     _onPresence(presence) {
         const parsedPresence = this.convertXMLPresenceToObject(presence);
+
+        // Suppress any presence errors until the MUC is joined as those
+        // initial presence errors are handled by the join flow instead.
+        if (parsedPresence.type === 'error' && !this._hasJoinedMuc) {
+            return true;
+        }
 
         // Update internal knowledge of participants
         if (parsedPresence.type === 'join') {
