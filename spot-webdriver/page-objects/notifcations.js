@@ -15,9 +15,7 @@ class Notifications extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = NOTIFICATIONS_CONTAINER;
+        super(driver, NOTIFICATIONS_CONTAINER);
     }
 
     /**

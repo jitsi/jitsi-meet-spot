@@ -15,9 +15,7 @@ class JoinCodePage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = JOIN_CODE_VIEW;
+        super(driver, JOIN_CODE_VIEW);
     }
 
     /**

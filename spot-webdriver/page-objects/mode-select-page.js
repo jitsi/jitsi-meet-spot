@@ -14,9 +14,7 @@ class ModeSelectPage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = MODE_SELECTION;
+        super(driver, MODE_SELECTION);
     }
 
     /**

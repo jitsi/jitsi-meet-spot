@@ -14,9 +14,7 @@ class StopSharePage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
-
-        this.rootSelector = STOP_SHARE_CTA;
+        super(driver, STOP_SHARE_CTA);
     }
 
     /**
