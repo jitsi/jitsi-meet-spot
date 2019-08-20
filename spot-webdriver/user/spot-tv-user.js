@@ -56,6 +56,15 @@ class SpotTV extends SpotUser {
     }
 
     /**
+     * Retrieves the short lived pairing code displayed on the calendar page.
+     *
+     * @returns {string}
+     */
+    getShortLivedPairingCode() {
+        return this.getCalendarPage().getJoinCode();
+    }
+
+    /**
      * Returns an instance of {@code MeetingPage} which wraps interactions with
      * the in-meeting view in Spot-TV.
      *

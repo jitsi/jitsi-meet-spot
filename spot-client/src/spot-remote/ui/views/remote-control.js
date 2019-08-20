@@ -66,7 +66,7 @@ export class RemoteControl extends React.PureComponent {
      */
     _getView() {
         if (!this.props.isConnectedToSpot) {
-            return <div>Waiting for Spot TV to connect...</div>;
+            return <div data-qa-id = 'waiting-for-spot-tv'>Waiting for Spot TV to connect...</div>;
         }
 
         switch (this.props.view) {
