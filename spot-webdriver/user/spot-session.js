@@ -97,6 +97,15 @@ class SpotSession {
     }
 
     /**
+     * Checks if backend is enabled in the current test session.
+     *
+     * @returns {boolean}
+     */
+    isBackendEnabled() {
+        return Boolean(constants.BACKEND_PAIRING_CODE);
+    }
+
+    /**
      * The {@code SpotRemote} makes the TV join a meeting with the given name. If a name is not
      * provided the session selects a random one.
      *
@@ -131,6 +140,34 @@ class SpotSession {
     }
 
     /**
+     * Starts Spot Remote with given join code and extra query params.
+     *
+     * @param {string} joinCode - The join code to be entered on the join code page.
+     * @param {Map} queryParams - Any extra query params to be added to the Spot Remote URL.
+     * @returns {void}
+     */
+    startSpotRemote(joinCode, queryParams) {
+        const joinCodePage = this.spotRemote.getJoinCodePage();
+
+        joinCodePage.visit(queryParams);
+        joinCodePage.enterCode(joinCode);
+    }
+
+    /**
+     * Starts the Spot TV and opens the home page(calendar page).
+     *
+     * @returns {void}
+     */
+    startSpotTv() {
+        const calendarPage = this.spotTV.getCalendarPage();
+        const queryParams = new Map();
+
+        queryParams.set('testPermanentPairingCode', constants.BACKEND_PAIRING_CODE || '');
+
+        calendarPage.visit(queryParams, constants.MAX_PAGE_LOAD_WAIT);
+    }
+
+    /**
      * Orchestrates the interactions for obtaining the join code from the {@code SpotTV}
      * and submitting it on the join code page of the {@code SpotRemote}.
      *
@@ -140,19 +177,11 @@ class SpotSession {
      * @returns {void}
      */
     _submitJoinCode(options = {}) {
-        const calendarPage = this.spotTV.getCalendarPage();
-        const queryParams = new Map();
+        this.startSpotTv();
 
-        queryParams.set('testPermanentPairingCode', constants.BACKEND_PAIRING_CODE || '');
+        const joinCode = this.spotTV.getShortLivedPairingCode();
 
-        calendarPage.visit(queryParams, constants.MAX_PAGE_LOAD_WAIT);
-
-        const joinCode = calendarPage.getJoinCode();
-
-        const joinCodePage = this.spotRemote.getJoinCodePage();
-
-        joinCodePage.visit(options.queryParams);
-        joinCodePage.enterCode(joinCode);
+        this.startSpotRemote(joinCode, options.queryParams);
     }
 }
 

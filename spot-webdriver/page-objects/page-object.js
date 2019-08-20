@@ -85,7 +85,7 @@ class PageObject {
     /**
      * Wait for this page object to be hidden.
      *
-     * @param {number} timeToWait - How many seconds to wait before failing the test.
+     * @param {number} [timeToWait] - How many seconds to wait before failing the test.
      * @returns {PageObject} - Returns this instance for calls chaining.
      */
     waitForHidden(timeToWait) {

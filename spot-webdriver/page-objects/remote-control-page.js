@@ -5,6 +5,7 @@ const ScreensharePicker = require('./screenshare-picker');
 const MEET_NOW_BUTTON = '[data-qa-id=meet-now]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const SHARE_CONTENT_BUTTON = '[data-qa-id=share-content]';
+const WAITING_FOR_SPOT_TV_LABEL = '[data-qa-id=waiting-for-spot-tv]';
 
 /**
  * A page object for interacting with the waiting view of Spot-Remote.
@@ -33,6 +34,15 @@ class RemoteControlPage extends PageObject {
         meetNowButton.click(MEET_NOW_BUTTON);
 
         return this.meetingInput;
+    }
+
+    /**
+     * Return a {@code PageObject} instance for the "waiting for Spot TV to connect" label.
+     *
+     * @returns {PageObject}
+     */
+    getWaitingForSpotTvLabel() {
+        return new PageObject(this.driver, WAITING_FOR_SPOT_TV_LABEL);
     }
 
     /**

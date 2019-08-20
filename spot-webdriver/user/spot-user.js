@@ -47,6 +47,15 @@ class SpotUser {
     setNetworkOnline() {
         this.driver.deleteNetworkConditions();
     }
+
+    /**
+     * Stops the Spot app by making the webdriver visit a blank page.
+     *
+     * @returns {void}
+     */
+    stop() {
+        this.driver.url('about:blank');
+    }
 }
 
 module.exports = SpotUser;
