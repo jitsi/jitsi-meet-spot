@@ -123,7 +123,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      */
     disconnect(event) {
         this.destroyWirelessScreenshareConnections();
-        this._lastSpotState = null;
+        this._resetSpotTvState();
 
         return super.disconnect(event);
     }
@@ -222,6 +222,24 @@ export class RemoteControlClient extends BaseRemoteControlService {
             COMMANDS.HANG_UP,
             {
                 skipFeedback
+            }
+        );
+    }
+
+    /**
+     * Clears the stored Spot TV state and emits update event.
+     *
+     * @private
+     * @returns {void}
+     */
+    _resetSpotTvState() {
+        this._lastSpotState = {
+            spotId: undefined
+        };
+        this.emit(
+            SERVICE_UPDATES.SERVER_STATE_CHANGE,
+            {
+                updatedState: this._lastSpotState
             }
         );
     }
@@ -429,15 +447,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 logger.log('Spot TV left the MUC');
                 if (this._options.backend) {
                     // With backend it is okay for remote to sit in the MUC without Spot TV connected.
-                    this._lastSpotState = {
-                        spotId: undefined
-                    };
-                    this.emit(
-                        SERVICE_UPDATES.SERVER_STATE_CHANGE,
-                        {
-                            updatedState: this._lastSpotState
-                        }
-                    );
+                    this._resetSpotTvState();
                 } else {
                     this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
                 }
