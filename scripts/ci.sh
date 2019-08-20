@@ -1,39 +1,68 @@
 #!/bin/bash
 set -e
 
-cd spot-client
+# A pid file is used in the project root to ensure cleanup of the dev server
+# used for selenium testing in case there was a non-graceful exit that prevented
+# a previous run of the script from performing cleanup.
+WEBPACK_DEV_SERVER_PID_FILE=webpack_dev_server.pid
+
+kill_webpack_dev_server_pid() {
+    sh ./scripts/ci-clean-pid.sh $WEBPACK_DEV_SERVER_PID_FILE
+}
+
+kill_webpack_dev_server_pid
+
+echo "Running basic tests"
+
+echo "Testing Spot-Controller"
+cd spot-controller
+npm install
+npm run lint
+
+echo "Testing Spot-Electron"
+cd ../spot-electron
+npm install
+npm run lint
+
+echo "Testing Spot-Client"
+cd ../spot-client
 npm install
 npm run lint
 npm run test
 npm run build:prod
 
-cd ../spot-controller
-npm install
-npm run lint
-
+echo "Testing Spot-Webdriver"
 cd ../spot-webdriver
 npm install
 npm run lint
 
-cd ../spot-electron
-npm install
-npm run lint
+if [ -z "$ENABLE_WEBDRIVER" ]; then
+    echo "No TEST_SERVER_URL configured for webdriver tests. Skipping tests."
+else
+    echo "Running Spot-Webdriver selenium tests"
 
-pid=""
+    echo "Enabling dev server"
+    cd ../spot-client
+    ./node_modules/.bin/webpack-dev-server &
+    echo $! > "../$WEBPACK_DEV_SERVER_PID_FILE"
 
-# if [ -z "$TEST_SERVER_URL" ]; then
-    # port=TEST_PORT
-    # export TEST_SERVER_URL="http://localhost:$TEST_PORT"
+    # Currently webpack-dev-server is used to serve the static frontend. It needs
+    # time to do an initial compile of the spot-client codebase. Otherwise the
+    # initial spot-webdriver test will run and wait for the server to come up,
+    # eating into its own run time.
+    echo "Sleeping to give webpack-dev-server time to start"
+    sleep 30
+    echo "Completed giving webpack-dev-server time to start"
 
-    # python -m SimpleHTTPServer $TEST_PORT &
-    # pid=$!
+    echo "Starting webdriver"
+    cd ../spot-webdriver
+    npm start || webdriver_exit_code=$?
+fi
 
-    # sleep 1
+cd ..
 
-    # ps aux | grep "$pid" | grep -v "grep"
-    # [ $? -eq 0 ] || exit $?;
-# fi
+kill_webpack_dev_server_pid
 
-# npm run start
+echo "Completing ci script with exit code $webdriver_exit_code"
 
-# kill $pid
+exit $webdriver_exit_code

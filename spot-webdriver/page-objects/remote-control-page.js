@@ -61,7 +61,7 @@ class RemoteControlPage extends PageObject {
                 // browser context - you may not access client or console
                 try {
                     return window.spot.store.getState().spotTv.wiredScreensharingEnabled;
-                } catch {
+                } catch (e) {
                     return false;
                 }
             }),
