@@ -59,11 +59,17 @@ exports.config = {
     maxInstances: process.env.MAX_INSTANCES || 1,
 
     reporters: [
+        [
+            'junit',
+            {
+                outputDir: './webdriver-results/junit'
+            }
+        ],
         'spec',
         [
             'timeline',
             {
-                outputDir: './webdriver-results',
+                outputDir: './webdriver-results/timeline',
                 screenshotStrategy: 'before:click'
             }
         ]
