@@ -1,6 +1,7 @@
 /* global __dirname */
 
 const path = require('path');
+const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 
 const constants = require('./constants');
 const screenInfo = require('./screen-info');
@@ -57,10 +58,22 @@ exports.config = {
 
     maxInstances: process.env.MAX_INSTANCES || 1,
 
-    reporters: [ 'spec' ],
+    reporters: [
+        'spec',
+        [
+            'timeline',
+            {
+                outputDir: './webdriver-results',
+                screenshotStrategy: 'before:click'
+            }
+        ]
+    ],
 
     // Use selenium-standalone to automatically download and launch selenium.
-    services: [ 'selenium-standalone' ],
+    services: [
+        'selenium-standalone',
+        [ TimelineService ]
+    ],
 
     specs: [
         path.resolve(__dirname, 'specs', '**/*.spec.js')

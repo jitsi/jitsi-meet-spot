@@ -14,6 +14,7 @@
         "eslint-plugin-import": "2.17.3",
         "eslint-plugin-jsdoc": "7.2.3",
         "eslint-plugin-react": "7.13.0",
+        "wdio-timeline-reporter": "5.0.12",
         "webdriverio": "5.10.1"
     },
     "name": "spot-webdriver",
