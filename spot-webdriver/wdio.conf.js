@@ -62,14 +62,15 @@ exports.config = {
         [
             'junit',
             {
-                outputDir: './webdriver-results/junit'
+                outputDir: './webdriver-results'
             }
         ],
         'spec',
         [
             'timeline',
             {
-                outputDir: './webdriver-results/timeline',
+                embedImages: true,
+                outputDir: './webdriver-results',
                 screenshotStrategy: 'before:click'
             }
         ]
