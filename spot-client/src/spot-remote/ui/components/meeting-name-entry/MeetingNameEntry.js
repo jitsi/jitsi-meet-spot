@@ -10,6 +10,7 @@ import { Button, Input } from 'common/ui';
  */
 export class MeetingNameEntry extends React.Component {
     static propTypes = {
+        domain: PropTypes.string,
         meetingName: PropTypes.string,
         onBlur: PropTypes.func,
         onChange: PropTypes.func,
@@ -45,17 +46,22 @@ export class MeetingNameEntry extends React.Component {
                     <label className = 'input-label'>
                         Start a new meeting
                     </label>
-                    <Input
-                        autoComplete = 'off'
-                        className = 'input'
-                        data-qa-id = 'meeting-name-input'
-                        onBlur = { this.props.onBlur }
-                        onChange = { this._onMeetingNameChange }
-                        onFocus = { this.props.onFocus }
-                        placeholder = { this.props.placeholder
-                            || 'Enter a meeting name' }
-                        spellCheck = { false }
-                        value = { this.props.meetingName } />
+                    <div className = 'input-with-default-domain'>
+                        <span className = 'default-domain'>
+                            { `${this.props.domain}/` }
+                        </span>
+                        <Input
+                            autoComplete = 'off'
+                            className = 'input'
+                            data-qa-id = 'meeting-name-input'
+                            onBlur = { this.props.onBlur }
+                            onChange = { this._onMeetingNameChange }
+                            onFocus = { this.props.onFocus }
+                            placeholder = { this.props.placeholder
+                                || 'Enter a meeting name' }
+                            spellCheck = { false }
+                            value = { this.props.meetingName } />
+                    </div>
                 </div>
                 <div className = 'submit-wrapper'>
                     <Button

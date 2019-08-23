@@ -22,6 +22,22 @@
         }
     }
 
+    .input-with-default-domain {
+        display: flex;
+
+        .default-domain {
+            /**
+             * Try matching the style of the neighboring Material Input component
+             */
+            align-items: center;
+            border-bottom: 2px solid black;
+            color: rgba(147, 185, 226, 1);
+            display: flex;
+            font-size: 16px;
+            line-height: 1.1875em;
+            padding: 6px 0 7px;
+        }
+    }
 
     .submit-wrapper {
         @include centered-content;

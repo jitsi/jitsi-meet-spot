@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import {
     dialOut,
+    getDefaultMeetingDomain,
     getInMeetingStatus,
     joinAdHocMeeting,
     joinScheduledMeeting,
@@ -46,6 +47,7 @@ class WaitingForCallView extends React.Component {
         _onJoinAdHocMeeting: PropTypes.func,
         _onJoinScheduledMeeting: PropTypes.func,
         _onUpdateAvailable: PropTypes.func,
+        defaultDomain: PropTypes.string,
         events: PropTypes.array,
         wiredScreensharingEnabled: PropTypes.bool
     };
@@ -150,6 +152,7 @@ class WaitingForCallView extends React.Component {
             return (
                 <div className = 'meeting-name-entry-view'>
                     <SelfFillingNameEntry
+                        domain = { this.props.defaultDomain }
                         onSubmit = { this.props._onJoinAdHocMeeting } />
                 </div>
             );
@@ -254,7 +257,8 @@ function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
         _enableAutoUpdate: isBackendEnabled(state)
-            && Boolean(getPermanentPairingCode(state))
+            && Boolean(getPermanentPairingCode(state)),
+        defaultDomain: getDefaultMeetingDomain(state)
     };
 }
 
