@@ -22,7 +22,6 @@ import {
     setAPiReceivedJoinCode
 } from './../../app-state';
 import { NavButton, NavContainer } from './../components';
-import { withUltrasound } from './../loaders';
 
 /**
  * Displays a view to enter a join code for connecting with a Spot-TV instance.
@@ -46,7 +45,6 @@ export class JoinCodeEntry extends React.Component {
         onDisconnect: PropTypes.func,
         permanentPairingCode: PropTypes.string,
         shareDomain: PropTypes.string,
-        ultrasoundService: PropTypes.object,
         updateReadyStatus: PropTypes.func
     };
 
@@ -78,7 +76,6 @@ export class JoinCodeEntry extends React.Component {
      */
     componentDidMount() {
         this.props.updateReadyStatus(true);
-        this.props.ultrasoundService.setMessage('');
         this.props.onDisconnect();
 
         const { pathname } = this.props.location;
@@ -291,11 +288,6 @@ export class JoinCodeEntry extends React.Component {
         });
         const trimmedCode = code.trim().toLowerCase();
 
-        // Trigger ultrasound playing now to piggyback on the connect button tap
-        // as workaround for mobile Safari requiring a user action to autoplay
-        // any sound.
-        this.props.ultrasoundService.setMessage(trimmedCode);
-
         submitPromise
             .then(() => this.props.onConnectToSpotTV(trimmedCode, this._isInShareModeEnv()))
             .then(() => {
@@ -407,4 +399,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default withUltrasound(connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry));
+export default connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry);
