@@ -22,6 +22,7 @@ export class SelfFillingNameEntry extends React.Component {
     static propTypes = {
         animationRevealRate: PropTypes.number,
         animationStartDelay: PropTypes.number,
+        domain: PropTypes.string,
         onSubmit: PropTypes.func
     };
 
@@ -99,6 +100,7 @@ export class SelfFillingNameEntry extends React.Component {
     render() {
         return (
             <MeetingNameEntry
+                domain = { this.props.domain }
                 meetingName = { this.state.enteredMeetingName }
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }
