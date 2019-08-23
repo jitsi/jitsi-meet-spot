@@ -352,7 +352,10 @@ export class MeetingFrame extends React.Component {
 
         case COMMANDS.SET_SCREENSHARING:
             if (this._isScreensharing !== data.on) {
-                this._jitsiApi.executeCommand('toggleShareScreen');
+                this._jitsiApi.executeCommand(
+                    'toggleShareScreen',
+                    { enable: data.on }
+                );
             }
             break;
 
