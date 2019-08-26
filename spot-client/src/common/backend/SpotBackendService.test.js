@@ -226,6 +226,25 @@ describe('SpotBackendService', () => {
                             .toBe(true);
                     })
             );
+            it('clears the registration if starts with expired token and initial refresh fails', () => {
+                // Starting with expired registration
+                const persistenceSpy = jest.spyOn(persistence, 'set');
+
+                jest.spyOn(persistence, 'get').mockReturnValue({
+                    ...MOCK_REGISTRATION,
+                    expires: Date.now() - 1000
+                });
+
+                // Reject the initial refresh
+                fetch.once('', {
+                    status: 401,
+                    ok: false
+                });
+
+                return spotBackendService.register(MOCK_PAIRING_CODE).catch(() => {
+                    expect(persistenceSpy).toHaveBeenCalledWith('spot-backend-registration', undefined);
+                });
+            });
         });
 
         describe('tries to refresh the access token if backend returns 401', () => {
