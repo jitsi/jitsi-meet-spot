@@ -191,6 +191,8 @@ export class SpotBackendService extends Emitter {
                 const expiresIn = getExpiresIn(storedRegistration);
 
                 if (expiresIn < FIVE_MINUTES) {
+                    // Need to attach the registration, so that it is correctly cleared on refresh failure.
+                    this.registration = storedRegistration;
                     registerDevicePromise = this._refreshRegistration(storedRegistration);
                 } else {
                     registerDevicePromise = Promise.resolve(storedRegistration);
@@ -199,7 +201,10 @@ export class SpotBackendService extends Emitter {
         }
 
         if (!registerDevicePromise) {
-            logger.log('No stored registration');
+            logger.log('No stored registration', {
+                pairingCode,
+                storedPairingCode: storedRegistration && storedRegistration.pairingCode
+            });
             registerDevicePromise
                 = registerDevice(`${this.pairingServiceUrl}`, pairingCode)
                     .catch(error => this._maybeClearRegistration(error));
