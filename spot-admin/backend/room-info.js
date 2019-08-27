@@ -1,4 +1,4 @@
-const { send401Error, send404Error, send500Error, sendJSON } = require('./utils');
+const { send401Error, send500Error, sendJSON } = require('./utils');
 
 const roomInfoFailureRate = process.env.ROOM_INFO_FAILURE_RATE;
 
@@ -26,24 +26,24 @@ function roomInfoController(spots, req, res){
 
     // FIXME is there any better way to do this ? .filter/.find is any of this possible ?
     for (const room of spots.values()) {
-        if (room.options.jwtToken.accessToken === jwt
-                || room.options.shortLivedToken.accessToken === jwt) {
+        if (room.getAccessToken().accessToken === jwt
+                || room.getShortLivedAccessToken().accessToken === jwt) {
             spotRoom = room;
             break;
         }
     }
 
     if (!spotRoom) {
-        send404Error(res, `No spot room found for jwt: ${jwt}`);
+        send401Error(res, `No spot room found for jwt: ${jwt}`);
 
         return;
     }
 
     sendJSON(res, {
-        countryCode: spotRoom.options.countryCode,
+        countryCode: spotRoom.countryCode,
         id: spotRoom.id,
-        mucUrl: spotRoom.options.mucUrl,
-        name: spotRoom.options.name
+        mucUrl: spotRoom.mucUrl,
+        name: spotRoom.name
     });
 }
 

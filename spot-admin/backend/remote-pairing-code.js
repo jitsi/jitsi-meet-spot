@@ -27,26 +27,26 @@ function remotePairingCodeController(spots, req, res){
 
     // FIXME is there any better way to do this ? .filter/.find is any of this possible ?
     for (const room of spots.values()) {
-        if (room.options.jwtToken.accessToken === jwt) {
+        if (room.getAccessToken().accessToken === jwt) {
             spotRoom = room;
             break;
         }
     }
 
     if (!spotRoom) {
-        send404Error(res, `No spot room found for the given JWT`);
+        send401Error(res, `No spot room found for the given JWT: ${jwt}`);
 
         return;
     }
 
     const remotePairingCode
         = pairingType === SHORT_LIVED_PAIRING_TYPE
-            ? spotRoom.options.remotePairingCode
-            : spotRoom.options.pairingCode;
+            ? spotRoom.generateShortLivedPairingCode()
+            : spotRoom.generateLongLivedPairingCode();
 
     sendJSON(res, {
         code: remotePairingCode.code,
-        emitted: Date.now(),
+        emitted: remotePairingCode.emitted,
         expiresIn: remotePairingCode.expiresIn,
         pairingType
     });

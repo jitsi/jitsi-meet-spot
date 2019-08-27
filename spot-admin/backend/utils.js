@@ -27,7 +27,23 @@ function send500Error(res, error) {
     res.end();
 }
 
+function generateRandomString(length = 13) {
+    return Math.random().toString(36).substring(2, Math.max(Math.min(2 + length, 15), 3))
+}
+
+function generateExpiresAndExpiresIn(expiresIn) {
+    const emitted = Date.now();
+
+    return {
+        emitted,
+        expires: emitted + expiresIn,
+        expiresIn
+    };
+};
+
 module.exports = {
+    generateExpiresAndExpiresIn,
+    generateRandomString,
     send400Error,
     send401Error,
     send404Error,
