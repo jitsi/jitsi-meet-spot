@@ -445,7 +445,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
         if (type === 'unavailable') {
             if (this._getSpotId() === from) {
                 logger.log('Spot TV left the MUC');
-                if (this._options.backend) {
+                if (this._getBackend()) {
                     // With backend it is okay for remote to sit in the MUC without Spot TV connected.
                     this._resetSpotTvState();
                 } else {

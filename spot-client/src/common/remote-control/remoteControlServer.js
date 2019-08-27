@@ -81,11 +81,13 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * code.
      */
     generateLongLivedPairingCode() {
-        if (!this._options || !this._options.backend) {
+        const backend = this._getBackend();
+
+        if (!backend) {
             return Promise.reject('no backend configured');
         }
 
-        return this._options.backend.generateLongLivedPairingCode();
+        return backend.generateLongLivedPairingCode();
     }
 
     /**
@@ -96,7 +98,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @override
      */
     getJoinCode() {
-        if (this._options.backend) {
+        if (this._getBackend()) {
             return this._options.joinCode;
         }
 
@@ -149,7 +151,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
         clearTimeout(this._nextJoinCodeUpdate);
 
         const refreshCodePromise
-            = this._options.backend
+            = this._getBackend()
                 ? this.refreshJoinCodeWithBackend()
                 : this.refreshJoinCodeWithXmpp();
 

@@ -196,7 +196,7 @@ export class BaseRemoteControlService extends Emitter {
     isUnrecoverableRequestError(error) {
         return error === 'not-authorized'
             || error === 'connection.passwordRequired'
-            || (Boolean(this._options.backend) && this._options.backend.isUnrecoverableRequestError(error));
+            || (Boolean(this._getBackend()) && this._getBackend().isUnrecoverableRequestError(error));
     }
 
     /**
@@ -263,7 +263,7 @@ export class BaseRemoteControlService extends Emitter {
 
                 this._setReconnectQueued(false);
 
-                const backend = this._options && this._options.backend;
+                const backend = this._getBackend();
 
                 // FIXME define a structure and add a getter for "REGISTRATION" being sent on REGISTRATION_UPDATED event
                 backend && this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, { jwt: backend.getJwt() });
@@ -285,7 +285,7 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {Promise}
      */
     disconnect(event) {
-        const backend = this._options && this._options.backend;
+        const backend = this._getBackend();
 
         if (backend) {
             backend.removeListener(
@@ -321,7 +321,7 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {Promise<RoomInfo>} Resolve with join information or an error.
      */
     exchangeCode(code = '') {
-        if (this._options.backend) {
+        if (this._getBackend()) {
             return this.exchangeCodeWithBackend(code.trim());
         }
 
@@ -336,7 +336,7 @@ export class BaseRemoteControlService extends Emitter {
      */
     exchangeCodeWithBackend(code) {
         logger.log('Using backend to exchange the join code');
-        const backend = this._options.backend;
+        const backend = this._getBackend();
 
         return backend
             .register(code)
@@ -361,6 +361,16 @@ export class BaseRemoteControlService extends Emitter {
      */
     hasConnection() {
         return Boolean(this.xmppConnection);
+    }
+
+    /**
+     * Convenience getter for the backend service instance.
+     *
+     * @returns {SpotBackendService}
+     * @protected
+     */
+    _getBackend() {
+        return this._options && this._options.backend;
     }
 
     /**
