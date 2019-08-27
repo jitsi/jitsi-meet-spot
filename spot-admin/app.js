@@ -1,3 +1,5 @@
+const { generateRandomString } = require('./backend/utils');
+
 require('dotenv').config();
 
 const jwtDecode = require('jwt-decode');
@@ -23,34 +25,16 @@ const spots = new Map();
 
 // Try to decode room ID from the token
 const jwt = process.env.JWT;
-const jwtPayload = jwtDecode(jwt);
+const jwtPayload = jwt && jwtDecode(jwt);
 const roomIdFromJwt = jwtPayload && jwtPayload.spotRoomId;
-const spot1Id = roomIdFromJwt ? roomIdFromJwt : 'h7g394ytiohdf_rooom1';
+const spot1Id = roomIdFromJwt ? roomIdFromJwt : `${generateRandomString()}_rooom1`;
 
 console.info('Spot room id: ' + spot1Id);
 
 const spot1 = new SpotRoom(spot1Id, {
-    pairingCode: {
-        code: '12345678',
-        expiresIn: 60 * 60 * 1000
-    },
-    jwtToken: {
-        accessToken: jwt,
-        expiresIn: 6 * 60 * 1000,
-        refreshToken: 'refreshsfj3049ublabla325something'
-    },
-    shortLivedToken: {
-        accessToken: process.env.JWT_SHORT_LIVED,
-        expiresIn: 10 * 60 * 1000
-    },
-    // It is unclear how the room name is to be retrieved yet. It might be part of the JWT.
-    mucUrl: spot1Id,
-    name: 'Spot Room 1',
-    remotePairingCode: {
-        code: '112233',
-        expiresIn: 6 * 60 * 1000
-    },
     countryCode: process.env.COUNTRY_CODE,
+    jwt,
+    shortLivedJwt: process.env.JWT_SHORT_LIVED,
     tenant: process.env.TENANT
 });
 
@@ -60,6 +44,6 @@ app.put('/pair', pairDeviceController.bind(null, spots));
 app.post('/pair/code', remotePairingCodeController.bind(null, spots));
 app.put('/pair/regenerate', refreshController.bind(null, spots));
 app.get('/room/info', roomInfoController.bind(null, spots));
-app.get('/calendar', calendarRequestController);
+app.get('/calendar', calendarRequestController.bind(null, spots));
 
 app.listen(port, () => console.log(`Spot-admin app listening on port ${port}!`));

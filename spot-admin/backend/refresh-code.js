@@ -25,7 +25,7 @@ function refreshController(spots, req, res) {
 
     let spotRoom = null;
     for (const spot of spots.values()) {
-        if (spot.options.jwtToken.refreshToken === refreshToken) {
+        if (spot.getAccessToken().refreshToken === refreshToken) {
             spotRoom = spot;
             break;
         }
@@ -44,14 +44,13 @@ function refreshController(spots, req, res) {
         return;
     }
 
-    const jwtToken = spotRoom.options.jwtToken;
+    const jwtToken = spotRoom.regenerateAccessToken();
 
     const response = {
         accessToken: jwtToken.accessToken,
-        emitted: Date.now(),
+        emitted: jwtToken.emitted,
         expiresIn: jwtToken.expiresIn,
-        tenant: spotRoom.options.tenant
-
+        tenant: spotRoom.tenant
     };
 
     sendJSON(res, response);

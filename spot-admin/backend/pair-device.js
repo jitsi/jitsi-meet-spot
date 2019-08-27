@@ -22,7 +22,7 @@ function registerDeviceController(spots, req, res) {
     let shortLived = false;
     let spotRoom = null;
     for (const spot of spots.values()) {
-        if (spot.options.pairingCode.code === pairingCode) {
+        if (spot.getLongLivedPairingCode().code === pairingCode) {
             spotRoom = spot;
         }
     }
@@ -31,7 +31,7 @@ function registerDeviceController(spots, req, res) {
     if (!spotRoom) {
         // Try to match the remote pairing code
         for (const spot of spots.values()) {
-            if (spot.options.remotePairingCode.code === pairingCode) {
+            if (spot.getShortLivedPairingCode().code === pairingCode) {
                 spotRoom = spot;
                 shortLived = true;
             }
@@ -44,15 +44,15 @@ function registerDeviceController(spots, req, res) {
         }
     }
 
-    const jwtStructure = shortLived ? spotRoom.options.shortLivedToken : spotRoom.options.jwtToken;
+    const jwtStructure = shortLived ? spotRoom.getShortLivedAccessToken() : spotRoom.getAccessToken();
 
     const response = {
         accessToken: jwtStructure.accessToken,
-        emitted: Date.now(),
+        emitted: jwtStructure.emitted,
         expiresIn: jwtStructure.expiresIn,
         id: spotRoom.id,
         refreshToken: shortLived ? undefined : jwtStructure.refreshToken,
-        tenant: spotRoom.options.tenant
+        tenant: spotRoom.tenant
     };
 
     sendJSON(res, response);

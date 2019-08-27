@@ -17,23 +17,28 @@ const calendarFailureRate = process.env.CALENDAR_FAILURE_RATE;
 
 console.info('calendar failure rate: ' + calendarFailureRate);
 
-const jwt = process.env.JWT;
-
-function calendarRequestController(req, res) {
+function calendarRequestController(spots, req, res) {
     if (calendarFailureRate && Math.random() < calendarFailureRate) {
         send500Error(res, "Randomly failed /calendar");
 
         return;
     }
 
-    if (jwt) {
-        const authorization = req.headers['authorization'];
-        if (authorization !== `Bearer ${jwt}`) {
-            console.info(`Invalid token, "Authorization" header = ${authorization}`);
-            send401Error(res, `Invalid token`);
-
-            return;
+    const authorization = req.headers['authorization'];
+    const jwt = authorization.substring(7);
+    let spotRoom = null;
+    for (const spot of spots.values()) {
+        if (spot.getAccessToken().accessToken === jwt) {
+            spotRoom = spot;
+            break;
         }
+    }
+
+    if (!spotRoom) {
+        console.info(`Invalid token, "Authorization" header = ${authorization}`);
+        send401Error(res, `Invalid token`);
+
+        return;
     }
 
     const tzid = req.query['tzid'];
