@@ -258,10 +258,15 @@ export class BaseRemoteControlService extends Emitter {
                         .catch(reject);
                 }, jitter);
             }))
-            .then(() => {
-                logger.log('loaded');
+            .then(results => {
+                logger.log('reconnect completed', results);
 
                 this._setReconnectQueued(false);
+
+                const backend = this._options && this._options.backend;
+
+                // FIXME define a structure and add a getter for "REGISTRATION" being sent on REGISTRATION_UPDATED event
+                backend && this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, { jwt: backend.getJwt() });
             })
             .catch(error => {
                 logger.warn('failed to load', { error });
