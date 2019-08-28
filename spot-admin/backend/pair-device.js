@@ -51,7 +51,8 @@ function registerDeviceController(spots, req, res) {
         emitted: Date.now(),
         expiresIn: jwtStructure.expiresIn,
         id: spotRoom.id,
-        refreshToken: shortLived ? undefined : jwtStructure.refreshToken
+        refreshToken: shortLived ? undefined : jwtStructure.refreshToken,
+        tenant: spotRoom.options.tenant
     };
 
     sendJSON(res, response);

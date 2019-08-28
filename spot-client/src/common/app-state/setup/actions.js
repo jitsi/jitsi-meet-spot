@@ -4,7 +4,8 @@ import {
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
     SET_JWT,
-    SET_PREFERRED_DEVICES
+    SET_PREFERRED_DEVICES,
+    SET_TENANT
 } from './action-types';
 
 /**
@@ -89,5 +90,18 @@ export function setPreferredDevices(cameraLabel, micLabel, speakerLabel) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
+    };
+}
+
+/**
+ * Stores a tenant advertised by the backend in the Redux state.
+ *
+ * @param {?string} tenant - A tenant name(if any) to store.
+ * @returns {Object}
+ */
+export function setTenant(tenant) {
+    return {
+        type: SET_TENANT,
+        tenant
     };
 }

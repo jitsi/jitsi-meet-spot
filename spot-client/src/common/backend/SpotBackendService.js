@@ -100,6 +100,15 @@ export class SpotBackendService extends Emitter {
     }
 
     /**
+     * Returns the tenant part from the backend registration info.
+     *
+     * @returns {string}
+     */
+    getTenant() {
+        return this.registration && this.registration.tenant;
+    }
+
+    /**
      * Returns true if the current pairing is permanent. This means that the backend has granted a refresh token which
      * can be used to refresh an access token indefinitely.
      *
@@ -279,7 +288,10 @@ export class SpotBackendService extends Emitter {
         // Only long lived registrations are persisted
         this.registration.refreshToken && persistence.set(PERSISTENCE_KEY, this.registration);
 
-        this.emit(SpotBackendService.REGISTRATION_UPDATED, { jwt: this.getJwt() });
+        this.emit(SpotBackendService.REGISTRATION_UPDATED, {
+            jwt: this.getJwt(),
+            tenant: this.getTenant()
+        });
 
         this._setRefreshTimeout();
     }

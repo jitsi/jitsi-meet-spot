@@ -46,6 +46,7 @@ const presenceToStore = new Set([
     'screensharing',
     'screensharingType',
     'spotId',
+    'tenant',
     'tileView',
     'videoMuted',
     'view',

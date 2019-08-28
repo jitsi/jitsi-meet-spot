@@ -64,6 +64,16 @@ export function getPreferredSpeaker(state) {
 }
 
 /**
+ * Returns the tenant name stored in the Redux state.
+ *
+ * @param {Object} state - The Redux store.
+ * @returns {?string}
+ */
+export function getTenant(state) {
+    return state.setup.tenant;
+}
+
+/**
  * A selector which returns whether or not the application has been configured.
  *
  * @param {Object} state - The Redux state.

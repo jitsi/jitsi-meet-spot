@@ -4,7 +4,7 @@ import {
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
     SET_JWT,
-    SET_PREFERRED_DEVICES
+    SET_PREFERRED_DEVICES, SET_TENANT
 } from './action-types';
 
 const DEFAULT_STATE = {
@@ -63,6 +63,12 @@ const setup = (state = DEFAULT_STATE, action) => {
             preferredCamera: action.cameraLabel,
             preferredMic: action.micLabel,
             preferredSpeaker: action.speakerLabel
+        };
+
+    case SET_TENANT:
+        return {
+            ...state,
+            tenant: action.tenant
         };
 
     default:

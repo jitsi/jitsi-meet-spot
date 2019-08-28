@@ -70,7 +70,7 @@ export function getDefaultAvatarUrl(state) {
 * @param {Object} state - The Redux state.
 * @returns {string}
 */
-export function getDefaultMeetingDomain(state) {
+export function getConfiguredMeetingDomain(state) {
     return state.config.DEFAULT_MEETING_DOMAIN;
 }
 

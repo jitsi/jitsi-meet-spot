@@ -51,6 +51,16 @@ export function getRemoteSpotTVRoomName(state) {
 }
 
 /**
+ * Returns a tenant name advertised by Spot TV.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {?string}
+ */
+export function getSpotTVTenant(state) {
+    return state.spotTv.tenant;
+}
+
+/**
 * A selector for Spot-Remote which returns whether or not it is currently
 * able to communicate with a Spot-TV.
 *
