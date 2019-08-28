@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import {
     dialOut,
-    getDefaultMeetingDomain,
     getInMeetingStatus,
     joinAdHocMeeting,
     joinScheduledMeeting,
@@ -23,6 +22,7 @@ import {
 import { getRandomMeetingName } from 'common/utils';
 
 import {
+    getDefaultMeetingDomain,
     updateSpotRemoteSource
 } from './../../../app-state';
 import {

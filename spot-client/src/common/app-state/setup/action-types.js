@@ -9,3 +9,5 @@ export const SET_IS_SPOT = 'SET_IS_SPOT';
 export const SET_JWT = 'SET_JWT_TOKEN';
 
 export const SET_PREFERRED_DEVICES = 'SET_PREFERRED_DEVICES';
+
+export const SET_TENANT = 'SET_TENANT';

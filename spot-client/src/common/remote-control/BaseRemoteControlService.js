@@ -266,7 +266,12 @@ export class BaseRemoteControlService extends Emitter {
                 const backend = this._getBackend();
 
                 // FIXME define a structure and add a getter for "REGISTRATION" being sent on REGISTRATION_UPDATED event
-                backend && this.emit(SERVICE_UPDATES.REGISTRATION_UPDATED, { jwt: backend.getJwt() });
+                backend
+                    && this.emit(
+                        SERVICE_UPDATES.REGISTRATION_UPDATED, {
+                            jwt: backend.getJwt(),
+                            tenant: backend.getTenant()
+                        });
             })
             .catch(error => {
                 logger.warn('failed to load', { error });

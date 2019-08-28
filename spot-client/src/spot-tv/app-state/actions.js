@@ -9,7 +9,8 @@ import {
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
-    setReconnectState
+    setReconnectState,
+    setTenant
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
@@ -96,11 +97,13 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 jwt,
                 permanentPairingCode,
                 remoteJoinCode,
-                roomProfile
+                roomProfile,
+                tenant
             } = result;
 
             dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
+            dispatch(setTenant(tenant));
             dispatch(setPermanentPairingCode(permanentPairingCode));
 
             if (isBackendEnabled(getState())) {
@@ -177,14 +180,16 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * connection state with the backend.
          *
          * @param {Object} pairingInfo - Information necessary to establish and
-         * maintain a connection tot he server.
+         * maintain a connection to the server.
          * @param {string} pairingInfo.jwt - The latest valid jwt for
          * communicating with other backend services.
+         * @param {string} [pairingInfo.tenant] - The tenant name advertised by the backend.
          * @private
          * @returns {void}
          */
-        function onRegistrationChange({ jwt }) {
+        function onRegistrationChange({ jwt, tenant }) {
             dispatch(setJwt(jwt));
+            dispatch(setTenant(tenant));
         }
 
         /**
@@ -281,6 +286,7 @@ function createConnection(state, permanentPairingCode) {
             permanentPairingCode,
             remoteJoinCode: remoteControlServer.getRemoteJoinCode(),
             roomProfile,
+            tenant: backend ? backend.getTenant() : undefined,
             jwt: backend ? backend.getJwt() : undefined
         };
     });

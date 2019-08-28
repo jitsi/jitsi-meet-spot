@@ -236,6 +236,7 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
  * the token has been emitted.
  * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
  * the token will expire.
+ * @property {string} [tenant] - A tenant name bound to specific customer for which Spot instance is being registered.
  */
 /**
  * Sends a token refresh request to get a fresh token, before the current one expires.
@@ -300,15 +301,7 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
  * the token will expire.
  * @property {string} [refreshToken] - The token used to refresh the authorization. Present only in
  * a permanent type of pairing.
- *
- * Example response:
- *
- * {
- *  "accessToken": "string",
- *  "emitted": "2019-05-28T18:02:31.576Z",
- *  "expiresIn": 0,
- *  "refreshToken": "string"
- * }
+ * @property {string} [tenant] - A tenant name bound to specific customer for which Spot instance is being registered.
  */
 /**
  * Authenticates with the backend service.
@@ -338,7 +331,8 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
                 accessToken,
                 emitted,
                 expiresIn,
-                refreshToken
+                refreshToken,
+                tenant
             } = json;
 
             if (!accessToken) {
@@ -352,6 +346,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
             return {
                 accessToken,
                 refreshToken,
+                tenant,
                 ...convertToEmittedAndExpires(json)
             };
         });

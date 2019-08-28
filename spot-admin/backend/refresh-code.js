@@ -23,15 +23,16 @@ function refreshController(spots, req, res) {
         return;
     }
 
-    let jwtToken = null;
+    let spotRoom = null;
     for (const spot of spots.values()) {
         if (spot.options.jwtToken.refreshToken === refreshToken) {
-            jwtToken = spot.options.jwtToken;
+            spotRoom = spot;
+            break;
         }
     }
 
     // Note that there are no checks for roomName duplication
-    if (!jwtToken) {
+    if (!spotRoom) {
         send401Error(res, 'Invalid refresh token');
 
         return;
@@ -43,10 +44,14 @@ function refreshController(spots, req, res) {
         return;
     }
 
+    const jwtToken = spotRoom.options.jwtToken;
+
     const response = {
         accessToken: jwtToken.accessToken,
         emitted: Date.now(),
-        expiresIn: jwtToken.expiresIn
+        expiresIn: jwtToken.expiresIn,
+        tenant: spotRoom.options.tenant
+
     };
 
     sendJSON(res, response);

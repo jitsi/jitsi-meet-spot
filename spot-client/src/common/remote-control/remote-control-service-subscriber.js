@@ -1,3 +1,6 @@
+// FIXME Reaching directly because of circular dependency
+import { getTenant } from 'common/app-state/setup/selectors';
+
 import remoteControlClient from './remoteControlClient';
 import remoteControlServer from './remoteControlServer';
 
@@ -12,6 +15,7 @@ export default class RemoteControlServiceSubscriber {
     constructor() {
         this._previousRoomName = '';
         this._previousSpotTvState = {};
+        this._previousTenant = undefined;
         this._previousCalendarEvents = [];
     }
 
@@ -28,16 +32,20 @@ export default class RemoteControlServiceSubscriber {
         const newSpotTvState = state.spotTv;
         const newCalendarEvents = state.calendars.events || [];
         const newRoomName = state.setup.displayName;
+        const newTenant = getTenant(state);
 
         if (newSpotTvState === this._previousSpotTvState
             && newCalendarEvents === this._previousCalendarEvents
-            && newRoomName === this._previousRoomName) {
+            && newRoomName === this._previousRoomName
+            && newTenant === this._previousTenant
+        ) {
             return;
         }
 
         remoteControlServer.updateStatus({
             ...newSpotTvState,
             roomName: newRoomName,
+            tenant: getTenant(state),
             calendar: newCalendarEvents
         });
 
@@ -48,6 +56,7 @@ export default class RemoteControlServiceSubscriber {
 
         this._previousRoomName = newRoomName;
         this._previousSpotTvState = newSpotTvState;
+        this._previousTenant = newTenant;
         this._previousCalendarEvents = newCalendarEvents;
     }
 }

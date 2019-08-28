@@ -48,7 +48,8 @@ const spot1 = new SpotRoom(spot1Id, {
     remotePairingCode: {
         code: '112233',
         expiresIn: 6 * 60 * 1000
-    }
+    },
+    tenant: process.env.TENANT
 });
 
 spots.set(spot1.id, spot1);

@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import {
     addNotification,
     getAvatarUrl,
-    getDefaultMeetingDomain,
     getDesktopSharingFramerate,
     getDisplayName,
     getInMeetingStatus,
@@ -15,6 +14,7 @@ import {
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
+    getTenant,
     getWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -22,6 +22,7 @@ import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
+import { getDefaultMeetingDomain } from '../../app-state';
 import { KickedOverlay, MeetingFrame, MeetingStatus } from './../components';
 
 /**
@@ -49,7 +50,8 @@ export class Meeting extends React.Component {
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
-        showPasswordPrompt: PropTypes.bool
+        showPasswordPrompt: PropTypes.bool,
+        tenant: PropTypes.string
     };
 
     /**
@@ -196,8 +198,7 @@ export class Meeting extends React.Component {
         if (isValidMeetingUrl(locationParam)) {
             location = locationParam;
         } else if (isValidMeetingName(locationParam)) {
-            location
-                = `https://${this.props.defaultMeetingDomain}/${locationParam}`;
+            location = `https://${this.props.defaultMeetingDomain}/${locationParam}`;
         }
 
         return {
@@ -303,7 +304,8 @@ function mapStateToProps(state) {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),
-        screenshareDevice: getWiredScreenshareInputLabel(state)
+        screenshareDevice: getWiredScreenshareInputLabel(state),
+        tenant: getTenant(state)
     };
 }
 
