@@ -84,6 +84,7 @@ export class MeetingFrame extends React.Component {
         bindAll(this, [
             '_onAudioMuteChange',
             '_onFeedbackPromptDisplayed',
+            '_onFeedbackSubmitted',
             '_onFilmstripDisplayChanged',
             '_onMeetingCommand',
             '_onMeetingJoined',
@@ -162,7 +163,7 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'cameraError', this._onReportDeviceError);
         this._jitsiApi.addListener(
-            'feedbackSubmitted', this.props.onMeetingLeave);
+            'feedbackSubmitted', this._onFeedbackSubmitted);
         this._jitsiApi.addListener(
             'feedbackPromptDisplayed', this._onFeedbackPromptDisplayed);
         this._jitsiApi.addListener(
@@ -312,6 +313,20 @@ export class MeetingFrame extends React.Component {
         this._isAudioMuted = muted;
 
         this.props.updateSpotTvState({ audioMuted: muted });
+    }
+
+    /**
+     * Callback invoked when feedback has been sent successfully through the
+     * iFrame api. Will invoke a callback to signify meeting leave if the
+     * iFrame is showing feedback, as it would at the end of a call.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onFeedbackSubmitted() {
+        if (this.state.feedbackDisplayed) {
+            this.props.onMeetingLeave();
+        }
     }
 
     /**

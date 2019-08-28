@@ -15,7 +15,7 @@ import { AutoUpdateChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { Clock, LoadingIcon, ScheduledMeetings } from 'common/ui';
+import { Clock, LoadingIcon, ScheduledMeetings, FeedbackOpener } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import { updateSpotTVSource } from '../../app-state';
@@ -126,6 +126,9 @@ export class Home extends React.Component {
                 <div className = 'admin-toolbar'>
                     <FullscreenToggle />
                     <SettingsButton />
+                </div>
+                <div className = 'home-feedback'>
+                    <FeedbackOpener />
                 </div>
             </WiredScreenshareChangeListener>
         );

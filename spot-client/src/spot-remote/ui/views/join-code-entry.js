@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import {
     addNotification,
@@ -399,4 +400,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry));

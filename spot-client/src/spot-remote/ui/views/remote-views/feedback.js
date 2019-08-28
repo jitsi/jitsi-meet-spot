@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Clock, RoomName } from 'common/ui';
-
-import { FeedbackForm } from './../../components';
+import { Clock, FeedbackForm, RoomName } from 'common/ui';
 
 /**
  * A view for Spot-Remote that displays a feedback form for a meeting that has

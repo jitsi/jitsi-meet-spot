@@ -1,3 +1,18 @@
+.feedback-opener {
+    bottom: 5px;
+    cursor: pointer;
+    position: fixed;
+    right: 5px;
+}
+
+.app-feedback-overlay {
+    justify-content: center;
+
+    .message-help {
+        display: none
+    }
+}
+
 .feedback-view {
     @include spot-remote-view-layout;
 

@@ -1,7 +1,6 @@
 import {
     analytics,
     eventStatusSuffixes,
-    feedbackEvents,
     inCallEvents,
     joinCodeEvents,
     meetingJoinEvents
@@ -27,7 +26,6 @@ import {
     SPOT_REMOTE_JOIN_CODE_VALID,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './../app-state';
-import { SUBMIT_FEEDBACK } from './../remote-control';
 import { shareModeEvents } from '../../common/analytics';
 
 const requestStateToEventSuffix = {
@@ -118,10 +116,7 @@ MiddlewareRegistry.register(() => next => action => {
 
         break;
     }
-    case SUBMIT_FEEDBACK: {
-        _submitFeedback(action);
-        break;
-    }
+
     case SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE: {
         if (action.shareMode) {
             analytics.updateProperty('share-mode', true);
@@ -156,29 +151,4 @@ MiddlewareRegistry.register(() => next => action => {
  */
 function isPendingAsyncAction(action) {
     return action.requestState === asyncActionRequestStates.PENDING;
-}
-
-/**
- * Sends analytics events for the {@link SUBMIT_FEEDBACK} action.
- *
- * @param {Object} action - The {@link SUBMIT_FEEDBACK} action.
- * @private
- * @returns {void}
- */
-function _submitFeedback(action) {
-    const {
-        message,
-        requestedMoreInfo,
-        score,
-        skip,
-        timeout
-    } = action;
-
-    analytics.log(
-        skip ? feedbackEvents.SKIP : feedbackEvents.SUBMIT, {
-            message,
-            requestedMoreInfo,
-            score,
-            timeout
-        });
 }
