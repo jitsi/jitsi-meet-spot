@@ -40,7 +40,7 @@ describe('The "waiting for the Spot TV to connect" message', () => {
         const remote = session.getSpotRemote();
 
         remote.setNetworkOffline();
-        remote.getReconnectOverlay().waitForOverlayToAppear();
+        remote.getLoadingScreen().waitForLoadingToAppear();
 
         session.getSpotTV().stop();
 

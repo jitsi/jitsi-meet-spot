@@ -3,26 +3,53 @@ const spotSessionStore = require('../user/spotSessionStore');
 describe('The reconnect logic', () => {
     const session = spotSessionStore.createSession();
 
-    beforeEach(() => {
-        session.connectRemoteToTV();
-    });
+    describe('when the internet goes offline', () => {
+        it('in the backend mode Spot TV and permanent remote will both reconnect', () => {
+            if (!session.isBackendEnabled()) {
+                pending();
 
-    it('show/hides reconnect overlay when the internet goes offline', () => {
-        const tv = session.getSpotTV();
-        const remote = session.getSpotRemote();
+                return;
+            }
 
-        tv.setNetworkOffline();
-        remote.setNetworkOffline();
+            session.startSpotTv();
+            session.startPermanentSpotRemote();
 
-        tv.getReconnectOverlay().waitForOverlayToAppear();
-        remote.getReconnectOverlay().waitForOverlayToAppear();
+            const tv = session.getSpotTV();
+            const remote = session.getSpotRemote();
 
-        tv.setNetworkOnline();
-        remote.setNetworkOnline();
+            tv.setNetworkOffline();
+            remote.setNetworkOffline();
 
-        remote.getReconnectOverlay().waitForOverlayToDisappear();
+            tv.getLoadingScreen().waitForLoadingToAppear();
+            remote.getLoadingScreen().waitForLoadingToAppear();
 
-        // Spot TV needs more time, because of the MUC JID conflict
-        tv.getReconnectOverlay().waitForOverlayToDisappear(90 * 1000);
+            tv.setNetworkOnline();
+            remote.setNetworkOnline();
+
+            remote.getLoadingScreen().waitForLoadingToDisappear();
+
+            // Spot TV needs more time, because of the MUC JID conflict
+            tv.getLoadingScreen().waitForLoadingToDisappear(90 * 1000);
+        });
+        it('Spot TV will reconnect, but temporary remote will go back to the join code entry page', () => {
+            const tv = session.getSpotTV();
+            const remote = session.getSpotRemote();
+
+            session.connectRemoteToTV();
+
+            tv.setNetworkOffline();
+            remote.setNetworkOffline();
+
+            tv.getLoadingScreen().waitForLoadingToAppear();
+
+            // Temporary remote is supposed to go back to the join code entry page
+            remote.getJoinCodePage().waitForVisible(30 * 1000);
+
+            tv.setNetworkOnline();
+            remote.setNetworkOnline();
+
+            // Spot TV needs more time, because of the MUC JID conflict
+            tv.getLoadingScreen().waitForLoadingToDisappear(90 * 1000);
+        });
     });
 });

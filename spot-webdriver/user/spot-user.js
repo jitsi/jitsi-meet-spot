@@ -1,4 +1,4 @@
-const ReconnectOverlay = require('../page-objects/reconnect-overlay');
+const LoadingScreen = require('../page-objects/loading-screen');
 
 const _OFFLINE_NETWORK_CONDITIONS = {
     offline: true,
@@ -18,7 +18,7 @@ class SpotUser {
     constructor(driver) {
         this.driver = driver;
 
-        this.reconnectOverlay = new ReconnectOverlay(this.driver);
+        this.loadingScreen = new LoadingScreen(this.driver);
     }
 
     /**
@@ -60,12 +60,12 @@ class SpotUser {
     }
 
     /**
-     * Gets the reconnect overlay.
+     * Gets the loading screen.
      *
-     * @returns {ReconnectOverlay}
+     * @returns {LoadingScreen}
      */
-    getReconnectOverlay() {
-        return this.reconnectOverlay;
+    getLoadingScreen() {
+        return this.loadingScreen;
     }
 
     /**

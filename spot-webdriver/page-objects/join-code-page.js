@@ -48,11 +48,13 @@ class JoinCodePage extends PageObject {
      *
      * @param {Map} [queryParams] - Additional parameters to append to the join
      * code url.
+     * @param {number} [visibilityWait] - Override for how long page load should wait for before reporting the page as
+     * having failed to load. Pass '-1' to skip the waiting.
      * @returns {void}
      */
-    visit(queryParams) {
+    visit(queryParams, visibilityWait) {
         this.driver.url(this._getJoinCodePageUrl(queryParams));
-        this.waitForVisible();
+        visibilityWait === -1 || this.waitForVisible(visibilityWait);
     }
 
     /**

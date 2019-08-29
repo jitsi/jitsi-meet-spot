@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getDisplayName, setSpotTVState } from 'common/app-state';
-import { ReconnectOverlay, View } from 'common/ui';
+import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
 
@@ -62,7 +62,6 @@ class SpotView extends React.Component {
                     { spotRoomName && `${spotRoomName} | ` }
                     <JoinInfo showDomain = { true } />
                 </div>
-                <ReconnectOverlay />
             </View>
         );
     }

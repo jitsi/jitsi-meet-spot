@@ -8,16 +8,28 @@ import { setSpotTVState } from './../spot-tv/actions';
 import {
     AUDIO_MUTE,
     DIAL_OUT,
+    DESTROY_CONNECTION,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
-    RECONNECTING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
     VIDEO_MUTE
 } from './actionTypes';
+
+/**
+ * Clears any state associated with the 'connect' async action.
+ * See {@link CREATE_CONNECTION} in action types and it's usage.
+ *
+ * @returns {Object}
+ */
+export function destroyConnection() {
+    return {
+        type: DESTROY_CONNECTION
+    };
+}
 
 /**
  * Requests a Spot-TV to join a meeting with the screensharing turned on from the start.
@@ -143,20 +155,6 @@ export function setAudioMute(mute) {
         AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
-}
-
-/**
- * Sets whether or not a reconnect to the remote control service is in flight.
- *
- * @param {boolean} isReconnecting - Whether or not there currently is a
- * reconnect attempt happening.
- * @returns {Object}
- */
-export function setReconnectState(isReconnecting) {
-    return {
-        type: RECONNECTING,
-        isReconnecting
-    };
 }
 
 /**

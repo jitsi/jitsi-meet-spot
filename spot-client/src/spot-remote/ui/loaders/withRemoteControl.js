@@ -1,9 +1,15 @@
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { isConnectionEstablished } from 'common/app-state';
 import { history } from 'common/history';
 import { remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { AbstractLoader, generateWrapper } from 'common/ui';
+import { AbstractLoader, generateWrapper, Loading } from 'common/ui';
+
+import { disconnectFromSpotTV } from './../../app-state';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -12,14 +18,31 @@ import { AbstractLoader, generateWrapper } from 'common/ui';
  * @extends React.Component
  */
 export class RemoteControlLoader extends AbstractLoader {
+    static propTypes = {
+        isConnected: PropTypes.bool,
+        onDisconnect: PropTypes.func
+    };
+
     /**
      * Initializes a new {@code RemoteControlLoader} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
+     * @param {boolean} disconnectOnUnmount - Whether or not the RCS should be disconnected when this loader component
+     * is being unmounted.
      */
-    constructor(props) {
+    constructor(props, disconnectOnUnmount) {
         super(props, 'SpotRemote');
+        this._disconnectOnUnmount = disconnectOnUnmount;
+    }
+
+    /**
+     * Clean up connection related state.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._disconnectOnUnmount && this.props.onDisconnect();
     }
 
     /**
@@ -51,8 +74,55 @@ export class RemoteControlLoader extends AbstractLoader {
 
         return Promise.reject('The connection must be started by the join code entry page');
     }
+
+    /**
+     * Overrides render method to show the loading indicator if RCS is not connected.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        if (!this.props.isConnected) {
+            return <Loading />;
+        }
+
+        return super.render();
+    }
+}
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code RemoteControlLoader}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        isConnected: isConnectionEstablished(state)
+    };
+}
+
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Stop any existing connection to a Spot-TV.
+         *
+         * @returns {void}
+         */
+        onDisconnect() {
+            dispatch(disconnectFromSpotTV());
+        }
+    };
 }
 
 const ConnectedRemoteControlLoader = withRouter(RemoteControlLoader);
 
-export default generateWrapper(ConnectedRemoteControlLoader);
+export default generateWrapper(connect(mapStateToProps, mapDispatchToProps)(ConnectedRemoteControlLoader));

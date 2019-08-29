@@ -1,8 +1,8 @@
 import {
     AUDIO_MUTE,
     CREATE_CONNECTION,
+    DESTROY_CONNECTION,
     JOIN_WITH_SCREENSHARING,
-    RECONNECTING,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
@@ -29,6 +29,11 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
 
     case CREATE_CONNECTION:
         return updateStateForAsyncAction(state, 'connect', action);
+    case DESTROY_CONNECTION:
+        return {
+            ...state,
+            connect: undefined
+        };
 
     case REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE:
         return {
@@ -41,12 +46,6 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             joinWithScreensharing: action.screensharingType
-        };
-
-    case RECONNECTING:
-        return {
-            ...state,
-            isReconnecting: action.isReconnecting
         };
 
     case SCREENSHARE:
