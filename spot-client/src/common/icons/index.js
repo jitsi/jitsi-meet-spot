@@ -6,6 +6,7 @@ export {
     CallEnd,
     ExpandLess,
     ExpandMore,
+    Feedback,
     Fullscreen,
     FullscreenExit,
     GridOff,

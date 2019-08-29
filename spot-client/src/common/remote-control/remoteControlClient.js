@@ -359,8 +359,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     submitFeedback(feedback) {
-        return this.xmppConnection.sendCommand(
-            this._getSpotId(), COMMANDS.SUBMIT_FEEDBACK, feedback);
+        return this.xmppConnection
+            ? this.xmppConnection.sendCommand(
+                this._getSpotId(), COMMANDS.SUBMIT_FEEDBACK, feedback)
+            : Promise.reject('No server connection for feedback');
     }
 
     /**

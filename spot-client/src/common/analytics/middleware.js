@@ -1,13 +1,16 @@
 import { MiddlewareRegistry } from 'common/redux';
 
-import { getSpotClientVersion } from '../app-state';
+import { SUBMIT_FEEDBACK, getSpotClientVersion } from '../app-state';
 import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
 import { SET_DEVICE_ID } from '../app-state/device-id';
 import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
 import { VIEW_DISPLAYED } from '../ui/actionTypes';
 
 import analytics from './analytics';
-import { permanentPairingCodeEvents } from './events';
+import {
+    feedbackEvents,
+    permanentPairingCodeEvents
+} from './events';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
@@ -21,6 +24,11 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         break;
     case SET_PERMANENT_PAIRING_CODE:
         return _permanentPairingAnalytics({ getState }, next, action);
+
+    case SUBMIT_FEEDBACK:
+        _submitFeedback(action);
+        break;
+
     case VIEW_DISPLAYED:
         analytics.page(action.name);
 
@@ -55,4 +63,29 @@ function _permanentPairingAnalytics({ getState }, next, action) {
 
     // The action executed, before it gets reduced, so that the store holds the old pairing code
     return next(action);
+}
+
+/**
+ * Sends analytics events for the {@link SUBMIT_FEEDBACK} action.
+ *
+ * @param {Object} action - The {@link SUBMIT_FEEDBACK} action.
+ * @private
+ * @returns {void}
+ */
+function _submitFeedback(action) {
+    const {
+        message,
+        requestedMoreInfo,
+        score,
+        skip,
+        timeout
+    } = action;
+
+    analytics.log(
+        skip ? feedbackEvents.SKIP : feedbackEvents.SUBMIT, {
+            message,
+            requestedMoreInfo,
+            score,
+            timeout
+        });
 }

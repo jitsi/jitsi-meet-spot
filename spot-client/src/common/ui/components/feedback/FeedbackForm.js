@@ -2,11 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { submitFeedback } from 'common/app-state';
 import { Star, StarBorder } from 'common/icons';
 import { logger } from 'common/logger';
-import { Button } from 'common/ui';
-
-import { submitFeedback } from 'spot-remote/remote-control';
+import { Button } from '../button';
 
 /**
  * By default will use 1 minute for feedback inactivity timeout.
@@ -16,14 +15,17 @@ import { submitFeedback } from 'spot-remote/remote-control';
 const DEFAULT_INACTIVITY_TIMEOUT = 60 * 1000;
 
 /**
- * A React Component for inputting and submitting post-call feedback by leaving
+ * A React Component for inputting and submitting feedback by leaving
  * a rating and an explanation for the rating.
  *
  * @extends React.Component
  */
-class FeedbackForm extends React.Component {
+export class FeedbackForm extends React.Component {
     static propTypes = {
-        _submitFeedback: PropTypes.func,
+        commentOnly: PropTypes.bool,
+        disableInactivityTimer: PropTypes.bool,
+        onSkip: PropTypes.func,
+        onSubmitFeedback: PropTypes.func,
         timeout: PropTypes.number
     };
 
@@ -50,7 +52,7 @@ class FeedbackForm extends React.Component {
         this.state = {
             hasSubmittedStars: false,
             message: '',
-            requestMoreInfo: false,
+            requestMoreInfo: props.commentOnly,
             score: -1
         };
 
@@ -152,10 +154,7 @@ class FeedbackForm extends React.Component {
      * @returns {void}
      */
     _onSkip() {
-        this.props._submitFeedback({
-            message: '',
-            score: -1
-        });
+        this.props.onSkip();
     }
 
     /**
@@ -251,6 +250,10 @@ class FeedbackForm extends React.Component {
      * @returns {void}
      */
     _restartInactivityTimeout() {
+        if (this.props.disableInactivityTimer) {
+            return;
+        }
+
         this._cancelInactivityTimeout();
         if (this.props.timeout && this.props.timeout > 0) {
             this._timeout = setTimeout(
@@ -276,7 +279,7 @@ class FeedbackForm extends React.Component {
             logger.log('Feedback submitting');
         }
 
-        this.props._submitFeedback({
+        this.props.onSubmitFeedback({
             message: this.state.message,
             requestedMoreInfo: this.state.requestMoreInfo,
             score: this.state.score,
@@ -294,6 +297,13 @@ class FeedbackForm extends React.Component {
  */
 function mapDispatchToProps(dispatch) {
     return {
+        onSkip() {
+            dispatch(submitFeedback({
+                message: '',
+                score: -1
+            }));
+        },
+
         /**
          * Dispatches the submit feedback action.
          *
@@ -301,9 +311,10 @@ function mapDispatchToProps(dispatch) {
          * @private
          * @returns {void}
          */
-        _submitFeedback(options) {
+        onSubmitFeedback(options) {
             dispatch(submitFeedback(options));
         }
     };
 }
+
 export default connect(undefined, mapDispatchToProps)(FeedbackForm);

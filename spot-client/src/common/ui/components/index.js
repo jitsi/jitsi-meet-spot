@@ -3,6 +3,7 @@ export * from './clock';
 export * from './code-input';
 export * from './countdown';
 export * from './error-boundary';
+export * from './feedback';
 export * from './idle-cursor-detector';
 export * from './input';
 export * from './loading-icon';

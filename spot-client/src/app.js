@@ -9,6 +9,8 @@ import { ROUTES } from 'common/routing';
 import {
     ErrorBoundary,
     FatalError,
+    FeedbackOpener,
+    FeedbackOverlay,
     IdleCursorDetector,
     ModalManager,
     Notifications
@@ -62,6 +64,11 @@ export class App extends React.Component {
         this._renderSetupView = this._renderSetupView.bind(this);
         this._renderUnsupportedBrowserView
             = this._renderUnsupportedBrowserView.bind(this);
+
+        this._renderHelpView = this._renderHelpView.bind(this);
+        this._renderShareView = this._renderShareView.bind(this);
+        this._renderJoinCodeEntry = this._renderJoinCodeEntry.bind(this);
+        this._renderRemoteControlView = this._renderRemoteControlView.bind(this);
     }
 
     /**
@@ -165,18 +172,19 @@ export class App extends React.Component {
                                  */
                             }
                             <Route
-                                component = { Help }
-                                path = { ROUTES.HELP } />
+                                path = { ROUTES.HELP }
+                                render = { this._renderHelpView } />
                             <Route
-                                component = { ShareView }
-                                path = { ROUTES.SHARE } />
+                                path = { ROUTES.SHARE }
+                                render = { this._renderShareView } />
                             <Route
-                                component = { RemoteControl }
-                                path = { ROUTES.REMOTE_CONTROL } />
-                            <Route component = { JoinCodeEntry } />
+                                path = { ROUTES.REMOTE_CONTROL }
+                                render = { this._renderRemoteControlView } />
+                            <Route render = { this._renderJoinCodeEntry } />
                         </Switch>
                     </div>
                     <ModalManager />
+                    <FeedbackOverlay />
                 </IdleCursorDetector>
             </ErrorBoundary>
         );
@@ -246,6 +254,16 @@ export class App extends React.Component {
     }
 
     /**
+     * Returns the Spot-Remote help view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderHelpView() {
+        return this._renderSpotRemoteViewWithHelp(Help);
+    }
+
+    /**
      * Returns the Spot TV home (calendar) view.
      *
      * @private
@@ -253,6 +271,16 @@ export class App extends React.Component {
      */
     _renderHomeView() {
         return this._renderSpotViewWithRemoteControl(Home, 'home');
+    }
+
+    /**
+     * Returns the Spot-Remote join code entry view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderJoinCodeEntry() {
+        return this._renderSpotRemoteViewWithHelp(JoinCodeEntry);
     }
 
     /**
@@ -276,6 +304,16 @@ export class App extends React.Component {
     }
 
     /**
+     * Returns the Spot-Remote remote control view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderRemoteControlView() {
+        return this._renderSpotRemoteViewWithHelp(RemoteControl);
+    }
+
+    /**
      * Returns the Spot TV setup view.
      *
      * @private
@@ -285,7 +323,33 @@ export class App extends React.Component {
         return (
             <SpotView name = { 'setup' }>
                 <Setup />
+                <FeedbackOpener />
             </SpotView>
+        );
+    }
+
+    /**
+     * Returns the Spot-Remote share-only mode view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderShareView() {
+        return this._renderSpotRemoteViewWithHelp(ShareView);
+    }
+
+    /**
+     * Helper for displaying a consistent view across Spot-Remote views.
+     *
+     * @param {Component} View - The Spot-Remove view component to show.
+     * @returns {ReactElement}
+     */
+    _renderSpotRemoteViewWithHelp(View) {
+        return (
+            <div>
+                <View />
+                <FeedbackOpener />
+            </div>
         );
     }
 
