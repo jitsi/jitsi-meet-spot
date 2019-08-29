@@ -35,7 +35,7 @@ class SpotSessionStore {
      */
     clearSessions() {
         this._sessions.forEach(session => {
-            session.resetConnection();
+            session.cleanup();
         });
 
         this._sessions.clear();

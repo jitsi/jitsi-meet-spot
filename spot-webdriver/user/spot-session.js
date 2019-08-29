@@ -45,40 +45,6 @@ class SpotSession {
     }
 
     /**
-     * Disconnects the Spot-TV from the underlying MUC. This method is used to
-     * avoid page-load stalls caused by the Spot-TV reusing the same JID
-     * between tests and waiting for JID conflicts to resolve.
-     *
-     * @returns {void}
-     */
-    forceDisconnectSpotTV() {
-        this.spotTV.driver.executeAsync(done => {
-            try {
-                window.spot.remoteControlServer.disconnect()
-                    .then(done, done);
-            } catch (e) {
-                done();
-            }
-        });
-    }
-
-    /**
-     * Disconnects the Spot-Remote from the underlying MUC.
-     *
-     * @returns {void}
-     */
-    forceDisconnectSpotRemote() {
-        this.spotRemote.driver.executeAsync(done => {
-            try {
-                window.spot.remoteControlClient.disconnect()
-                    .then(done, done);
-            } catch (e) {
-                done();
-            }
-        });
-    }
-
-    /**
      * Returns the Spot-TV associated with the session.
      *
      * @returns {SpotTV}
@@ -130,13 +96,13 @@ class SpotSession {
     }
 
     /**
-     * Disconnects the Spot-Remote and Spot-TV from the underlying MUC.
+     * Cleanups all sessions.
      *
      * @returns {void}
      */
-    resetConnection() {
-        this.forceDisconnectSpotTV();
-        this.forceDisconnectSpotRemote();
+    cleanup() {
+        this.spotRemote.cleanup();
+        this.spotTV.cleanup();
     }
 
     /**
