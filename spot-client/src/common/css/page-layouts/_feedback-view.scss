@@ -6,7 +6,9 @@
 }
 
 .app-feedback-overlay {
-    justify-content: center;
+    .feedback-form {
+        margin-top: 5%
+    }
 
     .message-help {
         display: none
