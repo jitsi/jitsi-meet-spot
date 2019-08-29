@@ -28,6 +28,22 @@ class SpotRemote extends SpotUser {
     }
 
     /**
+     * Disconnects the remote control service.
+     *
+     * @returns {void}
+     */
+    disconnectRemoteControlService() {
+        this.driver.executeAsync(done => {
+            try {
+                window.spot.remoteControlClient.disconnect()
+                    .then(done, done);
+            } catch (e) {
+                done();
+            }
+        });
+    }
+
+    /**
      * Returns an instance of {@code InMeetingPage} which wraps interactions with the Spot-Remote
      * view when connected to a Spot-TV in a meeting.
      *

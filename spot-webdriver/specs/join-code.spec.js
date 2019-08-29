@@ -6,7 +6,6 @@ describe('A Spot-Remote can connect to a Spot-TV', () => {
 
     it('using a code', () => {
         session.connectRemoteToTV();
-        session.forceDisconnectSpotRemote();
     });
 
     describe('but when the code is invalid', () => {

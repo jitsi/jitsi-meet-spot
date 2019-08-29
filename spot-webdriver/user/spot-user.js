@@ -22,6 +22,44 @@ class SpotUser {
     }
 
     /**
+     * Cleanups the session.
+     *
+     * @returns {void}
+     */
+    cleanup() {
+        this.setNetworkOnline();
+        this.disconnectRemoteControlService();
+        this.clearStorage();
+        this.stop();
+    }
+
+    /**
+     * Clears the local storage.
+     *
+     * @returns {void}
+     */
+    clearStorage() {
+        this.driver.executeAsync(done => {
+            try {
+                localStorage.clear();
+                done();
+            } catch (e) {
+                done();
+            }
+        });
+    }
+
+    /**
+     * Disconnects the remote control service.
+     *
+     * @returns {void}
+     * @protected
+     */
+    disconnectRemoteControlService() {
+        // Implemented in subclasses
+    }
+
+    /**
      * Gets the reconnect overlay.
      *
      * @returns {ReconnectOverlay}

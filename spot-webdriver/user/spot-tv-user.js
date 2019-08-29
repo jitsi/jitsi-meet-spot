@@ -22,6 +22,22 @@ class SpotTV extends SpotUser {
     }
 
     /**
+     * Disconnects the remote control service.
+     *
+     * @returns {void}
+     */
+    disconnectRemoteControlService() {
+        this.driver.executeAsync(done => {
+            try {
+                window.spot.remoteControlServer.disconnect()
+                    .then(done, done);
+            } catch (e) {
+                done();
+            }
+        });
+    }
+
+    /**
      * Returns an instance of {@code Admin} which wraps interactions with
      * the admin view in Spot-TV.
      *
