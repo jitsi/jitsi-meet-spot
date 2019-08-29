@@ -79,6 +79,8 @@ export function pairWithBackend(pairingCode) {
  * @returns {Object}
  */
 export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
+    let initiallyConnected = false;
+
     return (dispatch, getState) => {
         if (remoteControlServer.hasConnection()) {
             return Promise.reject('Called to create connection while connection exists');
@@ -100,6 +102,8 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 roomProfile,
                 tenant
             } = result;
+
+            initiallyConnected = true;
 
             dispatch(setRemoteJoinCode(remoteJoinCode));
             dispatch(setJwt(jwt));
@@ -156,7 +160,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 dispatch(setPermanentPairingCode(''));
 
                 throw error;
-            } else if (retry) {
+            } else if (retry || initiallyConnected) {
                 doConnect();
             } else {
                 throw error;
