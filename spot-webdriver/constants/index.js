@@ -44,7 +44,7 @@ module.exports = {
      * The maximum amount of time, in milliseconds, for Spot-Remote to wait for
      * Spot-TV to update its state after a command is sent.
      */
-    REMOTE_COMMAND_WAIT: 5000,
+    REMOTE_COMMAND_WAIT: 10000,
 
     /**
      * The direct URL to visit to for a browser to act as a Spot-TV.
