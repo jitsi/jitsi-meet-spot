@@ -35,7 +35,8 @@ describe('The "waiting for the Spot TV to connect" message', () => {
             return;
         }
 
-        session.connectRemoteToTV();
+        session.startSpotTv();
+        session.startPermanentSpotRemote();
 
         const remote = session.getSpotRemote();
 
