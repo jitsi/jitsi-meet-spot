@@ -50,7 +50,7 @@ export class Share extends React.PureComponent {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props);
+        super(props, /* Do not disconnect RCS - it might be a switch to the remote control view */false);
 
         this.state = {
             autoPromptScreenshare: true

@@ -1,5 +1,7 @@
 const constants = require('./../constants');
 
+const QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE = 'testPermanentPairingCode';
+
 /**
  * Represents a session/connection between SpotTV and SpotRemote instances.
  */
@@ -109,7 +111,7 @@ class SpotSession {
      * Starts Spot Remote with given join code and extra query params.
      *
      * @param {string} joinCode - The join code to be entered on the join code page.
-     * @param {Map} queryParams - Any extra query params to be added to the Spot Remote URL.
+     * @param {Map}[queryParams] - Any extra query params to be added to the Spot Remote URL.
      * @returns {void}
      */
     startSpotRemote(joinCode, queryParams) {
@@ -117,6 +119,23 @@ class SpotSession {
 
         joinCodePage.visit(queryParams);
         joinCodePage.enterCode(joinCode);
+    }
+
+    /**
+     * Connects Spot Remote using permanent pairing code.
+     *
+     * @returns {void}
+     */
+    startPermanentSpotRemote() {
+        const queryParams = new Map();
+
+        queryParams.set(QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE, constants.BACKEND_PAIRING_CODE || '');
+
+        this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
+
+        // The join code page once feed with the pairing code will redirect to remote-control.
+        // It can't go directly to the remote control page, because the join code page starts the connection.
+        this.spotRemote.getRemoteControlPage().waitForVisible();
     }
 
     /**
@@ -128,7 +147,7 @@ class SpotSession {
         const calendarPage = this.spotTV.getCalendarPage();
         const queryParams = new Map();
 
-        queryParams.set('testPermanentPairingCode', constants.BACKEND_PAIRING_CODE || '');
+        queryParams.set(QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE, constants.BACKEND_PAIRING_CODE || '');
 
         calendarPage.visit(queryParams, constants.MAX_PAGE_LOAD_WAIT);
     }

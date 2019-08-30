@@ -1,10 +1,9 @@
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
-import { generate8Characters, getJitterDelay } from 'common/utils';
+import { generate8Characters } from 'common/utils';
 
 import {
     CLIENT_TYPES,
-    CONNECTION_EVENTS,
     SERVICE_UPDATES
 } from './constants';
 import XmppConnection from './xmpp-connection';
@@ -69,6 +68,7 @@ export class BaseRemoteControlService extends Emitter {
     connect(options) {
         // Keep a cache of the initial options for reference when reconnecting.
         this._options = options;
+        this._disconnecting = false;
 
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
@@ -207,79 +207,13 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        if (this.isUnrecoverableRequestError(reason)
-            || reason === CONNECTION_EVENTS.SERVER_DISCONNECTED) {
+        // If XMPP server is not working calling disconnect triggers onDisconnect again.
+        if (!this._disconnecting) {
+            this._disconnecting = true;
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
-
-            return;
         }
-
-        this._reconnect();
-    }
-
-    /**
-     * Attempt to re-create the XMPP connection.
-     *
-     * @private
-     * @returns {void}
-     */
-    _reconnect() {
-        if (this._isReconnectQueued) {
-            logger.warn('reconnect called while already reconnecting');
-
-            return;
-        }
-
-        this._setReconnectQueued(true);
-
-        // wait a little bit to retry to avoid a stampeding herd
-        const jitter = getJitterDelay();
-
-        this._previousJoinCode = this.getJoinCode() || this._previousJoinCode;
-
-        this.disconnect()
-            .catch(error => {
-                logger.error(
-                    'an error occurred while trying to stop the service',
-                    { error }
-                );
-            })
-            .then(() => new Promise((resolve, reject) => {
-                this._reconnectTimeout = setTimeout(() => {
-                    logger.log('attempting reconnect');
-
-                    this.connect({
-                        ...this._options,
-                        joinCode: this._previousJoinCode
-                    })
-                        .then(resolve)
-                        .catch(reject);
-                }, jitter);
-            }))
-            .then(results => {
-                logger.log('reconnect completed', results);
-
-                this._setReconnectQueued(false);
-
-                const backend = this._getBackend();
-
-                // FIXME define a structure and add a getter for "REGISTRATION" being sent on REGISTRATION_UPDATED event
-                backend
-                    && this.emit(
-                        SERVICE_UPDATES.REGISTRATION_UPDATED, {
-                            jwt: backend.getJwt(),
-                            tenant: backend.getTenant()
-                        });
-            })
-            .catch(error => {
-                logger.warn('failed to load', { error });
-
-                this._setReconnectQueued(false);
-
-                this._onDisconnect(error);
-            });
     }
 
     /**
@@ -463,21 +397,6 @@ export class BaseRemoteControlService extends Emitter {
      */
     _processMessage() {
         return;
-    }
-
-    /**
-     * Updates the internal flag denoting the remote control service is
-     * currently trying to re-establish an XMPP connection.
-     *
-     * @param {boolean} isReconnecting - Whether or not a reconnect is currently
-     * happening.
-     * @private
-     * @returns {void}
-     */
-    _setReconnectQueued(isReconnecting) {
-        this._isReconnectQueued = isReconnecting;
-
-        this.emit(SERVICE_UPDATES.RECONNECT_UPDATE, { isReconnecting });
     }
 }
 

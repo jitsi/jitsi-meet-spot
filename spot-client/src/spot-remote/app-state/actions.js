@@ -1,10 +1,11 @@
 import {
+    CREATE_CONNECTION,
     PASSWORD,
     clearSpotTVState,
+    destroyConnection,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     setCalendarEvents,
-    setReconnectState,
     setSpotTVState
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
@@ -19,7 +20,7 @@ import { history } from 'common/history';
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { windowHandler } from 'common/utils';
+import { getJitterDelay, windowHandler } from 'common/utils';
 
 import {
     SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
@@ -124,11 +125,21 @@ export function connectToSpotTV(joinCode, shareMode) {
         function onDisconnect(error) {
             logger.error('On Spot Remote disconnect', { error });
 
+            dispatch(destroyConnection());
+            dispatch(clearSpotTVState());
+
             // Retry for permanent pairing as long as the backend accepts the code
             if (getPermanentPairingCode(getState())
                 && !remoteControlClient.isUnrecoverableRequestError(error)) {
+                const jitter = getJitterDelay(3);
 
-                return doConnect();
+                logger.log(`Spot Remote will try to reconnect after ${jitter}ms`);
+
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        doConnect().then(resolve, reject);
+                    }, jitter);
+                });
             }
 
             dispatch(setPermanentPairingCode(''));
@@ -157,12 +168,15 @@ export function connectToSpotTV(joinCode, shareMode) {
         function doConnect() {
             logger.log('Spot Remote attempting connection');
 
-            return remoteControlClient.connect({
-                joinCode,
-                backend,
-                serverConfig
-            })
-                .then(onSuccessfulConnect)
+            return createAsyncActionWithStates(
+                dispatch,
+                () => remoteControlClient.connect({
+                    joinCode,
+                    backend,
+                    serverConfig
+                }),
+                CREATE_CONNECTION
+            ).then(onSuccessfulConnect)
                 .catch(onDisconnect);
         }
 
@@ -170,11 +184,6 @@ export function connectToSpotTV(joinCode, shareMode) {
             dispatch,
             getState
         };
-
-        rcsListeners.push(
-            remoteControlClient.addListener(
-                SERVICE_UPDATES.RECONNECT_UPDATE,
-                _onReconnectStatusChange.bind(null, store)));
 
         rcsListeners.push(
             remoteControlClient.addListener(
@@ -214,19 +223,6 @@ function _clearSubscriptions() {
         removeListener();
     }
     rcsListeners = [];
-}
-
-/**
- * Callback invoked when remote control client has started or stopped to recover a broken connection
- * to the remote control service.
- *
- * @param {Object} store - The Redux store.
- * @param {Object} param - Details of the reconnection event.
- * @private
- * @returns {void}
- */
-function _onReconnectStatusChange({ dispatch }, { isReconnecting }) {
-    dispatch(setReconnectState(isReconnecting));
 }
 
 /**

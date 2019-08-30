@@ -139,12 +139,6 @@ export const SERVICE_UPDATES = {
     CLIENT_MESSAGE_RECEIVED: 'message-received',
 
     /**
-     * The remote control service has started or stopped the automatic
-     * reconnection flow.
-     */
-    RECONNECT_UPDATE: 'reconnect-update',
-
-    /**
      * The spot backend service received an updated profile for the connected
      * room.
      */

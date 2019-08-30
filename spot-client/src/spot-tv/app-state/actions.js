@@ -2,6 +2,7 @@ import {
     CREATE_CONNECTION,
     addPairedRemote,
     clearAllPairedRemotes,
+    destroyConnection,
     getJoinCodeRefreshRate,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
@@ -9,7 +10,6 @@ import {
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
-    setReconnectState,
     setTenant
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
@@ -20,7 +20,7 @@ import {
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
-import { windowHandler } from 'common/utils';
+import { getJitterDelay, windowHandler } from 'common/utils';
 
 import {
     SPOT_TV_PAIR_TO_BACKEND_PENDING,
@@ -152,6 +152,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          */
         function onDisconnect(error) {
             logger.error('Spot-TV disconnected from the remote control server.', { error });
+            dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());
 
@@ -161,22 +162,18 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
 
                 throw error;
             } else if (retry || initiallyConnected) {
-                doConnect();
+                const jitter = getJitterDelay(3);
+
+                logger.log(`Spot TV will try to reconnect after ${jitter}ms`);
+
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        doConnect().then(resolve, reject);
+                    }, jitter);
+                });
             } else {
                 throw error;
             }
-        }
-
-        /**
-         * Callback invoked when {@code remoteControlServer} has started or
-         * stopped trying to re-establish a connection to the remote control
-         * service.
-         *
-         * @private
-         * @returns {void}
-         */
-        function onReconnectChange({ isReconnecting }) {
-            dispatch(setReconnectState(isReconnecting));
         }
 
         /**
@@ -230,10 +227,6 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         remoteControlServer.addListener(
             SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
             onRemoteJoinCodeChange
-        );
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.RECONNECT_UPDATE,
-            onReconnectChange
         );
         remoteControlServer.addListener(
             SERVICE_UPDATES.REGISTRATION_UPDATED,

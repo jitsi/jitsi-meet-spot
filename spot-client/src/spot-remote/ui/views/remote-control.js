@@ -7,11 +7,10 @@ import {
     getCurrentView,
     isConnectedToSpot
 } from 'common/app-state';
-import { LoadingIcon, ReconnectOverlay, View } from 'common/ui';
+import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
 
-import { disconnectFromSpotTV } from './../../app-state';
 import { withRemoteControl, withUltrasound } from './../loaders';
 import { ElectronDesktopPickerModal } from './../components/electron-desktop-picker';
 
@@ -29,17 +28,17 @@ export class RemoteControl extends React.PureComponent {
         events: PropTypes.array,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
-        onDisconnect: PropTypes.func,
         view: PropTypes.string
     };
 
     /**
-     * Clean up connection related state.
+     * Creates new instance of {@code RemoteControl} component.
      *
-     * @inheritdoc
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
      */
-    componentWillUnmount() {
-        this.props.onDisconnect();
+    constructor(props) {
+        super(props, true);
     }
 
     /**
@@ -52,7 +51,6 @@ export class RemoteControl extends React.PureComponent {
             <View name = 'remoteControl'>
                 { this._getView() }
                 <ElectronDesktopPickerModal />
-                <ReconnectOverlay />
             </View>
         );
     }
@@ -104,25 +102,4 @@ function mapStateToProps(state) {
     };
 }
 
-/**
- * Creates actions which can update Redux state.
- *
- * @param {Function} dispatch - The Redux dispatch function to update state.
- * @private
- * @returns {Object}
- */
-function mapDispatchToProps(dispatch) {
-    return {
-        /**
-         * Stop any existing connection to a Spot-TV.
-         *
-         * @returns {void}
-         */
-        onDisconnect() {
-            dispatch(disconnectFromSpotTV());
-        }
-    };
-}
-
-export default withUltrasound(withRemoteControl(
-    connect(mapStateToProps, mapDispatchToProps)(RemoteControl)));
+export default withUltrasound(withRemoteControl(connect(mapStateToProps)(RemoteControl)));

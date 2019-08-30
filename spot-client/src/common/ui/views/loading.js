@@ -13,7 +13,9 @@ import View from './view';
 export default function Loading() {
     return (
         <View name = 'loading'>
-            <div className = 'loading'>
+            <div
+                className = 'loading'
+                data-qa-id = 'loading' >
                 <LoadingIcon />
             </div>
         </View>
