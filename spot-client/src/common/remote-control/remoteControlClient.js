@@ -245,6 +245,23 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Requests a {@code RemoteControlServer} to send dial tones into a meeting.
+     * This is intended for interaction with an IVR requesting additional
+     * conference details for dialing in.
+     *
+     * @param {string} tones - The dial pad numbers to be submitted for playing
+     * tones.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    sendDialTones(tones) {
+        return this.xmppConnection.sendCommand(
+            this._getSpotId(),
+            COMMANDS.SEND_DIAL_TONES,
+            { tones }
+        );
+    }
+
+    /**
      * Requests a {@code RemoteControlServer} to change its audio mute status.
      *
      * @param {boolean} mute - Whether or not Spot should be audio muted.

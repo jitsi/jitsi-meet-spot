@@ -359,6 +359,10 @@ export class MeetingFrame extends React.Component {
 
             break;
 
+        case COMMANDS.SEND_DIAL_TONES:
+            this._jitsiApi.executeCommand('sendTones', { tones: data.tones });
+            break;
+
         case COMMANDS.SET_AUDIO_MUTE:
             if (this._isAudioMuted !== data.mute) {
                 this._jitsiApi.executeCommand('toggleAudio');
