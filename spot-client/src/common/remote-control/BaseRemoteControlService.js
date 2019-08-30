@@ -68,6 +68,7 @@ export class BaseRemoteControlService extends Emitter {
     connect(options) {
         // Keep a cache of the initial options for reference when reconnecting.
         this._options = options;
+        this._disconnecting = false;
 
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
@@ -206,9 +207,13 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onDisconnect(reason) {
-        this.disconnect()
-            .then(() => this.emit(
-                SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
+        // If XMPP server is not working calling disconnect triggers onDisconnect again.
+        if (!this._disconnecting) {
+            this._disconnecting = true;
+            this.disconnect()
+                .then(() => this.emit(
+                    SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
+        }
     }
 
     /**
