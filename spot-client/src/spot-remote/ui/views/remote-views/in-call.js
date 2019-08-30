@@ -7,10 +7,8 @@ import {
     getInMeetingStatus,
     hangUp,
     hideModal,
-    isVolumeControlSupported,
-    startWirelessScreensharing
+    isVolumeControlSupported
 } from 'common/app-state';
-import { isWirelessScreenshareSupported } from 'common/detection';
 import { CallEnd } from 'common/icons';
 import { LoadingIcon, Modal, RoomName } from 'common/ui';
 import { parseMeetingUrl } from 'common/utils';
@@ -44,27 +42,11 @@ export class InCall extends React.Component {
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
-        onStartWirelessScreenshare: PropTypes.func,
         onSubmitPassword: PropTypes.func,
         screensharingType: PropTypes.string,
         showMoreButton: PropTypes.bool,
-        showPasswordPrompt: PropTypes.bool,
-        wiredScreensharingEnabled: PropTypes.bool
+        showPasswordPrompt: PropTypes.bool
     };
-
-    /**
-     * Initializes a new {@code InCall} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
-
-        this._onOpenScreenshareModal = this._onOpenScreenshareModal.bind(this);
-    }
 
     /**
      * Stops any wireless screensharing in progress from the Spot-Remote.
@@ -126,8 +108,7 @@ export class InCall extends React.Component {
                 <NavContainer>
                     <AudioMuteButton />
                     <VideoMuteButton />
-                    <ScreenshareButton
-                        onWillOpenModal = { this._onOpenScreenshareModal } />
+                    <ScreenshareButton />
                     { showMoreButton ? <MoreButton /> : <TileViewButton /> }
                     <NavButton
                         className = 'hangup'
@@ -161,29 +142,6 @@ export class InCall extends React.Component {
             )
             : null;
     }
-
-    /**
-     * Callback invoked when the screenshare button is clicked. Will either open
-     * the screenshare modal or automatically start the wireless screensharing
-     * flow.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _onOpenScreenshareModal() {
-        // If only wireless sceensharing is available and there is no
-        // screenshare occurring, then start the wireless screensharing flow.
-        if (this._isWirelessScreenshareSupported
-            && !this.props.wiredScreensharingEnabled
-            && !this.props.screensharingType) {
-            this.props.onStartWirelessScreenshare();
-
-            // Return false to prevent the modal from opening.
-            return false;
-        }
-
-        return true;
-    }
 }
 
 /**
@@ -198,8 +156,7 @@ function mapStateToProps(state) {
         inMeeting,
         kicked,
         needPassword,
-        screensharingType,
-        wiredScreensharingEnabled
+        screensharingType
     } = getInMeetingStatus(state);
 
     return {
@@ -207,8 +164,7 @@ function mapStateToProps(state) {
         kicked,
         screensharingType,
         showMoreButton: isVolumeControlSupported(state),
-        showPasswordPrompt: needPassword,
-        wiredScreensharingEnabled
+        showPasswordPrompt: needPassword
     };
 }
 
@@ -246,15 +202,6 @@ function mapDispatchToProps(dispatch) {
          */
         onHangUp() {
             return dispatch(hangUp());
-        },
-
-        /**
-         * Triggers the wireless screensharing flow to be started.
-         *
-         * @returns {Promise}
-         */
-        onStartWirelessScreenshare() {
-            return dispatch(startWirelessScreensharing());
         },
 
         /**

@@ -6,8 +6,10 @@ import {
     getInMeetingStatus,
     hideModal,
     isModalOpen,
-    showModal
+    showModal,
+    startWirelessScreensharing
 } from 'common/app-state';
+import { isWirelessScreenshareSupported } from 'common/detection';
 import { ScreenShare } from 'common/icons';
 
 import { NavButton } from './../nav';
@@ -24,8 +26,10 @@ export class ScreenshareButton extends React.Component {
         isScreenshareModalOpen: PropTypes.bool,
         onHideModal: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
+        onStartWirelessScreenshare: PropTypes.func,
         onWillOpenModal: PropTypes.func,
-        screensharingType: PropTypes.string
+        screensharingType: PropTypes.string,
+        wiredScreensharingEnabled: PropTypes.bool
     };
 
     /**
@@ -36,6 +40,8 @@ export class ScreenshareButton extends React.Component {
      */
     constructor(props) {
         super(props);
+
+        this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
 
         this._onToggleScreenshare = this._onToggleScreenshare.bind(this);
     }
@@ -78,9 +84,17 @@ export class ScreenshareButton extends React.Component {
             return;
         }
 
-        if (this.props.onWillOpenModal()) {
-            this.props.onShowScreenshareModal();
+        // If only wireless sceensharing is available and there is no
+        // screenshare occurring, then start the wireless screensharing flow.
+        if (this._isWirelessScreenshareSupported
+            && !this.props.wiredScreensharingEnabled
+            && !this.props.screensharingType) {
+            this.props.onStartWirelessScreenshare();
+
+            return;
         }
+
+        this.props.onShowScreenshareModal();
     }
 
     /**
@@ -106,11 +120,15 @@ export class ScreenshareButton extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
-    const { screensharingType } = getInMeetingStatus(state);
+    const {
+        screensharingType,
+        wiredScreensharingEnabled
+    } = getInMeetingStatus(state);
 
     return {
         isScreenshareModalOpen: isModalOpen(state, ScreenshareModal),
-        screensharingType
+        screensharingType,
+        wiredScreensharingEnabled
     };
 }
 
@@ -140,6 +158,15 @@ function mapDispatchToProps(dispatch) {
          */
         onShowScreenshareModal() {
             dispatch(showModal(ScreenshareModal));
+        },
+
+        /**
+         * Triggers the wireless screensharing flow to be started.
+         *
+         * @returns {Promise}
+         */
+        onStartWirelessScreenshare() {
+            return dispatch(startWirelessScreensharing());
         }
     };
 }
