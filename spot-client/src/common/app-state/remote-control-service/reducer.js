@@ -10,7 +10,6 @@ import {
 } from './actionTypes';
 
 const DEFAULT_STATE = {
-    isReconnecting: false,
     isWirelessScreensharing: false
 };
 
@@ -29,6 +28,9 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
 
     case CREATE_CONNECTION:
         return updateStateForAsyncAction(state, 'connect', action);
+
+    // This clears the 'connect' state created by CREATE_CONNECTION, so that the lack of it means the app is no longer
+    // connected nor trying to connect.
     case DESTROY_CONNECTION:
         return {
             ...state,
