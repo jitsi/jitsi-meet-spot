@@ -1,4 +1,5 @@
 import {
+    SPOT_ROOM_DISPLAY_NAME,
     analytics,
     eventStatusSuffixes,
     inCallEvents,
@@ -13,8 +14,11 @@ import {
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
     SCREENSHARE,
+    SPOT_TV_CLEAR_STATE,
+    SPOT_TV_SET_STATE,
     TILE_VIEW,
     VIDEO_MUTE,
+    getRemoteSpotTVRoomName,
     requestStates
 } from 'common/app-state';
 import { asyncActionRequestStates } from 'common/async-actions';
@@ -45,9 +49,7 @@ function addRequestStateSuffix(eventName, requestState) {
     return `${eventName}${requestStateToEventSuffix[requestState] || ''}`;
 }
 
-MiddlewareRegistry.register(() => next => action => {
-    const result = next(action);
-
+MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
     case AUDIO_MUTE: {
         if (isPendingAsyncAction(action)) {
@@ -79,6 +81,17 @@ MiddlewareRegistry.register(() => next => action => {
         analytics.log(joinCodeEvents.VALIDATE_SUCCESS, { shareMode: action.shareMode });
         break;
     }
+    case SPOT_TV_SET_STATE: {
+        const { roomName } = action.newState;
+
+        if (getRemoteSpotTVRoomName(getState()) !== roomName) {
+            analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, roomName);
+        }
+    }
+        break;
+    case SPOT_TV_CLEAR_STATE:
+        analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, undefined);
+        break;
     case JOIN_SCHEDULED_MEETING: {
         analytics.log(addRequestStateSuffix(
             meetingJoinEvents.SCHEDULED_MEETING_JOIN,
@@ -139,7 +152,7 @@ MiddlewareRegistry.register(() => next => action => {
     }
     }
 
-    return result;
+    return next(action);
 });
 
 /**
