@@ -1,5 +1,5 @@
-import { analytics } from 'common/analytics';
-import { CALENDAR_SET_ERROR } from 'common/app-state';
+import { SPOT_ROOM_DISPLAY_NAME, analytics } from 'common/analytics';
+import { CALENDAR_SET_ERROR, SET_DISPLAY_NAME } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
 import {
@@ -14,6 +14,9 @@ MiddlewareRegistry.register(() => next => action => {
     switch (action.type) {
     case CALENDAR_SET_ERROR:
         analytics.log(calendarEvents.CALENDAR_ERROR, { error: action.error });
+        break;
+    case SET_DISPLAY_NAME:
+        analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, action.displayName);
         break;
     case SPOT_TV_PAIR_TO_BACKEND_FAIL:
         analytics.log(backendPairingEvents.VALIDATE_FAIL);

@@ -45,6 +45,7 @@ const spot1 = new SpotRoom(spot1Id, {
     },
     // It is unclear how the room name is to be retrieved yet. It might be part of the JWT.
     mucUrl: spot1Id,
+    name: 'Spot Room 1',
     remotePairingCode: {
         code: '112233',
         expiresIn: 6 * 60 * 1000
