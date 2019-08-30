@@ -152,6 +152,8 @@ export function connectToSpotTV(joinCode, shareMode) {
 
             _clearSubscriptions();
 
+            dispatch(clearSpotTVState());
+
             history.push(ROUTES.CODE);
 
             throw error;
