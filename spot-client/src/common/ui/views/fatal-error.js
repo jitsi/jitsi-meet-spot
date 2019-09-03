@@ -40,9 +40,7 @@ export class FatalError extends React.Component {
      */
     render() {
         return (
-            <View
-                hideBackground = { true }
-                name = 'error'>
+            <View name = 'error'>
                 <StatusOverlay title = 'An unexpected error occurred'>
                     <div>We will redirect you to home in</div>
                     <Countdown

@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getBackgroundUrl, isAnyModalOpen } from 'common/app-state';
+import { isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 
+import { Background } from '../components';
 import { viewDisplayed } from '../actions';
 
 /**
@@ -15,10 +16,8 @@ import { viewDisplayed } from '../actions';
  */
 class View extends React.Component {
     static propTypes = {
-        backgroundUrl: PropTypes.string,
         children: PropTypes.node,
         dispatch: PropTypes.func,
-        hideBackground: PropTypes.bool,
         isAnyModalOpen: PropTypes.bool,
         name: PropTypes.string
     };
@@ -39,32 +38,13 @@ class View extends React.Component {
      * @inheritdoc
      */
     render() {
-        let backgroundStyles;
-
-        if (!this.props.hideBackground) {
-            const backgroundUrl = this.props.backgroundUrl;
-
-            if (backgroundUrl) {
-                backgroundStyles = {
-                    backgroundImage: `url('${backgroundUrl}')`
-                };
-            }
-        }
-
         const className = `view ${this.props.isAnyModalOpen ? 'modal-open' : ''}`;
-
-        const gradientStyle
-            = `view-gradient ${backgroundStyles ? 'visible' : ''}`;
 
         return (
             <div
                 className = { className }
                 data-qa-id = { `${this.props.name}-view` }>
-                <div
-                    className = 'view-background-container'
-                    style = { backgroundStyles }>
-                    <div className = { gradientStyle } />
-                </div>
+                <Background />
                 {
 
                     /**
@@ -94,7 +74,6 @@ class View extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        backgroundUrl: getBackgroundUrl(state),
         isAnyModalOpen: isAnyModalOpen(state)
     };
 }

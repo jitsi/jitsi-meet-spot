@@ -1,3 +1,4 @@
+export * from './background';
 export * from './button';
 export * from './clock';
 export * from './code-input';
