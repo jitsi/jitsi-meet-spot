@@ -20,7 +20,8 @@ import { getRandomMeetingName } from 'common/utils';
 import { exitShareMode } from './../../../app-state';
 
 import {
-    ElectronDesktopPickerModal
+    ElectronDesktopPickerModal,
+    WaitingForSpotTVOverlay
 } from './../../components';
 import { withRemoteControl } from './../../loaders';
 
@@ -122,7 +123,7 @@ export class Share extends React.PureComponent {
      */
     _renderSubView() {
         if (!this.props.isConnectedToSpot) {
-            return <div data-qa-id = 'waiting-for-spot-tv'>Waiting for Spot TV to connect...</div>;
+            return <WaitingForSpotTVOverlay />;
         } else if (this.props.isWirelessScreensharingPending) {
             return <LoadingIcon />;
         }

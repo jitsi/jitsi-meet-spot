@@ -3,9 +3,12 @@
     cursor: pointer;
     position: fixed;
     right: 5px;
+    z-index: $z-index-foreground;
 }
 
-.app-feedback-overlay {
+.app-feedback-overlay.status-overlay {
+    z-index: $z-index-above-all;
+
     .feedback-form {
         margin-top: 5%
     }

@@ -11,9 +11,11 @@ import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
 
+import {
+    ElectronDesktopPickerModal,
+    WaitingForSpotTVOverlay
+} from './../components';
 import { withRemoteControl, withUltrasound } from './../loaders';
-import { ElectronDesktopPickerModal } from './../components/electron-desktop-picker';
-
 import { Feedback, InCall, WaitingForCall } from './remote-views';
 
 /**
@@ -64,7 +66,7 @@ export class RemoteControl extends React.PureComponent {
      */
     _getView() {
         if (!this.props.isConnectedToSpot) {
-            return <div data-qa-id = 'waiting-for-spot-tv'>Waiting for Spot TV to connect...</div>;
+            return <WaitingForSpotTVOverlay />;
         }
 
         switch (this.props.view) {
