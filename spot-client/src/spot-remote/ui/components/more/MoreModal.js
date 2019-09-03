@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { hideModal, isVolumeControlSupported } from 'common/app-state';
+import {
+    hideModal,
+    isVolumeControlSupported,
+    shouldShowDtmf
+} from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
 import { Modal } from 'common/ui';
@@ -19,6 +23,7 @@ import VolumeModal from './VolumeModal';
 export class MoreModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
+        supportsDtmf: PropTypes.bool,
         supportsVolumeControl: PropTypes.bool
     };
 
@@ -59,7 +64,10 @@ export class MoreModal extends React.Component {
                 qaId = 'more-modal'>
                 <div className = 'more-modal'>
                     <TileViewButton />
-                    <DTMFButton onClick = { this._onShowDtmfModal } />
+                    {
+                        this.props.supportsDtmf
+                            && <DTMFButton onClick = { this._onShowDtmfModal } />
+                    }
                     {
                         this.props.supportsVolumeControl && (
                             <NavButton
@@ -114,6 +122,7 @@ export class MoreModal extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        supportsDtmf: shouldShowDtmf(state),
         supportsVolumeControl: isVolumeControlSupported(state)
     };
 }

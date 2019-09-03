@@ -6,7 +6,9 @@ import {
     forceStopWirelessScreenshare,
     getInMeetingStatus,
     hangUp,
-    hideModal
+    hideModal,
+    isVolumeControlSupported,
+    shouldShowDtmf
 } from 'common/app-state';
 import { CallEnd } from 'common/icons';
 import { LoadingIcon, Modal, RoomName } from 'common/ui';
@@ -23,6 +25,7 @@ import {
     NavContainer,
     PasswordPrompt,
     ScreenshareButton,
+    TileViewButton,
     VideoMuteButton
 } from '../../components';
 
@@ -41,6 +44,7 @@ export class InCall extends React.Component {
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onSubmitPassword: PropTypes.func,
+        showMoreButton: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool
     };
 
@@ -67,6 +71,7 @@ export class InCall extends React.Component {
         const {
             inMeeting,
             kicked,
+            showMoreButton,
             showPasswordPrompt
         } = this.props;
 
@@ -104,7 +109,7 @@ export class InCall extends React.Component {
                     <AudioMuteButton />
                     <VideoMuteButton />
                     <ScreenshareButton />
-                    <MoreButton />
+                    { showMoreButton ? <MoreButton /> : <TileViewButton /> }
                     <NavButton
                         className = 'hangup'
                         label = 'Leave'
@@ -156,6 +161,7 @@ function mapStateToProps(state) {
     return {
         inMeeting,
         kicked,
+        showMoreButton: shouldShowDtmf(state) || isVolumeControlSupported(state),
         showPasswordPrompt: needPassword
     };
 }
