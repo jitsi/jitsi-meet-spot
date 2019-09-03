@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Background } from './../background';
+
 /**
  * Displays a status message while covering the entire screen.
  *
@@ -11,6 +13,7 @@ import React from 'react';
 export function StatusOverlay(props) {
     return (
         <div className = 'status-overlay'>
+            { props.showBackground && <Background /> }
             <div className = 'status-overlay-text-frame'>
                 <h1>{ props.title }</h1>
                 <div className = 'status-overlay-text'>
@@ -23,5 +26,6 @@ export function StatusOverlay(props) {
 
 StatusOverlay.propTypes = {
     children: PropTypes.node,
+    showBackground: PropTypes.bool,
     title: PropTypes.string
 };
