@@ -26,9 +26,9 @@ export const COMMANDS = {
     HANG_UP: 'hangup',
 
     /**
-     * Play dial tones into the meeting for an IVR to listen to.
+     * Play touch tones into the meeting for an IVR to listen to.
      */
-    SEND_DIAL_TONES: 'sendDialTones',
+    SEND_TOUCH_TONES: 'sendTouchTones',
 
     /**
      * Set audio mute on or off.

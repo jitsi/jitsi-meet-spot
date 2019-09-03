@@ -228,7 +228,8 @@ export default {
     TEMPORARY_FEATURE_FLAGS: {
         /**
          * Allow DTMF support to be hidden while waiting for the jitsi-meet side
-         * to be deployed and dial tone playing fixed.
+         * to be deployed and for a fix to be created for touch tones not
+         * being played over dial out.
          *
          * @type {boolean}
          */

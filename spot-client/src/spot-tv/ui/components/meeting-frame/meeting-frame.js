@@ -359,7 +359,7 @@ export class MeetingFrame extends React.Component {
 
             break;
 
-        case COMMANDS.SEND_DIAL_TONES:
+        case COMMANDS.SEND_TOUCH_TONES:
             this._jitsiApi.executeCommand('sendTones', { tones: data.tones });
             break;
 

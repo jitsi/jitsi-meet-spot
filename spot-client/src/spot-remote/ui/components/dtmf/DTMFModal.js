@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { sendDialTones } from 'common/app-state';
+import { sendTouchTones } from 'common/app-state';
 import { Modal } from 'common/ui';
 
 import { StatelessDialPad } from './../dial-pad';
 
 /**
- * Displays a dial pad for requesting dial tones to be played.
+ * Displays a dial pad for requesting touch tones to be played.
  *
  * @extends React.Component
  */
@@ -92,13 +92,14 @@ export class DTMFModal extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         /**
-         * Plays the passed in string as dial tones.
+         * Plays the passed in string as touch tones.
          *
-         * @param {string} tones - The dial pad characters to play as dial tones.
+         * @param {string} tones - The dial pad characters to play as touch
+         * tones.
          * @returns {void}
          */
         onSendTones(tones) {
-            dispatch(sendDialTones(tones));
+            dispatch(sendTouchTones(tones));
         }
     };
 }

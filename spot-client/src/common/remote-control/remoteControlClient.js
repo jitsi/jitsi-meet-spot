@@ -245,7 +245,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
-     * Requests a {@code RemoteControlServer} to send dial tones into a meeting.
+     * Requests a {@code RemoteControlServer} to send touch tones into a meeting.
      * This is intended for interaction with an IVR requesting additional
      * conference details for dialing in.
      *
@@ -253,10 +253,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * tones.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
-    sendDialTones(tones) {
+    sendTouchTones(tones) {
         return this.xmppConnection.sendCommand(
             this._getSpotId(),
-            COMMANDS.SEND_DIAL_TONES,
+            COMMANDS.SEND_TOUCH_TONES,
             { tones }
         );
     }

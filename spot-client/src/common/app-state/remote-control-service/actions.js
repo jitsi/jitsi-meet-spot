@@ -143,13 +143,13 @@ export function hangUp(skipFeedback) {
 }
 
 /**
- * Sends a command to Spot-TV to play the passed in dial tones.
+ * Sends a command to Spot-TV to play the passed in touch tones.
  *
  * @param {string} tones - The tones to play.
  * @returns {Function}
  */
-export function sendDialTones(tones) {
-    return () => remoteControlClient.sendDialTones(tones);
+export function sendTouchTones(tones) {
+    return () => remoteControlClient.sendTouchTones(tones);
 }
 
 /**
