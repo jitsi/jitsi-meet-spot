@@ -7,3 +7,4 @@ export * from './nav';
 export * from './password-prompt';
 export * from './remote-control-menu';
 export * from './screenshare';
+export * from './waiting-for-spot-tv';
