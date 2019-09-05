@@ -3,7 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import { apiMessageReceived, getSpotClientVersion, setBootstrapComplete } from 'common/app-state';
+import {
+    apiMessageReceived,
+    getProductName,
+    getSpotClientVersion,
+    setBootstrapComplete
+} from 'common/app-state';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
@@ -82,6 +87,8 @@ export class App extends React.Component {
             userAgent: window.navigator.userAgent,
             spotClientVersion: this.props.spotClientVersion
         });
+
+        window.document.title = this.props.productName;
 
         /**
          * Defer touch actions to web to handle instead of the mobile device.
@@ -400,7 +407,8 @@ export class App extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        spotClientVersion: getSpotClientVersion(state)
+        spotClientVersion: getSpotClientVersion(state),
+        productName: getProductName(state)
     };
 }
 
