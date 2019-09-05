@@ -37,14 +37,14 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Detect Spot devices nearby</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Detect Spot devices nearby</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Detect Spot devices nearby</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Detect Spot devices nearby</string>
+	<string>Detect nearby meeting devices</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Detect nearby meeting devices</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Detect nearby meeting devices</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Detect nearby meeting devices</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
