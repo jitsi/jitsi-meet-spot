@@ -2,11 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { hideModal, isVolumeControlSupported } from 'common/app-state';
+import {
+    hideModal,
+    isVolumeControlSupported,
+    shouldShowDtmf
+} from 'common/app-state';
 
 import { VolumeUp } from 'common/icons';
 import { Modal } from 'common/ui';
 
+import { DTMFButton, DTMFModal } from './../dtmf';
 import { TileViewButton } from './../remote-control-menu';
 import { NavButton } from './../nav';
 
@@ -18,6 +23,7 @@ import VolumeModal from './VolumeModal';
 export class MoreModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
+        supportsDtmf: PropTypes.bool,
         supportsVolumeControl: PropTypes.bool
     };
 
@@ -30,10 +36,12 @@ export class MoreModal extends React.Component {
         super(props);
 
         this.state = {
-            showVolumeModal: false
+            modalToDisplay: 'more'
         };
 
-        this._onToggleVolumeModal = this._onToggleVolumeModal.bind(this);
+        this._onShowMoreMenu = this._onShowMoreMenu.bind(this);
+        this._onShowDtmfModal = this._onShowDtmfModal.bind(this);
+        this._onShowVolumeMenu = this._onShowVolumeMenu.bind(this);
     }
 
     /**
@@ -43,11 +51,11 @@ export class MoreModal extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        if (this.state.showVolumeModal) {
-            return (
-                <VolumeModal
-                    onClose = { this._onToggleVolumeModal } />
-            );
+        switch (this.state.modalToDisplay) {
+        case 'volume':
+            return <VolumeModal onClose = { this._onShowMoreMenu } />;
+        case 'dtmf':
+            return <DTMFModal onClose = { this._onShowMoreMenu } />;
         }
 
         return (
@@ -57,10 +65,14 @@ export class MoreModal extends React.Component {
                 <div className = 'more-modal'>
                     <TileViewButton />
                     {
+                        this.props.supportsDtmf
+                            && <DTMFButton onClick = { this._onShowDtmfModal } />
+                    }
+                    {
                         this.props.supportsVolumeControl && (
                             <NavButton
                                 label = 'Volume control'
-                                onClick = { this._onToggleVolumeModal }
+                                onClick = { this._onShowVolumeMenu }
                                 qaId = 'volume'>
                                 <VolumeUp />
                             </NavButton>
@@ -72,14 +84,31 @@ export class MoreModal extends React.Component {
     }
 
     /**
-     * Toggles the volume modal.
+     * Displays the DTMF modal.
      *
      * @returns {void}
      */
-    _onToggleVolumeModal() {
-        this.setState({
-            showVolumeModal: !this.state.showVolumeModal
-        });
+    _onShowDtmfModal() {
+        this.setState({ modalToDisplay: 'dtmf' });
+    }
+
+    /**
+     * Displays the default modal state, which has buttons to all features
+     * within {@code MoreModal}.
+     *
+     * @returns {void}
+     */
+    _onShowMoreMenu() {
+        this.setState({ modalToDisplay: 'more' });
+    }
+
+    /**
+     * Displays the volume modal.
+     *
+     * @returns {void}
+     */
+    _onShowVolumeMenu() {
+        this.setState({ modalToDisplay: 'volume' });
     }
 }
 
@@ -93,6 +122,7 @@ export class MoreModal extends React.Component {
  */
 function mapStateToProps(state) {
     return {
+        supportsDtmf: shouldShowDtmf(state),
         supportsVolumeControl: isVolumeControlSupported(state)
     };
 }

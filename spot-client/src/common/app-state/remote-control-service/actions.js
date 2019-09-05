@@ -143,6 +143,16 @@ export function hangUp(skipFeedback) {
 }
 
 /**
+ * Sends a command to Spot-TV to play the passed in touch tones.
+ *
+ * @param {string} tones - The tones to play.
+ * @returns {Function}
+ */
+export function sendTouchTones(tones) {
+    return () => remoteControlClient.sendTouchTones(tones);
+}
+
+/**
  * Sends a command to Spot-TV to change its audio mute setting.
  *
  * @param {boolean} mute - Whether to audio mute or audio unmute.

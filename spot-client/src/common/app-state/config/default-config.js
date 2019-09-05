@@ -228,6 +228,23 @@ export default {
     },
 
     /**
+     * Configurations for services or features in flight so their behavior can
+     * be altered through config changes instead of code changes. The flags are
+     * intended to be removed once the desired behavior is finalized and ready
+     * to use.
+     */
+    TEMPORARY_FEATURE_FLAGS: {
+        /**
+         * Allow DTMF support to be hidden while waiting for the jitsi-meet side
+         * to be deployed and for a fix to be created for touch tones not
+         * being played over dial out.
+         *
+         * @type {boolean}
+         */
+        SHOW_DTMF: false
+    },
+
+    /**
      * Configuration object for loading the ultrasound library.
      */
     ULTRASOUND: {

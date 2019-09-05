@@ -247,3 +247,14 @@ export function getUpdateStartHour(state) {
 export function getUpdateEndHour(state) {
     return state.config.UPDATES.END_HOUR;
 }
+
+/**
+ * A selector which returns whether or not the feature flag for showing DTMF
+ * support is enabled or not.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function shouldShowDtmf(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.SHOW_DTMF;
+}

@@ -1,4 +1,5 @@
 export * from './dial-pad';
+export * from './dtmf';
 export * from './electron-desktop-picker';
 export * from './kicked-notice';
 export * from './meeting-name-entry';

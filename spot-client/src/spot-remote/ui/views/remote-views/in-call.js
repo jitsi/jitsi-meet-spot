@@ -7,7 +7,8 @@ import {
     getInMeetingStatus,
     hangUp,
     hideModal,
-    isVolumeControlSupported
+    isVolumeControlSupported,
+    shouldShowDtmf
 } from 'common/app-state';
 import { CallEnd } from 'common/icons';
 import { LoadingIcon, Modal, RoomName } from 'common/ui';
@@ -43,7 +44,6 @@ export class InCall extends React.Component {
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onSubmitPassword: PropTypes.func,
-        screensharingType: PropTypes.string,
         showMoreButton: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool
     };
@@ -155,15 +155,13 @@ function mapStateToProps(state) {
     const {
         inMeeting,
         kicked,
-        needPassword,
-        screensharingType
+        needPassword
     } = getInMeetingStatus(state);
 
     return {
         inMeeting,
         kicked,
-        screensharingType,
-        showMoreButton: isVolumeControlSupported(state),
+        showMoreButton: shouldShowDtmf(state) || isVolumeControlSupported(state),
         showPasswordPrompt: needPassword
     };
 }

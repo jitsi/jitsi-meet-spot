@@ -4,6 +4,7 @@ export {
     CalendarToday,
     Call,
     CallEnd,
+    Dialpad,
     ExpandLess,
     ExpandMore,
     Feedback,
