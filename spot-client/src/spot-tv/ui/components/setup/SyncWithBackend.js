@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification } from 'common/app-state';
+import { addNotification, getProductName } from 'common/app-state';
 import { CodeInput, LoadingIcon } from 'common/ui';
 import { logger } from 'common/logger';
 
@@ -18,7 +18,8 @@ export class SyncWithBackend extends React.Component {
     static propTypes = {
         onAttemptSync: PropTypes.func,
         onSuccess: PropTypes.func,
-        onSyncError: PropTypes.func
+        onSyncError: PropTypes.func,
+        productName: PropTypes.string
     };
 
     /**
@@ -48,7 +49,7 @@ export class SyncWithBackend extends React.Component {
             <div className = 'setup-sync-with-backend'>
                 <div className = 'cta'>
                     <div className = 'title'>
-                        Welcome to Spot!
+                        Welcome to { this.props.productName }!
                     </div>
                     <div className = 'description'>
                         Enter your pairing code and start your setup
@@ -98,6 +99,20 @@ export class SyncWithBackend extends React.Component {
 }
 
 /**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code SyncWithBackend}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        productName: getProductName(state)
+    };
+}
+
+/**
  * Creates actions which can update Redux state.
  *
  * @param {Function} dispatch - The Redux dispatch function to update state.
@@ -116,4 +131,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(SyncWithBackend);
+export default connect(mapStateToProps, mapDispatchToProps)(SyncWithBackend);
