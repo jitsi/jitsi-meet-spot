@@ -70,7 +70,7 @@ export default class SettingsMenu extends React.Component {
                     icon = { warning }
                     iconColor = 'red'
                     onPress = { this.props.onShowSetup }
-                    text = 'Spot Deployment' />
+                    text = 'Deployment' />
             </ScrollView>
         );
     }
