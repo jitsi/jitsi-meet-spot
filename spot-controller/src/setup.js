@@ -85,7 +85,7 @@ export default class Setup extends React.Component {
         return (
             <View style = { styles.container }>
                 <Text style = { styles.title }>
-                    Please enter the URL for the Spot deployment
+                    Please enter the target deployment URL
                 </Text>
                 {
                     this.state.errorLoadingConfig
@@ -97,7 +97,7 @@ export default class Setup extends React.Component {
                     editable = { !this.state.loading }
                     onChangeText = { this._onEnteredUrlChange }
                     onSubmitEditing = { this._onSubmitEnteredUrl }
-                    placeholder = 'Spot URL'
+                    placeholder = 'Target Deployment URL'
                     placeholderTextColor = 'rgba(255, 255, 255, 0.3)'
                     style = { styles.input }
                     value = { this.state.enteredRemoteControlUrl } />

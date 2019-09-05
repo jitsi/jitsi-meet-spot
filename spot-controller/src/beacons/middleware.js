@@ -126,8 +126,8 @@ function _regionDidEnter(data, { dispatch }) {
     logger.info(`Beacon region entered: ${data.uuid}`);
     dispatch(sendLocalNotification(
         getIntegerUuid(data.uuid),
-        'Nearby Spot TV',
-        'There is a nearby Spot TV. Press the notification to connect.'));
+        'Nearby TV Detected',
+        'There is a nearby TV. Press the notification to connect.'));
 }
 
 /**
