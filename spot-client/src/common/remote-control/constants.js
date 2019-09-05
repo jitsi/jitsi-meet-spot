@@ -122,7 +122,12 @@ export const MESSAGES = {
      * {@code RemoteControlServer}, intended to be passed into the Jitsi-Meet
      * meeting.
      */
-    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control'
+    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control',
+
+    /**
+     * A message sent in order to establish a p2p signaling channel.
+     */
+    REMOTE_CONTROL_P2P: 'remote-control-p2p'
 };
 
 export const SERVICE_UPDATES = {

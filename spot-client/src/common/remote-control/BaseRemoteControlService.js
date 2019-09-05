@@ -4,9 +4,12 @@ import { generate8Characters } from 'common/utils';
 
 import {
     CLIENT_TYPES,
+    MESSAGES,
     SERVICE_UPDATES
 } from './constants';
 import XmppConnection from './xmpp-connection';
+import P2PSignalingClient from './P2PSignalingClient';
+import P2PSignalingServer from './P2PSignalingServer';
 
 /**
  * The interface for interacting with the XMPP service which powers the
@@ -35,6 +38,15 @@ export class BaseRemoteControlService extends Emitter {
                     .catch(() => { /* swallow unload errors from bubbling up */ });
             }
         );
+
+        /**
+         * A peer-to-peer direct signaling channel. Once established will be used to send/receive remote control
+         * commands.
+         *
+         * @type {P2PSignalingClient|P2PSignalingServer|null}
+         * @protected
+         */
+        this._p2pSignaling = null;
     }
 
     /**
@@ -139,6 +151,41 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @param {boolean} isServer - Whether to create a server or a client P2P signaling connection.
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection(isServer) {
+        logger.log('Will try to establish P2P signaling channel', { isServer });
+
+        const P2PSignalingType = isServer ? P2PSignalingServer : P2PSignalingClient;
+
+        this._p2pSignaling = new P2PSignalingType({
+            onReadyStateChanged: (remoteAddress, isReady) => {
+                logger.log(`P2P signaling ${(isReady ? 'ready' : 'closed')}`, {
+                    remoteAddress,
+                    isReady
+                });
+            },
+            onSendP2PMessage: (to, data) => {
+                this.xmppConnection.sendMessage(
+                    to,
+                    MESSAGES.REMOTE_CONTROL_P2P,
+                    data
+                ).catch(error => logger.error('Failed to send p2p message', { error }));
+            },
+            onRemoteControlMessageReceived: data => {
+                this._onP2PRemoteControlMessageReceived(data);
+            }
+        }, {
+            iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
+        });
+    }
+
+    /**
      * Returns a Promise which is to be resolved/rejected when the initial connection process is
      * done.
      *
@@ -210,6 +257,12 @@ export class BaseRemoteControlService extends Emitter {
         // If XMPP server is not working calling disconnect triggers onDisconnect again.
         if (!this._disconnecting) {
             this._disconnecting = true;
+
+            if (this._p2pSignaling) {
+                this._p2pSignaling.stop();
+                this._p2pSignaling = null;
+            }
+
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
@@ -370,6 +423,21 @@ export class BaseRemoteControlService extends Emitter {
         this._processMessage(messageType, from, data);
     }
 
+    /* eslint-disable no-empty-function */
+    /**
+     * Method called when a remote control command is received over the P2P channel.
+     *
+     * @param {string} remoteAddress - The remote address to which an ack needs to be sent to.
+     * @param {number} requestId - The request ID to be used for an ack.
+     * @param {string} command - A remote control service command.
+     * @param {Object} data - Any command specific extra data(if any).
+     * @protected
+     * @returns {void}
+     */
+    _onP2PRemoteControlMessageReceived() {
+    }
+    /* eslint-enable no-empty-function */
+
     /**
      * Callback invoked when Spot-TV or a Spot-Remote has a status update.
      * Spot-Remotes needs to know about Spot-TV state as well as connection
@@ -392,11 +460,40 @@ export class BaseRemoteControlService extends Emitter {
      * the message.
      * @param {string} from - The JID of the participant sending the message.
      * @param {Object} data - Additional information attached to the message.
+     * @protected
+     * @returns {void}
+     */
+    _processMessage(messageType, from, data) {
+        if (messageType === MESSAGES.REMOTE_CONTROL_P2P) {
+            this._processRemoteControlP2PMessage({
+                from,
+                data
+            });
+        }
+    }
+
+    /**
+     * Processing for {@link MESSAGES.REMOTE_CONTROL_P2P} message which are used to exchange offer/answer and ICE
+     * candidates needed to establish a P2P signaling channel.
+     *
+     * @param {string} from - The remote address from which the message has been received.
+     * @param {string} data - Any message data.
      * @private
      * @returns {void}
      */
-    _processMessage() {
-        return;
+    _processRemoteControlP2PMessage({ from, data }) {
+        if (!this._p2pSignaling) {
+            this._createP2PSignalingConnection(/* a server type of connection */ true);
+        }
+
+        if (this._p2pSignaling) {
+            this._p2pSignaling.processP2PMessage({
+                data,
+                from
+            });
+        } else {
+            logger.error('Ignoring P2P message - no connection', { from });
+        }
     }
 }
 

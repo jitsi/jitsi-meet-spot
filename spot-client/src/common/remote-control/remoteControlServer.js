@@ -258,6 +258,30 @@ export class RemoteControlServer extends BaseRemoteControlService {
         this._notifySpotRemoteMessageReceived(commandType, data);
     }
 
+    /**
+     * Method called when a remote control command is received over the P2P channel.
+     *
+     * @param {string} remoteAddress - The remote address to which an ack needs to be sent to.
+     * @param {number} requestId - The request ID to be used for an ack.
+     * @param {string} command - A remote control service command.
+     * @param {Object} data - Any command specific extra data(if any).
+     * @protected
+     * @returns {void}
+     */
+    _onP2PRemoteControlMessageReceived({ remoteAddress, requestId, command, data }) {
+        this._notifySpotRemoteMessageReceived(command, data);
+
+        if (this._p2pSignaling) {
+            this._p2pSignaling.sendCommandAck(remoteAddress, requestId);
+        } else {
+            logger.warn('Skipped sending P2P command ack - no P2P connection', {
+                remoteAddress,
+                requestId,
+                command
+            });
+        }
+    }
+
 
     /**
      * Callback invoked when the XMPP connection is disconnected.
@@ -346,6 +370,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
                 }
             );
 
+            break;
+        default:
+            super._processMessage(messageType, from, data);
             break;
         }
     }

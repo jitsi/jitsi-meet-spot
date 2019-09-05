@@ -249,6 +249,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise<Object>}
      */
     _sendCommand(command, data) {
+        if (this._p2pSignaling.isReady()) {
+            return this._p2pSignaling.sendCommand(command, data);
+        }
+
         return this.xmppConnection.sendCommand(this._getSpotId(), command, data);
     }
 
@@ -462,6 +466,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
         if (type === 'unavailable') {
             if (this._getSpotId() === from) {
                 logger.log('Spot TV left the MUC');
+                if (this._p2pSignaling) {
+                    this._p2pSignaling.stop();
+                    this._p2pSignaling = null;
+                }
                 if (this._getBackend()) {
                     // With backend it is okay for remote to sit in the MUC without Spot TV connected.
                     this._resetSpotTvState();
@@ -501,6 +509,13 @@ export class RemoteControlClient extends BaseRemoteControlService {
             this._waitForSpotTvTimeout = null;
         }
 
+        if (!this._p2pSignaling) {
+            this._createP2PSignalingConnection(false);
+
+            // Client initiates the P2P signaling session
+            this._p2pSignaling.start(this._getSpotId());
+        }
+
         this.emit(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
             {
@@ -524,6 +539,9 @@ export class RemoteControlClient extends BaseRemoteControlService {
                     data,
                     from
                 });
+            break;
+        default:
+            super._processMessage(messageType, from, data);
             break;
         }
     }
