@@ -49,5 +49,5 @@ module.exports = {
     /**
      * The direct URL to visit to for a browser to act as a Spot-TV.
      */
-    SPOT_URL: `${TEST_SERVER_URL}/spot`
+    SPOT_URL: `${TEST_SERVER_URL}/tv`
 };

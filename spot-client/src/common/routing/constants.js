@@ -4,9 +4,10 @@
 export const ROUTES = {
     CODE: '/',
     HELP: '/help',
-    HOME: '/spot',
+    HOME: '/tv',
     LOADING: '/loading',
     MEETING: '/meeting',
+    OLD_HOME: '/spot',
     OUTLOOK_OAUTH: '/oauth',
     REMOTE_CONTROL: '/remote-control',
     SETUP: '/setup',

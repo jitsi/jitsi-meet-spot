@@ -16,7 +16,7 @@ module.exports = {
     /**
      * The default URL to connect to.
      */
-    defaultSpotURL: process.env.SPOT_URL || 'https://spot.jitsi.net/spot',
+    defaultSpotURL: process.env.SPOT_URL || 'https://spot.jitsi.net/tv',
 
     /**
      * The details of the spash screen, if any.
