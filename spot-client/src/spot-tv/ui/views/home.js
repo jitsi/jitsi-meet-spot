@@ -7,6 +7,7 @@ import {
     getCalendarError,
     getCalendarEvents,
     getDisplayName,
+    getProductName,
     getRemoteJoinCode,
     hasCalendarBeenFetched,
     isSetupComplete
@@ -46,6 +47,7 @@ export class Home extends React.Component {
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
         onUpdateAvailable: PropTypes.func,
+        productName: PropTypes.string,
         remoteControlServer: PropTypes.object,
         remoteJoinCode: PropTypes.string,
         spotRoomName: PropTypes.string
@@ -250,7 +252,7 @@ export class Home extends React.Component {
     _renderSetupMessage() {
         return (
             <div className = 'no-events-message'>
-                <h1>Welcome to Spot!</h1>
+                <h1>Welcome to { this.props.productName }!</h1>
                 <div className = 'setup-instructions'>
                     <div>You're almost set</div>
                     <div>
@@ -286,6 +288,7 @@ function mapStateToProps(state) {
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
         isSetupComplete: isSetupComplete(state),
+        productName: getProductName(state),
         remoteJoinCode: getRemoteJoinCode(state),
         spotRoomName: getDisplayName(state)
     };

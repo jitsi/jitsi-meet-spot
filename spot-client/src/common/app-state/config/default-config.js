@@ -191,6 +191,14 @@ export default {
     },
 
     /**
+     * The user-facing name of the Spot app. Configurable in case "Spot" is not
+     * the desired name.
+     *
+     * @type {string}
+     */
+    PRODUCT_NAME: 'Spot',
+
+    /**
      * The Spot client's version(release tag).
      */
     SPOT_CLIENT_VERSION: process.env.SPOT_CLIENT_VERSION || 'development',

@@ -14,7 +14,7 @@ import { adjustVolume } from '../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
-import { FeedbackHider } from './FeedbackHider';
+import FeedbackHider from './FeedbackHider';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 

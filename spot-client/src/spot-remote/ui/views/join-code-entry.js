@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import {
     addNotification,
+    getProductName,
     getShareDomain,
     sendApiMessage
 } from 'common/app-state';
@@ -45,6 +46,7 @@ export class JoinCodeEntry extends React.Component {
         onConnectToSpotTV: PropTypes.func,
         onDisconnect: PropTypes.func,
         permanentPairingCode: PropTypes.string,
+        productName: PropTypes.string,
         shareDomain: PropTypes.string,
         updateReadyStatus: PropTypes.func
     };
@@ -166,7 +168,7 @@ export class JoinCodeEntry extends React.Component {
                             Enter a share key
                         </div>
                         <div className = 'help'>
-                            Your key is visible on the Spot TV
+                            Your key is visible on the { this.props.productName } TV
                         </div>
                     </div>
                     <div className = { `code-entry-wrapper boxes-${this.props.codeLength}` }>
@@ -334,6 +336,7 @@ function mapStateToProps(state) {
         codeLength: isSpotControllerApp(state) && isBackendEnabled(state) ? 8 : 6,
         completedOnboarding: isOnboardingComplete(state),
         permanentPairingCode: getPermanentPairingCode(state),
+        productName: getProductName(state),
         shareDomain: getShareDomain(state)
     };
 }

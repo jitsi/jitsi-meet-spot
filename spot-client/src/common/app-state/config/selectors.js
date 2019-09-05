@@ -152,6 +152,16 @@ export function getPrivacyPolicyURL(state) {
 }
 
 /**
+ * A selector which returns the configured name of Spot.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getProductName(state) {
+    return state.config.PRODUCT_NAME;
+}
+
+/**
 * A selector which returns XMPP configuration information for creating XMPP
 * connections and joining MUCs.
 *

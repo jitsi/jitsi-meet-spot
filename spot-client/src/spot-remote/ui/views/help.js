@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import {
     getPrivacyPolicyURL,
+    getProductName,
     getTermsAndConditionsURL
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
@@ -25,6 +26,7 @@ class Help extends React.Component {
         codeLength: PropTypes.number,
         onContinue: PropTypes.func,
         privacyPolicyURL: PropTypes.string,
+        productName: PropTypes.string,
         termsAndConditionsURL: PropTypes.string
     };
 
@@ -48,7 +50,7 @@ class Help extends React.Component {
             <View name = 'help'>
                 <div className = 'help-view'>
                     <div className = 'title'>
-                        Welcome to Spot!
+                        Welcome to { this.props.productName }!
                     </div>
                     <div className = 'help-dialog'>
                         <div className = 'help-message'>
@@ -113,6 +115,7 @@ function mapStateToProps(state) {
     return {
         codeLength: isSpotControllerApp(state) && isBackendEnabled(state) ? 8 : 6,
         privacyPolicyURL: getPrivacyPolicyURL(state),
+        productName: getProductName(state),
         termsAndConditionsURL: getTermsAndConditionsURL(state)
     };
 }
