@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
 import { apiMessageReceived, getSpotClientVersion, setBootstrapComplete } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -158,6 +158,9 @@ export class App extends React.Component {
                                 path = { ROUTES.SETUP }
                                 render = { this._renderSetupView }
                                 requireSetup = { false } />
+                            <Redirect
+                                from = { ROUTES.OLD_HOME }
+                                to = { ROUTES.HOME } />
                             <SpotTvRestrictedRoute
                                 path = { ROUTES.HOME }
                                 render = { this._renderHomeView } />
