@@ -42,6 +42,7 @@ export class App extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         location: PropTypes.object,
+        productName: PropTypes.string,
         spotClientVersion: PropTypes.string
     };
 
