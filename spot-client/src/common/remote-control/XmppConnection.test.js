@@ -33,14 +33,19 @@ describe('XmppConnection', () => {
     });
 
     describe('convertXMLPresenceToObject', () => {
-        it('transforms an IQ into a js object', () => {
+        it('transforms MUC presence into a js object', () => {
+            const spotStatus = JSON.stringify({
+                videoMuted: true,
+                isSpot: true
+            });
             const presenceString = `
                 <presence
                     from = "${IQ_FROM}"
                     to = "${IQ_TO}"
                     type = "unavailable">
-                    <videoMuted>true</videoMuted>
-                    <isSpot>true</isSpot>
+                    <spot-status xmlns="https://jitsi.org/spot">
+                        ${spotStatus}                    
+                    </spot-status>
                 </presence>
             `;
             const presenceIq = new DOMParser()

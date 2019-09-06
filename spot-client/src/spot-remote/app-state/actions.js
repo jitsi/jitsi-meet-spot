@@ -246,17 +246,10 @@ function _onSpotTVStateChange({ dispatch }, data) {
 
     dispatch(setSpotTVState(newState));
 
-    if (updatedState.calendar) {
-        try {
-            const events = JSON.parse(updatedState.calendar);
+    if (Array.isArray(updatedState.calendar)) {
+        const events = updatedState.calendar;
 
-            dispatch(setCalendarEvents(events));
-        } catch (error) {
-            logger.error(
-                'Spot-Remote could not parse calendar events',
-                { error }
-            );
-        }
+        dispatch(setCalendarEvents(events));
     }
 }
 
