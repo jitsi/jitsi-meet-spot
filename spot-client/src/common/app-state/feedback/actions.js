@@ -51,7 +51,7 @@ export function submitFeedback({ message, requestedMoreInfo, score, timeout }) {
         message,
         requestedMoreInfo,
         score,
-        skip: score === -1,
+        skip: score === -1 && !message,
         timeout
     };
 }
