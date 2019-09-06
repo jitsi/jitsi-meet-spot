@@ -225,7 +225,13 @@ export class RemoteControlServer extends BaseRemoteControlService {
             return;
         }
 
+        newStatus.timestamp = Date.now();
+
         this.xmppConnection.updateStatus(newStatus);
+
+        if (this._p2pSignaling && this._p2pSignaling.isReady()) {
+            this._p2pSignaling.updateStatus(newStatus);
+        }
     }
 
     /**

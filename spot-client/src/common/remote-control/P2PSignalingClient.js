@@ -33,24 +33,11 @@ export default class P2PSignalingClient extends P2PSignalingBase {
      * Client processing for data channel messages. A client processes only acks.
      *
      * @param {string} remoteAddress - The remote address that sent the message.
-     * @param {string} rawData - Raw message data as text.
+     * @param {Object} msg - FIXME.
      * @private
      * @returns {void}
      */
-    _onDataChannelMessage(remoteAddress, rawData) {
-        let msg;
-
-        try {
-            msg = JSON.parse(rawData);
-        } catch (error) {
-            logger.error('Failed to parse P2P message', {
-                rawData,
-                error
-            });
-
-            return;
-        }
-
+    _processDataChannelMessage(remoteAddress, msg) {
         const { command, requestId } = msg;
 
         if (command === 'ack' && requestId) {
@@ -63,8 +50,10 @@ export default class P2PSignalingClient extends P2PSignalingBase {
             }
 
             this._p2pSignalingRequests.delete(requestId);
+        } else if (msg.command === 'status' && msg.newStatus) {
+            this._callbacks.onStatusUpdateReceived(remoteAddress, msg.newStatus);
         } else {
-            logger.warn('Ignoring P2P msg', { rawData });
+            super._processDataChannelMessage(remoteAddress, msg);
         }
     }
 

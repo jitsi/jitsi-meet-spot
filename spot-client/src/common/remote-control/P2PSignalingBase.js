@@ -10,6 +10,7 @@ import { PeerConnection } from 'common/webrtc';
  * signaling instance during p2p connection establishment process(offer, answer and ICE candidates).
  * @property {function} onRemoteControlMessageReceived - When a remote control message is received over the P2P
  * signaling channel.
+ * @property {function} onStatusUpdateReceived - FIXME.
  */
 /**
  * @typedef {Object} P2PSignalingOptions
@@ -104,18 +105,45 @@ export default class P2PSignalingBase {
         return first && first.isDataChannelActive();
     }
 
-    /* eslint-disable no-empty-function */
     /**
      * Callback fired when a message has been received over {@link PeerConnection}'s data channel.
      *
      * @param {string} remoteAddress - The remote address that sent the message.
      * @param {string} rawData - Raw message data as text.
+     * @private
+     * @returns {void}
+     */
+    _onDataChannelMessage(remoteAddress, rawData) {
+        let msg;
+
+        try {
+            msg = JSON.parse(rawData);
+        } catch (error) {
+            logger.error('Failed to parse P2P message', {
+                rawData,
+                error
+            });
+
+            return;
+        }
+
+        this._processDataChannelMessage(remoteAddress, msg);
+    }
+
+    /**
+     * FIXME.
+     *
+     * @param {string} remoteAddress - The remote address that sent the message.
+     * @param {Object} msg - FIXME.
      * @protected
      * @returns {void}
      */
-    _onDataChannelMessage() {
+    _processDataChannelMessage(remoteAddress, msg) {
+        logger.warn('_processDataChannelMessage ignoring a msg', {
+            msg,
+            remoteAddress
+        });
     }
-    /* eslint-enable no-empty-function */
 
     /* eslint-disable no-unused-vars */
     /**

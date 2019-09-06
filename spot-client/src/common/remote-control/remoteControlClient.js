@@ -495,6 +495,40 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
+        logger.log('On Spot TV presence recevied over XMPP', {
+            from,
+            state
+        });
+
+        this._onSpotTvStatusReceived(from, state);
+    }
+
+    /**
+     * FIXME.
+     *
+     * @param {string} from - FIXME.
+     * @param {Object} state - FIXME.
+     * @private
+     * @returns {void}
+     */
+    _onSpotTvStatusReceived(from, state) {
+        // NOTE There will be no timestamp in the initial Spot TV presence
+        const { timestamp } = state;
+
+        const currentTimestamp = this._lastSpotState && this._lastSpotState.timestamp;
+
+        if (currentTimestamp && timestamp && currentTimestamp >= timestamp) {
+            logger.warn('Discarded outdated Spot TV state', {
+                currentTimestamp,
+                from,
+                timestamp,
+                newState: state,
+                currentState: this._lastSpotState
+            });
+
+            return;
+        }
+
         // Redundantly update the known {@code RemoteControlServer} jid in case
         // there are multiple due to ghosts left form disconnect, in which case
         // the active {@code RemoteControlServer} should be emitting updates.
@@ -523,7 +557,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
             }
         );
     }
-
 
     /**
      * Processes screenshare related updates from the Jitsi-Meet participant.

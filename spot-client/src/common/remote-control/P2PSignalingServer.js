@@ -10,24 +10,11 @@ export default class P2PSignalingServer extends P2PSignalingBase {
      * It processes remote control command and sends ack responses when done.
      *
      * @param {string} remoteAddress - The remote address from which the message has been received.
-     * @param {string} rawData - Raw message data as string.
+     * @param {Object} msg - FIXME.
      * @private
      * @returns {void}
      */
-    _onDataChannelMessage(remoteAddress, rawData) {
-        let msg;
-
-        try {
-            msg = JSON.parse(rawData);
-        } catch (error) {
-            logger.error('Failed to parse P2P message', {
-                rawData,
-                error
-            });
-
-            return;
-        }
-
+    _processDataChannelMessage(remoteAddress, msg) {
         const { command, data, requestId } = msg;
 
         if (requestId && command && data) {
@@ -38,7 +25,7 @@ export default class P2PSignalingServer extends P2PSignalingBase {
                 data
             });
         } else {
-            logger.warn('_onDataChannelMessage ignoring a msg', { rawData });
+            super._processDataChannelMessage(remoteAddress, msg);
         }
     }
 
@@ -67,6 +54,25 @@ export default class P2PSignalingServer extends P2PSignalingBase {
                 hasConnection: Boolean(connection),
                 isDataChannelActive: isActive
             });
+        }
+    }
+
+    /**
+     * FIXME.
+     *
+     * @param {Object} newStatus - FIXME.
+     * @returns {void}
+     */
+    updateStatus(newStatus = {}) {
+        const updateMsg = JSON.stringify({
+            command: 'status',
+            newStatus
+        });
+
+        for (const peerConnection of this._peerConnections.values()) {
+            if (peerConnection.isDataChannelActive()) {
+                peerConnection.sendDataChannelMessage(updateMsg);
+            }
         }
     }
 }
