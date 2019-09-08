@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import { hideModal } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
@@ -21,7 +22,8 @@ import SetupWizard from './setup-wizard';
 class AdminModal extends React.Component {
     static propTypes = {
         isBackendEnabled: PropTypes.bool,
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -68,7 +70,9 @@ class AdminModal extends React.Component {
         switch (this.state.view) {
         case 'device-selection':
             return (
-                <SelectMedia onSuccess = { this._onShowAllOptions } />
+                <SelectMedia
+                    onSuccess = { this._onShowAllOptions }
+                    t = { this.props.t } />
             );
         case 'all':
         default:
@@ -144,4 +148,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminModal);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(AdminModal)
+);

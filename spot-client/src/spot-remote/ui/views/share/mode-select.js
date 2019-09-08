@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { ArrowForward, ScreenShare } from 'common/icons';
 import { NavButton } from './../../components';
@@ -15,7 +16,8 @@ export class ModeSelect extends React.Component {
         isScreenshareActive: PropTypes.bool,
         isWirelessScreenshareSupported: PropTypes.bool,
         onGoToSpotRemoveView: PropTypes.func,
-        onStartWirelessScreenshare: PropTypes.func
+        onStartWirelessScreenshare: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -29,7 +31,8 @@ export class ModeSelect extends React.Component {
             isWirelessScreenshareSupported,
             isScreenshareActive,
             onStartWirelessScreenshare,
-            onGoToSpotRemoveView
+            onGoToSpotRemoveView,
+            t
         } = this.props;
 
         let disabled = false;
@@ -37,11 +40,10 @@ export class ModeSelect extends React.Component {
 
         if (!isWirelessScreenshareSupported) {
             disabled = true;
-            footerMessage = 'This browser is currently not supported. '
-                + 'To share content please use Chrome.';
+            footerMessage = t('screenshare.notSupported');
         } else if (isScreenshareActive) {
             disabled = true;
-            footerMessage = 'Cannot start wireless screenshare while screenshare is active.';
+            footerMessage = t('screenshare.alreadyActive');
         }
 
         return (
@@ -49,13 +51,13 @@ export class ModeSelect extends React.Component {
                 className = 'mode-select'
                 data-qa-id = 'mode-select'>
                 <div className = 'title'>
-                    Select a Mode
+                    { t('screenshare.selectMode') }
                 </div>
                 <div className = 'selections'>
                     <div className = 'selection'>
                         <NavButton
                             disabled = { disabled }
-                            label = 'Wireless screensharing'
+                            label = { t('screenshare.screenshareMode') }
                             onClick = { onStartWirelessScreenshare }
                             qaId = 'start-share'>
                             <ScreenShare />
@@ -63,7 +65,7 @@ export class ModeSelect extends React.Component {
                     </div>
                     <div className = 'selection'>
                         <NavButton
-                            label = 'Remote Control'
+                            label = { t('screenshare.remoteMode') }
                             onClick = { onGoToSpotRemoveView }
                             qaId = 'remote-control'>
                             <ArrowForward />
@@ -78,4 +80,4 @@ export class ModeSelect extends React.Component {
     }
 }
 
-export default ModeSelect;
+export default withTranslation()(ModeSelect);

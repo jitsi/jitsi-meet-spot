@@ -35,6 +35,8 @@ import {
 } from 'common/utils';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
+import 'common/i18n';
+
 import App from './app';
 
 const queryParams = new URLSearchParams(window.location.search);

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Button, Input } from 'common/ui';
 
@@ -16,7 +17,8 @@ export class MeetingNameEntry extends React.Component {
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
         onSubmit: PropTypes.func,
-        placeholder: PropTypes.string
+        placeholder: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -44,7 +46,7 @@ export class MeetingNameEntry extends React.Component {
                 onSubmit = { this._onSubmit } >
                 <div className = 'input-container'>
                     <label className = 'input-label'>
-                        Start a new meeting
+                        { this.props.t('adhoc.label') }
                     </label>
                     <div className = 'input-with-default-domain'>
                         <span className = 'default-domain'>
@@ -58,7 +60,7 @@ export class MeetingNameEntry extends React.Component {
                             onChange = { this._onMeetingNameChange }
                             onFocus = { this.props.onFocus }
                             placeholder = { this.props.placeholder
-                                || 'Enter a meeting name' }
+                                || this.props.t('adhoc.enterName') }
                             spellCheck = { false }
                             value = { this.props.meetingName } />
                     </div>
@@ -67,7 +69,7 @@ export class MeetingNameEntry extends React.Component {
                     <Button
                         qaId = 'meeting-name-submit'
                         type = 'submit'>
-                        GO
+                        { this.props.t('adhoc.go') }
                     </Button>
                 </div>
             </form>
@@ -101,4 +103,4 @@ export class MeetingNameEntry extends React.Component {
     }
 }
 
-export default MeetingNameEntry;
+export default withTranslation()(MeetingNameEntry);

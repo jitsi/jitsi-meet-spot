@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -31,6 +32,7 @@ export class RemoteControl extends React.PureComponent {
         events: PropTypes.array,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
+        t: PropTypes.func,
         view: PropTypes.string
     };
 
@@ -78,8 +80,6 @@ export class RemoteControl extends React.PureComponent {
         logger.log(`remote-control view: ${this.props.view}`);
 
         switch (this.props.view) {
-        case 'admin':
-            return <div>currently in admin tools</div>;
         case 'feedback':
             return (
                 <Feedback />
@@ -89,7 +89,7 @@ export class RemoteControl extends React.PureComponent {
         case 'meeting':
             return <InCall />;
         case 'setup':
-            return <div>currently in setup</div>;
+            return <div>{ this.props.t('appStatus.setup') }</div>;
         default:
             return <LoadingIcon />;
         }
@@ -112,4 +112,8 @@ function mapStateToProps(state) {
     };
 }
 
-export default withUltrasound(connect(mapStateToProps)(RemoteControl));
+export default withUltrasound(
+    connect(mapStateToProps)(
+        withTranslation()(RemoteControl)
+    )
+);

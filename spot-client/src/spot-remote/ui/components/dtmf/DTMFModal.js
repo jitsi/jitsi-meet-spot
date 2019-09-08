@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { sendTouchTones } from 'common/app-state';
@@ -16,7 +17,8 @@ import { StatelessDialPad } from './../dial-pad';
 export class DTMFModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
-        onSendTones: PropTypes.func
+        onSendTones: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -43,7 +45,7 @@ export class DTMFModal extends React.Component {
                 <div className = 'dtmf-modal'>
                     <StatelessDialPad
                         onChange = { this._onChange }
-                        placeholderText = 'Enter Numbers' />
+                        placeholderText = { this.props.t('dial.enterNumbers') } />
                 </div>
             </Modal>
         );
@@ -85,4 +87,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(DTMFModal);
+export default connect(undefined, mapDispatchToProps)(
+    withTranslation()(DTMFModal)
+);

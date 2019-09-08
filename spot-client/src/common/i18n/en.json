@@ -1,0 +1,144 @@
+{
+    "adhoc": {
+        "enterName": "Enter a meeting name",
+        "go": "Go",
+        "label": "Start a new meeting"
+    },
+    "admin": {
+        "change": "Change",
+        "code": "Pairing Code",
+        "devices": "Preferred devices",
+        "display": "Display",
+        "reset": "Reset app",
+        "resetting": "Resetting",
+        "wizard": "Setup wizard",
+        "wizardStart": "Start wizard"
+    },
+    "appStatus": {
+        "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
+        "kicked": "You have been removed from the conference",
+        "redirectingHome": "We will redirect you to home in",
+        "setup": "Currently in setup",
+        "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser",
+        "unexpectedError": "An unexpected error occurred",
+        "useChrome": "Please open {{ productName }} on Chrome desktop.",
+        "waitingForTv": "Waiting for {{ productName }} TV to connect"
+    },
+    "buttons": {
+        "adhoc": "Meet Now",
+        "calendar": "Calendar",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "continue": "Continue",
+        "dial": "Dial a Number",
+        "next": "Next",
+        "select": "Select",
+        "send": "Send",
+        "share": "Share Content",
+        "skip": "Skip",
+        "submit": "Submit"
+    },
+    "calendar": {
+        "join": "Join Now",
+        "today": "Today"
+    },
+    "commands": {
+        "audioMute": "Mute Audio",
+        "audioMutePending": "Muting...",
+        "audioUnmute": "Unmute Audio",
+        "audioUnmutePending": "Unmuting...",
+        "hangUp": "Leave",
+        "more": "More",
+        "tileViewEnter": "Enter Tile View",
+        "tileViewExit": "Exit Tile View",
+        "videoMute": "Stop Camera",
+        "videoMutePending": "Stopping...",
+        "videoUnmute": "Start Camera",
+        "videoUnmutePending": "Starting...",
+        "volume": "Volume"
+    },
+    "conferenceStatus": {
+        "enterPassword": "Enter the conference password",
+        "password": "Password"
+    },
+    "countdown": {
+        "timeLeft": "{{ count }} second",
+        "timeLeft_plural": "{{ count }} seconds"
+    },
+    "dial": {
+        "call": "Call",
+        "enterNumber": "Enter a phone number'",
+        "enterNumbers": "Enter Numbers",
+        "send": "Send",
+        "tones": "Dial Tones"
+    },
+    "feedback": {
+        "details": "Please tell us more about it.",
+        "howTo": "You can use the remote control device to submit feedback now.",
+        "rate": "Rate your experience",
+        "thanks": "Thanks for using {{ productName }}!"
+    },
+    "help": {
+        "howToConnect": "Open {{ url }} in a desktop Google Chrome browser in the conference room to set it up and obtain a share key. Next enter the {{ codeLength }}-character share key in this app.",
+        "isRemote": "This app is a remote controller for a conference room."
+    },
+    "join": {
+        "enterCode": "Enter a share key",
+        "visibleAt": "Your key is visible on the {{ productName }} TV"
+    },
+    "legal": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms and Conditions"
+    },
+    "notifications": {
+        "genericWrong": "Something went wrong",
+        "meetingJoinFailed": "An error occurred while joining the meeting",
+        "preferencesNotSaved": "Could not save preferences",
+        "shareKeyInvalid": "Invalid share key"
+    },
+    "screenshare": {
+        "alreadyActive": "Cannot start wireless screenshare while screenshare is active.",
+        "howToStop": "You can stop screen sharing below.",
+        "howToWireless": "To share, use Chrome desktop and go to",
+        "isSharing": "You're currently sharing content",
+        "notSupported": "This browser is currently not supported. To share content please use Chrome.",
+        "pick": "How would you like to screenshare?",
+        "plugWired": "Plug the HDMI dongle into your computer",
+        "remoteMode": "Remote Control",
+        "screenType": "Screen",
+        "screenshareMode": "Wireless screensharing",
+        "shareNow": "Share now",
+        "selectMode": "Select a Mode",
+        "startManual": "If sharing doesn't start automatically click start sharing below.",
+        "stopSharing": "Stop sharing",
+        "stopWired": "To stop sharing content unplug the cable or click stop sharing.",
+        "stopWireless": "You can stop the wireless sharing below.",
+        "windowType": "Window"
+    },
+    "setup": {
+        "audioIn": "Microphone",
+        "audioOut": "Speaker",
+        "audioOutTest": "Play test sound",
+        "avatar": "Enter an avatar url",
+        "devices": "Setup your devices",
+        "enterCode": "Enter your pairing code and start your setup",
+        "enterName": "Enter an email or room name (case-sensitive)",
+        "google": "Authenticate With Google",
+        "loading": "loading",
+        "name": "Enter room display name",
+        "noPreview": "Preview unavailable",
+        "noSelection": "None",
+        "outlook": "Authenticate With Outlook",
+        "pair": "Pair your remote",
+        "pairAsk": "Would you like to pair a permanent remote control with this room?",
+        "preview": "Preview",
+        "profile": "Room settings",
+        "roomByEmail": "Enter an email:",
+        "roomSelect": "Select A Room",
+        "screenShare": "Screen share",
+        "selectDevice": "Please select a device",
+        "useEmail": "use email:",
+        "videoIn": "Camera"
+    },
+    "welcome": "Welcome to {{ productName }}!"
+}

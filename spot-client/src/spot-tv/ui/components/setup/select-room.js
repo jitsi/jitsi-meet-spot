@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { setCalendar, setDisplayName } from 'common/app-state';
@@ -18,7 +19,8 @@ import { calendarService } from './../../../calendars';
 export class SelectRoom extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -79,7 +81,7 @@ export class SelectRoom extends React.Component {
                     // eslint-disable-next-line react/jsx-no-bind
                     onClick = { () => this._onEmailSubmit(this.state.email) }
                     tabIndex = { 0 }>
-                    use email: {this.state.email}
+                    { this.props.t('setup.useEmail')} {this.state.email}
                 </div>
             );
         }
@@ -87,15 +89,15 @@ export class SelectRoom extends React.Component {
         return (
             <div className = 'spot-setup setup-step setup-roomList'>
                 <div className = 'setup-title'>
-                    Select A Room
+                    { this.props.t('setup.roomSelect') }
                 </div>
                 <div className = 'setup-content'>
                     <div>
-                        <h1>Enter an email:</h1>
+                        <h1>{ this.props.t('setup.roomByEmail') }</h1>
                         <form onSubmit = { this._onEmailSubmit }>
                             <Input
                                 onChange = { this._onEmailChange }
-                                placeholder = 'Enter an email or room name (case-sensitive)'
+                                placeholder = { this.props.t('setup.enterName') }
                                 value = { this.state.email } />
                         </form>
                     </div>
@@ -104,7 +106,9 @@ export class SelectRoom extends React.Component {
                     </div>
                 </div>
                 <div className = 'setup-buttons'>
-                    <Button onClick = { this.props.onSuccess }>Skip</Button>
+                    <Button onClick = { this.props.onSuccess }>
+                        { this.props.t('buttons.skip') }
+                    </Button>
                 </div>
             </div>
         );
@@ -189,4 +193,4 @@ export class SelectRoom extends React.Component {
     }
 }
 
-export default connect()(SelectRoom);
+export default connect()(withTranslation()(SelectRoom));

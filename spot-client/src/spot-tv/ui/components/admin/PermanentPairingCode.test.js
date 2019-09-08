@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
+import { mockT } from 'common/test-mocks';
 import { LoadingIcon } from 'common/ui';
 
 import { PermanentPairingCode } from './PermanentPairingCode';
@@ -15,7 +16,8 @@ describe('PermanentPairingCode', () => {
         permanentPairingCode = mount(
             <PermanentPairingCode
                 pairingCode = { TEST_PAIRING_CODE }
-                refreshPairingCode = { refreshPairingCodeSpy } />
+                refreshPairingCode = { refreshPairingCodeSpy }
+                t = { mockT } />
         );
     });
 

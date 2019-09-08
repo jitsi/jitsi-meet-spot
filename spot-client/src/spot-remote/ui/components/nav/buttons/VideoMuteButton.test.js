@@ -2,6 +2,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 
 import { Videocam, VideocamOff } from 'common/icons';
+import { mockT } from 'common/test-mocks';
 
 import { VideoMuteButton } from './VideoMuteButton';
 
@@ -15,6 +16,7 @@ describe('VideoMuteButton', () => {
         videoMuteButton = mount(
             <VideoMuteButton
                 setVideoMute = { setVideoMuteCallback }
+                t = { mockT }
                 videoMuted = { false } />
         );
     });
@@ -25,7 +27,7 @@ describe('VideoMuteButton', () => {
 
     describe('when not muted', () => {
         it('displays UI showing no mute', () => {
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Stop Camera');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('commands.videoMute');
             expect(videoMuteButton.find(Videocam).length).toBe(1);
             expect(videoMuteButton.find(VideocamOff).length).toBe(0);
         });
@@ -39,7 +41,7 @@ describe('VideoMuteButton', () => {
         it('displays pending state when unmute is still processing', () => {
             videoMuteButton.setProps({ changePending: true });
 
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Starting...');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('commands.videoUnmutePending');
             expect(videoMuteButton.find(Videocam).length).toBe(1);
             expect(videoMuteButton.find(VideocamOff).length).toBe(0);
         });
@@ -51,7 +53,7 @@ describe('VideoMuteButton', () => {
         });
 
         it('displays UI showing mute', () => {
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Start Camera');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('commands.videoUnmute');
             expect(videoMuteButton.find(Videocam).length).toBe(0);
             expect(videoMuteButton.find(VideocamOff).length).toBe(1);
         });
@@ -65,7 +67,7 @@ describe('VideoMuteButton', () => {
         it('displays pending state when mute is still processing', () => {
             videoMuteButton.setProps({ changePending: true });
 
-            expect(videoMuteButton.find('.nav-label').text()).toEqual('Stopping...');
+            expect(videoMuteButton.find('.nav-label').text()).toEqual('commands.videoMutePending');
             expect(videoMuteButton.find(Videocam).length).toBe(0);
             expect(videoMuteButton.find(VideocamOff).length).toBe(1);
         });

@@ -69,6 +69,7 @@ export class Notifications extends React.PureComponent {
             <Notification
                 key = { notification.id }
                 message = { notification.message }
+                messageKey = { notification.messageKey }
                 type = { notification.type } />
         ));
     }

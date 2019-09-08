@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -45,7 +46,8 @@ class SelectMedia extends React.Component {
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
         preferredScreenshareDongle: PropTypes.string,
-        preferredSpeaker: PropTypes.string
+        preferredSpeaker: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -118,7 +120,7 @@ class SelectMedia extends React.Component {
                 device = { selectedCamera }
                 devices = { cameras }
                 key = 'camera'
-                label = 'Camera'
+                label = { this.props.t('setup.videoIn') }
                 onChange = { this._onCameraChange }
                 type = 'camera' />
         );
@@ -127,7 +129,7 @@ class SelectMedia extends React.Component {
                 device = { selectedMic }
                 devices = { mics }
                 key = 'mic'
-                label = 'Microphone'
+                label = { this.props.t('setup.audioIn') }
                 onChange = { this._onMicChange }
                 type = 'mic' />
         );
@@ -136,7 +138,7 @@ class SelectMedia extends React.Component {
                 device = { selectedSpeaker }
                 devices = { speakers }
                 key = 'speaker'
-                label = 'Speaker'
+                label = { this.props.t('setup.audioOut') }
                 onChange = { this._onSpeakerChange }
                 type = 'speaker' />
         );
@@ -145,7 +147,7 @@ class SelectMedia extends React.Component {
                 device = { selectedScreenshareDongle }
                 devices = { screenshareDongles }
                 key = 'screenshare'
-                label = 'Screen sharing'
+                label = { this.props.t('setup.screenShare') }
                 onChange = { this._onScreenshareChange }
                 qaId = 'screenshare'
                 type = 'screenshare' />
@@ -154,7 +156,7 @@ class SelectMedia extends React.Component {
         return (
             <div className = 'spot-setup select-media'>
                 <div className = 'setup-title'>
-                    Setup your devices
+                    { this.props.t('setup.devices') }
                 </div>
                 <div className = 'columns'>
                     <div className = 'column'>
@@ -164,7 +166,9 @@ class SelectMedia extends React.Component {
                         { screenshareSelect }
                     </div>
                     <div className = 'column'>
-                        <div className = 'select-label'>Preview</div>
+                        <div className = 'select-label'>
+                            { this.props.t('setup.preview') }
+                        </div>
                         <div className = 'camera-preview-container'>
                             <CameraPreview
                                 devices = { cameras }
@@ -184,13 +188,13 @@ class SelectMedia extends React.Component {
                         disabled = { this.state.saving }
                         onClick = { this._onSubmit }
                         qaId = 'device-selection-submit'>
-                        Next
+                        { this.props.t('buttons.next') }
                     </Button>
                     <Button
                         appearance = 'subtle'
                         disabled = { this.state.saving }
                         onClick = { this._onSkip }>
-                        Skip
+                        { this.props.t('buttons.skip') }
                     </Button>
                 </div>
             </div>
@@ -230,7 +234,7 @@ class SelectMedia extends React.Component {
             mics: [],
             screenshareDongles: [
                 {
-                    label: 'None',
+                    label: this.props.t('setup.noSelection'),
                     value: ''
                 }
             ],
@@ -423,7 +427,7 @@ class SelectMedia extends React.Component {
             .catch(error => {
                 logger.error('Error while saving preferred devices', { error });
 
-                this.props.dispatch(addNotification('error', 'Could not save preferences'));
+                this.props.dispatch(addNotification('error', 'notifications.preferencesNotSaved'));
 
                 this.setState({ saving: false });
             });
@@ -447,4 +451,6 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(SelectMedia);
+export default connect(mapStateToProps)(
+    withTranslation()(SelectMedia)
+);

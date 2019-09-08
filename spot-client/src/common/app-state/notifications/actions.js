@@ -10,16 +10,17 @@ let notificationId = 0;
  *
  * @param {string} type - One of the notification types, as defined by the
  * notifications feature.
- * @param {string} message - The text to display within the notification.
+ * @param {string} messageKey - The translation key representing the message
+ * to display within the notification.
  * @returns {Object}
  */
-export function addNotification(type, message) {
+export function addNotification(type, messageKey) {
     return {
         type: NOTIFICATION_ADD,
         notification: {
             id: notificationId++,
-            type,
-            message
+            messageKey,
+            type
         }
     };
 }

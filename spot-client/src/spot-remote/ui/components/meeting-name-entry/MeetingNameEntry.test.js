@@ -1,6 +1,8 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
+
 import { MeetingNameEntry } from './MeetingNameEntry';
 
 describe('MeetingNameEntry', () => {
@@ -17,7 +19,8 @@ describe('MeetingNameEntry', () => {
                 meetingName = { MEETING_NAME }
                 onChange = { onChangeCallback }
                 onSubmit = { onSubmitCallback }
-                placeholder = { PLACEHOLDER } />
+                placeholder = { PLACEHOLDER }
+                t = { mockT } />
         );
     });
 

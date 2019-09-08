@@ -1,6 +1,7 @@
 import { AsYouType } from 'libphonenumber-js/max';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { addNotification, getSpotServicesConfig } from 'common/app-state';
@@ -40,7 +41,8 @@ export class DialPad extends React.Component {
         countryCode: PropTypes.string,
         onPhoneAuthorizeFailed: PropTypes.func,
         onSubmit: PropTypes.func,
-        phoneAuthorizeServiceUrl: PropTypes.string
+        phoneAuthorizeServiceUrl: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -139,6 +141,7 @@ export class DialPad extends React.Component {
                 onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
                 onToggleCountryCodePicker = { this._onToggleCountryCodePicker }
+                placeholder = { this.props.t('dial.enterNumber') }
                 selectedCountryCode = { this.state.selectedCountryCode }
                 showCountryCodePicker = { this.state.showCountryCodePicker }
                 value = { this.state.formattedPhone } />
@@ -313,4 +316,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DialPad);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(DialPad));

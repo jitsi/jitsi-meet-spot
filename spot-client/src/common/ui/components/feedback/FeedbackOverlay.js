@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -30,7 +31,8 @@ export function FeedbackOverlay(props) {
                     commentOnly = { true }
                     disableInactivityTimer = { true }
                     onSkip = { props.onCancelFeedback }
-                    onSubmitFeedback = { props.onSubmitFeedback } />
+                    onSubmitFeedback = { props.onSubmitFeedback }
+                    t = { props.t } />
             </div>
         </div>
     );
@@ -39,7 +41,8 @@ export function FeedbackOverlay(props) {
 FeedbackOverlay.propTypes = {
     displayFeedback: PropTypes.bool,
     onCancelFeedback: PropTypes.func,
-    onSubmitFeedback: PropTypes.func
+    onSubmitFeedback: PropTypes.func,
+    t: PropTypes.func
 };
 
 /**
@@ -76,4 +79,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedbackOverlay);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(FeedbackOverlay)
+);

@@ -19,26 +19,26 @@ describe('notifications state', () => {
     });
 
     it('saves new notifications', () => {
-        const message = 'test-message';
+        const messageKey = 'test-message';
         const type = 'test-type';
 
-        dispatch(actions.addNotification(type, message));
+        dispatch(actions.addNotification(type, messageKey));
 
         expect(selectors.getAllNotifications(getState())).toEqual([
             {
                 id: expect.any(Number),
-                message,
+                messageKey,
                 type
             }
         ]);
     });
 
     it('removes notifications by id', () => {
-        const secondMessage = 'second-message';
+        const secondMessageKey = 'second-message';
         const type = 'test-type';
 
         dispatch(actions.addNotification(type, 'first-message'));
-        dispatch(actions.addNotification(type, secondMessage));
+        dispatch(actions.addNotification(type, secondMessageKey));
 
         const firstNotification = selectors.getAllNotifications(getState())[0];
 
@@ -47,7 +47,7 @@ describe('notifications state', () => {
         expect(selectors.getAllNotifications(getState())).toEqual([
             {
                 id: expect.any(Number),
-                message: secondMessage,
+                messageKey: secondMessageKey,
                 type
             }
         ]);

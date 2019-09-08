@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 import { Button } from 'common/ui';
@@ -12,10 +13,11 @@ import SourcePreview from './source-preview';
  *
  * @extends React.Component
  */
-export default class DesktopPicker extends React.Component {
+export class DesktopPicker extends React.Component {
     static propTypes = {
         onCancel: PropTypes.func,
-        onSelect: PropTypes.func
+        onSelect: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -89,13 +91,13 @@ export default class DesktopPicker extends React.Component {
                         className
                             = { windowSelected ? 'selected' : '' }
                         onClick = { this._onShowWindowPreviews }>
-                        Window
+                        { this.props.t('screenshare.windowType') }
                     </button>
                     <button
                         className
                             = { this.state.tab === 'screen' ? 'selected' : '' }
                         onClick = { this._onShowScreenPreviews }>
-                        Screen
+                        { this.props.t('screenshare.screenType') }
                     </button>
                 </div>
                 <div className = 'picker-choices'>
@@ -105,12 +107,12 @@ export default class DesktopPicker extends React.Component {
                     <Button
                         appearance = 'subtle'
                         onClick = { this.props.onCancel }>
-                        Cancel
+                        { this.props.t('buttons.cancel') }
                     </Button>
                     <Button
                         disabled = { !this.state.selected.id }
                         onClick = { this._onSubmit }>
-                        Select
+                        { this.props.t('buttons.select') }
                     </Button>
                 </div>
             </div>
@@ -310,3 +312,5 @@ export default class DesktopPicker extends React.Component {
         });
     }
 }
+
+export default withTranslation()(DesktopPicker);

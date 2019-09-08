@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -24,7 +25,8 @@ export class Profile extends React.Component {
         displayName: PropTypes.string,
         onSetAvatarUrl: PropTypes.func,
         onSetDisplayName: PropTypes.func,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -55,21 +57,21 @@ export class Profile extends React.Component {
         return (
             <div className = 'spot-setup setup-step'>
                 <div className = 'setup-title'>
-                    Room Settings
+                    { this.props.t('setup.profile') }
                 </div>
                 <div className = 'setup-content'>
                     <Input
                         onChange = { this._onDisplayNameChange }
-                        placeholder = 'Enter room display name'
+                        placeholder = { this.props.t('setup.name') }
                         value = { this.state.displayName } />
                     <Input
                         onChange = { this._onAvatarUrlChange }
-                        placeholder = 'Enter an avatar url'
+                        placeholder = { this.props.t('setup.avatar') }
                         value = { this.state.avatarUrl } />
                 </div>
                 <div className = 'setup-buttons'>
                     <Button onClick = { this._onSubmit }>
-                        Submit
+                        { this.props.t('buttons.submit') }
                     </Button>
                 </div>
             </div>
@@ -156,4 +158,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Profile));

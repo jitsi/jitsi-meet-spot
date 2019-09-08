@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -48,6 +49,7 @@ class WaitingForCallView extends React.Component {
         _onUpdateAvailable: PropTypes.func,
         defaultDomain: PropTypes.string,
         events: PropTypes.array,
+        t: PropTypes.func,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -100,26 +102,26 @@ class WaitingForCallView extends React.Component {
                 <NavContainer>
                     <NavButton
                         active = { activeTab === 'calendar' }
-                        label = 'Calendar'
+                        label = { this.props.t('buttons.calendar') }
                         onClick = { this._onSetCalendarActive }>
                         <CalendarToday />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'input' }
-                        label = 'Meet Now'
+                        label = { this.props.t('buttons.adhoc') }
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now'>
                         <Videocam />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'dial' }
-                        label = 'Dial a Number'
+                        label = { this.props.t('buttons.dial') }
                         onClick = { this._onSetDialActive }>
                         <Call />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'share' }
-                        label = 'Share Content'
+                        label = { this.props.t('buttons.share') }
                         onClick = { this._onSetScreenshareSelectActive }
                         qaId = 'share-content'>
                         <ScreenShare />
@@ -296,4 +298,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaitingForCallView);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(WaitingForCallView)
+);

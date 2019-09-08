@@ -54,6 +54,7 @@ describe('JoinCodeEntry', () => {
             history: historyMock,
             location: locationMock,
             onDisconnect: onDisconnectSpy,
+            t: key => key,
             updateReadyStatus: updateReadyStatusSpy,
             ultrasoundService: ultrasoundServiceMock,
             ...propOverrides

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -48,7 +49,8 @@ export class InCall extends React.Component {
         onShowScreenshareModal: PropTypes.func,
         onSubmitPassword: PropTypes.func,
         showMoreButton: PropTypes.bool,
-        showPasswordPrompt: PropTypes.bool
+        showPasswordPrompt: PropTypes.bool,
+        t: PropTypes.func
     };
 
     /**
@@ -132,7 +134,7 @@ export class InCall extends React.Component {
                     { showMoreButton ? <MoreButton /> : <TileViewButton /> }
                     <NavButton
                         className = 'hangup'
-                        label = 'Leave'
+                        label = { this.props.t('commands.hangUp') }
                         onClick = { this._onHangup }
                         qaId = 'hangup'>
                         <CallEnd />
@@ -259,4 +261,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InCall);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(InCall)
+);

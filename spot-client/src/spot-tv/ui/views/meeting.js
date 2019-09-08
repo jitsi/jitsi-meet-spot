@@ -233,7 +233,7 @@ export class Meeting extends React.Component {
     _onMeetingLeave(leaveEvent = {}) {
         if (leaveEvent.error) {
             logger.log('Leaving meeting due to error', { error: leaveEvent.error });
-            this.props.onError(leaveEvent.error);
+            this.props.onError('notifications.meetingJoinFailed');
         } else if (this.props.kickTemporaryRemotesOnMeetingEnd) {
             logger.log('Kicking temporary remotes');
             this.props.disconnectAllTemporaryRemotes();

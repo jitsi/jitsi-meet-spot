@@ -1,6 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
+import { mockT } from 'common/test-mocks';
+
 import { DialPad } from './dial-pad';
 
 describe('DialPad', () => {
@@ -8,7 +10,11 @@ describe('DialPad', () => {
 
     beforeEach(() => {
         submitCallback = jest.fn();
-        dialPad = mount(<DialPad onSubmit = { submitCallback } />);
+        dialPad = mount(
+            <DialPad
+                onSubmit = { submitCallback }
+                t = { mockT } />
+        );
     });
 
     afterEach(() => {

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { getPermanentPairedRemotesCount } from 'common/app-state';
@@ -17,7 +18,8 @@ export class PairRemote extends React.Component {
     static propTypes = {
         code: PropTypes.string,
         onSuccess: PropTypes.func,
-        permanentRemotesCount: PropTypes.number
+        permanentRemotesCount: PropTypes.number,
+        t: PropTypes.func
     };
 
     /**
@@ -41,11 +43,11 @@ export class PairRemote extends React.Component {
         return (
             <div className = 'spot-setup pair-remote'>
                 <div className = 'setup-title'>
-                    Pair your remote
+                    { this.props.t('setup.pair') }
                 </div>
                 <div className = 'setup-content'>
                     <div className = 'description'>
-                        Would you like to pair a permanent remote control with this room?
+                        { this.props.t('setup.pairAsk') }
                     </div>
                     <div className = 'join-code'>
                         { this.props.code }
@@ -55,7 +57,7 @@ export class PairRemote extends React.Component {
                     <Button
                         appearance = 'subtle'
                         onClick = { this.props.onSuccess }>
-                        Skip
+                        { this.props.t('buttons.skip') }
                     </Button>
                 </div>
             </div>
@@ -78,4 +80,6 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(PairRemote);
+export default connect(mapStateToProps)(
+    withTranslation()(PairRemote)
+);

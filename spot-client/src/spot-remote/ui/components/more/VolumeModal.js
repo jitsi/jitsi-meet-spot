@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { VolumeButton } from '../remote-control-menu';
 
 /**
  * Implements a modal to adjust the volume of the spot tv remotely.
  */
-export default class VolumeModal extends React.Component {
+export class VolumeModal extends React.Component {
     static propTypes = {
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        t: PropTypes.func
     }
 
     /**
@@ -31,7 +33,7 @@ export default class VolumeModal extends React.Component {
                     <div className = 'volume-modal'>
                         <VolumeButton type = 'up' />
                         <span>
-                            Volume
+                            { this.props.t('commands.volume') }
                         </span>
                         <VolumeButton type = 'down' />
                     </div>
@@ -40,3 +42,5 @@ export default class VolumeModal extends React.Component {
         );
     }
 }
+
+export default withTranslation()(VolumeModal);

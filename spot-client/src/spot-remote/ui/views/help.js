@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -27,6 +28,7 @@ class Help extends React.Component {
         onContinue: PropTypes.func,
         privacyPolicyURL: PropTypes.string,
         productName: PropTypes.string,
+        t: PropTypes.func,
         termsAndConditionsURL: PropTypes.string
     };
 
@@ -50,22 +52,29 @@ class Help extends React.Component {
             <View name = 'help'>
                 <div className = 'help-view'>
                     <div className = 'title'>
-                        Welcome to { this.props.productName }!
+                        {
+                            this.props.t('welcome', {
+                                productName: this.props.productName
+                            })
+                        }
                     </div>
                     <div className = 'help-dialog'>
                         <div className = 'help-message'>
-                            This app is a remote controller for a conference room.
+                            { this.props.t('help.isRemote') }
                             <div>
-                                Open { Help._getSpotTvUrl() } in a desktop Google Chrome browser in the conference room
-                                to set it up and obtain a share key. Next enter the { this.props.codeLength }-character
-                                share key in this app.
+                                {
+                                    this.props.t('help.howToConnect', {
+                                        url: Help._getSpotTvUrl(),
+                                        codeLength: this.props.codeLength
+                                    })
+                                }
                             </div>
                         </div>
                         <Button
                             className = 'ok-button'
                             onClick = { this.props.onContinue }
                             qaId = 'help-continue'>
-                            Continue
+                            { this.props.t('buttons.continue') }
                         </Button>
                     </div>
                     {
@@ -91,13 +100,13 @@ class Help extends React.Component {
                     href = { this.props.privacyPolicyURL }
                     rel = 'noopener noreferrer'
                     target = '_blank'>
-                    Privacy Policy
+                    { this.props.t('legal.privacy') }
                 </a>
                 <a
                     href = { this.props.termsAndConditionsURL }
                     rel = 'noopener noreferrer'
                     target = '_blank'>
-                    Terms and Conditions
+                    { this.props.t('legal.terms') }
                 </a>
             </div>
         );
@@ -136,4 +145,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Help);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(Help)
+);

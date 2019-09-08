@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Dialpad } from 'common/icons';
 
@@ -10,9 +11,10 @@ import { NavButton } from '../nav';
  *
  * @extends React.Component
  */
-export default class DTMFButton extends React.Component {
+export class DTMFButton extends React.Component {
     static propTypes = {
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -23,10 +25,12 @@ export default class DTMFButton extends React.Component {
     render() {
         return (
             <NavButton
-                label = 'Dial Tones'
+                label = { this.props.t('dial.tones') }
                 onClick = { this.props.onClick }>
                 <Dialpad />
             </NavButton>
         );
     }
 }
+
+export default withTranslation()(DTMFButton);

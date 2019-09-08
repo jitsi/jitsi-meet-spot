@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -48,6 +49,7 @@ export class JoinCodeEntry extends React.Component {
         permanentPairingCode: PropTypes.string,
         productName: PropTypes.string,
         shareDomain: PropTypes.string,
+        t: PropTypes.func,
         updateReadyStatus: PropTypes.func
     };
 
@@ -165,10 +167,10 @@ export class JoinCodeEntry extends React.Component {
                 <div className = 'join-code-view'>
                     <div className = 'cta'>
                         <div className = 'title'>
-                            Enter a share key
+                            { this.props.t('join.enterCode') }
                         </div>
                         <div className = 'help'>
-                            Your key is visible on the { this.props.productName } TV
+                            { this.props.t('join.visibleAt', { productName: this.props.productName }) }
                         </div>
                     </div>
                     <div className = { `code-entry-wrapper boxes-${this.props.codeLength}` }>
@@ -194,7 +196,7 @@ export class JoinCodeEntry extends React.Component {
                     </div>
                     <NavContainer>
                         <NavButton
-                            label = 'Continue'
+                            label = { this.props.t('buttons.continue') }
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
                             tabIndex = { 0 }>
@@ -312,9 +314,9 @@ export class JoinCodeEntry extends React.Component {
 
                 // In the wrong password case return back to join code entry.
                 if (error === 'not-authorized') {
-                    this.props.onAddNotification('error', 'Invalid share key');
+                    this.props.onAddNotification('error', 'notifications.shareKeyInvalid');
                 } else {
-                    this.props.onAddNotification('error', 'Something went wrong');
+                    this.props.onAddNotification('error', 'notifications.genericWrong');
                 }
 
                 this.props.history.push(ROUTES.CODE);
@@ -403,4 +405,8 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
+        withTranslation()(JoinCodeEntry)
+    )
+);

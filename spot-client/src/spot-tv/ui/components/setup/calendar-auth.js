@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { calendarTypes } from 'common/app-state';
 import { logger } from 'common/logger';
@@ -16,7 +17,8 @@ import { calendarService } from './../../../calendars';
 export class CalendarAuth extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
-        onSuccess: PropTypes.func
+        onSuccess: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -41,19 +43,19 @@ export class CalendarAuth extends React.Component {
         return (
             <div className = 'spot-setup setup-step'>
                 <div className = 'setup-title'>
-                    Authenticate With Google
+                    { this.props.t('setup.google') }
                 </div>
                 <div className = 'setup-buttons'>
                     <Button onClick = { this._onAuthEnterGoogle }>
-                        Submit
+                        { this.props.t('buttons.submit') }
                     </Button>
                 </div>
                 <div className = 'setup-title'>
-                    Authenticate With Outlook
+                    { this.props.t('setup.outlook') }
                 </div>
                 <div className = 'setup-buttons'>
                     <Button onClick = { this._onAuthEnterOutlook }>
-                        Submit
+                        { this.props.t('buttons.submit') }
                     </Button>
                 </div>
             </div>
@@ -105,4 +107,4 @@ export class CalendarAuth extends React.Component {
     }
 }
 
-export default CalendarAuth;
+export default withTranslation()(CalendarAuth);

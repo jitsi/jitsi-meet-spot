@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { date } from 'common/date';
 import { logger } from 'common/logger';
@@ -13,10 +14,11 @@ import Avatar from './avatar';
  *
  * @extends React.Component
  */
-export default class ScheduledMeeting extends React.Component {
+export class ScheduledMeeting extends React.Component {
     static propTypes = {
         event: PropTypes.object,
-        onMeetingClick: PropTypes.func
+        onMeetingClick: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -72,7 +74,7 @@ export default class ScheduledMeeting extends React.Component {
                     <Button
                         appearance = 'subtle'
                         className = 'join-cta'>
-                        Join Now
+                        { this.props.t('calendar.join') }
                     </Button>
                 </div>
             </div>
@@ -105,7 +107,7 @@ export default class ScheduledMeeting extends React.Component {
      */
     _getFormattedDate(startTime) {
         if (date.isDateForToday(startTime)) {
-            return 'Today';
+            return this.props.t('calendar.today');
         }
 
         return date.formatToCalendarDate(startTime);
@@ -164,3 +166,5 @@ export default class ScheduledMeeting extends React.Component {
         return (url || '').replace(/(^\w+:|^)\/\//, '');
     }
 }
+
+export default withTranslation()(ScheduledMeeting);
