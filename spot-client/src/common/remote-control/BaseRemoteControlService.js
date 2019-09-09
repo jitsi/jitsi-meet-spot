@@ -498,14 +498,10 @@ export class BaseRemoteControlService extends Emitter {
      *
      * @param {string} from - The remote address from which the message has been received.
      * @param {string} data - Any message data.
-     * @private
+     * @protected
      * @returns {void}
      */
     _processRemoteControlP2PMessage({ from, data }) {
-        if (!this._p2pSignaling) {
-            this._createP2PSignalingConnection(/* a server type of connection */ true);
-        }
-
         if (this._p2pSignaling) {
             this._p2pSignaling.processP2PMessage({
                 data,
