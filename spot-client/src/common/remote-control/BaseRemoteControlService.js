@@ -279,11 +279,6 @@ export class BaseRemoteControlService extends Emitter {
         if (!this._disconnecting) {
             this._disconnecting = true;
 
-            if (this._p2pSignaling) {
-                this._p2pSignaling.stop();
-                this._p2pSignaling = null;
-            }
-
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
@@ -305,6 +300,11 @@ export class BaseRemoteControlService extends Emitter {
                 backend.constructor.REGISTRATION_UPDATED,
                 this._onBackendRegistrationUpdated
             );
+        }
+
+        if (this._p2pSignaling) {
+            this._p2pSignaling.stop();
+            this._p2pSignaling = null;
         }
 
         const destroyPromise = this.xmppConnection
