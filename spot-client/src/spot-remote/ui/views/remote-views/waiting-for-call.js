@@ -86,7 +86,9 @@ class WaitingForCallView extends React.Component {
         const { activeTab } = this.state;
 
         return (
-            <div className = 'waiting-view'>
+            <div
+                className = 'waiting-view'
+                data-qa-id = 'waiting-for-call-view'>
                 { this.props._enableAutoUpdate
                     && <AutoUpdateChecker
                         onUpdateAvailable = { this.props._onUpdateAvailable } /> }
