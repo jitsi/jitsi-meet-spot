@@ -28,21 +28,9 @@ export class RemoteControlLoader extends AbstractLoader {
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
-     * @param {boolean} disconnectOnUnmount - Whether or not the RCS should be disconnected when this loader component
-     * is being unmounted.
      */
-    constructor(props, disconnectOnUnmount) {
+    constructor(props) {
         super(props, 'SpotRemote');
-        this._disconnectOnUnmount = disconnectOnUnmount;
-    }
-
-    /**
-     * Clean up connection related state.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this._disconnectOnUnmount && this.props.onDisconnect();
     }
 
     /**
