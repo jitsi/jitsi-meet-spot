@@ -6,6 +6,14 @@ import P2PSignalingBase from './P2PSignalingBase';
  */
 export default class P2PSignalingServer extends P2PSignalingBase {
     /**
+     * Event fired when remote control command(see {@link COMMANDS}) has been received over P2P data channel from Spot
+     * Remote. The Spot TV is supposed to send an ACK message back using {@link sendCommandAck} after the command has
+     * been processed.
+     * @type {string}
+     */
+    static REMOTE_CONTROL_CMD_RECEIVED = 'REMOTE_CONTROL_CMD_RECEIVED';
+
+    /**
      * Spot TV processing for data channels messages received over P2P data channel.
      * It processes remote control command and sends ack responses when done.
      *
@@ -18,7 +26,7 @@ export default class P2PSignalingServer extends P2PSignalingBase {
         const { command, data, requestId } = msg;
 
         if (requestId && command && data) {
-            this._callbacks.onRemoteControlMessageReceived({
+            this.emit(P2PSignalingServer.REMOTE_CONTROL_CMD_RECEIVED, {
                 remoteAddress,
                 requestId,
                 command,

@@ -170,9 +170,6 @@ export class BaseRemoteControlService extends Emitter {
                     MESSAGES.REMOTE_CONTROL_P2P,
                     data
                 ).catch(error => logger.error('Failed to send p2p message', { error }));
-            },
-            onRemoteControlMessageReceived: data => {
-                this._onP2PRemoteControlMessageReceived(data);
             }
         }, {
             iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
@@ -415,20 +412,6 @@ export class BaseRemoteControlService extends Emitter {
         logger.log('RemoteControlService received message', { messageType });
 
         this._processMessage(messageType, from, data);
-    }
-
-    /**
-     * Method called when a remote control command is received over the P2P channel.
-     *
-     * @param {string} remoteAddress - The remote address to which an ack needs to be sent to.
-     * @param {number} requestId - The request ID to be used for an ack.
-     * @param {string} command - A remote control service command.
-     * @param {Object} data - Any command specific extra data(if any).
-     * @protected
-     * @returns {void}
-     */
-    _onP2PRemoteControlMessageReceived() {
-        // Implementation is optional. At the time of this writing only the server implements this method.
     }
 
     /**

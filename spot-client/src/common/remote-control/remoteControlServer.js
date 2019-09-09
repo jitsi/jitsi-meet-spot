@@ -6,6 +6,7 @@ import { generateRandomString } from 'common/utils';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
 import { MESSAGES, SERVICE_UPDATES } from './constants';
+import P2PSignalingServer from './P2PSignalingServer';
 
 /**
  * Communication service to send updates and receive commands.
@@ -36,6 +37,22 @@ export class RemoteControlServer extends BaseRemoteControlService {
             ...options,
             retryOnUnauthorized: !options.backend
         }).then(roomProfile => this.refreshJoinCode().then(() => roomProfile));
+    }
+
+    /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @param {boolean} isServer - Whether to create a server or a client P2P signaling connection.
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection(isServer) {
+        super._createP2PSignalingConnection(isServer);
+
+        isServer && this._p2pSignaling.addListener(P2PSignalingServer.REMOTE_CONTROL_CMD_RECEIVED, cmdObj => {
+            this._onP2PRemoteControlCommandReceived(cmdObj);
+        });
     }
 
     /**
@@ -287,7 +304,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @protected
      * @returns {void}
      */
-    _onP2PRemoteControlMessageReceived({ remoteAddress, requestId, command, data }) {
+    _onP2PRemoteControlCommandReceived({ remoteAddress, requestId, command, data }) {
         this._notifySpotRemoteMessageReceived(command, data);
 
         if (this._p2pSignaling) {

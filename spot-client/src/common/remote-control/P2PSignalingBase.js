@@ -7,8 +7,6 @@ import { PeerConnection } from 'common/webrtc';
  * @typedef {Object} P2PSignalingCallbacks
  * @property {function} onSendP2PMessage - Callback called when a message needs to be transferred over to the remote P2P
  * signaling instance during p2p connection establishment process(offer, answer and ICE candidates).
- * @property {function} onRemoteControlMessageReceived - When a remote control message is received over the P2P
- * signaling channel.
  */
 /**
  * @typedef {Object} P2PSignalingOptions
