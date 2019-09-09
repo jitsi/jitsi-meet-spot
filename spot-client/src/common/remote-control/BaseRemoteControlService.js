@@ -444,7 +444,6 @@ export class BaseRemoteControlService extends Emitter {
         this._processMessage(messageType, from, data);
     }
 
-    /* eslint-disable no-empty-function */
     /**
      * Method called when a remote control command is received over the P2P channel.
      *
@@ -456,8 +455,8 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _onP2PRemoteControlMessageReceived() {
+        // Implementation is optional. At the time of this writing only the server implements this method.
     }
-    /* eslint-enable no-empty-function */
 
     /**
      * Callback invoked when Spot-TV or a Spot-Remote has a status update.
