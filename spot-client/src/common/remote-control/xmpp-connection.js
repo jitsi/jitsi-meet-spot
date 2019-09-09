@@ -6,6 +6,18 @@ import { JitsiMeetJSProvider } from 'common/vendor';
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
 /**
+ * XML element name for spot status added to MUC presence.
+ * @type {string}
+ */
+const SPOT_STATUS_ELEMENT_NAME = 'spot-status';
+
+/**
+ * XML namespace for Spot specific XML.
+ * @type {string}
+ */
+const SPOT_XMLNS = 'https://jitsi.org/spot';
+
+/**
  * Represents an XMPP connection to a prosody service.
  */
 export default class XmppConnection {
@@ -46,6 +58,8 @@ export default class XmppConnection {
         this._onCommand = this._onCommand.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
+
+        this._spotStatus = { };
     }
 
     /**
@@ -200,7 +214,7 @@ export default class XmppConnection {
             })
             .then(() => {
                 if (joinAsSpot) {
-                    this.updatePresence('isSpot', true);
+                    this.updateStatus({ isSpot: true });
                 }
             })
             .then(() => this._joinMuc(roomLock))
@@ -295,18 +309,6 @@ export default class XmppConnection {
     }
 
     /**
-     * Sets the presence status for a given type.
-     *
-     * @param {string} type - The present attribute to change.
-     * @param {string} value - The new value to associate with the presence
-     * attribute.
-     * @returns {void}
-     */
-    updatePresence(type, value) {
-        this.room && this.room.addToPresence(type, { value });
-    }
-
-    /**
      * Updates the current muc participant's status, which should notify other
      * participants of the update. This is a fire and forget call with no ack.
      *
@@ -316,15 +318,19 @@ export default class XmppConnection {
      * @returns {void}
      */
     updateStatus(newStatus = {}) {
-        Object.keys(newStatus).forEach(key => {
-            let valueToSend = newStatus[key];
+        this._spotStatus = {
+            ...this._spotStatus,
+            ...newStatus
+        };
 
-            if (typeof valueToSend !== 'string') {
-                valueToSend = JSON.stringify(valueToSend);
-            }
-
-            this.updatePresence(key, valueToSend);
-        });
+        this.room
+            && this.room.addToPresence(
+                SPOT_STATUS_ELEMENT_NAME, {
+                    value: JSON.stringify(this._spotStatus),
+                    attributes: {
+                        xmlns: SPOT_XMLNS
+                    }
+                });
 
         this._sendPresence();
     }
@@ -496,7 +502,7 @@ export default class XmppConnection {
 
         // Suppress any presence errors until the MUC is joined as those
         // initial presence errors are handled by the join flow instead.
-        if (parsedPresence.type === 'error' && !this._hasJoinedMuc) {
+        if (!parsedPresence || (parsedPresence.type === 'error' && !this._hasJoinedMuc)) {
             return true;
         }
 
@@ -647,7 +653,7 @@ export default class XmppConnection {
      * Converts a presence IQ into a plain JS object.
      *
      * @param {XML} presence - The presence to convert.
-     * @returns {Presence}
+     * @returns {?Presence}
      */
     convertXMLPresenceToObject(presence) {
         const from = presence.getAttribute('from');
@@ -657,22 +663,62 @@ export default class XmppConnection {
             type = 'join';
         }
 
+        let state;
+        const statusElement = presence.getElementsByTagNameNS('https://jitsi.org/spot', 'spot-status')[0];
+
+        // eslint-disable-next-line no-negated-condition
+        if (!statusElement) {
+            state = this._legacyConvertXMLPresenceToObject(presence);
+        } else {
+            try {
+                state = statusElement ? JSON.parse(statusElement.textContent) : { };
+            } catch (error) {
+                logger.error('Failed to parse presence', {
+                    from,
+                    type
+                });
+
+                return undefined;
+            }
+        }
+
         return {
             from,
             localUpdate: from === this.getRoomFullJid(),
-            state: Array.from(presence.children)
-                .reduce((acc, child) => {
-                    let value = child.textContent;
-
-                    if (value === 'true' || value === 'false') {
-                        value = value === 'true';
-                    }
-
-                    acc[child.tagName] = value;
-
-                    return acc;
-                }, {}),
+            state,
             type
         };
+    }
+
+    /**
+     * Legacy handling for presence to Spot TV state conversion.
+     *
+     * @param {XML} presence - The presence to convert.
+     * @returns {Object}
+     * @private
+     */
+    _legacyConvertXMLPresenceToObject(presence) {
+        return Array.from(presence.children)
+            .reduce((acc, child) => {
+                let value = child.textContent;
+
+                if (child.tagName === 'calendar') {
+                    try {
+                        value = JSON.parse(value);
+                    } catch (error) {
+                        logger.error(
+                            'Spot-Remote could not parse calendar events',
+                            { error }
+                        );
+                        value = [];
+                    }
+                } else if (value === 'true' || value === 'false') {
+                    value = value === 'true';
+                }
+
+                acc[child.tagName] = value;
+
+                return acc;
+            }, {});
     }
 }

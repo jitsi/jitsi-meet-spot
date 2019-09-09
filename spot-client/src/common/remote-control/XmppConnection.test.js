@@ -33,14 +33,19 @@ describe('XmppConnection', () => {
     });
 
     describe('convertXMLPresenceToObject', () => {
-        it('transforms an IQ into a js object', () => {
+        it('transforms MUC presence into a js object', () => {
+            const spotStatus = JSON.stringify({
+                videoMuted: true,
+                isSpot: true
+            });
             const presenceString = `
                 <presence
                     from = "${IQ_FROM}"
                     to = "${IQ_TO}"
                     type = "unavailable">
-                    <videoMuted>true</videoMuted>
-                    <isSpot>true</isSpot>
+                    <spot-status xmlns="https://jitsi.org/spot">
+                        ${spotStatus}                    
+                    </spot-status>
                 </presence>
             `;
             const presenceIq = new DOMParser()
@@ -59,6 +64,46 @@ describe('XmppConnection', () => {
                     },
                     type: 'unavailable'
                 });
+        });
+        it('transforms legacy MUC presence into a js object', () => {
+            const calendarArray = [ {
+                name: 'name1',
+                number: 123
+            }, {
+                name: 'name2',
+                number: 456
+            } ];
+
+            const presenceString = `
+                <presence
+                    from = "${IQ_FROM}"
+                    to = "${IQ_TO}"
+                    type = "unavailable">
+                    <videoMuted>true</videoMuted>
+                    <isSpot>true</isSpot>
+                    <calendar>${JSON.stringify(calendarArray)}</calendar>
+                </presence>
+            `;
+            const presenceIq = new DOMParser()
+                .parseFromString(presenceString, 'text/xml')
+                .documentElement;
+
+            const xmppConnection = new XmppConnection();
+
+            expect(xmppConnection.convertXMLPresenceToObject(presenceIq))
+                .toEqual({
+                    from: IQ_FROM,
+                    localUpdate: false,
+                    state: {
+                        isSpot: true,
+                        videoMuted: true,
+                        calendar: calendarArray
+                    },
+                    type: 'unavailable'
+                });
+
+            // Legacy handling is expected to be removed after 04/01/2020 @ 12:00am (UTC)
+            expect(Date.now()).toBeLessThan(1585699200000);
         });
     });
     describe('convertXMLMessageToObject', () => {
