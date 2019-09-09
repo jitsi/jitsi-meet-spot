@@ -109,13 +109,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
     _createP2PSignalingConnection(isServer) {
         super._createP2PSignalingConnection(isServer);
 
-        !isServer && this._p2pSignaling.addListener(P2PSignalingClient.SPOT_TV_STATUS_UPDATE, (from, newStatus) => {
-            logger.log('On Spot TV status received P2P', {
-                from,
-                newStatus
-            });
-            this._onSpotTvStatusReceived(from, newStatus);
-        });
+        !isServer
+            && this._p2pSignaling.addListener(
+                    P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
+                    this._onSpotTvStatusReceived.bind(this));
     }
 
     /**
@@ -516,19 +513,14 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
-        logger.log('On Spot TV presence recevied over XMPP', {
-            from,
-            state
-        });
-
         this._onSpotTvStatusReceived(from, state);
     }
 
     /**
-     * FIXME.
+     * Spot TV status processing.
      *
-     * @param {string} from - FIXME.
-     * @param {Object} state - FIXME.
+     * @param {string} from - Spot TV address from which the status has update has been received.
+     * @param {Object} state - JSON object with TV's state.
      * @private
      * @returns {void}
      */
@@ -539,13 +531,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
         const currentTimestamp = this._lastSpotState && this._lastSpotState.timestamp;
 
         if (currentTimestamp && timestamp && currentTimestamp >= timestamp) {
-            logger.warn('Discarded outdated Spot TV state', {
-                currentTimestamp,
-                from,
-                timestamp,
-                newState: state,
-                currentState: this._lastSpotState
-            });
 
             return;
         }

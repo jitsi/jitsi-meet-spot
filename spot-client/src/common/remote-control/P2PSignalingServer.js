@@ -18,7 +18,7 @@ export default class P2PSignalingServer extends P2PSignalingBase {
      * It processes remote control command and sends ack responses when done.
      *
      * @param {string} remoteAddress - The remote address from which the message has been received.
-     * @param {Object} msg - FIXME.
+     * @param {Object} msg - JSON object received in message content.
      * @private
      * @returns {void}
      */
@@ -66,9 +66,10 @@ export default class P2PSignalingServer extends P2PSignalingBase {
     }
 
     /**
-     * FIXME.
+     * Updates the current Spot TV's status, which should notify other participants of the update. This is a fire and
+     * forget call with no ack.
      *
-     * @param {Object} newStatus - FIXME.
+     * @param {Object} newStatus - The new TV status to be broadcasted over to all Spot Remotes.
      * @returns {void}
      */
     updateStatus(newStatus = {}) {

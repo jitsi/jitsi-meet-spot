@@ -60,7 +60,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
      * Client processing for data channel messages. A client processes only acks.
      *
      * @param {string} remoteAddress - The remote address that sent the message.
-     * @param {Object} msg - FIXME.
+     * @param {Object} msg - JSON object received in message content.
      * @private
      * @returns {void}
      */

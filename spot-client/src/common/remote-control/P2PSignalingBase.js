@@ -108,10 +108,11 @@ export default class P2PSignalingBase extends Emitter {
     }
 
     /**
-     * FIXME.
+     * Method to be overridden by subclasses in order to process client/server specific messages received over P2P data
+     * channel. Should still call super for common processing.
      *
      * @param {string} remoteAddress - The remote address that sent the message.
-     * @param {Object} msg - FIXME.
+     * @param {Object} msg - JSON object received in message content.
      * @protected
      * @returns {void}
      */
