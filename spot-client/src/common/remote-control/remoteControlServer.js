@@ -244,9 +244,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
 
         this.xmppConnection.updateStatus(newStatus);
 
-        if (this._p2pSignaling && this._p2pSignaling.isReady()) {
-            this._p2pSignaling.updateStatus(newStatus);
-        }
+        this._p2pSignaling && this._p2pSignaling.updateStatus(newStatus);
     }
 
     /**

@@ -35,7 +35,7 @@ export default class P2PSignalingBase {
          * Stores active {@link PeerConnection}s mapped by remote address string.
          *
          * @type {Map<string, PeerConnection>}
-         * @private
+         * @protected
          */
         this._peerConnections = new Map();
     }
