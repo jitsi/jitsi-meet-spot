@@ -4,8 +4,6 @@ import { PeerConnection } from 'common/webrtc';
 
 /**
  * @typedef {Object} P2PSignalingCallbacks
- * @property {function} onReadyStateChanged - Callback called with a boolean value which indicates the readiness state
- * of a P2P signalling channel.
  * @property {function} onSendP2PMessage - Callback called when a message needs to be transferred over to the remote P2P
  * signaling instance during p2p connection establishment process(offer, answer and ICE candidates).
  * @property {function} onRemoteControlMessageReceived - When a remote control message is received over the P2P
@@ -51,15 +49,6 @@ export default class P2PSignalingBase {
     }
 
     /**
-     * A convenience selector to find the first {@link PeerConnection}.
-     *
-     * @returns {?PeerConnection}
-     */
-    getFirstPeerConnection() {
-        return this._peerConnections.values().next().value;
-    }
-
-    /**
      * Creates and initializes new {@link PeerConnection} instance for given remote address.
      *
      * @param {string} remoteAddress - The remote address string.
@@ -78,7 +67,7 @@ export default class P2PSignalingBase {
 
         peerConnection.addListener(
             PeerConnection.DATA_CHANNEL_STATUS_CHANGED, (pc, isReady) => {
-                this._onReadyStateChanged(pc.remoteAddress, isReady);
+                this._onDCReadyStateChanged(pc.remoteAddress, isReady);
             });
         peerConnection.addListener(
             PeerConnection.DATA_CHANNEL_MSG_RECEIVED, (pc, data) => {
@@ -92,17 +81,6 @@ export default class P2PSignalingBase {
             });
 
         return peerConnection;
-    }
-
-    /**
-     * Checks if the first {@link PeerConnection} is active.
-     *
-     * @returns {boolean}
-     */
-    isReady() {
-        const first = this.getFirstPeerConnection();
-
-        return first && first.isDataChannelActive();
     }
 
     /**
@@ -145,7 +123,6 @@ export default class P2PSignalingBase {
         });
     }
 
-    /* eslint-disable no-unused-vars */
     /**
      * Callback triggered by {@link PeerConnection} whenever data channel's readiness state changes.
      *
@@ -154,10 +131,12 @@ export default class P2PSignalingBase {
      * @protected
      * @returns {void}
      */
-    _onReadyStateChanged(remoteAddress, isReady) {
-        this._callbacks.onReadyStateChanged && this._callbacks.onReadyStateChanged(remoteAddress, this.isReady());
+    _onDCReadyStateChanged(remoteAddress, isReady) {
+        logger.log(`P2P data channel ${isReady ? 'ready' : 'not-ready'}`, {
+            isReady,
+            remoteAddress
+        });
     }
-    /* eslint-enable no-unused-vars */
 
     /**
      * Tries to parse given JSON string and convert it into an {@code Object}. If fails logs an error and returns

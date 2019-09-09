@@ -164,12 +164,6 @@ export class BaseRemoteControlService extends Emitter {
         const P2PSignalingType = isServer ? P2PSignalingServer : P2PSignalingClient;
 
         this._p2pSignaling = new P2PSignalingType({
-            onReadyStateChanged: (remoteAddress, isReady) => {
-                logger.log(`P2P signaling ${(isReady ? 'ready' : 'closed')}`, {
-                    remoteAddress,
-                    isReady
-                });
-            },
             onSendP2PMessage: (to, data) => {
                 this.xmppConnection.sendMessage(
                     to,

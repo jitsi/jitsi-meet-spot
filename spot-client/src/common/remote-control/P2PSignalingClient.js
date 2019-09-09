@@ -30,6 +30,26 @@ export default class P2PSignalingClient extends P2PSignalingBase {
     }
 
     /**
+     * A convenience selector to find the first {@link PeerConnection}.
+     *
+     * @returns {?PeerConnection}
+     */
+    _getFirstPeerConnection() {
+        return this._peerConnections.values().next().value;
+    }
+
+    /**
+     * Checks if the connection is ready to send commands.
+     *
+     * @returns {boolean}
+     */
+    isReady() {
+        const first = this._getFirstPeerConnection();
+
+        return first && first.isDataChannelActive();
+    }
+
+    /**
      * Client processing for data channel messages. A client processes only acks.
      *
      * @param {string} remoteAddress - The remote address that sent the message.
@@ -65,8 +85,8 @@ export default class P2PSignalingClient extends P2PSignalingBase {
      * @protected
      * @returns {void}
      */
-    _onReadyStateChanged(remoteAddress, isReady) {
-        super._onReadyStateChanged(remoteAddress, isReady);
+    _onDCReadyStateChanged(remoteAddress, isReady) {
+        super._onDCReadyStateChanged(remoteAddress, isReady);
 
         if (!this.isReady()) {
 
@@ -96,7 +116,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
             data
         });
 
-        const peerConnection = this.getFirstPeerConnection();
+        const peerConnection = this._getFirstPeerConnection();
 
         if (!peerConnection) {
             throw new Error('No PeerConnection');
