@@ -275,7 +275,14 @@ function mapDispatchToProps(dispatch) {
             dispatch(joinWithScreensharing(meetingName, screensharingType));
         },
         _onDialOut(meetingName, phoneNumber) {
-            dispatch(dialOut(meetingName, phoneNumber));
+            if (meetingName && phoneNumber) {
+                dispatch(dialOut(meetingName, phoneNumber));
+            } else {
+                logger.log('Skipped dial-out', {
+                    meetingName,
+                    phoneNumber
+                });
+            }
         },
         _onJoinScheduledMeeting(meetingName) {
             dispatch(joinScheduledMeeting(meetingName));
