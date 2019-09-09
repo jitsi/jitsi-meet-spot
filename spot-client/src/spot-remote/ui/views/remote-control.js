@@ -11,6 +11,7 @@ import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
 
+import { disconnectFromSpotTV } from './../../app-state';
 import {
     ElectronDesktopPickerModal,
     WaitingForSpotTVOverlay
@@ -30,6 +31,7 @@ export class RemoteControl extends React.PureComponent {
         events: PropTypes.array,
         history: PropTypes.object,
         isConnectedToSpot: PropTypes.bool,
+        onDisconnect: PropTypes.func,
         view: PropTypes.string
     };
 
@@ -41,6 +43,15 @@ export class RemoteControl extends React.PureComponent {
      */
     constructor(props) {
         super(props, true);
+    }
+
+    /**
+     * Clean up connection related state.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.onDisconnect();
     }
 
     /**
@@ -104,4 +115,28 @@ function mapStateToProps(state) {
     };
 }
 
-export default withUltrasound(withRemoteControl(connect(mapStateToProps)(RemoteControl)));
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Stop any existing connection to a Spot-TV.
+         *
+         * @returns {void}
+         */
+        onDisconnect() {
+            dispatch(disconnectFromSpotTV());
+        }
+    };
+}
+
+export default withUltrasound(
+    withRemoteControl(
+        connect(mapStateToProps, mapDispatchToProps)(RemoteControl)
+    )
+);
