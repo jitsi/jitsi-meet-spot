@@ -45,5 +45,7 @@ describe('In share mode', () => {
         const remoteControlPage = spotRemote.getRemoteControlPage();
 
         remoteControlPage.waitForVisible();
+
+        remoteControlPage.waitWaitingForCallViewToDisplay();
     });
 });
