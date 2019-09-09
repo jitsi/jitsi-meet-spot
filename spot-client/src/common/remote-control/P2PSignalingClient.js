@@ -7,6 +7,13 @@ import P2PSignalingBase from './P2PSignalingBase';
  */
 export default class P2PSignalingClient extends P2PSignalingBase {
     /**
+     * Events fired when Spot TV status update is received over the P2P data channel. As an argument it will pass
+     * Spot TV's remote address and the entire TV state object.
+     * @type {string}
+     */
+    static SPOT_TV_STATUS_UPDATE = 'SPOT_TV_STATUS_UPDATE';
+
+    /**
      * Creates new instance.
      *
      * @param {P2PSignalingCallbacks} callbacks - See type description for more info.
@@ -71,7 +78,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
 
             this._p2pSignalingRequests.delete(requestId);
         } else if (msg.command === 'status' && msg.newStatus) {
-            this._callbacks.onStatusUpdateReceived(remoteAddress, msg.newStatus);
+            this.emit(P2PSignalingClient.SPOT_TV_STATUS_UPDATE, remoteAddress, msg.newStatus);
         } else {
             super._processDataChannelMessage(remoteAddress, msg);
         }

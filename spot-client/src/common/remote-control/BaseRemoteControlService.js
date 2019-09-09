@@ -173,32 +173,11 @@ export class BaseRemoteControlService extends Emitter {
             },
             onRemoteControlMessageReceived: data => {
                 this._onP2PRemoteControlMessageReceived(data);
-            },
-            onStatusUpdateReceived: (remoteAddress, newStatus) => {
-                logger.log('On Spot TV status received P2P', {
-                    remoteAddress,
-                    newStatus
-                });
-                this._onSpotTvStatusReceived(remoteAddress, newStatus);
             }
         }, {
             iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
         });
     }
-
-    /* eslint-disable no-unused-vars */
-    /**
-     * FIXME.
-     *
-     * @param {string} from - FIXME.
-     * @param {Object} state - FIXME.
-     * @private
-     * @returns {void}
-     */
-    _onSpotTvStatusReceived(from, state) {
-        // This is to be implemented only by the client
-    }
-    /* eslint-enable no-unused-vars */
 
     /**
      * Returns a Promise which is to be resolved/rejected when the initial connection process is

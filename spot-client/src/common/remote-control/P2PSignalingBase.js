@@ -1,3 +1,4 @@
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { PeerConnection } from 'common/webrtc';
 
@@ -8,7 +9,6 @@ import { PeerConnection } from 'common/webrtc';
  * signaling instance during p2p connection establishment process(offer, answer and ICE candidates).
  * @property {function} onRemoteControlMessageReceived - When a remote control message is received over the P2P
  * signaling channel.
- * @property {function} onStatusUpdateReceived - FIXME.
  */
 /**
  * @typedef {Object} P2PSignalingOptions
@@ -18,7 +18,7 @@ import { PeerConnection } from 'common/webrtc';
 /**
  * A peer to peer(direct) signaling channel used to send/receive remote control commands.
  */
-export default class P2PSignalingBase {
+export default class P2PSignalingBase extends Emitter {
     /**
      * Creates new instance.
      *
@@ -26,6 +26,7 @@ export default class P2PSignalingBase {
      * @param {P2PSignalingOptions} options - Extra options, see type description for more info.
      */
     constructor(callbacks, options) {
+        super();
         this._callbacks = callbacks;
         this._options = options;
 

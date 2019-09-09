@@ -8,6 +8,7 @@ import {
     MESSAGES,
     SERVICE_UPDATES
 } from './constants';
+import P2PSignalingClient from './P2PSignalingClient';
 import ScreenshareService from './screenshare-connection';
 
 /**
@@ -95,6 +96,26 @@ export class RemoteControlClient extends BaseRemoteControlService {
 
                 return roomProfile;
             });
+    }
+
+    /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @param {boolean} isServer - Whether to create a server or a client P2P signaling connection.
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection(isServer) {
+        super._createP2PSignalingConnection(isServer);
+
+        !isServer && this._p2pSignaling.addListener(P2PSignalingClient.SPOT_TV_STATUS_UPDATE, (from, newStatus) => {
+            logger.log('On Spot TV status received P2P', {
+                from,
+                newStatus
+            });
+            this._onSpotTvStatusReceived(from, newStatus);
+        });
     }
 
     /**
