@@ -127,6 +127,14 @@ export default class PeerConnection extends Emitter {
             throw new Error('_peerConnection already exists');
         }
 
+        // Convert deprecated 'url' to 'urls' if applicable
+        for (const server of this._iceServers) {
+            if (!server.urls && server.url) {
+                server.urls = server.url;
+                delete server.url;
+            }
+        }
+
         const peerConnection = this._peerConnection = new RTCPeerConnection({
             iceServers: this._iceServers
         });
