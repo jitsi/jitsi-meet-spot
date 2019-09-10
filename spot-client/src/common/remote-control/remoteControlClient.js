@@ -553,7 +553,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
             this._createP2PSignalingConnection(false);
 
             // Client initiates the P2P signaling session
-            this._p2pSignaling.start(this._getSpotId());
+            this._options.enableP2PSignaling && this._p2pSignaling.start(this._getSpotId());
         }
 
         this.emit(

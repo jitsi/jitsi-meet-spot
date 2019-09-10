@@ -258,3 +258,13 @@ export function getUpdateEndHour(state) {
 export function shouldShowDtmf(state) {
     return state.config.TEMPORARY_FEATURE_FLAGS.SHOW_DTMF;
 }
+
+/**
+ * Whether or not the P2P signaling channel should be enabled in the remote control service.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isP2PSignalingEnabled(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.P2P_SIGNALING;
+}

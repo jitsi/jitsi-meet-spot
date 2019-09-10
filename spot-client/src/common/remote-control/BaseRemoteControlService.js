@@ -65,6 +65,8 @@ export class BaseRemoteControlService extends Emitter {
      * @property {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
      * @property {SpotBackendService} [options.backend] - The optional backend service if configured.
+     * * @property {boolean} [options.enableP2PSignaling] - Whether or not to enable secondary(peer to peer) signaling
+     * channel for faster remote command processing.
      * @property {number} [options.joinCodeRefreshRate] - A duration in
      * milliseconds. If provided, a join code will be created and an interval
      * created to automatically update the join code at the provided rate.
@@ -85,6 +87,12 @@ export class BaseRemoteControlService extends Emitter {
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
+
+        const p2pEnabled = this._options.enableP2PSignaling;
+
+        logger.log(`P2P signaling ${p2pEnabled ? 'enabled' : 'disabled'}`, {
+            p2pEnabled
+        });
 
         this.xmppConnection = new XmppConnection({
             configuration: this._options.serverConfig,
