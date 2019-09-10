@@ -315,6 +315,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
         }
 
         if (type === 'join') {
+            logger.log('presence update of a Spot-Remote joining', { from });
+
             this.emit(
                 SERVICE_UPDATES.CLIENT_JOINED,
                 {
