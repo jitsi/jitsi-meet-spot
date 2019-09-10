@@ -46,7 +46,7 @@ export default class PeerConnection extends Emitter {
         this._iceServers = iceServers || DEFAULT_STUN_SERVERS;
         this._peerConnection = null;
         this._dataChannel = null;
-        this._currentStatus = false;
+        this._isDataChannelActive = false;
     }
 
     /**
@@ -85,13 +85,13 @@ export default class PeerConnection extends Emitter {
      * @returns {void}
      */
     _emitDataChannelStatusUpdate() {
-        const oldStatus = this._currentStatus;
+        const oldStatus = this._isDataChannelActive;
 
-        this._currentStatus = this.isDataChannelActive();
+        this._isDataChannelActive = this.isDataChannelActive();
 
-        oldStatus !== this._currentStatus
-        && this.emit(
-            PeerConnection.DATA_CHANNEL_STATUS_CHANGED, this, this._currentStatus);
+        oldStatus !== this._isDataChannelActive
+            && this.emit(
+                PeerConnection.DATA_CHANNEL_STATUS_CHANGED, this, this._isDataChannelActive);
     }
 
     /**
