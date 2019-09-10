@@ -103,7 +103,7 @@ window.onerror = (message, url, lineNo, columnNo, error) => {
     logger.error('Uncaught error', {
         columnNo,
         lineNo,
-        message,
+        message: message || (error && error.message),
         error: error && error.stack,
         url
     });
