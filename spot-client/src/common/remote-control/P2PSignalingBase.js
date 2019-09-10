@@ -295,21 +295,26 @@ export default class P2PSignalingBase extends Emitter {
             return;
         }
 
-        const peerConnection = this._initPeerConnection(from);
+        // Try catch block in case something's wrong with WebRTC version or not supported
+        try {
+            const peerConnection = this._initPeerConnection(from);
 
-        peerConnection.setOffer(offer)
-            .then(answer => {
-                this._callbacks.onSendP2PMessage(
-                    from, {
-                        answer: JSON.stringify(answer)
+            peerConnection.setOffer(offer)
+                .then(answer => {
+                    this._callbacks.onSendP2PMessage(
+                        from, {
+                            answer: JSON.stringify(answer)
+                        });
+                }, error => {
+                    logger.error('Failed to setOffer', {
+                        data,
+                        error,
+                        from
                     });
-            }, error => {
-                logger.error('Failed to setOffer', {
-                    data,
-                    error,
-                    from
                 });
-            });
+        } catch (error) {
+            logger.error('process offer - failed', { error });
+        }
     }
 
     /**
@@ -319,13 +324,18 @@ export default class P2PSignalingBase extends Emitter {
      * @returns {void}
      */
     start(remoteAddress) {
-        const peerConnection = this._initPeerConnection(remoteAddress);
+        // Try catch block in case something's wrong with WebRTC version or not supported
+        try {
+            const peerConnection = this._initPeerConnection(remoteAddress);
 
-        peerConnection.createOffer().then(offerDescription => {
-            this._callbacks.onSendP2PMessage(remoteAddress, { offer: JSON.stringify(offerDescription) });
-        }, error => {
-            logger.error('Failed to create P2P offer', { error });
-        });
+            peerConnection.createOffer().then(offerDescription => {
+                this._callbacks.onSendP2PMessage(remoteAddress, { offer: JSON.stringify(offerDescription) });
+            }, error => {
+                logger.error('Failed to create P2P offer', { error });
+            });
+        } catch (error) {
+            logger.error('Failed to initialize PeerConnection', { error });
+        }
     }
 
     /**
