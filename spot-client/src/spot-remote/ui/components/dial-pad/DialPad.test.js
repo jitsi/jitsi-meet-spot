@@ -15,9 +15,17 @@ describe('DialPad', () => {
         dialPad.unmount();
     });
 
-    test('entering a number', () => {
+    test('entering a number with a mouse', () => {
         for (let i = 1; i < 4; i++) {
-            dialPad.find(`#dial-button-${i}`).simulate('click');
+            dialPad.find(`#dial-button-${i}`).simulate('mousedown');
+        }
+
+        expect(dialPad.find('input').instance().value).toBe('123');
+    });
+
+    test('entering a number with touch', () => {
+        for (let i = 1; i < 4; i++) {
+            dialPad.find(`#dial-button-${i}`).simulate('touchstart');
         }
 
         expect(dialPad.find('input').instance().value).toBe('123');
@@ -25,7 +33,7 @@ describe('DialPad', () => {
 
     test('deleting numbers', () => {
         for (let i = 1; i < 4; i++) {
-            dialPad.find(`#dial-button-${i}`).simulate('click');
+            dialPad.find(`#dial-button-${i}`).simulate('mousedown');
         }
 
         dialPad.find('.backspace').simulate('click');
@@ -39,7 +47,7 @@ describe('DialPad', () => {
     });
 
     test('submitting the entered number', () => {
-        dialPad.find('#dial-button-1').simulate('click');
+        dialPad.find('#dial-button-1').simulate('mousedown');
         dialPad.find('button.call-button').simulate('click');
 
         expect(submitCallback).toHaveBeenCalledWith(expect.any(String), '1');
@@ -49,5 +57,18 @@ describe('DialPad', () => {
         dialPad.find('button.call-button').simulate('click');
 
         expect(submitCallback).toHaveBeenCalledWith(expect.any(String), '');
+    });
+
+    test('replaces 0 with + on long press', () => {
+        jest.useFakeTimers();
+
+        dialPad.find('#dial-button-1').simulate('mousedown');
+        dialPad.find('#dial-button-0').simulate('mousedown');
+
+        expect(dialPad.find('input').instance().value).toBe('10');
+
+        jest.runAllTimers();
+
+        expect(dialPad.find('input').instance().value).toBe('1+');
     });
 });

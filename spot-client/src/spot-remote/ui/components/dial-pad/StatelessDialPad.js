@@ -40,6 +40,7 @@ export default class StatelessDialPad extends React.Component {
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
         this._onGoToCall = this._onGoToCall.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
+        this._onReplaceLastChar = this._onReplaceLastChar.bind(this);
         this._renderDialButton = this._renderDialButton.bind(this);
     }
 
@@ -81,7 +82,7 @@ export default class StatelessDialPad extends React.Component {
                     </div>
                     <div className = 'row'>
                         { this._renderDialButton('*') }
-                        { this._renderDialButton('0') }
+                        { this._renderZeroButton() }
                         { this._renderDialButton('#') }
                     </div>
                 </div>
@@ -99,6 +100,7 @@ export default class StatelessDialPad extends React.Component {
                         <button
                             className = 'backspace'
                             onClick = { this._onDeleteLastCharacter }
+                            tabIndex = { -1 }
                             type = 'button'>
                             <Backspace />
                         </button>
@@ -161,22 +163,57 @@ export default class StatelessDialPad extends React.Component {
     }
 
     /**
+     * Callback invoked when the previous entered value should be set with a
+     * new value.
+     *
+     * @param {string} value - The value to set at the end of the current
+     * entered value.
+     * @private
+     * @returns {void}
+     */
+    _onReplaceLastChar(value) {
+        const sub = this.props.value.substring(0, this.props.value.length - 1);
+
+        this.props.onChange(`${sub}${value}`);
+    }
+
+    /**
      * Helper to create a button for display in the dial pad.
      *
      * @param {string} main - The value of the button.
      * @param {string} sub - A smaller value to display at the bottom of the
      * button.
      * @private
-     * @returns {ReactComponent}
+     * @returns {ReactElement}
      */
     _renderDialButton(main, sub) {
         return (
             <DialButton
                 id = { `dial-button-${main}` }
                 key = { main }
-                main = { main }
+                mainValue = { main }
                 onClick = { this._onDialButtonClick }
                 sub = { sub } />
+        );
+    }
+
+    /**
+     * Create the button for 0. It is a special case that supports changing the
+     * previous entered value to a "+" via a long press.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderZeroButton() {
+        return (
+            <DialButton
+                className = 'larger-sub'
+                id = 'dial-button-0'
+                key = '0'
+                mainValue = '0'
+                onClick = { this._onDialButtonClick }
+                onLongClick = { this._onReplaceLastChar }
+                sub = '+' />
         );
     }
 }
