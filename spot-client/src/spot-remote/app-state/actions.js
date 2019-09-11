@@ -1,6 +1,7 @@
 import {
     CREATE_CONNECTION,
     PASSWORD,
+    addNotification,
     clearSpotTVState,
     destroyConnection,
     getRemoteControlServerConfig,
@@ -19,7 +20,11 @@ import {
 } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
-import { SERVICE_UPDATES, remoteControlClient } from 'common/remote-control';
+import {
+    CONNECTION_EVENTS,
+    SERVICE_UPDATES,
+    remoteControlClient
+} from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { getJitterDelay, windowHandler } from 'common/utils';
 
@@ -157,6 +162,16 @@ export function connectToSpotTV(joinCode, shareMode) {
             dispatch(clearSpotTVState());
 
             history.push(ROUTES.CODE);
+
+            // Assumption alert: CLOSED_BY_SERVER can only happen when a
+            // temporary remote has been removed from the muc at the end of a
+            // meeting by Spot-TV.
+            if (error === CONNECTION_EVENTS.CLOSED_BY_SERVER) {
+                dispatch(addNotification(
+                    'message',
+                    'The meeting has ended.'
+                ));
+            }
 
             throw error;
         }

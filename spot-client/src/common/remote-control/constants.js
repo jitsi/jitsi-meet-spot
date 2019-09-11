@@ -65,6 +65,10 @@ export const COMMANDS = {
  * An enumeration of custom connection-related events that can be emitted.
  */
 export const CONNECTION_EVENTS = {
+    /**
+     * The {@code RemoteControlServer} intentionally disconnected a Spot-Remote.
+     */
+    CLOSED_BY_SERVER: 'connection-closed-by-server',
 
     /**
      * The {@code RemoteControlServer} is no longer available.

@@ -235,6 +235,14 @@ export default {
      */
     TEMPORARY_FEATURE_FLAGS: {
         /**
+         * Spot-TV should kick temporary remotes after a successfully joined
+         * meeting has neded.
+         *
+         * @type {boolean}
+         */
+        KICK_TEMPORARY_REMOTES: true,
+
+        /**
          * Whether or not to enable secondary(peer to peer) signaling channel for faster remote command processing.
          */
         P2P_SIGNALING:

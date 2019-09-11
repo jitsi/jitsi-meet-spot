@@ -497,7 +497,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      *
      * @inheritdoc
      */
-    _onPresenceReceived({ from, type, state }) {
+    _onPresenceReceived({ from, localUpdate, state, type, unavailableReason }) {
         if (type === 'unavailable') {
             if (this._getSpotId() === from) {
                 logger.log('Spot TV left the MUC');
@@ -511,6 +511,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 } else {
                     this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
                 }
+            } else if (localUpdate && unavailableReason === 'kicked') {
+                this._onDisconnect(CONNECTION_EVENTS.CLOSED_BY_SERVER);
             }
 
             return;

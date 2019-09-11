@@ -4,6 +4,7 @@ import { generate8Characters } from 'common/utils';
 
 import {
     CLIENT_TYPES,
+    CONNECTION_EVENTS,
     MESSAGES,
     SERVICE_UPDATES
 } from './constants';
@@ -250,6 +251,7 @@ export class BaseRemoteControlService extends Emitter {
     isUnrecoverableRequestError(error) {
         return error === 'not-authorized'
             || error === 'connection.passwordRequired'
+            || error === CONNECTION_EVENTS.CLOSED_BY_SERVER
             || (Boolean(this._getBackend()) && this._getBackend().isUnrecoverableRequestError(error));
     }
 

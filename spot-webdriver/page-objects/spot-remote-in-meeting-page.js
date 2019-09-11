@@ -4,9 +4,11 @@ const ScreensharePicker = require('./screenshare-picker');
 
 const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
 const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
+const HANG_UP_BUTTON = '[data-qa-id=hangup]';
 const MORE_BUTTON = '[data-qa-id=more]';
 const MORE_MODAL = '[data-qa-id=more-modal]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
+const SKIP_FEEDBACK_BUTTON = '[data-qa-id=skip-feedback]';
 const START_SHARE_BUTTON = '[data-qa-id=start-share]';
 const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
 const TILE_VIEW_ENABLE_BUTTON = '[data-qa-id=enter-tile-view]';
@@ -28,6 +30,17 @@ class SpotRemoteInMeetingPage extends PageObject {
         super(driver, REMOTE_CONTROL);
 
         this.screensharePicker = new ScreensharePicker(this.driver);
+    }
+
+    /**
+     * Ends the current meeting.
+     *
+     * @returns {void}
+     */
+    hangUp() {
+        const hangupButton = this.waitForElementDisplayed(HANG_UP_BUTTON);
+
+        hangupButton.click();
     }
 
     /**
@@ -114,6 +127,17 @@ class SpotRemoteInMeetingPage extends PageObject {
             });
 
         this.select(buttonToClick).click();
+    }
+
+    /**
+     * Dismisses the feedback overlay without submitting feedback.
+     *
+     * @returns {void}
+     */
+    skipFeedback() {
+        const skipButton = this.waitForElementDisplayed(SKIP_FEEDBACK_BUTTON);
+
+        skipButton.click();
     }
 
     /**

@@ -49,6 +49,19 @@ export class InCall extends React.Component {
     };
 
     /**
+     * Initializes a new {@code InCall} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        this._onHangup = this._onHangup.bind(this);
+        this._onHangUpWithoutFeedback = this._onHangUpWithoutFeedback.bind(this);
+    }
+
+    /**
      * Stops any wireless screensharing in progress from the Spot-Remote.
      *
      * @inheritdoc
@@ -78,7 +91,7 @@ export class InCall extends React.Component {
         if (kicked) {
             return (
                 <Modal>
-                    <KickedNotice onSubmit = { this.props.onHangUp } />
+                    <KickedNotice onSubmit = { this._onHangUpWithoutFeedback } />
                 </Modal>
             );
         }
@@ -87,7 +100,7 @@ export class InCall extends React.Component {
             return (
                 <Modal>
                     <PasswordPrompt
-                        onCancel = { this.props.onHangUp }
+                        onCancel = { this._onHangUpWithoutFeedback }
                         onSubmit = { this.props.onSubmitPassword } />
                 </Modal>
             );
@@ -113,7 +126,8 @@ export class InCall extends React.Component {
                     <NavButton
                         className = 'hangup'
                         label = 'Leave'
-                        onClick = { this.props.onHangUp }>
+                        onClick = { this._onHangup }
+                        qaId = 'hangup'>
                         <CallEnd />
                     </NavButton>
                 </NavContainer>
@@ -141,6 +155,27 @@ export class InCall extends React.Component {
                 </div>
             )
             : null;
+    }
+
+    /**
+     * Callback invokved to leave the call and allow showing of the feedback
+     * prompt.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHangup() {
+        this.props.onHangUp(false);
+    }
+
+    /**
+     * Callback invoked to leave the call but without showing feedback.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHangUpWithoutFeedback() {
+        this.props.onHangUp(true);
     }
 }
 
@@ -196,10 +231,12 @@ function mapDispatchToProps(dispatch) {
         /**
          * Leaves the currently joined meeting.
          *
+         * @param {boolean} skipFeedback - True if the post-call feedback should
+         * not be shown.
          * @returns {Promise}
          */
-        onHangUp() {
-            return dispatch(hangUp());
+        onHangUp(skipFeedback) {
+            return dispatch(hangUp(skipFeedback));
         },
 
         /**
