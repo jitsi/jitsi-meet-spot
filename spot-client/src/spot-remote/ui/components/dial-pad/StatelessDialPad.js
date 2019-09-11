@@ -207,6 +207,7 @@ export default class StatelessDialPad extends React.Component {
     _renderZeroButton() {
         return (
             <DialButton
+                className = 'larger-sub'
                 id = 'dial-button-0'
                 key = '0'
                 mainValue = '0'

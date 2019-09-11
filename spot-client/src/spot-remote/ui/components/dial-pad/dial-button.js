@@ -8,7 +8,12 @@ import React from 'react';
  * @extends React.Component
  */
 export default class DialButton extends React.Component {
+    static defaultProps = {
+        className: ''
+    };
+
     static propTypes = {
+        className: PropTypes.string,
         mainValue: PropTypes.string,
         onClick: PropTypes.func,
         onLongClick: PropTypes.func,
@@ -50,7 +55,7 @@ export default class DialButton extends React.Component {
     render() {
         return (
             <button
-                className = 'dial-button'
+                className = { `dial-button ${this.props.className}` }
                 onClick = { this._onClearSecondaryValueSubmitTimeout }
                 onMouseDown = { this._onTouchStart }
                 onTouchEnd = { this._onTouchEnd }

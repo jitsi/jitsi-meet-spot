@@ -35,14 +35,19 @@
                 color: var(--container-sub-content-font-color);
                 font-size: $font-size-x-small;
             }
+
             .sub:empty:before {
                 content: '.';
                 visibility: hidden;
             }
 
+            &.larger-sub .sub {
+                font-size: $font-size-medium;
+                line-height: $font-size-x-small;
+            }
+
             &.active,
-            &:active,
-            &:active .sub {
+            &:active {
                 @include active;
             }
         }
