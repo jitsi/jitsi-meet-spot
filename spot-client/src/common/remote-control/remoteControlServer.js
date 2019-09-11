@@ -166,7 +166,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @returns {void}
      */
     _processRemoteControlP2PMessage(...args) {
-        if (!this._p2pSignaling) {
+        if (!this._p2pSignaling && this._options.enableP2PSignaling) {
             this._createP2PSignalingConnection(/* a server type of connection */ true);
         }
 

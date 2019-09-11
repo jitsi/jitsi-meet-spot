@@ -549,11 +549,11 @@ export class RemoteControlClient extends BaseRemoteControlService {
             this._waitForSpotTvTimeout = null;
         }
 
-        if (!this._p2pSignaling) {
+        if (!this._p2pSignaling && this._options.enableP2PSignaling) {
             this._createP2PSignalingConnection(false);
 
             // Client initiates the P2P signaling session
-            this._options.enableP2PSignaling && this._p2pSignaling.start(this._getSpotId());
+            this._p2pSignaling.start(this._getSpotId());
         }
 
         this.emit(
