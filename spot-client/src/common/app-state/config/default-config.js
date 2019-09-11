@@ -240,7 +240,7 @@ export default {
          *
          * @type {boolean}
          */
-        KICK_TEMPORARY_REMOTES: false,
+        KICK_TEMPORARY_REMOTES: true,
 
         /**
          * Allow DTMF support to be hidden while waiting for the jitsi-meet side
