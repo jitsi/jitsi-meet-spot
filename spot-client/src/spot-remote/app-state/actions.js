@@ -40,9 +40,9 @@ import {
 /**
  * Presence attributes from Spot-TV to store in redux.
  *
- * @type {Set}
+ * @type {Array}
  */
-const presenceToStore = new Set([
+const presenceToStore = [
     'audioMuted',
     'electron',
     'inMeeting',
@@ -58,7 +58,7 @@ const presenceToStore = new Set([
     'videoMuted',
     'view',
     'wiredScreensharingEnabled'
-]);
+];
 
 /**
  * An array which stores all listeners bound to the the remote control service.
@@ -256,11 +256,9 @@ function _onSpotTVStateChange({ dispatch }, data) {
     const newState = {};
     const { updatedState } = data;
 
-    Object.keys(updatedState).forEach(key => {
-        if (presenceToStore.has(key)) {
-            newState[key] = updatedState[key];
-        }
-    });
+    for (const presenceKey of presenceToStore) {
+        newState[presenceKey] = updatedState[presenceKey];
+    }
 
     dispatch(setSpotTVState(newState));
 
