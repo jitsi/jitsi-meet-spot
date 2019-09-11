@@ -10,6 +10,7 @@ import {
 } from './constants';
 import P2PSignalingClient from './P2PSignalingClient';
 import ScreenshareService from './screenshare-connection';
+import P2PSignalingBase from './P2PSignalingBase';
 
 /**
  * @typedef {Object} GoToMeetingOptions
@@ -111,6 +112,14 @@ export class RemoteControlClient extends BaseRemoteControlService {
         this._p2pSignaling.addListener(
                 P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
                 this._onSpotTvStatusReceived.bind(this));
+
+        this._p2pSignaling.addListener(
+            P2PSignalingBase.DATA_CHANNEL_READY_UPDATE,
+            () => {
+                this.emit(
+                    SERVICE_UPDATES.P2P_SIGNALING_STATE_CHANGE,
+                    this._p2pSignaling && this._p2pSignaling.isReady());
+            });
     }
 
     /**

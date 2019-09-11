@@ -18,6 +18,14 @@ import { PeerConnection } from 'common/webrtc';
  */
 export default class P2PSignalingBase extends Emitter {
     /**
+     * Event emitted when readiness status of the peer connection's data channel changes. The first argument is remote
+     * address and the second one is a boolean flag for ready/not ready.
+     *
+     * @type {string}
+     */
+    static DATA_CHANNEL_READY_UPDATE = 'DATA_CHANNEL_READY_UPDATE';
+
+    /**
      * Creates new instance.
      *
      * @param {P2PSignalingCallbacks} callbacks - The callbacks structure, see type description for more info.
@@ -136,6 +144,7 @@ export default class P2PSignalingBase extends Emitter {
             isReady,
             remoteAddress
         });
+        this.emit(P2PSignalingBase.DATA_CHANNEL_READY_UPDATE, remoteAddress, isReady);
     }
 
     /**
