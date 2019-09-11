@@ -35,9 +35,9 @@ describe('paired remotes state', () => {
             getState
         } = createStore(combineReducers({ pairedRemotes: pairedRemotesReducer })));
 
-        dispatch(actions.addPairedRemote(1, CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
-        dispatch(actions.addPairedRemote(2, CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
-        dispatch(actions.addPairedRemote(3, CLIENT_TYPES.SPOT_REMOTE_TEMPORARY));
+        dispatch(actions.addPairedRemote('1', CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
+        dispatch(actions.addPairedRemote('2', CLIENT_TYPES.SPOT_REMOTE_PERMANENT));
+        dispatch(actions.addPairedRemote('3', CLIENT_TYPES.SPOT_REMOTE_TEMPORARY));
     });
 
     it('saves reference to a new remote', () => {
@@ -64,5 +64,9 @@ describe('paired remotes state', () => {
         dispatch(actions.clearAllPairedRemotes());
 
         validateRemoteCounts(0, 0);
+    });
+
+    it('stores temporary remotes', () => {
+        expect(selectors.getTemporaryRemoteIds(getState())).toEqual([ '3' ]);
     });
 });

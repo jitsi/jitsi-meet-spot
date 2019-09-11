@@ -235,6 +235,14 @@ export default {
      */
     TEMPORARY_FEATURE_FLAGS: {
         /**
+         * Spot-TV should kick temporary remotes after a successfully joined
+         * meeting has neded.
+         *
+         * @type {boolean}
+         */
+        KICK_TEMPORARY_REMOTES: true,
+
+        /**
          * Allow DTMF support to be hidden while waiting for the jitsi-meet side
          * to be deployed and for a fix to be created for touch tones not
          * being played over dial out.

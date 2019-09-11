@@ -98,7 +98,8 @@ export class FeedbackForm extends React.Component {
                 <Button
                     appearance = 'subtle'
                     className = 'skip-button'
-                    onClick = { this._onSkip }>
+                    onClick = { this._onSkip }
+                    qaId = 'skip-feedback'>
                     Skip
                 </Button>
                 <Button type = 'submit'>

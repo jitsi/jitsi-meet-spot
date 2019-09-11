@@ -15,14 +15,19 @@ import {
     getPreferredMic,
     getPreferredSpeaker,
     getTenant,
-    getWiredScreenshareInputLabel
+    getWiredScreenshareInputLabel,
+    shouldKickTemporaryRemotes
 } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
-import { getDefaultMeetingDomain } from '../../app-state';
+import {
+    disconnectAllTemporaryRemotes,
+    getDefaultMeetingDomain
+} from './../../app-state';
 import { KickedOverlay, MeetingFrame, MeetingStatus } from './../components';
 
 /**
@@ -34,16 +39,18 @@ export class Meeting extends React.Component {
     static propTypes = {
         avatarUrl: PropTypes.string,
         defaultMeetingDomain: PropTypes.string,
-        dispatch: PropTypes.func,
+        disconnectAllTemporaryRemotes: PropTypes.func,
         displayName: PropTypes.string,
         history: PropTypes.object,
         jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
         jwtDomains: PropTypes.array,
+        kickTemporaryRemotesOnMeetingEnd: PropTypes.bool,
         location: PropTypes.object,
         match: PropTypes.object,
         maxDesktopSharingFramerate: PropTypes.number,
         minDesktopSharingFramerate: PropTypes.number,
+        onError: PropTypes.func,
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
         preferredSpeaker: PropTypes.string,
@@ -221,7 +228,9 @@ export class Meeting extends React.Component {
      */
     _onMeetingLeave(leaveEvent = {}) {
         if (leaveEvent.error) {
-            this.props.dispatch(addNotification('error', leaveEvent.error));
+            this.props.onError(leaveEvent.error);
+        } else if (this.props.kickTemporaryRemotesOnMeetingEnd) {
+            this.props.disconnectAllTemporaryRemotes();
         }
 
         this._onRedirectToHome();
@@ -299,6 +308,8 @@ function mapStateToProps(state) {
         jwtDomains: getJwtDomains(state),
         maxDesktopSharingFramerate,
         minDesktopSharingFramerate,
+        kickTemporaryRemotesOnMeetingEnd: shouldKickTemporaryRemotes(state)
+            && isBackendEnabled(state),
         showKickedOverlay: kicked,
         showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),
@@ -309,4 +320,35 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRouter(connect(mapStateToProps)(Meeting));
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Callback to invoke to cause all temporary Spot-Remotes to disconnect.
+         *
+         * @returns {void}
+         */
+        disconnectAllTemporaryRemotes() {
+            dispatch(disconnectAllTemporaryRemotes());
+        },
+
+        /**
+         * Callback invoked when an error occurs while joining a meeting.
+         *
+         * @param {string} error - An error message to display in an error
+         * notification.
+         * @returns {void}
+         */
+        onError(error) {
+            dispatch(addNotification('error', error));
+        }
+    };
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Meeting));
