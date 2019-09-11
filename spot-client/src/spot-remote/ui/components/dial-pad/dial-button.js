@@ -58,6 +58,7 @@ export default class DialButton extends React.Component {
                 className = { `dial-button ${this.props.className}` }
                 onClick = { this._onClearSecondaryValueSubmitTimeout }
                 onMouseDown = { this._onTouchStart }
+                onMouseOut = { this._onClearSecondaryValueSubmitTimeout }
                 onTouchEnd = { this._onTouchEnd }
                 onTouchStart = { this._onTouchStart }
                 tabIndex = { -1 }
