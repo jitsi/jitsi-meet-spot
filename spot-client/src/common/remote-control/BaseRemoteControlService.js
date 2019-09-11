@@ -5,6 +5,7 @@ import { generate8Characters } from 'common/utils';
 import {
     CLIENT_TYPES,
     CONNECTION_EVENTS,
+    MESSAGES,
     SERVICE_UPDATES
 } from './constants';
 import XmppConnection from './xmpp-connection';
@@ -36,6 +37,15 @@ export class BaseRemoteControlService extends Emitter {
                     .catch(() => { /* swallow unload errors from bubbling up */ });
             }
         );
+
+        /**
+         * A peer-to-peer direct signaling channel. Once established will be used to send/receive remote control
+         * commands.
+         *
+         * @type {P2PSignalingClient|P2PSignalingServer|null}
+         * @protected
+         */
+        this._p2pSignaling = null;
     }
 
     /**
@@ -54,6 +64,8 @@ export class BaseRemoteControlService extends Emitter {
      * @property {string} options.joinCode - The code to use when joining or to set
      * when creating a new MUC.
      * @property {SpotBackendService} [options.backend] - The optional backend service if configured.
+     * * @property {boolean} [options.enableP2PSignaling] - Whether or not to enable secondary(peer to peer) signaling
+     * channel for faster remote command processing.
      * @property {number} [options.joinCodeRefreshRate] - A duration in
      * milliseconds. If provided, a join code will be created and an interval
      * created to automatically update the join code at the provided rate.
@@ -74,6 +86,12 @@ export class BaseRemoteControlService extends Emitter {
         if (this.xmppConnectionPromise) {
             return this.xmppConnectionPromise;
         }
+
+        const p2pEnabled = this._options.enableP2PSignaling;
+
+        logger.log(`P2P signaling ${p2pEnabled ? 'enabled' : 'disabled'}`, {
+            p2pEnabled
+        });
 
         this.xmppConnection = new XmppConnection({
             configuration: this._options.serverConfig,
@@ -140,6 +158,31 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection() {
+        logger.log('Will try to establish P2P signaling channel');
+
+        const P2PSignalingType = this._getP2PSignalingType();
+
+        this._p2pSignaling = new P2PSignalingType({
+            onSendP2PMessage: (to, data) => {
+                this.xmppConnection.sendMessage(
+                    to,
+                    MESSAGES.REMOTE_CONTROL_P2P,
+                    data
+                ).catch(error => logger.error('Failed to send p2p message', { error }));
+            }
+        }, {
+            iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
+        });
+    }
+
+    /**
      * Returns a Promise which is to be resolved/rejected when the initial connection process is
      * done.
      *
@@ -187,6 +230,17 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
+     * Returns type of P2P signaling that's supported by the implementing subclass.
+     *
+     * @protected
+     * @abstract
+     * @returns {P2PSignalingServer|P2PSignalingClient} - A class not an instance.
+     */
+    _getP2PSignalingType() {
+        throw new Error('Subclass must implemented this method to return P2P signaling class');
+    }
+
+    /**
      * Returns whether or not the error is one in which a backend request cannot
      * be completed due a serious error, like missing authentication.
      *
@@ -212,6 +266,7 @@ export class BaseRemoteControlService extends Emitter {
         // If XMPP server is not working calling disconnect triggers onDisconnect again.
         if (!this._disconnecting) {
             this._disconnecting = true;
+
             this.disconnect()
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
@@ -233,6 +288,11 @@ export class BaseRemoteControlService extends Emitter {
                 backend.constructor.REGISTRATION_UPDATED,
                 this._onBackendRegistrationUpdated
             );
+        }
+
+        if (this._p2pSignaling) {
+            this._p2pSignaling.stop();
+            this._p2pSignaling = null;
         }
 
         const destroyPromise = this.xmppConnection
@@ -394,11 +454,36 @@ export class BaseRemoteControlService extends Emitter {
      * the message.
      * @param {string} from - The JID of the participant sending the message.
      * @param {Object} data - Additional information attached to the message.
-     * @private
+     * @protected
      * @returns {void}
      */
-    _processMessage() {
-        return;
+    _processMessage(messageType, from, data) {
+        if (messageType === MESSAGES.REMOTE_CONTROL_P2P) {
+            this._processRemoteControlP2PMessage({
+                from,
+                data
+            });
+        }
+    }
+
+    /**
+     * Processing for {@link MESSAGES.REMOTE_CONTROL_P2P} message which are used to exchange offer/answer and ICE
+     * candidates needed to establish a P2P signaling channel.
+     *
+     * @param {string} from - The remote address from which the message has been received.
+     * @param {string} data - Any message data.
+     * @protected
+     * @returns {void}
+     */
+    _processRemoteControlP2PMessage({ from, data }) {
+        if (this._p2pSignaling) {
+            this._p2pSignaling.processP2PMessage({
+                data,
+                from
+            });
+        } else {
+            logger.error('Ignoring P2P message - no connection', { from });
+        }
     }
 }
 

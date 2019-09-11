@@ -8,7 +8,9 @@ import {
     MESSAGES,
     SERVICE_UPDATES
 } from './constants';
+import P2PSignalingClient from './P2PSignalingClient';
 import ScreenshareService from './screenshare-connection';
+import P2PSignalingBase from './P2PSignalingBase';
 
 /**
  * @typedef {Object} GoToMeetingOptions
@@ -94,6 +96,29 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 }
 
                 return roomProfile;
+            });
+    }
+
+    /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection() {
+        super._createP2PSignalingConnection();
+
+        this._p2pSignaling.addListener(
+                P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
+                this._onSpotTvStatusReceived.bind(this));
+
+        this._p2pSignaling.addListener(
+            P2PSignalingBase.DATA_CHANNEL_READY_UPDATE,
+            () => {
+                this.emit(
+                    SERVICE_UPDATES.P2P_SIGNALING_STATE_CHANGE,
+                    this._p2pSignaling && this._p2pSignaling.isReady());
             });
     }
 
@@ -206,6 +231,16 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Returns the type of P2P signaling supported by RCS client.
+     *
+     * @returns {P2PSignalingClient}
+     * @private
+     */
+    _getP2PSignalingType() {
+        return P2PSignalingClient;
+    }
+
+    /**
      * Requests a {@code RemoteControlServer} to leave a meeting in progress.
      *
      * @param {boolean} skipFeedback - Whether or not to immediately navigate
@@ -249,6 +284,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise<Object>}
      */
     _sendCommand(command, data) {
+        if (this._p2pSignaling.isReady()) {
+            return this._p2pSignaling.sendCommand(command, data);
+        }
+
         return this.xmppConnection.sendCommand(this._getSpotId(), command, data);
     }
 
@@ -462,6 +501,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
         if (type === 'unavailable') {
             if (this._getSpotId() === from) {
                 logger.log('Spot TV left the MUC');
+                if (this._p2pSignaling) {
+                    this._p2pSignaling.stop();
+                    this._p2pSignaling = null;
+                }
                 if (this._getBackend()) {
                     // With backend it is okay for remote to sit in the MUC without Spot TV connected.
                     this._resetSpotTvState();
@@ -489,6 +532,28 @@ export class RemoteControlClient extends BaseRemoteControlService {
             return;
         }
 
+        this._onSpotTvStatusReceived(from, state);
+    }
+
+    /**
+     * Spot TV status processing.
+     *
+     * @param {string} from - Spot TV address from which the status has update has been received.
+     * @param {Object} state - JSON object with TV's state.
+     * @private
+     * @returns {void}
+     */
+    _onSpotTvStatusReceived(from, state) {
+        // NOTE There will be no timestamp in the initial Spot TV presence
+        const { timestamp } = state;
+
+        const currentTimestamp = this._lastSpotState && this._lastSpotState.timestamp;
+
+        if (currentTimestamp && timestamp && currentTimestamp >= timestamp) {
+
+            return;
+        }
+
         // Redundantly update the known {@code RemoteControlServer} jid in case
         // there are multiple due to ghosts left form disconnect, in which case
         // the active {@code RemoteControlServer} should be emitting updates.
@@ -503,6 +568,13 @@ export class RemoteControlClient extends BaseRemoteControlService {
             this._waitForSpotTvTimeout = null;
         }
 
+        if (!this._p2pSignaling && this._options.enableP2PSignaling) {
+            this._createP2PSignalingConnection(false);
+
+            // Client initiates the P2P signaling session
+            this._p2pSignaling.start(this._getSpotId());
+        }
+
         this.emit(
             SERVICE_UPDATES.SERVER_STATE_CHANGE,
             {
@@ -510,7 +582,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
             }
         );
     }
-
 
     /**
      * Processes screenshare related updates from the Jitsi-Meet participant.
@@ -526,6 +597,9 @@ export class RemoteControlClient extends BaseRemoteControlService {
                     data,
                     from
                 });
+            break;
+        default:
+            super._processMessage(messageType, from, data);
             break;
         }
     }

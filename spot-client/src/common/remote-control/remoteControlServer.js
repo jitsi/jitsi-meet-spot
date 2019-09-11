@@ -6,6 +6,7 @@ import { generateRandomString } from 'common/utils';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
 import { MESSAGES, SERVICE_UPDATES } from './constants';
+import P2PSignalingServer from './P2PSignalingServer';
 
 /**
  * Communication service to send updates and receive commands.
@@ -36,6 +37,21 @@ export class RemoteControlServer extends BaseRemoteControlService {
             ...options,
             retryOnUnauthorized: !options.backend
         }).then(roomProfile => this.refreshJoinCode().then(() => roomProfile));
+    }
+
+    /**
+     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
+     * commands.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _createP2PSignalingConnection() {
+        super._createP2PSignalingConnection();
+
+        this._p2pSignaling.addListener(P2PSignalingServer.REMOTE_CONTROL_CMD_RECEIVED, cmdObj => {
+            this._onP2PRemoteControlCommandReceived(cmdObj);
+        });
     }
 
     /**
@@ -141,6 +157,16 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Returns the type of P2P signaling supported by RCS server.
+     *
+     * @returns {P2PSignalingServer}
+     * @private
+     */
+    _getP2PSignalingType() {
+        return P2PSignalingServer;
+    }
+
+    /**
      * Returns the join code that is to be used by a Spot Remote in order to be paired with this Spot TV.
      *
      * @returns {string}
@@ -149,6 +175,21 @@ export class RemoteControlServer extends BaseRemoteControlService {
         const { backend } = this._options;
 
         return backend ? backend.getShortLivedPairingCode() : this.getJoinCode();
+    }
+
+    /**
+     * Processing for {@link MESSAGES.REMOTE_CONTROL_P2P} message which are used to exchange offer/answer and ICE
+     * candidates needed to establish a P2P signaling channel.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _processRemoteControlP2PMessage(...args) {
+        if (!this._p2pSignaling && this._options.enableP2PSignaling) {
+            this._createP2PSignalingConnection(/* a server type of connection */ true);
+        }
+
+        super._processRemoteControlP2PMessage(...args);
     }
 
     /**
@@ -235,7 +276,11 @@ export class RemoteControlServer extends BaseRemoteControlService {
             return;
         }
 
+        newStatus.timestamp = Date.now();
+
         this.xmppConnection.updateStatus(newStatus);
+
+        this._p2pSignaling && this._p2pSignaling.updateStatus(newStatus);
     }
 
     /**
@@ -266,6 +311,30 @@ export class RemoteControlServer extends BaseRemoteControlService {
         logger.log('RemoteControlServer received command', { commandType });
 
         this._notifySpotRemoteMessageReceived(commandType, data);
+    }
+
+    /**
+     * Method called when a remote control command is received over the P2P channel.
+     *
+     * @param {string} remoteAddress - The remote address to which an ack needs to be sent to.
+     * @param {number} requestId - The request ID to be used for an ack.
+     * @param {string} command - A remote control service command.
+     * @param {Object} data - Any command specific extra data(if any).
+     * @protected
+     * @returns {void}
+     */
+    _onP2PRemoteControlCommandReceived({ remoteAddress, requestId, command, data }) {
+        this._notifySpotRemoteMessageReceived(command, data);
+
+        if (this._p2pSignaling) {
+            this._p2pSignaling.sendCommandAck(remoteAddress, requestId);
+        } else {
+            logger.warn('Skipped sending P2P command ack - no P2P connection', {
+                remoteAddress,
+                requestId,
+                command
+            });
+        }
     }
 
 
@@ -358,6 +427,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
                 }
             );
 
+            break;
+        default:
+            super._processMessage(messageType, from, data);
             break;
         }
     }

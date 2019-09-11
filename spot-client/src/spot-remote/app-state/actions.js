@@ -6,6 +6,7 @@ import {
     destroyConnection,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
+    isP2PSignalingEnabled,
     setCalendarEvents,
     setSpotTVState
 } from 'common/app-state';
@@ -90,6 +91,7 @@ export function connectToSpotTV(joinCode, shareMode) {
             = isBackendEnabled(state)
                 ? new SpotBackendService(getSpotServicesConfig(state))
                 : null;
+        const enableP2PSignaling = isP2PSignalingEnabled(state);
         const serverConfig = getRemoteControlServerConfig(state);
 
         /**
@@ -188,6 +190,7 @@ export function connectToSpotTV(joinCode, shareMode) {
                 () => remoteControlClient.connect({
                     joinCode,
                     backend,
+                    enableP2PSignaling,
                     serverConfig
                 }),
                 CREATE_CONNECTION

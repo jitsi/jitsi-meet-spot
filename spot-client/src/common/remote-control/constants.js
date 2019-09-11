@@ -126,7 +126,12 @@ export const MESSAGES = {
      * {@code RemoteControlServer}, intended to be passed into the Jitsi-Meet
      * meeting.
      */
-    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control'
+    REMOTE_CONTROL_UPDATE: 'update-message-from-remote-control',
+
+    /**
+     * A message sent in order to establish a p2p signaling channel.
+     */
+    REMOTE_CONTROL_P2P: 'remote-control-p2p'
 };
 
 export const SERVICE_UPDATES = {
@@ -146,6 +151,11 @@ export const SERVICE_UPDATES = {
      * A command from a {@code RemoteControlClient} has been received.
      */
     CLIENT_MESSAGE_RECEIVED: 'message-received',
+
+    /**
+     * Event emitted by Spot Remote when it switches to use P2P signaling channel for remote control command execution.
+     */
+    P2P_SIGNALING_STATE_CHANGE: 'p2p-signaling-state-change',
 
     /**
      * The spot backend service received an updated profile for the connected

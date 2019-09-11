@@ -8,6 +8,7 @@ import {
 } from 'common/analytics';
 import {
     AUDIO_MUTE,
+    BOOTSTRAP_COMPLETE,
     DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
@@ -23,6 +24,10 @@ import {
 } from 'common/app-state';
 import { asyncActionRequestStates } from 'common/async-actions';
 import { MiddlewareRegistry } from 'common/redux';
+import {
+    SERVICE_UPDATES,
+    remoteControlClient
+} from 'common/remote-control';
 
 import {
     SPOT_REMOTE_EXIT_SHARE_MODE,
@@ -31,6 +36,8 @@ import {
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './../app-state';
 import { shareModeEvents } from '../../common/analytics';
+
+import { SPOT_REMOTE_P2P_ACTIVE } from './properties';
 
 const requestStateToEventSuffix = {
     [requestStates.DONE]: eventStatusSuffixes.SUCCESS,
@@ -51,6 +58,10 @@ function addRequestStateSuffix(eventName, requestState) {
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
+    case BOOTSTRAP_COMPLETE: {
+        _registerRCSListeners();
+        break;
+    }
     case AUDIO_MUTE: {
         if (isPendingAsyncAction(action)) {
             analytics.log(inCallEvents.AUDIO_MUTE, { muting: action.expectedState });
@@ -164,4 +175,18 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
  */
 function isPendingAsyncAction(action) {
     return action.requestState === asyncActionRequestStates.PENDING;
+}
+
+/**
+ * Registers for RCS events that result in analytics updates.
+ *
+ * @returns {void}
+ */
+function _registerRCSListeners() {
+    remoteControlClient.addListener(
+        SERVICE_UPDATES.P2P_SIGNALING_STATE_CHANGE,
+        isActive => {
+            analytics.updateProperty(SPOT_REMOTE_P2P_ACTIVE, isActive);
+        }
+    );
 }
