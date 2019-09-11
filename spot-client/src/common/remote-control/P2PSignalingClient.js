@@ -1,4 +1,7 @@
 import { logger } from 'common/logger';
+
+import { generate8Characters } from '../utils';
+
 import P2PSignalingBase from './P2PSignalingBase';
 
 
@@ -129,8 +132,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
             throw new Error('No PeerConnection');
         }
 
-        // FIXME time may not be 100% reliable for unique IDs
-        const requestId = new Date().getTime();
+        const requestId = `${generate8Characters()}-${generate8Characters}`;
 
         // FIXME is there any better way to do this?
         // The 'reject' and 'resolve' methods are set when the promise is created.
