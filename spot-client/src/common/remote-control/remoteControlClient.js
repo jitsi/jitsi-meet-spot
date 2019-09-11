@@ -102,17 +102,15 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
      * commands.
      *
-     * @param {boolean} isServer - Whether to create a server or a client P2P signaling connection.
      * @protected
      * @returns {void}
      */
-    _createP2PSignalingConnection(isServer) {
-        super._createP2PSignalingConnection(isServer);
+    _createP2PSignalingConnection() {
+        super._createP2PSignalingConnection();
 
-        !isServer
-            && this._p2pSignaling.addListener(
-                    P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
-                    this._onSpotTvStatusReceived.bind(this));
+        this._p2pSignaling.addListener(
+                P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
+                this._onSpotTvStatusReceived.bind(this));
     }
 
     /**
@@ -221,6 +219,16 @@ export class RemoteControlClient extends BaseRemoteControlService {
             });
 
         return this._goToMeetingPromise;
+    }
+
+    /**
+     * Returns the type of P2P signaling supported by RCS client.
+     *
+     * @returns {P2PSignalingClient}
+     * @private
+     */
+    _getP2PSignalingType() {
+        return P2PSignalingClient;
     }
 
     /**

@@ -8,8 +8,6 @@ import {
     SERVICE_UPDATES
 } from './constants';
 import XmppConnection from './xmpp-connection';
-import P2PSignalingClient from './P2PSignalingClient';
-import P2PSignalingServer from './P2PSignalingServer';
 
 /**
  * The interface for interacting with the XMPP service which powers the
@@ -162,14 +160,13 @@ export class BaseRemoteControlService extends Emitter {
      * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
      * commands.
      *
-     * @param {boolean} isServer - Whether to create a server or a client P2P signaling connection.
      * @protected
      * @returns {void}
      */
-    _createP2PSignalingConnection(isServer) {
-        logger.log('Will try to establish P2P signaling channel', { isServer });
+    _createP2PSignalingConnection() {
+        logger.log('Will try to establish P2P signaling channel');
 
-        const P2PSignalingType = isServer ? P2PSignalingServer : P2PSignalingClient;
+        const P2PSignalingType = this._getP2PSignalingType();
 
         this._p2pSignaling = new P2PSignalingType({
             onSendP2PMessage: (to, data) => {
@@ -229,6 +226,17 @@ export class BaseRemoteControlService extends Emitter {
 
         // Append a random part to allow multiple remotes per type join one XMPP MUC.
         return `${type}-${generate8Characters()}`;
+    }
+
+    /**
+     * Returns type of P2P signaling that's supported by the implementing subclass.
+     *
+     * @protected
+     * @abstract
+     * @returns {P2PSignalingServer|P2PSignalingClient} - A class not an instance.
+     */
+    _getP2PSignalingType() {
+        throw new Error('Subclass must implemented this method to return P2P signaling class');
     }
 
     /**
