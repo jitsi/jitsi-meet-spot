@@ -41,6 +41,7 @@ export default class StatelessDialPad extends React.Component {
         this._onGoToCall = this._onGoToCall.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
         this._onReplaceLastChar = this._onReplaceLastChar.bind(this);
+        this._renderDialButton = this._renderDialButton.bind(this);
     }
 
     /**
