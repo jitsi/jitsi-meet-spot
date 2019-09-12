@@ -414,6 +414,8 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingJoined() {
+        logger.log('meeting joined');
+
         this._meetingJoined = true;
 
         this.props.onMeetingStart(this._jitsiApi);
@@ -502,6 +504,8 @@ export class MeetingFrame extends React.Component {
      */
     _onParticipantKicked({ kicked }) {
         if (kicked.local) {
+            logger.log('Kicked from jitsi meeting');
+
             this.props.updateSpotTvState({
                 kicked: true
             });
@@ -546,6 +550,8 @@ export class MeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLoaded() {
+        logger.log('meeting iframe loaded meeting page');
+
         this._meetingLoaded = true;
         this.setState({
             feedbackDisplayed: false

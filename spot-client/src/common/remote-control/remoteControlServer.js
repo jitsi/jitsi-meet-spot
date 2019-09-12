@@ -138,6 +138,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @returns {Promise}
      */
     disconnectRemoteControl(jid) {
+        logger.log('Kicking out remote control', { jid });
+
         return this.xmppConnection.kick(jid);
     }
 

@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { sendTouchTones } from 'common/app-state';
+import { logger } from 'common/logger';
 import { Modal } from 'common/ui';
 
 import { StatelessDialPad } from './../dial-pad';
@@ -76,6 +77,8 @@ export class DTMFModal extends React.Component {
      * @returns {void}
      */
     _onSubmit(_, tones) {
+        logger.log('submitting touch tones');
+
         this.props.onSendTones(tones);
         this.setState({ value: '' });
     }
