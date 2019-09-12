@@ -14,7 +14,7 @@ export function WaitingForSpotTVOverlay({ productName }) {
     return (
         <StatusOverlay
             showBackground = { true }
-            title = 'Waiting for Spot-TV to connect'>
+            title = { `Waiting for ${productName} TV to connect` }>
             <div data-qa-id = 'waiting-for-spot-tv'>
                 Please make sure the associated { productName } TV<br />
                 is currently running and connected to the Internet.
