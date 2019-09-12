@@ -8,7 +8,7 @@ There are a few requirements before the application can be launched.
 1. Have access to a computer that can build this application using node and npm; specific versions that are known to work should be listed in package.json.
 1. Spot supports Google and Outlook client side flows and also a bring-your-own-server flow. For Google and Outlook, check `docs/creating_a_calendar_client.md` for more details on creating calendar integration applications. The application ids should be configured in spot. The bring-your-own-server flow is currently a work in progress. An example of the required APIs and interactions are in the `spot-admin` directory.
 1. Clone this repository.
-1. In the local clone, fill out the configuration for this project. The actual configuration file is at `src/config/index.js`. This config file overrides the default config values in `spot-client/src/common/app-state/config/default-config.js`.
+1. In the local clone, fill out the configuration for this project. The configuration file is at `src/config/config.js`. This config file overrides the default config values in `spot-client/src/common/app-state/config/default-config.js`.
 1. Build the application by running `npm install` to download dependencies and `npm run build:prod` to create the javascript files for the application.
 1. Host the `index.html` and javascript on a server that supports the client using the history api.
 

@@ -1,4 +1,4 @@
-Spot needs to support multiple resolutions. The Spot itself is intended to be displayed on a TV, whereas the remote controls are intended to be displayed on laptops, cell phones, and tables. Here are example of some common TV resolutions, for example:
+Spot needs to support multiple resolutions. Spot-TV is intended to be displayed on actual televisions, whereas Spot-Remotes  are intended to be displayed on laptops, cell phones, and tablets. Here are example of some common TV resolutions, for example:
 
 4k: 3840 x 2160
 HD: 1920 x 1080

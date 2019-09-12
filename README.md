@@ -1,10 +1,10 @@
 # Jitsi-Meet Spot
 
-This is the mono-repo for Jitsi Meet's room integration, named Spot.
+This is the mono-repo for Jitsi Meet's room integration, named Spot. This project is fairly independent of jitsi-meet (the web UI codebase) but it consumes Jitsi Meet through jitsi-meet's iFrame API.
 
 - spot-admin/ contains a mock server for testing integration between Spot and a backend service
 - spot-client/ contains the Spot-TV and Spot-Remote codebase. This is the main application folder.
-- spot-controller/ contains the iOS and Android application for the Spot-Remote. It shows the spot-client's remote in a webview.
+- spot-controller/ contains the iOS and Android application for the Spot-Remote. It shows the spot-client in a webview.
 - spot-electron/ contains the desktop application for displaying a Spot-TV in an iframe. It has additional functionality on top of what the spot-client can provide.
 - spot-webdriver/ contains selenium webdriver tests for spot-client
 
@@ -12,7 +12,7 @@ This is the mono-repo for Jitsi Meet's room integration, named Spot.
 
 - Spot-Remotes and Spot-TVs only works together when they use the same server configuration
 - Spot-TV currently supports latest Chrome only
-- Spot-Remotes is full-featured in Chrome but also supports mobile browsers, Safari, Firefox.
+- Spot-Remotes are full-featured in Chrome but also supports reduced functionality in mobile browsers, Safari, and Firefox.
 
 ## Contributing
 
