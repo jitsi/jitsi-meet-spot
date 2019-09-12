@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { logger } from 'common/logger';
 import { Button, Input } from 'common/ui';
 
 /**
@@ -82,6 +83,8 @@ export default class PasswordPrompt extends React.Component {
      */
     _onSubmit(e) {
         e.preventDefault();
+
+        logger.log('submitting password for meeting');
 
         this.props.onSubmit(this.state.enteredPassword);
     }
