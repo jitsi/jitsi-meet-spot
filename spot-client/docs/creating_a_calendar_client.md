@@ -29,3 +29,17 @@ Note: The user which will be logged into the calendar integration should be a de
 1. Select the desired room.
 1. Set the Delegate.
 1. Also, Edit Exchange Settings and set the delegate in "mailbox delegation."
+
+
+## Integrating with Spot
+For Spot to use the created applications, Spot must be aware of the application ids. The keys can be added to config.js, which overrides default-config.js. In config.js, add an entry that looks like this:
+```
+    CALENDARS: {
+        GOOGLE: {
+            CLIENT_ID: google-app-id-here
+        },
+        OUTLOOK: {
+            CLIENT_ID: outlook-app-id-here
+        }
+    }
+```

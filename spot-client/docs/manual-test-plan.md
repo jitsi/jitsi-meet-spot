@@ -11,7 +11,6 @@ Environments supported as a Spot-Remote
 - [ ] Latest Safari
 - [ ] Latest iOS Safari
 - [ ] Latest Android Chrome
-- [ ] iOS 10.x iPad
 - [ ] iOS 11.x iPad
 - [ ] iOS 12.x iPad
 
@@ -22,6 +21,7 @@ Hosting
 Pairing
 ------
 - [ ] Spot-Remote can pair with Spot-TV
+- [ ] Backend flow only: both temporary and permanent remotes can be paired
 
 Calendar
 ------
@@ -36,7 +36,7 @@ Setup
 
 Home
 ------
-- [ ] Spot-Remote starts a calendar meeting
+- [ ] Spot-Remote starts a meeting from a calendar event
 - [ ] Spot-Remote starts an ad-hoc meeting with random name
 - [ ] Spot-Remote starts an ad-hoc meeting with typed in name
 - [ ] Spot-Remote starts an ad-hoc meeting on a specified domain
@@ -44,7 +44,7 @@ Home
 - [ ] Spot-Remote starts an ad-hoc meeting with wired screenshare
 - [ ] Spot-Remote starts an ad-hoc meeting with wireless screenshare
 
-Spot In Meeting
+Spot In Meeting (with two remotes)
 ------
 - [ ] Spot-Remote toggles audio mute
 - [ ] Spot-Remote toggles video mute
@@ -73,20 +73,25 @@ Automatic Wired Screensharing
 - [ ] Spot-TV in a meeting automatically starts SS when connecting a device
 - [ ] Spot-TV in a meeting automatically stops SS when disconnecting a device
 
+In-Meeting Errors
+------
+- [ ] Spot-Remotes can enter a password for a locked meeting
+- [ ] Spot-TV and Spot-Remote show an error message when kicked from a meeting
+
 Disconnects - Open source flow
 ------
 - [ ] Spot-TV reloads the page and Spot-Remote displays join code entry
-- [ ] Spot-Remote reconnects to a Spot-TV after disconnect
 - [ ] Spot-TV reestablishes its own connection to the backend after losing internet
-- [ ] Spot-Remote reestablishes its connection to the Spot-TV after losing internet
 
 Disconnects - Backend flow
 ------
-- [ ] Spot-TV exits the browser and Spot-Remote remains waiting for the Spot-TV
+- [ ] Spot-TV exits the browser and Spot-Remotes remains waiting for the Spot-TV
 - [ ] Spot-TV automatically rejoins with existing setup when re-opening the browser
 - [ ] Spot-Remote reconnects automatically to the Spot-TV after the Spot-TV reconnects
 - [ ] Spot-TV reestablishes its own connection to the backend after losing internet
-- [ ] Spot-Remote reestablishes its connection to the Spot-TV after losing internet
+- [ ] Permanent Spot-Remote reestablishes its connection to the Spot-TV after losing internet
+- [ ] Temporary Spot-Remote does not try to establish its connection to the Spot-TV after losing internet
+- [ ] Temporary Spot-Remotes are disconnected after a meeting ends.
 
 Screenshare Selection
 ------
@@ -125,11 +130,10 @@ Share Mode
 - [ ] On wireless screenshare start, and Spot-TV not in a meeting, Spot-TV enters a random meeting with screensharing
 - [ ] On wireless screenshare start, and Spot-TV in a meeting, SpotTV starts wireless screensharing in the current meeting
 - [ ] Spot-Remote stopping screensharing exists the meeting
-- [ ] Another Spot-Remote stopping the screensharing leave Spot-TV in the meeting
-- [ ] At mode select, clicking the "Remote Control" button takes Spot-Remote to the full remote control view
-- [ ] At mode select, unsupported browsers cannot start wireless screensharing
+- [ ] Another Spot-Remote, not in share mode, stopping the screensharing leaves Spot-TV in the meeting
+- [ ] Unsupported browsers cannot start wireless but do see mode select to become a full remote control
 - [ ] At mode select, Spot-Remote cannot start a wireless screenshare if Spot-TV is already screensharing
 
 Auto-updates - Backend flow only
 ------
-- [ ] Automatically reloads the page at the configured time (default 2am)
+- [ ] Automatically reloads the page at the configured time (default 2am). This can be faked in console via spot.remoteControlClient.disconnect().then(() => window.location.reload()) and spot.remoteControlServer.disconnect().then(() => window.location.reload()).

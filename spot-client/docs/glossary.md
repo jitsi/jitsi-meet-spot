@@ -5,7 +5,10 @@ Terms for features used within spot.
 A meeting not scheduled on a calendar that Spot-TV has access to. The ad-hoc meeting is created by manually entering a meeting name within the Spot-Remote to create the meeting.
 
 ### Admin
-The person setting up and maintaining Spots. This person knows about how to go through setup flow for Spot-TV and understands how the different parts of Spot interact.
+The person setting up and maintaining Spots. This person knows about how to go through setup flow for Spot-TV and understands how the different parts of Spot interact. Oftentimes it is assumed this person is in IT or is performing IT work.
+
+### Backend Flow
+Spot supports two modes of operation: backend and open-source. For the backend flow, Spot-TV and Spot-Remote will attempt to connect together using configured backend service urls and Spot-TV will get Spot-Room information from the backend.
 
 ### Calendar meeting
 A meeting scheduled on a calendar that is connected to Spot-TV. The meeting URL cannot be changed by Spot-TV but is instead part of a calendar event.
@@ -14,10 +17,22 @@ A meeting scheduled on a calendar that is connected to Spot-TV. The meeting URL 
 The React-Native application for displaying the Spot-Remote. It is intended to be left connected to a Spot-TV and left located in a Spot-Room so users can interact with it to control the Spot-TV.
 
 ### Join code, Share key
-The 6-character code a user needs to enter in order to get a Spot-Remote to become connected to Spot-TV. Once connected, the Spot-Remote can make Spot-TV join a meeting and has access to Spot-TV's in-meeting controls. 
+The 6-character or 8-character code a user needs to enter in order to get a Spot-Remote to become connected to Spot-TV. Once connected, the Spot-Remote can make Spot-TV join a meeting and has access to Spot-TV's in-meeting controls. 
 
 ### lib-jitsi-meet
 The javascript library which contains XMPP, MUC, and WebRTC code used by Jitsi-Meet for its video conferencing. Spot re-uses the library for its own needs.
+
+### Open-source flow
+Spot supports two modes of operation: backend and open-source. For the open-source flow, Spot-TV connects to a configured prosody deployment on its own, without the use of a proprietary backend. Spot-TVs use Google and Outlook integrations to get calendar information.
+
+### P2P
+Stands for peer-to-peer. Reference to p2p will generally be avoid a peer-to-peer connection created between a Spot-TV and a Spot-Remote for sending and receiving commands. Peer-to-peer is used for speed, as prosody's round trip times could take several hundred milliseconds.
+
+### Permanent remote
+A distinction of Spot-Remote type for the backend flow. These Spot-Remotes do not disconnect after a meeting ends and will attempt to reconnect to Spot-TV automatically. Permanent remotes are paired using an 8-character code.
+
+### Prosody
+An XMPP server implementation. Used as the communiction hub between Spot-TVs and Spot-Remotes.
 
 ### Quiet
 A library for ultrasound transmitting and decoding. The main library is lib-quiet, written in C, but the maintainer provides iOS, Android, and JS libraries to use lib-quiet. See Ultrasound.
@@ -49,8 +64,11 @@ A sub-application of Spot, allowing Spot-TV to be interacted with without a phys
 ### Spot-Room
 The physical location in which the Spot-TV is located. It is expected this be a small conference (huddle) room.
 
-### Ultrasonic
-Sound that is not readily perceivable by adults due to its high frequency. Can be used to send messages between devices without cables. This is a feature of Spot in which a Spot-Remote, likely an iPad set up as a dedicated Spot-Remote, can emit the join code using ultrasonic. Receivers, such as a web page implementing an ultrasonic receiver, can listen for the join code and take action. The goal is to allow a device to become a Spot-Remote without having to manually navigate to a URL and manually enter a join code.
+### Temporary Remote
+A distinction of Spot-Remote type for the backend flow. Temporary Spot-Remotes do not attempt to maintain a connection to a Spot-TV; these Spot-Remotes are intended to be used for one meeting and dropped. Temporary remotes are paired using a 6-character code.
+
+### Ultrasonic, Ultrasound
+Sound that is not readily perceivable by adults due to its high frequency. Can be used to send messages between devices without cables. This is a feature of Spot in which a Spot-Remote, likely an iPad set up as a dedicated Spot-Remote, can emit the join code using ultrasound. Receivers, such as a web page implementing an ultrasonic receiver, can listen for the join code and take action. The goal is to allow a device to become a Spot-Remote without having to manually navigate to a URL and manually enter a join code.
 
 ### Waiting View
 A UI state within the Spot-Remote where it is connected to a Spot-TV while the Spot-TV is displaying a calendar. At this point the Spot-TV is waiting for further action to be taken, such as a Spot-Remote entering a meeting.
