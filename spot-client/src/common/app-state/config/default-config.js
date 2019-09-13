@@ -240,7 +240,7 @@ export default {
          *
          * @type {boolean}
          */
-        KICK_TEMPORARY_REMOTES: true,
+        KICK_TEMPORARY_REMOTES: false,
 
         /**
          * Whether or not to enable secondary(peer to peer) signaling channel for faster remote command processing.
