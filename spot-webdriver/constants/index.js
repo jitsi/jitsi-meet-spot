@@ -32,7 +32,7 @@ module.exports = {
      * Delays can happen when a Spot-TV attempts to create a connection while
      * a previous sessions of Spot-TV is still active.
      */
-    MAX_PAGE_LOAD_WAIT: 90000,
+    MAX_PAGE_LOAD_WAIT: 120000,
 
     /**
      * The maximum amount of time, in milliseconds, to allow Jitsi-Meet to load
