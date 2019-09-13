@@ -9,8 +9,6 @@ import { remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { AbstractLoader, generateWrapper, Loading } from 'common/ui';
 
-import { disconnectFromSpotTV } from './../../app-state';
-
 /**
  * Loads application services while displaying a loading icon. Will display
  * the passed-in children when loading is complete.
@@ -19,8 +17,7 @@ import { disconnectFromSpotTV } from './../../app-state';
  */
 export class RemoteControlLoader extends AbstractLoader {
     static propTypes = {
-        isConnected: PropTypes.bool,
-        onDisconnect: PropTypes.func
+        isConnected: PropTypes.bool
     };
 
     /**
@@ -91,26 +88,6 @@ function mapStateToProps(state) {
     };
 }
 
-/**
- * Creates actions which can update Redux state.
- *
- * @param {Function} dispatch - The Redux dispatch function to update state.
- * @private
- * @returns {Object}
- */
-function mapDispatchToProps(dispatch) {
-    return {
-        /**
-         * Stop any existing connection to a Spot-TV.
-         *
-         * @returns {void}
-         */
-        onDisconnect() {
-            dispatch(disconnectFromSpotTV());
-        }
-    };
-}
-
 const ConnectedRemoteControlLoader = withRouter(RemoteControlLoader);
 
-export default generateWrapper(connect(mapStateToProps, mapDispatchToProps)(ConnectedRemoteControlLoader));
+export default generateWrapper(connect(mapStateToProps)(ConnectedRemoteControlLoader));
