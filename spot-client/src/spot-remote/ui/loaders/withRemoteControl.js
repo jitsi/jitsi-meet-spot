@@ -7,7 +7,9 @@ import { isConnectionEstablished } from 'common/app-state';
 import { history } from 'common/history';
 import { remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
-import { AbstractLoader, generateWrapper, Loading } from 'common/ui';
+import { AbstractLoader, Loading } from 'common/ui';
+
+import { disconnectFromSpotTV } from '../../app-state';
 
 /**
  * Loads application services while displaying a loading icon. Will display
@@ -17,7 +19,13 @@ import { AbstractLoader, generateWrapper, Loading } from 'common/ui';
  */
 export class RemoteControlLoader extends AbstractLoader {
     static propTypes = {
-        isConnected: PropTypes.bool
+        disconnectOnUnmount: PropTypes.bool,
+        isConnected: PropTypes.bool,
+        onDisconnect: PropTypes.func
+    };
+
+    static defaultProps = {
+        disconnectOnUnmount: true
     };
 
     /**
@@ -28,6 +36,15 @@ export class RemoteControlLoader extends AbstractLoader {
      */
     constructor(props) {
         super(props, 'SpotRemote');
+    }
+
+    /**
+     * Clean up connection related state.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this.props.disconnectOnUnmount && this.props.onDisconnect();
     }
 
     /**
@@ -76,6 +93,26 @@ export class RemoteControlLoader extends AbstractLoader {
 }
 
 /**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Stop any existing connection to a Spot-TV.
+         *
+         * @returns {void}
+         */
+        onDisconnect() {
+            dispatch(disconnectFromSpotTV());
+        }
+    };
+}
+
+/**
  * Selects parts of the Redux state to pass in with the props of {@code RemoteControlLoader}.
  *
  * @param {Object} state - The Redux state.
@@ -90,4 +127,4 @@ function mapStateToProps(state) {
 
 const ConnectedRemoteControlLoader = withRouter(RemoteControlLoader);
 
-export default generateWrapper(connect(mapStateToProps)(ConnectedRemoteControlLoader));
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectedRemoteControlLoader);

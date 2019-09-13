@@ -23,7 +23,7 @@ import {
     ElectronDesktopPickerModal,
     WaitingForSpotTVOverlay
 } from './../../components';
-import { withRemoteControl } from './../../loaders';
+import { WithRemoteControl } from './../../loaders';
 
 import ModeSelect from './mode-select';
 import StopShare from './stop-share';
@@ -99,8 +99,10 @@ export class Share extends React.PureComponent {
     render() {
         return (
             <View name = 'share-view'>
-                { this._renderSubView() }
-                <ElectronDesktopPickerModal />
+                <WithRemoteControl disconnectOnUnmount = { false } >
+                    { this._renderSubView() }
+                    <ElectronDesktopPickerModal />
+                </WithRemoteControl>
             </View>
         );
     }
@@ -207,4 +209,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withRemoteControl(connect(mapStateToProps)(Share));
+export default connect(mapStateToProps)(Share);
