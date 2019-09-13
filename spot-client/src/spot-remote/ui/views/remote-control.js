@@ -7,6 +7,7 @@ import {
     getCurrentView,
     isConnectedToSpot
 } from 'common/app-state';
+import { logger } from 'common/logger';
 import { LoadingIcon, View } from 'common/ui';
 
 import './../../analytics';
@@ -68,8 +69,13 @@ export class RemoteControl extends React.PureComponent {
      */
     _getView() {
         if (!this.props.isConnectedToSpot) {
+            logger.log('remote-control show waiting for Spot TV');
+
             return <WaitingForSpotTVOverlay />;
         }
+
+        // FIXME if those subview would subclass View we would also have analytics
+        logger.log(`remote-control view: ${this.props.view}`);
 
         switch (this.props.view) {
         case 'admin':
