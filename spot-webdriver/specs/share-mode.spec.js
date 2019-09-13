@@ -23,6 +23,24 @@ describe('In share mode', () => {
         stopSharePage.stopScreensharing();
     });
 
+    it('Spot-Remote can enter full remote control mode', () => {
+        const stopSharePage = spotRemote.getStopSharePage();
+
+        stopSharePage.stopScreensharing();
+
+        const modeSelectPage = spotRemote.getModeSelectPage();
+
+        modeSelectPage.waitForVisible();
+
+        modeSelectPage.selectFullRemoteControlMode();
+
+        const remoteControlPage = spotRemote.getRemoteControlPage();
+
+        remoteControlPage.waitForVisible();
+
+        remoteControlPage.waitWaitingForCallViewToDisplay();
+    });
+
     xit('Spot-Remote is disconnected on share end', () => {
         if (!session.isBackendEnabled()) {
             pending();
@@ -41,5 +59,7 @@ describe('In share mode', () => {
         const joinCodePage = spotRemote.getJoinCodePage();
 
         joinCodePage.waitForVisible();
+
+        spotRemote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
     });
 });
