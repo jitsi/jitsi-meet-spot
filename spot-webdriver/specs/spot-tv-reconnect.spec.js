@@ -29,7 +29,9 @@ describe('The reconnect logic', () => {
             remote.getLoadingScreen().waitForLoadingToDisappear();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForLoadingToDisappear(90 * 1000);
+            tv.getLoadingScreen().waitForLoadingToDisappear(100 * 1000);
+
+            remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
         });
         it('Spot TV will reconnect, but temporary remote will go back to the join code entry page', () => {
             const tv = session.getSpotTV();
@@ -49,7 +51,7 @@ describe('The reconnect logic', () => {
             remote.setNetworkOnline();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForLoadingToDisappear(90 * 1000);
+            tv.getLoadingScreen().waitForLoadingToDisappear(100 * 1000);
         });
     });
 });
