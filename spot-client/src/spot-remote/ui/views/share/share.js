@@ -124,6 +124,7 @@ export class Share extends React.PureComponent {
      * @returns {ReactComponent}
      */
     _renderSubView() {
+        // FIXME log displayed view
         if (!this.props.isConnectedToSpot) {
             return <WaitingForSpotTVOverlay />;
         } else if (this.props.isWirelessScreensharingPending) {
