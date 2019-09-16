@@ -2,13 +2,17 @@
     @include spot-remote-view-layout;
 
     .waiting-sub-view {
+        align-items: center;
+        display: flex;
         flex: 1;
+        justify-content: center;
     }
 
     .meetings {
-        display: flex;
-        flex-direction: column;
         align-items: center;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
 
         .meeting {
             padding: .8em 1.2em;
@@ -36,6 +40,8 @@
 
     .meeting-name-entry-view {
         @include centered-content;
+
+        flex: 1;
     }
 
     .share-select-view {

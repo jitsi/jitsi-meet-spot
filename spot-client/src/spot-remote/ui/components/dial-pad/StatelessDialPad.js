@@ -78,7 +78,7 @@ export default class StatelessDialPad extends React.Component {
                         { this._renderDialButton('9', 'WXYZ') }
                     </div>
                     <div className = 'row'>
-                        { this._renderDialButton('*') }
+                        { this._renderDialButton('＊') }
                         { this._renderZeroButton() }
                         { this._renderDialButton('#') }
                     </div>
