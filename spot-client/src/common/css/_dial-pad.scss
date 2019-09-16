@@ -104,3 +104,14 @@
         width: 100%;
     }
 }
+
+.dtmf-modal {
+    .dial-pad-footer,
+    .number-input {
+        display: none;
+    }
+
+    .dial-pad-buttons {
+        padding-bottom: 17px;
+    }
+}
