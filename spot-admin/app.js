@@ -50,6 +50,7 @@ const spot1 = new SpotRoom(spot1Id, {
         code: '112233',
         expiresIn: 6 * 60 * 1000
     },
+    countryCode: process.env.COUNTRY_CODE,
     tenant: process.env.TENANT
 });
 

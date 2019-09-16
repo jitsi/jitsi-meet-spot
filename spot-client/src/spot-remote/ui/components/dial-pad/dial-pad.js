@@ -1,10 +1,12 @@
 import { AsYouType } from 'libphonenumber-js';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { logger } from 'common/logger';
-
 import { getRandomMeetingName } from 'common/utils';
+
+import { getCountryCode } from '../../../app-state';
 
 import StatelessDialPad from './StatelessDialPad';
 
@@ -27,8 +29,13 @@ function removeFormatting(formattedPhoneNumber) {
  *
  * @extends React.Component
  */
-export default class DialPad extends React.Component {
+class DialPad extends React.Component {
+    static defaultProps = {
+        countryCode: 'US'
+    };
+
     static propTypes = {
+        countryCode: PropTypes.string,
         onSubmit: PropTypes.func
     };
 
@@ -54,10 +61,44 @@ export default class DialPad extends React.Component {
             formattedPhone: ''
         };
 
-        this._asYouType = new AsYouType('US');
+        this._createAsYouType(props.countryCode);
 
         this._onChange = this._onChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
+    }
+
+    /**
+     * Initializes the {@code AsYouType} utility for phone number fomratting with the given country code.
+     *
+     * @param {string} countryCode - ISO 3166-1 alpha-2 country code.
+     * @private
+     * @returns {void}
+     */
+    _createAsYouType(countryCode) {
+        logger.log('Init dial pad with country code', { countryCode });
+
+        this._asYouType = new AsYouType(countryCode);
+
+        if (!this._asYouType.country) {
+            this._asYouType = new AsYouType(DialPad.defaultProps.countryCode);
+
+            logger.error('Invalid country code - falling back to default', { countryCode });
+        }
+    }
+
+    /**
+     * Navigates away from the view {@code RemoteControl} when no longer
+     * connected to a Spot-TV.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        if (prevProps.countryCode !== this.props.countryCode) {
+            this._createAsYouType(this.props.countryCode);
+
+            // Clear any value typed so far
+            this._setTypedValue('');
+        }
     }
 
     /**
@@ -139,3 +180,18 @@ export default class DialPad extends React.Component {
         });
     }
 }
+
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code DialPad}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        countryCode: getCountryCode(state)
+    };
+}
+
+export default connect(mapStateToProps)(DialPad);
