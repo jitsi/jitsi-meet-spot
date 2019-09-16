@@ -15,36 +15,27 @@ describe('DialPad', () => {
         dialPad.unmount();
     });
 
+    /**
+     * Runs through the digits in given string and simulates events on corresponding dial pad keys.
+     *
+     * @param {string} phoneNumber - The phone number digits(only numbers) to type.
+     * @param {string} method - The method for pressing keys. Uses ' touchstart' by default.
+     * @returns {void}
+     */
+    function typePhoneNumber(phoneNumber, method = 'touchstart') {
+        for (const digit of phoneNumber) {
+            dialPad.find(`#dial-button-${digit}`).simulate(method);
+        }
+    }
+
     test('entering a number with a mouse', () => {
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
-
-        dialPad.find(`#dial-button-${3}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${3}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${3}`).simulate('mousedown');
-
-        dialPad.find(`#dial-button-${4}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${4}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${4}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${4}`).simulate('mousedown');
+        typePhoneNumber('2223334444', 'mousedown');
 
         expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
     });
 
     test('entering a number with touch', () => {
-        dialPad.find(`#dial-button-${2}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${2}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${2}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
+        typePhoneNumber('2223334444');
 
         expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
     });
@@ -55,21 +46,7 @@ describe('DialPad', () => {
         dialPad.find('#dial-button-0').simulate('mousedown');
         jest.runAllTimers();
 
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${5}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${5}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${6}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${6}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${6}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${6}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${7}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${7}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${7}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${7}`).simulate('touchstart');
+        typePhoneNumber('445566667777');
 
         expect(dialPad.find('input').instance().value).toBe('+44 55 6666 7777');
     });
@@ -90,18 +67,7 @@ describe('DialPad', () => {
     });
 
     test('submitting a valid phone number in the E.164 format', () => {
-        dialPad.find(`#dial-button-${2}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${3}`).simulate('touchstart');
-
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
-        dialPad.find(`#dial-button-${4}`).simulate('touchstart');
+        typePhoneNumber('2343334444');
 
         dialPad.find('button.call-button').simulate('click');
 
