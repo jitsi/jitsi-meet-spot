@@ -30,6 +30,10 @@ function removeFormatting(formattedPhoneNumber) {
  * @extends React.Component
  */
 class DialPad extends React.Component {
+    static defaultProps = {
+        countryCode: 'US'
+    };
+
     static propTypes = {
         countryCode: PropTypes.string,
         onSubmit: PropTypes.func
@@ -71,12 +75,12 @@ class DialPad extends React.Component {
      * @returns {void}
      */
     _createAsYouType(countryCode) {
-        logger.log(`Init dial pad with country code: ${countryCode}`, { countryCode });
+        logger.log('Init dial pad with country code', { countryCode });
 
         this._asYouType = new AsYouType(countryCode);
 
         if (!this._asYouType.country) {
-            this._asYouType = new AsYouType('US');
+            this._asYouType = new AsYouType(DialPad.defaultProps.countryCode);
 
             logger.error('Invalid country code - falling back to default', { countryCode });
         }
@@ -185,10 +189,8 @@ class DialPad extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
-    const countryCode = getCountryCode(state) || 'US';
-
     return {
-        countryCode
+        countryCode: getCountryCode(state)
     };
 }
 
