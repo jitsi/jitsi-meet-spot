@@ -16,7 +16,6 @@ import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
 import { logger } from 'common/logger';
 import {
     Clock,
-    RoomName,
     ScheduledMeetings
 } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
@@ -94,7 +93,6 @@ class WaitingForCallView extends React.Component {
                         onUpdateAvailable = { this.props._onUpdateAvailable } /> }
                 <div className = 'view-header'>
                     <Clock />
-                    <RoomName />
                 </div>
                 <div className = 'waiting-sub-view'>
                     { this._getSubView() }

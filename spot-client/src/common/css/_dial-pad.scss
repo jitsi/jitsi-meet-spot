@@ -6,7 +6,7 @@
     flex-direction: column;
 
     .dial-pad-buttons {
-        padding: 17px 17px 0px;
+        padding: 17px 28px 0px;
 
         .row {
             display: flex;
@@ -14,27 +14,31 @@
     }
 
     .dial-button {
+        align-items: center;
         background-color: transparent;
         border: 1px solid white;
         border-radius: 50%;
         color: inherit;
         cursor: pointer;
         font-family: inherit;
-        font-size: inherit;
-        height: calc(#{$font-size-large} * 1.6);
-        line-height: 1;
+        height: 64px;
+        justify-content: center;
+        line-height: 32px;
         margin: 4px;
         padding: 0;
-        width: calc(#{$font-size-large} * 1.6);
+        width: 64px;
 
         .main {
-            display:block;
-            font-size: $font-size-medium-plus;
+            display: block;
+            font-size: 32px;
+            font-weight: 600;
         }
 
         .sub {
             color: var(--container-sub-content-font-color);
-            font-size: $font-size-x-small;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 14px;
         }
 
         .sub:empty:before {
@@ -42,9 +46,9 @@
             visibility: hidden;
         }
 
-        &.larger-sub .sub {
-            font-size: $font-size-medium;
-            line-height: $font-size-x-small;
+        .larger-sub .sub {
+            font-size: 12px;
+            line-height: 12px;
         }
 
         &.active,
@@ -55,7 +59,7 @@
 
     .dial-pad-footer {
         display: flex;
-        padding-bottom: 24px;
+        padding: 0 28px 24px;
         text-align: center;
         width: 100%;
 
