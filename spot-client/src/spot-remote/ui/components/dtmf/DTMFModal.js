@@ -46,7 +46,6 @@ export class DTMFModal extends React.Component {
             <Modal onClose = { this.props.onClose }>
                 <div className = 'dtmf-modal'>
                     <StatelessDialPad
-                        buttonText = 'Send'
                         onChange = { this._onChange }
                         onSubmit = { this._onSubmit }
                         placeholderText = 'Enter Numbers'
