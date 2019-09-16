@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Backspace, Call } from 'common/icons';
-import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';
 import NumberInput from './NumberInput';
@@ -38,7 +37,7 @@ export default class StatelessDialPad extends React.Component {
 
         this._onDeleteLastCharacter = this._onDeleteLastCharacter.bind(this);
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
-        this._onGoToCall = this._onGoToCall.bind(this);
+        this._onSubmit = this._onSubmit.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
         this._onReplaceLastChar = this._onReplaceLastChar.bind(this);
         this._renderDialButton = this._renderDialButton.bind(this);
@@ -54,7 +53,7 @@ export default class StatelessDialPad extends React.Component {
         return (
             <form
                 className = 'dial-pad'
-                onSubmit = { this._onGoToCall }>
+                onSubmit = { this._onSubmit }>
                 <NumberInput
                     className = 'number-input'
                     gradientStart = 'center'
@@ -89,7 +88,7 @@ export default class StatelessDialPad extends React.Component {
                     <div className = 'dial-pad-footer-button'>
                         <button
                             className = 'call-button dial-button'
-                            onClick = { this._onGoToCall }
+                            onClick = { this._onSubmit }
                             type = 'submit'>
                             <Call />
                         </button>
@@ -130,21 +129,16 @@ export default class StatelessDialPad extends React.Component {
     }
 
     /**
-     * Callback invoked to enter a Jitsi-Meet meeting and invite the entered
-     * phone number.
+     * Callback invoked when the form's submit action is executed.
      *
-     * @param {Event} event - The form submission event to proceed to the a
-     * call and invite the entered phone number.
+     * @param {Event} event - The form submission event.
      * @private
      * @returns {void}
      */
-    _onGoToCall(event) {
+    _onSubmit(event) {
         event.preventDefault();
 
-        this.props.onSubmit(
-            getRandomMeetingName(),
-            this.props.value
-        );
+        this.props.onSubmit && this.props.onSubmit();
     }
 
     /**
