@@ -4,62 +4,63 @@
     background-color: var(--container-bg-color);
     border-radius: 4px;
     flex-direction: column;
-    padding: 20px 15px 10px;
 
     .dial-pad-buttons {
-        margin: 10px 0;
+        padding: 17px 17px 0px;
 
         .row {
             display: flex;
         }
+    }
 
-        .dial-button {
-            background-color: transparent;
-            border: 1px solid white;
-            border-radius: 50%;
-            color: inherit;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: inherit;
-            height: calc(#{$font-size-large} * 1.6);
-            line-height: 1;
-            margin: 4px;
-            padding: 0;
-            width: calc(#{$font-size-large} * 1.6);
+    .dial-button {
+        background-color: transparent;
+        border: 1px solid white;
+        border-radius: 50%;
+        color: inherit;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        height: calc(#{$font-size-large} * 1.6);
+        line-height: 1;
+        margin: 4px;
+        padding: 0;
+        width: calc(#{$font-size-large} * 1.6);
 
-            .main {
-                display:block;
-                font-size: $font-size-medium-plus;
-            }
+        .main {
+            display:block;
+            font-size: $font-size-medium-plus;
+        }
 
-            .sub {
-                color: var(--container-sub-content-font-color);
-                font-size: $font-size-x-small;
-            }
+        .sub {
+            color: var(--container-sub-content-font-color);
+            font-size: $font-size-x-small;
+        }
 
-            .sub:empty:before {
-                content: '.';
-                visibility: hidden;
-            }
+        .sub:empty:before {
+            content: '.';
+            visibility: hidden;
+        }
 
-            &.larger-sub .sub {
-                font-size: $font-size-medium;
-                line-height: $font-size-x-small;
-            }
+        &.larger-sub .sub {
+            font-size: $font-size-medium;
+            line-height: $font-size-x-small;
+        }
 
-            &.active,
-            &:active {
-                @include active;
-            }
+        &.active,
+        &:active {
+            @include active;
         }
     }
 
     .dial-pad-footer {
         display: flex;
+        padding-bottom: 24px;
         text-align: center;
         width: 100%;
 
         .dial-pad-footer-button {
+            align-self: center;
             flex: 1;
         }
 
@@ -75,8 +76,31 @@
     }
 
     .call-button {
-        @include styled-button;
+        background-color: var(--call-button);
+        border: 0;
 
-        font-size: $font-size-small;
+        &:active {
+            background-color: var(--call-button-active);
+        }
+    }
+
+    .number-input {
+        padding: 16px 16px 8px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+
+        input {
+            @include inherit-reset;
+            background: transparent;
+            border: 0;
+            color: white;
+            outline: none;
+            padding: 0;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        width: 100%;
     }
 }

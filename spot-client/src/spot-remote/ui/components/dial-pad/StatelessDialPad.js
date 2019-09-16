@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Backspace } from 'common/icons';
-import { Button, Input } from 'common/ui';
+import { Backspace, Call } from 'common/icons';
 import { getRandomMeetingName } from 'common/utils';
 
 import DialButton from './dial-button';
+import NumberInput from './NumberInput';
 
 /**
  * Displays numbers and an input for entering a phone number.
@@ -55,15 +55,13 @@ export default class StatelessDialPad extends React.Component {
             <form
                 className = 'dial-pad'
                 onSubmit = { this._onGoToCall }>
-                <div className = 'input-container'>
-                    <Input
-                        className = 'number-input'
-                        gradientStart = 'center'
-                        onChange = { this._onInputChange }
-                        placeholder = { this.props.placeholderText }
-                        type = 'tel'
-                        value = { this.props.value } />
-                </div>
+                <NumberInput
+                    className = 'number-input'
+                    gradientStart = 'center'
+                    onChange = { this._onInputChange }
+                    placeholder = { this.props.placeholderText }
+                    type = 'tel'
+                    value = { this.props.value } />
                 <div className = 'dial-pad-buttons'>
                     <div className = 'row'>
                         { this._renderDialButton('1', '') }
@@ -89,12 +87,12 @@ export default class StatelessDialPad extends React.Component {
                 <div className = 'dial-pad-footer'>
                     <div className = 'dial-pad-footer-button' />
                     <div className = 'dial-pad-footer-button'>
-                        <Button
-                            className = 'call-button'
+                        <button
+                            className = 'call-button dial-button'
                             onClick = { this._onGoToCall }
                             type = 'submit'>
-                            { this.props.buttonText }
-                        </Button>
+                            <Call />
+                        </button>
                     </div>
                     <div className = 'dial-pad-footer-button'>
                         <button
