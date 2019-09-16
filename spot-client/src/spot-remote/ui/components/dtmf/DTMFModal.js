@@ -70,16 +70,13 @@ export class DTMFModal extends React.Component {
     /**
      * Requests the entered number be played as tones.
      *
-     * @param {*} _ - Meeting names details. Not used for the purpose of
-     * sending tones.
-     * @param {string} tones - The number to be played.
      * @private
      * @returns {void}
      */
-    _onSubmit(_, tones) {
+    _onSubmit() {
         logger.log('submitting touch tones');
 
-        this.props.onSendTones(tones);
+        this.props.onSendTones(this.state.value);
         this.setState({ value: '' });
     }
 }
