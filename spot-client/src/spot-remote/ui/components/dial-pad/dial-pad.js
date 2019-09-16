@@ -29,7 +29,7 @@ function removeFormatting(formattedPhoneNumber) {
  *
  * @extends React.Component
  */
-class DialPad extends React.Component {
+export class DialPad extends React.Component {
     static defaultProps = {
         countryCode: 'US'
     };

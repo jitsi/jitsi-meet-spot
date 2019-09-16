@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import DialPad from './dial-pad';
+import { DialPad } from './dial-pad';
 
 describe('DialPad', () => {
     let dialPad, submitCallback;
