@@ -357,12 +357,14 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
  * @property {string} mucUrl - the name of the MUC room assigned for the Spot's join code which
  * tells where both Spot TV and Spot Remote have to go in order to establish the connection.
  * @property {string} name - The Spot room's display name.
+ * @property {string} countryCode - ISO 3166-1 alpha-2 country code for the room's location.
  *
  * {
  *   "calendarAccountId": "string",
  *   "customerId": "string",
  *   "id": "string",
  *   "location": "string",
+ *   "countryCode": "string",
  *   "mucUrl": "string",
  *   "name": "string",
  *   "pairingCode": {
@@ -405,6 +407,7 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
             }
 
             return {
+                countryCode: json.countryCode,
                 id: json.id,
                 mucUrl: json.mucUrl,
                 name: json.name

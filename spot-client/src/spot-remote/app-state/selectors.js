@@ -11,6 +11,16 @@ export function getApiReceivedJoinCode(state) {
 }
 
 /**
+ * Selects ISO 3166-1 alpha-2 country code for the room's location. It's optionally provided by the backend.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {?string}
+ */
+export function getCountryCode(state) {
+    return state.spotRemote.countryCode;
+}
+
+/**
  * A selector which returns which Jitsi-Meet deployment domain to direct
  * meetings to which do not specify a domain.
  *

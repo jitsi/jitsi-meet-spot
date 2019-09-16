@@ -33,7 +33,7 @@ import {
     SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
-    SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_JOIN_CODE_VALID, SPOT_REMOTE_SET_COUNTRY_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
 
@@ -113,6 +113,13 @@ export function connectToSpotTV(joinCode, shareMode) {
             } else {
                 dispatch(setPermanentPairingCode(''));
             }
+
+            const countryCode = roomProfile && roomProfile.countryCode;
+
+            dispatch({
+                type: SPOT_REMOTE_SET_COUNTRY_CODE,
+                countryCode
+            });
 
             const roomId = roomProfile && roomProfile.id;
 

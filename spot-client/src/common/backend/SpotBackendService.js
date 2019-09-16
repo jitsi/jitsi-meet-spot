@@ -89,8 +89,9 @@ export class SpotBackendService extends Emitter {
         );
 
         return this._wrapJwtBackendRequest(requestCreator)
-            .then(({ id, mucUrl, name }) => {
+            .then(({ countryCode, id, mucUrl, name }) => {
                 return {
+                    countryCode,
                     id,
                     name,
                     roomName: mucUrl,

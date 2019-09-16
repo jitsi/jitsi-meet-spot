@@ -52,6 +52,7 @@ export class BaseRemoteControlService extends Emitter {
      * @typedef {Object} RoomProfile - Public information about the Spot-TV
      * and the physical room it is hosted in.
      *
+     * @property {string} [countryCode] - ISO 3166-1 alpha-2 country code for the room's location.
      * @property {string} [id] - The room ID.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
@@ -127,6 +128,7 @@ export class BaseRemoteControlService extends Emitter {
         return this.exchangeCode(joinCode)
             .then(roomInfo => {
                 roomProfile = {
+                    countryCode: roomInfo.countryCode,
                     id: roomInfo.id,
                     name: roomInfo.name
                 };
@@ -309,6 +311,7 @@ export class BaseRemoteControlService extends Emitter {
 
     /**
      * @typedef {Object} RoomInfo
+     * @property {string} [countryCode] - ISO 3166-1 alpha-2 country code for the room's location.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
      * @property {string} roomName - the name of the MUC room.

@@ -40,6 +40,7 @@ function roomInfoController(spots, req, res){
     }
 
     sendJSON(res, {
+        countryCode: spotRoom.options.countryCode,
         id: spotRoom.id,
         mucUrl: spotRoom.options.mucUrl,
         name: spotRoom.options.name
