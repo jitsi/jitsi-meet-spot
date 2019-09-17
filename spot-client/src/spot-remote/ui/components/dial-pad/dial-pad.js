@@ -216,7 +216,10 @@ export class DialPad extends React.Component {
         if (removeFormatting(formattedPhone) !== typedValue) {
             formattedPhone = typedValue;
         } else if (this._asYouType.country && this._asYouType.country !== this.state.selectedCountryCode) {
-            logger.log('Dial pad detected another country code', { selectedCountryCode });
+            logger.log('Dial pad detected another country code', {
+                selectedCountryCode,
+                detectedCountryCode: this._asYouType.country
+            });
             selectedCountryCode = this._asYouType.country;
         }
 
