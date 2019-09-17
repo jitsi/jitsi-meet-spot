@@ -31,13 +31,13 @@ describe('DialPad', () => {
     test('entering a number with a mouse', () => {
         typePhoneNumber('2223334444', 'mousedown');
 
-        expect(dialPad.find('input').instance().value).toBe('1 (222) 333-4444');
+        expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
     });
 
     test('entering a number with touch', () => {
         typePhoneNumber('2223334444');
 
-        expect(dialPad.find('input').instance().value).toBe('1 (222) 333-4444');
+        expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
     });
 
     test('formats international phone numbers', () => {
@@ -55,18 +55,13 @@ describe('DialPad', () => {
     });
 
     test('deleting numbers', () => {
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
-        dialPad.find(`#dial-button-${2}`).simulate('mousedown');
+        typePhoneNumber('222')
 
         dialPad.find('.backspace').simulate('click');
-        expect(dialPad.find('input').instance().value).toBe('1 22');
+        expect(dialPad.find('input').instance().value).toBe('22');
 
         dialPad.find('.backspace').simulate('click');
-        expect(dialPad.find('input').instance().value).toBe('1 2');
-
-        dialPad.find('.backspace').simulate('click');
-        expect(dialPad.find('input').instance().value).toBe('1');
+        expect(dialPad.find('input').instance().value).toBe('2');
 
         dialPad.find('.backspace').simulate('click');
         expect(dialPad.find('input').instance().value).toBe('');
@@ -93,10 +88,10 @@ describe('DialPad', () => {
         dialPad.find('#dial-button-1').simulate('mousedown');
         dialPad.find('#dial-button-0').simulate('mousedown');
 
-        expect(dialPad.find('input').instance().value).toBe('110');
+        expect(dialPad.find('input').instance().value).toBe('10');
 
         jest.runAllTimers();
 
-        expect(dialPad.find('input').instance().value).toBe('11+');
+        expect(dialPad.find('input').instance().value).toBe('1+');
     });
 });
