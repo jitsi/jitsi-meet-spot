@@ -196,7 +196,7 @@ export default {
      *
      * @type {string}
      */
-    PRODUCT_NAME: 'Spot',
+    PRODUCT_NAME: process.env.PRODUCT_NAME || 'Spot',
 
     /**
      * The Spot client's version(release tag).
