@@ -96,7 +96,7 @@ export default class CountryCodePicker extends React.PureComponent {
                         className = 'country-flag'
                         code = { countryInfo.code } />
                     { countryInfo.name }
-                    { countryInfo.number }
+                    { `+${countryInfo.number}` }
                 </li>
             ));
     }

@@ -1,4 +1,4 @@
-import { AsYouType } from 'libphonenumber-js';
+import { AsYouType } from 'libphonenumber-js/max';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -52,6 +52,7 @@ export class DialPad extends React.Component {
         this._createAsYouType(props.countryCode);
 
         const { number } = findCountryInfoByCode(props.countryCode);
+        const typedValue = `+${number}`;
 
         this.state = {
             showCountryCodePicker: false,
@@ -59,13 +60,13 @@ export class DialPad extends React.Component {
             /**
              * This state stores numbers/characters typed by the user on the dial pad.
              */
-            typedValue: number,
+            typedValue,
 
             /**
              * This is the typed value formatted in to a phone number text with extra parenthesis, dashes and spaces
              * which make the phone number easier to read. This is passed over to the dial pad to display.
              */
-            formattedPhone: this._asYouType.input(number),
+            formattedPhone: this._asYouType.input(typedValue),
 
             selectedCountryCode: props.countryCode
         };
@@ -84,7 +85,7 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _createAsYouType(countryCode) {
-        logger.log('Init dial pad with country code', { countryCode });
+        logger.log('Set dial pad country code', { countryCode });
 
         this._asYouType = new AsYouType(countryCode);
 
@@ -162,10 +163,11 @@ export class DialPad extends React.Component {
         this.setState({
             selectedCountryCode: code,
             showCountryCodePicker: false
+        },
+        () => {
+            this._createAsYouType(code);
+            this._setTypedValue(`+${number}`);
         });
-
-        this._createAsYouType(code);
-        this._setTypedValue(number);
     }
 
     /**
@@ -210,14 +212,19 @@ export class DialPad extends React.Component {
         this._asYouType.reset();
 
         let formattedPhone = this._asYouType.input(typedValue);
+        let selectedCountryCode = this.state.selectedCountryCode;
 
         // If entered characters are removed by the "as you type" it means they do not add up to a valid phone number.
         // In this case skip the formatting and display the typed value directly.
         if (removeFormatting(formattedPhone) !== typedValue) {
             formattedPhone = typedValue;
+        } else if (this._asYouType.country && this._asYouType.country !== this.state.selectedCountryCode) {
+            logger.log('Dial pad detected another country code', { selectedCountryCode });
+            selectedCountryCode = this._asYouType.country;
         }
 
         this.setState({
+            selectedCountryCode,
             typedValue,
             formattedPhone
         });
