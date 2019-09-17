@@ -55,7 +55,7 @@ describe('DialPad', () => {
     });
 
     test('deleting numbers', () => {
-        typePhoneNumber('222')
+        typePhoneNumber('222');
 
         dialPad.find('.backspace').simulate('click');
         expect(dialPad.find('input').instance().value).toBe('22');
