@@ -65,6 +65,11 @@ const countriesInfo = [
         number: '297'
     },
     {
+        code: 'AC',
+        name: 'Ascension Island',
+        number: '247'
+    },
+    {
         code: 'AU',
         name: 'Australia',
         number: '61'
@@ -578,6 +583,11 @@ const countriesInfo = [
         code: 'KI',
         name: 'Kiribati',
         number: '686'
+    },
+    {
+        code: 'XK',
+        name: 'Kosovo',
+        number: '383'
     },
     {
         code: 'KW',
