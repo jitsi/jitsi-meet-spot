@@ -13,6 +13,7 @@ export {
     GridOff,
     GridOn,
     HelpOutline,
+    KeyboardArrowDown,
     Mic,
     MicOff,
     MoreVert,

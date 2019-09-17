@@ -31,16 +31,19 @@ describe('DialPad', () => {
     test('entering a number with a mouse', () => {
         typePhoneNumber('2223334444', 'mousedown');
 
-        expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
+        expect(dialPad.find('input').instance().value).toBe('1 (222) 333-4444');
     });
 
     test('entering a number with touch', () => {
         typePhoneNumber('2223334444');
 
-        expect(dialPad.find('input').instance().value).toBe('(222) 333-4444');
+        expect(dialPad.find('input').instance().value).toBe('1 (222) 333-4444');
     });
 
     test('formats international phone numbers', () => {
+        // Clear the initial default of the US country code.
+        dialPad.find('.backspace').simulate('click');
+
         // Long press on 0 to produce +
         jest.useFakeTimers();
         dialPad.find('#dial-button-0').simulate('mousedown');
@@ -57,10 +60,13 @@ describe('DialPad', () => {
         dialPad.find(`#dial-button-${2}`).simulate('mousedown');
 
         dialPad.find('.backspace').simulate('click');
-        expect(dialPad.find('input').instance().value).toBe('22');
+        expect(dialPad.find('input').instance().value).toBe('1 22');
 
         dialPad.find('.backspace').simulate('click');
-        expect(dialPad.find('input').instance().value).toBe('2');
+        expect(dialPad.find('input').instance().value).toBe('1 2');
+
+        dialPad.find('.backspace').simulate('click');
+        expect(dialPad.find('input').instance().value).toBe('1');
 
         dialPad.find('.backspace').simulate('click');
         expect(dialPad.find('input').instance().value).toBe('');
@@ -87,10 +93,10 @@ describe('DialPad', () => {
         dialPad.find('#dial-button-1').simulate('mousedown');
         dialPad.find('#dial-button-0').simulate('mousedown');
 
-        expect(dialPad.find('input').instance().value).toBe('10');
+        expect(dialPad.find('input').instance().value).toBe('110');
 
         jest.runAllTimers();
 
-        expect(dialPad.find('input').instance().value).toBe('1+');
+        expect(dialPad.find('input').instance().value).toBe('11+');
     });
 });

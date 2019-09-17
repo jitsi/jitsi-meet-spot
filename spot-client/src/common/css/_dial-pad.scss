@@ -6,7 +6,8 @@
     flex-direction: column;
 
     .dial-pad-buttons {
-        padding: 17px 28px 0px;
+        padding: 17px 28px 24px;
+        position: relative;
 
         .row {
             display: flex;
@@ -59,7 +60,6 @@
 
     .dial-pad-footer {
         display: flex;
-        padding: 0 28px 24px;
         text-align: center;
         width: 100%;
 
@@ -88,9 +88,15 @@
         }
     }
 
-    .number-input {
-        padding: 16px 16px 8px 16px;
+    .dial-pad-entered-number {
         border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        display: flex;
+        width: 100%;
+    }
+
+    .number-input {
+        flex: 1;
+        padding: 16px 16px 8px 16px;
 
         input {
             @include inherit-reset;
@@ -104,14 +110,42 @@
         input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
+    }
 
+    .country-search {
+        background: white;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
         width: 100%;
+
+        .countries {
+            color: black;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+    }
+
+    .country-flag {
+        font-size: 22px;
+    }
+
+    .country-search-trigger {
+        @include button-reset;
+
+        border: none;
+        color: white;
+        display: flex;
     }
 }
 
 .dtmf-modal {
-    .dial-pad-footer,
-    .number-input {
+    .dial-pad-entered-number,
+    .dial-pad-footer {
         display: none;
     }
 
