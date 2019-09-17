@@ -1,4 +1,4 @@
-import { AsYouType } from 'libphonenumber-js';
+import { AsYouType } from 'libphonenumber-js/max';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -49,6 +49,8 @@ export class DialPad extends React.Component {
         super(props);
 
         this.state = {
+            showCountryCodePicker: false,
+
             /**
              * This state stores numbers/characters typed by the user on the dial pad.
              */
@@ -58,12 +60,15 @@ export class DialPad extends React.Component {
              * This is the typed value formatted in to a phone number text with extra parenthesis, dashes and spaces
              * which make the phone number easier to read. This is passed over to the dial pad to display.
              */
-            formattedPhone: ''
+            formattedPhone: '',
+
+            selectedCountryCode: props.countryCode
         };
 
         this._createAsYouType(props.countryCode);
-
         this._onChange = this._onChange.bind(this);
+        this._onCountryCodeSelect = this._onCountryCodeSelect.bind(this);
+        this._onToggleCountryCodePicker = this._onToggleCountryCodePicker.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
 
@@ -75,7 +80,7 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _createAsYouType(countryCode) {
-        logger.log('Init dial pad with country code', { countryCode });
+        logger.log('Set dial pad country code', { countryCode });
 
         this._asYouType = new AsYouType(countryCode);
 
@@ -111,7 +116,11 @@ export class DialPad extends React.Component {
         return (
             <StatelessDialPad
                 onChange = { this._onChange }
+                onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
+                onToggleCountryCodePicker = { this._onToggleCountryCodePicker }
+                selectedCountryCode = { this.state.selectedCountryCode }
+                showCountryCodePicker = { this.state.showCountryCodePicker }
                 value = { this.state.formattedPhone } />
         );
     }
@@ -135,6 +144,39 @@ export class DialPad extends React.Component {
         }
 
         this._setTypedValue(removeFormatting(newTypedValue));
+    }
+
+    /**
+     * Updates the pretty formatted phone number and clears any entered number
+     * to begin entering a new number with the country code.
+     *
+     * @param {string} code - The country code representing the selected country.
+     * @private
+     * @returns {void}
+     */
+    _onCountryCodeSelect(code) {
+        this.setState({
+            selectedCountryCode: code,
+            showCountryCodePicker: false
+        },
+        () => {
+            this._createAsYouType(code);
+
+            // Clear any value typed so far
+            this._setTypedValue('');
+        });
+    }
+
+    /**
+     * Callback invoked to show or hide country code selection.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToggleCountryCodePicker() {
+        this.setState({
+            showCountryCodePicker: !this.state.showCountryCodePicker
+        });
     }
 
     /**
@@ -167,14 +209,22 @@ export class DialPad extends React.Component {
         this._asYouType.reset();
 
         let formattedPhone = this._asYouType.input(typedValue);
+        let selectedCountryCode = this.state.selectedCountryCode;
 
         // If entered characters are removed by the "as you type" it means they do not add up to a valid phone number.
         // In this case skip the formatting and display the typed value directly.
         if (removeFormatting(formattedPhone) !== typedValue) {
             formattedPhone = typedValue;
+        } else if (this._asYouType.country && this._asYouType.country !== this.state.selectedCountryCode) {
+            logger.log('Dial pad detected another country code', {
+                selectedCountryCode,
+                detectedCountryCode: this._asYouType.country
+            });
+            selectedCountryCode = this._asYouType.country;
         }
 
         this.setState({
+            selectedCountryCode,
             typedValue,
             formattedPhone
         });

@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactCountryFlag from 'react-country-flag';
 
-import { Backspace, Call } from 'common/icons';
+import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
 
+import CountryCodePicker from './CountryCodePicker';
 import DialButton from './dial-button';
 import NumberInput from './NumberInput';
 
@@ -15,14 +17,19 @@ export default class StatelessDialPad extends React.Component {
     static defaultProps = {
         buttonText: 'Call',
         placeholderText: 'Enter a phone number',
+        selectedCountryCode: 'US',
         value: ''
     };
 
     static propTypes = {
         buttonText: PropTypes.string,
         onChange: PropTypes.func,
+        onCountryCodeSelect: PropTypes.func,
         onSubmit: PropTypes.func,
+        onToggleCountryCodePicker: PropTypes.func,
         placeholderText: PropTypes.string,
+        selectedCountryCode: PropTypes.string,
+        showCountryCodePicker: PropTypes.bool,
         value: PropTypes.string
     };
 
@@ -54,14 +61,21 @@ export default class StatelessDialPad extends React.Component {
             <form
                 className = 'dial-pad'
                 onSubmit = { this._onSubmit }>
-                <NumberInput
-                    className = 'number-input'
-                    gradientStart = 'center'
-                    onChange = { this._onInputChange }
-                    placeholder = { this.props.placeholderText }
-                    type = 'tel'
-                    value = { this.props.value } />
+                <div className = 'dial-pad-entered-number'>
+                    { this._renderCountrySelector() }
+                    <NumberInput
+                        className = 'number-input'
+                        gradientStart = 'center'
+                        onChange = { this._onInputChange }
+                        placeholder = { this.props.placeholderText }
+                        type = 'tel'
+                        value = { this.props.value } />
+                </div>
                 <div className = 'dial-pad-buttons'>
+                    {
+                        this.props.showCountryCodePicker
+                           && <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
+                    }
                     <div className = 'row'>
                         { this._renderDialButton('1', '') }
                         { this._renderDialButton('2', 'ABC') }
@@ -82,25 +96,25 @@ export default class StatelessDialPad extends React.Component {
                         { this._renderZeroButton() }
                         { this._renderDialButton('#') }
                     </div>
-                </div>
-                <div className = 'dial-pad-footer'>
-                    <div className = 'dial-pad-footer-button' />
-                    <div className = 'dial-pad-footer-button'>
-                        <button
-                            className = 'call-button dial-button'
-                            onClick = { this._onSubmit }
-                            type = 'submit'>
-                            <Call />
-                        </button>
-                    </div>
-                    <div className = 'dial-pad-footer-button'>
-                        <button
-                            className = 'backspace'
-                            onClick = { this._onDeleteLastCharacter }
-                            tabIndex = { -1 }
-                            type = 'button'>
-                            <Backspace />
-                        </button>
+                    <div className = 'dial-pad-footer'>
+                        <div className = 'dial-pad-footer-button' />
+                        <div className = 'dial-pad-footer-button'>
+                            <button
+                                className = 'call-button dial-button'
+                                onClick = { this._onSubmit }
+                                type = 'submit'>
+                                <Call />
+                            </button>
+                        </div>
+                        <div className = 'dial-pad-footer-button'>
+                            <button
+                                className = 'backspace'
+                                onClick = { this._onDeleteLastCharacter }
+                                tabIndex = { -1 }
+                                type = 'button'>
+                                <Backspace />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -167,6 +181,27 @@ export default class StatelessDialPad extends React.Component {
         const sub = this.props.value.substring(0, this.props.value.length - 1);
 
         this.props.onChange(`${sub}${value}`);
+    }
+
+    /**
+     * Renders a toggle for the country code search while displaying the
+     * currently selected country.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderCountrySelector() {
+        return (
+            <button
+                className = 'country-search-trigger'
+                onClick = { this.props.onToggleCountryCodePicker }
+                type = 'button'>
+                <ReactCountryFlag
+                    className = 'country-flag'
+                    code = { this.props.selectedCountryCode } />
+                <KeyboardArrowDown />
+            </button>
+        );
     }
 
     /**
