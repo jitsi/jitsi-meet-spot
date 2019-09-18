@@ -217,6 +217,8 @@ export class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
+        this._jitsiApi.dispose();
+
         this.props.remoteControlServer.removeListener(
             SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onMeetingCommand
