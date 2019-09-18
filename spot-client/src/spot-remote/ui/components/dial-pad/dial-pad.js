@@ -127,7 +127,7 @@ export class DialPad extends React.Component {
     render() {
         return (
             <StatelessDialPad
-                disableCallButton = { typeof this._getPhoneNumber() === 'string' }
+                disableCallButton = { typeof this._getPhoneNumber() !== 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
