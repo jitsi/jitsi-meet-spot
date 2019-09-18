@@ -174,7 +174,7 @@ export class Home extends React.Component {
             let path = `${ROUTES.MEETING}?location=${data.meetingName}`;
 
             if (data.invites) {
-                path += `&invites=${JSON.stringify(data.invites)}`;
+                path += `&invites=${encodeURIComponent(JSON.stringify(data.invites))}`;
             }
 
             if (data.startWithScreensharing) {
