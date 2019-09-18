@@ -195,7 +195,7 @@ export class Meeting extends React.Component {
         let invites;
 
         try {
-            invites = JSON.parse(invitesParam);
+            invites = JSON.parse(decodeURIComponent(invitesParam));
         } catch (error) {
             /** no op */
         }
