@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
+import { HighlightOff, Search } from 'common/icons';
 import countriesInfo from './countriesInfo';
 
 // FIXME verify all codes are actually ISO 3166-1 alpha-2 and verify which
@@ -31,6 +32,7 @@ export default class CountryCodePicker extends React.PureComponent {
             filter: ''
         };
 
+        this._onClearFilter = this._onClearFilter.bind(this);
         this._onFilterChange = this._onFilterChange.bind(this);
     }
 
@@ -44,13 +46,32 @@ export default class CountryCodePicker extends React.PureComponent {
         return (
             <div className = 'country-search'>
                 <div className = 'search-bar'>
+                    <div className = 'search-icon'>
+                        <Search />
+                    </div>
                     <input
                         onChange = { this._onFilterChange }
-                        placeholder = 'Search country/region' />
+                        placeholder = 'Search country / region'
+                        value = { this.state.filter } />
+                    <div
+                        className = { `search-clear ${this.state.filter ? 'visible' : ''}` }
+                        onClick = { this._onClearFilter }>
+                        <HighlightOff />
+                    </div>
                 </div>
                 <ul className = 'countries'>{ this._renderCountryInfo() }</ul>
             </div>
         );
+    }
+
+    /**
+     * Callback invoked to set the filter to empty.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onClearFilter() {
+        this.setState({ filter: '' });
     }
 
     /**
@@ -88,15 +109,22 @@ export default class CountryCodePicker extends React.PureComponent {
             countryInfo.name.toLowerCase().includes(this.state.filter))
             .map(countryInfo => (
                 <li
+                    className = 'country'
                     key = { countryInfo.code }
 
                     // eslint-disable-next-line react/jsx-no-bind
                     onClick = { this._onCountryClick.bind(this, countryInfo) } >
-                    <ReactCountryFlag
-                        className = 'country-flag'
-                        code = { countryInfo.code } />
-                    { countryInfo.name }
-                    { `+${countryInfo.number}` }
+                    <div className = 'flag-container'>
+                        <ReactCountryFlag
+                            className = 'country-flag'
+                            code = { countryInfo.code } />
+                    </div>
+                    <div className = 'country-name'>
+                        { countryInfo.name }
+                    </div>
+                    <div className = 'country-number'>
+                        { `+${countryInfo.number}` }
+                    </div>
                 </li>
             ));
     }
