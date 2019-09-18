@@ -107,6 +107,18 @@ export class DialPad extends React.Component {
     }
 
     /**
+     * Returns E.164 formatted phone number if a valid phone number has been typed in.
+     *
+     * @returns {?E164Number}
+     * @private
+     */
+    _getPhoneNumber() {
+        const phoneNumber = this._asYouType.getNumber();
+
+        return phoneNumber && phoneNumber.isValid() && phoneNumber.number;
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -115,6 +127,7 @@ export class DialPad extends React.Component {
     render() {
         return (
             <StatelessDialPad
+                disableCallButton = { typeof this._getPhoneNumber() !== 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
@@ -186,14 +199,14 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
-        const phoneNumber = this._asYouType.getNumber();
+        const phoneNumber = this._getPhoneNumber();
 
-        if (phoneNumber && phoneNumber.isValid()) {
+        if (phoneNumber) {
             this.props.onSubmit(
                 getRandomMeetingName(),
-                phoneNumber.number);
+                phoneNumber);
         } else {
-            logger.log('Not a valid phone number', { inout: this.state.typedValue });
+            logger.log('Not a valid phone number', { input: this.state.typedValue });
         }
     }
 
@@ -224,9 +237,9 @@ export class DialPad extends React.Component {
         }
 
         this.setState({
+            formattedPhone,
             selectedCountryCode,
-            typedValue,
-            formattedPhone
+            typedValue
         });
     }
 }
