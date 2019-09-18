@@ -42,12 +42,37 @@ export default class StatelessDialPad extends React.Component {
     constructor(props) {
         super(props);
 
+        this._countryCodePickerWrapperRef = React.createRef();
+        this._countryCodePickerTriggerRef = React.createRef();
+
         this._onDeleteLastCharacter = this._onDeleteLastCharacter.bind(this);
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
         this._onInputChange = this._onInputChange.bind(this);
+        this._onMaybeCloseCountryPicker = this._onMaybeCloseCountryPicker.bind(this);
         this._onReplaceLastChar = this._onReplaceLastChar.bind(this);
         this._renderDialButton = this._renderDialButton.bind(this);
+    }
+
+    /**
+     * Adds listeners for closing {@code CountryCodePicker}.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        document.addEventListener('click', this._onMaybeCloseCountryPicker);
+        document.addEventListener('touchend', this._onMaybeCloseCountryPicker);
+
+    }
+
+    /**
+     * Removes listeners for closing {@code CountryCodePicker}.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        document.removeEventListener('click', this._onMaybeCloseCountryPicker);
+        document.removeEventListener('touchend', this._onMaybeCloseCountryPicker);
     }
 
     /**
@@ -73,8 +98,11 @@ export default class StatelessDialPad extends React.Component {
                 </div>
                 <div className = 'dial-pad-buttons'>
                     {
-                        this.props.showCountryCodePicker
-                           && <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
+                        this.props.showCountryCodePicker && (
+                            <div ref = { this._countryCodePickerWrapperRef }>
+                                <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
+                            </div>
+                        )
                     }
                     <div className = 'row'>
                         { this._renderDialButton('1', '') }
@@ -143,6 +171,23 @@ export default class StatelessDialPad extends React.Component {
     }
 
     /**
+     * Toggles {@code CountryPicker} closed if there is an interaction outside
+     * of the {@code CountryPicker}. Trigger button clicks are also ignored
+     * because the trigger button itself will handle toggling the picker.
+     *
+     * @param {Object} e - The SyntheticEvent for interacting with the document.
+     * @private
+     * @returns {void}
+     */
+    _onMaybeCloseCountryPicker(e) {
+        if (this.props.showCountryCodePicker
+            && !this._countryCodePickerWrapperRef.current.contains(e.target)
+            && !this._countryCodePickerTriggerRef.current.contains(e.target)) {
+            this.props.onToggleCountryCodePicker();
+        }
+    }
+
+    /**
      * Callback invoked when the form's submit action is executed.
      *
      * @param {Event} event - The form submission event.
@@ -195,6 +240,7 @@ export default class StatelessDialPad extends React.Component {
             <button
                 className = 'country-search-trigger'
                 onClick = { this.props.onToggleCountryCodePicker }
+                ref = { this._countryCodePickerTriggerRef }
                 type = 'button'>
                 <ReactCountryFlag
                     className = 'country-flag'
