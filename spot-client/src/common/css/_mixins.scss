@@ -22,6 +22,19 @@
     font-size: inherit;
 }
 
+@mixin input-reset {
+    @include inherit-reset;
+    background: transparent;
+    border: 0;
+
+    /**
+     * Reset min-width for safari.
+     */
+    min-width: 0;
+    outline: none;
+    padding: 0;
+}
+
 @mixin join-code {
     font-family: var(--code-font);
     text-transform: uppercase;

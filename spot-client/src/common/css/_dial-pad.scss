@@ -89,22 +89,21 @@
     }
 
     .dial-pad-entered-number {
+        align-items: baseline;
         border-bottom: 1px solid rgba(255, 255, 255, 0.4);
         display: flex;
+        padding: 16px 0px 8px;
         width: 100%;
     }
 
     .number-input {
         flex: 1;
-        padding: 16px 16px 8px 16px;
 
         input {
-            @include inherit-reset;
-            background: transparent;
-            border: 0;
+            @include input-reset;
             color: white;
-            outline: none;
-            padding: 0;
+            font-size: 15px;
+            line-height: 24px;
         }
 
         input::placeholder {
@@ -128,6 +127,79 @@
             overflow-x: hidden;
             overflow-y: scroll;
         }
+
+        .country {
+            align-items: center;
+            cursor: pointer;
+            display: flex;
+            height: 64px;
+
+            .country-name {
+                color: #1C2025;
+                flex: 1;
+                font-size: 15px;
+                line-height: 20px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .country-flag,
+            .country-number {
+                margin: 0 16px;
+            }
+
+            .country-number {
+                color: #5E6D7A;
+                font-size: 13px;
+                font-weight: bold;
+                line-height: 20px;
+            }
+        }
+
+        .country,
+        .search-bar {
+            box-shadow: inset 0px -1px 0px #D1DBE8;
+        }
+
+        .search-bar {
+            align-items: center;
+            display: flex;
+            min-height: 64px;
+
+            .search-icon,
+            .search-clear {
+                margin: 0 16px;
+            }
+
+            .search-clear {
+                color: #1C2025;
+                cursor: pointer;
+            }
+
+            .search-icon {
+                color: #5E6D7A;
+            }
+
+            .search-clear {
+                display: none;
+            }
+
+            .search-clear.visible {
+                display: block;
+            }
+
+            input {
+                @include input-reset;
+
+                &::placeholder {
+                    color: #A4B8D1;
+                }
+
+                color: #1C2025;
+                flex: 1;
+            }
+        }
     }
 
     .country-flag {
@@ -137,9 +209,12 @@
     .country-search-trigger {
         @include button-reset;
 
+        align-self: end;
         border: none;
         color: white;
         display: flex;
+        padding: 0;
+        margin: 0 16px;
     }
 }
 
