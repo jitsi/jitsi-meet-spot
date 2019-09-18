@@ -115,7 +115,7 @@ export class InCall extends React.Component {
 
         const { meetingName } = parseMeetingUrl(inMeeting);
         const phoneNumber = this.props.invitedPhoneNumber && parsePhoneNumberFromString(this.props.invitedPhoneNumber);
-        const formattedPhoneNumber = phoneNumber && phoneNumber.formatInternational();
+        const formattedPhoneNumber = phoneNumber?.formatInternational();
 
         return (
             <div className = 'in-call'>

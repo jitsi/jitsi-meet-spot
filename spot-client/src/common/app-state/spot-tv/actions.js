@@ -49,14 +49,11 @@ export function setSpotTVState(newState) {
  *
  * @param {Array<{ type: string, number: string }>} [invites] - An array of invites as specified by Jitsi Meet iframe
  * API.
- * @returns {Function}
+ * @returns {Object}
  */
 export function storePhoneNumberFromInvites(invites) {
-    return dispatch => {
-        const phoneInvites = invites && invites.filter(invite => invite.type === 'phone');
-        const phone = phoneInvites && phoneInvites[0] && phoneInvites[0].number;
+    const phone = invites?.find(invite => invite.type === 'phone')?.number;
 
-        dispatch(setSpotTVState({ invitedPhoneNumber: phone }));
-    };
+    return setSpotTVState({ invitedPhoneNumber: phone });
 }
 /* eslint-enable jsdoc/require-description-complete-sentence */

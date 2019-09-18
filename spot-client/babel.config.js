@@ -6,6 +6,8 @@ module.exports = {
         '@babel/plugin-proposal-function-sent',
         '@babel/plugin-proposal-export-namespace-from',
         '@babel/plugin-proposal-numeric-separator',
+        '@babel/plugin-proposal-nullish-coalescing-operator',
+        '@babel/plugin-proposal-optional-chaining',
         '@babel/plugin-proposal-throw-expressions',
 
         // Stage 3
