@@ -95,7 +95,7 @@ export default class CountryCodePicker extends React.PureComponent {
      * @returns {void}
      */
     _onFilterChange(e) {
-        this.setState({ filter: e.target.value.trim() });
+        this.setState({ filter: e.target.value });
     }
 
     /**
@@ -105,8 +105,10 @@ export default class CountryCodePicker extends React.PureComponent {
      * @returns {Array<ReactElement>}
      */
     _renderCountryInfo() {
+        const filter = this.state.filter.trim().toLowerCase();
+
         return countriesInfo.filter(countryInfo =>
-            countryInfo.name.toLowerCase().includes(this.state.filter))
+            countryInfo.name.toLowerCase().includes(filter))
             .map(countryInfo => (
                 <li
                     className = 'country'
