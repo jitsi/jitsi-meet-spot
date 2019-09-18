@@ -77,7 +77,7 @@ export class SelectRoom extends React.Component {
                     key = 'entered-value'
 
                     // eslint-disable-next-line react/jsx-no-bind
-                    onClick = { () => this._onRoomClick(this.state.email) }
+                    onClick = { () => this._onEmailSubmit(this.state.email) }
                     tabIndex = { 0 }>
                     use email: {this.state.email}
                 </div>
