@@ -49,11 +49,6 @@ export class DialPad extends React.Component {
         super(props);
 
         this.state = {
-            /**
-             * State updated to 'true' when a valid phone number has been typed in.
-             */
-            isPhoneNumberValid: false,
-
             showCountryCodePicker: false,
 
             /**
@@ -132,7 +127,7 @@ export class DialPad extends React.Component {
     render() {
         return (
             <StatelessDialPad
-                disableCallButton = { !this.state.isPhoneNumberValid }
+                disableCallButton = { typeof this._getPhoneNumber() === 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
@@ -243,7 +238,6 @@ export class DialPad extends React.Component {
 
         this.setState({
             formattedPhone,
-            isPhoneNumberValid: typeof this._getPhoneNumber() === 'string',
             selectedCountryCode,
             typedValue
         });
