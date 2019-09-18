@@ -1,3 +1,4 @@
+import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -5,6 +6,7 @@ import { connect } from 'react-redux';
 import {
     forceStopWirelessScreenshare,
     getInMeetingStatus,
+    getInvitedPhoneNumber,
     hangUp,
     hideModal,
     isVolumeControlSupported,
@@ -39,6 +41,7 @@ export class InCall extends React.Component {
     static propTypes = {
         hideModal: PropTypes.func,
         inMeeting: PropTypes.string,
+        invitedPhoneNumber: PropTypes.string,
         kicked: PropTypes.bool,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
@@ -111,11 +114,16 @@ export class InCall extends React.Component {
         }
 
         const { meetingName } = parseMeetingUrl(inMeeting);
+        const phoneNumber = this.props.invitedPhoneNumber && parsePhoneNumberFromString(this.props.invitedPhoneNumber);
+        const formattedPhoneNumber = phoneNumber && phoneNumber.formatInternational();
 
         return (
             <div className = 'in-call'>
                 <div className = 'view-header'>
-                    <div className = 'in-call-name'>{ meetingName }</div>
+                    { formattedPhoneNumber && <div className = 'in-call-invited-phone'>{ formattedPhoneNumber }</div> }
+                    <div className = { formattedPhoneNumber ? 'in-call-name-with-phone' : 'in-call-name' } >
+                        { meetingName }
+                    </div>
                     <RoomName render = { this._generateRoomNameString } />
                 </div>
                 <NavContainer>
@@ -195,6 +203,7 @@ function mapStateToProps(state) {
 
     return {
         inMeeting,
+        invitedPhoneNumber: getInvitedPhoneNumber(state),
         kicked,
         showMoreButton: shouldShowDtmf(state) || isVolumeControlSupported(state),
         showPasswordPrompt: needPassword

@@ -41,3 +41,22 @@ export function setSpotTVState(newState) {
         newState
     };
 }
+
+/* eslint-disable jsdoc/require-description-complete-sentence */
+/**
+ * Extracts a phone number(if any) from the invites passed to the meeting view as part of the URL query and stores it in
+ * Spot TV state so that Spot Remotes can display it in the UI.
+ *
+ * @param {Array<{ type: string, number: string }>} [invites] - An array of invites as specified by Jitsi Meet iframe
+ * API.
+ * @returns {Function}
+ */
+export function storePhoneNumberFromInvites(invites) {
+    return dispatch => {
+        const phoneInvites = invites && invites.filter(invite => invite.type === 'phone');
+        const phone = phoneInvites && phoneInvites[0] && phoneInvites[0].number;
+
+        dispatch(setSpotTVState({ invitedPhoneNumber: phone }));
+    };
+}
+/* eslint-enable jsdoc/require-description-complete-sentence */
