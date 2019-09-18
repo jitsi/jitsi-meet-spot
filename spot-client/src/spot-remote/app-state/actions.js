@@ -46,6 +46,7 @@ const presenceToStore = [
     'audioMuted',
     'electron',
     'inMeeting',
+    'invitedPhoneNumber',
     'kicked',
     'needPassword',
     'remoteJoinCode',

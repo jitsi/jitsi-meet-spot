@@ -16,7 +16,8 @@ import {
     getPreferredSpeaker,
     getTenant,
     getWiredScreenshareInputLabel,
-    shouldKickTemporaryRemotes
+    shouldKickTemporaryRemotes,
+    storePhoneNumberFromInvites
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
@@ -58,6 +59,7 @@ export class Meeting extends React.Component {
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool,
+        storePhoneNumberFromInvites: PropTypes.func,
         tenant: PropTypes.string
     };
 
@@ -102,6 +104,8 @@ export class Meeting extends React.Component {
             );
             this._onMeetingLeave();
         }
+
+        this.props.storePhoneNumberFromInvites(this._queryParams.invites);
     }
 
     /**
@@ -349,6 +353,17 @@ function mapDispatchToProps(dispatch) {
          */
         onError(error) {
             dispatch(addNotification('error', error));
+        },
+
+        /**
+         * Dispatches an action which is supposed to store or clear a phone number that's being dialed using the iframe
+         * api.
+         *
+         * @param {Array<Object>} [invites] - An array of invites parsed from the URL query.
+         * @returns {void}
+         */
+        storePhoneNumberFromInvites(invites) {
+            dispatch(storePhoneNumberFromInvites(invites));
         }
     };
 }

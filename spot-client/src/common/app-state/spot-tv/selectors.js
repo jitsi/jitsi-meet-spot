@@ -29,6 +29,16 @@ export function getInMeetingStatus(state) {
 }
 
 /**
+ * Returns the phone number that Spot TV has invited(dial out) into the meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {?string}
+ */
+export function getInvitedPhoneNumber(state) {
+    return state.spotTv.invitedPhoneNumber;
+}
+
+/**
 * A selector which returns the join code needed for pairing to a Spot-Remote to
 * connect to the same MUC as the Spot-TV.
 *
