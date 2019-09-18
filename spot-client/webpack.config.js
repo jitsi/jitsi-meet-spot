@@ -49,6 +49,12 @@ module.exports = {
                 // has flow annotations that need processing through babel.
                 exclude: new RegExp(`${__dirname}/node_modules/(?!js-utils)`),
                 loader: 'babel-loader',
+                options: {
+                    plugins: [
+                        require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
+                        require.resolve('@babel/plugin-proposal-optional-chaining')
+                    ]
+                },
                 test: /\.js$/
             }
         ]
