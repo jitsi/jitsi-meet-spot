@@ -10,3 +10,7 @@ export const backendPairingEvents = {
 export const calendarEvents = {
     CALENDAR_ERROR: 'calendar-error'
 };
+
+export const meetingLeaveEvents = {
+    UNEXPECTED: 'unexpected-meeting-end'
+};

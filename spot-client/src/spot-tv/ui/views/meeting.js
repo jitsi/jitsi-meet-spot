@@ -16,6 +16,7 @@ import {
     getPreferredSpeaker,
     getTenant,
     getWiredScreenshareInputLabel,
+    leaveMeetingWithError,
     shouldKickTemporaryRemotes,
     storePhoneNumberFromInvites
 } from 'common/app-state';
@@ -228,12 +229,14 @@ export class Meeting extends React.Component {
      * exited.
      * @param {string} leaveEvent.error - An error, if any, which caused the
      * current view to be exited.
+     * @param {string} leaveEvent.errorCode - The string representing the cause
+     * of the error.
      * @returns {void}
      */
     _onMeetingLeave(leaveEvent = {}) {
         if (leaveEvent.error) {
             logger.log('Leaving meeting due to error', { error: leaveEvent.error });
-            this.props.onError(leaveEvent.error);
+            this.props.onError(leaveEvent.errorCode, leaveEvent.error);
         } else if (this.props.kickTemporaryRemotesOnMeetingEnd) {
             logger.log('Kicking temporary remotes');
             this.props.disconnectAllTemporaryRemotes();
@@ -347,11 +350,13 @@ function mapDispatchToProps(dispatch) {
         /**
          * Callback invoked when an error occurs while joining a meeting.
          *
+         * @param {string} errorCode - The abstract representation of the error.
          * @param {string} error - An error message to display in an error
          * notification.
          * @returns {void}
          */
-        onError(error) {
+        onError(errorCode, error) {
+            dispatch(leaveMeetingWithError(errorCode));
             dispatch(addNotification('error', error));
         },
 
