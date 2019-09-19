@@ -234,15 +234,15 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
  *
  * @param {string} serviceEndpointUrl - The URL pointing to the phone authorize service.
  * @param {string} phoneNumber - E.164 formatted phone number to be checked.
- * @returns {Promise<{allow: boolean, message: string}>}
+ * @returns {Promise<void>}
  */
 export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
     if (!serviceEndpointUrl) {
-        throw new Error('phoneAuthorize - serviceEndpointUrl is required');
+        return Promise.reject('phoneAuthorize - serviceEndpointUrl is required');
     }
 
     if (!phoneNumber) {
-        throw new Error('phoneAuthorize - phoneNumber is required');
+        return Promise.reject('phoneAuthorize - phoneNumber is required');
     }
 
     const requestOptions = {
