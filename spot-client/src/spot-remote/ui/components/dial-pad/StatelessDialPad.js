@@ -23,6 +23,7 @@ export default class StatelessDialPad extends React.Component {
 
     static propTypes = {
         buttonText: PropTypes.string,
+        dialingInProgress: PropTypes.bool,
         disableCallButton: PropTypes.bool,
         onChange: PropTypes.func,
         onCountryCodeSelect: PropTypes.func,
@@ -85,7 +86,7 @@ export default class StatelessDialPad extends React.Component {
     render() {
         let callButtonClassName = 'call-button dial-button';
 
-        if (this.props.disableCallButton) {
+        if (this.props.disableCallButton || this.props.dialingInProgress) {
             callButtonClassName += ' disabled';
         }
 
@@ -136,10 +137,12 @@ export default class StatelessDialPad extends React.Component {
                         <div className = 'dial-pad-footer-button'>
                             <button
                                 className = { callButtonClassName }
-                                disabled = { this.props.disableCallButton }
+                                disabled = { this.props.disableCallButton || this.props.dialingInProgress }
                                 onClick = { this._onSubmit }
                                 type = 'submit'>
-                                <Call />
+                                { this.props.dialingInProgress
+                                    ? <div className = 'dialing-dots' >...</div>
+                                    : <Call />}
                             </button>
                         </div>
                         <div className = 'dial-pad-footer-button'>

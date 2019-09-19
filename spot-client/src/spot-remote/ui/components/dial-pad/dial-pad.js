@@ -53,6 +53,8 @@ export class DialPad extends React.Component {
         super(props);
 
         this.state = {
+            authorizePromise: undefined,
+
             showCountryCodePicker: false,
 
             /**
@@ -131,6 +133,7 @@ export class DialPad extends React.Component {
     render() {
         return (
             <StatelessDialPad
+                dialingInProgress = { typeof this.state.authorizePromise !== 'undefined' }
                 disableCallButton = { typeof this._getPhoneNumber() !== 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
@@ -203,6 +206,10 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        if (this.state.authorizePromise) {
+            return;
+        }
+
         const phoneNumber = this._getPhoneNumber();
 
         if (!phoneNumber) {
@@ -225,6 +232,13 @@ export class DialPad extends React.Component {
         }, error => {
             logger.error('Phone authorize request failed', { error });
             this.props.onAddNotification('error', `Calling ${phoneNumber} is not allowed at this time`);
+        })
+        .then(() => {
+            this.setState({ authorizePromise: undefined });
+        });
+
+        this.setState({
+            authorizePromise
         });
     }
 
