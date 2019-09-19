@@ -38,7 +38,7 @@ export class DialPad extends React.Component {
 
     static propTypes = {
         countryCode: PropTypes.string,
-        onAddNotification: PropTypes.func,
+        onPhoneAuthorizeFailed: PropTypes.func,
         onSubmit: PropTypes.func,
         phoneAuthorizeServiceUrl: PropTypes.string
     };
@@ -231,7 +231,7 @@ export class DialPad extends React.Component {
                 phoneNumber);
         }, error => {
             logger.error('Phone authorize request failed', { error });
-            this.props.onAddNotification('error', `Calling ${phoneNumber} is not allowed at this time`);
+            this.props.onPhoneAuthorizeFailed(phoneNumber);
         })
         .then(() => {
             this.setState({ authorizePromise: undefined });
@@ -286,14 +286,13 @@ export class DialPad extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         /**
-         * Display an app notification.
+         * Handles the case when phone number is not allowed to be called.
          *
-         * @param {string} type - The type of the notification to display.
-         * @param {string} message - The text to display in the notification.
+         * @param {string} phoneNumber - The phone number that has not been authorized.
          * @returns {void}
          */
-        onAddNotification(type, message) {
-            dispatch(addNotification(type, message));
+        onPhoneAuthorizeFailed(phoneNumber) {
+            dispatch(addNotification('error', `Calling ${phoneNumber} is not allowed at this time`));
         }
     };
 }
