@@ -27,17 +27,6 @@ export default {
     },
 
     /**
-     * Returns the current url host--the base url without protocol.
-     *
-     * @returns {string}
-     */
-    getHost() {
-        const url = new URL(window.location);
-
-        return url.host;
-    },
-
-    /**
      * Opens a popup window with the provided url.
      *
      * @param {string} url - The url to go to in the new window.
