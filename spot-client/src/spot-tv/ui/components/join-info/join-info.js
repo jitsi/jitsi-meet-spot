@@ -56,7 +56,7 @@ class JoinInfo extends React.Component {
 
         return (
             <>
-                { `${shareDomain || windowHandler.getHost()}/` }
+                { `${shareDomain || windowHandler.getBaseUrl()}/` }
                 { codeElement }
             </>
         );
