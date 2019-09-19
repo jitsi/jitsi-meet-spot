@@ -1,6 +1,7 @@
 const {
     BrowserWindow
 } = require('electron');
+const process = require('process');
 
 const {
     defaultSpotURL,
@@ -31,6 +32,7 @@ function createApplicationWindow() {
         fullscreen: config.getValue('window.fullscreen'),
         height: config.getValue('window.height'),
         show: false,
+        titleBarStyle: 'hidden',
         width: config.getValue('window.width'),
         webPreferences: {
             nodeIntegration: true
@@ -59,6 +61,21 @@ function createApplicationWindow() {
     applicationWindow.on('exit-html-full-screen', _onHtmlFullScreenChange);
 
     applicationWindow.loadURL(defaultSpotURL);
+
+    if (process.platform === 'darwin') {
+        applicationWindow.webContents.on('did-finish-load', () => {
+            /* eslint-disable max-len */
+            const code = `
+                var _titleBar = document.createElement('div');
+                _titleBar.id = 'titleBar';
+                _titleBar.setAttribute('style', '-webkit-app-region: drag; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 32px; min-height: 32px;');
+                document.getElementsByTagName('body')[0].prepend(_titleBar);
+            `;
+
+            /* eslint-enable max-len */
+            applicationWindow.webContents.executeJavaScript(code);
+        });
+    }
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 }
