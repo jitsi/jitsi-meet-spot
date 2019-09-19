@@ -1,4 +1,3 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -30,6 +29,7 @@ import {
     TileViewButton,
     VideoMuteButton
 } from '../../components';
+import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 /**
  * A view for displaying ways to interact with the Spot-TV while Spot-TV is in a
@@ -86,6 +86,7 @@ export class InCall extends React.Component {
     render() {
         const {
             inMeeting,
+            invitedPhoneNumber,
             kicked,
             showMoreButton,
             showPasswordPrompt
@@ -114,14 +115,12 @@ export class InCall extends React.Component {
         }
 
         const { meetingName } = parseMeetingUrl(inMeeting);
-        const phoneNumber = this.props.invitedPhoneNumber && parsePhoneNumberFromString(this.props.invitedPhoneNumber);
-        const formattedPhoneNumber = phoneNumber?.formatInternational();
 
         return (
             <div className = 'in-call'>
                 <div className = 'view-header'>
-                    { formattedPhoneNumber && <div className = 'in-call-invited-phone'>{ formattedPhoneNumber }</div> }
-                    <div className = { formattedPhoneNumber ? 'in-call-name-with-phone' : 'in-call-name' } >
+                    { invitedPhoneNumber && <div className = 'in-call-invited-phone'>{ invitedPhoneNumber }</div> }
+                    <div className = { invitedPhoneNumber ? 'in-call-name-with-phone' : 'in-call-name' } >
                         { meetingName }
                     </div>
                     <RoomName render = { this._generateRoomNameString } />
@@ -203,7 +202,7 @@ function mapStateToProps(state) {
 
     return {
         inMeeting,
-        invitedPhoneNumber: getInvitedPhoneNumber(state),
+        invitedPhoneNumber: formatPhoneNumber(getInvitedPhoneNumber(state)),
         kicked,
         showMoreButton: shouldShowDtmf(state) || isVolumeControlSupported(state),
         showPasswordPrompt: needPassword
