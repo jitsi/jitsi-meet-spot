@@ -230,6 +230,44 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
 }
 
 /**
+ * Checks if it's ok to call given phone number.
+ *
+ * @param {string} serviceEndpointUrl - The URL pointing to the phone authorize service.
+ * @param {string} phoneNumber - E.164 formatted phone number to be checked.
+ * @returns {Promise<{allow: boolean, message: string}>}
+ */
+export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
+    if (!serviceEndpointUrl) {
+        throw new Error('phoneAuthorize - serviceEndpointUrl is required');
+    }
+
+    if (!phoneNumber) {
+        throw new Error('phoneAuthorize - phoneNumber is required');
+    }
+
+    const requestOptions = {
+        headers: createHeaders(),
+        method: 'GET',
+        mode: 'cors'
+    };
+
+    return fetchWithRetry({
+        operationName: 'phoneAuthorize',
+        requestOptions,
+        url: `${serviceEndpointUrl}?phone=${encodeURIComponent(phoneNumber)}`
+    })
+        .then(({ message, allow }) => {
+            if (typeof allow === 'undefined') {
+                throw new Error('phoneAuthorize - no "allow" field in the response');
+            }
+
+            if (!allow) {
+                throw message;
+            }
+        });
+}
+
+/**
  * @typedef {Object} RefreshTokenResponse
  * @property {string} accessToken - A new/refreshed access token.
  * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when

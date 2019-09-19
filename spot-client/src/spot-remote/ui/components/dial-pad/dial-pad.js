@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { addNotification, getSpotServicesConfig } from 'common/app-state';
+import { phoneAuthorize } from 'common/backend';
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
 
@@ -36,7 +38,9 @@ export class DialPad extends React.Component {
 
     static propTypes = {
         countryCode: PropTypes.string,
-        onSubmit: PropTypes.func
+        onAddNotification: PropTypes.func,
+        onSubmit: PropTypes.func,
+        phoneAuthorizeServiceUrl: PropTypes.string
     };
 
     /**
@@ -201,13 +205,27 @@ export class DialPad extends React.Component {
     _onSubmit() {
         const phoneNumber = this._getPhoneNumber();
 
-        if (phoneNumber) {
+        if (!phoneNumber) {
+            // This "should never happen" because the button is supposed to be disabled when the number is not valid
+            logger.error('Not a valid phone number', { input: this.state.typedValue });
+
+            return;
+        }
+
+        const { phoneAuthorizeServiceUrl } = this.props;
+        const authorizePromise
+            = phoneAuthorizeServiceUrl
+                ? phoneAuthorize(phoneAuthorizeServiceUrl, phoneNumber)
+                : Promise.resolve();
+
+        authorizePromise.then(() => {
             this.props.onSubmit(
                 getRandomMeetingName(),
                 phoneNumber);
-        } else {
-            logger.log('Not a valid phone number', { input: this.state.typedValue });
-        }
+        }, error => {
+            logger.error('Phone authorize request failed', { error });
+            this.props.onAddNotification('error', `Calling ${phoneNumber} is not allowed at this time`);
+        });
     }
 
     /**
@@ -245,6 +263,28 @@ export class DialPad extends React.Component {
 }
 
 /**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Display an app notification.
+         *
+         * @param {string} type - The type of the notification to display.
+         * @param {string} message - The text to display in the notification.
+         * @returns {void}
+         */
+        onAddNotification(type, message) {
+            dispatch(addNotification(type, message));
+        }
+    };
+}
+
+/**
  * Selects parts of the Redux state to pass in with the props of {@code DialPad}.
  *
  * @param {Object} state - The Redux state.
@@ -252,9 +292,12 @@ export class DialPad extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const { phoneAuthorizeServiceUrl } = getSpotServicesConfig(state);
+
     return {
-        countryCode: getCountryCode(state)
+        countryCode: getCountryCode(state),
+        phoneAuthorizeServiceUrl
     };
 }
 
-export default connect(mapStateToProps)(DialPad);
+export default connect(mapStateToProps, mapDispatchToProps)(DialPad);

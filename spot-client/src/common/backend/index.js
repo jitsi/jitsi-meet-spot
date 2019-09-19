@@ -6,6 +6,7 @@ export * from './SpotBackendService';
 export {
     fetchCalendarEvents,
     getRemotePairingCode,
+    phoneAuthorize,
     refreshAccessToken
 } from './utils';
 

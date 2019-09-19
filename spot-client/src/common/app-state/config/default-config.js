@@ -220,6 +220,14 @@ export default {
         pairingServiceUrl: process.env.PAIRING_SERVICE_URL,
 
         /**
+         * The URL pointing to the phone authorize service which checks if
+         * calling a phone number is allowed or not.
+         *
+         * @type {string}
+         */
+        phoneAuthorizeServiceUrl: process.env.PHONE_AUTHORIZE_SERVICE_URL,
+
+        /**
          * The backend service URL getting conference room information.
          *
          * @type {string}
