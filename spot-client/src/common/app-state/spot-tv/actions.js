@@ -1,5 +1,6 @@
 import {
     SPOT_TV_CLEAR_STATE,
+    SPOT_TV_LEAVE_MEETING,
     SPOT_TV_SET_REMOTE_JOIN_CODE,
     SPOT_TV_SET_STATE
 } from './action-types';
@@ -12,6 +13,20 @@ import {
 export function clearSpotTVState() {
     return {
         type: SPOT_TV_CLEAR_STATE
+    };
+}
+
+/**
+ * Action dispatched when a meeting is being left due to an error, not due to
+ * a deliberate user action.
+ *
+ * @param {string} error - The representation of the error.
+ * @returns {Object}
+ */
+export function leaveMeetingWithError(error) {
+    return {
+        type: SPOT_TV_LEAVE_MEETING,
+        error
     };
 }
 

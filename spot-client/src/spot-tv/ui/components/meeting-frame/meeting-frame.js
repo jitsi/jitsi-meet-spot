@@ -14,6 +14,7 @@ import { adjustVolume } from '../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../wired-screenshare';
 
+import ApiHealthCheck from './ApiHealthCheck';
 import FeedbackHider from './FeedbackHider';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
@@ -82,6 +83,7 @@ export class MeetingFrame extends React.Component {
         this._participants = new Map();
 
         bindAll(this, [
+            '_onApiHealthCheckError',
             '_onAudioMuteChange',
             '_onFeedbackPromptDisplayed',
             '_onFeedbackSubmitted',
@@ -105,6 +107,7 @@ export class MeetingFrame extends React.Component {
         ]);
 
         this._jitsiApi = null;
+        this._jitsiApiHealthCheck = null;
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
@@ -157,6 +160,11 @@ export class MeetingFrame extends React.Component {
             parentNode: this._meetingContainer,
             roomName: meetingName
         });
+
+        this._jitsiApiHealthCheck = new ApiHealthCheck(
+            this._jitsiApi,
+            this._onApiHealthCheckError
+        );
 
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
@@ -217,6 +225,7 @@ export class MeetingFrame extends React.Component {
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
+        this._jitsiApiHealthCheck.stop();
         this._jitsiApi.dispose();
 
         this.props.remoteControlServer.removeListener(
@@ -280,6 +289,7 @@ export class MeetingFrame extends React.Component {
         });
 
         this.props.onMeetingLeave({
+            errorCode: 'failed-to-join',
             error: 'An error occurred while joining the meeting'
         });
     }
@@ -297,6 +307,22 @@ export class MeetingFrame extends React.Component {
         if (shouldFilmstripBeVisible !== this._isFilmstripVisible) {
             this._jitsiApi.executeCommand('toggleFilmStrip');
         }
+    }
+
+    /**
+     * Callback invoked when the iFrame is not responsive.
+     *
+     * @param {string} reason - The detected reason for the failed health check.
+     * @private
+     * @returns {void}
+     */
+    _onApiHealthCheckError(reason) {
+        logger.error('jitsi api health check failed', { reason });
+
+        this.props.onMeetingLeave({
+            errorCode: reason,
+            error: 'Connection to the meeting has been lost'
+        });
     }
 
     /**
@@ -429,7 +455,7 @@ export class MeetingFrame extends React.Component {
         this._meetingJoined = true;
 
         this.props.onMeetingStart(this._jitsiApi);
-
+        this._jitsiApiHealthCheck.start();
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
             needPassword: false
