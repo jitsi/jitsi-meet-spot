@@ -61,16 +61,6 @@ class JoinInfo extends React.Component {
             </>
         );
     }
-
-    /**
-     * Generates the URL for a browser to become a Spot-Remote.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSpotRemoteConnectUrl() {
-        return `${windowHandler.getBaseUrl()}/${this.props.remoteJoinCode.toUpperCase()}`;
-    }
 }
 
 /**
