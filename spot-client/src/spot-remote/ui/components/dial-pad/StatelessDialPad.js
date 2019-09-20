@@ -3,11 +3,11 @@ import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
 import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
+import { LoadingIcon } from 'common/ui';
 
 import CountryCodePicker from './CountryCodePicker';
 import DialButton from './dial-button';
 import NumberInput from './NumberInput';
-import LoadingIcon from '../../../../common/ui/components/loading-icon/loading-icon';
 
 /**
  * Displays numbers and an input for entering a phone number.
