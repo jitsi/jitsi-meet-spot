@@ -93,7 +93,7 @@ export default {
      * @type {string}
      */
     EXTERNAL_API_SRC: process.env.EXTERNAL_API_SRC
-        || 'https://beta.meet.jit.si/external_api.js',
+        || 'https://meet.jit.si/external_api.js',
 
     /**
      * Configuration object for websites which can be opened from the app.
