@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { addNotification, getSpotServicesConfig } from 'common/app-state';
+import { phoneAuthorize } from 'common/backend';
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
 
@@ -36,7 +38,9 @@ export class DialPad extends React.Component {
 
     static propTypes = {
         countryCode: PropTypes.string,
-        onSubmit: PropTypes.func
+        onPhoneAuthorizeFailed: PropTypes.func,
+        onSubmit: PropTypes.func,
+        phoneAuthorizeServiceUrl: PropTypes.string
     };
 
     /**
@@ -49,6 +53,8 @@ export class DialPad extends React.Component {
         super(props);
 
         this.state = {
+            authorizePromise: undefined,
+
             showCountryCodePicker: false,
 
             /**
@@ -127,6 +133,7 @@ export class DialPad extends React.Component {
     render() {
         return (
             <StatelessDialPad
+                dialingInProgress = { typeof this.state.authorizePromise !== 'undefined' }
                 disableCallButton = { typeof this._getPhoneNumber() !== 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
@@ -199,15 +206,40 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        if (this.state.authorizePromise) {
+            return;
+        }
+
         const phoneNumber = this._getPhoneNumber();
 
-        if (phoneNumber) {
+        if (!phoneNumber) {
+            // This "should never happen" because the button is supposed to be disabled when the number is not valid
+            logger.error('Not a valid phone number', { input: this.state.typedValue });
+
+            return;
+        }
+
+        const { phoneAuthorizeServiceUrl } = this.props;
+        const authorizePromise
+            = phoneAuthorizeServiceUrl
+                ? phoneAuthorize(phoneAuthorizeServiceUrl, phoneNumber)
+                : Promise.resolve();
+
+        authorizePromise.then(() => {
             this.props.onSubmit(
                 getRandomMeetingName(),
                 phoneNumber);
-        } else {
-            logger.log('Not a valid phone number', { input: this.state.typedValue });
-        }
+        }, error => {
+            logger.error('Phone authorize request failed', { error });
+            this.props.onPhoneAuthorizeFailed(phoneNumber);
+        })
+        .then(() => {
+            this.setState({ authorizePromise: undefined });
+        });
+
+        this.setState({
+            authorizePromise
+        });
     }
 
     /**
@@ -245,6 +277,27 @@ export class DialPad extends React.Component {
 }
 
 /**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Handles the case when phone number is not allowed to be called.
+         *
+         * @param {string} phoneNumber - The phone number that has not been authorized.
+         * @returns {void}
+         */
+        onPhoneAuthorizeFailed(phoneNumber) {
+            dispatch(addNotification('error', `Calling ${phoneNumber} is not allowed at this time`));
+        }
+    };
+}
+
+/**
  * Selects parts of the Redux state to pass in with the props of {@code DialPad}.
  *
  * @param {Object} state - The Redux state.
@@ -252,9 +305,12 @@ export class DialPad extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const { phoneAuthorizeServiceUrl } = getSpotServicesConfig(state);
+
     return {
-        countryCode: getCountryCode(state)
+        countryCode: getCountryCode(state),
+        phoneAuthorizeServiceUrl
     };
 }
 
-export default connect(mapStateToProps)(DialPad);
+export default connect(mapStateToProps, mapDispatchToProps)(DialPad);

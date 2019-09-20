@@ -16,6 +16,17 @@ describe('DialPad', () => {
     });
 
     /**
+     * Click the call button on the dial pad. It's an async process so must be handled from the returned promise.
+     *
+     * @returns {Promise<void>}
+     */
+    function clickCallButton() {
+        dialPad.find('button.call-button').simulate('click');
+
+        return new Promise(resolve => process.nextTick(resolve));
+    }
+
+    /**
      * Runs through the digits in given string and simulates events on corresponding dial pad keys.
      *
      * @param {string} phoneNumber - The phone number digits(only numbers) to type.
@@ -72,14 +83,18 @@ describe('DialPad', () => {
 
         dialPad.find('button.call-button').simulate('click');
 
-        expect(submitCallback).toHaveBeenCalledWith(expect.any(String), '+12343334444');
+        return clickCallButton().then(() => {
+            expect(submitCallback).toHaveBeenCalledWith(expect.any(String), '+12343334444');
+        });
     });
 
     test('not submitting the form if the phone number is invalid', () => {
         dialPad.find('#dial-button-1').simulate('mousedown');
         dialPad.find('button.call-button').simulate('click');
 
-        expect(submitCallback).not.toHaveBeenCalled();
+        return clickCallButton().then(() => {
+            expect(submitCallback).not.toHaveBeenCalled();
+        });
     });
 
     test('replaces 0 with + on long press', () => {

@@ -3,6 +3,7 @@ import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
 import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
+import { LoadingIcon } from 'common/ui';
 
 import CountryCodePicker from './CountryCodePicker';
 import DialButton from './dial-button';
@@ -23,6 +24,7 @@ export default class StatelessDialPad extends React.Component {
 
     static propTypes = {
         buttonText: PropTypes.string,
+        dialingInProgress: PropTypes.bool,
         disableCallButton: PropTypes.bool,
         onChange: PropTypes.func,
         onCountryCodeSelect: PropTypes.func,
@@ -83,9 +85,10 @@ export default class StatelessDialPad extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const callButtonDisabled = this.props.disableCallButton || this.props.dialingInProgress;
         let callButtonClassName = 'call-button dial-button';
 
-        if (this.props.disableCallButton) {
+        if (callButtonDisabled) {
             callButtonClassName += ' disabled';
         }
 
@@ -136,10 +139,12 @@ export default class StatelessDialPad extends React.Component {
                         <div className = 'dial-pad-footer-button'>
                             <button
                                 className = { callButtonClassName }
-                                disabled = { this.props.disableCallButton }
+                                disabled = { callButtonDisabled }
                                 onClick = { this._onSubmit }
                                 type = 'submit'>
-                                <Call />
+                                { this.props.dialingInProgress
+                                    ? <LoadingIcon />
+                                    : <Call />}
                             </button>
                         </div>
                         <div className = 'dial-pad-footer-button'>
