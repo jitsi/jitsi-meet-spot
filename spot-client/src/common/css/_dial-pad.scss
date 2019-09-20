@@ -227,9 +227,18 @@
 }
 
 .dtmf-modal {
-    .dial-pad-entered-number,
+    .country-search-trigger,
     .dial-pad-footer {
         display: none;
+    }
+
+    .number-input {
+        margin: 0 16px;
+
+        input {
+            text-align: center;
+            width: 100%;
+        }
     }
 
     .dial-pad-buttons {

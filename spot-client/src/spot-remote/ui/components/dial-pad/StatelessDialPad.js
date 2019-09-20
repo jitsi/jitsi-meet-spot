@@ -18,6 +18,7 @@ export default class StatelessDialPad extends React.Component {
     static defaultProps = {
         buttonText: 'Call',
         placeholderText: 'Enter a phone number',
+        readOnlyInput: false,
         selectedCountryCode: 'US',
         value: ''
     };
@@ -31,6 +32,7 @@ export default class StatelessDialPad extends React.Component {
         onSubmit: PropTypes.func,
         onToggleCountryCodePicker: PropTypes.func,
         placeholderText: PropTypes.string,
+        readOnlyInput: PropTypes.bool,
         selectedCountryCode: PropTypes.string,
         showCountryCodePicker: PropTypes.bool,
         value: PropTypes.string
@@ -103,6 +105,7 @@ export default class StatelessDialPad extends React.Component {
                         gradientStart = 'center'
                         onChange = { this._onInputChange }
                         placeholder = { this.props.placeholderText }
+                        readOnly = { this.props.readOnlyInput }
                         type = 'tel'
                         value = { this.props.value } />
                 </div>

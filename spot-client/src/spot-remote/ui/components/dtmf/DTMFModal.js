@@ -28,6 +28,10 @@ export class DTMFModal extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            value: ''
+        };
+
         this._onChange = this._onChange.bind(this);
     }
 
@@ -43,7 +47,9 @@ export class DTMFModal extends React.Component {
                 <div className = 'dtmf-modal'>
                     <StatelessDialPad
                         onChange = { this._onChange }
-                        placeholderText = 'Enter Numbers' />
+                        placeholderText = 'Enter Numbers'
+                        readOnlyInput = { true }
+                        value = { this.state.value } />
                 </div>
             </Modal>
         );
@@ -57,8 +63,15 @@ export class DTMFModal extends React.Component {
      * @returns {void}
      */
     _onChange(value) {
-        logger.log('submitting touch tones');
-        this.props.onSendTones(value);
+        const enteredNumber = value[value.length - 1];
+
+        logger.log('submitting touch tones', { value: enteredNumber });
+
+        this.setState({
+            value
+        });
+
+        this.props.onSendTones(enteredNumber);
 
     }
 }
