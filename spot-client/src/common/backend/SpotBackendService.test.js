@@ -27,10 +27,9 @@ function refreshRequestMatcher(refreshToken) {
  * do the token refresh and retry the get room info again.
  *
  * @param {SpotBackendService} spotBackendService - The backend instance to run the scenario with.
- * @param {RefreshTokenResponse} refreshTokenResponse - The token refresh response object.
  * @returns {Promise<RoomInfo>}
  */
-function checkRetryOn401ToGetRoomInfo(spotBackendService, refreshTokenResponse) {
+function checkRetryOn401ToGetRoomInfo(spotBackendService) {
     // Mock the initial request to get room info
     fetch.once('', {
         status: 401,
@@ -38,7 +37,11 @@ function checkRetryOn401ToGetRoomInfo(spotBackendService, refreshTokenResponse) 
     });
 
     // Mock the refreshing of the token
-    fetch.once(JSON.stringify(refreshTokenResponse));
+    fetch.once(JSON.stringify({
+        accessToken: 'refreshed-access-token',
+        emitted: Date.now(),
+        expiresIn: 10 * 60 * 1000
+    }));
 
     // Mock the request to get room info
     fetch.once(JSON.stringify({
@@ -53,6 +56,7 @@ function checkRetryOn401ToGetRoomInfo(spotBackendService, refreshTokenResponse) 
             name: 'mock-muc-name',
             roomName: 'muc-url'
         });
+        expect(spotBackendService.getJwt()).toEqual('refreshed-access-token');
     });
 }
 
@@ -264,7 +268,7 @@ describe('SpotBackendService', () => {
 
             it('refresh the token if get room info on expired', () =>
                 spotBackendService.register(MOCK_PAIRING_CODE)
-                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService, MOCK_RESPONSE))
+                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService))
             );
 
             it('will not emit registration lost when 401 is returned to get room info', () => {
@@ -276,7 +280,7 @@ describe('SpotBackendService', () => {
                 );
 
                 return spotBackendService.register(MOCK_PAIRING_CODE)
-                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService, MOCK_RESPONSE)
+                    .then(() => checkRetryOn401ToGetRoomInfo(spotBackendService)
                         .then(() => {
                             expect(registrationLostCallback).not.toHaveBeenCalled();
                         })
