@@ -330,7 +330,16 @@ export class SpotBackendService extends Emitter {
                     throw error;
                 }
 
-                return this._refreshRegistration(this.registration).then(() => requestCreator());
+                logger.warn('Request failed with not-authorized - will attempt to refresh and try again.');
+
+                // FIXME this is duplicated code, move this to the refresh function
+                const { pairingCode } = this.registration;
+
+                return this._refreshRegistration(this.registration).then(registration => {
+                    this._setRegistration(pairingCode, registration);
+
+                    return requestCreator();
+                });
             })
         );
     }
