@@ -175,12 +175,16 @@ export class SpotBackendService extends Emitter {
         return refreshAccessToken(`${this.pairingServiceUrl}/regenerate`, registration)
             .then(({ accessToken, emitted, expires }) => {
                 // copy the fields to preserve the refresh token
-                return {
+                const newRegistration = {
                     ...registration,
                     accessToken,
                     emitted,
                     expires
                 };
+
+                this._setRegistration(pairingCode, newRegistration);
+
+                return newRegistration;
             }, error => this._maybeClearRegistration(error));
     }
 
@@ -255,16 +259,12 @@ export class SpotBackendService extends Emitter {
                 return;
             }
 
-            const { pairingCode } = this.registration;
-
             this._refreshRegistration(this.registration)
-                .then(
-                    registration => {
-                        this._setRegistration(pairingCode, registration);
-                    },
-                    error => {
-                        logger.error('Access token refresh failed', { error });
-                    });
+                .catch(error => {
+                    // It is not clear from here, but _setRegistration emits the events about registration lost
+                    // and re-throws. This block only prevents unhandled promise rejection.
+                    logger.error('Access token refresh failed', { error });
+                });
         }, delay);
     }
 
@@ -332,14 +332,7 @@ export class SpotBackendService extends Emitter {
 
                 logger.warn('Request failed with not-authorized - will attempt to refresh and try again.');
 
-                // FIXME this is duplicated code, move this to the refresh function
-                const { pairingCode } = this.registration;
-
-                return this._refreshRegistration(this.registration).then(registration => {
-                    this._setRegistration(pairingCode, registration);
-
-                    return requestCreator();
-                });
+                return this._refreshRegistration(this.registration).then(() => requestCreator());
             })
         );
     }
