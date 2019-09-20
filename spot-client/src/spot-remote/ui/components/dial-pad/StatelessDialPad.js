@@ -7,6 +7,7 @@ import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
 import CountryCodePicker from './CountryCodePicker';
 import DialButton from './dial-button';
 import NumberInput from './NumberInput';
+import LoadingIcon from '../../../../common/ui/components/loading-icon/loading-icon';
 
 /**
  * Displays numbers and an input for entering a phone number.
@@ -84,9 +85,10 @@ export default class StatelessDialPad extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const callButtonDisabled = this.props.disableCallButton || this.props.dialingInProgress;
         let callButtonClassName = 'call-button dial-button';
 
-        if (this.props.disableCallButton || this.props.dialingInProgress) {
+        if (callButtonDisabled) {
             callButtonClassName += ' disabled';
         }
 
@@ -137,11 +139,11 @@ export default class StatelessDialPad extends React.Component {
                         <div className = 'dial-pad-footer-button'>
                             <button
                                 className = { callButtonClassName }
-                                disabled = { this.props.disableCallButton || this.props.dialingInProgress }
+                                disabled = { callButtonDisabled }
                                 onClick = { this._onSubmit }
                                 type = 'submit'>
                                 { this.props.dialingInProgress
-                                    ? <div className = 'dialing-dots' >...</div>
+                                    ? <LoadingIcon />
                                     : <Call />}
                             </button>
                         </div>
