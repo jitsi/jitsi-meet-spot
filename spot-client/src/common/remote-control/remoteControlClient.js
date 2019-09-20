@@ -243,18 +243,19 @@ export class RemoteControlClient extends BaseRemoteControlService {
     /**
      * Requests a {@code RemoteControlServer} to leave a meeting in progress.
      *
-     * @param {boolean} skipFeedback - Whether or not to immediately navigate
-     * out of the meeting instead of display feedback entry.
+     * @param {Object} options - How the hangup should occur.
+     * @param {boolean} options.skipFeedback - Whether or not to immediately
+     * navigate out of the meeting instead of display feedback entry.
+     * @param {boolean} options.onlyIfLonelyCall - If true, hangup will occur
+     * only if there are no remote participants in the call.
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
-    hangUp(skipFeedback = false) {
+    hangUp(options = {}) {
         this.destroyWirelessScreenshareConnections();
 
         return this._sendCommand(
             COMMANDS.HANG_UP,
-            {
-                skipFeedback
-            }
+            options
         );
     }
 

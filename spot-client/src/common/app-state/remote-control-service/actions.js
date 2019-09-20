@@ -130,13 +130,19 @@ export function dialOut(meetingName, phoneNumber) {
  *
  * @param {boolean} skipFeedback - Whether or not to immediately leave the
  * meeting without prompting for meeting feedback.
+ * @param {boolean} onlyIfLonelyCall - If true, hangup will occur only if there
+ * are no remote participants in the call.
  * @returns {Function}
  */
-export function hangUp(skipFeedback) {
+export function hangUp(skipFeedback = false, onlyIfLonelyCall = false) {
     return dispatch => {
-        remoteControlClient.hangUp(skipFeedback);
+        remoteControlClient.hangUp({
+            onlyIfLonelyCall,
+            skipFeedback
+        });
         dispatch({
             type: HANG_UP,
+            onlyIfLonelyCall,
             skipFeedback
         });
     };

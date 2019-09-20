@@ -182,9 +182,10 @@ export class Share extends React.PureComponent {
     _onStopWirelessScreenshare() {
         this.props.dispatch(stopScreenshare());
 
-        // Pass true to immediately leave the meeting as share mode should not
-        // display feedback entry.
-        this.props.dispatch(hangUp(true));
+        // Share mode should never prompt for feedback. Also, share mode should
+        // only hang up the meeting if there are no remote participants so that
+        // the TV can stay in the call.
+        this.props.dispatch(hangUp(true, true));
     }
 }
 

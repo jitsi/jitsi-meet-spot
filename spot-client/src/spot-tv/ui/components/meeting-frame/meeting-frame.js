@@ -351,6 +351,14 @@ export class MeetingFrame extends React.Component {
             break;
 
         case COMMANDS.HANG_UP:
+            if (data.onlyIfLonelyCall && this._participants.size > 0) {
+                logger.log('Skipping hangup due to participants present', {
+                    count: this._participants.size
+                });
+
+                break;
+            }
+
             this._jitsiApi.executeCommand('hangup');
 
             if (data.skipFeedback) {
