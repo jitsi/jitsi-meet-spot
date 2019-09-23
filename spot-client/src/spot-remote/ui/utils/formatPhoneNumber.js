@@ -1,4 +1,4 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 /**
  * Pretty prints given phone number. Will return a formatted text if a valid phone number string is given.
