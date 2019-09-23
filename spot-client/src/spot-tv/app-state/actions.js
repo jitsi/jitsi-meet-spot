@@ -339,15 +339,16 @@ export function disconnectAllTemporaryRemotes() {
 /**
  * The action kills the Spot TV remote control service connection if one exists.
  *
+ * @param {Object} [event] - Optionally, the event which triggered the necessity to disconnect.
  * @returns {Function}
  */
-export function disconnectSpotTvRemoteControl() {
+export function disconnectSpotTvRemoteControl(event) {
     return () => {
         if (!remoteControlServer.hasConnection()) {
             return Promise.resolve();
         }
 
-        return remoteControlServer.disconnect();
+        return remoteControlServer.disconnect(event);
     };
 }
 

@@ -33,7 +33,10 @@ import {
     loadScript,
     setPersistedState
 } from 'common/utils';
+
+import { disconnectFromSpotTV } from 'spot-remote/app-state';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
+import { disconnectSpotTvRemoteControl } from './spot-tv/app-state';
 
 import App from './app';
 
@@ -97,6 +100,16 @@ const analyticsAppKey = getAnalyticsAppKey(reduxState);
 if (analyticsAppKey) {
     analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
+
+window.addEventListener(
+    'beforeunload',
+    event => {
+        store.dispatch(disconnectSpotTvRemoteControl(event)).catch(error => {
+            console.error('Failed to disconnect Spot TV on unload', error);
+        });
+        store.dispatch(disconnectFromSpotTV(event));
+    }
+);
 
 // eslint-disable-next-line max-params
 window.onerror = (message, url, lineNo, columnNo, error) => {

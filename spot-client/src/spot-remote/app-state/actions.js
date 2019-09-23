@@ -280,13 +280,18 @@ function _onSpotTVStateChange({ dispatch }, data) {
 /**
  * Stops any connection to a Spot-TV and clears redux state about the Spot-TV.
  *
+ * @param {Object} [event] - Optionally, the event which triggered the necessity to disconnect.
  * @returns {Function}
  */
-export function disconnectFromSpotTV() {
+export function disconnectFromSpotTV(event) {
     return dispatch => {
         _clearSubscriptions();
 
-        remoteControlClient.disconnect();
+        dispatch(destroyConnection());
+
+        remoteControlClient.disconnect(event).catch(error => {
+            logger.error('Failed to disconnect Spot Remote', { error });
+        });
 
         dispatch(setCalendarEvents([]));
         dispatch(clearSpotTVState());
