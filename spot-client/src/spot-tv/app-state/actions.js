@@ -88,6 +88,32 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             return Promise.reject('Called to create connection while connection exists');
         }
 
+        const eventHandlerRemovers = [
+            [
+                SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
+                onDisconnect
+            ],
+            [
+                SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
+                onRemoteJoinCodeChange
+            ],
+            [
+                SERVICE_UPDATES.REGISTRATION_UPDATED,
+                onRegistrationChange
+            ],
+            [
+                SERVICE_UPDATES.CLIENT_JOINED,
+                onRemoteConnected
+            ],
+            [
+                SERVICE_UPDATES.CLIENT_LEFT,
+                onRemoteDisconnected
+            ]
+        ].map(([ event, callback ]) => remoteControlServer.addListener(
+            event,
+            callback
+        ));
+
         /**
          * Callback invoked when a connect has been successfully made with
          * {@code remoteControlServer}.
@@ -97,6 +123,8 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {void}
          */
         function onSuccessfulConnect(result) {
+            logger.log('Successfully created connection for remote control server');
+
             const {
                 jwt,
                 permanentPairingCode,
@@ -130,6 +158,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {void}
          */
         function onRemoteConnected({ id, type }) {
+            logger.log('Detected remote control connection', {
+                id,
+                type
+            });
+
             dispatch(addPairedRemote(id, type));
         }
 
@@ -141,6 +174,8 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {void}
          */
         function onRemoteDisconnected({ id }) {
+            logger.log('Detected remote control disconnect', { id });
+
             dispatch(removePairedRemote(id));
         }
 
@@ -153,14 +188,23 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
-            logger.error('Spot-TV disconnected from the remote control server.', { error });
+            logger.error('Spot-TV disconnected from the remote control server.', {
+                error,
+                initiallyConnected,
+                pairingCode,
+                retry
+            });
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());
 
             if (pairingCode && remoteControlServer.isUnrecoverableRequestError(error)) {
+                logger.log('Disconnected with unrecoverable error');
+
                 // Clear the permanent pairing code
                 dispatch(setPermanentPairingCode(''));
+
+                eventHandlerRemovers.forEach(remover => remover());
 
                 throw error;
             } else if (retry || initiallyConnected) {
@@ -174,6 +218,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                     }, jitter);
                 });
             } else {
+                logger.log('Disconnected without an established connection');
+
+                eventHandlerRemovers.forEach(remover => remover());
+
                 throw error;
             }
         }
@@ -221,27 +269,6 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             ).then(onSuccessfulConnect)
             .catch(onDisconnect);
         }
-
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
-            onDisconnect
-        );
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.REMOTE_JOIN_CODE_CHANGE,
-            onRemoteJoinCodeChange
-        );
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.REGISTRATION_UPDATED,
-            onRegistrationChange
-        );
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.CLIENT_JOINED,
-            onRemoteConnected
-        );
-        remoteControlServer.addListener(
-            SERVICE_UPDATES.CLIENT_LEFT,
-            onRemoteDisconnected
-        );
 
         return doConnect();
     };
