@@ -111,3 +111,29 @@ export function isWirelessScreenshareSupported() {
     return (isDesktopBrowser() && jitsiBrowserDetection.isChrome() && jitsiBrowserDetection.supportsGetDisplayMedia())
         || jitsiBrowserDetection.isElectron();
 }
+
+/**
+ * Returns whether or not the current environment has a bug where caret-color
+ * is not respected on the initial focus of a text input element.
+ *
+ * @returns {boolean}
+ */
+export function hasVisibleCaretOnInitialFocus() {
+    return _hasReactNativeOnlyAttributes()
+        && _isIOSWebView()
+        && _isMaybeIOS13();
+}
+
+/**
+ * Detects whether or not the current environment is in iOS 13. Starting with
+ * iOS 13, the user agent may return that it is actually macOS, and bowser does
+ * not have a workaround for this yet. As such, there is an assumption that
+ * a mobile platform with a certain macOS version may  be 13.
+ *
+ * @private
+ * @returns {boolean}
+ */
+function _isMaybeIOS13() {
+    return (browser.getOSName() === 'iOS' && browser.getOSVersion().startsWith('13'))
+        || (browser.getPlatformType() === 'mobile' && browser.getOSVersion().startsWith('10.15'));
+}

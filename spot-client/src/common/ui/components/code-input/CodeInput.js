@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { isAutoFocusSupported } from 'common/detection';
+import {
+    hasVisibleCaretOnInitialFocus,
+    isAutoFocusSupported
+} from 'common/detection';
 
 /**
  * A mapping of keyboard key names to keyboard key codes for readability while
@@ -143,6 +146,11 @@ export default class CodeInput extends React.Component {
      */
     _onRootClick() {
         if (!this.state.isFocused) {
+            if (hasVisibleCaretOnInitialFocus()) {
+                this._inputRef.current.focus();
+                this._inputRef.current.blur();
+            }
+
             this._inputRef.current.focus();
         }
     }
