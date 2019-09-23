@@ -1,4 +1,4 @@
-import { AsYouType } from 'libphonenumber-js/max';
+import { AsYouType } from 'libphonenumber-js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -121,7 +121,7 @@ export class DialPad extends React.Component {
     _getPhoneNumber() {
         const phoneNumber = this._asYouType.getNumber();
 
-        return phoneNumber && phoneNumber.isValid() && phoneNumber.number;
+        return phoneNumber && phoneNumber.isPossible() && phoneNumber.number;
     }
 
     /**
