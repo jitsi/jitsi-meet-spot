@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		E566902923034808000D1DF7 /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E566902823034808000D1DF7 /* AppInfo.m */; };
+		E5C8CCD2233D404800366113 /* FIRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C8CCD1233D404800366113 /* FIRUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -210,6 +211,8 @@
 		A58A9A976A5180AC6EE989D0 /* Pods-spot-controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spot-controller.release.xcconfig"; path = "Pods/Target Support Files/Pods-spot-controller/Pods-spot-controller.release.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		E566902823034808000D1DF7 /* AppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppInfo.m; path = "spot-controller/AppInfo.m"; sourceTree = "<group>"; };
+		E5C8CCBA233D404800366113 /* FIRUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIRUtilities.h; path = "spot-controller/FIRUtilities.h"; sourceTree = "<group>"; };
+		E5C8CCD1233D404800366113 /* FIRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIRUtilities.m; path = "spot-controller/FIRUtilities.m"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -306,6 +309,8 @@
 		13B07FAE1A68108700A75B9A /* spot-controller */ = {
 			isa = PBXGroup;
 			children = (
+				E5C8CCBA233D404800366113 /* FIRUtilities.h */,
+				E5C8CCD1233D404800366113 /* FIRUtilities.m */,
 				0E934677222F35F50005B4A5 /* spot-controller.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -451,6 +456,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
+				E5C8CCD3233D413600366113 /* Copy Google Plist file */,
+				E53702F623395009009D0141 /* Setup Fabric */,
 			);
 			buildRules = (
 			);
@@ -793,6 +800,42 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E53702F623395009009D0141 /* Setup Fabric */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Fabric";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/Fabric/run\n";
+		};
+		E5C8CCD3233D413600366113 /* Copy Google Plist file */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Google Plist file";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "GOOGLE_PLIST_NAME=\"GoogleService-Info.plist\"\nGOOGLE_PLIST=\"$PROJECT_DIR/$GOOGLE_PLIST_NAME\"\nBUILD_APP_DIR=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app\"\n\necho \"GOOGLE PLIST= ${GOOGLE_PLIST} BUILD DIR= ${BUILD_APP_DIR}\"\n\nif [[ -f $GOOGLE_PLIST ]]; then\n    echo \"COPY GOOGLE PLIST\"\n    cp $GOOGLE_PLIST \"$BUILD_APP_DIR/$GOOGLE_PLIST_NAME\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -809,6 +852,7 @@
 			files = (
 				E566902923034808000D1DF7 /* AppInfo.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E5C8CCD2233D404800366113 /* FIRUtilities.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

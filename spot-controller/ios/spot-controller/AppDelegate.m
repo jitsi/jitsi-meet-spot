@@ -6,15 +6,25 @@
  */
 
 #import "AppDelegate.h"
+#import "FIRUtilities.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTRootView.h>
 
+@import Firebase;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // Initialize Crashlytics and Firebase if a valid GoogleService-Info.plist file was provided.
+  if ([FIRUtilities appContainsRealServiceInfoPlist]) {
+    [FIRApp configure];
+    NSLog(@"Enabling Crashlytics");
+    [Fabric with:@[[Crashlytics class]]];
+  }
+
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
