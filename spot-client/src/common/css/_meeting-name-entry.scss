@@ -24,6 +24,11 @@
 
     .input-with-default-domain {
         display: flex;
+        flex-direction: column;
+
+        @media #{$mq-mobile-l} {
+            flex-direction: row;
+        }
 
         .default-domain {
             /**
