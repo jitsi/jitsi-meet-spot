@@ -34,9 +34,7 @@ import {
     setPersistedState
 } from 'common/utils';
 
-import { disconnectFromSpotTV } from 'spot-remote/app-state';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
-import { disconnectSpotTvRemoteControl } from './spot-tv/app-state';
 
 import App from './app';
 
@@ -100,19 +98,6 @@ const analyticsAppKey = getAnalyticsAppKey(reduxState);
 if (analyticsAppKey) {
     analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
-
-// FIXME move to actions
-window.addEventListener(
-    'beforeunload',
-    event => {
-        store.dispatch(disconnectSpotTvRemoteControl(event)).catch(error => {
-            logger.error('Failed to disconnect Spot TV on beforeunload', error);
-        });
-        store.dispatch(disconnectFromSpotTV(event)).catch(error => {
-            logger.error('Failed to disconnect Spot Remote on beforeunload', error);
-        });
-    }
-);
 
 // eslint-disable-next-line max-params
 window.onerror = (message, url, lineNo, columnNo, error) => {

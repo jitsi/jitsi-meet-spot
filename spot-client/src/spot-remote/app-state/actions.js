@@ -221,6 +221,14 @@ export function connectToSpotTV(joinCode, shareMode) {
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
                 onDisconnect));
 
+        const onBeforeUnloadHandler = event => dispatch(disconnectFromSpotTV(event));
+
+        window.addEventListener('beforeunload', onBeforeUnloadHandler);
+
+        rcsListeners.push(() => {
+            window.removeEventListener('beforeunload', onBeforeUnloadHandler);
+        });
+
         return doConnect();
     };
 }
