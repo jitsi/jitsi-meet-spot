@@ -288,13 +288,10 @@ export function disconnectFromSpotTV(event) {
         _clearSubscriptions();
 
         dispatch(destroyConnection());
-
-        remoteControlClient.disconnect(event).catch(error => {
-            logger.error('Failed to disconnect Spot Remote', { error });
-        });
-
         dispatch(setCalendarEvents([]));
         dispatch(clearSpotTVState());
+
+        return remoteControlClient.disconnect(event);
     };
 }
 

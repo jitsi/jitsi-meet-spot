@@ -31,8 +31,7 @@ export class RemoteControl extends React.PureComponent {
     static propTypes = {
         events: PropTypes.array,
         history: PropTypes.object,
-        isConnectedToSpot: PropTypes.bool,
-        isConnectionEstablished: PropTypes.bool,
+        isWaitingForSpotTV: PropTypes.bool,
         view: PropTypes.string
     };
 
@@ -70,7 +69,7 @@ export class RemoteControl extends React.PureComponent {
      * @returns {ReactElement}
      */
     _getView() {
-        if (this.props.isConnectionEstablished && !this.props.isConnectedToSpot) {
+        if (this.props.isWaitingForSpotTV) {
             logger.log('remote-control show waiting for Spot TV');
 
             return <WaitingForSpotTVOverlay />;
@@ -110,8 +109,7 @@ function mapStateToProps(state) {
     return {
         events: getCalendarEvents(state),
         view: getCurrentView(state),
-        isConnectionEstablished: isConnectionEstablished(state),
-        isConnectedToSpot: isConnectedToSpot(state)
+        isWaitingForSpotTV: isConnectionEstablished(state) && !isConnectedToSpot(state)
     };
 }
 

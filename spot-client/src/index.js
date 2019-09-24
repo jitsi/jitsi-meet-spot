@@ -101,13 +101,16 @@ if (analyticsAppKey) {
     analytics.addHandler(new SegmentHandler(deviceId, analyticsAppKey));
 }
 
+// FIXME move to actions
 window.addEventListener(
     'beforeunload',
     event => {
         store.dispatch(disconnectSpotTvRemoteControl(event)).catch(error => {
-            console.error('Failed to disconnect Spot TV on unload', error);
+            logger.error('Failed to disconnect Spot TV on beforeunload', error);
         });
-        store.dispatch(disconnectFromSpotTV(event));
+        store.dispatch(disconnectFromSpotTV(event)).catch(error => {
+            logger.error('Failed to disconnect Spot Remote on beforeunload', error);
+        });
     }
 );
 
