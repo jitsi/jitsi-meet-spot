@@ -117,7 +117,9 @@ export class InCall extends React.Component {
         const { meetingName } = parseMeetingUrl(inMeeting);
 
         return (
-            <div className = 'in-call'>
+            <div
+                className = 'in-call'
+                data-qa-id = 'in-call'>
                 <div className = 'view-header'>
                     { invitedPhoneNumber && <div className = 'in-call-invited-phone'>{ invitedPhoneNumber }</div> }
                     <div className = { invitedPhoneNumber ? 'in-call-name-with-phone' : 'in-call-name' } >
