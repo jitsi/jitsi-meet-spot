@@ -8,8 +8,6 @@ export {
     ExpandLess,
     ExpandMore,
     Feedback,
-    Fullscreen,
-    FullscreenExit,
     GridOff,
     GridOn,
     HelpOutline,
