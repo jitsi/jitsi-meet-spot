@@ -11,12 +11,15 @@ Environments supported as a Spot-Remote
 - [ ] Latest Safari
 - [ ] Latest iOS Safari
 - [ ] Latest Android Chrome
-- [ ] iOS 11.x iPad
-- [ ] iOS 12.x iPad
+- [ ] Android App
+- [ ] iOS 11.x iPad/iPhone App
+- [ ] iOS 12.x iPad/iPhone App
+- [ ] iOS 13.x iPad/iPhone App
 
 Hosting
 ------
 - [ ] Spot-TV can only be opened from Chrome
+- [ ] Spot-TV displays a compatibility message for non-Chrome browsers
 
 Pairing
 ------
@@ -58,6 +61,7 @@ Spot In Meeting (with two remotes)
 - [ ] Spot-Remote hangs up
 - [ ] Spot-Remote submits feedback
 - [ ] Spot-TV and Spot-Remote proceed to Home after feedback submission
+- [ ] Spot-Remote can send touch tones (when dialing into a jitsi-meet call for example)
 
 Wireless SS
 ------
@@ -129,7 +133,8 @@ Share Mode
 - [ ] Spot-Remote is automatically prompted with the screenshare picker after initial join code submit
 - [ ] On wireless screenshare start, and Spot-TV not in a meeting, Spot-TV enters a random meeting with screensharing
 - [ ] On wireless screenshare start, and Spot-TV in a meeting, SpotTV starts wireless screensharing in the current meeting
-- [ ] Spot-Remote stopping screensharing exists the meeting
+- [ ] Spot-Remote stopping screensharing exists the meeting if in a lonely call
+- [ ] Spot-Remote stopping screensharing stays in the meeting if other participants are in the meeting
 - [ ] Another Spot-Remote, not in share mode, stopping the screensharing leaves Spot-TV in the meeting
 - [ ] Unsupported browsers cannot start wireless but do see mode select to become a full remote control
 - [ ] At mode select, Spot-Remote cannot start a wireless screenshare if Spot-TV is already screensharing
