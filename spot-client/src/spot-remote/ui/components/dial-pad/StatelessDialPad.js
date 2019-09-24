@@ -110,13 +110,6 @@ export default class StatelessDialPad extends React.Component {
                         value = { this.props.value } />
                 </div>
                 <div className = 'dial-pad-buttons'>
-                    {
-                        this.props.showCountryCodePicker && (
-                            <div ref = { this._countryCodePickerWrapperRef }>
-                                <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
-                            </div>
-                        )
-                    }
                     <div className = 'row'>
                         { this._renderDialButton('1', '') }
                         { this._renderDialButton('2', 'ABC') }
@@ -160,6 +153,15 @@ export default class StatelessDialPad extends React.Component {
                             </button>
                         </div>
                     </div>
+                    {
+                        this.props.showCountryCodePicker && (
+                            <div
+                                className = 'country-code-picker-wrapper'
+                                ref = { this._countryCodePickerWrapperRef }>
+                                <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
+                            </div>
+                        )
+                    }
                 </div>
             </form>
         );
