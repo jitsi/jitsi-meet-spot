@@ -4,7 +4,8 @@
     .waiting-sub-view {
         align-items: center;
         display: flex;
-        flex: 1;
+        flex-shrink: 0;
+        flex-grow: 1;
         justify-content: center;
     }
 
