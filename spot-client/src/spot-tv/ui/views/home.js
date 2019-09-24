@@ -21,7 +21,6 @@ import { getRandomMeetingName } from 'common/utils';
 
 import { updateSpotTVSource } from '../../app-state';
 import {
-    FullscreenToggle,
     JoinInfo,
     SettingsButton,
     WiredScreenshareChangeListener
@@ -126,7 +125,6 @@ export class Home extends React.Component {
                     }
                 </div>
                 <div className = 'admin-toolbar'>
-                    <FullscreenToggle />
                     <SettingsButton />
                 </div>
                 <div className = 'home-feedback'>
