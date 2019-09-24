@@ -33,6 +33,7 @@ import {
     loadScript,
     setPersistedState
 } from 'common/utils';
+
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
 import App from './app';

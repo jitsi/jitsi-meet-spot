@@ -30,14 +30,6 @@ export class BaseRemoteControlService extends Emitter {
 
         this._onDisconnect = this._onDisconnect.bind(this);
 
-        window.addEventListener(
-            'beforeunload',
-            event => {
-                this.disconnect(event)
-                    .catch(() => { /* swallow unload errors from bubbling up */ });
-            }
-        );
-
         /**
          * A peer-to-peer direct signaling channel. Once established will be used to send/receive remote control
          * commands.

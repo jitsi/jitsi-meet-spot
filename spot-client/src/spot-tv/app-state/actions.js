@@ -33,6 +33,8 @@ import {
     SpotTvBackendService
 } from '../backend';
 
+let eventHandlerRemovers;
+
 /**
  * Action dispatched by the UI in order to pair Spot TV with the backend.
  *
@@ -88,7 +90,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             return Promise.reject('Called to create connection while connection exists');
         }
 
-        const eventHandlerRemovers = [
+        eventHandlerRemovers = [
             [
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
                 onDisconnect
@@ -113,6 +115,14 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             event,
             callback
         ));
+
+        const onBeforeUnloadHandler = event => dispatch(disconnectSpotTvRemoteControl(event));
+
+        window.addEventListener('beforeunload', onBeforeUnloadHandler);
+
+        eventHandlerRemovers.push(() => {
+            window.removeEventListener('beforeunload', onBeforeUnloadHandler);
+        });
 
         /**
          * Callback invoked when a connect has been successfully made with
@@ -204,7 +214,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 // Clear the permanent pairing code
                 dispatch(setPermanentPairingCode(''));
 
-                eventHandlerRemovers.forEach(remover => remover());
+                removeEventHandlers();
 
                 throw error;
             } else if (retry || initiallyConnected) {
@@ -220,7 +230,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             } else {
                 logger.log('Disconnected without an established connection');
 
-                eventHandlerRemovers.forEach(remover => remover());
+                removeEventHandlers();
 
                 throw error;
             }
@@ -339,15 +349,27 @@ export function disconnectAllTemporaryRemotes() {
 /**
  * The action kills the Spot TV remote control service connection if one exists.
  *
+ * @param {Object} [event] - Optionally, the event which triggered the necessity to disconnect.
  * @returns {Function}
  */
-export function disconnectSpotTvRemoteControl() {
-    return () => {
+export function disconnectSpotTvRemoteControl(event) {
+    return dispatch => {
         if (!remoteControlServer.hasConnection()) {
             return Promise.resolve();
         }
 
-        return remoteControlServer.disconnect();
+        removeEventHandlers();
+
+        // NOTE When trying to execute the cleanup before disconnect then the disconnect does not happen if triggered by
+        // the on before unload event handler.
+        const postDisconnectCleanup = () => {
+            dispatch(destroyConnection());
+            dispatch(setRemoteJoinCode(''));
+            dispatch(clearAllPairedRemotes());
+        };
+
+        return remoteControlServer.disconnect(event)
+            .then(postDisconnectCleanup, postDisconnectCleanup);
     };
 }
 
@@ -383,6 +405,16 @@ export function generateLongLivedPairingCodeIfExpired() {
 
         return Promise.resolve();
     };
+}
+
+/**
+ * Removes event handlers registered when starting the connection.
+ *
+ * @returns {void}
+ */
+function removeEventHandlers() {
+    eventHandlerRemovers.forEach(remover => remover());
+    eventHandlerRemovers = [];
 }
 
 /**

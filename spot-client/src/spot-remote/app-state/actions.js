@@ -221,6 +221,14 @@ export function connectToSpotTV(joinCode, shareMode) {
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
                 onDisconnect));
 
+        const onBeforeUnloadHandler = event => dispatch(disconnectFromSpotTV(event));
+
+        window.addEventListener('beforeunload', onBeforeUnloadHandler);
+
+        rcsListeners.push(() => {
+            window.removeEventListener('beforeunload', onBeforeUnloadHandler);
+        });
+
         return doConnect();
     };
 }
@@ -280,16 +288,18 @@ function _onSpotTVStateChange({ dispatch }, data) {
 /**
  * Stops any connection to a Spot-TV and clears redux state about the Spot-TV.
  *
+ * @param {Object} [event] - Optionally, the event which triggered the necessity to disconnect.
  * @returns {Function}
  */
-export function disconnectFromSpotTV() {
+export function disconnectFromSpotTV(event) {
     return dispatch => {
         _clearSubscriptions();
 
-        remoteControlClient.disconnect();
-
+        dispatch(destroyConnection());
         dispatch(setCalendarEvents([]));
         dispatch(clearSpotTVState());
+
+        return remoteControlClient.disconnect(event);
     };
 }
 
