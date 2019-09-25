@@ -115,9 +115,9 @@ PODS:
     - React/RCTBlob
   - ReactNativeBeaconsManager (1.1.0):
     - React
-  - RNCAsyncStorage (1.4.2):
+  - RNCAsyncStorage (1.6.2):
     - React
-  - RNSVG (9.5.1):
+  - RNSVG (9.9.5):
     - React
   - yoga (0.59.9.React)
 
@@ -199,8 +199,8 @@ SPEC CHECKSUMS:
   react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
   react-native-webview: 048135293d160a64d329e11d52d0128c67942813
   ReactNativeBeaconsManager: dd0b01841445881989af5be9ab83153d1cdaa6b7
-  RNCAsyncStorage: 285698b8a4f219573174d99e863a78b93f389272
-  RNSVG: 0eb087cfb5d7937be93c45b163b26352a647e681
+  RNCAsyncStorage: 5ae4d57458804e99f73d427214442a6b10a53856
+  RNSVG: f578799dd236be1ff32c55306df3e01711d428e5
   yoga: 03ff42a6f223fb88deeaed60249020d80c3091ee
 
 PODFILE CHECKSUM: a93e823490e3d9193aeb18b82f2c003e728738e4
