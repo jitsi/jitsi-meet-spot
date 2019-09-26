@@ -41,8 +41,8 @@ module.exports = {
     MEETING_JOIN_WAIT: 15000,
 
     /**
-     * The maximum amount of time, in milliseconds, for Spot-Remote to wait for
-     * Spot-TV to update its state after a command is sent.
+     * The maximum amount of time, in milliseconds, for a Spot-Remote to wait
+     * for the Spot-TV to update its state after a command is sent.
      */
     REMOTE_COMMAND_WAIT: 10000,
 

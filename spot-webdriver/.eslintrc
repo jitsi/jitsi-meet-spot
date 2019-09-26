@@ -8,6 +8,7 @@
         "process": true
     },
     "rules": {
+        "jsdoc/check-tag-names": 0,
         "max-len": [ "error", 120 ],
         "no-console": 1,
         "space-before-function-paren": ["error", {
