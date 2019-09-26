@@ -25,6 +25,7 @@ class PostLogsRequest {
 export default class PostToEndpoint {
     /**
      * How many times it'll retry to send a log batch.
+     *
      * @type {number}
      */
     static MAX_RETRIES = 3;

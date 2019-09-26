@@ -37,6 +37,7 @@ export default {
                 // FIXME define a type for Spot's calendar event object
                 const output = [];
                 const MAX_EVENT_COUNT = 3;
+
                 let i = 0;
 
                 for (const inputEvent of events) {

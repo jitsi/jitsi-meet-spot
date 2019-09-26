@@ -10,9 +10,13 @@ import {
 } from './constants';
 
 let clientConfig = null;
+
 let popupAuthWindow = null;
+
 let refreshPromise = null;
+
 let signInPromise = null;
+
 let windowCloseCheck = null;
 
 /**

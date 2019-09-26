@@ -64,6 +64,7 @@ describe('SpotBackendService', () => {
     const PAIRING_SERVICE_URL = 'test/pairing/url';
     const REFRESH_SERVICE_URL = `${PAIRING_SERVICE_URL}/regenerate`;
     const ROOM_KEEPER_SERVICE_URL = 'test/keeper/url';
+
     let spotBackendService;
 
     beforeEach(() => {

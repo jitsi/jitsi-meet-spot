@@ -61,7 +61,7 @@ export default class P2PSignalingBase extends Emitter {
      * @param {string} remoteAddress - The remote address string.
      * @private
      * @returns {PeerConnection}
-     * @throws an error if {@link PeerConnection} already exists for the given address.
+     * @throws An error if {@link PeerConnection} already exists for the given address.
      */
     _initPeerConnection(remoteAddress) {
         if (this._peerConnections.get(remoteAddress)) {

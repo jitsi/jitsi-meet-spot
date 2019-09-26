@@ -17,7 +17,7 @@ import StatelessDialPad from './StatelessDialPad';
  * Removes phone number formatting from given formatted string.
  *
  * Example:
- * +1 (342) 543 6767 => +13425436767
+ * +1 (342) 543 6767 => +13425436767.
  *
  * @param {string} formattedPhoneNumber - A pretty phone number string to be stripped of extra formatting.
  * @returns {string}
@@ -254,6 +254,7 @@ export class DialPad extends React.Component {
         this._asYouType.reset();
 
         let formattedPhone = this._asYouType.input(typedValue);
+
         let selectedCountryCode = this.state.selectedCountryCode;
 
         // If entered characters are removed by the "as you type" it means they do not add up to a valid phone number.

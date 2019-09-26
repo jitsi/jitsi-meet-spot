@@ -196,6 +196,7 @@ export class SpotBackendService extends Emitter {
      */
     register(pairingCode) {
         const storedRegistration = persistence.get(PERSISTENCE_KEY);
+
         let registerDevicePromise;
 
         if (storedRegistration && storedRegistration.pairingCode === pairingCode) {

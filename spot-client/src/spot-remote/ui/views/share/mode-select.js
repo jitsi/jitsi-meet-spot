@@ -33,6 +33,7 @@ export class ModeSelect extends React.Component {
         } = this.props;
 
         let disabled = false;
+
         let footerMessage = '';
 
         if (!isWirelessScreenshareSupported) {

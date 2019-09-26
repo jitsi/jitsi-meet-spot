@@ -235,6 +235,7 @@ export class ScreensharePicker extends React.Component {
         const icon = isWirelessScreensharing
             ? 'wireless_screen_share'
             : 'wired_screen_share';
+
         let ctaTitle;
 
         if (isWirelessScreensharing) {

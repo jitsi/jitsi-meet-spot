@@ -80,7 +80,7 @@ export default {
     /**
      * The domain to proceed to when a meeting name is submitted without a base
      * url. This value should be set to the domain of a jitsi-meet deployment;
-     * for example, set it to "meet.jit.si."
+     * for example, set it to "meet.jit.si".
      *
      * @type {string}
      */

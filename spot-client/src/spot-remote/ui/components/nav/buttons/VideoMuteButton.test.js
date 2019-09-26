@@ -7,6 +7,7 @@ import { VideoMuteButton } from './VideoMuteButton';
 
 describe('VideoMuteButton', () => {
     let setVideoMuteCallback;
+
     let videoMuteButton;
 
     beforeEach(() => {

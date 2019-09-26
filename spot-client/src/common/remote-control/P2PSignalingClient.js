@@ -12,6 +12,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
     /**
      * Events fired when Spot TV status update is received over the P2P data channel. As an argument it will pass
      * Spot TV's remote address and the entire TV state object.
+     *
      * @type {string}
      */
     static SPOT_TV_STATUS_UPDATE = 'SPOT_TV_STATUS_UPDATE';
@@ -27,12 +28,13 @@ export default class P2PSignalingClient extends P2PSignalingBase {
 
         /**
          * @typedef {Object} PromiseLike
-         * @property {Function} resolve - hooked up to Promise's resolve method.
-         * @property {Function} reject - hooked up to Promise's reject method.
+         * @property {Function} resolve - Hooked up to Promise's resolve method.
+         * @property {Function} reject - Hooked up to Promise's reject method.
          */
         /**
          * Map stores command requests sent over P2P signaling in order to resolve original promises when ack is
          * received.
+         *
          * @type {Map<number, PromiseLike>}
          * @private
          */

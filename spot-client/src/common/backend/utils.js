@@ -58,6 +58,7 @@ function createHeaders(jwt) {
  */
 function fetchWithRetry(fetchOptions, maxRetries = 3) {
     const { url, requestOptions, operationName } = fetchOptions;
+
     let retry = 0;
 
     /**
@@ -392,7 +393,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
 
 /**
  * @typedef {Object} BackendRoomInfo
- * @property {string} mucUrl - the name of the MUC room assigned for the Spot's join code which
+ * @property {string} mucUrl - The name of the MUC room assigned for the Spot's join code which
  * tells where both Spot TV and Spot Remote have to go in order to establish the connection.
  * @property {string} name - The Spot room's display name.
  * @property {string} countryCode - ISO 3166-1 alpha-2 country code for the room's location.
@@ -414,7 +415,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
  *     "roomId": "string"
  *   },
  *   "resourceEmail": "string"
- * }
+ * }.
  */
 /**
  * Contacts the backend service which assigns the MUC room names for Spot join codes.

@@ -43,7 +43,9 @@ export class VideoMuteButton extends React.Component {
      */
     render() {
         const { changePending, videoMuted } = this.props;
+
         let label;
+
         let qaId;
 
         if (changePending) {

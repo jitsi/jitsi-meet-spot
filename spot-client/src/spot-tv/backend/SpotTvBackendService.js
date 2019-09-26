@@ -49,6 +49,7 @@ export class SpotTvBackendService extends SpotBackendService {
      */
     getNextShortLivedPairingCodeRefresh() {
         const FIVE_MINUTES = 5 * 60 * 1000;
+
         let nextRefresh = FIVE_MINUTES;
 
         if (this.remotePairingInfo) {

@@ -2,7 +2,9 @@ import ApiHealthCheck from './ApiHealthCheck';
 
 describe('ApiHealthCheck', () => {
     let apiHealthCheck;
+
     let mockJitsiApi;
+
     let onErrorCallback;
 
     beforeEach(() => {
@@ -45,7 +47,7 @@ describe('ApiHealthCheck', () => {
         });
 
         it('is called if the health check times out', () => {
-            mockJitsiApi.isVideoMuted.mockReturnValue(new Promise(() => { /** hung promise */ }));
+            mockJitsiApi.isVideoMuted.mockReturnValue(new Promise(() => { /** Hung promise. */ }));
 
             apiHealthCheck.start();
 

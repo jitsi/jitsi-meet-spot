@@ -6,6 +6,7 @@ import { MeetingNameEntry } from './MeetingNameEntry';
 describe('MeetingNameEntry', () => {
     const MEETING_NAME = 'mock-meeting-name';
     const PLACEHOLDER = 'test-placeholder';
+
     let meetingNameEntry, onChangeCallback, onSubmitCallback;
 
     beforeEach(() => {

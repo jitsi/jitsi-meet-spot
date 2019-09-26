@@ -7,12 +7,14 @@ import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
 /**
  * XML element name for spot status added to MUC presence.
+ *
  * @type {string}
  */
 const SPOT_STATUS_ELEMENT_NAME = 'spot-status';
 
 /**
  * XML namespace for Spot specific XML.
+ *
  * @type {string}
  */
 const SPOT_XMLNS = 'https://jitsi.org/spot';
@@ -650,6 +652,7 @@ export default class XmppConnection {
         const id = messageIq.getAttribute('id');
         const message = messageIq.getElementsByTagName('message')[0];
         const messageType = message.getAttribute('type');
+
         let data;
 
         try {
@@ -674,7 +677,7 @@ export default class XmppConnection {
      *
      * @property {string} from - The jid of the user with the presence.
      * @property {string} type - The current overall status of the user. Examples
-     * include "unavailable" and "error."
+     * include "unavailable" and "error".
      * @property {Object} state - Current application state of the user.
      */
 
@@ -688,6 +691,7 @@ export default class XmppConnection {
         const from = presence.getAttribute('from');
         const statusCodes = Array.from(presence.getElementsByTagName('status'))
             .map(statusEl => statusEl.getAttribute('code'));
+
         let type = presence.getAttribute('type');
 
         // Assume unknown participant presence indicates a join.
