@@ -256,16 +256,7 @@ export default {
         P2P_SIGNALING:
             typeof process.env.FEATURE_FLAG_P2P_SIGNALING === 'undefined'
                 ? true
-                : process.env.FEATURE_FLAG_P2P_SIGNALING === 'true',
-
-        /**
-         * Allow DTMF support to be hidden while waiting for the jitsi-meet side
-         * to be deployed and for a fix to be created for touch tones not
-         * being played over dial out.
-         *
-         * @type {boolean}
-         */
-        SHOW_DTMF: false
+                : process.env.FEATURE_FLAG_P2P_SIGNALING === 'true'
     },
 
     /**

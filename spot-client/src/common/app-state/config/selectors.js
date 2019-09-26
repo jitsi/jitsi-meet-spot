@@ -260,17 +260,6 @@ export function shouldKickTemporaryRemotes(state) {
 }
 
 /**
- * A selector which returns whether or not the feature flag for showing DTMF
- * support is enabled or not.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function shouldShowDtmf(state) {
-    return state.config.TEMPORARY_FEATURE_FLAGS.SHOW_DTMF;
-}
-
-/**
  * Whether or not the P2P signaling channel should be enabled in the remote control service.
  *
  * @param {Object} state - The Redux state.
