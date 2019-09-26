@@ -93,11 +93,14 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                         requestId: requestOptions.headers.get('request-id')
                     });
 
-                    if (response.status === 401) {
+                    const { status: httpStatusCode } = response;
+
+                    if (httpStatusCode === 401
+                        || (httpStatusCode === 400 && json?.messageKey === 'pairing.code.not.found')) {
                         reject(errorConstants.NOT_AUTHORIZED);
 
                         return;
-                    } else if (response.status < 500 || response.status >= 600) {
+                    } else if (httpStatusCode < 500 || httpStatusCode >= 600) {
                         // Break the retry chain early
                         reject(errorConstants.REQUEST_FAILED);
 
