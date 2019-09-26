@@ -27,6 +27,7 @@ export default class StatelessDialPad extends React.Component {
         buttonText: PropTypes.string,
         dialingInProgress: PropTypes.bool,
         disableCallButton: PropTypes.bool,
+        disablePlusSign: PropTypes.bool,
         onChange: PropTypes.func,
         onCountryCodeSelect: PropTypes.func,
         onSubmit: PropTypes.func,
@@ -307,8 +308,8 @@ export default class StatelessDialPad extends React.Component {
                 key = '0'
                 mainValue = '0'
                 onClick = { this._onDialButtonClick }
-                onLongClick = { this._onReplaceLastChar }
-                sub = '+' />
+                onLongClick = { this.props.disablePlusSign ? undefined : this._onReplaceLastChar }
+                sub = { this.props.disablePlusSign ? '' : '+' } />
         );
     }
 }
