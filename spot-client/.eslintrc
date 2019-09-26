@@ -17,6 +17,8 @@
         }
     ],
     "rules": {
+        "jsdoc/check-tag-names": 0,
+        "jsdoc/require-description-complete-sentence": 0,
         "no-console": 1,
         "space-before-function-paren": ["error", {
             "anonymous": "always",

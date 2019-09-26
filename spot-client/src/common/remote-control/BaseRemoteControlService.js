@@ -115,6 +115,7 @@ export class BaseRemoteControlService extends Emitter {
             joinCode,
             retryOnUnauthorized
         } = options;
+
         let roomProfile;
 
         return this.exchangeCode(joinCode)
@@ -306,8 +307,8 @@ export class BaseRemoteControlService extends Emitter {
      * @property {string} [countryCode] - ISO 3166-1 alpha-2 country code for the room's location.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
-     * @property {string} roomName - the name of the MUC room.
-     * @property {string} [roomLock] - the room's password (if any).
+     * @property {string} roomName - The name of the MUC room.
+     * @property {string} [roomLock] - The room's password (if any).
      */
     /**
      * Converts a join code to Spot-TV connection information so it can be

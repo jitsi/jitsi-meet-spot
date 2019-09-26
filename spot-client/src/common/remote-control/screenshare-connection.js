@@ -49,7 +49,7 @@ export default class ScreenshareConnection {
             = new JitsiMeetJS.ProxyConnectionService({
                 jitsiConnection: options.jitsiConnection,
                 onConnectionClosed: () => this.options.onConnectionClosed(),
-                onRemoteStream: () => { /** no-op for Spot */ },
+                onRemoteStream: () => { /** No-op for Spot. */ },
                 onSendMessage: (to, data) => this.options.sendMessage(to, data)
             });
     }

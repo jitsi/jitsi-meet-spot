@@ -84,7 +84,7 @@ class WiredScreenshareDetector extends React.PureComponent {
 
             wiredScreenshareService.stopListeningForConnection(
                 prevProps.wiredScreenshareDevice,
-                this._onWiredScreenshareChange,
+                this._onWiredScreenshareChange
             );
 
             avUtils.enumerateVideoDevices()

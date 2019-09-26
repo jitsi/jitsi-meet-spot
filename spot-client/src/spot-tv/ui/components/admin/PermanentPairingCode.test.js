@@ -7,6 +7,7 @@ import { PermanentPairingCode } from './PermanentPairingCode';
 
 describe('PermanentPairingCode', () => {
     const TEST_PAIRING_CODE = '123456';
+
     let permanentPairingCode, refreshPairingCodeSpy;
 
     beforeEach(() => {

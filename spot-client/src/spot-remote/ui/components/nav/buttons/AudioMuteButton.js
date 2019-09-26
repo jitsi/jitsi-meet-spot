@@ -43,7 +43,9 @@ export class AudioMuteButton extends React.Component {
      */
     render() {
         const { audioMuted, changePending } = this.props;
+
         let label;
+
         let qaId;
 
         if (changePending) {

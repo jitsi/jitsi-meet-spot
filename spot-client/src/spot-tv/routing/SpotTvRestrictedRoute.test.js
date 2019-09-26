@@ -14,6 +14,7 @@ jest.mock('common/detection', () => {
 
 describe('SpotTvRestrictedRoute', () => {
     const MOCK_ROUTE = '/mock-route';
+
     let isSupportedBrowserSpy, pathRenderSpy, restrictedRoute;
 
     beforeEach(() => {

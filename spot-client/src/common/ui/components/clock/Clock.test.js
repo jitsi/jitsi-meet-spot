@@ -6,6 +6,7 @@ import Clock from './Clock';
 
 describe('Clock', () => {
     const twelveHoursInMs = 12 * 60 * 60 * 1000;
+
     let clock, mockSystemClock;
 
     beforeEach(() => {

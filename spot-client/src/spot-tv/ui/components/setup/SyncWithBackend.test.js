@@ -7,6 +7,7 @@ import { SyncWithBackend } from './SyncWithBackend';
 
 describe('SyncWithBackend', () => {
     const MOCK_JOIN_CODE = '12345678';
+
     let onAttemptSyncSpy, onSuccessSpy, onSyncErrorSpy, syncWithBackend;
 
     beforeEach(() => {

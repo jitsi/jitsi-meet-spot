@@ -2,13 +2,14 @@ import { logger } from 'common/logger';
 import P2PSignalingBase from './P2PSignalingBase';
 
 /**
- * Peer to peer signalling channel for Spot TV(server). Will process remote control commands
+ * Peer to peer signalling channel for Spot TV(server). Will process remote control commands.
  */
 export default class P2PSignalingServer extends P2PSignalingBase {
     /**
      * Event fired when remote control command(see {@link COMMANDS}) has been received over P2P data channel from Spot
      * Remote. The Spot TV is supposed to send an ACK message back using {@link sendCommandAck} after the command has
      * been processed.
+     *
      * @type {string}
      */
     static REMOTE_CONTROL_CMD_RECEIVED = 'REMOTE_CONTROL_CMD_RECEIVED';

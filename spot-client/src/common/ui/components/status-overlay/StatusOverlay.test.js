@@ -5,6 +5,7 @@ import { StatusOverlay } from './StatusOverlay';
 
 describe('StatusOverlay', () => {
     const TEST_TITLE = 'test-title';
+
     let statusOverlay;
 
     it('renders the passed in title', () => {

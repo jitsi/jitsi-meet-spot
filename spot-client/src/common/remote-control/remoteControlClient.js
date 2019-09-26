@@ -14,7 +14,7 @@ import P2PSignalingBase from './P2PSignalingBase';
 
 /**
  * @typedef {Object} GoToMeetingOptions
- * @property {string} startWithScreensharing - if 'wireless' the meeting will be joined with
+ * @property {string} startWithScreensharing - If 'wireless' the meeting will be joined with
  * the wireless screensharing turned on. If 'wired' will be joined with wired. The meeting will be
  * joined without screensharing for any other value or lack of thereof.
  */
@@ -198,6 +198,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
         }
 
         const { startWithScreensharing, ...otherOptions } = options;
+
         let preGoToMeeting = Promise.resolve();
 
         if (startWithScreensharing === 'wireless') {

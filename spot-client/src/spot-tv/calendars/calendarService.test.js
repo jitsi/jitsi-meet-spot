@@ -201,6 +201,7 @@ describe('calendarService', () => {
                 }
             ];
             const options = {};
+
             let hasFetched = false;
 
             jest.spyOn(calendarService, 'getCalendar').mockImplementation(() => {

@@ -7,6 +7,7 @@ import { AudioMuteButton } from './AudioMuteButton';
 
 describe('AudioMuteButton', () => {
     let setAudioMuteCallback;
+
     let audioMuteButton;
 
     beforeEach(() => {

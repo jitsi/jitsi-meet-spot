@@ -202,7 +202,7 @@ export class Meeting extends React.Component {
         try {
             invites = JSON.parse(decodeURIComponent(invitesParam));
         } catch (error) {
-            /** no op */
+            /** No op. */
         }
 
         let location;

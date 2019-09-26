@@ -5,6 +5,7 @@ import IdleCursorDetector from './IdleCursorDetector';
 
 describe('IdleCursorDetector', () => {
     const TIME_LIMIT = 100;
+
     let idleCursorDetector, listenerMap, onChangeSpy;
 
     beforeEach(() => {

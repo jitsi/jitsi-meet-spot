@@ -14,6 +14,7 @@ import { SelfFillingNameEntry } from './SelfFillingNameEntry';
 describe('SelfFillingNameEntry', () => {
     const RANDOM_MEETING = 'random placeholder';
     const { animationRevealRate, animationStartDelay } = SelfFillingNameEntry.defaultProps;
+
     let onSubmitCallback, randomNameSpy, selfFillingNameEntry;
 
     beforeEach(() => {

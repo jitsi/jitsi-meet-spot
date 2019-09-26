@@ -261,7 +261,7 @@ export class App extends React.Component {
      * @returns {void}
      */
     _onTouchStart() {
-        /** no-op */
+        /** No-op. */
     }
 
     /**

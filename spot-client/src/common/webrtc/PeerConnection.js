@@ -15,6 +15,7 @@ export const DEFAULT_STUN_SERVERS = [
 export default class PeerConnection extends Emitter {
     /**
      * Event sent when a new message is received over the data channel.
+     *
      * @type {string}
      */
     static DATA_CHANNEL_MSG_RECEIVED = 'PC_DATA_CHANNEL_MSG_RECEIVED';
@@ -22,6 +23,7 @@ export default class PeerConnection extends Emitter {
     /**
      * The {@code PeerConnection} class tries to manage a single data channel and this event is emitted whenever this
      * data channel's status changes.
+     *
      * @type {string}
      */
     static DATA_CHANNEL_STATUS_CHANGED = 'PC_DATA_CHANNEL_STATUS_CHANGED';
@@ -29,6 +31,7 @@ export default class PeerConnection extends Emitter {
     /**
      * Event emitted when new ICE candidate has been discovered. It needs to be transferred over and set on the remote
      * {@code PeerConnection}. See {@link PeerConnection.addRemoteIceCandidate}.
+     *
      * @type {string}
      */
     static ON_ICE_CANDIDATE = 'PC_ON_ICE_CANDIDATE';

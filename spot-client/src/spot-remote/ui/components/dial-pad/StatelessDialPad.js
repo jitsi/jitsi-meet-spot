@@ -89,6 +89,7 @@ export default class StatelessDialPad extends React.Component {
      */
     render() {
         const callButtonDisabled = this.props.disableCallButton || this.props.dialingInProgress;
+
         let callButtonClassName = 'call-button dial-button';
 
         if (callButtonDisabled) {
