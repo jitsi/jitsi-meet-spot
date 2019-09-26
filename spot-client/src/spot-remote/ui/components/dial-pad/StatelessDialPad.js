@@ -185,7 +185,11 @@ export default class StatelessDialPad extends React.Component {
      * @returns {void}
      */
     _onDialButtonClick(value) {
-        this.props.onChange(`${this.props.value}${value}`);
+        // The ＊ sign was used as the buttons value to make it look better. But it needs to be translated back to * in
+        // order for the DTMF tones to work correctly.
+        const filteredValue = value === '＊' ? '*' : value;
+
+        this.props.onChange(`${this.props.value}${filteredValue}`);
     }
 
     /**
