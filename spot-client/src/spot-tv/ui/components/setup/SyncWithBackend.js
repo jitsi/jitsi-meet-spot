@@ -93,7 +93,7 @@ export class SyncWithBackend extends React.Component {
                     });
 
                     logger.error('connectSpotTvToBackend failed', { error });
-                    this.props.onSyncError();
+                    this.props.onSyncError(error);
                 });
     }
 }
@@ -125,8 +125,13 @@ function mapDispatchToProps(dispatch) {
             return dispatch(pairWithBackend(pairingCode));
         },
 
-        onSyncError() {
-            dispatch(addNotification('error', 'Something went wrong'));
+        onSyncError(error) {
+            // In the wrong password case return back to join code entry.
+            if (error === 'not-authorized') {
+                dispatch(addNotification('error', 'Invalid share key'));
+            } else {
+                dispatch(addNotification('error', 'Something went wrong'));
+            }
         }
     };
 }
