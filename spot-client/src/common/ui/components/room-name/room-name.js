@@ -14,7 +14,6 @@ import {
  */
 export class RoomName extends React.Component {
     static propTypes = {
-        render: PropTypes.func,
         roomName: PropTypes.string
     };
 
@@ -27,11 +26,7 @@ export class RoomName extends React.Component {
     render() {
         return (
             <div className = 'room-name'>
-                {
-                    this.props.render
-                        ? this.props.render(this.props.roomName)
-                        : this.props.roomName
-                }
+                { this.props.roomName }
             </div>
         );
     }
