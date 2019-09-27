@@ -38,7 +38,12 @@ function registerDeviceController(spots, req, res) {
         }
 
         if (!spotRoom) {
-            send400Error(res, 'Invalid paring code');
+            res.status(400);
+            res.statusMessage = 'Invalid paring code';
+            sendJSON(res, {
+                messageKey: 'pairing.code.not.found'
+            });
+            res.end();
 
             return;
         }
