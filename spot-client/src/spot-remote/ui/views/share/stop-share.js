@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
 import { ScreenShare } from 'common/icons';
-import { LoadingIcon, RoomName, View } from 'common/ui';
-import { parseMeetingUrl } from 'common/utils';
+import { LoadingIcon, View } from 'common/ui';
 
-import { NavButton } from './../../components';
+import { MeetingHeader, NavButton } from './../../components';
 
 /**
  * Displays a button for stopping wireless screenshare in progress.
@@ -31,22 +30,12 @@ export class StopShare extends React.Component {
             return <LoadingIcon />;
         }
 
-        const { host, meetingName, path } = parseMeetingUrl(this.props.inMeeting);
-
         return (
             <View name = 'stop-share'>
                 <div
                     className = 'stop-share'
                     data-qa-id = 'stop-share'>
-                    <div className = 'view-header'>
-                        <RoomName />
-                        <div className = 'in-call-name'>
-                            { meetingName }
-                        </div>
-                        <div className = 'in-call-meeting-url' >
-                            { `${host}${path}/${meetingName}` }
-                        </div>
-                    </div>
+                    <MeetingHeader meetingUrl = { this.props.inMeeting } />
                     <div className = 'stop-share-button-container'>
                         <NavButton
                             className = 'sharebutton active'
