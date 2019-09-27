@@ -22,6 +22,7 @@ import reducers, {
     setSetupCompleted
 } from 'common/app-state';
 import { setPermanentPairingCode } from 'common/backend';
+import 'common/i18n';
 import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,

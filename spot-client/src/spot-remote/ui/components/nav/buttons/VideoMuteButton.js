@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -21,6 +22,7 @@ export class VideoMuteButton extends React.Component {
     static propTypes = {
         changePending: PropTypes.bool,
         setVideoMute: PropTypes.func,
+        t: PropTypes.func,
         videoMuted: PropTypes.bool
     };
 
@@ -42,17 +44,19 @@ export class VideoMuteButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { changePending, videoMuted } = this.props;
+        const { changePending, t, videoMuted } = this.props;
 
-        let label;
-
-        let qaId;
+        let qaId, translationKey;
 
         if (changePending) {
-            label = videoMuted ? 'Stopping...' : 'Starting...';
+            translationKey = videoMuted
+                ? 'commands.videoMutePending'
+                : 'commands.videoUnmutePending';
             qaId = 'mute-video-change-pending';
         } else {
-            label = videoMuted ? 'Start Camera' : 'Stop Camera';
+            translationKey = videoMuted
+                ? 'commands.videoUnmute'
+                : 'commands.videoMute';
             qaId = videoMuted ? 'unmute-video' : 'mute-video';
         }
 
@@ -60,7 +64,7 @@ export class VideoMuteButton extends React.Component {
             <NavButton
                 active = { changePending ? !videoMuted : videoMuted }
                 className = { `video-mute-button ${changePending ? 'pending' : ''}` }
-                label = { label }
+                label = { t(translationKey) }
                 onClick = { this._onToggleVideoMute }
                 qaId = { qaId }>
                 { videoMuted ? <VideocamOff /> : <Videocam /> }
@@ -115,4 +119,7 @@ function mapDispatchToProps(dispatch) {
         }
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(VideoMuteButton);
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(VideoMuteButton)
+);
