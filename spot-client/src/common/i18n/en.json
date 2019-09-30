@@ -1,8 +1,27 @@
 {
+    "appStatus": {
+        "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
+        "redirectingHome": "Redirecting to home in",
+        "setup": "Currently in setup.",
+        "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
+        "unexpectedError": "An unexpected error occurred.",
+        "useChrome": "Please open {{ productName }} on Chrome desktop.",
+        "waitingForTv": "Waiting for {{ productName }} TV to connect."
+    },
+    "buttons": {
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "submit": "Submit"
+    },
     "commands": {
         "videoMute": "Stop Camera",
         "videoMutePending": "Stopping...",
         "videoUnmute": "Start Camera",
         "videoUnmutePending": "Starting..."
+    },
+    "conferenceStatus": {
+        "enterPassword": "Enter the conference password.",
+        "kicked": "You have been removed from the conference.",
+        "password": "Password"
     }
 }

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 import { Button, Input } from 'common/ui';
@@ -9,10 +10,11 @@ import { Button, Input } from 'common/ui';
  *
  * @extends React.Component
  */
-export default class PasswordPrompt extends React.Component {
+export class PasswordPrompt extends React.Component {
     static propTypes = {
         onCancel: PropTypes.func,
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -39,24 +41,29 @@ export default class PasswordPrompt extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const { onCancel, t } = this.props;
+        const { enteredPassword } = this.state;
+
         return (
             <form
                 className = 'password-prompt'
                 onSubmit = { this._onSubmit }>
-                <div className = 'cta'>Enter the conference password</div>
+                <div className = 'cta'>
+                    { t('conferenceStatus.enterPassword') }
+                </div>
                 <Input
                     onChange = { this._onInputChange }
-                    placeholder = { 'Enter the conference password' }
-                    value = { this.state.enteredPassword } />
+                    placeholder = { t('conferenceStatus.password') }
+                    value = { enteredPassword } />
                 <div className = 'password-prompt-buttons'>
                     <Button
                         appearance = 'subtle'
                         className = 'skip-button'
-                        onClick = { this.props.onCancel }>
-                        Cancel
+                        onClick = { onCancel }>
+                        { t('buttons.cancel') }
                     </Button>
                     <Button type = 'submit'>
-                        Submit
+                        { t('buttons.submit') }
                     </Button>
                 </div>
             </form>
@@ -89,3 +96,5 @@ export default class PasswordPrompt extends React.Component {
         this.props.onSubmit(this.state.enteredPassword);
     }
 }
+
+export default withTranslation()(PasswordPrompt);

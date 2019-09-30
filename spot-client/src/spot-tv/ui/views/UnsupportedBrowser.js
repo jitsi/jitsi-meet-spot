@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { getProductName } from 'common/app-state';
@@ -9,19 +10,18 @@ import { getProductName } from 'common/app-state';
  *
  * @returns {ReactElement}
  */
-export function UnsupportedBrowser({ productName }) {
+export function UnsupportedBrowser({ productName, t }) {
     return (
         <div className = 'unsupported-browser'>
-            <div>
-                Hosting { productName } is not supported on the current browser.
-            </div>
-            <div>Please open { productName } on Chrome desktop.</div>
+            <div>{ t('appStatus.tvNotSupported', { productName })}</div>
+            <div>{ t('appStatus.useChrome', { productName }) }</div>
         </div>
     );
 }
 
 UnsupportedBrowser.propTypes = {
-    productName: PropTypes.string
+    productName: PropTypes.string,
+    t: PropTypes.func
 };
 
 /**
@@ -38,5 +38,4 @@ function mapStateToProps(state) {
     };
 }
 
-
-export default connect(mapStateToProps)(UnsupportedBrowser);
+export default connect(mapStateToProps)(withTranslation()(UnsupportedBrowser));

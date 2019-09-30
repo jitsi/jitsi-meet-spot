@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Countdown, StatusOverlay } from 'common/ui';
 
@@ -11,15 +12,18 @@ import { Countdown, StatusOverlay } from 'common/ui';
  * instance is to be initialized.
  * @returns {ReactNode}
  */
-export function KickedOverlay(props) {
+export function KickedOverlay({ onRedirect, t }) {
     return (
-        <StatusOverlay title = 'You have been removed from the conference'>
-            <div>The conference will be exited automatically in:</div>
-            <Countdown onCountdownComplete = { props.onRedirect } />
+        <StatusOverlay title = { t('conferenceStatus.kicked') }>
+            <div>{ t('appStatus.redirectingHome') }</div>
+            <Countdown onCountdownComplete = { onRedirect } />
         </StatusOverlay>
     );
 }
 
 KickedOverlay.propTypes = {
-    onRedirect: PropTypes.func
+    onRedirect: PropTypes.func,
+    t: PropTypes.func
 };
+
+export default withTranslation()(KickedOverlay);
