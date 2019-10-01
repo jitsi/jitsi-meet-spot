@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -21,6 +22,7 @@ export class TileViewButton extends React.Component {
     static propTypes = {
         changePending: PropTypes.bool,
         setTileView: PropTypes.func,
+        t: PropTypes.func,
         tileView: PropTypes.bool
     };
 
@@ -42,13 +44,15 @@ export class TileViewButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { tileView } = this.props;
-        const label = tileView ? 'Exit Tile View' : 'Enter Tile View';
+        const { tileView, t } = this.props;
+        const translationKey = tileView
+            ? 'commands.tileViewExit'
+            : 'commands.tileViewEnter';
         const qaId = tileView ? 'exit-tile-view' : 'enter-tile-view';
 
         return (
             <NavButton
-                label = { label }
+                label = { t(translationKey) }
                 onClick = { this._onToggleTileView }
                 qaId = { qaId }>
                 { tileView ? <GridOff /> : <GridOn /> }
@@ -103,4 +107,6 @@ function mapDispatchToProps(dispatch) {
         }
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(TileViewButton);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(TileViewButton)
+);

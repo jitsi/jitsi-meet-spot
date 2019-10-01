@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -22,7 +23,8 @@ export class MoreButton extends React.Component {
     static propTypes = {
         isMoreModalOpen: PropTypes.bool,
         onHideModal: PropTypes.func,
-        onShowMoreModal: PropTypes.func
+        onShowMoreModal: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -48,7 +50,7 @@ export class MoreButton extends React.Component {
         return (
             <NavButton
                 className = { moreButtonStyles }
-                label = 'More'
+                label = { this.props.t('commands.more') }
                 onClick = { this._onToggleMoreModal }
                 qaId = 'more'>
                 <MoreVert />
@@ -114,4 +116,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MoreButton);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(MoreButton)
+);

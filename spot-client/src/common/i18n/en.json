@@ -14,10 +14,21 @@
         "submit": "Submit"
     },
     "commands": {
+        "audioMute": "Mute Audio",
+        "audioMutePending": "Muting...",
+        "audioUnmute": "Unmute Audio",
+        "audioUnmutePending": "Unmuting...",
+        "dialTones": "Dial Tones",
+        "hangUp": "Leave",
+        "more": "More",
+        "share": "Share Content",
+        "tileViewEnter": "Enter Tile View",
+        "tileViewExit": "Exit Tile View",
         "videoMute": "Stop Camera",
         "videoMutePending": "Stopping...",
         "videoUnmute": "Start Camera",
-        "videoUnmutePending": "Starting..."
+        "videoUnmutePending": "Starting...",
+        "volume": "Volume control"
     },
     "conferenceStatus": {
         "enterPassword": "Enter the conference password.",
