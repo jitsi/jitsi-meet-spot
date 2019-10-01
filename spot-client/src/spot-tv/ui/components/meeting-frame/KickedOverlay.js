@@ -15,7 +15,7 @@ import { Countdown, StatusOverlay } from 'common/ui';
 export function KickedOverlay({ onRedirect, t }) {
     return (
         <StatusOverlay title = { t('conferenceStatus.kicked') }>
-            <div>{ t('appStatus.redirectingHome') }</div>
+            <div>{ t('conferenceStatus.exitingConference') }</div>
             <Countdown onCountdownComplete = { onRedirect } />
         </StatusOverlay>
     );

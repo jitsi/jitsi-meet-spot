@@ -44,7 +44,7 @@ export class FatalError extends React.Component {
         return (
             <View name = 'error'>
                 <StatusOverlay title = { this.props.t('appStatus.unexpectedError') }>
-                    <div>{ this.props.t('appStatus.redirectingHome') }</div>
+                    <div>{ this.props.t('appStatus.willReload') }</div>
                     <Countdown
                         onCountdownComplete = { this._onReload }
                         startTime = { 10 } />
