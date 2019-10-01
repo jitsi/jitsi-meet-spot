@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
+
 import { Button } from 'common/ui';
 
 /**
@@ -7,9 +9,10 @@ import { Button } from 'common/ui';
  *
  * @extends React.Component
  */
-export default class KickedNotice extends React.Component {
+export class KickedNotice extends React.Component {
     static propTypes = {
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -19,11 +22,15 @@ export default class KickedNotice extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const { onSubmit, t } = this.props;
+
         return (
             <div className = 'kicked-notice'>
-                <div className = 'cta'>You have been removed from the conference</div>
-                <Button onClick = { this.props.onSubmit }>Continue</Button>
+                <div className = 'cta'>{ t('conferenceStatus.kicked') }</div>
+                <Button onClick = { onSubmit }>{ t('buttons.continue') }</Button>
             </div>
         );
     }
 }
+
+export default withTranslation()(KickedNotice);

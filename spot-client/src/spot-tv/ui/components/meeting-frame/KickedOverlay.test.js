@@ -1,6 +1,8 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
+
 import { KickedOverlay } from './KickedOverlay';
 
 describe('KickedOverlay', () => {
@@ -9,7 +11,11 @@ describe('KickedOverlay', () => {
 
         const callback = jest.fn();
 
-        mount(<KickedOverlay onRedirect = { callback } />);
+        mount(
+            <KickedOverlay
+                onRedirect = { callback }
+                t = { mockT } />
+        );
 
         jest.runAllTimers();
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { isSpot } from 'common/app-state';
@@ -17,7 +18,8 @@ import View from './view';
  */
 export class FatalError extends React.Component {
     static propTypes = {
-        isSpotTV: PropTypes.bool
+        isSpotTV: PropTypes.bool,
+        t: PropTypes.func
     };
 
     /**
@@ -41,8 +43,8 @@ export class FatalError extends React.Component {
     render() {
         return (
             <View name = 'error'>
-                <StatusOverlay title = 'An unexpected error occurred'>
-                    <div>We will redirect you to home in</div>
+                <StatusOverlay title = { this.props.t('appStatus.unexpectedError') }>
+                    <div>{ this.props.t('appStatus.willReload') }</div>
                     <Countdown
                         onCountdownComplete = { this._onReload }
                         startTime = { 10 } />
@@ -75,4 +77,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(FatalError);
+export default connect(mapStateToProps)(withTranslation()(FatalError));
