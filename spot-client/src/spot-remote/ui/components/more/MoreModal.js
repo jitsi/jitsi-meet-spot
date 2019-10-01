@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -23,7 +24,8 @@ export class MoreModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
         supportsDtmf: PropTypes.bool,
-        supportsVolumeControl: PropTypes.bool
+        supportsVolumeControl: PropTypes.bool,
+        t: PropTypes.func
     };
 
     /**
@@ -67,7 +69,7 @@ export class MoreModal extends React.Component {
                     {
                         this.props.supportsVolumeControl && (
                             <NavButton
-                                label = 'Volume control'
+                                label = { this.props.t('commands.volume') }
                                 onClick = { this._onShowVolumeMenu }
                                 qaId = 'volume'>
                                 <VolumeUp />
@@ -142,4 +144,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MoreModal);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(MoreModal)
+);

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -21,7 +22,8 @@ export class AudioMuteButton extends React.Component {
     static propTypes = {
         audioMuted: PropTypes.bool,
         changePending: PropTypes.bool,
-        setAudioMute: PropTypes.func
+        setAudioMute: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -42,17 +44,19 @@ export class AudioMuteButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { audioMuted, changePending } = this.props;
+        const { audioMuted, changePending, t } = this.props;
 
-        let label;
-
-        let qaId;
+        let qaId, translationKey;
 
         if (changePending) {
-            label = audioMuted ? 'Muting...' : 'Unmuting...';
+            translationKey = audioMuted
+                ? 'commands.audioMutePending'
+                : 'commands.audioUnmutePending';
             qaId = 'mute-audio-change-pending';
         } else {
-            label = audioMuted ? 'Unmute Audio' : 'Mute Audio';
+            translationKey = audioMuted
+                ? 'commands.audioUnmute'
+                : 'commands.audioMute';
             qaId = audioMuted ? 'unmute-audio' : 'mute-audio';
         }
 
@@ -60,7 +64,7 @@ export class AudioMuteButton extends React.Component {
             <NavButton
                 active = { changePending ? !audioMuted : audioMuted }
                 className = { changePending ? 'pending' : '' }
-                label = { label }
+                label = { t(translationKey) }
                 onClick = { this._onToggleAudioMute }
                 qaId = { qaId }>
                 { audioMuted ? <MicOff /> : <Mic /> }
@@ -115,4 +119,6 @@ function mapDispatchToProps(dispatch) {
         }
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(AudioMuteButton);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(AudioMuteButton)
+);
