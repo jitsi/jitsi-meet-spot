@@ -63,6 +63,7 @@ export class CalendarService extends Emitter {
         this._calendarEvents = [];
 
         this._currentCalendarPollingOptions = null;
+        this._hasErrorOnLastFetch = false;
         this._hasFetchedEvents = false;
         this._updateEventsTimeout = null;
     }
@@ -221,8 +222,10 @@ export class CalendarService extends Emitter {
                 const events = this._updateMeetingUrlOnEvents(formattedEvents);
 
                 if (!this._hasFetchedEvents
+                    || this._hasErrorOnLastFetch
                     || hasUpdatedEvents(this._calendarEvents, events)) {
                     this._hasFetchedEvents = true;
+                    this._hasErrorOnLastFetch = false;
                     this._calendarEvents = events;
 
                     this.emit(
@@ -237,6 +240,8 @@ export class CalendarService extends Emitter {
                 if (!this._pollingOptionsAreEqual(options)) {
                     return;
                 }
+
+                this._hasErrorOnLastFetch = true;
 
                 logger.error('Calendar _pollForEvents error: ', { error });
                 this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });
