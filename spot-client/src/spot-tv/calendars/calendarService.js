@@ -63,7 +63,6 @@ export class CalendarService extends Emitter {
         this._calendarEvents = [];
 
         this._currentCalendarPollingOptions = null;
-        this._hasFetchedEvents = false;
         this._updateEventsTimeout = null;
     }
 
@@ -87,9 +86,7 @@ export class CalendarService extends Emitter {
          *
          * @type {Array<Event>}
          */
-        this._calendarEvents = [];
-
-        this._hasFetchedEvents = false;
+        this._calendarEvents = undefined;
 
         return this._calendarIntegration.initialize(this.config[type]);
     }
@@ -220,9 +217,7 @@ export class CalendarService extends Emitter {
 
                 const events = this._updateMeetingUrlOnEvents(formattedEvents);
 
-                if (!this._hasFetchedEvents
-                    || hasUpdatedEvents(this._calendarEvents, events)) {
-                    this._hasFetchedEvents = true;
+                if (hasUpdatedEvents(this._calendarEvents, events)) {
                     this._calendarEvents = events;
 
                     this.emit(
@@ -237,6 +232,8 @@ export class CalendarService extends Emitter {
                 if (!this._pollingOptionsAreEqual(options)) {
                     return;
                 }
+
+                this._calendarEvents = undefined;
 
                 logger.error('Calendar _pollForEvents error: ', { error });
                 this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });

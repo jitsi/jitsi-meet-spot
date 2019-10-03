@@ -8,7 +8,11 @@ const keysToCheck = [ 'end', 'id', 'meetingUrl', 'start', 'title' ];
  * @param {Array<Object>} newEvents - The latest set of events to compare.
  * @returns {boolean} True if there has been a change in event data.
  */
-export function hasUpdatedEvents(oldEvents = [], newEvents = []) {
+export function hasUpdatedEvents(oldEvents, newEvents) {
+    if (Boolean(oldEvents) !== Boolean(newEvents)) {
+        return true;
+    }
+
     const oldEventsCount = oldEvents.length;
     const newEventsCount = newEvents.length;
 

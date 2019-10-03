@@ -236,5 +236,42 @@ describe('calendarService', () => {
                 })
                 .then(({ events }) => expect(events).toEqual(secondEvents));
         });
+
+        it('emits an update if a fetch succeeds after a failure', () => {
+            jest.useFakeTimers();
+
+            jest.spyOn(backendCalendar, 'getCalendar')
+                .mockImplementation(() => Promise.resolve([]));
+
+            const firstEventsPromise = createOneTimeCalendarServiceListener(
+                SERVICE_UPDATES.EVENTS_UPDATED
+            );
+
+            calendarService.startPollingForEvents();
+
+            return firstEventsPromise
+                .then(() => {
+                    const errorPromise = createOneTimeCalendarServiceListener(
+                        SERVICE_UPDATES.EVENTS_ERROR
+                    );
+
+                    jest.spyOn(backendCalendar, 'getCalendar')
+                        .mockImplementation(() => Promise.reject('get-calendar-error'));
+
+                    jest.runAllTimers();
+
+                    return errorPromise;
+                }).then(() => {
+                    const successPromise = createOneTimeCalendarServiceListener(
+                        SERVICE_UPDATES.EVENTS_UPDATED
+                    );
+
+                    jest.spyOn(backendCalendar, 'getCalendar')
+                        .mockImplementation(() => Promise.resolve([]));
+                    jest.runAllTimers();
+
+                    return successPromise;
+                });
+        });
     });
 });
