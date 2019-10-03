@@ -14,6 +14,7 @@ import { parseMeetingUrl } from 'common/utils';
 export class MeetingHeader extends React.Component {
     static propTypes = {
         invitedPhoneNumber: PropTypes.string,
+        meetingDisplayName: PropTypes.string,
         meetingUrl: PropTypes.string
     };
 
@@ -26,6 +27,7 @@ export class MeetingHeader extends React.Component {
     render() {
         const {
             invitedPhoneNumber,
+            meetingDisplayName,
             meetingUrl
         } = this.props;
         const { host, meetingName, path } = parseMeetingUrl(meetingUrl);
@@ -35,7 +37,7 @@ export class MeetingHeader extends React.Component {
                 <RoomName />
                 { invitedPhoneNumber && <div className = 'in-call-invited-phone'>{ invitedPhoneNumber }</div> }
                 <div className = { invitedPhoneNumber ? 'in-call-name-with-phone' : 'in-call-name' } >
-                    { meetingName }
+                    { meetingDisplayName || meetingName }
                 </div>
                 <div className = 'in-call-meeting-url' >
                     { `${host}${path}/${meetingName}` }

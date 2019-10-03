@@ -151,7 +151,10 @@ export default class ScheduledMeeting extends React.Component {
 
         logger.log('scheduledMeeting clicked on meeting with url');
 
-        this.props.onMeetingClick(this.props.event.meetingUrl);
+        this.props.onMeetingClick(
+            this.props.event.meetingUrl,
+            this.props.event.title
+        );
     }
 
     /**

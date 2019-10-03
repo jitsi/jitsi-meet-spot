@@ -41,6 +41,7 @@ export class InCall extends React.Component {
         inMeeting: PropTypes.string,
         invitedPhoneNumber: PropTypes.string,
         kicked: PropTypes.bool,
+        meetingDisplayName: PropTypes.string,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
@@ -86,6 +87,7 @@ export class InCall extends React.Component {
             inMeeting,
             invitedPhoneNumber,
             kicked,
+            meetingDisplayName,
             showPasswordPrompt
         } = this.props;
 
@@ -117,6 +119,7 @@ export class InCall extends React.Component {
                 data-qa-id = 'in-call'>
                 <MeetingHeader
                     invitedPhoneNumber = { invitedPhoneNumber }
+                    meetingDisplayName = { meetingDisplayName }
                     meetingUrl = { inMeeting } />
                 <NavContainer>
                     <AudioMuteButton />
@@ -167,6 +170,7 @@ function mapStateToProps(state) {
     const {
         inMeeting,
         kicked,
+        meetingDisplayName,
         needPassword
     } = getInMeetingStatus(state);
 
@@ -174,6 +178,7 @@ function mapStateToProps(state) {
         inMeeting,
         invitedPhoneNumber: formatPhoneNumber(getInvitedPhoneNumber(state)),
         kicked,
+        meetingDisplayName,
         showPasswordPrompt: needPassword
     };
 }
