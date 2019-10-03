@@ -71,13 +71,15 @@ export function joinWithScreensharing(meetingName, screensharingType) {
 /**
  * Requests a Spot to join a scheduled meeting.
  *
- * @param {string} meetingName - The meeting to join.
+ * @param {string} meetingName - The Jitsi meeting to join.
+ * @param {string} meetingDisplayName - An alternative display name for the
+ * meeting, such as the event name on a calendar.
  * @returns {Function}
  */
-export function joinScheduledMeeting(meetingName) {
+export function joinScheduledMeeting(meetingName, meetingDisplayName) {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlClient.goToMeeting(meetingName),
+        () => remoteControlClient.goToMeeting(meetingName, { meetingDisplayName }),
         JOIN_SCHEDULED_MEETING,
         meetingName
     );

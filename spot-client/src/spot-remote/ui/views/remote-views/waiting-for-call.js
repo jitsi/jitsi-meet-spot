@@ -284,8 +284,8 @@ function mapDispatchToProps(dispatch) {
                 });
             }
         },
-        _onJoinScheduledMeeting(meetingName) {
-            dispatch(joinScheduledMeeting(meetingName));
+        _onJoinScheduledMeeting(meetingName, meetingDisplayName) {
+            dispatch(joinScheduledMeeting(meetingName, meetingDisplayName));
         },
         _onJoinAdHocMeeting(meetingName) {
             dispatch(joinAdHocMeeting(meetingName));

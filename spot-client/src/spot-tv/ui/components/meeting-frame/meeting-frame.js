@@ -45,6 +45,7 @@ export class MeetingFrame extends React.Component {
         jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
         maxDesktopSharingFramerate: PropTypes.number,
+        meetingDisplayName: PropTypes.string,
         meetingUrl: PropTypes.string,
         minDesktopSharingFramerate: PropTypes.number,
         onMeetingLeave: PropTypes.func,
@@ -238,6 +239,7 @@ export class MeetingFrame extends React.Component {
             audioMuted: false,
             inMeeting: '',
             kicked: false,
+            meetingDisplayName: '',
             needPassword: false,
             screensharingType: undefined,
             tileView: false,
@@ -458,6 +460,7 @@ export class MeetingFrame extends React.Component {
         this._jitsiApiHealthCheck.start();
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
+            meetingDisplayName: this.props.meetingDisplayName,
             needPassword: false
         });
 

@@ -183,6 +183,10 @@ export class Home extends React.Component {
                 path += '&startWithVideoMuted=true';
             }
 
+            if (data.meetingDisplayName) {
+                path += `&meetingDisplayName=${encodeURIComponent(data.meetingDisplayName)}`;
+            }
+
             this.props.history.push(path);
 
             break;

@@ -115,7 +115,13 @@ export class Meeting extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { invites, location, screenshare, startWithVideoMuted } = this._queryParams;
+        const {
+            invites,
+            location,
+            meetingDisplayName,
+            screenshare,
+            startWithVideoMuted
+        } = this._queryParams;
 
         if (!location) {
             return null;
@@ -146,6 +152,7 @@ export class Meeting extends React.Component {
                     jitsiAppName = { jitsiAppName }
                     jwt = { this._useJwt ? jwt : undefined }
                     maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
+                    meetingDisplayName = { meetingDisplayName }
                     meetingUrl = { location }
                     minDesktopSharingFramerate = { minDesktopSharingFramerate }
                     onMeetingLeave = { this._onMeetingLeave }
@@ -194,6 +201,7 @@ export class Meeting extends React.Component {
         const queryParams = new URLSearchParams(this.props.location.search);
         const invitesParam = queryParams.get('invites');
         const locationParam = queryParams.get('location');
+        const meetingDisplayNameParam = queryParams.get('meetingDisplayName');
         const screenshareParam = queryParams.get('screenshare');
         const startWithVideoMutedParam = queryParams.get('startWithVideoMuted');
 
@@ -202,7 +210,7 @@ export class Meeting extends React.Component {
         try {
             invites = JSON.parse(decodeURIComponent(invitesParam));
         } catch (error) {
-            /** No op. */
+            logger.error('Could not parse invites param', { error });
         }
 
         let location;
@@ -213,9 +221,18 @@ export class Meeting extends React.Component {
             location = `https://${this.props.defaultMeetingDomain}/${locationParam}`;
         }
 
+        let meetingDisplayName;
+
+        try {
+            meetingDisplayName = meetingDisplayNameParam;
+        } catch (error) {
+            logger.error('Could not parse meeting display name param', { error });
+        }
+
         return {
             invites,
             location,
+            meetingDisplayName,
             screenshare: screenshareParam === 'true',
             startWithVideoMuted: startWithVideoMutedParam === 'true'
         };
