@@ -8,7 +8,11 @@ import { phoneAuthorize } from 'common/backend';
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
 
-import { getCountryCode } from '../../../app-state';
+import {
+    getCountryCode,
+    getMostRecentCountryCode,
+    setMostRecentCountryCode
+} from '../../../app-state';
 
 import StatelessDialPad from './StatelessDialPad';
 
@@ -38,6 +42,7 @@ export class DialPad extends React.Component {
 
     static propTypes = {
         countryCode: PropTypes.string,
+        onCountryCodeSelected: PropTypes.func,
         onPhoneAuthorizeFailed: PropTypes.func,
         onSubmit: PropTypes.func,
         phoneAuthorizeServiceUrl: PropTypes.string
@@ -184,6 +189,8 @@ export class DialPad extends React.Component {
 
             // Clear any value typed so far
             this._setTypedValue('');
+
+            this.props.onCountryCodeSelected(code);
         });
     }
 
@@ -294,6 +301,16 @@ function mapDispatchToProps(dispatch) {
          */
         onPhoneAuthorizeFailed(phoneNumber) {
             dispatch(addNotification('error', `Calling ${phoneNumber} is not allowed at this time`));
+        },
+
+        /**
+         * Does things when country code is selected with the country picker.
+         *
+         * @param {string} countryCode - The country code selected by the user.
+         * @returns {void}
+         */
+        onCountryCodeSelected(countryCode) {
+            dispatch(setMostRecentCountryCode(countryCode));
         }
     };
 }
@@ -307,9 +324,11 @@ function mapDispatchToProps(dispatch) {
  */
 function mapStateToProps(state) {
     const { phoneAuthorizeServiceUrl } = getSpotServicesConfig(state);
+    const countryCode = getCountryCode(state);
+    const mostRecentCountryCode = getMostRecentCountryCode(state);
 
     return {
-        countryCode: getCountryCode(state),
+        countryCode: countryCode || mostRecentCountryCode,
         phoneAuthorizeServiceUrl
     };
 }

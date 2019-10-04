@@ -4,7 +4,9 @@ import {
     SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
     SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_JOIN_CODE_INVALID,
-    SPOT_REMOTE_JOIN_CODE_VALID, SPOT_REMOTE_SET_COUNTRY_CODE,
+    SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_SET_COUNTRY_CODE,
+    SPOT_REMOTE_SET_MOST_RECENT_COUNTRY_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
 
@@ -43,6 +45,12 @@ ReducerRegistry.register('spotRemote', (state = { }, action) => {
         return {
             ...state,
             countryCode: action.countryCode
+        };
+
+    case SPOT_REMOTE_SET_MOST_RECENT_COUNTRY_CODE:
+        return {
+            ...state,
+            mostRecentCountryCode: action.mostRecentCountryCode
         };
 
     default:
