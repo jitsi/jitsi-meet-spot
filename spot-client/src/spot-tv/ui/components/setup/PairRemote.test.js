@@ -1,6 +1,8 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
+
 import { PairRemote } from './PairRemote';
 
 describe('PairRemote', () => {
@@ -15,7 +17,8 @@ describe('PairRemote', () => {
             <PairRemote
                 code = { MOCK_PAIR_CODE }
                 onSuccess = { onSuccessSpy }
-                permanentRemotesCount = { 0 } />
+                permanentRemotesCount = { 0 }
+                t = { mockT } />
         );
     });
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 
@@ -10,10 +11,11 @@ import PreviewTrack from './PreviewTrack';
  *
  * @extends React.PureComponent
  */
-export default class CameraPreview extends React.PureComponent {
+export class CameraPreview extends React.PureComponent {
     static propTypes = {
         devices: PropTypes.array,
-        label: PropTypes.string
+        label: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -94,7 +96,7 @@ export default class CameraPreview extends React.PureComponent {
             this._destroyPreviewTrack();
 
             this.setState({
-                statusMessage: 'Preview Unavailable'
+                statusMessage: this.props.t('setup.noPreview')
             });
 
             return;
@@ -107,7 +109,7 @@ export default class CameraPreview extends React.PureComponent {
             this._destroyPreviewTrack();
 
             this.setState({
-                statusMessage: 'Preview Unavailable'
+                statusMessage: this.props.t('setup.noPreview')
             });
 
             return;
@@ -121,7 +123,7 @@ export default class CameraPreview extends React.PureComponent {
         this._destroyPreviewTrack();
 
         const setLoadingPromise = new Promise(resolve => this.setState({
-            statusMessage: 'loading'
+            statusMessage: this.props.t('setup.loading')
         }, resolve));
 
         setLoadingPromise
@@ -139,7 +141,7 @@ export default class CameraPreview extends React.PureComponent {
                 logger.error('Camera preview failed', { error });
 
                 this.setState({
-                    statusMessage: 'Preview Unavailable'
+                    statusMessage: this.props.t('setup.noPreview')
                 });
             });
     }
@@ -170,3 +172,5 @@ export default class CameraPreview extends React.PureComponent {
         });
     }
 }
+
+export default withTranslation()(CameraPreview);

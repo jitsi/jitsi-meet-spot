@@ -23,6 +23,7 @@
         "confirm": "Confirm",
         "continue": "Continue",
         "select": "Select",
+        "skip": "Skip",
         "submit": "Submit"
     },
     "commands": {
@@ -67,5 +68,31 @@
         "windowType": "Window",
         "wired": "HDMI Screensharing",
         "wireless": "Wireless Screensharing"
-    }
+    },
+    "setup": {
+        "audioIn": "Microphone",
+        "audioOut": "Speaker",
+        "audioOutTest": "Play test sound",
+        "avatar": "Enter an avatar url",
+        "devices": "Setup your devices",
+        "enterCode": "Enter your pairing code and start your setup",
+        "enterName": "Enter an email or room name (case-sensitive)",
+        "google": "Authenticate With Google",
+        "loading": "loading",
+        "name": "Enter room display name",
+        "noPreview": "Preview unavailable",
+        "noSelection": "None",
+        "outlook": "Authenticate With Outlook",
+        "pair": "Pair your remote",
+        "pairAsk": "Would you like to pair a permanent remote control with this room?",
+        "preview": "Preview",
+        "profile": "Room settings",
+        "roomByEmail": "Enter an email:",
+        "roomSelect": "Select A Room",
+        "screenShare": "Screen share",
+        "selectDevice": "Please select a device",
+        "useEmail": "use email:",
+        "videoIn": "Camera"
+    },
+    "welcome": "Welcome to {{ productName }}!"
 }
