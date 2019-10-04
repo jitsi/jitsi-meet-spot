@@ -33,7 +33,9 @@ import {
     SPOT_REMOTE_COMPLETED_ONBOARDING,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
-    SPOT_REMOTE_JOIN_CODE_VALID, SPOT_REMOTE_SET_COUNTRY_CODE,
+    SPOT_REMOTE_JOIN_CODE_VALID,
+    SPOT_REMOTE_SET_COUNTRY_CODE,
+    SPOT_REMOTE_SET_MOST_RECENT_COUNTRY_CODE,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './actionTypes';
 
@@ -244,6 +246,21 @@ export function setAPiReceivedJoinCode(joinCode) {
     return {
         type: SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
         joinCode
+    };
+}
+
+/**
+ * Stores most recently country code selected by the user on the dial pad screen using the country
+ * picker. It is meant to be persisted and re-used as default next time user open the dial pad
+ * screen.
+ *
+ * @param {string} mostRecentCountryCode - The country code returned by the country picker.
+ * @returns {Object}
+ */
+export function setMostRecentCountryCode(mostRecentCountryCode) {
+    return {
+        type: SPOT_REMOTE_SET_MOST_RECENT_COUNTRY_CODE,
+        mostRecentCountryCode
     };
 }
 

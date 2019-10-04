@@ -39,6 +39,7 @@ const keysToStore = [
     'setup.preferredSpeaker',
     'spot-tv/backend.longLivedPairingCodeInfo',
     'spotRemote.completedOnboarding',
+    'spotRemote.mostRecentCountryCode',
     'wiredScreenshare.deviceLabel',
     'wiredScreenshare.idleValue'
 ];
@@ -103,7 +104,8 @@ function parsePersistedState(state) {
             longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo
         },
         spotRemote: {
-            completedOnboarding: state.spotRemote.completedOnboarding
+            completedOnboarding: state.spotRemote.completedOnboarding,
+            mostRecentCountryCode: state.spotRemote.mostRecentCountryCode
         }
     };
 }

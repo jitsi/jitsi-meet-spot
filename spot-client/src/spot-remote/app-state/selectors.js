@@ -21,6 +21,16 @@ export function getCountryCode(state) {
 }
 
 /**
+ * Selector for the last selected country code. See {@link setMostRecentCountryCode}.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {?string}
+ */
+export function getMostRecentCountryCode(state) {
+    return state.spotRemote.mostRecentCountryCode;
+}
+
+/**
  * A selector which returns which Jitsi-Meet deployment domain to direct
  * meetings to which do not specify a domain.
  *
