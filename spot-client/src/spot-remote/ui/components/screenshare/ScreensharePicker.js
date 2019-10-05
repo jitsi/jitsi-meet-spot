@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -25,6 +26,7 @@ export class ScreensharePicker extends React.Component {
         onStopScreensharing: PropTypes.func,
         screensharingType: PropTypes.string,
         shareDomain: PropTypes.string,
+        t: PropTypes.func,
         wiredScreenshareEnabled: PropTypes.bool,
         wirelessScreenshareEnabled: PropTypes.bool
     };
@@ -161,24 +163,26 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderShareSelect() {
+        const { t, wiredScreenshareEnabled } = this.props;
+
         return (
             <>
                 <div className = 'title'>
-                    How would you like to screenshare?
+                    { t('screenshare.pick') }
                 </div>
                 <div className = 'options'>
                     <NavButton
                         className = 'screenshare'
-                        label = 'Wireless Screensharing'
+                        label = { t('screenshare.wireless') }
                         onClick = { this._onShowStartWireless }
                         qaId = 'start-wireless-screenshare'>
                         <WirelessScreenshare />
                     </NavButton>
-                    { this.props.wiredScreenshareEnabled
+                    { wiredScreenshareEnabled
                         && (
                             <NavButton
                                 className = 'screenshare'
-                                label = 'HDMI Screensharing'
+                                label = { t('screenshare.wired') }
                                 onClick = { this._onShowStartWired }>
                                 <WiredScreenshare />
                             </NavButton>
@@ -196,6 +200,8 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderStartWiredScreenshare() {
+        const { onStartWiredScreenshare, t } = this.props;
+
         return (
             <>
                 <div className = 'content'>
@@ -203,18 +209,18 @@ export class ScreensharePicker extends React.Component {
                         <i className = 'material-icons'>wired_screen_share</i>
                     </div>
                     <div className = 'title'>
-                        Plug the HDMI dongle into your computer
+                        { t('screenshare.plugWired') }
                     </div>
                     <div className = 'subtitle'>
-                        If sharing doesn't start automatically click start sharing below.
+                        { t('screenshare.startManual') }
                     </div>
                 </div>
                 <div className = 'footer'>
                     <Button
                         appearance = 'subtle'
                         className = 'cta-button'
-                        onClick = { this.props.onStartWiredScreenshare }>
-                            Share now
+                        onClick = { onStartWiredScreenshare }>
+                        { t('screenshare.shareNow') }
                     </Button>
                 </div>
             </>
@@ -230,8 +236,8 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderStopShare() {
-        const isWirelessScreensharing
-            = this.props.screensharingType === 'proxy';
+        const { onStopScreensharing, screensharingType, t } = this.props;
+        const isWirelessScreensharing = screensharingType === 'proxy';
         const icon = isWirelessScreensharing
             ? 'wireless_screen_share'
             : 'wired_screen_share';
@@ -239,12 +245,11 @@ export class ScreensharePicker extends React.Component {
         let ctaTitle;
 
         if (isWirelessScreensharing) {
-            ctaTitle = 'You can stop the wireless sharing below.';
-        } else if (this.props.screensharingType === 'device') {
-            ctaTitle
-                = 'To stop sharing content unplug the cable or click stop sharing.';
+            ctaTitle = 'screenshare.stopWireless';
+        } else if (screensharingType === 'device') {
+            ctaTitle = 'screenshare.stopWired';
         } else {
-            ctaTitle = 'You can stop screen sharing below.';
+            ctaTitle = 'screenshare.howToStop';
         }
 
         return (
@@ -254,19 +259,19 @@ export class ScreensharePicker extends React.Component {
                         <i className = 'material-icons'>{ icon }</i>
                     </div>
                     <div className = 'title'>
-                        You're currently sharing content.
+                        { t('screenshare.isSharing') }
                     </div>
                     <div className = 'subtitle'>
-                        { ctaTitle }
+                        { t(ctaTitle) }
                     </div>
                 </div>
                 <div className = 'footer'>
                     <Button
                         appearance = 'subtle-danger'
                         className = 'cta-button'
-                        onClick = { this.props.onStopScreensharing }
+                        onClick = { onStopScreensharing }
                         qaId = 'stop-share-button'>
-                        Stop sharing
+                        { t('screenshare.stopSharing') }
                     </Button>
                 </div>
             </>
@@ -281,7 +286,7 @@ export class ScreensharePicker extends React.Component {
      * @returns {ReactElement}
      */
     _renderWirelessScreenshareNotSupported() {
-        const { shareDomain } = this.props;
+        const { shareDomain, t } = this.props;
 
         return (
             <>
@@ -292,7 +297,7 @@ export class ScreensharePicker extends React.Component {
                         </i>
                     </div>
                     <div className = 'title'>
-                        To share, use Chrome desktop and go to
+                        { t('screenshare.howToWireless') }
                     </div>
                     <div className = 'share-url'>
                         { `${shareDomain || windowHandler.getBaseUrl()}/` }
@@ -319,4 +324,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(ScreensharePicker);
+export default connect(mapStateToProps)(withTranslation()(ScreensharePicker));
