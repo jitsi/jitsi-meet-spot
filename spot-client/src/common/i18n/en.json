@@ -11,6 +11,7 @@
     "buttons": {
         "cancel": "Cancel",
         "continue": "Continue",
+        "select": "Select",
         "submit": "Submit"
     },
     "commands": {
@@ -35,5 +36,25 @@
         "exitingConference": "The conference will be exited automatically in",
         "kicked": "You have been removed from the conference.",
         "password": "Password"
+    },
+    "screenshare": {
+        "alreadyActive": "Cannot start wireless screenshare while screenshare is active.",
+        "howToStop": "You can stop screen sharing below.",
+        "howToWireless": "To share, use Chrome desktop and go to",
+        "isSharing": "You're currently sharing content",
+        "notSupported": "This browser is currently not supported. To share content please use Chrome.",
+        "pick": "How would you like to screenshare?",
+        "plugWired": "Plug the HDMI dongle into your computer",
+        "remoteMode": "Remote Control",
+        "screenType": "Screen",
+        "selectMode": "Select a Mode",
+        "shareNow": "Share now",
+        "startManual": "If sharing doesn't start automatically click start sharing below.",
+        "stopSharing": "Stop sharing",
+        "stopWired": "To stop sharing content unplug the cable or click stop sharing.",
+        "stopWireless": "You can stop the wireless sharing below.",
+        "windowType": "Window",
+        "wired": "HDMI Screensharing",
+        "wireless": "Wireless Screensharing"
     }
 }
