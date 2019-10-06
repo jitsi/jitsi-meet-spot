@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Button } from 'common/ui';
 
@@ -12,19 +13,21 @@ import AdminEntry from './admin-entry';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function PreferredDevices(props) {
+export function PreferredDevices({ onClick, t }) {
     return (
-        <AdminEntry entryLabel = 'Preferred devices'>
+        <AdminEntry entryLabel = { t('admin.devices') }>
             <Button
-                onClick = { props.onClick }
+                onClick = { onClick }
                 qaId = 'device-selection-button'>
-                Change
+                { t('admin.change') }
             </Button>
         </AdminEntry>
     );
 }
 
 PreferredDevices.propTypes = {
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    t: PropTypes.func
 };
 
+export default withTranslation()(PreferredDevices);

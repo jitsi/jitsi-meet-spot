@@ -1,4 +1,14 @@
 {
+    "admin": {
+        "change": "Change",
+        "code": "Pairing Code",
+        "devices": "Preferred devices",
+        "display": "Display",
+        "reset": "Reset app",
+        "resetting": "Resetting",
+        "wizard": "Setup wizard",
+        "wizardStart": "Start wizard"
+    },
     "appStatus": {
         "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
         "setup": "Currently in setup.",
@@ -10,6 +20,7 @@
     },
     "buttons": {
         "cancel": "Cancel",
+        "confirm": "Confirm",
         "continue": "Continue",
         "submit": "Submit"
     },

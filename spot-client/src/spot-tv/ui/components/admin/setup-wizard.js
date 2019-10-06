@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { ROUTES } from 'common/routing';
@@ -13,13 +15,18 @@ import AdminEntry from './admin-entry';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function SetupWizard() {
+export function SetupWizard({ t }) {
     return (
-        <AdminEntry entryLabel = 'Setup wizard'>
+        <AdminEntry entryLabel = { t('admin.wizard') }>
             <Link to = { ROUTES.SETUP }>
-                <Button>Start wizard</Button>
+                <Button>{ t('admin.wizardStart') }</Button>
             </Link>
         </AdminEntry>
     );
 }
 
+SetupWizard.propTypes = {
+    t: PropTypes.func
+};
+
+export default withTranslation()(SetupWizard);

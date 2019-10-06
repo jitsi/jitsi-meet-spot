@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { Button, LoadingIcon } from 'common/ui';
@@ -18,7 +19,8 @@ import AdminEntry from './admin-entry';
 export class PermanentPairingCode extends React.Component {
     static propTypes = {
         pairingCode: PropTypes.string,
-        refreshPairingCode: PropTypes.func
+        refreshPairingCode: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -57,13 +59,13 @@ export class PermanentPairingCode extends React.Component {
         } else {
             content = (
                 <Button onClick = { this._onShowCode }>
-                    Display
+                    { this.props.t('admin.display') }
                 </Button>
             );
         }
 
         return (
-            <AdminEntry entryLabel = 'Pairing Code'>
+            <AdminEntry entryLabel = { this.props.t('admin.code') }>
                 { content }
             </AdminEntry>
         );
@@ -122,4 +124,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PermanentPairingCode);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(PermanentPairingCode)
+);
