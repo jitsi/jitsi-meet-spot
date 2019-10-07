@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Button, Input } from 'common/ui';
 
@@ -16,7 +17,8 @@ export class MeetingNameEntry extends React.Component {
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
         onSubmit: PropTypes.func,
-        placeholder: PropTypes.string
+        placeholder: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -38,36 +40,45 @@ export class MeetingNameEntry extends React.Component {
      * @inheritdoc
      */
     render() {
+        const {
+            domain,
+            meetingName,
+            onBlur,
+            onFocus,
+            placeholder,
+            t
+        } = this.props;
+
         return (
             <form
                 className = 'meeting-name-entry'
                 onSubmit = { this._onSubmit } >
                 <div className = 'input-container'>
                     <label className = 'input-label'>
-                        Start a new meeting
+                        { t('adhoc.label') }
                     </label>
                     <div className = 'input-with-default-domain'>
                         <span className = 'default-domain'>
-                            { `${this.props.domain}/` }
+                            { `${domain}/` }
                         </span>
                         <Input
                             autoComplete = 'off'
                             className = 'input'
                             data-qa-id = 'meeting-name-input'
-                            onBlur = { this.props.onBlur }
+                            onBlur = { onBlur }
                             onChange = { this._onMeetingNameChange }
-                            onFocus = { this.props.onFocus }
-                            placeholder = { this.props.placeholder
-                                || 'Enter a meeting name' }
+                            onFocus = { onFocus }
+                            placeholder = { placeholder
+                                || t('adhoc.enterName') }
                             spellCheck = { false }
-                            value = { this.props.meetingName } />
+                            value = { meetingName } />
                     </div>
                 </div>
                 <div className = 'submit-wrapper'>
                     <Button
                         qaId = 'meeting-name-submit'
                         type = 'submit'>
-                        GO
+                        { t('buttons.go') }
                     </Button>
                 </div>
             </form>
@@ -101,4 +112,4 @@ export class MeetingNameEntry extends React.Component {
     }
 }
 
-export default MeetingNameEntry;
+export default withTranslation()(MeetingNameEntry);

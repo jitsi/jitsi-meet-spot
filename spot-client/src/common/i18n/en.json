@@ -1,4 +1,9 @@
 {
+    "adhoc": {
+        "enterName": "Enter a meeting name",
+        "label": "Start a new meeting",
+        "meetNow": "Meet Now"
+    },
     "admin": {
         "change": "Change",
         "code": "Pairing Code",
@@ -22,11 +27,17 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "continue": "Continue",
+        "go": "GO",
         "select": "Select",
         "next": "Next",
         "send": "Send",
         "skip": "Skip",
         "submit": "Submit"
+    },
+    "calendar": {
+        "calendar": "Calendar",
+        "join": "Join Now",
+        "today": "Today"
     },
     "commands": {
         "audioMute": "Mute Audio",
@@ -50,6 +61,12 @@
         "exitingConference": "The conference will be exited automatically in",
         "kicked": "You have been removed from the conference.",
         "password": "Password"
+    },
+    "dial": {
+        "dial": "Dial a Number",
+        "enterPhoneNumber": "Enter a phone number",
+        "enterNumbers": "Enter Numbers",
+        "searchCountry": "Search country / region"
     },
     "feedback": {
         "details": "Please tell us more about it.",
