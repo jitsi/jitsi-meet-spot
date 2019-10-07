@@ -192,7 +192,7 @@ class SelectMedia extends React.Component {
                         disabled = { saving }
                         onClick = { this._onSubmit }
                         qaId = 'device-selection-submit'>
-                        { t('buttons.submit') }
+                        { t('buttons.next') }
                     </Button>
                     <Button
                         appearance = 'subtle'
