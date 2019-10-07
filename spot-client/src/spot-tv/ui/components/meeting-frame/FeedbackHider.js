@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { getProductName } from 'common/app-state';
@@ -11,16 +12,17 @@ import { StatusOverlay } from 'common/ui';
  *
  * @returns {ReactNode}
  */
-export function FeedbackHider({ productName }) {
+export function FeedbackHider({ productName, t }) {
     return (
-        <StatusOverlay title = { `Thanks for using ${productName}!` }>
-            <div>You can use the remote control device to submit feedback now.</div>
+        <StatusOverlay title = { t('feedback.thanks', { productName }) }>
+            <div>{ t('feedback.howTo') }</div>
         </StatusOverlay>
     );
 }
 
 FeedbackHider.propTypes = {
-    productName: PropTypes.string
+    productName: PropTypes.string,
+    t: PropTypes.func
 };
 
 /**
@@ -37,4 +39,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(FeedbackHider);
+export default connect(mapStateToProps)(withTranslation()(FeedbackHider));

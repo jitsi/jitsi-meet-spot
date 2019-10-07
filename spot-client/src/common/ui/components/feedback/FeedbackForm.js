@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { submitFeedback } from 'common/app-state';
@@ -26,6 +27,7 @@ export class FeedbackForm extends React.Component {
         disableInactivityTimer: PropTypes.bool,
         onSkip: PropTypes.func,
         onSubmitFeedback: PropTypes.func,
+        t: PropTypes.func,
         timeout: PropTypes.number
     };
 
@@ -91,7 +93,9 @@ export class FeedbackForm extends React.Component {
             <form
                 className = 'remote-feedback'
                 onSubmit = { this._onSubmit }>
-                <div className = 'cta'>Rate your experience</div>
+                <div className = 'cta'>
+                    { this.props.t('feedback.rate') }
+                </div>
                 { this.state.requestMoreInfo
                     ? this._renderInfoRequest()
                     : this._renderStars() }
@@ -100,10 +104,10 @@ export class FeedbackForm extends React.Component {
                     className = 'skip-button'
                     onClick = { this._onSkip }
                     qaId = 'skip-feedback'>
-                    Skip
+                    { this.props.t('buttons.skip') }
                 </Button>
                 <Button type = 'submit'>
-                    Send
+                    { this.props.t('buttons.send') }
                 </Button>
             </form>
         );
@@ -195,7 +199,7 @@ export class FeedbackForm extends React.Component {
         return (
             <div>
                 <div className = 'message-help'>
-                    Please tell us more about it.
+                    { this.props.t('feedback.details') }
                 </div>
                 <textarea
                     autoFocus = { true }
@@ -318,4 +322,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(FeedbackForm);
+export default connect(undefined, mapDispatchToProps)(withTranslation()(FeedbackForm));
