@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { SimpleSelect } from 'common/ui';
 
@@ -8,13 +9,14 @@ import { SimpleSelect } from 'common/ui';
  *
  * @extends React.Component
  */
-export default class MediaSelector extends React.Component {
+export class MediaSelector extends React.Component {
     static propTypes = {
         device: PropTypes.string,
         devices: PropTypes.array,
         label: PropTypes.string,
         onChange: PropTypes.func,
-        qaId: PropTypes.string
+        qaId: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -38,7 +40,8 @@ export default class MediaSelector extends React.Component {
         const {
             devices,
             device,
-            label: selectorLabel
+            label: selectorLabel,
+            t
         } = this.props;
 
         return (
@@ -47,7 +50,7 @@ export default class MediaSelector extends React.Component {
                 <SimpleSelect
                     onChange = { this._onChange }
                     options = { devices }
-                    placeholder = 'Please select a device'
+                    placeholder = { t('setup.selectDevice') }
                     qaId = { this.props.qaId }
                     value = { device } />
             </div>
@@ -65,3 +68,5 @@ export default class MediaSelector extends React.Component {
         this.props.onChange(value);
     }
 }
+
+export default withTranslation()(MediaSelector);

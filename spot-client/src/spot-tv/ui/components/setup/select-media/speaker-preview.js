@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 
@@ -9,11 +10,12 @@ import { logger } from 'common/logger';
  *
  * @extends React.PureComponent
  */
-export default class SpeakerPreview extends React.PureComponent {
+export class SpeakerPreview extends React.PureComponent {
     static propTypes = {
         devices: PropTypes.array,
         label: PropTypes.string,
-        src: PropTypes.string
+        src: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -65,7 +67,7 @@ export default class SpeakerPreview extends React.PureComponent {
                         `speaker-preview-link ${this.state.hasSetSinkId ? '' : 'disabled'}`
                     }
                     onClick = { this._onPreview }>
-                    Play a test sound
+                    { this.props.t('setup.audioOutTest') }
                 </a>
                 <audio
                     ref = { this._ref }
@@ -119,3 +121,5 @@ export default class SpeakerPreview extends React.PureComponent {
         }
     }
 }
+
+export default withTranslation()(SpeakerPreview);

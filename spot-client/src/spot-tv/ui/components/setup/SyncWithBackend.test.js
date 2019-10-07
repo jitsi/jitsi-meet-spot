@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
 import { LoadingIcon } from 'common/ui';
 
 import { SyncWithBackend } from './SyncWithBackend';
@@ -19,7 +20,8 @@ describe('SyncWithBackend', () => {
             <SyncWithBackend
                 onAttemptSync = { onAttemptSyncSpy }
                 onSuccess = { onSuccessSpy }
-                onSyncError = { onSyncErrorSpy } />
+                onSyncError = { onSyncErrorSpy }
+                t = { mockT } />
         );
     });
 

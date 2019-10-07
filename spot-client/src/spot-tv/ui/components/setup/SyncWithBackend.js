@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { addNotification, getProductName } from 'common/app-state';
@@ -19,7 +20,8 @@ export class SyncWithBackend extends React.Component {
         onAttemptSync: PropTypes.func,
         onSuccess: PropTypes.func,
         onSyncError: PropTypes.func,
-        productName: PropTypes.string
+        productName: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -45,14 +47,16 @@ export class SyncWithBackend extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const { productName, t } = this.props;
+
         return (
             <div className = 'setup-sync-with-backend'>
                 <div className = 'cta'>
                     <div className = 'title'>
-                        Welcome to { this.props.productName }!
+                        { t('welcome', { productName }) }
                     </div>
                     <div className = 'description'>
-                        Enter your pairing code and start your setup
+                        { t('setup.enterCode') }
                     </div>
                 </div>
                 <div className = { `code-input ${this.state.loading ? 'with-loading' : ''}` }>
@@ -136,4 +140,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncWithBackend);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(SyncWithBackend)
+);
