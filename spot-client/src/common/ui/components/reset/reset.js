@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 import { clearPersistedState } from 'common/utils';
@@ -11,7 +13,11 @@ import { Button } from './../button';
  *
  * @extends React.Component
  */
-export default class ResetState extends React.Component {
+export class ResetState extends React.Component {
+    static propTypes = {
+        t: PropTypes.func
+    };
+
     state = {
         resetting: false,
         showResetConfirm: false
@@ -40,7 +46,7 @@ export default class ResetState extends React.Component {
         let child;
 
         if (this.state.resetting) {
-            child = 'Resetting';
+            child = this.props.t('admin.resetting');
         } else {
             child = this.state.showResetConfirm
                 ? this._renderResetConfirm()
@@ -64,7 +70,7 @@ export default class ResetState extends React.Component {
     _renderResetButton() {
         return (
             <Button onClick = { this._onShowResetConfirm }>
-                Reset app
+                { this.props.t('admin.reset') }
             </Button>
         );
     }
@@ -80,12 +86,12 @@ export default class ResetState extends React.Component {
         return (
             <div>
                 <Button onClick = { this._onResetApp }>
-                    Confirm
+                    { this.props.t('buttons.confirm') }
                 </Button>
                 <Button
                     appearance = 'secondary'
                     onClick = { this._onShowResetButton }>
-                    Cancel
+                    { this.props.t('buttons.cancel') }
                 </Button>
             </div>
         );
@@ -135,3 +141,5 @@ export default class ResetState extends React.Component {
         this.setState({ showResetConfirm: true });
     }
 }
+
+export default withTranslation()(ResetState);
