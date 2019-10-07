@@ -57,6 +57,10 @@
         "rate": "Rate your experience",
         "thanks": "Thanks for using {{ productName }}!"
     },
+    "help": {
+        "howToConnect": "Open {{ url }} in a desktop Google Chrome browser in the conference room to set it up and obtain a share key. Next enter the {{ codeLength }}-character share key in this app.",
+        "isRemote": "This app is a remote controller for a conference room."
+    },
     "join": {
         "enterCode": "Enter a share key",
         "visibleAt": "Your key is visible on the {{ productName }} TV"
