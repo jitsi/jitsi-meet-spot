@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
 import * as detection from 'common/detection';
 
 import { JoinCodeEntry } from './join-code-entry';
@@ -54,6 +55,7 @@ describe('JoinCodeEntry', () => {
             history: historyMock,
             location: locationMock,
             onDisconnect: onDisconnectSpy,
+            t: mockT,
             updateReadyStatus: updateReadyStatusSpy,
             ultrasoundService: ultrasoundServiceMock,
             ...propOverrides
