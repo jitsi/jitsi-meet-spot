@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import { withTranslation } from 'react-i18next';
 
 import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
 import { LoadingIcon } from 'common/ui';
@@ -14,17 +15,14 @@ import NumberInput from './NumberInput';
  *
  * @extends React.Component
  */
-export default class StatelessDialPad extends React.Component {
+export class StatelessDialPad extends React.Component {
     static defaultProps = {
-        buttonText: 'Call',
-        placeholderText: 'Enter a phone number',
         readOnlyInput: false,
         selectedCountryCode: 'US',
         value: ''
     };
 
     static propTypes = {
-        buttonText: PropTypes.string,
         dialingInProgress: PropTypes.bool,
         disableCallButton: PropTypes.bool,
         disablePlusSign: PropTypes.bool,
@@ -36,6 +34,7 @@ export default class StatelessDialPad extends React.Component {
         readOnlyInput: PropTypes.bool,
         selectedCountryCode: PropTypes.string,
         showCountryCodePicker: PropTypes.bool,
+        t: PropTypes.func,
         value: PropTypes.string
     };
 
@@ -88,7 +87,17 @@ export default class StatelessDialPad extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const callButtonDisabled = this.props.disableCallButton || this.props.dialingInProgress;
+        const {
+            dialingInProgress,
+            disableCallButton,
+            onCountryCodeSelect,
+            placeholderText,
+            readOnlyInput,
+            showCountryCodePicker,
+            t,
+            value
+        } = this.props;
+        const callButtonDisabled = disableCallButton || dialingInProgress;
 
         let callButtonClassName = 'call-button dial-button';
 
@@ -106,10 +115,11 @@ export default class StatelessDialPad extends React.Component {
                         className = 'number-input'
                         gradientStart = 'center'
                         onChange = { this._onInputChange }
-                        placeholder = { this.props.placeholderText }
-                        readOnly = { this.props.readOnlyInput }
+                        placeholder = { placeholderText
+                            || t('dial.enterPhoneNumber') }
+                        readOnly = { readOnlyInput }
                         type = 'tel'
-                        value = { this.props.value } />
+                        value = { value } />
                 </div>
                 <div className = 'dial-pad-buttons'>
                     <div className = 'row'>
@@ -140,7 +150,7 @@ export default class StatelessDialPad extends React.Component {
                                 disabled = { callButtonDisabled }
                                 onClick = { this._onSubmit }
                                 type = 'submit'>
-                                { this.props.dialingInProgress
+                                { dialingInProgress
                                     ? <LoadingIcon />
                                     : <Call />}
                             </button>
@@ -156,11 +166,11 @@ export default class StatelessDialPad extends React.Component {
                         </div>
                     </div>
                     {
-                        this.props.showCountryCodePicker && (
+                        showCountryCodePicker && (
                             <div
                                 className = 'country-code-picker-wrapper'
                                 ref = { this._countryCodePickerWrapperRef }>
-                                <CountryCodePicker onCountryCodeSelect = { this.props.onCountryCodeSelect } />
+                                <CountryCodePicker onCountryCodeSelect = { onCountryCodeSelect } />
                             </div>
                         )
                     }
@@ -314,3 +324,5 @@ export default class StatelessDialPad extends React.Component {
         );
     }
 }
+
+export default withTranslation()(StatelessDialPad);

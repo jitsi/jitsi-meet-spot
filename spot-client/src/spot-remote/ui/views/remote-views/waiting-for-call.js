@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -48,6 +49,7 @@ class WaitingForCallView extends React.Component {
         _onUpdateAvailable: PropTypes.func,
         defaultDomain: PropTypes.string,
         events: PropTypes.array,
+        t: PropTypes.func,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -82,15 +84,16 @@ class WaitingForCallView extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        const { _enableAutoUpdate, _onUpdateAvailable, t } = this.props;
         const { activeTab } = this.state;
 
         return (
             <div
                 className = 'waiting-view'
                 data-qa-id = 'waiting-for-call-view'>
-                { this.props._enableAutoUpdate
+                { _enableAutoUpdate
                     && <AutoUpdateChecker
-                        onUpdateAvailable = { this.props._onUpdateAvailable } /> }
+                        onUpdateAvailable = { _onUpdateAvailable } /> }
                 <div className = 'view-header'>
                     <Clock />
                 </div>
@@ -100,26 +103,26 @@ class WaitingForCallView extends React.Component {
                 <NavContainer>
                     <NavButton
                         active = { activeTab === 'calendar' }
-                        label = 'Calendar'
+                        label = { t('calendar.calendar') }
                         onClick = { this._onSetCalendarActive }>
                         <CalendarToday />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'input' }
-                        label = 'Meet Now'
+                        label = { t('adhoc.meetNow') }
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now'>
                         <Videocam />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'dial' }
-                        label = 'Dial a Number'
+                        label = { t('dial.dial') }
                         onClick = { this._onSetDialActive }>
                         <Call />
                     </NavButton>
                     <NavButton
                         active = { activeTab === 'share' }
-                        label = 'Share Content'
+                        label = { t('commands.share') }
                         onClick = { this._onSetScreenshareSelectActive }
                         qaId = 'share-content'>
                         <ScreenShare />
@@ -296,4 +299,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaitingForCallView);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation()(WaitingForCallView)
+);

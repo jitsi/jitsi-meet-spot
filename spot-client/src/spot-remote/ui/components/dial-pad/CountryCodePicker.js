@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import { withTranslation } from 'react-i18next';
 
 import { HighlightOff, Search } from 'common/icons';
 import countriesInfo from './countriesInfo';
@@ -14,9 +15,10 @@ import countriesInfo from './countriesInfo';
  *
  * @extends React.PureComponent
  */
-export default class CountryCodePicker extends React.PureComponent {
+export class CountryCodePicker extends React.PureComponent {
     static propTypes = {
-        onCountryCodeSelect: PropTypes.func
+        onCountryCodeSelect: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -51,7 +53,7 @@ export default class CountryCodePicker extends React.PureComponent {
                     </div>
                     <input
                         onChange = { this._onFilterChange }
-                        placeholder = 'Search country / region'
+                        placeholder = { this.props.t('dial.searchCountry') }
                         value = { this.state.filter } />
                     <div
                         className = { `search-clear ${this.state.filter ? 'visible' : ''}` }
@@ -131,3 +133,5 @@ export default class CountryCodePicker extends React.PureComponent {
             ));
     }
 }
+
+export default withTranslation()(CountryCodePicker);
