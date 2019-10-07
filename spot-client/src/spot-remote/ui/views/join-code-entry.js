@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -48,6 +49,7 @@ export class JoinCodeEntry extends React.Component {
         permanentPairingCode: PropTypes.string,
         productName: PropTypes.string,
         shareDomain: PropTypes.string,
+        t: PropTypes.func,
         updateReadyStatus: PropTypes.func
     };
 
@@ -161,23 +163,29 @@ export class JoinCodeEntry extends React.Component {
             return <Loading />;
         }
 
+        const {
+            codeLength,
+            productName,
+            t
+        } = this.props;
+
         return (
             <View name = 'join-code'>
                 <div className = 'join-code-view'>
                     <div className = 'cta'>
                         <div className = 'title'>
-                            Enter a share key
+                            { t('join.enterCode') }
                         </div>
                         <div className = 'help'>
-                            Your key is visible on the { this.props.productName } TV
+                            { t('join.visibleAt', { productName }) }
                         </div>
                     </div>
-                    <div className = { `code-entry-wrapper boxes-${this.props.codeLength}` }>
+                    <div className = { `code-entry-wrapper boxes-${codeLength}` }>
                         <form
                             onSubmit = { this._onFormSubmit }>
                             <div data-qa-id = { 'join-code-input' }>
                                 <CodeInput
-                                    length = { this.props.codeLength }
+                                    length = { codeLength }
                                     onChange = { this._onCodeChange } />
                                 {
 
@@ -195,7 +203,7 @@ export class JoinCodeEntry extends React.Component {
                     </div>
                     <NavContainer>
                         <NavButton
-                            label = 'Continue'
+                            label = { t('buttons.continue') }
                             onClick = { this._onSubmit }
                             qaId = 'join-code-submit'
                             tabIndex = { 0 }>
@@ -404,4 +412,8 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JoinCodeEntry));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
+        withTranslation()(JoinCodeEntry)
+    )
+);

@@ -57,6 +57,10 @@
         "rate": "Rate your experience",
         "thanks": "Thanks for using {{ productName }}!"
     },
+    "join": {
+        "enterCode": "Enter a share key",
+        "visibleAt": "Your key is visible on the {{ productName }} TV"
+    },
     "screenshare": {
         "alreadyActive": "Cannot start wireless screenshare while screenshare is active.",
         "howToStop": "You can stop screen sharing below.",
