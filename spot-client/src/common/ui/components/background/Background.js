@@ -16,17 +16,15 @@ export function Background({ backgroundUrl }) {
 
     if (backgroundUrl) {
         backgroundStyles = {
-            backgroundImage: `url('${backgroundUrl}')`
+            background: `linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 89%), url('${backgroundUrl}')`
         };
     }
-
-    const gradientStyle = `view-gradient ${backgroundStyles ? 'visible' : ''}`;
 
     return (
         <div
             className = 'view-background-container'
             style = { backgroundStyles }>
-            <div className = { gradientStyle } />
+            <div className = 'view-gradient' />
         </div>
     );
 }
