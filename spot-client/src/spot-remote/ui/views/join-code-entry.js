@@ -321,9 +321,9 @@ export class JoinCodeEntry extends React.Component {
 
                 // In the wrong password case return back to join code entry.
                 if (error === 'not-authorized') {
-                    this.props.onAddNotification('error', 'Invalid share key');
+                    this.props.onAddNotification('error', 'appEvents.invalidShareKey');
                 } else {
-                    this.props.onAddNotification('error', 'Something went wrong');
+                    this.props.onAddNotification('error', 'appEvents.genericError');
                 }
 
                 this.props.history.push(ROUTES.CODE);

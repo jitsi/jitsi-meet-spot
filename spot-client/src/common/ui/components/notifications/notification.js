@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 /**
  * Displays a notification message with the approriate styling for the
@@ -7,17 +8,19 @@ import React from 'react';
  *
  * @returns {ReactElement}
  */
-export function Notification({ message, type }) {
+export function Notification({ messageKey, messageParams, t, type }) {
     return (
         <div className = { `notification notification-${type}` }>
-            { message }
+            { t(messageKey, messageParams) }
         </div>
     );
 }
 
 Notification.propTypes = {
-    message: PropTypes.string,
+    messageKey: PropTypes.string,
+    messageParams: PropTypes.object,
+    t: PropTypes.func,
     type: PropTypes.string
 };
 
-export default Notification;
+export default withTranslation()(Notification);

@@ -14,6 +14,15 @@
         "wizard": "Setup wizard",
         "wizardStart": "Start wizard"
     },
+    "appEvents": {
+        "devicesNotSaved": "Could not save preferences.",
+        "genericError": "Something went wrong.",
+        "invalidShareKey": "Invalid share key.",
+        "meetingConnectionLost": "Connection to the meeting has been lost",
+        "meetingEnded": "The meeting has ended.",
+        "meetingJoinFailed": "An error occurred while joining the meeting",
+        "numberNotAllowed": "Calling {{ phoneNumber }} is not allowed at this time"
+    },
     "appStatus": {
         "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
         "setup": "Currently in setup.",

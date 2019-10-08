@@ -180,7 +180,7 @@ export function connectToSpotTV(joinCode, shareMode) {
             if (error === CONNECTION_EVENTS.CLOSED_BY_SERVER) {
                 dispatch(addNotification(
                     'message',
-                    'The meeting has ended.'
+                    'appEvents.meetingEnded'
                 ));
             }
 

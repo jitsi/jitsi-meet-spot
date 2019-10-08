@@ -132,9 +132,9 @@ function mapDispatchToProps(dispatch) {
         onSyncError(error) {
             // In the wrong password case return back to join code entry.
             if (error === 'not-authorized') {
-                dispatch(addNotification('error', 'Invalid share key'));
+                dispatch(addNotification('error', 'appEvents.invalidShareKey'));
             } else {
-                dispatch(addNotification('error', 'Something went wrong'));
+                dispatch(addNotification('error', 'appEvents.genericError'));
             }
         }
     };

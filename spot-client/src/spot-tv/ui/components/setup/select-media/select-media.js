@@ -431,7 +431,7 @@ class SelectMedia extends React.Component {
             .catch(error => {
                 logger.error('Error while saving preferred devices', { error });
 
-                this.props.dispatch(addNotification('error', 'Could not save preferences'));
+                this.props.dispatch(addNotification('error', 'appEvents.devicesNotSaved'));
 
                 this.setState({ saving: false });
             });
