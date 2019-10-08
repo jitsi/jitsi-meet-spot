@@ -36,7 +36,13 @@
     },
     "calendar": {
         "calendar": "Calendar",
+        "errorGettingEvents": "Unable to get calendar events." ,
+        "inviteThisRoom": "Invite this room to your calendar event and you'll be set.",
         "join": "Join Now",
+        "noEvents": "There are no scheduled meetings.",
+        "retrySync": "Please try reconnecting to the room's calendar.",
+        "setupHeader": "You're almost set.",
+        "setupHow": "Pair your remote and connect your calendar.",
         "today": "Today"
     },
     "commands": {
