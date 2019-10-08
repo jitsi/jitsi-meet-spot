@@ -1,5 +1,10 @@
 .status-overlay {
     background: rgb(27, 38, 56);
+
+    &.transparent {
+        background: none;
+    }
+
     height: 100vh;
     left: 0;
     position: absolute;
