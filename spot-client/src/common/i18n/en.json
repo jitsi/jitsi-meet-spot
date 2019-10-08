@@ -60,7 +60,7 @@
         "videoMutePending": "Stopping...",
         "videoUnmute": "Start Camera",
         "videoUnmutePending": "Starting...",
-        "volume": "Volume control"
+        "volume": "Volume"
     },
     "conferenceStatus": {
         "enterPassword": "Enter the conference password.",
