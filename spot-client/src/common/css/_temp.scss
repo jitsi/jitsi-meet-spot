@@ -101,16 +101,6 @@ body.using-mouse :focus {
   width: 100%;
 }
 
-.view-background-container {
-    background-position: center;
-    background-size: cover;
-    height: 100vh;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: 100vw;
-}
-
 .view-content-container {
     height: 100vh;
     overflow: auto;
@@ -123,20 +113,6 @@ body.using-mouse :focus {
         justify-content: center;
         min-height: 100vh;
     }
-}
-
-.view-gradient {
-  align-items: center;
-  background-size: cover;
-  display: flex;
-  min-height: 100vh;
-  justify-content: center;
-  width: 100%;
-}
-
-.view-gradient.visible {
-  background-image: linear-gradient(to bottom, #020f1b, rgba(0, 0, 0, 0) 30%), linear-gradient(to bottom, rgba(2, 15, 27, 0) 50%, #020f1b);
-  flex-grow: 1;
 }
 
 .app {

@@ -1,0 +1,23 @@
+
+.view-background-container {
+    background-position: center;
+    background-size: cover;
+    flex-grow: 1;
+    height: 100vh;
+    opacity: 0.3;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+}
+
+.view-gradient {
+    align-items: center;
+    background-image: linear-gradient(180deg, rgba(28, 32, 37, 0) 0%, #1C2025 100%);
+    background-size: cover;
+    display: flex;
+    flex-grow: 1;
+    min-height: 100vh;
+    justify-content: center;
+    width: 100%;
+}
