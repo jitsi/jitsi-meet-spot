@@ -1,19 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 /**
  * Displays a number in seconds which decrements each second.
  *
  * @extends React.Component
  */
-export default class Countdown extends React.Component {
+export class Countdown extends React.Component {
     static defaultProps = {
         startTime: 20
     };
 
     static propTypes = {
         onCountdownComplete: PropTypes.func,
-        startTime: PropTypes.number
+        startTime: PropTypes.number,
+        t: PropTypes.func
     };
 
     /**
@@ -64,12 +66,16 @@ export default class Countdown extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { time } = this.state;
-
         return (
             <div className = 'countdown'>
-                { `${time} ${time === 1 ? 'second' : 'seconds'}` }
+                {
+                    this.props.t('countdown.timeLeft', {
+                        count: this.state.time
+                    })
+                }
             </div>
         );
     }
 }
+
+export default withTranslation()(Countdown);

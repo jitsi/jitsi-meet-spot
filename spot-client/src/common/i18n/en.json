@@ -70,6 +70,10 @@
         "password": "Password",
         "passwordRequired": "Password required to join."
     },
+    "countdown": {
+        "timeLeft": "{{ count }} second",
+        "timeLeft_plural": "{{ count }} seconds"
+    },
     "dial": {
         "dial": "Dial a Number",
         "enterPhoneNumber": "Enter a phone number",
