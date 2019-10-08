@@ -299,7 +299,8 @@ describe('utils', () => {
                 .then(result => expect(result).toEqual({
                     accessToken: MOCK_RESPONSE.accessToken,
                     emitted: 1,
-                    expires: 3
+                    expires: 3,
+                    tenant: MOCK_RESPONSE.tenant
                 }));
         });
     });
