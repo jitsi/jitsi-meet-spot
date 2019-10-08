@@ -68,7 +68,8 @@ export class Notifications extends React.PureComponent {
         return this.props.notifications.map(notification => (
             <Notification
                 key = { notification.id }
-                message = { notification.message }
+                messageKey = { notification.messageKey }
+                messageParams = { notification.messageParams }
                 type = { notification.type } />
         ));
     }

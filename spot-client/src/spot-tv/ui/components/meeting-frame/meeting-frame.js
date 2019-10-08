@@ -292,7 +292,7 @@ export class MeetingFrame extends React.Component {
 
         this.props.onMeetingLeave({
             errorCode: 'failed-to-join',
-            error: 'An error occurred while joining the meeting'
+            error: 'appEvents.meetingJoinFailed'
         });
     }
 
@@ -323,7 +323,7 @@ export class MeetingFrame extends React.Component {
 
         this.props.onMeetingLeave({
             errorCode: reason,
-            error: 'Connection to the meeting has been lost'
+            error: 'appEvents.meetingConnectionLost'
         });
     }
 

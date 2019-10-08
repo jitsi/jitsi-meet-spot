@@ -300,7 +300,11 @@ function mapDispatchToProps(dispatch) {
          * @returns {void}
          */
         onPhoneAuthorizeFailed(phoneNumber) {
-            dispatch(addNotification('error', `Calling ${phoneNumber} is not allowed at this time`));
+            dispatch(addNotification(
+                'error',
+                'appEvents.numberNotAllowed',
+                { phoneNumber }
+            ));
         },
 
         /**
