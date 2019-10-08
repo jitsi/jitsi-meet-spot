@@ -314,7 +314,8 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
             const {
                 accessToken: newAccessToken,
                 emitted,
-                expiresIn
+                expiresIn,
+                tenant
             } = json;
 
             if (!newAccessToken) {
@@ -328,6 +329,7 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
             return {
                 accessToken: newAccessToken,
                 refreshToken,
+                tenant,
                 ...convertToEmittedAndExpires(json)
             };
         });

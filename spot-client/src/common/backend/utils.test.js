@@ -122,6 +122,7 @@ describe('utils', () => {
     });
 
     describe('refreshAccessToken', () => {
+        const MOCK_TENANT = 'tenant';
         const MOCK_TOKENS = {
             accessToken: 'access-token',
             refreshToken: 'refresh-token'
@@ -130,6 +131,7 @@ describe('utils', () => {
             accessToken: 'new-access-token',
             emitted: '1',
             expiresIn: '2',
+            tenant: MOCK_TENANT,
             refreshToken: MOCK_TOKENS.refreshToken
         };
 
@@ -216,18 +218,21 @@ describe('utils', () => {
                     accessToken: MOCK_RESPONSE.accessToken,
                     emitted: 1,
                     expires: 3,
-                    refreshToken: MOCK_TOKENS.refreshToken
+                    refreshToken: MOCK_TOKENS.refreshToken,
+                    tenant: MOCK_RESPONSE.tenant
                 }));
         });
     });
 
     describe('registerDevice', () => {
+        const MOCK_TENANT = 'tenant1234';
         const MOCK_PAIRING_CODE = 'mock-pairing-code';
         const MOCK_RESPONSE = {
             accessToken: 'new-access-token',
             emitted: '1',
             expiresIn: '2',
-            refreshToken: 'new-refresh-token'
+            refreshToken: 'new-refresh-token',
+            tenant: MOCK_TENANT
         };
 
         describe('rejects with an error object', () => {
@@ -279,7 +284,8 @@ describe('utils', () => {
                     accessToken: MOCK_RESPONSE.accessToken,
                     emitted: 1,
                     expires: 3,
-                    refreshToken: MOCK_RESPONSE.refreshToken
+                    refreshToken: MOCK_RESPONSE.refreshToken,
+                    tenant: MOCK_RESPONSE.tenant
                 }));
         });
 
@@ -293,7 +299,8 @@ describe('utils', () => {
                 .then(result => expect(result).toEqual({
                     accessToken: MOCK_RESPONSE.accessToken,
                     emitted: 1,
-                    expires: 3
+                    expires: 3,
+                    tenant: MOCK_RESPONSE.tenant
                 }));
         });
     });
