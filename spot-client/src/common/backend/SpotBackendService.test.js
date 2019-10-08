@@ -80,7 +80,8 @@ describe('SpotBackendService', () => {
             accessToken: 'new-access-token',
             emitted: Date.now(),
             expiresIn: 10 * 60 * 1000,
-            refreshToken: 'new-refresh-token'
+            refreshToken: 'new-refresh-token',
+            tenant: 'tenant1'
         };
 
         describe('without stored registration', () => {
@@ -101,6 +102,7 @@ describe('SpotBackendService', () => {
                         );
 
                         expect(spotBackendService.getJwt()).toBe(MOCK_RESPONSE.accessToken);
+                        expect(spotBackendService.getTenant()).toBe(MOCK_RESPONSE.tenant);
                         expect(spotBackendService.isPairingPermanent()).toBe(true);
                     })
             );
@@ -131,6 +133,9 @@ describe('SpotBackendService', () => {
             });
 
             it('notifies listeners of the token refresh', () => {
+                const MOCK_TENANT_2 = 'tenant2';
+                const MOCK_ACESS_TOKEN_2 = 'access-token-2';
+
                 jest.useFakeTimers();
 
                 const onUpdateCallback = jest.fn();
@@ -140,6 +145,14 @@ describe('SpotBackendService', () => {
                     onUpdateCallback
                 );
 
+                fetch.resetMocks();
+                fetch.mockResponseOnce(JSON.stringify(MOCK_RESPONSE));
+                fetch.mockResponseOnce(JSON.stringify({
+                    ...MOCK_RESPONSE,
+                    accessToken: MOCK_ACESS_TOKEN_2,
+                    tenant: 'tenant2'
+                }));
+
                 return spotBackendService.register(MOCK_PAIRING_CODE)
                     .then(() => {
                         jest.runAllTimers();
@@ -147,7 +160,16 @@ describe('SpotBackendService', () => {
                         // Advance other async operations
                         return new Promise(resolve => process.nextTick(resolve));
                     })
-                    .then(() => expect(onUpdateCallback).toHaveBeenCalled());
+                    .then(() => {
+                        expect(onUpdateCallback).toHaveBeenCalledWith({
+                            jwt: MOCK_RESPONSE.accessToken,
+                            tenant: MOCK_RESPONSE.tenant
+                        });
+                        expect(onUpdateCallback).toHaveBeenCalledWith({
+                            jwt: MOCK_ACESS_TOKEN_2,
+                            tenant: MOCK_TENANT_2
+                        });
+                    });
             });
 
             it('clears the registration on room info error', () =>
