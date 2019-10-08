@@ -65,8 +65,10 @@
     "conferenceStatus": {
         "enterPassword": "Enter the conference password.",
         "exitingConference": "The conference will be exited automatically in",
+        "howToEnterPassword": "You can use the remote control device to submit a password.",
         "kicked": "You have been removed from the conference.",
-        "password": "Password"
+        "password": "Password",
+        "passwordRequired": "Password required to join."
     },
     "dial": {
         "dial": "Dial a Number",
