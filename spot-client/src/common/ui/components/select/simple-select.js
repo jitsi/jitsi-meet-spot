@@ -19,7 +19,6 @@ const menuProps = {
  */
 export default class SimpleSelect extends React.Component {
     static defaultProps = {
-        placeholder: 'Please make a selection',
         value: ''
     };
 
