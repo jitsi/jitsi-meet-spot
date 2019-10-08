@@ -30,7 +30,12 @@ import {
     disconnectAllTemporaryRemotes,
     getDefaultMeetingDomain
 } from './../../app-state';
-import { KickedOverlay, MeetingFrame, MeetingStatus } from './../components';
+import {
+    KickedOverlay,
+    MeetingFrame,
+    MeetingStatus,
+    PasswordRequiredOverlay
+} from './../components';
 
 /**
  * Displays a Jitsi-Meet meeting.
@@ -292,16 +297,7 @@ export class Meeting extends React.Component {
      * @private
      */
     _renderPasswordPrompt() {
-        return (
-            <div className = 'status-overlay'>
-                <div className = 'status-overlay-text-frame'>
-                    <h1>Password required to join</h1>
-                    <div className = 'status-overlay-text'>
-                        <div>You can use the remote control device to submit a password.</div>
-                    </div>
-                </div>
-            </div>
-        );
+        return <PasswordRequiredOverlay />;
     }
 }
 
