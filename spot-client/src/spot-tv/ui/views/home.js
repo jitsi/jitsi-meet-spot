@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -49,7 +50,8 @@ export class Home extends React.Component {
         productName: PropTypes.string,
         remoteControlServer: PropTypes.object,
         remoteJoinCode: PropTypes.string,
-        spotRoomName: PropTypes.string
+        spotRoomName: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -215,12 +217,12 @@ export class Home extends React.Component {
      * @returns {ReactElement}
      */
     _renderError() {
+        const { t } = this.props;
+
         return (
             <div className = 'no-events-message'>
-                <div>Unable to get calendar events.</div>
-                <div>
-                   Please try reconnecting to the room's calendar.
-                </div>
+                <div>{ t('calendar.errorGettingEvents') }</div>
+                <div> { t('calendar.retrySync') }</div>
             </div>
         );
     }
@@ -233,13 +235,12 @@ export class Home extends React.Component {
      * @returns {ReactElement}
      */
     _renderNoEventsMessage() {
+        const { t } = this.props;
+
         return (
             <div className = 'no-events-message'>
-                <div>There are no scheduled meetings.</div>
-                <div>
-                    Invite this room to your calendar event
-                    and you'll be set
-                </div>
+                <div>{ t('calendar.noEvents') }</div>
+                <div>{ t('calendar.inviteThisRoom') }</div>
             </div>
         );
     }
@@ -252,17 +253,18 @@ export class Home extends React.Component {
      * @returns {ReactElement}
      */
     _renderSetupMessage() {
+        const { productName, remoteJoinCode, t } = this.props;
+
         return (
             <div className = 'no-events-message'>
-                <h1>Welcome to { this.props.productName }!</h1>
+                <h1>{ t('welcome', { productName }) }</h1>
                 <div className = 'setup-instructions'>
-                    <div>You're almost set</div>
-                    <div>
-                        Pair your remote and connect your calendar.
-                    </div>
+                    <div>{ t('calendar.setupHeader') }</div>
+                    <div>{ t('calendar.setupHow') }</div>
+
                 </div>
                 {
-                    this.props.remoteJoinCode
+                    remoteJoinCode
                         && (
                             <div className = 'setup-join-code'>
                                 <JoinInfo />
@@ -311,5 +313,10 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default withRouter(withCalendar(
-    connect(mapStateToProps, mapDispatchToProps)(Home)));
+export default withRouter(
+    withCalendar(
+        connect(mapStateToProps, mapDispatchToProps)(
+            withTranslation()(Home)
+        )
+    )
+);
