@@ -44,7 +44,6 @@ class View extends React.Component {
             <div
                 className = { className }
                 data-qa-id = { `${this.props.name}-view` }>
-                <Background />
                 {
 
                     /**

@@ -12,6 +12,7 @@ import {
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
+    Background,
     ErrorBoundary,
     FatalError,
     FeedbackOpener,
@@ -147,7 +148,7 @@ export class App extends React.Component {
                 <IdleCursorDetector
                     onCursorIdleChange = { this._onCursorIdleChange }>
                     <div className = { rootClassName }>
-
+                        <Background />
                         <Notifications />
                         <Switch>
                             {
