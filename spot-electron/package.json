@@ -32,6 +32,7 @@
     },
     "version": "1.0.0",
     "dependencies": {
+        "electron-is-dev": "1.1.0",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "lodash": "4.17.11",
         "node-osascript": "2.1.0"
