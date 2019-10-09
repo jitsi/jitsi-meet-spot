@@ -31,7 +31,6 @@ function createApplicationWindow() {
     const startFullScreen = config.getValue('window.fullscreen');
 
     applicationWindow = new BrowserWindow({
-        autoHideMenuBar: startFullScreen,
         fullscreen: startFullScreen,
         height: config.getValue('window.height'),
         show: false,
@@ -58,8 +57,14 @@ function createApplicationWindow() {
     // Set event handlers
     applicationWindow.once('ready-to-show', _onWindowReady);
     applicationWindow.on('resize', _onWindowResize);
-    applicationWindow.on('enter-full-screen', () => config.setValue('window.fullscreen', true));
-    applicationWindow.on('leave-full-screen', () => config.setValue('window.fullscreen', undefined));
+    applicationWindow.on('enter-full-screen', () => {
+        applicationWindow.setMenuBarVisibility(false);
+        config.setValue('window.fullscreen', true);
+    });
+    applicationWindow.on('leave-full-screen', () => {
+        applicationWindow.setMenuBarVisibility(true);
+        config.setValue('window.fullscreen', undefined);
+    });
 
     applicationWindow.loadURL(defaultSpotURL);
 
