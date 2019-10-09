@@ -28,8 +28,11 @@ let splashWindow;
  * @returns {void}
  */
 function createApplicationWindow() {
+    const startFullScreen = config.getValue('window.fullscreen');
+
     applicationWindow = new BrowserWindow({
-        fullscreen: config.getValue('window.fullscreen'),
+        autoHideMenuBar: startFullScreen,
+        fullscreen: startFullScreen,
         height: config.getValue('window.height'),
         show: false,
         titleBarStyle: 'hidden',
@@ -39,7 +42,7 @@ function createApplicationWindow() {
         }
     });
 
-    if (spashScreen && !config.getValue('window.fullscreen')) {
+    if (spashScreen && !startFullScreen) {
         splashWindow = new BrowserWindow({
             frame: false,
             height: spashScreen.height,
