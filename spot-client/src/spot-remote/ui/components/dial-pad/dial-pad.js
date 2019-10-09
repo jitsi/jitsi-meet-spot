@@ -14,6 +14,7 @@ import {
     setMostRecentCountryCode
 } from '../../../app-state';
 
+import { findCountryCodeForLanguage } from './LanguageToCountryCode';
 import StatelessDialPad from './StatelessDialPad';
 
 // eslint-disable-next-line jsdoc/require-description-complete-sentence
@@ -332,7 +333,9 @@ function mapStateToProps(state) {
     const mostRecentCountryCode = getMostRecentCountryCode(state);
 
     return {
-        countryCode: countryCode || mostRecentCountryCode,
+        countryCode: countryCode
+            || mostRecentCountryCode
+            || findCountryCodeForLanguage(navigator.language),
         phoneAuthorizeServiceUrl
     };
 }
