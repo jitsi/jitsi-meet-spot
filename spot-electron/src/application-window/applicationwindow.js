@@ -58,8 +58,8 @@ function createApplicationWindow() {
     // Set event handlers
     applicationWindow.once('ready-to-show', _onWindowReady);
     applicationWindow.on('resize', _onWindowResize);
-    applicationWindow.on('enter-full-screen', _onWindowFullScreenChange);
-    applicationWindow.on('leave-full-screen', _onWindowFullScreenChange);
+    applicationWindow.on('enter-full-screen', () => config.setValue('window.fullscreen', true));
+    applicationWindow.on('leave-full-screen', () => config.setValue('window.fullscreen', undefined));
 
     applicationWindow.loadURL(defaultSpotURL);
 
@@ -79,16 +79,6 @@ function createApplicationWindow() {
     }
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
-}
-
-/**
- * Callback to handle 'enter-full-screen' and 'leave-full-screen' events of the main window.
- *
- * @returns {void}
- */
-function _onWindowFullScreenChange() {
-    // NOTE: Setting fullscreen: false disables the possibility to set the window full screen.
-    config.setValue('window.fullscreen', applicationWindow.isFullScreen() ? true : undefined);
 }
 
 /**
