@@ -57,8 +57,6 @@ function createApplicationWindow() {
     applicationWindow.on('resize', _onWindowResize);
     applicationWindow.on('enter-full-screen', _onWindowFullScreenChange);
     applicationWindow.on('leave-full-screen', _onWindowFullScreenChange);
-    applicationWindow.on('enter-html-full-screen', _onHtmlFullScreenChange);
-    applicationWindow.on('exit-html-full-screen', _onHtmlFullScreenChange);
 
     applicationWindow.loadURL(defaultSpotURL);
 
@@ -78,15 +76,6 @@ function createApplicationWindow() {
     }
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
-}
-
-/**
- * Callback to handle 'enter-html-full-screen' and 'exit-html-full-screen' event of the main window.
- *
- * @returns {void}
- */
-function _onHtmlFullScreenChange() {
-    applicationWindow.setFullScreen(!applicationWindow.isFullScreen());
 }
 
 /**
