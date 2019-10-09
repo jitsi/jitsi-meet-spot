@@ -68,8 +68,8 @@ function createApplicationWindow() {
 
     applicationWindow.loadURL(defaultSpotURL);
 
-    if (process.platform === 'darwin') {
-        applicationWindow.webContents.on('did-finish-load', () => {
+    applicationWindow.webContents.on('did-finish-load', () => {
+        if (process.platform === 'darwin') {
             /* eslint-disable max-len */
             const code = `
                 var _titleBar = document.createElement('div');
@@ -80,8 +80,10 @@ function createApplicationWindow() {
 
             /* eslint-enable max-len */
             applicationWindow.webContents.executeJavaScript(code);
-        });
-    }
+        }
+
+        applicationWindow.setMenuBarVisibility(!startFullScreen);
+    });
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 }
