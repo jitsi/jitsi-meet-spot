@@ -66,6 +66,19 @@ function createApplicationWindow() {
         config.setValue('window.fullscreen', undefined);
     });
 
+    applicationWindow.webContents.on('crashed', () => {
+        // The setTimeout 0 is necessary clear the current stack or else
+        // navigation will cause the main app to crash as well.
+        setTimeout(() => {
+            applicationWindow.loadFile('src/static/crashed.html')
+                .then(() => {
+                    setTimeout(() => {
+                        applicationWindow.loadURL(defaultSpotURL);
+                    }, 5000);
+                });
+        });
+    });
+
     applicationWindow.loadURL(defaultSpotURL);
 
     applicationWindow.webContents.on('did-finish-load', () => {
