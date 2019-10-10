@@ -1,6 +1,7 @@
 {
     "author": "Jitsi",
     "build": {
+        "productName": "Spot",
         "appId": "org.jitsi.spot",
         "mac": {
             "category": "public.app-category.business",
