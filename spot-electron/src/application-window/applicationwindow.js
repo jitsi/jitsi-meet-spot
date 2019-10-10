@@ -81,8 +81,6 @@ function createApplicationWindow() {
             /* eslint-enable max-len */
             applicationWindow.webContents.executeJavaScript(code);
         }
-
-        applicationWindow.setMenuBarVisibility(!startFullScreen);
     });
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
@@ -95,6 +93,9 @@ function createApplicationWindow() {
  */
 function _onWindowReady() {
     splashWindow && splashWindow.destroy();
+
+    applicationWindow.setMenuBarVisibility(!config.getValue('window.fullscreen'));
+
     applicationWindow.show();
 }
 
