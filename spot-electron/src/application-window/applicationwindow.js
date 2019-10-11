@@ -12,6 +12,13 @@ const { config } = require('../config');
 const { logger } = require('../logger');
 
 /**
+ * The constant is included into the user agent part to allow feature detection in future.
+ *
+ * @type {string}
+ */
+const SPOT_ELECTRON_FEATURE_VERSION = 'SpotElectron/1';
+
+/**
  * This is the reference for the main window. May be exposed from this scope later, but we don't have
  * any reasons to do it yet.
  */
@@ -79,7 +86,9 @@ function createApplicationWindow() {
         });
     });
 
-    applicationWindow.loadURL(defaultSpotURL);
+    applicationWindow.loadURL(defaultSpotURL, {
+        userAgent: `${applicationWindow.webContents.getUserAgent()} ${SPOT_ELECTRON_FEATURE_VERSION}`
+    });
 
     applicationWindow.webContents.on('did-finish-load', () => {
         if (process.platform === 'darwin') {
