@@ -9,6 +9,8 @@ import {
     submitFeedback
 } from 'common/app-state';
 
+import { Background } from '../background';
+
 import { FeedbackForm } from './FeedbackForm';
 
 /**
@@ -26,6 +28,7 @@ export function FeedbackOverlay(props) {
 
     return (
         <div className = 'feedback-view status-overlay app-feedback-overlay'>
+            <Background />
             <div className = 'feedback-form'>
                 <FeedbackForm
                     commentOnly = { true }

@@ -118,7 +118,9 @@ export class Home extends React.Component {
                     <div className = 'room-name'>
                         { spotRoomName && <div>{ spotRoomName }</div> }
                     </div>
-                    { this._getCalendarEventsView() }
+                    <div className = 'calendar-content'>
+                        { this._getCalendarEventsView() }
+                    </div>
                     {
                         _isSetupComplete
                             && <div className = 'spot-home-footer'>

@@ -16,7 +16,9 @@
     }
 
     .modal-content {
-        background-color: var(--container-content-bg-color-no-opacity);
+        background:  var(--container-bg-color-fallback);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         height: 100%;
         max-height: 100vh;
         overflow: auto;
@@ -29,6 +31,14 @@
             height: auto;
             margin: 50px;
             width: unset;
+        }
+
+        .fallback-background {
+            height: 100%;
+            width: 100%;
+            opacity: 0.9;
+            position: absolute;
+            top: 0;
         }
 
         .close {
@@ -48,12 +58,16 @@
 }
 
 .modal-content {
-    background-color: var(--modal-bg-color);
+    background-color: var(--container-bg-color);
     border-radius: 5px;
     display: flex;
     justify-content: center;
-    padding: 40px;
+    padding: 40px 20px;
     max-height: calc(100vh - 40px);
     min-height: 300px;
     width: 100%;
+
+    & > *:last-child {
+        position: relative;
+    }
 }

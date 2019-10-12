@@ -1,8 +1,8 @@
 .meeting-name-entry {
-    background-color: var(--container-content-bg-color);
+    background-color: var(--container-bg-color);
     border-radius: 5px;
     display: flex;
-    padding: 1.2em 2.5em;
+    padding: 20px;
     width: 80%;
 
     @media #{$mq-laptop} {

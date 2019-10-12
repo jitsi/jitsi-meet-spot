@@ -1,6 +1,6 @@
 .admin-entry {
     align-items: center;
-    background-color: var(--container-content-bg-color);
+    border-top: var(--separator-border);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,5 +17,9 @@
 
     .pairing-code {
         @include join-code;
+    }
+
+    &:last-child {
+        border-bottom: var(--separator-border);
     }
 }

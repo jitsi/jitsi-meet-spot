@@ -1,10 +1,5 @@
 .status-overlay {
-    background: rgb(27, 38, 56);
-
-    &.transparent {
-        background: none;
-    }
-
+    background: var(--backdrop-color);
     height: 100vh;
     left: 0;
     position: absolute;
@@ -15,7 +10,7 @@
     .status-overlay-text-frame {
         display: block;
         width: 55%;
-        background-color: var(--container-content-bg-color);
+        background-color: var(--container-bg-color);
         border-radius: 5px;
         color: var(--container-sub-content-font-color);
         padding: 3em;

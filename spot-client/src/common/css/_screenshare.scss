@@ -5,10 +5,15 @@
 .screenshare-select {
     @include centered-content;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     min-width: 360px;
+    padding: 0 20px;
     text-align: center;
     width: 100%;
+
+    @media #{$mq-tablet} {
+        justify-content: space-between;
+    }
 
     .options {
         display: flex;

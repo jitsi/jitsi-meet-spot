@@ -7,7 +7,12 @@
 }
 
 .app-feedback-overlay.status-overlay {
+    background: #1C2025;
     z-index: $z-index-above-all;
+
+    * {
+        z-index: $z-index-above-all;
+    }
 
     .feedback-form {
         margin-top: 5%
