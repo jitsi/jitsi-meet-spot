@@ -228,6 +228,10 @@
 }
 
 .dtmf-modal {
+    .dial-pad {
+        background-color: transparent;
+    }
+
     .country-search-trigger,
     .dial-pad-footer {
         display: none;

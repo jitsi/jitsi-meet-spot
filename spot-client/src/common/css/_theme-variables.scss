@@ -1,6 +1,7 @@
 :root {
     --active: rgba(37, 138, 255, 0.9);
 
+    --backdrop-color: #1C2025;
     --button-color: rgba(37, 138, 255);
     --button-active-color: #0074e0;
     --button-opaque: rgba(0, 0, 0, 0.5);
@@ -9,7 +10,8 @@
     --call-button-active: #005C3A;
     --code-font: 'Roboto mono';
 
-    --container-bg-color: rgba(42, 58, 75, 0.7);
+    --container-bg-color: rgba(28, 32, 37, 0.5);
+    --container-bg-color-fallback: rgba(28, 32, 37, 1);
     --container-content-bg-color: rgba(42, 58, 75, 0.9);
     --container-content-bg-color-no-opacity: rgb(42, 58, 75);
     --container-content-font-color: #ffffff;
@@ -29,6 +31,7 @@
     --select-background-color:rgb(82, 97, 118);
     --secondary-link-color: #8fc3f0;
     --secondary-white: #d1dbe8;
+    --separator-border: 1px solid rgba(255, 255, 255, .2);
 
     --mic-preview-active-background-color: rgba(39, 119, 235, 1);
     --mic-preview-background-color: rgba(250, 250, 250, 0.38);

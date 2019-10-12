@@ -14,7 +14,7 @@ import { NavButton } from '../nav';
 export class DTMFButton extends React.Component {
     static propTypes = {
         onClick: PropTypes.func,
-        t: PropTypes.funcs
+        t: PropTypes.func
     };
 
     /**

@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 
-import { Background } from '../components';
 import { viewDisplayed } from '../actions';
 
 /**

@@ -16,7 +16,7 @@ export function Background({ backgroundUrl }) {
 
     if (backgroundUrl) {
         backgroundStyles = {
-            background: `linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 89%), url('${backgroundUrl}')`
+            background: `linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%), url('${backgroundUrl}')`
         };
     }
 

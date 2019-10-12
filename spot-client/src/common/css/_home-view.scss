@@ -46,8 +46,12 @@
         }
     }
 
+    .calendar-content {
+        border-top: var(--separator-border);
+        border-bottom: var(--separator-border);
+    }
+
     .no-events-message {
-        background-color: var(--container-content-bg-color);
         color: var(--container-sub-content-font-color);
         padding: 3em;
         text-align: center;
