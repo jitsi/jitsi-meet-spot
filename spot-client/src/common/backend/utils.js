@@ -341,6 +341,8 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
  * instance for accessing other services.
  * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when
  * the token has been emitted.
+ * @property {string} [endpointId] - An endpoint ID assigned by the backend which is used to identify the device. It
+ * should be persisted on the client side and used in future "register" requests.
  * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
  * the token will expire.
  * @property {string} [refreshToken] - The token used to refresh the authorization. Present only in
@@ -353,12 +355,15 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
  * @param {string} serviceEndpointUrl - The URL pointing to the service.
  * @param {string} pairingCode - The pairing code to be used to connect Spot TV and Spot Remote through the pairing
  * service.
+ * @param {string} [assignedEndpointId] - The endpoint ID assigned by the backend.
+ * See {@link SpotRegistration.endpointId}.
  * @returns {Promise<SpotRegistration>}
  */
-export function registerDevice(serviceEndpointUrl, pairingCode) {
+export function registerDevice(serviceEndpointUrl, pairingCode, assignedEndpointId) {
     const requestOptions = {
         headers: createHeaders(),
         body: JSON.stringify({
+            endpointId: assignedEndpointId,
             pairingCode
         }),
         method: 'PUT',
@@ -374,6 +379,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
             const {
                 accessToken,
                 emitted,
+                endpointId,
                 expiresIn,
                 refreshToken,
                 tenant
@@ -389,6 +395,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
 
             return {
                 accessToken,
+                endpointId,
                 refreshToken,
                 tenant,
                 ...convertToEmittedAndExpires(json)

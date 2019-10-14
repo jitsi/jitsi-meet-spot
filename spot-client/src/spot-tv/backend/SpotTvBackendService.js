@@ -11,7 +11,7 @@ export class SpotTvBackendService extends SpotBackendService {
      * @param {SpotBackendConfig} config - Backend service configuration.
      */
     constructor(config) {
-        super(config);
+        super(config, { endpointIdPersistenceKey: 'spot-tv-endpoint-id' });
         this.remotePairingInfo = { };
     }
 

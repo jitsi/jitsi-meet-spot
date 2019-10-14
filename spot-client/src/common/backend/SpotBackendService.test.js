@@ -61,6 +61,7 @@ function checkRetryOn401ToGetRoomInfo(spotBackendService) {
 }
 
 describe('SpotBackendService', () => {
+    const MOCK_ENDPOINT_ID_KEY = 'test-spot-endpoint-id';
     const PAIRING_SERVICE_URL = 'test/pairing/url';
     const REFRESH_SERVICE_URL = `${PAIRING_SERVICE_URL}/regenerate`;
     const ROOM_KEEPER_SERVICE_URL = 'test/keeper/url';
@@ -71,6 +72,8 @@ describe('SpotBackendService', () => {
         spotBackendService = new SpotBackendService({
             pairingServiceUrl: PAIRING_SERVICE_URL,
             roomKeeperServiceUrl: ROOM_KEEPER_SERVICE_URL
+        }, {
+            endpointIdPersistenceKey: MOCK_ENDPOINT_ID_KEY
         });
     });
 
@@ -187,6 +190,49 @@ describe('SpotBackendService', () => {
                     });
                 })
             );
+
+            it('re-uses endpoint ID received on the 1st register', () => {
+                const MOCK_ENDPOINT_ID = 'endpointId1';
+
+                fetch.mockResponse(JSON.stringify({
+                    ...MOCK_RESPONSE,
+                    endpointId: MOCK_ENDPOINT_ID
+                }));
+                const peristenceSpy = jest.spyOn(persistence, 'get');
+
+                peristenceSpy.mockImplementation(() => undefined);
+
+                return spotBackendService.register(MOCK_PAIRING_CODE)
+                    .then(() => {
+                        expect(fetch).toHaveBeenCalledWith(
+                            PAIRING_SERVICE_URL,
+                            expect.objectContaining({
+                                body: JSON.stringify({
+                                    pairingCode: MOCK_PAIRING_CODE,
+                                    endpointId: undefined
+                                })
+                            }));
+
+                        peristenceSpy.mockImplementation(key => {
+                            if (key === MOCK_ENDPOINT_ID_KEY) {
+                                return MOCK_ENDPOINT_ID;
+                            }
+
+                            return undefined;
+                        });
+
+                        return spotBackendService.register('123123').then(() => {
+                            expect(fetch).toHaveBeenCalledWith(
+                                PAIRING_SERVICE_URL,
+                                expect.objectContaining({
+                                    body: JSON.stringify({
+                                        endpointId: MOCK_ENDPOINT_ID,
+                                        pairingCode: '123123'
+                                    })
+                                }));
+                        });
+                    });
+            });
         });
 
         describe('with stored registration', () => {

@@ -93,7 +93,10 @@ export function connectToSpotTV(joinCode, shareMode) {
         const state = getState();
         const backend
             = isBackendEnabled(state)
-                ? new SpotBackendService(getSpotServicesConfig(state))
+                ? new SpotBackendService(
+                    getSpotServicesConfig(state), {
+                        endpointIdPersistenceKey: 'spot-remote-endpoint-id'
+                    })
                 : null;
         const enableP2PSignaling = isP2PSignalingEnabled(state);
         const serverConfig = getRemoteControlServerConfig(state);
