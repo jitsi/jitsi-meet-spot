@@ -15,8 +15,7 @@ import { createAsyncActionWithStates } from 'common/async-actions';
 import {
     getPermanentPairingCode,
     isBackendEnabled,
-    setPermanentPairingCode,
-    SpotBackendService
+    setPermanentPairingCode
 } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
@@ -27,6 +26,8 @@ import {
 } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { getJitterDelay, windowHandler } from 'common/utils';
+
+import SpotRemoteBackendService from '../backend/SpotRemoteBackendService';
 
 import {
     SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
@@ -93,10 +94,7 @@ export function connectToSpotTV(joinCode, shareMode) {
         const state = getState();
         const backend
             = isBackendEnabled(state)
-                ? new SpotBackendService(
-                    getSpotServicesConfig(state), {
-                        endpointIdPersistenceKey: 'spot-remote-endpoint-id'
-                    })
+                ? new SpotRemoteBackendService(getSpotServicesConfig(state))
                 : null;
         const enableP2PSignaling = isP2PSignalingEnabled(state);
         const serverConfig = getRemoteControlServerConfig(state);
