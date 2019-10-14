@@ -26,6 +26,11 @@
 .feedback-view {
     @include spot-remote-view-layout;
 
+    .feedback-form {
+        display: flex;
+        flex: 1;
+    }
+
     .remote-feedback {
         background-color: var(--container-bg-color);
         border-radius: 5px;

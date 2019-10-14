@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Clock, FeedbackForm, RoomName } from 'common/ui';
+import { FeedbackForm, RoomName } from 'common/ui';
 
 /**
  * A view for Spot-Remote that displays a feedback form for a meeting that has
@@ -19,7 +19,6 @@ export default class FeedbackView extends React.PureComponent {
         return (
             <div className = 'feedback-view'>
                 <div className = 'view-header'>
-                    <Clock />
                     <RoomName />
                 </div>
                 <div className = 'feedback-form'>
