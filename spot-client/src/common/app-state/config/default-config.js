@@ -243,6 +243,12 @@ export default {
      */
     TEMPORARY_FEATURE_FLAGS: {
         /**
+         * Whether or the note feature for inviting participants to a conference
+         * is available.
+         */
+        ENABLE_INVITES: false,
+
+        /**
          * Spot-TV should kick temporary remotes after a successfully joined
          * meeting has neded.
          *

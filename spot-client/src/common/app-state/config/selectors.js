@@ -259,6 +259,18 @@ export function shouldKickTemporaryRemotes(state) {
     return state.config.TEMPORARY_FEATURE_FLAGS.KICK_TEMPORARY_REMOTES;
 }
 
+
+/**
+ * A selector which returns whether or not to display on the remote an option
+ * to invite people to a meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isInviteEnabled(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_INVITES;
+}
+
 /**
  * Whether or not the P2P signaling channel should be enabled in the remote control service.
  *
