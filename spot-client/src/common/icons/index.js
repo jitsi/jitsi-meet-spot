@@ -16,6 +16,7 @@ export {
     Mic,
     MicOff,
     MoreVert,
+    PersonAdd,
     ScreenShare,
     Search,
     Settings,
