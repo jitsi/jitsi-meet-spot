@@ -1,11 +1,14 @@
-const { send400Error, send500Error, sendJSON } = require('./utils');
+const { generateRandomString, send400Error, send500Error, sendJSON } = require('./utils');
 
 const registerDeviceFailureRate = process.env.REG_DEVICE_FAILURE_RATE;
 
 console.info('register-device failure rate: ' + registerDeviceFailureRate);
 
 function registerDeviceController(spots, req, res) {
-    const { pairingCode } = req.body;
+    const {
+        endpointId,
+        pairingCode
+    } = req.body;
 
     if (!pairingCode) {
         send400Error(res, '"pairingCode" is required');
@@ -54,6 +57,7 @@ function registerDeviceController(spots, req, res) {
     const response = {
         accessToken: jwtStructure.accessToken,
         emitted: jwtStructure.emitted,
+        endpointId: endpointId || generateRandomString(),
         expiresIn: jwtStructure.expiresIn,
         id: spotRoom.id,
         refreshToken: shortLived ? undefined : jwtStructure.refreshToken,
