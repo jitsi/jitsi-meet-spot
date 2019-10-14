@@ -48,8 +48,11 @@ export class SpotBackendService extends Emitter {
      * Creates new {@link SpotBackendService}.
      *
      * @param {SpotBackendConfig} config - Spot backend configuration.
+     * @param {Object} options - Extra options for tweaking the behaviour.
+     * @param {string} options.endpointIdPersistenceKey - The name of persistence key under which the service will store
+     * the endpoint ID received from the backend.
      */
-    constructor({ pairingServiceUrl, roomKeeperServiceUrl }) {
+    constructor({ pairingServiceUrl, roomKeeperServiceUrl }, { endpointIdPersistenceKey }) {
         super();
 
         if (!pairingServiceUrl) {
@@ -58,6 +61,10 @@ export class SpotBackendService extends Emitter {
         if (!roomKeeperServiceUrl) {
             throw Error('No "roomKeeperServiceUrl"');
         }
+        if (!endpointIdPersistenceKey) {
+            throw Error('No "endpointIdPersistenceKey"');
+        }
+        this.endpointIdPersistenceKey = endpointIdPersistenceKey;
         this.pairingServiceUrl = pairingServiceUrl;
         this.roomKeeperServiceUrl = roomKeeperServiceUrl;
 
@@ -217,13 +224,30 @@ export class SpotBackendService extends Emitter {
         }
 
         if (!registerDevicePromise) {
+            const storedEndpointId = persistence.get(this.endpointIdPersistenceKey);
+
             logger.log('No stored registration', {
+                endpointIdPersistenceKey: this.endpointIdPersistenceKey,
                 pairingCode,
+                storedEndpointId,
                 storedPairingCode: storedRegistration && storedRegistration.pairingCode
             });
+
             registerDevicePromise
-                = registerDevice(`${this.pairingServiceUrl}`, pairingCode)
-                    .catch(error => this._maybeClearRegistration(error));
+                = registerDevice(`${this.pairingServiceUrl}`, pairingCode, storedEndpointId)
+                    .then(registration => {
+                        const { endpointId, ...rest } = registration;
+
+                        if (storedEndpointId !== endpointId) {
+                            logger.log('Storing new endpoint ID', {
+                                endpointId,
+                                endpointIdPersistenceKey: this.endpointIdPersistenceKey
+                            });
+                            persistence.set(this.endpointIdPersistenceKey, endpointId);
+                        }
+
+                        return { ...rest };
+                    }, error => this._maybeClearRegistration(error));
         }
 
         return registerDevicePromise
