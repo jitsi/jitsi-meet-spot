@@ -13,7 +13,7 @@ import {
 import { AutoUpdateChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isWirelessScreenshareSupported } from 'common/detection';
-import { CalendarToday, Call, ScreenShare, Videocam } from 'common/icons';
+import { ArrowRightAlt, Call, Event, ScreenShare } from 'common/icons';
 import { logger } from 'common/logger';
 import {
     Clock,
@@ -27,8 +27,8 @@ import {
 } from './../../../app-state';
 import {
     DialPad,
-    NavButton,
-    NavContainer,
+    NavList,
+    NavItem,
     ScreensharePicker,
     SelfFillingNameEntry
 } from './../../components';
@@ -100,34 +100,34 @@ class WaitingForCallView extends React.Component {
                 <div className = 'waiting-sub-view'>
                     { this._getSubView() }
                 </div>
-                <NavContainer>
-                    <NavButton
+                <NavList>
+                    <NavItem
                         active = { activeTab === 'calendar' }
                         label = { t('calendar.calendar') }
                         onClick = { this._onSetCalendarActive }>
-                        <CalendarToday />
-                    </NavButton>
-                    <NavButton
+                        <Event />
+                    </NavItem>
+                    <NavItem
                         active = { activeTab === 'input' }
                         label = { t('adhoc.meetNow') }
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now'>
-                        <Videocam />
-                    </NavButton>
-                    <NavButton
+                        <ArrowRightAlt />
+                    </NavItem>
+                    <NavItem
                         active = { activeTab === 'dial' }
                         label = { t('dial.dial') }
                         onClick = { this._onSetDialActive }>
                         <Call />
-                    </NavButton>
-                    <NavButton
+                    </NavItem>
+                    <NavItem
                         active = { activeTab === 'share' }
                         label = { t('commands.share') }
                         onClick = { this._onSetScreenshareSelectActive }
                         qaId = 'share-content'>
                         <ScreenShare />
-                    </NavButton>
-                </NavContainer>
+                    </NavItem>
+                </NavList>
             </div>
         );
     }
