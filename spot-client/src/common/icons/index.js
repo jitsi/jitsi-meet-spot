@@ -1,10 +1,11 @@
 export {
     ArrowForward,
+    ArrowRightAlt,
     Backspace,
-    CalendarToday,
     Call,
     CallEnd,
     Dialpad,
+    Event,
     ExpandLess,
     ExpandMore,
     Feedback,

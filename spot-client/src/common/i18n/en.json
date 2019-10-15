@@ -2,7 +2,7 @@
     "adhoc": {
         "enterName": "Enter a meeting name",
         "label": "Start a new meeting",
-        "meetNow": "Meet Now"
+        "meetNow": "Join with ID"
     },
     "admin": {
         "change": "Change",
@@ -85,7 +85,7 @@
         "timeLeft_plural": "{{ count }} seconds"
     },
     "dial": {
-        "dial": "Dial a Number",
+        "dial": "Dial a number",
         "enterPhoneNumber": "Enter a phone number",
         "enterNumbers": "Enter Numbers",
         "searchCountry": "Search country / region"
