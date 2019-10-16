@@ -246,10 +246,34 @@ export class BaseRemoteControlService extends Emitter {
     isUnrecoverableRequestError(error) {
         const isBackendUsed = Boolean(this._getBackend());
 
-        return error === 'not-authorized'
-            || (!isBackendUsed && error === 'connection.passwordRequired')
-            || error === CONNECTION_EVENTS.CLOSED_BY_SERVER
-            || (isBackendUsed && this._getBackend().isUnrecoverableRequestError(error));
+        return error === CONNECTION_EVENTS.CLOSED_BY_SERVER
+            || (isBackendUsed
+                ? this._isUnrecoverableRequestErrorBackendImpl(error)
+                : this._isUnrecoverableRequestErrorNoBackendImpl(error));
+    }
+
+    /**
+     * The backend flow impl for {@link isUnrecoverableRequestError}.
+     *
+     * @param {Error|string} error - The error object with details about the error
+     * or a string that identifies the error.
+     * @returns {boolean}
+     * @private
+     */
+    _isUnrecoverableRequestErrorBackendImpl(error) {
+        return this._getBackend().isUnrecoverableRequestError(error);
+    }
+
+    /**
+     * The no backend flow impl for {@link isUnrecoverableRequestError}.
+     *
+     * @param {Error|string} error - The error object with details about the error
+     * or a string that identifies the error.
+     * @returns {boolean}
+     * @private
+     */
+    _isUnrecoverableRequestErrorNoBackendImpl(error) {
+        return error === 'connection.passwordRequired' || error === 'not-authorized';
     }
 
     /**
