@@ -244,10 +244,12 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {boolean}
      */
     isUnrecoverableRequestError(error) {
+        const isBackendUsed = Boolean(this._getBackend());
+
         return error === 'not-authorized'
-            || error === 'connection.passwordRequired'
+            || (!isBackendUsed && error === 'connection.passwordRequired')
             || error === CONNECTION_EVENTS.CLOSED_BY_SERVER
-            || (Boolean(this._getBackend()) && this._getBackend().isUnrecoverableRequestError(error));
+            || (isBackendUsed && this._getBackend().isUnrecoverableRequestError(error));
     }
 
     /**
