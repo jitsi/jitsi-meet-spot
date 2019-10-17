@@ -148,7 +148,7 @@ class WaitingForCallView extends React.Component {
         switch (activeTab) {
         case 'calendar':
             return (
-                <div>
+                <div className = 'remote-calendar-view'>
                     <Clock />
                     <ScheduledMeetings
                         events = { this.props.events }
