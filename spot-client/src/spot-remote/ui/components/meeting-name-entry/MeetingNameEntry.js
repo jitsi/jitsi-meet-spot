@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Button, Input } from 'common/ui';
+import { Button } from 'common/ui';
 
 /**
  * Displays an input for entering the name of a meeting.
@@ -58,28 +58,27 @@ export class MeetingNameEntry extends React.Component {
                         { t('adhoc.label') }
                     </label>
                     <div className = 'input-with-default-domain'>
-                        <span className = 'default-domain'>
-                            { `${domain}/` }
-                        </span>
-                        <Input
-                            autoComplete = 'off'
-                            className = 'input'
-                            data-qa-id = 'meeting-name-input'
-                            onBlur = { onBlur }
-                            onChange = { this._onMeetingNameChange }
-                            onFocus = { onFocus }
-                            placeholder = { placeholder
-                                || t('adhoc.enterName') }
-                            spellCheck = { false }
-                            value = { meetingName } />
+                        <div className = 'input-url'>
+                            <span className = 'default-domain'>
+                                { `${domain}/` }
+                            </span>
+                            <input
+                                autoComplete = 'off'
+                                className = 'input'
+                                data-qa-id = 'meeting-name-input'
+                                onBlur = { onBlur }
+                                onChange = { this._onMeetingNameChange }
+                                onFocus = { onFocus }
+                                placeholder = { placeholder || t('adhoc.enterName') }
+                                spellCheck = { false }
+                                value = { meetingName } />
+                        </div>
+                        <Button
+                            qaId = 'meeting-name-submit'
+                            type = 'submit'>
+                            { t('buttons.go') }
+                        </Button>
                     </div>
-                </div>
-                <div className = 'submit-wrapper'>
-                    <Button
-                        qaId = 'meeting-name-submit'
-                        type = 'submit'>
-                        { t('buttons.go') }
-                    </Button>
                 </div>
             </form>
         );

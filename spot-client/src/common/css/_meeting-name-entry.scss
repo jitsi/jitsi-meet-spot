@@ -1,5 +1,4 @@
 .meeting-name-entry {
-    background-color: var(--container-bg-color);
     border-radius: 5px;
     display: flex;
     padding: 20px;
@@ -18,16 +17,35 @@
 
         .input-label {
             display: block;
+            font-size: 19px;
             margin-bottom: 10px;
+        }
+
+        .input {
+            @include input-reset;
+            color: #5E6D7A;
+            flex: 1;
+            padding: 0px 16px;
         }
     }
 
     .input-with-default-domain {
         display: flex;
-        flex-direction: column;
 
-        @media #{$mq-mobile-l} {
-            flex-direction: row;
+        .input-url {
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            font-size: 19px;
+            margin-right: 4px;
+            overflow: hidden;
+
+
+            @media #{$mq-mobile-l} {
+                flex-direction: row;
+            }
         }
 
         .default-domain {
@@ -35,12 +53,12 @@
              * Try matching the style of the neighboring Material Input component
              */
             align-items: center;
-            border-bottom: 2px solid black;
-            color: rgba(147, 185, 226, 1);
+            border-right: 1px solid #D1DBE8;
+            color: #0376DA;
             display: flex;
-            font-size: 16px;
+            font-size: 19px;
             line-height: 1.1875em;
-            padding: 6px 0 7px;
+            padding: 10px 16px;
             white-space: nowrap;
         }
     }
@@ -51,7 +69,7 @@
         margin-left: 2em;
 
         .submit-button {
-            font-size: $font-size-medium;
+            font-size: 19px;
         }
     }
 }
