@@ -27,6 +27,7 @@ const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 export class MeetingFrame extends React.Component {
     static defaultProps = {
         displayName: DEFAULT_DISPLAY_NAME,
+        dtmfThrottleRate: -1,
 
         /**
          * Ensure params set for the external api are defined or else a
@@ -41,6 +42,7 @@ export class MeetingFrame extends React.Component {
     static propTypes = {
         avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
+        dtmfThrottleRate: PropTypes.number,
         invites: PropTypes.array,
         jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
@@ -115,6 +117,21 @@ export class MeetingFrame extends React.Component {
         this.state = {
             feedbackDisplayed: false
         };
+
+        /**
+         * FIXME: enqueueing touch tones to play is a workaround for consecutive
+         * numbers playing over each other and potentially being registered as
+         * one tone by voximplant, which is jitsi's dial in/out provider. As a
+         * preventative, tones are to be played one at a time with a gap in
+         * between.
+         */
+        this._touchTonesQueue = [];
+
+        /**
+         * FIXME: a timeout is used to provide a buffer between each touch tone
+         * playing to workaround two consecutive tones being registered as one.
+         */
+        this._playToneTimeout = null;
     }
 
     /**
@@ -225,6 +242,7 @@ export class MeetingFrame extends React.Component {
      */
     componentWillUnmount() {
         clearTimeout(this._assumeMeetingFailedTimeout);
+        clearTimeout(this._playToneTimeout);
 
         this._jitsiApiHealthCheck.stop();
         this._jitsiApi.dispose();
@@ -398,7 +416,7 @@ export class MeetingFrame extends React.Component {
             break;
 
         case COMMANDS.SEND_TOUCH_TONES:
-            this._jitsiApi.executeCommand('sendTones', { tones: data.tones });
+            this._playTouchTone(data.tones);
             break;
 
         case COMMANDS.SET_AUDIO_MUTE:
@@ -725,6 +743,43 @@ export class MeetingFrame extends React.Component {
         this._isVideoMuted = muted;
 
         this.props.updateSpotTvState({ videoMuted: muted });
+    }
+
+    /**
+     * Callback to invoke to enqueue touch tones to be played.
+     *
+     * @param {string} newTone - The tone value.
+     * @private
+     * @returns {void}
+     */
+    _playTouchTone(newTone = '') {
+        if (this.props.dtmfThrottleRate < 0) {
+            this._jitsiApi.executeCommand('sendTones', { tones: newTone });
+
+            return;
+        }
+
+        this._touchTonesQueue = [
+            ...this._touchTonesQueue,
+            ...newTone.split('')
+        ];
+
+        if (this._playToneTimeout) {
+            return;
+        }
+
+        const toneToPlay = this._touchTonesQueue.shift();
+
+        if (typeof toneToPlay === 'undefined') {
+            return;
+        }
+
+        this._jitsiApi.executeCommand('sendTones', { tones: toneToPlay });
+
+        this._playToneTimeout = setTimeout(() => {
+            this._playToneTimeout = null;
+            this._playTouchTone();
+        }, this.props.dtmfThrottleRate);
     }
 
     /**

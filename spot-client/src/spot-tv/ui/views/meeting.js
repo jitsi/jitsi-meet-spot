@@ -7,6 +7,7 @@ import {
     getAvatarUrl,
     getDesktopSharingFramerate,
     getDisplayName,
+    getDtmfThrottleRate,
     getInMeetingStatus,
     getJitsiAppName,
     getJwt,
@@ -48,6 +49,7 @@ export class Meeting extends React.Component {
         defaultMeetingDomain: PropTypes.string,
         disconnectAllTemporaryRemotes: PropTypes.func,
         displayName: PropTypes.string,
+        dtmfThrottleRate: PropTypes.number,
         history: PropTypes.object,
         jitsiAppName: PropTypes.string,
         jwt: PropTypes.string,
@@ -135,6 +137,7 @@ export class Meeting extends React.Component {
         const {
             avatarUrl,
             displayName,
+            dtmfThrottleRate,
             jitsiAppName,
             jwt,
             maxDesktopSharingFramerate,
@@ -153,6 +156,7 @@ export class Meeting extends React.Component {
                 <MeetingFrame
                     avatarUrl = { avatarUrl }
                     displayName = { displayName }
+                    dtmfThrottleRate = { dtmfThrottleRate }
                     invites = { invites }
                     jitsiAppName = { jitsiAppName }
                     jwt = { this._useJwt ? jwt : undefined }
@@ -325,6 +329,7 @@ function mapStateToProps(state) {
         avatarUrl: getAvatarUrl(state),
         defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
+        dtmfThrottleRate: getDtmfThrottleRate(state),
         jitsiAppName: getJitsiAppName(state),
         jwt: getJwt(state),
         jwtDomains: getJwtDomains(state),
