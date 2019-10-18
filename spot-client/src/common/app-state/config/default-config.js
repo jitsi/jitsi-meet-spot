@@ -243,6 +243,16 @@ export default {
      */
     TEMPORARY_FEATURE_FLAGS: {
         /**
+         * A temporary workaround to touch tones playing too close to each other
+         * and being interpreted as one tone. The value is the minimum pause
+         * duration between each tone played. Setting this value to a falsy
+         * value will disable throttling. Set to a negative number will disable.
+         *
+         * @type {number}
+         */
+        DTMF_THROTTLE_RATE: 250,
+
+        /**
          * Spot-TV should kick temporary remotes after a successfully joined
          * meeting has neded.
          *

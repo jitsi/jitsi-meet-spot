@@ -89,6 +89,16 @@ export function getDesktopSharingFramerate(state) {
 }
 
 /**
+ * A selector which returns the pause interval between playing DTMF.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getDtmfThrottleRate(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.DTMF_THROTTLE_RATE;
+}
+
+/**
  * A selector which returns the URL for loading the Jitsi Meet External Api.
  *
  * @param {Object} state - The Redux state.
