@@ -100,7 +100,9 @@ export class Share extends React.PureComponent {
         return (
             <View name = 'share-view'>
                 <WithRemoteControl disconnectOnUnmount = { false } >
-                    { this._renderSubView() }
+                    <div className = 'share-view-contents'>
+                        { this._renderSubView() }
+                    </div>
                     <ElectronDesktopPickerModal />
                 </WithRemoteControl>
             </View>

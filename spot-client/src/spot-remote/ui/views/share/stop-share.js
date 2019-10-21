@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { getInMeetingStatus } from 'common/app-state';
 import { ScreenShare } from 'common/icons';
-import { LoadingIcon, View } from 'common/ui';
-
-import { MeetingHeader, NavButton } from './../../components';
+import { Button, LoadingIcon } from 'common/ui';
 
 /**
  * Displays a button for stopping wireless screenshare in progress.
@@ -16,7 +15,8 @@ import { MeetingHeader, NavButton } from './../../components';
 export class StopShare extends React.Component {
     static propTypes = {
         inMeeting: PropTypes.string,
-        onStopScreenshare: PropTypes.func
+        onStopScreenshare: PropTypes.func,
+        t: PropTypes.func
     };
 
     /**
@@ -26,27 +26,33 @@ export class StopShare extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        if (!this.props.inMeeting) {
+        const {
+            inMeeting,
+            onStopScreenshare,
+            t
+        } = this.props;
+
+        if (!inMeeting) {
             return <LoadingIcon />;
         }
 
         return (
-            <View name = 'stop-share'>
-                <div
-                    className = 'stop-share'
-                    data-qa-id = 'stop-share'>
-                    <MeetingHeader meetingUrl = { this.props.inMeeting } />
-                    <div className = 'stop-share-button-container'>
-                        <NavButton
-                            className = 'sharebutton active'
-                            label = 'Stop sharing'
-                            onClick = { this.props.onStopScreenshare }
-                            qaId = 'stop-share-button'>
-                            <ScreenShare />
-                        </NavButton>
-                    </div>
+            <div
+                className = 'stop-share'
+                data-qa-id = 'stop-share'>
+                <div className = 'stop-share-title'>
+                    { t('screenshare.isSharingScreen') }
                 </div>
-            </View>
+                <div className = 'stop-share-icon'>
+                    <ScreenShare />
+                </div>
+                <Button
+                    className = 'stop-share-button'
+                    onClick = { onStopScreenshare }
+                    qaId = 'stop-share-button'>
+                    { t('screenshare.stopSharing') }
+                </Button>
+            </div>
         );
     }
 }
@@ -68,4 +74,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(StopShare);
+export default connect(mapStateToProps)(withTranslation()(StopShare));
