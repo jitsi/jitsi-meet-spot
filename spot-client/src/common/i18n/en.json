@@ -1,7 +1,7 @@
 {
     "adhoc": {
         "enterName": "Enter a meeting name",
-        "label": "Start a new meeting",
+        "label": "Join a meeting",
         "meetNow": "Join with ID"
     },
     "admin": {
@@ -36,7 +36,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "continue": "Continue",
-        "go": "GO",
+        "go": "Join",
         "select": "Select",
         "next": "Next",
         "send": "Send",
