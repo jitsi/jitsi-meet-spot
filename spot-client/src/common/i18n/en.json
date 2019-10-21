@@ -86,8 +86,8 @@
     },
     "dial": {
         "dial": "Dial a number",
-        "enterPhoneNumber": "Enter a phone number",
-        "enterNumbers": "Enter Numbers",
+        "enterPhoneNumber": "enter phone number",
+        "enterNumbers": "enter numbers",
         "searchCountry": "Search country / region"
     },
     "feedback": {

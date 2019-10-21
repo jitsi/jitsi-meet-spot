@@ -52,9 +52,6 @@ describe('DialPad', () => {
     });
 
     test('formats international phone numbers', () => {
-        // Clear the initial default of the US country code.
-        dialPad.find('.backspace').simulate('click');
-
         // Long press on 0 to produce +
         jest.useFakeTimers();
         dialPad.find('#dial-button-0').simulate('mousedown');

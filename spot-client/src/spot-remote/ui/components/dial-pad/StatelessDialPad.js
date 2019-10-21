@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { withTranslation } from 'react-i18next';
 
-import { Backspace, Call, KeyboardArrowDown } from 'common/icons';
+import { Backspace, Call } from 'common/icons';
 import { LoadingIcon } from 'common/ui';
 
+import CountryCodeButton from './CountryCodeButton';
 import CountryCodePicker from './CountryCodePicker';
 import DialButton from './dial-button';
 import NumberInput from './NumberInput';
@@ -156,13 +156,16 @@ export class StatelessDialPad extends React.Component {
                             </button>
                         </div>
                         <div className = 'dial-pad-footer-button'>
-                            <button
-                                className = 'backspace'
-                                onClick = { this._onDeleteLastCharacter }
-                                tabIndex = { -1 }
-                                type = 'button'>
-                                <Backspace />
-                            </button>
+                            {
+                                this.props.value
+                                    && <button
+                                        className = 'backspace'
+                                        onClick = { this._onDeleteLastCharacter }
+                                        tabIndex = { -1 }
+                                        type = 'button'>
+                                        <Backspace />
+                                    </button>
+                            }
                         </div>
                     </div>
                     {
@@ -216,7 +219,7 @@ export class StatelessDialPad extends React.Component {
     _onMaybeCloseCountryPicker(e) {
         if (this.props.showCountryCodePicker
             && !this._countryCodePickerWrapperRef.current.contains(e.target)
-            && !this._countryCodePickerTriggerRef.current.contains(e.target)) {
+            && !this._countryCodePickerTriggerRef.current.containsElement(e.target)) {
             this.props.onToggleCountryCodePicker();
         }
     }
@@ -271,16 +274,10 @@ export class StatelessDialPad extends React.Component {
      */
     _renderCountrySelector() {
         return (
-            <button
-                className = 'country-search-trigger'
+            <CountryCodeButton
+                code = { this.props.selectedCountryCode }
                 onClick = { this.props.onToggleCountryCodePicker }
-                ref = { this._countryCodePickerTriggerRef }
-                type = 'button'>
-                <ReactCountryFlag
-                    className = 'country-flag'
-                    code = { this.props.selectedCountryCode } />
-                <KeyboardArrowDown />
-            </button>
+                ref = { this._countryCodePickerTriggerRef } />
         );
     }
 

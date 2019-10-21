@@ -30,7 +30,7 @@ export default function NavItem({ active, children, label, onClick, qaId }) {
 NavItem.propTypes = {
     active: PropTypes.bool,
     children: PropTypes.node,
-    label: PropTypes.text,
+    label: PropTypes.string,
     onClick: PropTypes.func,
     qaId: PropTypes.string
 };
