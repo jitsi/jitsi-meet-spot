@@ -1,12 +1,10 @@
 .dial-pad {
     @include centered-content;
 
-    background-color: var(--container-bg-color);
     border-radius: 4px;
     flex-direction: column;
 
     .dial-pad-buttons {
-        padding: 17px 28px 24px;
         position: relative;
 
         .row {
@@ -16,18 +14,18 @@
 
     .dial-button {
         align-items: center;
-        background-color: transparent;
-        border: 1px solid white;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: none;
         border-radius: 50%;
         color: inherit;
         cursor: pointer;
         font-family: inherit;
-        height: 64px;
+        height: 72px;
         justify-content: center;
         line-height: 32px;
-        margin: 4px;
+        margin: 8px 12px;
         padding: 0;
-        width: 64px;
+        width: 72px;
 
         .main {
             display: block;
@@ -97,21 +95,22 @@
     }
 
     .dial-pad-entered-number {
-        align-items: baseline;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        align-items: center;
         display: flex;
-        padding: 16px 0px 8px;
+        flex-direction: column;
         width: 100%;
     }
 
     .number-input {
         flex: 1;
+        margin: 8px 0px 16px;
 
         input {
             @include input-reset;
             color: white;
-            font-size: 15px;
-            line-height: 24px;
+            font-size: 32px;
+            line-height: 44px;
+            text-align: center;
         }
 
         input::placeholder {
@@ -218,12 +217,16 @@
     .country-search-trigger {
         @include button-reset;
 
-        align-self: end;
-        border: none;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.25);
         color: white;
         display: flex;
-        padding: 0;
-        margin: 0 16px;
+        font-size: 13px;
+        padding: 4px 8px;
+
+        .country-search-trigger-name {
+            margin: 0 6px;
+        }
     }
 }
 
