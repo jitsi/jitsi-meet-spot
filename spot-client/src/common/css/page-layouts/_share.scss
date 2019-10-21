@@ -1,6 +1,12 @@
+.share-view-contents {
+    @include spot-remote-view-layout;
+}
+
 .mode-select {
-    background-color: var(--container-bg-color);
-    padding: 50px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
 
     .title {
         font-size: $font-size-large;
@@ -13,29 +19,71 @@
         margin: 50px 0;
 
         .selection {
-            border-radius: 5px;
+            @include button-reset;
 
-            .nav-button {
-                padding: 50px;
+            align-items: center;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            height: 264px;
+            justify-content: space-around;
+            padding: 38px 30px 24px;
+            width: 264px;
+
+            i,
+            svg {
+                height: 80px;
+                width: 120px;
+
+                margin-bottom: 38px;
+            }
+
+            i {
+                font-size: 80px;
+            }
+
+            .selection-label {
+                font-size: 19px;
+            }
+            .selection-sub-label {
+                font-size: 15px;
             }
         }
         
         .selection:not(:last-child) {
             margin-right: 50px;
         }
+
+        .selection:disabled {
+            color: gray;
+            cursor: default;
+        }
+    }
+
+    .footer {
+        text-align: center;
     }
 }
 
 .stop-share {
-    @include spot-remote-view-layout;
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
 
-    .in-call-name {
-        font-size: $font-size-medium-plus;
+    .stop-share-title {
+        font-size: 24px;
     }
 
-    .in-call-name,
-    .stop-share-button-container {
-        margin-top: 100px;
-        text-align: center;
+    .stop-share-icon {
+        height: 80px;
+        margin: 54px 0px;
+        width: 120px;
+
+        svg {
+            height: 100%;
+            width: 100%;
+        }
     }
 }

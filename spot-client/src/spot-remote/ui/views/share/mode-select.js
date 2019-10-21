@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { ArrowForward, ScreenShare } from 'common/icons';
-import { NavButton } from './../../components';
+import { ScreenShare, WirelessScreenshare } from 'common/icons';
 
 /**
  * Displays buttons for starting wireless screenshare or becoming a full
@@ -55,23 +54,31 @@ export class ModeSelect extends React.Component {
                     { t('screenshare.selectMode') }
                 </div>
                 <div className = 'selections'>
-                    <div className = 'selection'>
-                        <NavButton
-                            disabled = { disabled }
-                            label = { t('screenshare.wireless') }
-                            onClick = { onStartWirelessScreenshare }
-                            qaId = 'start-share'>
-                            <ScreenShare />
-                        </NavButton>
-                    </div>
-                    <div className = 'selection'>
-                        <NavButton
-                            label = { t('screenshare.remoteMode') }
-                            onClick = { onGoToSpotRemoveView }
-                            qaId = 'remote-control'>
-                            <ArrowForward />
-                        </NavButton>
-                    </div>
+                    <button
+                        className = 'selection'
+                        data-qa-id = 'start-share'
+                        disabled = { disabled }
+                        onClick = { onStartWirelessScreenshare }>
+                        <WirelessScreenshare />
+                        <span className = 'selection-label'>
+                            { t('screenshare.wireless') }
+                        </span>
+                        <span className = 'selection-sub-label'>
+                            { t('screenshare.shareComputer') }
+                        </span>
+                    </button>
+                    <button
+                        className = 'selection'
+                        data-qa-id = 'remote-control'
+                        onClick = { onGoToSpotRemoveView }>
+                        <ScreenShare />
+                        <span className = 'selection-label'>
+                            { t('screenshare.remoteMode') }
+                        </span>
+                        <span className = 'selection-sub-label'>
+                            { t('screenshare.controlRoom') }
+                        </span>
+                    </button>
                 </div>
                 <div className = 'footer'>
                     { footerMessage }
