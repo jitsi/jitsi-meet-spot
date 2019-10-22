@@ -30,7 +30,11 @@
     }
 
     .input-with-default-domain {
-        display: flex;
+        display: block;
+
+        @media #{$mq-mobile-l} {
+            display: flex;
+        }
 
         .input-url {
             background: white;
