@@ -10,14 +10,6 @@
         background-color: var(--container-bg-color);
     }
 
-    &.pending:not(.disabled),
-    &:active:not(.disabled) {
-        .nav-icon-container {
-            border-color: var(--pending);
-            color: var(--pending);
-        }
-    }
-
     .nav-icon-container {
         @include centered-content;
 
@@ -25,25 +17,22 @@
         border-radius: 50%;
         margin-bottom: 15px;
 
-        height: calc(#{$font-size-x-large} * 2);
-        width: calc(#{$font-size-x-large} * 2);
-
-        @media #{$mq-laptop-l} {
-            height: calc(#{$font-size-large} * 2.5);
-            width: calc(#{$font-size-large} * 2.5);
-        }
+        height: 80px;
+        width:  80px;
 
         .nav-icon {
             position: relative;
+            height: 32px;
+            width: 32px;
 
             // Override material icon SVG size
-            svg,
+            svg {
+                height: 100%;
+                width: 100%;
+            }
+
             .material-icons {
-                font-size: $font-size-x-large;
-    
-                @media #{$mq-laptop-l} {
-                    font-size: $font-size-large;
-                }
+                font-size: 32px;
             }
 
             .sub-icon {

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -44,29 +43,14 @@ export class VideoMuteButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { changePending, t, videoMuted } = this.props;
-
-        let qaId, translationKey;
-
-        if (changePending) {
-            translationKey = videoMuted
-                ? 'commands.videoMutePending'
-                : 'commands.videoUnmutePending';
-            qaId = 'mute-video-change-pending';
-        } else {
-            translationKey = videoMuted
-                ? 'commands.videoUnmute'
-                : 'commands.videoMute';
-            qaId = videoMuted ? 'unmute-video' : 'mute-video';
-        }
+        const { changePending, videoMuted } = this.props;
 
         return (
             <NavButton
                 active = { changePending ? !videoMuted : videoMuted }
                 className = { `video-mute-button ${changePending ? 'pending' : ''}` }
-                label = { t(translationKey) }
                 onClick = { this._onToggleVideoMute }
-                qaId = { qaId }>
+                qaId = { videoMuted ? 'unmute-video' : 'mute-video' }>
                 { videoMuted ? <VideocamOff /> : <Videocam /> }
             </NavButton>
         );
@@ -120,6 +104,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withTranslation()(VideoMuteButton)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(VideoMuteButton);

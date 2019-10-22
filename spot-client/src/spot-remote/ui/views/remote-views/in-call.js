@@ -22,7 +22,6 @@ import {
     MoreButton,
     MeetingHeader,
     NavButton,
-    NavContainer,
     PasswordPrompt,
     ScreenshareButton,
     VideoMuteButton
@@ -121,19 +120,18 @@ export class InCall extends React.Component {
                     invitedPhoneNumber = { invitedPhoneNumber }
                     meetingDisplayName = { meetingDisplayName }
                     meetingUrl = { inMeeting } />
-                <NavContainer>
-                    <AudioMuteButton />
-                    <VideoMuteButton />
+                <div className = 'in-call-nav'>
                     <ScreenshareButton />
-                    <MoreButton />
+                    <AudioMuteButton />
                     <NavButton
                         className = 'hangup'
-                        label = { this.props.t('commands.hangUp') }
                         onClick = { this._onHangup }
                         qaId = 'hangup'>
                         <CallEnd />
                     </NavButton>
-                </NavContainer>
+                    <VideoMuteButton />
+                    <MoreButton />
+                </div>
             </div>
         );
     }

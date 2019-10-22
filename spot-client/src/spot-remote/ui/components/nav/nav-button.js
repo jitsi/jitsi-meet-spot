@@ -108,11 +108,15 @@ export default class NavButton extends React.Component {
                         }
                     </div>
                 </div>
-                <div className = 'nav-label-container'>
-                    <div className = 'nav-label'>
-                        { label }
-                    </div>
-                </div>
+                {
+                    label && (
+                        <div className = 'nav-label-container'>
+                            <div className = 'nav-label'>
+                                { label }
+                            </div>
+                        </div>
+                    )
+                }
             </button>
         );
     }

@@ -14,4 +14,20 @@
         font-size: $font-size-medium;
         text-align: center;
     }
+
+    .in-call-nav {
+        align-content: center;
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-button {
+        margin: 10px 20px;
+    }
+
+    .view-header {
+        flex: 1;
+    }
 }

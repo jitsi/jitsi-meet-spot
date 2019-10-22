@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -50,7 +49,6 @@ export class MoreButton extends React.Component {
         return (
             <NavButton
                 className = { moreButtonStyles }
-                label = { this.props.t('commands.more') }
                 onClick = { this._onToggleMoreModal }
                 qaId = 'more'>
                 <MoreVert />
@@ -116,6 +114,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withTranslation()(MoreButton)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(MoreButton);
