@@ -8,7 +8,7 @@ import {
     isVideoMutePending,
     setVideoMute
 } from 'common/app-state';
-import { Videocam, VideocamOff } from 'common/icons';
+import { VideocamOutlined, VideocamOffOutlined } from 'common/icons';
 
 import NavButton from '../nav-button';
 
@@ -47,11 +47,11 @@ export class VideoMuteButton extends React.Component {
 
         return (
             <NavButton
-                active = { changePending ? !videoMuted : videoMuted }
+                active = { changePending ? videoMuted : !videoMuted }
                 className = { `video-mute-button ${changePending ? 'pending' : ''}` }
                 onClick = { this._onToggleVideoMute }
                 qaId = { videoMuted ? 'unmute-video' : 'mute-video' }>
-                { videoMuted ? <VideocamOff /> : <Videocam /> }
+                { videoMuted ? <VideocamOffOutlined /> : <VideocamOutlined /> }
             </NavButton>
         );
     }

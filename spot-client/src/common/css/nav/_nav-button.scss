@@ -7,7 +7,11 @@
     margin: 10px 5px;
 
     &.active .nav-icon-container {
-        background-color: var(--container-bg-color);
+        background-color: white;
+
+        .nav-icon {
+            color: #1C2025;;
+        }
     }
 
     .nav-icon-container {

@@ -8,7 +8,7 @@ import {
     isAudioMutePending,
     setAudioMute
 } from 'common/app-state';
-import { Mic, MicOff } from 'common/icons';
+import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
 
 import NavButton from '../nav-button';
 
@@ -47,11 +47,11 @@ export class AudioMuteButton extends React.Component {
 
         return (
             <NavButton
-                active = { changePending ? !audioMuted : audioMuted }
+                active = { changePending ? audioMuted : !audioMuted }
                 className = { changePending ? 'pending' : '' }
                 onClick = { this._onToggleAudioMute }
                 qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' }>
-                { audioMuted ? <MicOff /> : <Mic /> }
+                { audioMuted ? <MicOffOutlined /> : <MicNoneOutlined /> }
             </NavButton>
         );
     }

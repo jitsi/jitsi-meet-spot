@@ -9,7 +9,7 @@ import {
     isTileViewChangePending,
     setTileView
 } from 'common/app-state';
-import { GridOff, GridOn } from 'common/icons';
+import { BorderAllOutlined } from 'common/icons';
 
 import { NavButton } from './../nav';
 
@@ -52,10 +52,11 @@ export class TileViewButton extends React.Component {
 
         return (
             <NavButton
+                active = { tileView }
                 label = { t(translationKey) }
                 onClick = { this._onToggleTileView }
                 qaId = { qaId }>
-                { tileView ? <GridOff /> : <GridOn /> }
+                <BorderAllOutlined />
             </NavButton>
         );
     }

@@ -44,11 +44,8 @@ export class MoreButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const moreButtonStyles = this.props.isMoreModalOpen ? 'active' : '';
-
         return (
             <NavButton
-                className = { moreButtonStyles }
                 onClick = { this._onToggleMoreModal }
                 qaId = 'more'>
                 <MoreVert />

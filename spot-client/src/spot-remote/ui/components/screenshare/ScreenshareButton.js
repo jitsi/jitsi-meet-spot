@@ -10,7 +10,7 @@ import {
     startWirelessScreensharing
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
-import { ScreenShare } from 'common/icons';
+import { ScreenShareOutlined } from 'common/icons';
 
 import { NavButton } from './../nav';
 
@@ -52,9 +52,9 @@ export class ScreenshareButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { isScreenshareModalOpen, screensharingType } = this.props;
-        const screenshareButtonStyles = `sharebutton ${isScreenshareModalOpen
-            || screensharingType ? 'active' : ''}`;
+        const { screensharingType } = this.props;
+        const screenshareButtonStyles = `sharebutton ${screensharingType
+            ? 'active' : ''}`;
 
         return (
             <NavButton
@@ -62,7 +62,7 @@ export class ScreenshareButton extends React.Component {
                 onClick = { this._onToggleScreenshare }
                 qaId = { screensharingType ? 'stop-share' : 'start-share' }
                 subIcon = { this._renderScreenshareSubIcon() }>
-                <ScreenShare />
+                <ScreenShareOutlined />
             </NavButton>
         );
     }
