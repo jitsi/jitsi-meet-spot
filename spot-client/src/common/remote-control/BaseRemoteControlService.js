@@ -45,6 +45,7 @@ export class BaseRemoteControlService extends Emitter {
      * and the physical room it is hosted in.
      *
      * @property {string} [countryCode] - ISO 3166-1 alpha-2 country code for the room's location.
+     * @property {string} [customerId] - The customer ID assigned for the room's owner.
      * @property {string} [id] - The room ID.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
@@ -122,6 +123,7 @@ export class BaseRemoteControlService extends Emitter {
             .then(roomInfo => {
                 roomProfile = {
                     countryCode: roomInfo.countryCode,
+                    customerId: roomInfo.customerId,
                     id: roomInfo.id,
                     name: roomInfo.name
                 };
@@ -331,6 +333,7 @@ export class BaseRemoteControlService extends Emitter {
     /**
      * @typedef {Object} RoomInfo
      * @property {string} [countryCode] - ISO 3166-1 alpha-2 country code for the room's location.
+     * @property {string} [customerId] - THe customer ID assigned by the backend for the room's owner.
      * @property {string} [name] - The name of psychical conference room
      * which has the Spot-TV.
      * @property {string} roomName - The name of the MUC room.

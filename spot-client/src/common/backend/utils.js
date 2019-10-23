@@ -402,6 +402,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode) {
  * tells where both Spot TV and Spot Remote have to go in order to establish the connection.
  * @property {string} name - The Spot room's display name.
  * @property {string} countryCode - ISO 3166-1 alpha-2 country code for the room's location.
+ * @property {string} customerId - The customer ID assigned by the backend for the room's owner.
  *
  * {
  *   "calendarAccountId": "string",
@@ -452,6 +453,7 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
 
             return {
                 countryCode: json.countryCode,
+                customerId: json.customerId,
                 id: json.id,
                 mucUrl: json.mucUrl,
                 name: json.name
