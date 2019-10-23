@@ -1,7 +1,8 @@
-import { SPOT_ROOM_DISPLAY_NAME, analytics } from 'common/analytics';
+import { SPOT_ROOM_DISPLAY_NAME, TENANT, analytics } from 'common/analytics';
 import {
     CALENDAR_SET_ERROR,
     SET_DISPLAY_NAME,
+    SET_TENANT,
     SPOT_TV_LEAVE_MEETING
 } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
@@ -25,6 +26,9 @@ MiddlewareRegistry.register(() => next => action => {
         break;
     case SET_DISPLAY_NAME:
         analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, action.displayName);
+        break;
+    case SET_TENANT:
+        analytics.updateProperty(TENANT, action.tenant);
         break;
     case SPOT_TV_LEAVE_MEETING:
         if (action.error) {
