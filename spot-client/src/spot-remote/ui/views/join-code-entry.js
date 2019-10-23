@@ -12,10 +12,10 @@ import {
 } from 'common/app-state';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isSpotControllerApp } from 'common/detection';
-import { ArrowForward, HelpOutline } from 'common/icons';
+import { HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
-import { CodeInput, Loading, View } from 'common/ui';
+import { Button, CodeInput, Loading, View } from 'common/ui';
 
 import {
     connectToSpotTV,
@@ -24,7 +24,6 @@ import {
     isOnboardingComplete,
     setAPiReceivedJoinCode
 } from './../../app-state';
-import { NavButton, NavContainer } from './../components';
 
 /**
  * Displays a view to enter a join code for connecting with a Spot-TV instance.
@@ -201,15 +200,13 @@ export class JoinCodeEntry extends React.Component {
                             </div>
                         </form>
                     </div>
-                    <NavContainer>
-                        <NavButton
-                            label = { t('buttons.continue') }
+                    <div className = 'join-button-bar'>
+                        <Button
                             onClick = { this._onSubmit }
-                            qaId = 'join-code-submit'
-                            tabIndex = { 0 }>
-                            <ArrowForward />
-                        </NavButton>
-                    </NavContainer>
+                            qaId = 'join-code-submit'>
+                            { t('buttons.continue') }
+                        </Button>
+                    </div>
                     <HelpOutline
                         className = 'help-icon'
                         onClick = { this._onHelpIconClicked } />
