@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -9,7 +8,7 @@ import {
     isAudioMutePending,
     setAudioMute
 } from 'common/app-state';
-import { Mic, MicOff } from 'common/icons';
+import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
 
 import NavButton from '../nav-button';
 
@@ -44,30 +43,15 @@ export class AudioMuteButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { audioMuted, changePending, t } = this.props;
-
-        let qaId, translationKey;
-
-        if (changePending) {
-            translationKey = audioMuted
-                ? 'commands.audioMutePending'
-                : 'commands.audioUnmutePending';
-            qaId = 'mute-audio-change-pending';
-        } else {
-            translationKey = audioMuted
-                ? 'commands.audioUnmute'
-                : 'commands.audioMute';
-            qaId = audioMuted ? 'unmute-audio' : 'mute-audio';
-        }
+        const { audioMuted, changePending } = this.props;
 
         return (
             <NavButton
-                active = { changePending ? !audioMuted : audioMuted }
+                active = { changePending ? audioMuted : !audioMuted }
                 className = { changePending ? 'pending' : '' }
-                label = { t(translationKey) }
                 onClick = { this._onToggleAudioMute }
-                qaId = { qaId }>
-                { audioMuted ? <MicOff /> : <Mic /> }
+                qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' }>
+                { audioMuted ? <MicOffOutlined /> : <MicNoneOutlined /> }
             </NavButton>
         );
     }
@@ -119,6 +103,5 @@ function mapDispatchToProps(dispatch) {
         }
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withTranslation()(AudioMuteButton)
-);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AudioMuteButton);

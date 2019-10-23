@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -9,7 +8,7 @@ import {
     isVideoMutePending,
     setVideoMute
 } from 'common/app-state';
-import { Videocam, VideocamOff } from 'common/icons';
+import { VideocamOutlined, VideocamOffOutlined } from 'common/icons';
 
 import NavButton from '../nav-button';
 
@@ -44,30 +43,15 @@ export class VideoMuteButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { changePending, t, videoMuted } = this.props;
-
-        let qaId, translationKey;
-
-        if (changePending) {
-            translationKey = videoMuted
-                ? 'commands.videoMutePending'
-                : 'commands.videoUnmutePending';
-            qaId = 'mute-video-change-pending';
-        } else {
-            translationKey = videoMuted
-                ? 'commands.videoUnmute'
-                : 'commands.videoMute';
-            qaId = videoMuted ? 'unmute-video' : 'mute-video';
-        }
+        const { changePending, videoMuted } = this.props;
 
         return (
             <NavButton
-                active = { changePending ? !videoMuted : videoMuted }
+                active = { changePending ? videoMuted : !videoMuted }
                 className = { `video-mute-button ${changePending ? 'pending' : ''}` }
-                label = { t(translationKey) }
                 onClick = { this._onToggleVideoMute }
-                qaId = { qaId }>
-                { videoMuted ? <VideocamOff /> : <Videocam /> }
+                qaId = { videoMuted ? 'unmute-video' : 'mute-video' }>
+                { videoMuted ? <VideocamOffOutlined /> : <VideocamOutlined /> }
             </NavButton>
         );
     }
@@ -120,6 +104,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withTranslation()(VideoMuteButton)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(VideoMuteButton);

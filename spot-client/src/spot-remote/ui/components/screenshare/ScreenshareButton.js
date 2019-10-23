@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -11,7 +10,7 @@ import {
     startWirelessScreensharing
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
-import { ScreenShare } from 'common/icons';
+import { ScreenShareOutlined } from 'common/icons';
 
 import { NavButton } from './../nav';
 
@@ -30,7 +29,6 @@ export class ScreenshareButton extends React.Component {
         onStartWirelessScreenshare: PropTypes.func,
         onWillOpenModal: PropTypes.func,
         screensharingType: PropTypes.string,
-        t: PropTypes.func,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -54,20 +52,17 @@ export class ScreenshareButton extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { isScreenshareModalOpen, screensharingType, t } = this.props;
-        const screenshareButtonStyles = `sharebutton ${isScreenshareModalOpen
-            || screensharingType ? 'active' : ''}`;
+        const { screensharingType } = this.props;
+        const screenshareButtonStyles = `sharebutton ${screensharingType
+            ? 'active' : ''}`;
 
         return (
             <NavButton
                 className = { screenshareButtonStyles }
-                label = { t('commands.share') }
                 onClick = { this._onToggleScreenshare }
-                qaId = {
-                    screensharingType ? 'stop-share' : 'start-share'
-                }
+                qaId = { screensharingType ? 'stop-share' : 'start-share' }
                 subIcon = { this._renderScreenshareSubIcon() }>
-                <ScreenShare />
+                <ScreenShareOutlined />
             </NavButton>
         );
     }
@@ -173,6 +168,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    withTranslation()(ScreenshareButton)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ScreenshareButton);
