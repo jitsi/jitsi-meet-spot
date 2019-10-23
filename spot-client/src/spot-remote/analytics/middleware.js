@@ -1,5 +1,6 @@
 import {
     SPOT_ROOM_DISPLAY_NAME,
+    TENANT,
     analytics,
     eventStatusSuffixes,
     inCallEvents,
@@ -93,11 +94,13 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         break;
     }
     case SPOT_TV_SET_STATE: {
-        const { roomName } = action.newState;
+        const { roomName, tenant } = action.newState;
 
         if (getRemoteSpotTVRoomName(getState()) !== roomName) {
             analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, roomName);
         }
+
+        analytics.updateProperty(TENANT, tenant);
     }
         break;
     case SPOT_TV_CLEAR_STATE:
