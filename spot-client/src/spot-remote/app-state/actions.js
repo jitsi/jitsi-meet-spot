@@ -8,6 +8,7 @@ import {
     getSpotServicesConfig,
     isP2PSignalingEnabled,
     setCalendarEvents,
+    setCustomerId,
     setSpotTVState
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
@@ -125,6 +126,8 @@ export function connectToSpotTV(joinCode, shareMode) {
                 type: SPOT_REMOTE_SET_COUNTRY_CODE,
                 countryCode
             });
+
+            roomProfile && dispatch(setCustomerId(roomProfile.customerId));
 
             const roomId = roomProfile && roomProfile.id;
 

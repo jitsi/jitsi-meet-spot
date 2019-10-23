@@ -9,6 +9,7 @@ import {
     getTemporaryRemoteIds,
     isP2PSignalingEnabled,
     removePairedRemote,
+    setCustomerId,
     setDisplayName,
     setRemoteJoinCode,
     setJwt,
@@ -149,6 +150,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setJwt(jwt));
             dispatch(setTenant(tenant));
             dispatch(setPermanentPairingCode(permanentPairingCode));
+            roomProfile && dispatch(setCustomerId(roomProfile.customerId));
 
             if (isBackendEnabled(getState())) {
                 dispatch(setSpotInstanceInfo({
