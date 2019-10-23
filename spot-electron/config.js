@@ -28,7 +28,7 @@ module.exports = {
     // },
 
     window: {
-        fullscreen: undefined,
+        fullscreen: true,
         height: 800,
         width: 1200
     }

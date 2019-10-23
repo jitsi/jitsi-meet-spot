@@ -1,4 +1,9 @@
 const { app } = require('electron');
+const electron = require("electron")
+
+electron.app.setLoginItemSettings({
+    openAtLogin: true
+});
 
 const { createApplicationWindow } = require('./src/application-window');
 
