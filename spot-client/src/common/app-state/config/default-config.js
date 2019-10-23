@@ -250,7 +250,7 @@ export default {
          *
          * @type {number}
          */
-        DTMF_THROTTLE_RATE: 250,
+        DTMF_THROTTLE_RATE: 500,
 
         /**
          * Spot-TV should kick temporary remotes after a successfully joined
