@@ -18,13 +18,13 @@
         border: 2px solid #FFFFFF;
         border-radius: 4px;
         color: var(--container-content-font-color);
-        font-size: $font-size-x-large;
-        height: calc(#{$font-size-x-large} * 0.7);
+        font-size: 36px;
+        height: 96px;
         line-height: normal;
-        margin: 15px;
+        margin: 15px 12px;
         padding: 0;
         text-align: center;
-        width: calc(#{$font-size-x-large} * 0.5);
+        width: 64px;
 
         &.focused {
             background: rgba(2, 98, 182, 0.4);

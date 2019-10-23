@@ -1,24 +1,25 @@
 .join-code-view {
     @include spot-remote-view-layout;
 
-    justify-content: space-between;
+    justify-content: center;
     position: relative;
 
     .cta {
-        padding: 2.5em;
         text-align: center;
 
         .title {
-            font-size: $font-size-x-large;
+            font-size: 45px;
         }
 
         .help {
-            font-size: $font-size-large;
+            font-size: 19px;
         }
     }
 
     .code-entry-wrapper {
         @include centered-content;
+
+        margin: 56px 0 48px;
 
         &.boxes-8 .code-entry {
             display: grid;
@@ -32,7 +33,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
 
-
             @media #{$mq-tablet} {
                 display: flex;
             }
@@ -41,21 +41,6 @@
         .code-entry {
             justify-content: center;
             margin: auto;
-
-            /**
-             * Override box styles to support 6x1 grid of boxes, which works
-             * around the code entry implementation of having one input and
-             * mobile browsers auto-centering on focused inputs.
-             */
-            .box {
-                @media #{$mq-xxsmall} {
-                    margin: 5px;
-                }
-
-                @media #{$mq-tablet} {
-                    margin: 15px;
-                }
-            }
         }
 
         .hidden-submit {
@@ -63,6 +48,10 @@
             pointer-events: none;
             visibility: hidden;
         }
+    }
+
+    .join-button-bar {
+        text-align: center;
     }
 
     .help-icon {
