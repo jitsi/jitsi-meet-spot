@@ -1,7 +1,6 @@
 const { app } = require('electron');
-const electron = require("electron")
 
-electron.app.setLoginItemSettings({
+app.setLoginItemSettings({
     openAtLogin: true
 });
 
