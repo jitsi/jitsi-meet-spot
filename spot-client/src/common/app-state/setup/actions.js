@@ -1,6 +1,7 @@
 import {
     SETUP_COMPLETED,
     SET_AVATAR_URL,
+    SET_CUSTOMER_ID,
     SET_DISPLAY_NAME,
     SET_IS_SPOT,
     SET_JWT,
@@ -18,6 +19,19 @@ export function setAvatarUrl(avatarUrl) {
     return {
         type: SET_AVATAR_URL,
         avatarUrl
+    };
+}
+
+/**
+ * Sets the customer ID assigned to the room's owner.
+ *
+ * @param {string} [customerId] - The customer ID assigned to the room's owner.
+ * @returns {Object}
+ */
+export function setCustomerId(customerId) {
+    return {
+        type: SET_CUSTOMER_ID,
+        customerId
     };
 }
 
