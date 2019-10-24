@@ -1,5 +1,9 @@
 const { app } = require('electron');
 
+app.setLoginItemSettings({
+    openAtLogin: true
+});
+
 const { createApplicationWindow } = require('./src/application-window');
 
 // Imports from features that we need to load.
