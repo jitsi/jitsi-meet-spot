@@ -31,6 +31,7 @@ import {
 } from 'common/remote-control';
 
 import {
+    SPOT_REMOTE_CONNECTION_FAILED,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
@@ -39,6 +40,7 @@ import {
 import { shareModeEvents } from '../../common/analytics';
 
 import { SPOT_REMOTE_P2P_ACTIVE } from './properties';
+import { connectionEvents } from './events';
 
 const requestStateToEventSuffix = {
     [requestStates.DONE]: eventStatusSuffixes.SUCCESS,
@@ -78,6 +80,16 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
             meetingJoinEvents.AD_HOC,
             action.requestState
         ));
+        break;
+    }
+    case SPOT_REMOTE_CONNECTION_FAILED: {
+        const {
+            // eslint-disable-next-line no-unused-vars
+            type,
+            ...actionArgs
+        } = action;
+
+        analytics.log(connectionEvents.CONNECTION_FAILED, { ...actionArgs });
         break;
     }
     case SPOT_REMOTE_EXIT_SHARE_MODE: {
