@@ -33,6 +33,7 @@ import SpotRemoteBackendService from '../backend/SpotRemoteBackendService';
 import {
     SPOT_REMOTE_API_JOIN_CODE_RECEIVED,
     SPOT_REMOTE_COMPLETED_ONBOARDING,
+    SPOT_REMOTE_CONNECTION_FAILED,
     SPOT_REMOTE_EXIT_SHARE_MODE,
     SPOT_REMOTE_JOIN_CODE_INVALID,
     SPOT_REMOTE_JOIN_CODE_VALID,
@@ -145,14 +146,29 @@ export function connectToSpotTV(joinCode, shareMode) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
-            logger.error('On Spot Remote disconnect', { error });
+            const usingPermanentPairingCode = Boolean(getPermanentPairingCode(getState()));
+            const isUnrecoverableError = remoteControlClient.isUnrecoverableRequestError(error);
 
+            // Retry for permanent pairing as long as the backend accepts the code
+            const willRetry = usingPermanentPairingCode && !isUnrecoverableError;
+
+            logger.error('On Spot Remote disconnect', {
+                error,
+                isUnrecoverableError,
+                usingPermanentPairingCode,
+                willRetry
+            });
+
+            dispatch(spotRemoteConnectionFailed({
+                error,
+                isUnrecoverableError,
+                usingPermanentPairingCode,
+                willRetry
+            }));
             dispatch(destroyConnection());
             dispatch(clearSpotTVState());
 
-            // Retry for permanent pairing as long as the backend accepts the code
-            if (getPermanentPairingCode(getState())
-                && !remoteControlClient.isUnrecoverableRequestError(error)) {
+            if (willRetry) {
                 const jitter = getJitterDelay(3);
 
                 logger.log(`Spot Remote will try to reconnect after ${jitter}ms`);
@@ -348,6 +364,23 @@ export function exitShareMode() {
 export function setHasCompletedOnboarding() {
     return {
         type: SPOT_REMOTE_COMPLETED_ONBOARDING
+    };
+}
+
+/**
+ * Action dispatched when Spot Remote's connection fails.
+ *
+ * @param {Error|string} error - The error that caused the disconnect.
+ * @param {boolean} willRetry - Indicates whether or not Spot Remote will try to reconnect.
+ * @param {...*} otherFlags - Other flags that affect the {@code willRetry}.
+ * @returns {Object}
+ */
+function spotRemoteConnectionFailed({ error, willRetry, ...otherFlags }) {
+    return {
+        type: SPOT_REMOTE_CONNECTION_FAILED,
+        error: typeof error === 'object' ? error.message : error,
+        willRetry,
+        ...otherFlags
     };
 }
 
