@@ -146,7 +146,7 @@ export function connectToSpotTV(joinCode, shareMode) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
-            const usingPermanentPairingCode = Boolean(getPermanentPairingCode(getState()));
+            const usingPermanentPairingCode = getPermanentPairingCode(getState()) === joinCode;
             const isUnrecoverableError = remoteControlClient.isUnrecoverableRequestError(error);
 
             // Retry for permanent pairing as long as the backend accepts the code
@@ -180,7 +180,7 @@ export function connectToSpotTV(joinCode, shareMode) {
                 });
             }
 
-            dispatch(setPermanentPairingCode(''));
+            usingPermanentPairingCode && dispatch(setPermanentPairingCode(''));
 
             dispatch({
                 type: SPOT_REMOTE_JOIN_CODE_INVALID,
