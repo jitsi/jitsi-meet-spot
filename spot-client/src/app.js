@@ -34,6 +34,9 @@ import {
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
 import { SpotTvRestrictedRoute } from './spot-tv/routing';
 
+// This import enables Spot-TV specific analytics
+import 'spot-tv/analytics';
+
 /**
  * The root of the application which determines what view should be displayed.
  *

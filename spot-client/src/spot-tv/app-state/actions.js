@@ -34,6 +34,8 @@ import {
     SpotTvBackendService
 } from '../backend';
 
+import { SPOT_TV_CONNECTION_FAILED } from './actionTypes';
+
 let eventHandlerRemovers;
 
 /**
@@ -200,26 +202,48 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
+            const isUnrecoverableError = remoteControlServer.isUnrecoverableRequestError(error);
+            const usingPermanentPairingCode = Boolean(pairingCode);
+            const canRecoverConnection = !usingPermanentPairingCode || !isUnrecoverableError;
+
+            /**
+             * The connection is retried if explicit 'retry' flag has been set or if the connection succeeds initially.
+             * Even if both conditions are met, the connection will be dropped when using permanent pairing and
+             * the error is not recoverable.
+             *
+             * @type {boolean}
+             */
+            const willRetry = (retry || initiallyConnected) && canRecoverConnection;
+
             logger.error('Spot-TV disconnected from the remote control server.', {
                 error,
                 initiallyConnected,
-                pairingCode,
-                retry
+                isUnrecoverableError,
+                retry,
+                usingPermanentPairingCode,
+                willRetry
             });
+
+            dispatch(spotTvConnectionFailed({
+                error,
+                initiallyConnected,
+                isUnrecoverableError,
+                retry,
+                usingPermanentPairingCode,
+                willRetry
+            }));
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());
 
-            if (pairingCode && remoteControlServer.isUnrecoverableRequestError(error)) {
-                logger.log('Disconnected with unrecoverable error');
+            if (usingPermanentPairingCode && isUnrecoverableError) {
+                logger.log('Clearing permanent pairing code on unrecoverable disconnect');
 
                 // Clear the permanent pairing code
                 dispatch(setPermanentPairingCode(''));
+            }
 
-                removeEventHandlers();
-
-                throw error;
-            } else if (retry || initiallyConnected) {
+            if (willRetry) {
                 const jitter = getJitterDelay(3);
 
                 logger.log(`Spot TV will try to reconnect after ${jitter}ms`);
@@ -229,13 +253,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                         doConnect().then(resolve, reject);
                     }, jitter);
                 });
-            } else {
-                logger.log('Disconnected without an established connection');
-
-                removeEventHandlers();
-
-                throw error;
             }
+
+            removeEventHandlers();
+
+            throw error;
         }
 
         /**
@@ -417,6 +439,25 @@ export function generateLongLivedPairingCodeIfExpired() {
 function removeEventHandlers() {
     eventHandlerRemovers.forEach(remover => remover());
     eventHandlerRemovers = [];
+}
+
+/**
+ * Action dispatched when connection either fails to establish initially or disconnects.
+ *
+ * @param {Error|string} error - The error that caused disconnect.
+ * @param {boolean} willRetry - The flag indicates whether or not Spot TV will make an attempt to reconnect after this
+ * failure.
+ * @param {...*} otherFlags - Other flag which impacts the decision on whether or not the connection will be
+ * re-established after this failure.
+ * @returns {Object}
+ */
+function spotTvConnectionFailed({ error, willRetry, ...otherFlags }) {
+    return {
+        type: SPOT_TV_CONNECTION_FAILED,
+        error: typeof error === 'object' ? error.message : error,
+        willRetry,
+        ...otherFlags
+    };
 }
 
 /**

@@ -11,6 +11,10 @@ export const calendarEvents = {
     CALENDAR_ERROR: 'calendar-error'
 };
 
+export const connectionEvents = {
+    CONNECTION_FAILED: 'connection-failed'
+};
+
 export const meetingLeaveEvents = {
     UNEXPECTED: 'unexpected-meeting-end'
 };
