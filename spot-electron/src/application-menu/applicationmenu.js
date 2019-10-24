@@ -1,6 +1,5 @@
 const { Menu } = require('electron');
 const isDev = require('electron-is-dev');
-const process = require('process');
 
 const { productName } = require('../../package.json');
 
@@ -10,22 +9,11 @@ const { productName } = require('../../package.json');
  * @returns {Array}
  */
 function getMenuItems() {
-    const isDarwin = process.platform === 'darwin';
     const menuItems = [];
 
     menuItems.push({
         label: productName,
         submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            ...isDarwin ? [
-                { role: 'hide' },
-                { role: 'hideothers' },
-                { role: 'unhide' },
-                { type: 'separator' }
-            ] : [],
-            { role: 'togglefullscreen' },
-            { type: 'separator' },
             { role: 'quit' }
         ]
     });
