@@ -7,6 +7,7 @@ import {
 } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
+import { SPOT_TV_CONNECTION_FAILED } from '../app-state';
 import {
     SPOT_TV_PAIR_TO_BACKEND_FAIL,
     SPOT_TV_PAIR_TO_BACKEND_PENDING,
@@ -16,6 +17,7 @@ import {
 import {
     backendPairingEvents,
     calendarEvents,
+    connectionEvents,
     meetingLeaveEvents
 } from './events';
 
@@ -30,6 +32,16 @@ MiddlewareRegistry.register(() => next => action => {
     case SET_TENANT:
         analytics.updateProperty(TENANT, action.tenant);
         break;
+    case SPOT_TV_CONNECTION_FAILED: {
+        const {
+            // eslint-disable-next-line no-unused-vars
+            type,
+            ...actionArgs
+        } = action;
+
+        analytics.log(connectionEvents.CONNECTION_FAILED, { ...actionArgs });
+        break;
+    }
     case SPOT_TV_LEAVE_MEETING:
         if (action.error) {
             analytics.log(meetingLeaveEvents.UNEXPECTED, { error: action.error });
