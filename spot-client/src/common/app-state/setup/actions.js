@@ -6,6 +6,7 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
+    SET_ROOM_ID,
     SET_TENANT
 } from './action-types';
 
@@ -92,6 +93,19 @@ export function setPreferredDevices(cameraLabel, micLabel, speakerLabel) {
         cameraLabel,
         micLabel,
         speakerLabel
+    };
+}
+
+/**
+ * Sets the room ID provided by the backend.
+ *
+ * @param {string} roomId - The room id.
+ * @returns {Object}
+ */
+export function setRoomId(roomId) {
+    return {
+        type: SET_ROOM_ID,
+        roomId
     };
 }
 
