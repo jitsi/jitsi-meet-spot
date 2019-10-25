@@ -202,9 +202,9 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
-            const isUnrecoverableError = remoteControlServer.isUnrecoverableRequestError(error);
+            const isRecoverableError = remoteControlServer.isRecoverableRequestError(error);
             const usingPermanentPairingCode = Boolean(pairingCode);
-            const canRecoverConnection = !usingPermanentPairingCode || !isUnrecoverableError;
+            const canRecoverConnection = !usingPermanentPairingCode || isRecoverableError;
 
             /**
              * The connection is retried if explicit 'retry' flag has been set or if the connection succeeds initially.
@@ -218,7 +218,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             logger.error('Spot-TV disconnected from the remote control server.', {
                 error,
                 initiallyConnected,
-                isUnrecoverableError,
+                isRecoverableError,
                 retry,
                 usingPermanentPairingCode,
                 willRetry
@@ -227,7 +227,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(spotTvConnectionFailed({
                 error,
                 initiallyConnected,
-                isUnrecoverableError,
+                isRecoverableError,
                 retry,
                 usingPermanentPairingCode,
                 willRetry
@@ -236,7 +236,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());
 
-            if (usingPermanentPairingCode && isUnrecoverableError) {
+            if (usingPermanentPairingCode && !isRecoverableError) {
                 logger.log('Clearing permanent pairing code on unrecoverable disconnect');
 
                 // Clear the permanent pairing code

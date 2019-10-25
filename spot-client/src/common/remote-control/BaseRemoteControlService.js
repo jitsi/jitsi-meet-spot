@@ -238,44 +238,43 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
-     * Returns whether or not the error is one in which a backend request cannot
-     * be completed due a serious error, like missing authentication.
+     * Returns if the error is not a serious error and if it makes sense to retry the connection using the current data.
      *
-     * @param {Error|string} error - The error object with details about the error
-     * or a string that identifies the error.
+     * @param {Error|string} error - The error object with details about the error or a string that identifies
+     * the error.
      * @returns {boolean}
      */
-    isUnrecoverableRequestError(error) {
+    isRecoverableRequestError(error) {
         const isBackendUsed = Boolean(this._getBackend());
 
-        return error === CONNECTION_EVENTS.CLOSED_BY_SERVER
-            || (isBackendUsed
-                ? this._isUnrecoverableRequestErrorBackendImpl(error)
-                : this._isUnrecoverableRequestErrorNoBackendImpl(error));
+        return error !== CONNECTION_EVENTS.CLOSED_BY_SERVER
+            && (isBackendUsed
+                ? this._isRecoverableRequestErrorBackendImpl(error)
+                : this._isRecoverableRequestErrorNoBackendImpl(error));
     }
 
     /**
-     * The backend flow impl for {@link isUnrecoverableRequestError}.
+     * The backend flow impl for {@link isRecoverableRequestError}.
      *
-     * @param {Error|string} error - The error object with details about the error
-     * or a string that identifies the error.
+     * @param {Error|string} error - The error object with details about the error or a string that identifies
+     * the error.
      * @returns {boolean}
      * @private
      */
-    _isUnrecoverableRequestErrorBackendImpl(error) {
-        return this._getBackend().isUnrecoverableRequestError(error);
+    _isRecoverableRequestErrorBackendImpl(error) {
+        return this._getBackend().isRecoverableRequestError(error);
     }
 
     /**
-     * The no backend flow impl for {@link isUnrecoverableRequestError}.
+     * The no backend flow impl for {@link isRecoverableRequestError}.
      *
-     * @param {Error|string} error - The error object with details about the error
-     * or a string that identifies the error.
+     * @param {Error|string} error - The error object with details about the error or a string that identifies
+     * the error.
      * @returns {boolean}
      * @private
      */
-    _isUnrecoverableRequestErrorNoBackendImpl(error) {
-        return error === 'connection.passwordRequired' || error === 'not-authorized';
+    _isRecoverableRequestErrorNoBackendImpl(error) {
+        return error !== 'connection.passwordRequired' && error !== 'not-authorized';
     }
 
     /**
