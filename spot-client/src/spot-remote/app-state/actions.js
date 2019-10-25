@@ -147,21 +147,21 @@ export function connectToSpotTV(joinCode, shareMode) {
          */
         function onDisconnect(error) {
             const usingPermanentPairingCode = getPermanentPairingCode(getState()) === joinCode;
-            const isUnrecoverableError = remoteControlClient.isUnrecoverableRequestError(error);
+            const isRecoverableError = remoteControlClient.isRecoverableRequestError(error);
 
             // Retry for permanent pairing as long as the backend accepts the code
-            const willRetry = usingPermanentPairingCode && !isUnrecoverableError;
+            const willRetry = usingPermanentPairingCode && isRecoverableError;
 
             logger.error('On Spot Remote disconnect', {
                 error,
-                isUnrecoverableError,
+                isRecoverableError,
                 usingPermanentPairingCode,
                 willRetry
             });
 
             dispatch(spotRemoteConnectionFailed({
                 error,
-                isUnrecoverableError,
+                isRecoverableError,
                 usingPermanentPairingCode,
                 willRetry
             }));

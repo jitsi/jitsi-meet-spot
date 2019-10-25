@@ -128,17 +128,17 @@ export class SpotBackendService extends Emitter {
     }
 
     /**
-     * Checks if the error is one that is fatal and should not be retried.
+     * Checks if the error is not fatal and if it makes sense to retry the connection attempt using the same data.
      *
      * @param {Error|string} error - The error object with details about the
      * error or a string that identifies the error.
      * @returns {boolean}
      */
-    isUnrecoverableRequestError(error) {
+    isRecoverableRequestError(error) {
         const message = typeof error === 'object' ? error.message : error;
 
-        return message === errorConstants.REQUEST_FAILED
-            || message === errorConstants.NOT_AUTHORIZED;
+        return message !== errorConstants.REQUEST_FAILED
+            && message !== errorConstants.NOT_AUTHORIZED;
     }
 
     /**
@@ -150,7 +150,7 @@ export class SpotBackendService extends Emitter {
      * @returns {void}
      */
     _maybeClearRegistration(error) {
-        if (this.isUnrecoverableRequestError(error)) {
+        if (!this.isRecoverableRequestError(error)) {
             if (this.registration) {
                 logger.log('Cleared backend registration');
                 persistence.set(PERSISTENCE_KEY, undefined);
