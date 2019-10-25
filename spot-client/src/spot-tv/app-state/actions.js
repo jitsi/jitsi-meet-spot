@@ -12,6 +12,7 @@ import {
     setCustomerId,
     setDisplayName,
     setRemoteJoinCode,
+    setRoomId,
     setJwt,
     setTenant
 } from 'common/app-state';
@@ -155,6 +156,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             roomProfile && dispatch(setCustomerId(roomProfile.customerId));
 
             if (isBackendEnabled(getState())) {
+                dispatch(setRoomId(roomProfile.id));
                 dispatch(setSpotInstanceInfo({
                     isPairingPermanent: true,
                     isSpotTv: true,

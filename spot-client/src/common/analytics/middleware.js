@@ -1,6 +1,6 @@
 import { MiddlewareRegistry } from 'common/redux';
 
-import { SET_CUSTOMER_ID, SUBMIT_FEEDBACK, getSpotClientVersion } from '../app-state';
+import { SET_CUSTOMER_ID, SET_ROOM_ID, SUBMIT_FEEDBACK, getSpotClientVersion } from '../app-state';
 import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
 import { SET_DEVICE_ID } from '../app-state/device-id';
 import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
@@ -11,7 +11,7 @@ import {
     feedbackEvents,
     permanentPairingCodeEvents
 } from './events';
-import { CUSTOMER_ID } from './properties';
+import { CUSTOMER_ID, SPOT_ROOM_ID } from './properties';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
@@ -30,6 +30,10 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         break;
     case SET_PERMANENT_PAIRING_CODE:
         return _permanentPairingAnalytics({ getState }, next, action);
+
+    case SET_ROOM_ID:
+        analytics.updateProperty(SPOT_ROOM_ID, action.roomId);
+        break;
 
     case SUBMIT_FEEDBACK:
         _submitFeedback(action);

@@ -9,6 +9,7 @@ import {
     isP2PSignalingEnabled,
     setCalendarEvents,
     setCustomerId,
+    setRoomId,
     setSpotTVState
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
@@ -132,6 +133,7 @@ export function connectToSpotTV(joinCode, shareMode) {
 
             const roomId = roomProfile && roomProfile.id;
 
+            roomId && dispatch(setRoomId(roomId));
             roomId && dispatch(setSpotInstanceInfo({
                 roomId,
                 isSpotTv: false,
