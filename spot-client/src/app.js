@@ -9,6 +9,7 @@ import {
     getSpotClientVersion,
     setBootstrapComplete
 } from 'common/app-state';
+import { isElectron } from 'common/detection';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import {
@@ -23,6 +24,7 @@ import {
 } from 'common/ui';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
+    ExitElectron,
     Home,
     Meeting,
     OutlookOauth,
@@ -200,6 +202,7 @@ export class App extends React.Component {
                     </div>
                     <ModalManager />
                     <FeedbackOverlay />
+                    { isElectron() && <ExitElectron /> }
                 </IdleCursorDetector>
             </ErrorBoundary>
         );

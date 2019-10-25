@@ -12,19 +12,19 @@ function getMenuItems() {
     const menuItems = [];
 
     menuItems.push({
-        label: productName,
-        submenu: [
-            { role: 'quit' }
-        ]
+        label: productName
     });
 
     if (isDev) {
-        menuItems.push({
-            label: 'Development',
-            submenu: [
-                { role: 'toggledevtools' }
-            ]
-        });
+        menuItems.push(
+            {
+                label: 'Development',
+                submenu: [
+                    { role: 'toggledevtools' },
+                    { role: 'quit' }
+                ]
+            }
+        );
     }
 
     return menuItems;
