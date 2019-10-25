@@ -10,6 +10,7 @@ const { createApplicationWindow } = require('./src/application-window');
 require('./src/application-menu');
 require('./src/bt-beacon');
 require('./src/client-control');
+require('./src/exit');
 require('./src/volume-control');
 
 app.on('ready', createApplicationWindow);

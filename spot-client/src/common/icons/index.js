@@ -4,6 +4,7 @@ export {
     Backspace,
     Call,
     CallEnd,
+    Cancel,
     Dialpad,
     Event,
     ExpandLess,
