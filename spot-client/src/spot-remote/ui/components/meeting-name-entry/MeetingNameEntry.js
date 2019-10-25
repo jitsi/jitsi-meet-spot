@@ -60,7 +60,7 @@ export class MeetingNameEntry extends React.Component {
                     <div className = 'input-with-default-domain'>
                         <div className = 'input-url'>
                             <span className = 'default-domain'>
-                                { `${domain}/` }
+                                { domain }
                             </span>
                             <input
                                 autoComplete = 'off'

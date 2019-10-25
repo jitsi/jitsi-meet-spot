@@ -23,7 +23,8 @@ export class SelfFillingNameEntry extends React.Component {
         animationRevealRate: PropTypes.number,
         animationStartDelay: PropTypes.number,
         domain: PropTypes.string,
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        tenant: PropTypes.string
     };
 
     /**
@@ -100,7 +101,7 @@ export class SelfFillingNameEntry extends React.Component {
     render() {
         return (
             <MeetingNameEntry
-                domain = { this.props.domain }
+                domain = { this._getDomainToDisplay() }
                 meetingName = { this.state.enteredMeetingName }
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }
@@ -173,6 +174,26 @@ export class SelfFillingNameEntry extends React.Component {
     }
 
     /**
+     * Returns what the domain displayed should be. Will include the tenant
+     * of necessary.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getDomainToDisplay() {
+        const { domain, tenant } = this.props;
+
+        if (this.state.enteredMeetingName.startsWith('/')) {
+            return domain;
+        } else if (tenant) {
+            return `${domain}/${tenant}/`;
+        }
+
+        return `${domain}/`;
+
+    }
+
+    /**
      * Callback invoked when the meeting name input is no longer in focus.
      * Starts a timeout to generate a random meeting name to display in the
      * input, if no meeting name has been entered.
@@ -213,16 +234,25 @@ export class SelfFillingNameEntry extends React.Component {
      * @returns {void}
      */
     _onSubmit() {
+        const { enteredMeetingName } = this.state;
+
+        let meetingToJoin;
+
+        if (enteredMeetingName) {
+            meetingToJoin = enteredMeetingName.startsWith('/')
+                ? `https://${this.props.domain}${enteredMeetingName}`
+                : enteredMeetingName;
+        } else {
+            meetingToJoin = this._fullGeneratedMeetingName || getRandomMeetingName();
+        }
+
         logger.log('meeting name submitted', {
-            enteredName: this.state.enteredMeetingName,
-            generatedName: this._fullGeneratedMeetingName
+            enteredMeetingName,
+            generatedName: this._fullGeneratedMeetingName,
+            meetingToJoin
         });
 
-        this.props.onSubmit(
-            this.state.enteredMeetingName
-              || this._fullGeneratedMeetingName
-              || getRandomMeetingName()
-        );
+        this.props.onSubmit(meetingToJoin);
     }
 }
 
