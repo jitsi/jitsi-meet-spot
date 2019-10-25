@@ -4,6 +4,8 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
+    getConfiguredMeetingDomain,
+    getSpotTVTenant,
     dialOut,
     getInMeetingStatus,
     joinAdHocMeeting,
@@ -23,7 +25,6 @@ import {
 import { getRandomMeetingName } from 'common/utils';
 
 import {
-    getDefaultMeetingDomain,
     updateSpotRemoteSource
 } from './../../../app-state';
 import {
@@ -48,9 +49,10 @@ class WaitingForCallView extends React.Component {
         _onJoinAdHocMeeting: PropTypes.func,
         _onJoinScheduledMeeting: PropTypes.func,
         _onUpdateAvailable: PropTypes.func,
-        defaultDomain: PropTypes.string,
+        domain: PropTypes.string,
         events: PropTypes.array,
         t: PropTypes.func,
+        tenant: PropTypes.string,
         wiredScreensharingEnabled: PropTypes.bool
     };
 
@@ -159,8 +161,9 @@ class WaitingForCallView extends React.Component {
             return (
                 <div className = 'meeting-name-entry-view'>
                     <SelfFillingNameEntry
-                        domain = { this.props.defaultDomain }
-                        onSubmit = { this.props._onJoinAdHocMeeting } />
+                        domain = { this.props.domain }
+                        onSubmit = { this.props._onJoinAdHocMeeting }
+                        tenant = { this.props.tenant } />
                 </div>
             );
         case 'dial':
@@ -265,7 +268,8 @@ function mapStateToProps(state) {
         ...getInMeetingStatus(state),
         _enableAutoUpdate: isBackendEnabled(state)
             && Boolean(getPermanentPairingCode(state)),
-        defaultDomain: getDefaultMeetingDomain(state)
+        domain: getConfiguredMeetingDomain(state),
+        tenant: getSpotTVTenant(state)
     };
 }
 
