@@ -29,6 +29,7 @@ export default class Modal extends React.PureComponent {
                 data-qa-id = { this.props.qaId }>
                 <div className = 'modal-shroud' />
                 <div className = 'modal-content'>
+                    { this.props.children }
                     { onClose && <button
                         className = 'close'
                         data-qa-id = 'modal-close'
@@ -36,7 +37,6 @@ export default class Modal extends React.PureComponent {
                         type = 'button'>
                         x
                     </button> }
-                    { this.props.children }
                 </div>
             </div>
         );

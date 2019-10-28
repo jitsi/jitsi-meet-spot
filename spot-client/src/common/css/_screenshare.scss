@@ -7,16 +7,36 @@
     flex-direction: column;
     justify-content: center;
     min-width: 360px;
-    padding: 0 20px;
     text-align: center;
     width: 100%;
+
+    @media #{$mq-tablet} {
+        width: 450px;
+    }
+
+    @media #{$mq-laptop-l} {
+        width: 500px;
+    }
+
+    .title {
+        padding: 20px 0px;
+    }
+
+    .content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+    }
 
     @media #{$mq-tablet} {
         justify-content: space-between;
     }
 
     .options {
+        align-items: center;
         display: flex;
+        flex: 1;
         justify-content: space-around;
         width: 100%;
     }
@@ -31,23 +51,33 @@
 
     .cta-button {
         display: block;
-        font-size: $font-size-small;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-        padding: 0.3em 1em;
+        font-size: 12px;
+    }
+
+    .footer,
+    .share-url {
+        align-items: center;
+        display: flex;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        height: 80px;
+        justify-content: center;
+        width: 100%;
     }
 
     .share-url {
-        color: var(--secondary-link-color);
-        font-size: $font-size-medium-plus;
-        font-weight: bold;
-        margin-top: 1em;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
     }
 
-    .subtitle {
-        font-size: $font-size-small;
+    .sub-description {
+        font-size: 12px;;
         margin-top: 10px;
+    }
+
+    .description {
+        font-size: 15px;
+        line-height: 24px;
     }
 }
 
@@ -57,4 +87,7 @@
     height: 16px;
     border: solid 2px #ffffff;
     background-color: #31b76a;
+}
+.modal.screenshare .modal-content {
+    padding: 0;
 }

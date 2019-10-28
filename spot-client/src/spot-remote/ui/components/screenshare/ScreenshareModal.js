@@ -50,7 +50,9 @@ export class ScreenshareModal extends React.Component {
      */
     render() {
         return (
-            <Modal onClose = { this.props.onHideModal }>
+            <Modal
+                onClose = { this.props.onHideModal }
+                rootClassName = 'screenshare'>
                 <ScreensharePicker
                     onStartWiredScreenshare
                         = { this.props.onStartWiredScreenshare }

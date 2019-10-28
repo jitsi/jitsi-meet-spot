@@ -58,6 +58,7 @@
         @include centered-content;
         align-items: initial;
         margin: auto;
+        padding: 0;
         width: 100%;
 
         @media #{$mq-tablet} {

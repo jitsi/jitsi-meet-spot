@@ -208,10 +208,10 @@ export class ScreensharePicker extends React.Component {
                     <div className = 'icon'>
                         <i className = 'material-icons'>wired_screen_share</i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.plugWired') }
                     </div>
-                    <div className = 'subtitle'>
+                    <div className = 'sub-description'>
                         { t('screenshare.startManual') }
                     </div>
                 </div>
@@ -258,10 +258,10 @@ export class ScreensharePicker extends React.Component {
                     <div className = 'icon'>
                         <i className = 'material-icons'>{ icon }</i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.isSharing') }
                     </div>
-                    <div className = 'subtitle'>
+                    <div className = 'sub-description'>
                         { t(ctaTitle) }
                     </div>
                 </div>
@@ -296,13 +296,13 @@ export class ScreensharePicker extends React.Component {
                             wireless_screen_share
                         </i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.howToWireless') }
                     </div>
-                    <div className = 'share-url'>
-                        { `${shareDomain || windowHandler.getBaseUrl()}/` }
-                        <RemoteJoinCode />
-                    </div>
+                </div>
+                <div className = 'share-url'>
+                    { `${shareDomain || windowHandler.getBaseUrl()}/` }
+                    <RemoteJoinCode />
                 </div>
             </>
         );
