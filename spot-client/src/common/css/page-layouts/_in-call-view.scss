@@ -3,18 +3,6 @@
 
     justify-content: space-between;
 
-    .in-call-name,
-    .in-call-invited-phone {
-        font-size: $font-size-medium-plus;
-        margin-top: 100px;
-        text-align: center;
-    }
-
-    .in-call-name-with-phone {
-        font-size: $font-size-medium;
-        text-align: center;
-    }
-
     .in-call-nav {
         align-content: center;
         display: flex;
@@ -29,5 +17,23 @@
 
     .view-header {
         flex: 1;
+    }
+}
+
+.in-call,
+.stop-share {
+    .view-header {
+
+        .in-call-name,
+        .in-call-invited-phone {
+            font-size: $font-size-medium-plus;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        .in-call-name-with-phone {
+            font-size: $font-size-medium;
+            text-align: center;
+        }
     }
 }

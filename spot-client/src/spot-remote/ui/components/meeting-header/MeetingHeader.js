@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
-import { getInMeetingStatus } from 'common/app-state';
 import { RoomName } from 'common/ui';
 import { parseMeetingUrl } from 'common/utils';
 
@@ -11,7 +9,7 @@ import { parseMeetingUrl } from 'common/utils';
  *
  * @extends React.Component
  */
-export class MeetingHeader extends React.Component {
+export default class MeetingHeader extends React.Component {
     static propTypes = {
         invitedPhoneNumber: PropTypes.string,
         meetingDisplayName: PropTypes.string,
@@ -46,20 +44,3 @@ export class MeetingHeader extends React.Component {
         );
     }
 }
-
-/**
- * Selects parts of the Redux state to pass in with the props of {@code MeetingHeader}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    const { inMeeting } = getInMeetingStatus(state);
-
-    return {
-        inMeeting
-    };
-}
-
-export default connect(mapStateToProps)(MeetingHeader);

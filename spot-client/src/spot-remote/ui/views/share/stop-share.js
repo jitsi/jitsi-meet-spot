@@ -3,9 +3,12 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { getInMeetingStatus } from 'common/app-state';
+import { getInMeetingStatus, getInvitedPhoneNumber } from 'common/app-state';
 import { ScreenShare } from 'common/icons';
 import { Button, LoadingIcon } from 'common/ui';
+
+import { MeetingHeader } from '../../components'
+import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 /**
  * Displays a button for stopping wireless screenshare in progress.
@@ -27,7 +30,9 @@ export class StopShare extends React.Component {
      */
     render() {
         const {
+            meetingDisplayName,
             inMeeting,
+            invitedPhoneNumber,
             onStopScreenshare,
             t
         } = this.props;
@@ -40,6 +45,10 @@ export class StopShare extends React.Component {
             <div
                 className = 'stop-share'
                 data-qa-id = 'stop-share'>
+                <MeetingHeader
+                    invitedPhoneNumber = { invitedPhoneNumber }
+                    meetingDisplayName = { meetingDisplayName }
+                    meetingUrl = { inMeeting } />
                 <div className = 'stop-share-title'>
                     { t('screenshare.isSharingScreen') }
                 </div>
@@ -66,11 +75,14 @@ export class StopShare extends React.Component {
  */
 function mapStateToProps(state) {
     const {
+        meetingDisplayName,
         inMeeting
     } = getInMeetingStatus(state);
 
     return {
-        inMeeting
+        inMeeting,
+        invitedPhoneNumber: formatPhoneNumber(getInvitedPhoneNumber(state)),
+        meetingDisplayName
     };
 }
 

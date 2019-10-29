@@ -14,7 +14,7 @@ import {
     stopScreenshare
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
-import { LoadingIcon, View } from 'common/ui';
+import { LoadingIcon, RoomName, View } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
 import { exitShareMode } from './../../../app-state';
@@ -141,11 +141,16 @@ export class Share extends React.PureComponent {
         }
 
         return (
-            <ModeSelect
-                isScreenshareActive = { this.props.isScreenshareActiveRemotely }
-                isWirelessScreenshareSupported = { isWirelessScreenshareSupported() }
-                onGoToSpotRemoveView = { this._onGoToSpotRemoteView }
-                onStartWirelessScreenshare = { this._onStartWirelessScreenshare } />
+            <>
+                <div className = 'view-header'>
+                    <RoomName />
+                </div>
+                <ModeSelect
+                    isScreenshareActive = { this.props.isScreenshareActiveRemotely }
+                    isWirelessScreenshareSupported = { isWirelessScreenshareSupported() }
+                    onGoToSpotRemoveView = { this._onGoToSpotRemoteView }
+                    onStartWirelessScreenshare = { this._onStartWirelessScreenshare } />
+            </>
         );
     }
 
