@@ -1,3 +1,3 @@
-module.exports = require('jitsi-meet-logger').getLogger('jitsi-meet-spot-electron', undefined, {
+module.exports = require('jitsi-meet-logger').getLogger('spot-electron', undefined, {
     disableCallerInfo: true
 });
