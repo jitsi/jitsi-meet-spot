@@ -245,7 +245,7 @@ export class ScreensharePicker extends React.Component {
         let ctaTitle;
 
         if (isWirelessScreensharing) {
-            ctaTitle = 'screenshare.stopWireless';
+            ctaTitle = null;
         } else if (screensharingType === 'device') {
             ctaTitle = 'screenshare.stopWired';
         } else {
@@ -261,13 +261,13 @@ export class ScreensharePicker extends React.Component {
                     <div className = 'description'>
                         { t('screenshare.isSharing') }
                     </div>
-                    <div className = 'sub-description'>
+                    { ctaTitle && <div className = 'sub-description'>
                         { t(ctaTitle) }
-                    </div>
+                    </div> }
                 </div>
                 <div className = 'footer'>
                     <Button
-                        appearance = 'subtle-danger'
+                        appearance = 'subtle'
                         className = 'cta-button'
                         onClick = { onStopScreensharing }
                         qaId = 'stop-share-button'>
@@ -290,7 +290,7 @@ export class ScreensharePicker extends React.Component {
 
         return (
             <>
-                <div className = 'content'>
+                <div className = 'content with-share-url'>
                     <div className = 'icon'>
                         <i className = 'material-icons'>
                             wireless_screen_share
