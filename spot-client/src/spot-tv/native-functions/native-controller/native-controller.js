@@ -6,7 +6,7 @@ import { logger } from 'common/logger';
  *
  * Using it will enable SpotTVs running wrapped in Electron access OS-native functions.
  */
-class NativeControntroller {
+class NativeController {
     /**
      * Instantiates a new instance of the controller.
      */
@@ -34,4 +34,4 @@ class NativeControntroller {
     }
 }
 
-export default new NativeControntroller();
+export default new NativeController();
