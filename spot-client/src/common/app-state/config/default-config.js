@@ -191,6 +191,14 @@ export default {
     },
 
     /**
+     * The amount of time to wait for a meeting to be joined before assuming it
+     * has failed to join.
+     *
+     * @type {number}
+     */
+    MEETING_JOIN_TIMEOUT_MS: 120000,
+
+    /**
      * The user-facing name of the Spot app. Configurable in case "Spot" is not
      * the desired name.
      *
