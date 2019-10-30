@@ -7,6 +7,8 @@ app.setLoginItemSettings({
 const { createApplicationWindow } = require('./src/application-window');
 
 // Imports from features that we need to load.
+// Import log transport early as it caches any logs produced even before able to send.
+require('./src/spot-client-log-transport');
 require('./src/application-menu');
 require('./src/bt-beacon');
 require('./src/client-control');

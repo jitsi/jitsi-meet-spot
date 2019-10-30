@@ -39,6 +39,9 @@ import { SpotTvRestrictedRoute } from './spot-tv/routing';
 // This import enables Spot-TV specific analytics
 import 'spot-tv/analytics';
 
+// This import enables tunneling Electron logs through the spot-client logging service
+import 'spot-tv/electron-logs';
+
 /**
  * The root of the application which determines what view should be displayed.
  *
