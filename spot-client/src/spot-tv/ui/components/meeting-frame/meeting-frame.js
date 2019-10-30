@@ -28,6 +28,7 @@ export class MeetingFrame extends React.Component {
     static defaultProps = {
         displayName: DEFAULT_DISPLAY_NAME,
         dtmfThrottleRate: -1,
+        meetingJoinTimeout: 15000,
 
         /**
          * Ensure params set for the external api are defined or else a
@@ -48,6 +49,7 @@ export class MeetingFrame extends React.Component {
         jwt: PropTypes.string,
         maxDesktopSharingFramerate: PropTypes.number,
         meetingDisplayName: PropTypes.string,
+        meetingJoinTimeout: PropTypes.number,
         meetingUrl: PropTypes.string,
         minDesktopSharingFramerate: PropTypes.number,
         onMeetingLeave: PropTypes.func,
@@ -232,7 +234,7 @@ export class MeetingFrame extends React.Component {
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
-        }, 15000);
+        }, this.props.meetingJoinTimeout);
     }
 
     /**
