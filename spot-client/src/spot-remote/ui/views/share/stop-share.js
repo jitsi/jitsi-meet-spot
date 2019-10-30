@@ -7,7 +7,7 @@ import { getInMeetingStatus, getInvitedPhoneNumber } from 'common/app-state';
 import { ScreenShare } from 'common/icons';
 import { Button, LoadingIcon } from 'common/ui';
 
-import { MeetingHeader } from '../../components'
+import { MeetingHeader } from '../../components';
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 /**
@@ -18,6 +18,8 @@ import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 export class StopShare extends React.Component {
     static propTypes = {
         inMeeting: PropTypes.string,
+        invitedPhoneNumber: PropTypes.string,
+        meetingDisplayName: PropTypes.string,
         onStopScreenshare: PropTypes.func,
         t: PropTypes.func
     };
