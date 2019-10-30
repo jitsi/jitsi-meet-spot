@@ -28,7 +28,6 @@ export class MeetingFrame extends React.Component {
     static defaultProps = {
         displayName: DEFAULT_DISPLAY_NAME,
         dtmfThrottleRate: -1,
-        meetingJoinTimeout: 15000,
 
         /**
          * Ensure params set for the external api are defined or else a
