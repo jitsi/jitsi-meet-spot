@@ -8,6 +8,7 @@ import {
     getSpotServicesConfig,
     getTemporaryRemoteIds,
     isP2PSignalingEnabled,
+    reconnectScheduleUpdate,
     removePairedRemote,
     setCustomerId,
     setDisplayName,
@@ -154,6 +155,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(setTenant(tenant));
             dispatch(setPermanentPairingCode(permanentPairingCode));
             roomProfile && dispatch(setCustomerId(roomProfile.customerId));
+            dispatch(reconnectScheduleUpdate(false));
 
             if (isBackendEnabled(getState())) {
                 dispatch(setRoomId(roomProfile.id));
@@ -234,6 +236,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 usingPermanentPairingCode,
                 willRetry
             }));
+
+            if (initiallyConnected) {
+                dispatch(reconnectScheduleUpdate(willRetry));
+            }
+
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());

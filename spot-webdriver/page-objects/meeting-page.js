@@ -38,6 +38,15 @@ class MeetingPage extends PageObject {
     }
 
     /**
+     * Checks whether or not the Jitsi-Meet iFrame is visible.
+     *
+     * @returns {boolean}
+     */
+    isDisplayingMeeting() {
+        return this.select(MEETING_IFRAME).isDisplayed();
+    }
+
+    /**
      * Checks the Jitsi-Meet iFrame for whether or not tile view layout is
      * currently displayed.
      *

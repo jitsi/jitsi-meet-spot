@@ -3,6 +3,7 @@ import {
     CREATE_CONNECTION,
     DESTROY_CONNECTION,
     JOIN_WITH_SCREENSHARING,
+    RECONNECTION_SCHEDULE_UPDATED,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
@@ -49,6 +50,13 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
             ...state,
             joinWithScreensharing: action.screensharingType
         };
+
+    case RECONNECTION_SCHEDULE_UPDATED: {
+        return {
+            ...state,
+            isReconnectScheduled: action.isReconnectScheduled
+        };
+    }
 
     case SCREENSHARE:
         return updateStateForAsyncAction(state, 'screenshare', action);

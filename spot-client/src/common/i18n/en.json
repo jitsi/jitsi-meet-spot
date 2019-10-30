@@ -26,6 +26,7 @@
     "appStatus": {
         "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
         "exitElectronConfirm": "Are you sure you would like to exit {{ productName }}?",
+        "reconnecting": "Reconnecting",
         "setup": "Currently in setup.",
         "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
         "unexpectedError": "An unexpected error occurred.",

@@ -20,7 +20,8 @@ import {
     FeedbackOverlay,
     IdleCursorDetector,
     ModalManager,
-    Notifications
+    Notifications,
+    ReconnectIndicator
 } from 'common/ui';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
@@ -201,6 +202,7 @@ export class App extends React.Component {
                         </Switch>
                     </div>
                     <ModalManager />
+                    <ReconnectIndicator />
                     <FeedbackOverlay />
                     { isElectron() && <ExitElectron /> }
                 </IdleCursorDetector>

@@ -13,6 +13,7 @@ import {
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
+    RECONNECTION_SCHEDULE_UPDATED,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
@@ -147,6 +148,20 @@ export function hangUp(skipFeedback = false, onlyIfLonelyCall = false) {
             onlyIfLonelyCall,
             skipFeedback
         });
+    };
+}
+
+/**
+ * Stores whether or not a reconnect is queued.
+ *
+ * @param {boolean} isReconnectScheduled - Whether or not a reconnect will
+ * happen soon.
+ * @returns {Object}
+ */
+export function reconnectScheduleUpdate(isReconnectScheduled) {
+    return {
+        type: RECONNECTION_SCHEDULE_UPDATED,
+        isReconnectScheduled
     };
 }
 

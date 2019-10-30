@@ -7,6 +7,7 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     isP2PSignalingEnabled,
+    reconnectScheduleUpdate,
     setCalendarEvents,
     setCustomerId,
     setRoomId,
@@ -139,6 +140,7 @@ export function connectToSpotTV(joinCode, shareMode) {
                 isSpotTv: false,
                 isPairingPermanent: backend && backend.isPairingPermanent()
             }));
+            dispatch(reconnectScheduleUpdate(false));
         }
 
         /**
@@ -167,6 +169,7 @@ export function connectToSpotTV(joinCode, shareMode) {
                 usingPermanentPairingCode,
                 willRetry
             }));
+            dispatch(reconnectScheduleUpdate(willRetry));
             dispatch(destroyConnection());
             dispatch(clearSpotTVState());
 
