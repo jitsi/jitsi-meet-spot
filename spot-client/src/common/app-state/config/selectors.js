@@ -152,6 +152,17 @@ export function getMeetingDomainsWhitelist(state) {
 }
 
 /**
+ * A selector which gets how long the app should wait before automatically
+ * returning home if a meeting join verification has not been received.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getMeetingJoinTimeout(state) {
+    return state.config.MEETING_JOIN_TIMEOUT_MS;
+}
+
+/**
  * A selector which returns the URL for the privacy policy of the app.
  *
  * @param {Object} state - The Redux state.

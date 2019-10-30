@@ -12,6 +12,7 @@ import {
     getJitsiAppName,
     getJwt,
     getJwtDomains,
+    getMeetingJoinTimeout,
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
@@ -58,6 +59,7 @@ export class Meeting extends React.Component {
         location: PropTypes.object,
         match: PropTypes.object,
         maxDesktopSharingFramerate: PropTypes.number,
+        meetingJoinTimeout: PropTypes.number,
         minDesktopSharingFramerate: PropTypes.number,
         onError: PropTypes.func,
         preferredCamera: PropTypes.string,
@@ -141,6 +143,7 @@ export class Meeting extends React.Component {
             jitsiAppName,
             jwt,
             maxDesktopSharingFramerate,
+            meetingJoinTimeout,
             minDesktopSharingFramerate,
             preferredCamera,
             preferredMic,
@@ -162,6 +165,7 @@ export class Meeting extends React.Component {
                     jwt = { this._useJwt ? jwt : undefined }
                     maxDesktopSharingFramerate = { maxDesktopSharingFramerate }
                     meetingDisplayName = { meetingDisplayName }
+                    meetingJoinTimeout = { meetingJoinTimeout }
                     meetingUrl = { location }
                     minDesktopSharingFramerate = { minDesktopSharingFramerate }
                     onMeetingLeave = { this._onMeetingLeave }
@@ -334,6 +338,7 @@ function mapStateToProps(state) {
         jwt: getJwt(state),
         jwtDomains: getJwtDomains(state),
         maxDesktopSharingFramerate,
+        meetingJoinTimeout: getMeetingJoinTimeout(state),
         minDesktopSharingFramerate,
         kickTemporaryRemotesOnMeetingEnd: shouldKickTemporaryRemotes(state)
             && isBackendEnabled(state),

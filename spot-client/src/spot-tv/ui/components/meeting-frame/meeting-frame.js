@@ -48,6 +48,7 @@ export class MeetingFrame extends React.Component {
         jwt: PropTypes.string,
         maxDesktopSharingFramerate: PropTypes.number,
         meetingDisplayName: PropTypes.string,
+        meetingJoinTimeout: PropTypes.number,
         meetingUrl: PropTypes.string,
         minDesktopSharingFramerate: PropTypes.number,
         onMeetingLeave: PropTypes.func,
@@ -232,7 +233,7 @@ export class MeetingFrame extends React.Component {
 
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
-        }, 15000);
+        }, this.props.meetingJoinTimeout);
     }
 
     /**
