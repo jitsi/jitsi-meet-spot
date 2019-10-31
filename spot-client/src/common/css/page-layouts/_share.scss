@@ -10,7 +10,8 @@
     flex-direction: column;
     justify-content: center;
 
-    .title {
+    .title,
+    .description {
         font-size: $font-size-large;
         text-align: center;
     }

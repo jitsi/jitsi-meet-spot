@@ -208,10 +208,10 @@ export class ScreensharePicker extends React.Component {
                     <div className = 'icon'>
                         <i className = 'material-icons'>wired_screen_share</i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.plugWired') }
                     </div>
-                    <div className = 'subtitle'>
+                    <div className = 'sub-description'>
                         { t('screenshare.startManual') }
                     </div>
                 </div>
@@ -245,7 +245,7 @@ export class ScreensharePicker extends React.Component {
         let ctaTitle;
 
         if (isWirelessScreensharing) {
-            ctaTitle = 'screenshare.stopWireless';
+            ctaTitle = null;
         } else if (screensharingType === 'device') {
             ctaTitle = 'screenshare.stopWired';
         } else {
@@ -258,16 +258,16 @@ export class ScreensharePicker extends React.Component {
                     <div className = 'icon'>
                         <i className = 'material-icons'>{ icon }</i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.isSharing') }
                     </div>
-                    <div className = 'subtitle'>
+                    { ctaTitle && <div className = 'sub-description'>
                         { t(ctaTitle) }
-                    </div>
+                    </div> }
                 </div>
                 <div className = 'footer'>
                     <Button
-                        appearance = 'subtle-danger'
+                        appearance = 'subtle'
                         className = 'cta-button'
                         onClick = { onStopScreensharing }
                         qaId = 'stop-share-button'>
@@ -290,19 +290,19 @@ export class ScreensharePicker extends React.Component {
 
         return (
             <>
-                <div className = 'content'>
+                <div className = 'content with-share-url'>
                     <div className = 'icon'>
                         <i className = 'material-icons'>
                             wireless_screen_share
                         </i>
                     </div>
-                    <div className = 'title'>
+                    <div className = 'description'>
                         { t('screenshare.howToWireless') }
                     </div>
-                    <div className = 'share-url'>
-                        { `${shareDomain || windowHandler.getBaseUrl()}/` }
-                        <RemoteJoinCode />
-                    </div>
+                </div>
+                <div className = 'share-url'>
+                    { `${shareDomain || windowHandler.getBaseUrl()}/` }
+                    <RemoteJoinCode />
                 </div>
             </>
         );

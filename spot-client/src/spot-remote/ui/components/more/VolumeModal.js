@@ -24,12 +24,6 @@ export class VolumeModal extends React.Component {
             <div className = 'modal'>
                 <div className = 'modal-shroud' />
                 <div className = 'modal-content'>
-                    <button
-                        className = 'close'
-                        onClick = { this.props.onClose }
-                        type = 'button'>
-                        x
-                    </button>
                     <div className = 'volume-modal'>
                         <VolumeButton type = 'up' />
                         <span>
@@ -37,6 +31,12 @@ export class VolumeModal extends React.Component {
                         </span>
                         <VolumeButton type = 'down' />
                     </div>
+                    <button
+                        className = 'close'
+                        onClick = { this.props.onClose }
+                        type = 'button'>
+                        x
+                    </button>
                 </div>
             </div>
         );
