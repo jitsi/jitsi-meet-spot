@@ -3,7 +3,7 @@ const { clientController, events } = require('../client-control');
 /**
  * Log levels supported by the jitsi logger.
  */
-const levels = [ 'trace', 'debug', 'info', 'log', 'warn', 'error' ];
+const levels = Object.keys(require('jitsi-meet-logger').levels).map(l => l.toLowerCase());
 
 const LOG_CACHE_SIZE = 1000;
 
@@ -17,7 +17,7 @@ class SpotClientLogTransport {
      */
     constructor() {
         for (const level of levels) {
-            this[level] = this.log.bind(this);
+            this[level] = this._logImpl.bind(this, level);
         }
 
         this._logsCache = [];
@@ -25,7 +25,12 @@ class SpotClientLogTransport {
         clientController.on(events.CAN_SEND_MSG_EVENT, canSendMsgs => {
             if (canSendMsgs) {
                 for (const delayedLog of this._logsCache) {
-                    clientController.sendClientMessage('spot-electron-logs', delayedLog);
+                    const {
+                        level,
+                        message
+                    } = delayedLog;
+
+                    clientController.sendClientMessage('spot-electron-logs', level, message);
                 }
                 this._logsCache = [];
             }
@@ -35,20 +40,24 @@ class SpotClientLogTransport {
     /**
      * The log message executed for every logging level.
      *
-     * @param {...*} args - Log method arguments as defined by jitsi-logger.
+     * @param {string} level - The logging level as defined by the jitsi-logger lib.
+     * @param {...*} args - Whatever has been passed to the corresponding log level method.
      * @returns {void}
      */
-    log(...args) {
-        const logString = args.join(' ');
+    _logImpl(level, ...args) {
+        const message = args.join(' ');
 
         if (clientController.canSendClientMessage()) {
-            clientController.sendClientMessage('spot-electron-logs', logString);
+            clientController.sendClientMessage('spot-electron-logs', level, message);
         } else {
             if (this._logsCache.length >= LOG_CACHE_SIZE) {
                 this._logsCache.shift();
             }
 
-            this._logsCache.push(logString);
+            this._logsCache.push({
+                level,
+                message
+            });
         }
     }
 }
