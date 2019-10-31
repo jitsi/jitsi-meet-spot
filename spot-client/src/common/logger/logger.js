@@ -43,8 +43,27 @@ function formatMessage(level, message, context) {
 /**
  * A logger to use for logging, to prevent direct access to console and add
  * additional behavior as needed.
+ *
+ * Log level priorities(the higher the number the more urgent the level is):
+ * trace: 0
+ * debug: 1
+ * info: 2
+ * log: 3
+ * warn: 4
+ * error: 5
  */
 export default {
+    /**
+     * Logs a debug level message.
+     *
+     * @param {string} message - The main string to be logged as debug level msg.
+     * @param {Object} context - Additional information to be logged.
+     * @returns {void}
+     */
+    debug(message, context) {
+        jitsiLogger.debug(formatMessage('debug', message, context));
+    },
+
     /**
      * Logs an error level message. Should be used for critical errors.
      *
@@ -54,6 +73,18 @@ export default {
      */
     error(message, context) {
         jitsiLogger.error(formatMessage('error', message, context));
+    },
+
+    /**
+     * Logs an info level message. Less urgent than the log level, but more urgent that the debug level.
+     *
+     * @param {string} message - The main string to be logged as essentially an
+     * information level log.
+     * @param {Object} context - Additional information to be logged.
+     * @returns {void}
+     */
+    info(message, context) {
+        jitsiLogger.info(formatMessage('info', message, context));
     },
 
     /**
@@ -67,6 +98,17 @@ export default {
      */
     log(message, context) {
         jitsiLogger.log(formatMessage('log', message, context));
+    },
+
+    /**
+     * Logs a trace level message. Should be used for debug messages with the biggest level of details.
+     *
+     * @param {string} message - The main string to be logged as a trace.
+     * @param {Object} context - Additional information to be logged.
+     * @returns {void}
+     */
+    trace(message, context) {
+        jitsiLogger.trace(formatMessage('trace', message, context));
     },
 
     /**
