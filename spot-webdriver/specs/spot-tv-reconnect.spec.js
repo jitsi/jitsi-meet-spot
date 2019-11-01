@@ -20,8 +20,9 @@ describe('The reconnect logic', () => {
             tv.setNetworkOffline();
             remote.setNetworkOffline();
 
-            tv.getLoadingScreen().waitForLoadingToAppear();
+            tv.getLoadingScreen().waitForReconnectingToAppear();
             remote.getLoadingScreen().waitForLoadingToAppear();
+            remote.getLoadingScreen().waitForReconnectingToAppear();
 
             tv.setNetworkOnline();
             remote.setNetworkOnline();
@@ -29,7 +30,7 @@ describe('The reconnect logic', () => {
             remote.getLoadingScreen().waitForLoadingToDisappear();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForLoadingToDisappear(100 * 1000);
+            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
 
             remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
         });
@@ -42,7 +43,7 @@ describe('The reconnect logic', () => {
             tv.setNetworkOffline();
             remote.setNetworkOffline();
 
-            tv.getLoadingScreen().waitForLoadingToAppear();
+            tv.getLoadingScreen().waitForReconnectingToAppear();
 
             // Temporary remote is supposed to go back to the join code entry page
             remote.getJoinCodePage().waitForVisible(30 * 1000);
@@ -51,7 +52,31 @@ describe('The reconnect logic', () => {
             remote.setNetworkOnline();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForLoadingToDisappear(100 * 1000);
+            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+        });
+    });
+
+    describe('when prosody disconnects', () => {
+        it('does not disconnect the TV from the meeting', () => {
+            const tv = session.getSpotTV();
+            const remote = session.getSpotRemote();
+
+            session.connectRemoteToTV();
+
+            session.joinMeeting();
+
+            remote.getInMeetingPage().waitForVisible();
+            tv.getMeetingPage().waitForMeetingJoined();
+
+            tv.setNetworkOffline();
+
+            tv.getLoadingScreen().waitForReconnectingToAppear();
+            expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
+
+            tv.setNetworkOnline();
+
+            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+            expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
         });
     });
 });

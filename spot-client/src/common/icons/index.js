@@ -21,6 +21,7 @@ export {
     Settings,
     Star,
     StarBorder,
+    Sync,
     Videocam,
     VideocamOff,
     VolumeUp

@@ -6,6 +6,7 @@ import { analytics } from 'common/analytics';
 import {
     isConnectionEstablished,
     isConnectionPending,
+    isReconnecting,
     setIsSpot
 } from 'common/app-state';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
@@ -31,6 +32,7 @@ export class SpotTVRemoteControlLoader extends React.Component {
         isAttemptingConnection: PropTypes.bool,
         isBackendEnabled: PropTypes.bool,
         isConnected: PropTypes.bool,
+        isReconnecting: PropTypes.bool,
         permanentPairingCode: PropTypes.string
     };
 
@@ -73,15 +75,15 @@ export class SpotTVRemoteControlLoader extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        if (this.props.isConnected) {
-            const { children } = this.props;
-            const childProps = this._getPropsForChildren();
-
-            return React.Children.map(children, child =>
-                React.cloneElement(child, childProps));
+        if (!this.props.isConnected && !this.props.isReconnecting) {
+            return <Loading />;
         }
 
-        return <Loading />;
+        const { children } = this.props;
+        const childProps = this._getPropsForChildren();
+
+        return React.Children.map(children, child =>
+            React.cloneElement(child, childProps));
     }
 
     /**
@@ -110,6 +112,7 @@ function mapStateToProps(state) {
         isAttemptingConnection: isConnectionPending(state),
         isBackendEnabled: isBackendEnabled(state),
         isConnected: isConnectionEstablished(state),
+        isReconnecting: isReconnecting(state),
         permanentPairingCode: getPermanentPairingCode(state)
     };
 }

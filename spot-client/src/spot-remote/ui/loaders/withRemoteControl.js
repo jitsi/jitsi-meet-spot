@@ -21,6 +21,7 @@ export class RemoteControlLoader extends AbstractLoader {
     static propTypes = {
         disconnectOnUnmount: PropTypes.bool,
         isConnected: PropTypes.bool,
+        isReconnecting: PropTypes.bool,
         onDisconnect: PropTypes.func
     };
 

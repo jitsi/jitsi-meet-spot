@@ -10,6 +10,7 @@ export * from './input';
 export * from './loading-icon';
 export * from './modal';
 export * from './notifications';
+export * from './reconnect-indicator';
 export * from './remote-join-code';
 export * from './reset';
 export * from './room-name';
