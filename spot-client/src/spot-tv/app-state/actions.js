@@ -396,6 +396,7 @@ export function disconnectSpotTvRemoteControl(event) {
         // NOTE When trying to execute the cleanup before disconnect then the disconnect does not happen if triggered by
         // the on before unload event handler.
         const postDisconnectCleanup = () => {
+            dispatch(reconnectScheduleUpdate(false));
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
             dispatch(clearAllPairedRemotes());

@@ -338,6 +338,7 @@ export function disconnectFromSpotTV(event) {
     return dispatch => {
         _clearSubscriptions();
 
+        dispatch(reconnectScheduleUpdate(false));
         dispatch(destroyConnection());
         dispatch(setCalendarEvents([]));
         dispatch(clearSpotTVState());
