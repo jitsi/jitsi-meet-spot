@@ -22,16 +22,6 @@ class SpotTV extends SpotUser {
     }
 
     /**
-     * Reaches into internals to synthetically trigger an unexpected disconnect
-     * occurring.
-     *
-     * @returns {void}
-     */
-    triggerInternalConnectionDisconnect() {
-        this.driver.execute(() => window.spot.remoteControlServer._onDisconnect());
-    }
-
-    /**
      * Disconnects the remote control service.
      *
      * @returns {void}

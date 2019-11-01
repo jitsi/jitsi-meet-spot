@@ -3,4 +3,5 @@
     display: flex;
     position: fixed;
     left: 10;
+    z-index: $z-index-above-all;
 }

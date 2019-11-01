@@ -64,15 +64,19 @@ describe('The reconnect logic', () => {
             session.connectRemoteToTV();
 
             session.joinMeeting();
-            remote.getInMeetingPage().waitForVisible();
 
-            tv.triggerInternalConnectionDisconnect();
+            remote.getInMeetingPage().waitForVisible();
+            tv.getMeetingPage().waitForMeetingJoined();
+
+            tv.setNetworkOffline();
 
             tv.getLoadingScreen().waitForReconnectingToAppear();
-
             expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
 
+            tv.setNetworkOnline();
+
             tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+            expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
         });
     });
 });
