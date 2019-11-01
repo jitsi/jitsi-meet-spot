@@ -17,7 +17,7 @@ class BluetoothD {
         this.xpcConnection = new XpcConnection('com.apple.bluetoothd');
 
         this.xpcConnection.on('error', message => {
-            logger.error('XpcError', message);
+            logger.error('XpcError', { message });
         });
 
         this.xpcConnection.on('event', event => {
@@ -44,7 +44,7 @@ class BluetoothD {
                 // Connection request. We don't need this.
                 break;
             default:
-                logger.warn('Unknown XpcEvent', event);
+                logger.warn('Unknown XpcEvent', { event });
             }
         });
     }
@@ -110,7 +110,7 @@ class BluetoothD {
      */
     setStatus(status) {
         this.status = DEVICE_STATES[status];
-        logger.info('BluetoothD status updated to', this.status);
+        logger.info(`BluetoothD status updated to ${this.status}`);
     }
 
     /**

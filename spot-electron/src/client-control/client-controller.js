@@ -49,7 +49,10 @@ class ClientController extends EventEmitter {
     _handleClientMessage(event, message) {
         const { args, command } = message;
 
-        logger.info(`Native command received: ${command} ${JSON.stringify(args)}`);
+        logger.info(`Native command received: ${command}`, {
+            command,
+            args: JSON.stringify(args)
+        });
         this.emit(command, args);
     }
 

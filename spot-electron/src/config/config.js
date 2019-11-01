@@ -66,7 +66,7 @@ class Config {
             logger.info('No persisted config to load.');
 
         } catch (error) {
-            logger.error('Error reading persisted config.', error);
+            logger.error('Error reading persisted config.', { error });
         }
 
         return undefined;
@@ -80,7 +80,7 @@ class Config {
     _persistConfig() {
         fs.writeFile(PERSISTED_CONFIG, JSON.stringify(this._config, 4), error => {
             if (error) {
-                logger.error('Error persisting config.', error);
+                logger.error('Error persisting config.', { error });
             } else {
                 logger.info('Config persisted.');
             }
