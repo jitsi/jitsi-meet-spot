@@ -27,10 +27,11 @@ class SpotClientLogTransport {
                 for (const delayedLog of this._logsCache) {
                     const {
                         level,
-                        message
+                        message,
+                        context
                     } = delayedLog;
 
-                    clientController.sendClientMessage('spot-electron-logs', level, message);
+                    clientController.sendClientMessage('spot-electron-logs', level, message, context);
                 }
                 this._logsCache = [];
             }
@@ -41,14 +42,16 @@ class SpotClientLogTransport {
      * The log message executed for every logging level.
      *
      * @param {string} level - The logging level as defined by the jitsi-logger lib.
-     * @param {...*} args - Whatever has been passed to the corresponding log level method.
+     * @param {string} loggerName - The logger name automatically added as argument by the jitsi-logger.
+     * @param {string} message - A message passed to the corresponding log level method.
+     * @param {Object} context - Optional additional information as a JSON compatible object.
      * @returns {void}
      */
-    _logImpl(level, ...args) {
-        const message = args.join(' ');
+    _logImpl(level, loggerName, message, context) {
+        const msgString = `${loggerName} ${message}`;
 
         if (clientController.canSendClientMessage()) {
-            clientController.sendClientMessage('spot-electron-logs', level, message);
+            clientController.sendClientMessage('spot-electron-logs', level, msgString, context);
         } else {
             if (this._logsCache.length >= LOG_CACHE_SIZE) {
                 this._logsCache.shift();
@@ -56,7 +59,8 @@ class SpotClientLogTransport {
 
             this._logsCache.push({
                 level,
-                message
+                message: msgString,
+                context
             });
         }
     }
