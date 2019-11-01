@@ -3,7 +3,7 @@ import {
 } from './action-types';
 import logger from './logger';
 import LoggingService from './logging-service';
-import PostToEndpoint from './post-to-endpoint';
+import { PostToEndpoint } from './PostToEndpoint';
 
 /**
  * Initializes new logging service instance.
