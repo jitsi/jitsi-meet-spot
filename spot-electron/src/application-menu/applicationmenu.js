@@ -1,7 +1,7 @@
-const { Menu } = require('electron');
+const { app, Menu } = require('electron');
 const isDev = require('electron-is-dev');
 
-const { productName } = require('../../package.json');
+const productName = app.getName();
 
 /**
  * Generates the configuration for the menu items to display in the app toolbar.
@@ -9,27 +9,19 @@ const { productName } = require('../../package.json');
  * @returns {Array}
  */
 function getMenuItems() {
-    const menuItems = [];
-
-    menuItems.push({
-        label: productName
-    });
-
-    if (isDev) {
-        menuItems.push(
-            {
-                label: 'Development',
-                submenu: [
-                    { role: 'toggledevtools' },
-                    { role: 'quit' }
-                ]
-            }
-        );
-    }
-
-    return menuItems;
+    return [
+        {
+            label: productName,
+            submenu: [
+                { role: 'toggledevtools' },
+                { role: 'quit' }
+            ]
+        }
+    ];
 }
 
-const menu = Menu.buildFromTemplate(getMenuItems());
+const menu = isDev
+    ? Menu.buildFromTemplate(getMenuItems())
+    : null;
 
 Menu.setApplicationMenu(menu);
