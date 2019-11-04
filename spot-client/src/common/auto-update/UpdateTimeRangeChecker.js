@@ -3,29 +3,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getUpdateEndHour, getUpdateStartHour } from 'common/app-state';
-import { date } from 'common/date';
 import { logger } from 'common/logger';
 
 import TimeRangePoller from './TimeRangePoller';
 
-const lastLoadTime = date.getCurrentDate();
-
 /**
- * Periodically checks for when the last time the page was loaded and will
- * reload if it has been 24 hours. This reload is to get any bundle updates and
- * to clear any memory leaks.
+ * Periodically checks if the current time falls into the preconfigured time range when the updates are allowed.
  *
  * @extends React.Component
  */
-export class AutoUpdateChecker extends React.Component {
+export class UpdateTimeRangeChecker extends React.Component {
     static propTypes = {
-        onUpdateAvailable: PropTypes.func,
+        onTimeWithinRangeUpdate: PropTypes.func,
         updateEndHour: PropTypes.number,
         updateStartHour: PropTypes.number
     };
 
     /**
-     * Initializes a new {@code AutoUpdateChecker} instance.
+     * Initializes a new {@code UpdateTimeRangeChecker} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -33,7 +28,7 @@ export class AutoUpdateChecker extends React.Component {
     constructor(props) {
         super(props);
 
-        this._onUpdateAvailable = this._onUpdateAvailable.bind(this);
+        this._onTimeWithinRangeUpdate = this._onTimeWithinRangeUpdate.bind(this);
 
         this._poller = new TimeRangePoller({
             endHour: props.updateEndHour,
@@ -41,8 +36,10 @@ export class AutoUpdateChecker extends React.Component {
             frequency: 30000
         });
 
-        this._unsubscribePollerListener = this._poller.addListener(
-            TimeRangePoller.CURRENT_TIME_WITHIN_RANGE, this._onUpdateAvailable);
+        this._unsubscribePollerListener
+            = this._poller.addListener(
+                TimeRangePoller.TIME_WITHIN_RANGE_UPDATE,
+                this._onTimeWithinRangeUpdate);
     }
 
     /**
@@ -66,6 +63,7 @@ export class AutoUpdateChecker extends React.Component {
     componentWillUnmount() {
         logger.log('Stopping auto update checks');
 
+        this.props.onTimeWithinRangeUpdate(false);
         this._unsubscribePollerListener();
         this._poller.stop();
         this._poller = null;
@@ -84,19 +82,19 @@ export class AutoUpdateChecker extends React.Component {
     /**
      * Triggers the passed in callback notifying that an update is ready.
      *
+     * @param {boolean} isTimeWithingRange - Whether or not the current time is within the auto update allowed time
+     * range.
      * @private
      * @returns {void}
      */
-    _onUpdateAvailable() {
-        if (!date.isDateForToday(lastLoadTime)) {
-            this.props.onUpdateAvailable();
-        }
+    _onTimeWithinRangeUpdate(isTimeWithingRange) {
+        this.props.onTimeWithinRangeUpdate(isTimeWithingRange);
     }
 }
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code AutoReload}.
+ * {@code UpdateTimeRangeChecker}.
  *
  * @param {Object} state - The Redux state.
  * @private
@@ -109,4 +107,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(AutoUpdateChecker);
+export default connect(mapStateToProps)(UpdateTimeRangeChecker);

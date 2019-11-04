@@ -13,14 +13,14 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/app-state';
-import { AutoUpdateChecker } from 'common/auto-update';
+import { UpdateTimeRangeChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { Clock, LoadingIcon, ScheduledMeetings, FeedbackOpener } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
-import { updateSpotTVSource } from '../../app-state';
+import { setOkToUpdate } from '../../app-state';
 import {
     JoinInfo,
     SettingsButton,
@@ -46,7 +46,7 @@ export class Home extends React.Component {
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
-        onUpdateAvailable: PropTypes.func,
+        onTimeWithinRangeUpdate: PropTypes.func,
         productName: PropTypes.string,
         remoteControlServer: PropTypes.object,
         remoteJoinCode: PropTypes.string,
@@ -111,8 +111,8 @@ export class Home extends React.Component {
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this._onRedirectToMeeting }>
                 { enableAutoUpdate
-                    && <AutoUpdateChecker
-                        onUpdateAvailable = { this.props.onUpdateAvailable } /> }
+                    && <UpdateTimeRangeChecker
+                        onTimeWithinRangeUpdate = { this.props.onTimeWithinRangeUpdate } /> }
                 <div className = 'spot-home'>
                     <Clock />
                     <div className = 'room-name'>
@@ -309,8 +309,8 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
-        onUpdateAvailable() {
-            dispatch(updateSpotTVSource());
+        onTimeWithinRangeUpdate(isWithinTimeRange) {
+            dispatch(setOkToUpdate(isWithinTimeRange));
         }
     };
 }

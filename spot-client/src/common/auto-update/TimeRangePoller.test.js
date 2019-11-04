@@ -5,7 +5,6 @@ import TimeRangePoller from './TimeRangePoller';
 describe('TimeRangePoller', () => {
     const pollInterval = 1000 * 60 * 10; // every 10 minutes
     const clockTick1Hour = '01:00:00';
-    const clockTick5Minutes = '00:05:00';
 
     let callback, clock, timeRangePoller;
 
@@ -22,7 +21,7 @@ describe('TimeRangePoller', () => {
         });
 
         timeRangePoller.addListener(
-            TimeRangePoller.CURRENT_TIME_WITHIN_RANGE,
+            TimeRangePoller.TIME_WITHIN_RANGE_UPDATE,
             callback
         );
 
@@ -38,31 +37,23 @@ describe('TimeRangePoller', () => {
         it('notifies when the current time is within the hour range', () => {
             clock.tick(clockTick1Hour);
 
-            expect(callback).toHaveBeenCalled();
-        });
+            expect(callback).toHaveBeenCalledWith(true);
 
-        it('checks the time at the configured interval', () => {
             clock.tick(clockTick1Hour);
-            expect(callback.mock.calls.length).toBe(1);
 
-            clock.tick(clockTick5Minutes);
-            expect(callback.mock.calls.length).toBe(1);
+            expect(callback).toHaveBeenCalledWith(false);
 
-            clock.tick(clockTick5Minutes);
+            clock.tick(clockTick1Hour);
+
             expect(callback.mock.calls.length).toBe(2);
         });
     });
 
     describe('stop', () => {
         it('stops checking the time', () => {
-            clock.tick(clockTick1Hour);
-            expect(callback.mock.calls.length).toBe(1);
-
             timeRangePoller.stop();
-
-            clock.next();
-
-            expect(callback.mock.calls.length).toBe(1);
+            clock.tick(clockTick1Hour);
+            expect(callback.mock.calls.length).toBe(0);
         });
     });
 });
