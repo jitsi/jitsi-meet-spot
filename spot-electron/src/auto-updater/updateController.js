@@ -1,3 +1,4 @@
+const { app } = require('electron');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
 
@@ -49,9 +50,11 @@ class UpdateController {
      */
     constructor(spotClientController) {
         this._updateDownloaded = false;
-        this._updateAllowed = false;
+        this._updateAllowed = undefined;
 
         autoUpdater.on('update-downloaded', this._onUpdateDownloaded.bind(this));
+
+        app.on('ready', () => this.checkForUpdateAndStartDownload());
 
         spotClientController.on('spot-electron/auto-updater', ({ updateAllowed }) => {
             logger.debug('received spot-electron/auto-updater', { updateAllowed });
@@ -104,7 +107,9 @@ class UpdateController {
             updateInfo
         });
         this._updateDownloaded = true;
-        this._updateAllowed && this._updateAndRestart();
+        if (typeof this._updateAllowed === 'undefined' || this._updateAllowed) {
+            this._updateAndRestart();
+        }
     }
 
     /**
