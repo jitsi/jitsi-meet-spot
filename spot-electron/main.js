@@ -10,6 +10,7 @@ const { createApplicationWindow } = require('./src/application-window');
 // Import log transport early as it caches any logs produced even before able to send.
 require('./src/spot-client-log-transport');
 require('./src/application-menu');
+require('./src/auto-updater');
 require('./src/bt-beacon');
 require('./src/client-control');
 require('./src/exit');

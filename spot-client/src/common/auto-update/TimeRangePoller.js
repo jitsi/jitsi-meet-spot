@@ -9,7 +9,7 @@ const defaultFrequency = 5 * 60 * 1000; // 5 minutes in milliseconds
  * @extends Emitter
  */
 export default class TimeRangePoller extends Emitter {
-    static CURRENT_TIME_WITHIN_RANGE = 'CURRENT_TIME_WITHIN_RANGE';
+    static TIME_WITHIN_RANGE_UPDATE = 'TIME_WITHIN_RANGE_UPDATE';
 
     /**
      * Initializes a new {@code TimeRangePoller} instance.
@@ -36,6 +36,7 @@ export default class TimeRangePoller extends Emitter {
         this._startHour = startHour;
 
         this._dateCheckInterval = null;
+        this._isWithinRange = false;
 
         this._check = this._check.bind(this);
     }
@@ -74,9 +75,11 @@ export default class TimeRangePoller extends Emitter {
     _check() {
         const now = date.getCurrentDate();
         const currentHour = now.getHours();
+        const newIsWithingRange = currentHour >= this._startHour && currentHour < this._endHour;
 
-        if (currentHour >= this._startHour && currentHour < this._endHour) {
-            this.emit(TimeRangePoller.CURRENT_TIME_WITHIN_RANGE);
+        if (this._isWithinRange !== newIsWithingRange) {
+            this._isWithinRange = newIsWithingRange;
+            this.emit(TimeRangePoller.TIME_WITHIN_RANGE_UPDATE, newIsWithingRange);
         }
     }
 }

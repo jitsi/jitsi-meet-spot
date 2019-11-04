@@ -12,7 +12,7 @@ import {
     joinScheduledMeeting,
     joinWithScreensharing
 } from 'common/app-state';
-import { AutoUpdateChecker } from 'common/auto-update';
+import { UpdateTimeRangeChecker, WebUpdateChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { ArrowRightAlt, Call, Event, ScreenShare } from 'common/icons';
@@ -48,7 +48,7 @@ class WaitingForCallView extends React.Component {
         _onDialOut: PropTypes.func,
         _onJoinAdHocMeeting: PropTypes.func,
         _onJoinScheduledMeeting: PropTypes.func,
-        _onUpdateAvailable: PropTypes.func,
+        _onTimeWithinRangeUpdate: PropTypes.func,
         domain: PropTypes.string,
         events: PropTypes.array,
         t: PropTypes.func,
@@ -87,7 +87,7 @@ class WaitingForCallView extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { _enableAutoUpdate, _onUpdateAvailable, t } = this.props;
+        const { _enableAutoUpdate, _onTimeWithinRangeUpdate, t } = this.props;
         const { activeTab } = this.state;
 
         return (
@@ -95,8 +95,8 @@ class WaitingForCallView extends React.Component {
                 className = 'waiting-view'
                 data-qa-id = 'waiting-for-call-view'>
                 { _enableAutoUpdate
-                    && <AutoUpdateChecker
-                        onUpdateAvailable = { _onUpdateAvailable } /> }
+                    && <UpdateTimeRangeChecker
+                        onTimeWithinRangeUpdate = { _onTimeWithinRangeUpdate } /> }
                 <div className = 'view-header'>
                     <RoomName />
                 </div>
@@ -301,8 +301,10 @@ function mapDispatchToProps(dispatch) {
         _onJoinAdHocMeeting(meetingName) {
             dispatch(joinAdHocMeeting(meetingName));
         },
-        _onUpdateAvailable() {
-            dispatch(updateSpotRemoteSource());
+        _onTimeWithinRangeUpdate(isWithinUpdateAllowedRange) {
+            if (isWithinUpdateAllowedRange && WebUpdateChecker.isWebUpdateAvailable()) {
+                dispatch(updateSpotRemoteSource());
+            }
         }
     };
 }
