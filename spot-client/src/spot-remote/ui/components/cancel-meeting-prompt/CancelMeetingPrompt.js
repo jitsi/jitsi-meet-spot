@@ -23,7 +23,7 @@ export class CancelMeetingPrompt extends React.Component {
         const { onSubmit, t } = this.props;
 
         return (
-            <div className = 'kicked-notice'>
+            <div className = 'conference-status-notice'>
                 <div className = 'cta'>{ t('conferenceStatus.slowJoin') }</div>
                 <Button
                     onClick = { onSubmit }
