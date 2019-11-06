@@ -8,7 +8,9 @@
 export function isValidMeetingName(meetingName) {
     // TODO: add some validation of the meeting name.
 
-    return Boolean(meetingName);
+    // Exclude just the characters which are part of a URL for now. Don't want to go into UTF-8 territory and try
+    // to figure out any special characters that may or may not be allowed.
+    return meetingName && meetingName.indexOf(':') === -1 && meetingName.indexOf('/') === -1;
 }
 
 /**
