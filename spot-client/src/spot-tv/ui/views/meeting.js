@@ -16,7 +16,6 @@ import {
     getPreferredCamera,
     getPreferredMic,
     getPreferredSpeaker,
-    getTenant,
     getWiredScreenshareInputLabel,
     leaveMeetingWithError,
     shouldKickTemporaryRemotes,
@@ -69,8 +68,7 @@ export class Meeting extends React.Component {
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool,
-        storePhoneNumberFromInvites: PropTypes.func,
-        tenant: PropTypes.string
+        storePhoneNumberFromInvites: PropTypes.func
     };
 
     /**
@@ -347,8 +345,7 @@ function mapStateToProps(state) {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),
-        screenshareDevice: getWiredScreenshareInputLabel(state),
-        tenant: getTenant(state)
+        screenshareDevice: getWiredScreenshareInputLabel(state)
     };
 }
 
