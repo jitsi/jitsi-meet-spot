@@ -18,6 +18,7 @@ import {
 } from '../../../app-state';
 import {
     AudioMuteButton,
+    CancelMeetingPrompt,
     KickedNotice,
     MoreButton,
     MeetingHeader,
@@ -58,8 +59,40 @@ export class InCall extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showCancelMeeting: false
+        };
+
+        this._showCancelMeetingTimeout = null;
+
         this._onHangup = this._onHangup.bind(this);
         this._onHangUpWithoutFeedback = this._onHangUpWithoutFeedback.bind(this);
+    }
+
+    /**
+     * Starts timer to show a button to cancel joining the meeting.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._showCancelMeetingTimeout = setTimeout(() => {
+            this.setState({
+                showCancelMeeting: true
+            });
+        }, 10000);
+    }
+
+    /**
+     * Prevents the cancel meeting button from displaying if the meeting has
+     * been joined.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate() {
+        if (this._showCancelMeetingTimeout && this.props.inMeeting) {
+            this._showCancelMeetingTimeout = null;
+            clearTimeout(this._showCancelMeetingTimeout);
+        }
     }
 
     /**
@@ -69,6 +102,8 @@ export class InCall extends React.Component {
      */
     componentWillUnmount() {
         this.props.hideModal();
+
+        clearTimeout(this._showCancelMeetingTimeout);
 
         // Force stop wireless screenshare in case there is a connection in
         // flight, as only established connections get automatically cleaned up.
@@ -109,7 +144,13 @@ export class InCall extends React.Component {
         }
 
         if (!inMeeting) {
-            return <LoadingIcon />;
+            return this.state.showCancelMeeting
+                ? (
+                    <Modal>
+                        <CancelMeetingPrompt onSubmit = { this._onHangUpWithoutFeedback } />
+                    </Modal>
+                )
+                : <LoadingIcon />;
         }
 
         return (

@@ -4,6 +4,7 @@ const ScreensharePicker = require('./screenshare-picker');
 
 const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
 const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
+const CANCEL_MEETING_BUTTON = '[data-qa-id=cancel-meeting]';
 const HANG_UP_BUTTON = '[data-qa-id=hangup]';
 const MORE_BUTTON = '[data-qa-id=more]';
 const MORE_MODAL = '[data-qa-id=more-modal]';
@@ -30,6 +31,16 @@ class SpotRemoteInMeetingPage extends PageObject {
         super(driver, REMOTE_CONTROL);
 
         this.screensharePicker = new ScreensharePicker(this.driver);
+    }
+
+    /**
+     * Exits a meeting that is taking a while to load.
+     *
+     * @returns {void}
+     */
+    cancelMeetingJoin() {
+        this.waitForCancelMeetingToDisplay();
+        this.select(CANCEL_MEETING_BUTTON).click();
     }
 
     /**
@@ -212,6 +223,15 @@ class SpotRemoteInMeetingPage extends PageObject {
                 offStateSelector: AUDIO_MUTE_BUTTON,
                 waitTime: constants.REMOTE_COMMAND_WAIT
             });
+    }
+
+    /**
+     * Waits for the button to display which aborts a meeting join attempting.
+     *
+     * @returns {void}
+     */
+    waitForCancelMeetingToDisplay() {
+        this.waitForElementDisplayed(CANCEL_MEETING_BUTTON, 20000);
     }
 
     /**

@@ -14,6 +14,21 @@ describe('Can start a meeting', () => {
         expect(spotTV.getMeetingName()).toBe(testMeetingName);
     });
 
+    it('and cancel join', () => {
+        const spotTV = session.getSpotTV();
+        const spotRemote = session.getSpotRemote();
+        const inMeetingPage = spotRemote.getInMeetingPage();
+
+        // Go to an invalid meeting url to prevent any meeting loaded confirmation
+        // from firing and to make the cancel button display.
+        session.joinMeeting('https://meet.jit.si');
+
+        inMeetingPage.waitForCancelMeetingToDisplay();
+        inMeetingPage.cancelMeetingJoin();
+
+        spotTV.getCalendarPage().waitForVisible();
+    });
+
     xit('and disconnects the remote on meeting end', () => {
         if (!session.isBackendEnabled()) {
             pending();

@@ -5,11 +5,9 @@ import { withTranslation } from 'react-i18next';
 import { Button } from 'common/ui';
 
 /**
- * Informs that the Spot-TV has been removed from the conference.
- *
- * @extends React.Component
+ * Displays a prompt to immediately stop trying to join a meeting.
  */
-export class KickedNotice extends React.Component {
+export class CancelMeetingPrompt extends React.Component {
     static propTypes = {
         onSubmit: PropTypes.func,
         t: PropTypes.func
@@ -26,11 +24,15 @@ export class KickedNotice extends React.Component {
 
         return (
             <div className = 'conference-status-notice'>
-                <div className = 'cta'>{ t('conferenceStatus.kicked') }</div>
-                <Button onClick = { onSubmit }>{ t('buttons.continue') }</Button>
+                <div className = 'cta'>{ t('conferenceStatus.slowJoin') }</div>
+                <Button
+                    onClick = { onSubmit }
+                    qaId = 'cancel-meeting'>
+                    { t('buttons.cancel') }
+                </Button>
             </div>
         );
     }
 }
 
-export default withTranslation()(KickedNotice);
+export default withTranslation()(CancelMeetingPrompt);

@@ -71,7 +71,8 @@
         "howToEnterPassword": "You can use the remote control device to submit a password.",
         "kicked": "You have been removed from the conference.",
         "password": "Password",
-        "passwordRequired": "Password required to join."
+        "passwordRequired": "Password required to join.",
+        "slowJoin": "The conference is taking a while to join. Cancel?"
     },
     "countdown": {
         "timeLeft": "{{ count }} second",
