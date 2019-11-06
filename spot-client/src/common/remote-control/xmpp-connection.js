@@ -58,6 +58,7 @@ export default class XmppConnection {
         this._pendingIQRequestRejections = new Set();
 
         this._onCommand = this._onCommand.bind(this);
+        this._onDisconnect = this._onDisconnect.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
 
@@ -90,13 +91,14 @@ export default class XmppConnection {
             resourceName,
             retryOnUnauthorized,
             roomLock,
-            roomName,
-            onDisconnect
+            roomName
         } = options;
 
         if (this.initPromise) {
             return this.initPromise;
         }
+
+        this._joinOptions = options;
 
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
@@ -121,7 +123,7 @@ export default class XmppConnection {
                 () => {
                     this.xmppConnection.addEventListener(
                         connectionEvents.CONNECTION_FAILED,
-                        onDisconnect);
+                        this._onDisconnect);
 
                     resolve();
                 }
@@ -414,6 +416,23 @@ export default class XmppConnection {
         this.room.connection.send(ack);
 
         return true;
+    }
+
+    /**
+     * Callback invoked when an established xmpp connection has become disconnected.
+     *
+     * @param {string} error - Represents the type of the error.
+     * @param {string} reason - Represents what caused the error.
+     * @private
+     * @returns {void}
+     */
+    _onDisconnect(error, reason) {
+        logger.error('xmpp connection disconnected', {
+            error,
+            reason
+        });
+
+        this._joinOptions.onDisconnect(error, reason);
     }
 
     /**
