@@ -21,11 +21,13 @@ import { WebUpdateChecker } from 'common/auto-update';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled, setPermanentPairingCode } from 'common/backend';
+import { history } from 'common/history';
 import { logger } from 'common/logger';
 import {
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
+import { ROUTES } from 'common/routing';
 import { getJitterDelay, windowHandler } from 'common/utils';
 
 import {
@@ -39,6 +41,8 @@ import {
 import { nativeController } from '../native-functions/native-controller';
 
 import { SPOT_TV_CONNECTION_FAILED } from './actionTypes';
+import { isValidMeetingName, isValidMeetingUrl } from '../../common/utils';
+import { getDefaultMeetingDomain } from './selectors';
 
 let eventHandlerRemovers;
 
@@ -500,5 +504,52 @@ export function setOkToUpdate(isOkToUpdate) {
         }
 
         return Promise.resolve();
+    };
+}
+
+/**
+ * Redirects to the meeting route and joins a meeting.
+ *
+ * @param {string} meetingNameOrUrl - It can be either just name of a conference room or a full URL.
+ * @param {Array<Object>} invites - An array of invites. An invite's structure is defined by JitsiMeet's external API.
+ * @param {boolean} screenshare - Whether to start with the screensharing enabled.
+ * @param {boolean} startWithVideoMuted - Whether to start with the video muted.
+ * @param {string} meetingDisplayName - An alternative display name for the meeting, such as the event name on
+ * a calendar.
+ * @returns {Function}
+ */
+export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayName, screenshare, startWithVideoMuted }) {
+    return (dispatch, getState) => {
+        let location;
+
+        if (isValidMeetingUrl(meetingNameOrUrl)) {
+            location = meetingNameOrUrl;
+        } else if (isValidMeetingName(meetingNameOrUrl)) {
+            location = `https://${getDefaultMeetingDomain(getState())}/${meetingNameOrUrl}`;
+        } else {
+            logger.error(`redirectToMeeting - invalid meeting URL: ${meetingNameOrUrl}`);
+
+            return;
+        }
+
+        let redirectUrl = `${ROUTES.MEETING}?location=${encodeURIComponent(location)}`;
+
+        if (screenshare) {
+            redirectUrl += '&screenshare=true';
+        }
+
+        if (invites) {
+            redirectUrl += `&invites=${encodeURIComponent(JSON.stringify(invites))}`;
+        }
+
+        if (startWithVideoMuted) {
+            redirectUrl += '&startWithVideoMuted=true';
+        }
+
+        if (meetingDisplayName) {
+            redirectUrl += `&meetingDisplayName=${encodeURIComponent(meetingDisplayName)}`;
+        }
+
+        history.push(redirectUrl);
     };
 }

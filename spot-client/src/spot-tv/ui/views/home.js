@@ -16,11 +16,10 @@ import {
 import { UpdateTimeRangeChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
-import { ROUTES } from 'common/routing';
 import { Clock, LoadingIcon, ScheduledMeetings, FeedbackOpener } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
-import { setOkToUpdate } from '../../app-state';
+import { redirectToMeeting, setOkToUpdate } from '../../app-state';
 import {
     JoinInfo,
     SettingsButton,
@@ -46,6 +45,8 @@ export class Home extends React.Component {
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
         isSetupComplete: PropTypes.bool,
+        onGoToMeetingCommand: PropTypes.func,
+        onStartScreenshareMeeting: PropTypes.func,
         onTimeWithinRangeUpdate: PropTypes.func,
         productName: PropTypes.string,
         remoteControlServer: PropTypes.object,
@@ -68,7 +69,6 @@ export class Home extends React.Component {
         };
 
         this._onCommand = this._onCommand.bind(this);
-        this._onRedirectToMeeting = this._onRedirectToMeeting.bind(this);
     }
 
     /**
@@ -109,7 +109,7 @@ export class Home extends React.Component {
 
         return (
             <WiredScreenshareChangeListener
-                onDeviceConnected = { this._onRedirectToMeeting }>
+                onDeviceConnected = { this.props.onStartScreenshareMeeting }>
                 { enableAutoUpdate
                     && <UpdateTimeRangeChecker
                         onTimeWithinRangeUpdate = { this.props.onTimeWithinRangeUpdate } /> }
@@ -173,42 +173,10 @@ export class Home extends React.Component {
     _onCommand(type, data) {
         switch (type) {
         case COMMANDS.GO_TO_MEETING: {
-            let path = `${ROUTES.MEETING}?location=${data.meetingName}`;
-
-            if (data.invites) {
-                path += `&invites=${encodeURIComponent(JSON.stringify(data.invites))}`;
-            }
-
-            if (data.startWithScreensharing) {
-                path += '&screenshare=true';
-            }
-
-            if (data.startWithVideoMuted === true) {
-                path += '&startWithVideoMuted=true';
-            }
-
-            if (data.meetingDisplayName) {
-                path += `&meetingDisplayName=${encodeURIComponent(data.meetingDisplayName)}`;
-            }
-
-            this.props.history.push(path);
-
+            this.props.onGoToMeetingCommand(data);
             break;
         }
         }
-    }
-
-    /**
-     * Proceeds into a random meeting with screensharing enabled.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onRedirectToMeeting() {
-        const meetingName = getRandomMeetingName();
-
-        this.props.history.push(
-            `${ROUTES.MEETING}?location=${meetingName}&screenshare=true`);
     }
 
     /**
@@ -309,6 +277,17 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
+        onGoToMeetingCommand(data) {
+            dispatch(redirectToMeeting(data.meetingName, {
+                invites: data.invites,
+                meetingDisplayName: data.meetingDisplayName,
+                screenshare: data.startWithScreensharing === true,
+                startWithVideoMuted: data.startWithVideoMuted === true
+            }));
+        },
+        onStartScreenshareMeeting() {
+            dispatch(redirectToMeeting(getRandomMeetingName(), { screenshare: true }));
+        },
         onTimeWithinRangeUpdate(isWithinTimeRange) {
             dispatch(setOkToUpdate(isWithinTimeRange));
         }

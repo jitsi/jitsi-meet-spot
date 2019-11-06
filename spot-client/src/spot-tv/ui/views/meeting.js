@@ -23,14 +23,10 @@ import {
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
-import { isValidMeetingName, isValidMeetingUrl } from 'common/utils';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
-import {
-    disconnectAllTemporaryRemotes,
-    getDefaultMeetingDomain
-} from './../../app-state';
+import { disconnectAllTemporaryRemotes } from './../../app-state';
 import {
     KickedOverlay,
     MeetingFrame,
@@ -46,7 +42,6 @@ import {
 export class Meeting extends React.Component {
     static propTypes = {
         avatarUrl: PropTypes.string,
-        defaultMeetingDomain: PropTypes.string,
         disconnectAllTemporaryRemotes: PropTypes.func,
         displayName: PropTypes.string,
         dtmfThrottleRate: PropTypes.number,
@@ -211,7 +206,7 @@ export class Meeting extends React.Component {
     _getQueryParams() {
         const queryParams = new URLSearchParams(this.props.location.search);
         const invitesParam = queryParams.get('invites');
-        const locationParam = queryParams.get('location');
+        const location = queryParams.get('location');
         const meetingDisplayNameParam = queryParams.get('meetingDisplayName');
         const screenshareParam = queryParams.get('screenshare');
         const startWithVideoMutedParam = queryParams.get('startWithVideoMuted');
@@ -222,14 +217,6 @@ export class Meeting extends React.Component {
             invites = JSON.parse(decodeURIComponent(invitesParam));
         } catch (error) {
             logger.error('Could not parse invites param', { error });
-        }
-
-        let location;
-
-        if (isValidMeetingUrl(locationParam)) {
-            location = locationParam;
-        } else if (isValidMeetingName(locationParam)) {
-            location = `https://${this.props.defaultMeetingDomain}/${locationParam}`;
         }
 
         let meetingDisplayName;
@@ -329,7 +316,6 @@ function mapStateToProps(state) {
 
     return {
         avatarUrl: getAvatarUrl(state),
-        defaultMeetingDomain: getDefaultMeetingDomain(state),
         displayName: getDisplayName(state),
         dtmfThrottleRate: getDtmfThrottleRate(state),
         jitsiAppName: getJitsiAppName(state),
