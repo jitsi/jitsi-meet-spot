@@ -21,7 +21,7 @@ describe('Can start a meeting', () => {
 
         // Go to an invalid meeting url to prevent any meeting loaded confirmation
         // from firing and to make the cancel button display.
-        session.joinMeeting('https://meet.jit.si');
+        session.joinMeeting('https://something.invalid1234.com/meeting12323');
 
         inMeetingPage.waitForCancelMeetingToDisplay();
         inMeetingPage.cancelMeetingJoin();
