@@ -23,7 +23,7 @@ import reducers, {
 } from 'common/app-state';
 import { setPermanentPairingCode } from 'common/backend';
 import 'common/i18n';
-import { MiddlewareRegistry, ReducerRegistry } from 'common/redux';
+import { MiddlewareRegistry, ReducerRegistry, StateListenerRegistry } from 'common/redux';
 import {
     RemoteControlServiceSubscriber,
     remoteControlClient
@@ -62,6 +62,9 @@ const store = createStore(
     },
     MiddlewareRegistry.applyMiddleware(thunk)
 );
+
+// StateListenerRegistry
+StateListenerRegistry.subscribe(store);
 
 const remoteControlServiceSubscriber = new RemoteControlServiceSubscriber();
 
