@@ -40,7 +40,7 @@ import {
 } from '../backend';
 import { nativeController } from '../native-functions/native-controller';
 
-import { SPOT_TV_CONNECTION_FAILED } from './actionTypes';
+import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from './actionTypes';
 import { isValidMeetingName, isValidMeetingUrl } from '../../common/utils';
 import { getDefaultMeetingDomain } from './selectors';
 
@@ -455,6 +455,27 @@ export function generateLongLivedPairingCodeIfExpired() {
 function removeEventHandlers() {
     eventHandlerRemovers.forEach(remover => remover());
     eventHandlerRemovers = [];
+}
+
+/**
+ * @typedef {Object} MeetingSummary
+ * @property {string} meetingUrl - The full meeting's URL.
+ * @property {number} duration - Duration of the meeting in seconds.
+ * @property {string} error - Error summary.
+ * @property {string} errorCode - Error constant.
+ * @property {number} participantCount - How many participants were in the meeting(max over entire duration).
+ */
+/**
+ * Action dispatched when a meeting ends.
+ *
+ * @param {MeetingSummary} meetingSummary - Information about the just ended meeting.
+ * @returns {Object}
+ */
+export function setMeetingSummary(meetingSummary) {
+    return {
+        type: SPOT_TV_SET_MEETING_SUMMARY,
+        meetingSummary
+    };
 }
 
 /**

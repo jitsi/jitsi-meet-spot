@@ -26,7 +26,7 @@ import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 
-import { disconnectAllTemporaryRemotes } from './../../app-state';
+import { disconnectAllTemporaryRemotes, setMeetingSummary } from './../../app-state';
 import {
     KickedOverlay,
     MeetingFrame,
@@ -59,6 +59,7 @@ export class Meeting extends React.Component {
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
         preferredSpeaker: PropTypes.string,
+        processMeetingSummary: PropTypes.func,
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
@@ -246,12 +247,23 @@ export class Meeting extends React.Component {
      * current view to be exited.
      * @param {string} leaveEvent.errorCode - The string representing the cause
      * of the error.
+     * @param {string} leaveEvent.meetingSummary - A summary for the meeting.
      * @returns {void}
      */
     _onMeetingLeave(leaveEvent = {}) {
-        if (leaveEvent.error) {
-            logger.log('Leaving meeting due to error', { error: leaveEvent.error });
-            this.props.onError(leaveEvent.errorCode, leaveEvent.error);
+        const {
+            error,
+            errorCode,
+            meetingSummary
+        } = leaveEvent;
+
+        if (meetingSummary) {
+            this.props.processMeetingSummary(meetingSummary);
+        }
+
+        if (error) {
+            logger.log('Leaving meeting due to error', { error });
+            this.props.onError(errorCode, error);
         } else if (this.props.kickTemporaryRemotesOnMeetingEnd) {
             logger.log('Kicking temporary remotes');
             this.props.disconnectAllTemporaryRemotes();
@@ -364,6 +376,16 @@ function mapDispatchToProps(dispatch) {
         onError(errorCode, error) {
             dispatch(leaveMeetingWithError(errorCode));
             dispatch(addNotification('error', error));
+        },
+
+        /**
+         * Does something with the meeting summary. Currently emits an event.
+         *
+         * @param {MeetingSummary} meetingSummary - Summary for meeting that just ended.
+         * @returns {void}
+         */
+        processMeetingSummary(meetingSummary) {
+            dispatch(setMeetingSummary(meetingSummary));
         },
 
         /**

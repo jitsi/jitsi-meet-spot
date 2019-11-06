@@ -15,6 +15,10 @@ export const connectionEvents = {
     CONNECTION_FAILED: 'connection-failed'
 };
 
+export const meetingEvents = {
+    SUMMARY: 'meeting-summary'
+};
+
 export const meetingLeaveEvents = {
     UNEXPECTED: 'unexpected-meeting-end'
 };

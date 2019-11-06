@@ -94,6 +94,7 @@ export class MeetingFrame extends React.Component {
             '_onFilmstripDisplayChanged',
             '_onMeetingCommand',
             '_onMeetingJoined',
+            '_onMeetingLeave',
             '_onMeetingLeft',
             '_onMeetingLoaded',
             '_onParticipantJoined',
@@ -112,9 +113,11 @@ export class MeetingFrame extends React.Component {
 
         this._jitsiApi = null;
         this._jitsiApiHealthCheck = null;
+        this._maxParticipantCount = 1;
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
+        this._meetingStartTime = undefined;
         this.state = {
             feedbackDisplayed: false
         };
@@ -208,7 +211,7 @@ export class MeetingFrame extends React.Component {
         this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
         this._jitsiApi.addListener(
-            'readyToClose', this.props.onMeetingLeave);
+            'readyToClose', this._onMeetingLeave);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
         this._jitsiApi.addListener(
@@ -267,6 +270,27 @@ export class MeetingFrame extends React.Component {
     }
 
     /**
+     * Method called when the meeting is about to be left and the app is supposed to navigate to another path.
+     *
+     * @param {Object} leaveEvent - The leave event.
+     * @private
+     * @returns {void}
+     */
+    _onMeetingLeave(leaveEvent = { }) {
+        leaveEvent.meetingSummary = {
+            duration: this._meetingStartTime
+                ? (Date.now() - this._meetingStartTime) / 1000
+                : 0,
+            error: leaveEvent.error,
+            errorCode: leaveEvent.errorCode,
+            participantCount: this._maxParticipantCount,
+            url: this.props.meetingUrl
+        };
+
+        this.props.onMeetingLeave(leaveEvent);
+    }
+
+    /**
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
@@ -309,7 +333,7 @@ export class MeetingFrame extends React.Component {
             meetingJoined: this._meetingJoined
         });
 
-        this.props.onMeetingLeave({
+        this._onMeetingLeave({
             errorCode: 'failed-to-join',
             error: 'appEvents.meetingJoinFailed'
         });
@@ -340,7 +364,7 @@ export class MeetingFrame extends React.Component {
     _onApiHealthCheckError(reason) {
         logger.error('jitsi api health check failed', { reason });
 
-        this.props.onMeetingLeave({
+        this._onMeetingLeave({
             errorCode: reason,
             error: 'appEvents.meetingConnectionLost'
         });
@@ -374,7 +398,7 @@ export class MeetingFrame extends React.Component {
      */
     _onFeedbackSubmitted() {
         if (this.state.feedbackDisplayed) {
-            this.props.onMeetingLeave();
+            this._onMeetingLeave();
         }
     }
 
@@ -411,7 +435,7 @@ export class MeetingFrame extends React.Component {
             this._jitsiApi.executeCommand('hangup');
 
             if (data.skipFeedback) {
-                this.props.onMeetingLeave();
+                this._onMeetingLeave();
             }
 
             break;
@@ -474,6 +498,7 @@ export class MeetingFrame extends React.Component {
         logger.log('meeting joined');
 
         this._meetingJoined = true;
+        this._meetingStartTime = Date.now();
 
         this.props.onMeetingStart(this._jitsiApi);
         this._jitsiApiHealthCheck.start();
@@ -541,12 +566,19 @@ export class MeetingFrame extends React.Component {
      *
      * @param {Object} event - An object with participant information.
      * @param {string} event.id - The jitsi-meet ID of the participant.
-     * @param {string} even.displayName - The current name of the participant.
+     * @param {string} event.displayName - The current name of the participant.
      * @private
      * @returns {void}
      */
     _onParticipantJoined({ id, displayName }) {
         this._participants.set(id, displayName);
+
+        // The +1 is is for Spot TV participant which is not included
+        const newMax = this._participants.size + 1;
+
+        if (this._maxParticipantCount < newMax) {
+            this._maxParticipantCount += newMax;
+        }
 
         this._maybeToggleFilmstripVisibility();
     }

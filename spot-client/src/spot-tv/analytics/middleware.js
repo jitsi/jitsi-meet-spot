@@ -7,7 +7,7 @@ import {
 } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
-import { SPOT_TV_CONNECTION_FAILED } from '../app-state';
+import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from '../app-state';
 import {
     SPOT_TV_PAIR_TO_BACKEND_FAIL,
     SPOT_TV_PAIR_TO_BACKEND_PENDING,
@@ -18,6 +18,7 @@ import {
     backendPairingEvents,
     calendarEvents,
     connectionEvents,
+    meetingEvents,
     meetingLeaveEvents
 } from './events';
 
@@ -46,6 +47,9 @@ MiddlewareRegistry.register(() => next => action => {
         if (action.error) {
             analytics.log(meetingLeaveEvents.UNEXPECTED, { error: action.error });
         }
+        break;
+    case SPOT_TV_SET_MEETING_SUMMARY:
+        analytics.log(meetingEvents.SUMMARY, action.meetingSummary);
         break;
     case SPOT_TV_PAIR_TO_BACKEND_FAIL:
         analytics.log(backendPairingEvents.VALIDATE_FAIL);
