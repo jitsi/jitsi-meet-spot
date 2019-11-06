@@ -130,7 +130,7 @@ export class BaseRemoteControlService extends Emitter {
 
                 return this.xmppConnection.joinMuc({
                     joinAsSpot,
-                    jwt: backend ? backend.getJwt() : null,
+                    getJwt: backend ? () => backend.getJwt() : null,
                     resourceName: this._getMucResourceName(),
                     retryOnUnauthorized,
                     roomName: roomInfo.roomName,
