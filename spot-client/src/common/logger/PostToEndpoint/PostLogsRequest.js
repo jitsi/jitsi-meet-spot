@@ -93,9 +93,9 @@ export default class PostLogsRequest {
      * @private
      */
     static _getNextTimeout(retry) {
-        // 1st retry 500 - 3 seconds
-        // 2nd retry 500 - 9 seconds
-        // 3rd retry 500 - 27 seconds
+        // 1st retry 10 seconds
+        // 2nd retry 10 seconds
+        // 3rd retry 10 - 27 seconds
         return getJitterDelay(retry, /* min delay */ 10000, /* base */ 3);
     }
 
