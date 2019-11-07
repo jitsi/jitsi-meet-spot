@@ -47,9 +47,14 @@ export default class XmppConnection {
     constructor(options) {
         this.options = options;
 
-        this.initPromise = null;
+        /**
+         * A cache of attached strophe handlers. They must be cached and removed
+         * on disconnect to prevent strophe from calling them again.
+         */
+        this._connectionEventHandlers = new Set();
 
         this._hasJoinedMuc = false;
+        this.initPromise = null;
         this._participants = new Set();
 
         /**
@@ -57,12 +62,13 @@ export default class XmppConnection {
          */
         this._pendingIQRequestRejections = new Set();
 
+        this._roomLock = null;
+        this._spotStatus = { };
+
         this._onCommand = this._onCommand.bind(this);
         this._onDisconnect = this._onDisconnect.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
-
-        this._spotStatus = { };
     }
 
     /**
@@ -135,32 +141,37 @@ export default class XmppConnection {
             );
         });
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onPresence,
-            null,
-            'presence',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onPresence,
+                null,
+                'presence',
+                null,
+                null
+            )
         );
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onCommand,
-            IQ_NAMESPACES.COMMAND,
-            'iq',
-            'set',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onCommand,
+                IQ_NAMESPACES.COMMAND,
+                'iq',
+                'set',
+                null,
+                null
+            )
         );
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onMessage,
-            IQ_NAMESPACES.MESSAGE,
-            'iq',
-            'set',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onMessage,
+                IQ_NAMESPACES.MESSAGE,
+                'iq',
+                'set',
+                null,
+                null
+            )
         );
-
 
         const createJoinPromise = function () {
             return new Promise((resolve, reject) => {
@@ -193,12 +204,14 @@ export default class XmppConnection {
 
                 // This is a generic presence handler that gets all presence,
                 // including error and unavailable.
-                connection.addHandler(
-                    onSuccessConnect,
-                    null,
-                    'presence',
-                    null, // null to get passed all presence types into callback
-                    null
+                this._connectionEventHandlers.add(
+                    connection.addHandler(
+                        onSuccessConnect,
+                        null,
+                        'presence',
+                        null, // null to get passed all presence types into callback
+                        null
+                    )
                 );
             });
         }.bind(this);
@@ -259,10 +272,21 @@ export default class XmppConnection {
             ? this.xmppConnection.disconnect(event)
             : Promise.resolve();
 
+        if (this.xmppConnection) {
+            this._connectionEventHandlers.forEach(handler =>
+                this.xmppConnection.xmpp.connection.deleteHandler(handler));
+
+            this.xmppConnection.removeEventListener(
+                JitsiMeetJSProvider.get().events.connection.CONNECTION_FAILED,
+                this._onDisconnect
+            );
+        }
+
         return leavePromise
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
             .then(() => {
+                this._connectionEventHandlers.clear();
                 this._participants.clear();
                 this._pendingIQRequestRejections.forEach(reject => reject());
                 this._pendingIQRequestRejections.clear();
