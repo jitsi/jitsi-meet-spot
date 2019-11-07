@@ -2,6 +2,7 @@ import { Strophe, $iq } from 'strophe.js';
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
+import { getJitterDelay } from 'common/utils';
 
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
@@ -53,17 +54,24 @@ export default class XmppConnection {
          */
         this._connectionEventHandlers = new Set();
 
-        this._hasJoinedMuc = false;
-        this.initPromise = null;
         this._participants = new Set();
+
+        /**
+         * The last known presence. Cached so that methods may perform a partial
+         * update on it while prosody expects the full presence to be sent each
+         * time.
+         *
+         * This state is not reset with other initial state because its value
+         * may need to be kept on a silent reconnect.
+         */
+        this._spotStatus = {};
 
         /**
          * A reference to all rejection functions for IQ requests in flight.
          */
         this._pendingIQRequestRejections = new Set();
 
-        this._roomLock = null;
-        this._spotStatus = { };
+        this._resetToInitialState();
 
         this._onCommand = this._onCommand.bind(this);
         this._onDisconnect = this._onDisconnect.bind(this);
@@ -87,6 +95,9 @@ export default class XmppConnection {
      * @param {Function} options.onDisconnect - Callback to invoke when the
      * connection has been terminated without an explicit disconnect.
      * @param {string} options.roomName - The name of the MUC to join or create.
+     * @param {Function} options.shouldAttemptReconnect - Callback to invoke
+     * when the XMPP connection experiences a reconnect and is about to silently
+     * try to reconnect.
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
@@ -337,6 +348,20 @@ export default class XmppConnection {
     }
 
     /**
+     * Reset the simple instance variables stored to keep track of current
+     * xmpp state.
+     *
+     * @private
+     * @returns {void}
+     */
+    _resetToInitialState() {
+        this._hasJoinedMuc = false;
+        this.initPromise = null;
+        this._roomLock = null;
+        this.room = null;
+    }
+
+    /**
      * Updates the current muc participant's status, which should notify other
      * participants of the update. This is a fire and forget call with no ack.
      *
@@ -451,12 +476,29 @@ export default class XmppConnection {
      * @returns {void}
      */
     _onDisconnect(error, reason) {
-        logger.error('xmpp connection disconnected', {
-            error,
-            reason
-        });
+        if ((error === 'connection.droppedError' || error === 'item-not-found')
+            && this._joinOptions.shouldAttemptReconnect()) {
+            logger.warn('xmpp connection attempting silent reconnect', {
+                error,
+                reason
+            });
+            this.destroy()
+                .then(() => new Promise(resolve => {
+                    setTimeout(resolve, getJitterDelay(0, 1000));
+                }))
+                .then(() => {
+                    this._resetToInitialState();
 
-        this._joinOptions.onDisconnect(error, reason);
+                    return this.joinMuc(this._joinOptions);
+                })
+                .then(undefined, reconnectError => {
+                    setTimeout(() => {
+                        this._onDisconnect(reconnectError);
+                    }, getJitterDelay(0, 5000));
+                });
+        } else {
+            this._joinOptions.onDisconnect(error, reason);
+        }
     }
 
     /**

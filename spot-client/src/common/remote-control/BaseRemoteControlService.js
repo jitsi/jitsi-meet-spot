@@ -135,7 +135,8 @@ export class BaseRemoteControlService extends Emitter {
                     retryOnUnauthorized,
                     roomName: roomInfo.roomName,
                     roomLock: roomInfo.roomLock,
-                    onDisconnect: this._onDisconnect
+                    onDisconnect: this._onDisconnect,
+                    shouldAttemptReconnect: this._shouldXmppAttemptReconnect.bind(this)
                 });
             })
             .then(() => {
@@ -293,6 +294,21 @@ export class BaseRemoteControlService extends Emitter {
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
         }
+    }
+
+    /**
+     * Responds to Xmpp attempting to reconnect. If there are no active p2p2
+     * connections, then consider it a disconnect as there are no p2p that
+     * need to be kept alive.
+     *
+     * @returns {boolean}
+     */
+    _shouldXmppAttemptReconnect() {
+        return Boolean(
+            this._getBackend()
+                && this._p2pSignaling
+                && this._p2pSignaling.hasActiveConnection()
+        );
     }
 
     /**
