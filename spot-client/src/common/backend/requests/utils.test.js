@@ -1,5 +1,6 @@
 import * as utils from './utils';
 import { errorConstants } from './constants';
+import CalendarRequestHandler from './CalendarRequestHandler';
 
 jest.mock('common/utils', () => {
     return {
@@ -12,28 +13,32 @@ describe('utils', () => {
     const MOCK_JWT = 'mock-jwt';
     const MOCK_SERVICE_ENDPOINT = 'access-token-refresh';
 
+    let calendarRequestHandler;
+
     beforeEach(() => {
         global.fetch.resetMocks();
         global.fetch.mockClear('');
+        calendarRequestHandler = new CalendarRequestHandler('mock-cal/?tzid={tzid}');
     });
     afterEach(() => {
         global.fetch.resetMocks();
     });
 
     describe('fetchCalendarEvents', () => {
-        const MOCK_CAL_ENDPOINT = 'mock-cal/?tzid={tzid}';
-
         describe('rejects with an error string', () => {
-            it('when there is no {tzid} template in service url', () =>
-                utils.fetchCalendarEvents('mock_endpoint?tzid', MOCK_JWT)
-                    .then(
-                        () => Promise.reject('no tzid should fail'),
-                        error => expect(error.includes('tzid')).toBe(true)
-                    )
-            );
+            it('when there is no {tzid} template in service url', () => {
+                try {
+                    // eslint-disable-next-line no-new
+                    new CalendarRequestHandler('mockendpoint?tzid');
+                    fail('no {tzid} should fail');
+                } catch (error) {
+                    expect(error.message.includes('tzid'))
+                        .toBe(true);
+                }
+            });
 
             it('when no jwt is passed', () =>
-                utils.fetchCalendarEvents(MOCK_CAL_ENDPOINT)
+                calendarRequestHandler.fetchCalendarEvents()
                     .then(
                         () => Promise.reject('no jwt should fail'),
                         error => expect(error.includes('JWT')).toBe(true)
@@ -46,7 +51,7 @@ describe('utils', () => {
 
             fetch.mockResponseOnce(JSON.stringify(testCalendarResult));
 
-            return utils.fetchCalendarEvents(MOCK_CAL_ENDPOINT, MOCK_JWT)
+            return calendarRequestHandler.fetchCalendarEvents(MOCK_JWT)
                 .then(events => expect(events).toEqual(testCalendarResult));
         });
     });

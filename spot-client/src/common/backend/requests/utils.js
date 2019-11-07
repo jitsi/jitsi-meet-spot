@@ -15,7 +15,7 @@ import { errorConstants } from './constants';
  *     expires: number
  * }}
  */
-function convertToEmittedAndExpires({ emitted, expiresIn }) {
+export function convertToEmittedAndExpires({ emitted, expiresIn }) {
     const emittedMillis = Number(emitted);
 
     return {
@@ -31,7 +31,7 @@ function convertToEmittedAndExpires({ emitted, expiresIn }) {
  * @private
  * @returns {Headers}
  */
-function createHeaders(jwt) {
+export function createHeaders(jwt) {
     const headerOptions = {
         accept: 'application/json',
         'content-type': 'application/json; charset=UTF-8',
@@ -133,53 +133,6 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
     }
 
     return internalFetchWithRetry();
-}
-
-/**
- * @typedef {Object} RESTBackendCalendarEvent
- * @property {boolean} allDay
- * @property {string} calendarId
- * @property {string} description
- * @property {string} end - The end date as formatted with {@link Date.toISOString()}.
- * @property {string} eventId
- * @property {string} meetingLink
- * @property {string} start - The start date as formatted with {@link Date.toISOString()}.
- * @property {string} summary - The title ?
- * @property {boolean} updatable
- */
-/**
- * Retrieves the list of calendar events.
- *
- * @param {string} serviceEndpointUrl - The URL pointing to the REST endpoint which serves
- * the calendar events.
- * @param {string} jwt - The JWT required for authentication.
- * @returns {Promise<Array<RESTBackendCalendarEvent>>}
- */
-export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
-    let url = serviceEndpointUrl;
-
-    if (!url.includes('{tzid}')) {
-        return Promise.reject(`Missing {tzid} template in the URL: ${url}`);
-    }
-
-    if (!jwt) {
-        return Promise.reject('JWT is required to request calendar events');
-    }
-
-    // eslint-disable-next-line new-cap
-    url = url.replace('{tzid}', Intl.DateTimeFormat().resolvedOptions().timeZone);
-
-    const requestOptions = {
-        headers: createHeaders(jwt),
-        method: 'GET',
-        mode: 'cors'
-    };
-
-    return fetchWithRetry({
-        operationName: 'get calendar events',
-        requestOptions,
-        url
-    });
 }
 
 /**

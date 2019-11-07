@@ -3,12 +3,12 @@ import { logger } from 'common/logger';
 
 import { persistence } from '../utils';
 
-import { errorConstants } from './constants';
+import { errorConstants } from './requests/constants';
 import {
     fetchRoomInfo,
     refreshAccessToken,
     registerDevice
-} from './utils';
+} from './requests/utils';
 
 const ONE_SECOND = 1000;
 const ONE_MINUTE = 60 * ONE_SECOND;

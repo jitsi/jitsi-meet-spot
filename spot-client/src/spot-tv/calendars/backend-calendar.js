@@ -1,5 +1,5 @@
 import { calendarTypes } from 'common/app-state';
-import { fetchCalendarEvents } from 'common/backend';
+import { CalendarRequestHandler } from 'common/backend';
 
 /**
  * The calendar's implementation based on REST API.
@@ -14,7 +14,7 @@ export default {
      * @returns {Promise} Resolves when the backend API has loaded.
      */
     initialize(config) {
-        this.url = config.SERVICE_URL;
+        this.calendarRequestHandler = new CalendarRequestHandler(config.SERVICE_URL);
 
         return Promise.resolve();
     },
@@ -25,7 +25,7 @@ export default {
      * @returns {Promise<Array<Object>>}
      */
     getCalendar({ jwt }) {
-        return fetchCalendarEvents(this.url, jwt)
+        return this.calendarRequestHandler.fetchCalendarEvents(jwt)
             .then(response => {
                 const events = response && response.events;
 
