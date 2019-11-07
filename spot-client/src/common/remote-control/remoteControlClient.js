@@ -286,7 +286,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise<Object>}
      */
     _sendCommand(command, data) {
-        if (this._p2pSignaling.isReady()) {
+        if (this._p2pSignaling && this._p2pSignaling.isReady()) {
             return this._p2pSignaling.sendCommand(command, data);
         }
 
