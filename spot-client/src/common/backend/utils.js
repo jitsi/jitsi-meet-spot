@@ -62,6 +62,14 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
     let retry = 0;
 
     /**
+     * This is the value passed to {@link getJitterDelay} as the retry counter. The variable was introduced, in order to
+     * jump immediately into the highest jitter delay range on 5xx error. Otherwise it will follow the retry counter.
+     *
+     * @type {number}
+     */
+    let delayLevel = 0;
+
+    /**
      * A private function used to perform the fetch request while keeping access
      * the retry count through a closure.
      *
@@ -96,6 +104,11 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
 
                     const { status: httpStatusCode } = response;
 
+                    // Bump the delay to the max level immediately on 5xx to give backend a breath
+                    if (httpStatusCode >= 500 && httpStatusCode < 600) {
+                        delayLevel = maxRetries;
+                    }
+
                     if (httpStatusCode === 401
                         || (httpStatusCode === 400 && json?.messageKey === 'pairing.code.not.found')) {
                         reject(errorConstants.NOT_AUTHORIZED);
@@ -120,9 +133,15 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                     }
 
                     retry = retry + 1;
-                    const timeout = getJitterDelay(retry, 500, 2);
 
-                    logger.log(`${operationName} retry: ${retry} delay: ${timeout}`);
+                    // Stop increasing the delay level if it's been already maxed out on 5xx error.
+                    if (delayLevel + 1 <= maxRetries) {
+                        delayLevel += 1;
+                    }
+
+                    const timeout = getJitterDelay(delayLevel, 500, 3);
+
+                    logger.log(`${operationName} retry: ${retry} delay level: ${delayLevel} delay: ${timeout}`);
 
                     setTimeout(() => {
                         internalFetchWithRetry()
