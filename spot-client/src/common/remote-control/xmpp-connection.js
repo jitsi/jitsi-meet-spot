@@ -237,6 +237,7 @@ export default class XmppConnection {
             .then(() => this._createMuc(roomName, resourceName))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
+                    this._isXmppConnectionActive = true;
                     room.addEventListener('xmpp.muc_joined', resolve);
                 });
             })
@@ -305,6 +306,15 @@ export default class XmppConnection {
     }
 
     /**
+     * Returns whether or not the internal XMPP connection is active.
+     *
+     * @returns {boolean}
+     */
+    isConnected() {
+        return this._isXmppConnectionActive;
+    }
+
+    /**
      * Creates a MUC for the Spot and remote controllers to join to communicate
      * with each other.
      *
@@ -357,6 +367,7 @@ export default class XmppConnection {
     _resetToInitialState() {
         this._hasJoinedMuc = false;
         this.initPromise = null;
+        this._isXmppConnectionActive = false;
         this._roomLock = null;
         this.room = null;
     }
@@ -476,6 +487,8 @@ export default class XmppConnection {
      * @returns {void}
      */
     _onDisconnect(error, reason) {
+        this._isXmppConnectionActive = false;
+
         if ((error === 'connection.droppedError' || error === 'item-not-found')
             && this._joinOptions.shouldAttemptReconnect()) {
             logger.warn('xmpp connection attempting silent reconnect', {

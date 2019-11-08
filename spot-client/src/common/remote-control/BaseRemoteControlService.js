@@ -2,6 +2,7 @@ import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { generate8Characters } from 'common/utils';
 
+import P2PSignalingBase from './P2PSignalingBase';
 import {
     CLIENT_TYPES,
     CONNECTION_EVENTS,
@@ -178,6 +179,17 @@ export class BaseRemoteControlService extends Emitter {
         }, {
             iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
         });
+
+        this._p2pSignaling.addListener(
+            P2PSignalingBase.DATA_CHANNEL_READY_UPDATE,
+            () => {
+                const hasActiveP2PConnection = this._p2pSignaling?.hasActiveConnection();
+                const hasActiveXmppConnection = this.xmppConnection?.isConnected();
+
+                if (!hasActiveP2PConnection && !hasActiveXmppConnection) {
+                    this._onDisconnect('no-active-signaling');
+                }
+            });
     }
 
     /**
