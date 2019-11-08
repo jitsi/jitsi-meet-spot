@@ -92,6 +92,7 @@ class SpotUser {
      * @returns {void}
      */
     stop() {
+        this.disconnectRemoteControlService();
         this.driver.url('about:blank');
     }
 }
