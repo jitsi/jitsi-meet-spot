@@ -45,9 +45,8 @@
             visibility: hidden;
         }
 
-        .larger-sub .sub {
-            font-size: 12px;
-            line-height: 12px;
+        &.larger-sub .sub {
+            font-size: 22px;
         }
 
         &.active,
