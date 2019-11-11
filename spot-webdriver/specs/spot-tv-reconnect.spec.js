@@ -34,6 +34,7 @@ describe('The reconnect logic', () => {
 
             remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
         });
+
         it('Spot TV will reconnect, but temporary remote will go back to the join code entry page', () => {
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
@@ -54,9 +55,7 @@ describe('The reconnect logic', () => {
             // Spot TV needs more time, because of the MUC JID conflict
             tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
         });
-    });
 
-    describe('when prosody disconnects', () => {
         it('does not disconnect the TV from the meeting', () => {
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
