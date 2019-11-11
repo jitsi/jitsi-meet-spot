@@ -1,4 +1,4 @@
-import { AsYouType } from 'libphonenumber-js';
+import { formatIncompletePhoneNumber, parsePhoneNumberFromString } from 'libphonenumber-js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -16,6 +16,54 @@ import {
 
 import { findCountryCodeForLanguage } from './LanguageToCountryCode';
 import StatelessDialPad from './StatelessDialPad';
+
+/**
+ * @typedef {Object} ParsedPhoneNumber
+ * @property {string} country - The country code of the parsed phone number.
+ * @property {?string} number - The final phone number in E.164 format. The value is defined only if the entered text
+ * makes for a valid phone number.
+ * @property {?string} formatted - Pretty formatted phone number text if the parsing library provides any for
+ * the current input.
+ */
+/**
+ * Tries to parse a phone number out of the given input string(even if not complete yet).
+ *
+ * @param {string} typedValue - The text to be parsed as a phone number.
+ * @param {string} defaultCountryCode - The default country code to be used in case it is not possible to detect from
+ * the entered phone number. Some countries may have region specific way for dialing international numbers and that
+ * is based on the default country.
+ * @returns {ParsedPhoneNumber|undefined}
+ */
+function parsePhoneNumber(typedValue, defaultCountryCode) {
+    const phoneNumber = parsePhoneNumberFromString(typedValue, defaultCountryCode);
+
+    if (!phoneNumber) {
+        return undefined;
+    }
+
+    const result = {
+        country: phoneNumber.country,
+        number: phoneNumber.isPossible() ? phoneNumber.number : undefined
+    };
+
+    // The order in which formats are pushed is important, because of the select strategy. The first value that will
+    // match the input text after stripped down of formatting characters will be used in the UI for the presentation.
+    const formatted = [];
+    const incompleteFormat = formatIncompletePhoneNumber(typedValue);
+
+    // Special case for incomplete formatting. Most of the time it is equal to the input, so include it in proposals
+    // only if adds any actual formatting.
+    if (removeFormatting(incompleteFormat) !== incompleteFormat) {
+        formatted.push(incompleteFormat);
+    }
+
+    formatted.push(phoneNumber.formatNational());
+    formatted.push(phoneNumber.formatInternational());
+
+    result.formatted = formatted.find(f => removeFormatting(f) === typedValue);
+
+    return result;
+}
 
 // eslint-disable-next-line jsdoc/require-description-complete-sentence
 /**
@@ -38,11 +86,11 @@ function removeFormatting(formattedPhoneNumber) {
  */
 export class DialPad extends React.Component {
     static defaultProps = {
-        countryCode: 'US'
+        initialCountryCode: 'US'
     };
 
     static propTypes = {
-        countryCode: PropTypes.string,
+        initialCountryCode: PropTypes.string,
         onCountryCodeSelected: PropTypes.func,
         onPhoneAuthorizeFailed: PropTypes.func,
         onSubmit: PropTypes.func,
@@ -61,6 +109,14 @@ export class DialPad extends React.Component {
         this.state = {
             authorizePromise: undefined,
 
+            /**
+             * This is the country code that is passed to the parser as a default country. It's a hint for the parser
+             * about the current country in case it's not explicitly specified in the phone number text.
+             *
+             * @type {string}
+             */
+            defaultCountryCode: props.initialCountryCode,
+
             showCountryCodePicker: false,
 
             /**
@@ -74,60 +130,29 @@ export class DialPad extends React.Component {
              */
             formattedPhone: '',
 
-            selectedCountryCode: props.countryCode
+            /**
+             * This is the output phone number in E.164 format. The value is set only if the currently typed text makes
+             * for a callable phone number according to the parsing library.
+             *
+             * @type {undefined|string}
+             * @private
+             */
+            outputPhoneNumber: undefined,
+
+            /**
+             * This is the country code that has been detected after parsing the currently entered phone number
+             * text(even if not complete). This value is passed to the country code selector as the value to be
+             * displayed in the UI as the currently selected country.
+             *
+             * @type {string}
+             */
+            parsedCountryCode: props.initialCountryCode
         };
 
-        this._createAsYouType(props.countryCode);
         this._onChange = this._onChange.bind(this);
         this._onCountryCodeSelect = this._onCountryCodeSelect.bind(this);
         this._onToggleCountryCodePicker = this._onToggleCountryCodePicker.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
-    }
-
-    /**
-     * Initializes the {@code AsYouType} utility for phone number fomratting with the given country code.
-     *
-     * @param {string} countryCode - ISO 3166-1 alpha-2 country code.
-     * @private
-     * @returns {void}
-     */
-    _createAsYouType(countryCode) {
-        logger.log('Set dial pad country code', { countryCode });
-
-        this._asYouType = new AsYouType(countryCode);
-
-        if (!this._asYouType.country) {
-            this._asYouType = new AsYouType(DialPad.defaultProps.countryCode);
-
-            logger.error('Invalid country code - falling back to default', { countryCode });
-        }
-    }
-
-    /**
-     * Navigates away from the view {@code RemoteControl} when no longer
-     * connected to a Spot-TV.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate(prevProps) {
-        if (prevProps.countryCode !== this.props.countryCode) {
-            this._createAsYouType(this.props.countryCode);
-
-            // Clear any value typed so far
-            this._setTypedValue('');
-        }
-    }
-
-    /**
-     * Returns E.164 formatted phone number if a valid phone number has been typed in.
-     *
-     * @returns {?E164Number}
-     * @private
-     */
-    _getPhoneNumber() {
-        const phoneNumber = this._asYouType.getNumber();
-
-        return phoneNumber && phoneNumber.isPossible() && phoneNumber.number;
     }
 
     /**
@@ -140,12 +165,12 @@ export class DialPad extends React.Component {
         return (
             <StatelessDialPad
                 dialingInProgress = { typeof this.state.authorizePromise !== 'undefined' }
-                disableCallButton = { typeof this._getPhoneNumber() !== 'string' }
+                disableCallButton = { typeof this.state.outputPhoneNumber !== 'string' }
                 onChange = { this._onChange }
                 onCountryCodeSelect = { this._onCountryCodeSelect }
                 onSubmit = { this._onSubmit }
                 onToggleCountryCodePicker = { this._onToggleCountryCodePicker }
-                selectedCountryCode = { this.state.selectedCountryCode }
+                selectedCountryCode = { this.state.parsedCountryCode }
                 showCountryCodePicker = { this.state.showCountryCodePicker }
                 value = { this.state.formattedPhone } />
         );
@@ -182,12 +207,11 @@ export class DialPad extends React.Component {
      */
     _onCountryCodeSelect(code) {
         this.setState({
-            selectedCountryCode: code,
+            defaultCountryCode: code,
+            parsedCountryCode: code,
             showCountryCodePicker: false
         },
         () => {
-            this._createAsYouType(code);
-
             // Clear any value typed so far
             this._setTypedValue('');
 
@@ -218,7 +242,7 @@ export class DialPad extends React.Component {
             return;
         }
 
-        const phoneNumber = this._getPhoneNumber();
+        const phoneNumber = this.state.outputPhoneNumber;
 
         if (!phoneNumber) {
             // This "should never happen" because the button is supposed to be disabled when the number is not valid
@@ -259,27 +283,12 @@ export class DialPad extends React.Component {
      * @returns {void}
      */
     _setTypedValue(typedValue) {
-        this._asYouType.reset();
-
-        let formattedPhone = this._asYouType.input(typedValue);
-
-        let selectedCountryCode = this.state.selectedCountryCode;
-
-        // If entered characters are removed by the "as you type" it means they do not add up to a valid phone number.
-        // In this case skip the formatting and display the typed value directly.
-        if (removeFormatting(formattedPhone) !== typedValue) {
-            formattedPhone = typedValue;
-        } else if (this._asYouType.country && this._asYouType.country !== this.state.selectedCountryCode) {
-            logger.log('Dial pad detected another country code', {
-                selectedCountryCode,
-                detectedCountryCode: this._asYouType.country
-            });
-            selectedCountryCode = this._asYouType.country;
-        }
+        const parsedPhone = parsePhoneNumber(typedValue, this.state.defaultCountryCode);
 
         this.setState({
-            formattedPhone,
-            selectedCountryCode,
+            formattedPhone: parsedPhone?.formatted ?? typedValue,
+            outputPhoneNumber: parsedPhone?.number,
+            parsedCountryCode: parsedPhone?.country ?? this.state.defaultCountryCode,
             typedValue
         });
     }
@@ -333,7 +342,7 @@ function mapStateToProps(state) {
     const mostRecentCountryCode = getMostRecentCountryCode(state);
 
     return {
-        countryCode: countryCode
+        initialCountryCode: countryCode
             || mostRecentCountryCode
             || findCountryCodeForLanguage(navigator.language),
         phoneAuthorizeServiceUrl

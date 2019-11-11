@@ -52,7 +52,7 @@
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",
         "lib-quiet-js": "github:virtuacoplenny/quiet-js#lenny/rewrite",
-        "libphonenumber-js": "1.7.25",
+        "libphonenumber-js": "1.7.26",
         "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",
         "lodash.isequal": "4.5.0",
