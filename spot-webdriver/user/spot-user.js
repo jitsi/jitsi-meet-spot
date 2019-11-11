@@ -75,6 +75,10 @@ class SpotUser {
      */
     setNetworkOffline() {
         this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+
+        // Setting network conditions stops future traffic but does not kill
+        // existing connections, so explicitly stop any active P2P connections.
+        this.stopP2P();
     }
 
     /**
@@ -94,6 +98,38 @@ class SpotUser {
     stop() {
         this.disconnectRemoteControlService();
         this.driver.url('about:blank');
+    }
+
+    /**
+     * Stops any active peer-to-peer connections.
+     *
+     * @returns {void}
+     */
+    stopP2P() {
+        // to be implemented
+        this.driver.execute(rcsName => {
+            window.spot[rcsName]._p2pSignaling.stop();
+        }, this._internalRemoteControlServiceName);
+    }
+
+    /**
+     * Waits for the peer-to-peer between a TV and remotes to be useable.
+     *
+     * @returns {void}
+     */
+    waitForP2PConnectionEstablished() {
+        this.driver.waitUntil(
+            () => this.driver.execute(rcsName => {
+                // browser context - you may not access client or console
+                try {
+                    return window.spot[rcsName]._p2pSignaling.hasActiveConnection();
+                } catch (e) {
+                    return false;
+                }
+            }, this._internalRemoteControlServiceName),
+            10000,
+            `p2p not established with ${this._internalRemoteControlServiceName}`
+        );
     }
 }
 
