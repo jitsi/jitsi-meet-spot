@@ -489,7 +489,9 @@ export default class XmppConnection {
     _onDisconnect(error, reason) {
         this._isXmppConnectionActive = false;
 
-        if ((error === 'connection.droppedError' || error === 'item-not-found')
+        if ((error === 'connection.droppedError'
+            || error === 'item-not-found'
+            || error === 'conflict')
             && this._joinOptions.shouldAttemptReconnect()) {
             logger.warn('xmpp connection attempting silent reconnect', {
                 error,
