@@ -74,11 +74,11 @@ class SpotUser {
      * @returns {void}
      */
     setNetworkOffline() {
-        this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+        this.stopSignalingConnection();
 
         // Setting network conditions stops future traffic but does not kill
         // existing connections, so explicitly stop any active P2P connections.
-        this.stopP2P();
+        this.stopP2PConnection();
     }
 
     /**
@@ -105,11 +105,36 @@ class SpotUser {
      *
      * @returns {void}
      */
-    stopP2P() {
-        // to be implemented
+    stopP2PConnection() {
         this.driver.execute(rcsName => {
-            window.spot[rcsName]._p2pSignaling.stop();
+            try {
+                window.spot[rcsName]._p2pSignaling.stop();
+            } catch (e) {
+                // Error means p2p is already destroyed.
+            }
         }, this._internalRemoteControlServiceName);
+    }
+
+    /**
+     * Stops messages from being sent to or received from the signaling service.
+     *
+     * @returns {void}
+     */
+    stopSignalingConnection() {
+        this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+
+        this.driver.waitUntil(
+            () => this.driver.execute(rcsName => {
+                // browser context - you may not access client or console
+                try {
+                    return !window.spot[rcsName].xmppConnection.isConnected();
+                } catch (e) {
+                    return true;
+                }
+            }, this._internalRemoteControlServiceName),
+            60000,
+            `signaling still connected with ${this._internalRemoteControlServiceName}`
+        );
     }
 
     /**
@@ -129,6 +154,30 @@ class SpotUser {
             }, this._internalRemoteControlServiceName),
             10000,
             `p2p not established with ${this._internalRemoteControlServiceName}`
+        );
+    }
+
+    /**
+     * Polls for the XMPP connection to join the control MUC.
+     *
+     * @returns {void}
+     */
+    waitForSignalingConnectionEstablished() {
+        this.driver.waitUntil(
+            () => this.driver.execute(rcsName => {
+                // browser context - you may not access client or console
+                try {
+                    const internalXmppConnection = window.spot[rcsName].xmppConnection;
+
+
+                    return internalXmppConnection.isConnected()
+                        && internalXmppConnection._hasJoinedMuc;
+                } catch (e) {
+                    return false;
+                }
+            }, this._internalRemoteControlServiceName),
+            120000,
+            `signaling not established with ${this._internalRemoteControlServiceName}`
         );
     }
 }
