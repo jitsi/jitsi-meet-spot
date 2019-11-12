@@ -41,10 +41,22 @@ module.exports = {
     MEETING_JOIN_WAIT: 15000,
 
     /**
+     * The amount of time to wait for a Spot-Remote and Spot-TV to create a
+     * peer-to-peer connection to each other.
+     */
+    P2P_ESTABLISHED_WAIT: 10000,
+
+    /**
      * The maximum amount of time, in milliseconds, for a Spot-Remote to wait
      * for the Spot-TV to update its state after a command is sent.
      */
     REMOTE_COMMAND_WAIT: 10000,
+
+    /**
+     * The max amount to wait for the signaling connection (XMPP) to go to a
+     * disconnected state.
+     */
+    SIGNALING_DISCONNECT_TIMEOUT: 60000,
 
     /**
      * The direct URL to visit to for a browser to act as a Spot-TV.

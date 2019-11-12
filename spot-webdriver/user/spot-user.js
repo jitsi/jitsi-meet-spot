@@ -1,4 +1,5 @@
 const LoadingScreen = require('../page-objects/loading-screen');
+const constants = require('../constants');
 
 const _OFFLINE_NETWORK_CONDITIONS = {
     offline: true,
@@ -132,7 +133,7 @@ class SpotUser {
                     return true;
                 }
             }, this._internalRemoteControlServiceName),
-            60000,
+            constants.SIGNALING_DISCONNECT_TIMEOUT,
             `signaling still connected with ${this._internalRemoteControlServiceName}`
         );
     }
@@ -152,7 +153,7 @@ class SpotUser {
                     return false;
                 }
             }, this._internalRemoteControlServiceName),
-            10000,
+            constants.P2P_ESTABLISHED_WAIT,
             `p2p not established with ${this._internalRemoteControlServiceName}`
         );
     }
@@ -176,7 +177,7 @@ class SpotUser {
                     return false;
                 }
             }, this._internalRemoteControlServiceName),
-            120000,
+            constants.MAX_PAGE_LOAD_WAIT,
             `signaling not established with ${this._internalRemoteControlServiceName}`
         );
     }
