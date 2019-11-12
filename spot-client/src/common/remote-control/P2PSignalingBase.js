@@ -61,13 +61,10 @@ export default class P2PSignalingBase extends Emitter {
      * @returns {boolean}
      */
     hasActiveConnection() {
-        for (const peerConnection of this._peerConnections.values()) {
-            if (peerConnection.isDataChannelActive()) {
-                return true;
-            }
-        }
-
-        return false;
+        return Boolean(
+            Array.from(this._peerConnections.values()).find(
+                peerConnection => peerConnection.isDataChannelActive())
+        );
     }
 
     /**
