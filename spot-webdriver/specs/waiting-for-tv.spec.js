@@ -41,6 +41,8 @@ describe('The "waiting for the Spot TV to connect" message', () => {
         const remote = session.getSpotRemote();
 
         remote.setNetworkOffline();
+        remote.stopP2PConnection();
+
         remote.getLoadingScreen().waitForLoadingToAppear();
 
         session.getSpotTV().stop();

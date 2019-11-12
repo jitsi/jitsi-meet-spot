@@ -21,6 +21,20 @@ describe('The reconnect logic', () => {
         tv.getMeetingPage().waitForMeetingJoined();
     }
 
+    /**
+     * Helper for making sure there is no connection, xmpp or p2p, to spot
+     * signaling.
+     *
+     * @param {SpotUser} spotUser - The Spot-TV or Spot-Remote instance which
+     * should disconnect from signaling.
+     * @returns {void}
+     */
+    function disconnectFromCommunicationPlane(spotUser) {
+        spotUser.setNetworkOffline();
+        spotUser.waitForSignalingConnectionStopped();
+        spotUser.stopP2PConnection();
+    }
+
     describe('when the internet goes offline', () => {
         it('in the backend mode Spot TV and permanent remote will both reconnect', () => {
             if (!session.isBackendEnabled()) {
@@ -35,8 +49,8 @@ describe('The reconnect logic', () => {
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
 
-            tv.setNetworkOffline();
-            remote.setNetworkOffline();
+            disconnectFromCommunicationPlane(tv);
+            disconnectFromCommunicationPlane(remote);
 
             tv.getLoadingScreen().waitForReconnectingToAppear();
             remote.getLoadingScreen().waitForLoadingToAppear();
@@ -59,8 +73,8 @@ describe('The reconnect logic', () => {
 
             session.connectRemoteToTV();
 
-            tv.setNetworkOffline();
-            remote.setNetworkOffline();
+            disconnectFromCommunicationPlane(tv);
+            disconnectFromCommunicationPlane(remote);
 
             tv.getLoadingScreen().waitForReconnectingToAppear();
 
@@ -79,7 +93,7 @@ describe('The reconnect logic', () => {
 
             const tv = session.getSpotTV();
 
-            tv.setNetworkOffline();
+            disconnectFromCommunicationPlane(tv);
 
             tv.getLoadingScreen().waitForReconnectingToAppear();
             expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
@@ -104,7 +118,9 @@ describe('The reconnect logic', () => {
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
 
-            tv.stopSignalingConnection();
+            // Kill the network but allow P2P to persist.
+            tv.setNetworkOffline();
+            tv.waitForSignalingConnectionStopped();
 
             // Execute audio mute to test if the peer-to-peer connection is
             // active

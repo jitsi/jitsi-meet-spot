@@ -75,11 +75,7 @@ class SpotUser {
      * @returns {void}
      */
     setNetworkOffline() {
-        this.stopSignalingConnection();
-
-        // Setting network conditions stops future traffic but does not kill
-        // existing connections, so explicitly stop any active P2P connections.
-        this.stopP2PConnection();
+        this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
     }
 
     /**
@@ -114,28 +110,6 @@ class SpotUser {
                 // Error means p2p is already destroyed.
             }
         }, this._internalRemoteControlServiceName);
-    }
-
-    /**
-     * Stops messages from being sent to or received from the signaling service.
-     *
-     * @returns {void}
-     */
-    stopSignalingConnection() {
-        this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
-
-        this.driver.waitUntil(
-            () => this.driver.execute(rcsName => {
-                // browser context - you may not access client or console
-                try {
-                    return !window.spot[rcsName].xmppConnection.isConnected();
-                } catch (e) {
-                    return true;
-                }
-            }, this._internalRemoteControlServiceName),
-            constants.SIGNALING_DISCONNECT_TIMEOUT,
-            `signaling still connected with ${this._internalRemoteControlServiceName}`
-        );
     }
 
     /**
@@ -181,6 +155,27 @@ class SpotUser {
             `signaling not established with ${this._internalRemoteControlServiceName}`
         );
     }
+
+    /**
+     * Checks for signaling to become disconnected.
+     *
+     * @returns {void}
+     */
+    waitForSignalingConnectionStopped() {
+        this.driver.waitUntil(
+            () => this.driver.execute(rcsName => {
+                // browser context - you may not access client or console
+                try {
+                    return !window.spot[rcsName].xmppConnection.isConnected();
+                } catch (e) {
+                    return true;
+                }
+            }, this._internalRemoteControlServiceName),
+            constants.SIGNALING_DISCONNECT_TIMEOUT,
+            `signaling still connected with ${this._internalRemoteControlServiceName}`
+        );
+    }
+
 }
 
 module.exports = SpotUser;
