@@ -56,6 +56,18 @@ export default class P2PSignalingBase extends Emitter {
     }
 
     /**
+     * Finds if any connections are currently alive.
+     *
+     * @returns {boolean}
+     */
+    hasActiveConnection() {
+        return Boolean(
+            Array.from(this._peerConnections.values()).find(
+                peerConnection => peerConnection.isDataChannelActive())
+        );
+    }
+
+    /**
      * Creates and initializes new {@link PeerConnection} instance for given remote address.
      *
      * @param {string} remoteAddress - The remote address string.

@@ -2,6 +2,7 @@ import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { generate8Characters } from 'common/utils';
 
+import P2PSignalingBase from './P2PSignalingBase';
 import {
     CLIENT_TYPES,
     CONNECTION_EVENTS,
@@ -130,12 +131,13 @@ export class BaseRemoteControlService extends Emitter {
 
                 return this.xmppConnection.joinMuc({
                     joinAsSpot,
-                    jwt: backend ? backend.getJwt() : null,
+                    getJwt: backend ? () => backend.getJwt() : null,
                     resourceName: this._getMucResourceName(),
                     retryOnUnauthorized,
                     roomName: roomInfo.roomName,
                     roomLock: roomInfo.roomLock,
-                    onDisconnect: this._onDisconnect
+                    onDisconnect: this._onDisconnect,
+                    shouldAttemptReconnect: this._shouldXmppAttemptReconnect.bind(this)
                 });
             })
             .then(() => {
@@ -177,6 +179,17 @@ export class BaseRemoteControlService extends Emitter {
         }, {
             iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
         });
+
+        this._p2pSignaling.addListener(
+            P2PSignalingBase.DATA_CHANNEL_READY_UPDATE,
+            () => {
+                const hasActiveP2PConnection = this._p2pSignaling?.hasActiveConnection();
+                const hasActiveXmppConnection = this.xmppConnection?.isConnected();
+
+                if (!hasActiveP2PConnection && !hasActiveXmppConnection) {
+                    this._onDisconnect('no-active-signaling');
+                }
+            });
     }
 
     /**
@@ -293,6 +306,21 @@ export class BaseRemoteControlService extends Emitter {
                 .then(() => this.emit(
                     SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT, reason));
         }
+    }
+
+    /**
+     * Responds to Xmpp attempting to reconnect. If there are no active p2p2
+     * connections, then consider it a disconnect as there are no p2p that
+     * need to be kept alive.
+     *
+     * @returns {boolean}
+     */
+    _shouldXmppAttemptReconnect() {
+        return Boolean(
+            this._getBackend()
+                && this._p2pSignaling
+                && this._p2pSignaling.hasActiveConnection()
+        );
     }
 
     /**

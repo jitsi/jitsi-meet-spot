@@ -19,6 +19,8 @@ class SpotTV extends SpotUser {
         this.adminPage = new AdminPage(this.driver);
         this.calendarPage = new CalendarPage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
+
+        this._internalRemoteControlServiceName = 'remoteControlServer';
     }
 
     /**

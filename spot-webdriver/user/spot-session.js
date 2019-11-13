@@ -30,6 +30,8 @@ class SpotSession {
         const remoteControlPage = this.spotRemote.getRemoteControlPage();
 
         remoteControlPage.waitForVisible();
+
+        this.spotRemote.waitForP2PConnectionEstablished();
     }
 
     /**
@@ -136,6 +138,8 @@ class SpotSession {
         // The join code page once feed with the pairing code will redirect to remote-control.
         // It can't go directly to the remote control page, because the join code page starts the connection.
         this.spotRemote.getRemoteControlPage().waitForVisible();
+
+        this.spotRemote.waitForP2PConnectionEstablished();
     }
 
     /**

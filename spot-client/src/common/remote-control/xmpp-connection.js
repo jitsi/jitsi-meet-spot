@@ -2,6 +2,7 @@ import { Strophe, $iq } from 'strophe.js';
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
+import { getJitterDelay } from 'common/utils';
 
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
@@ -47,21 +48,35 @@ export default class XmppConnection {
     constructor(options) {
         this.options = options;
 
-        this.initPromise = null;
+        /**
+         * A cache of attached strophe handlers. They must be cached and removed
+         * on disconnect to prevent strophe from calling them again.
+         */
+        this._connectionEventHandlers = new Set();
 
-        this._hasJoinedMuc = false;
         this._participants = new Set();
+
+        /**
+         * The last known presence. Cached so that methods may perform a partial
+         * update on it while prosody expects the full presence to be sent each
+         * time.
+         *
+         * This state is not reset with other initial state because its value
+         * may need to be kept on a silent reconnect.
+         */
+        this._spotStatus = {};
 
         /**
          * A reference to all rejection functions for IQ requests in flight.
          */
         this._pendingIQRequestRejections = new Set();
 
+        this._resetToInitialState();
+
         this._onCommand = this._onCommand.bind(this);
+        this._onDisconnect = this._onDisconnect.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
-
-        this._spotStatus = { };
     }
 
     /**
@@ -70,8 +85,8 @@ export default class XmppConnection {
      * @param {Object} options - Information necessary for creating the MUC.
      * @param {boolean} options.joinAsSpot - Whether or not this connection is
      * being made by a Spot client.
-     * @param {string} options.jwt - The JWT token to be used with the XMPP
-     * connection.
+     * @param {Function} options.getJwt - Callback to get the JWT token to be
+     * used with the XMPP connection.
      * @param {string} [options.resourceName] - The resource part of the MUC JID to be used(optional).
      * @param {boolean} [options.retryOnUnauthorized] - Whether or not to retry
      * connection without a roomLock if an unauthorized error occurs.
@@ -80,29 +95,33 @@ export default class XmppConnection {
      * @param {Function} options.onDisconnect - Callback to invoke when the
      * connection has been terminated without an explicit disconnect.
      * @param {string} options.roomName - The name of the MUC to join or create.
+     * @param {Function} options.shouldAttemptReconnect - Callback to invoke
+     * when the XMPP connection experiences a reconnect and is about to silently
+     * try to reconnect.
      * @returns {Promise<string>} - The promise resolves with the connection's
      * jid.
      */
     joinMuc(options) {
         const {
             joinAsSpot,
-            jwt,
+            getJwt,
             resourceName,
             retryOnUnauthorized,
             roomLock,
-            roomName,
-            onDisconnect
+            roomName
         } = options;
 
         if (this.initPromise) {
             return this.initPromise;
         }
 
+        this._joinOptions = options;
+
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         this.xmppConnection = new JitsiMeetJS.JitsiConnection(
             null,
-            jwt,
+            getJwt && getJwt(),
             {
                 p2p: {
                     useStunTurn: true
@@ -121,7 +140,7 @@ export default class XmppConnection {
                 () => {
                     this.xmppConnection.addEventListener(
                         connectionEvents.CONNECTION_FAILED,
-                        onDisconnect);
+                        this._onDisconnect);
 
                     resolve();
                 }
@@ -133,32 +152,37 @@ export default class XmppConnection {
             );
         });
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onPresence,
-            null,
-            'presence',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onPresence,
+                null,
+                'presence',
+                null,
+                null
+            )
         );
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onCommand,
-            IQ_NAMESPACES.COMMAND,
-            'iq',
-            'set',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onCommand,
+                IQ_NAMESPACES.COMMAND,
+                'iq',
+                'set',
+                null,
+                null
+            )
         );
 
-        this.xmppConnection.xmpp.connection.addHandler(
-            this._onMessage,
-            IQ_NAMESPACES.MESSAGE,
-            'iq',
-            'set',
-            null,
-            null
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onMessage,
+                IQ_NAMESPACES.MESSAGE,
+                'iq',
+                'set',
+                null,
+                null
+            )
         );
-
 
         const createJoinPromise = function () {
             return new Promise((resolve, reject) => {
@@ -191,12 +215,14 @@ export default class XmppConnection {
 
                 // This is a generic presence handler that gets all presence,
                 // including error and unavailable.
-                connection.addHandler(
-                    onSuccessConnect,
-                    null,
-                    'presence',
-                    null, // null to get passed all presence types into callback
-                    null
+                this._connectionEventHandlers.add(
+                    connection.addHandler(
+                        onSuccessConnect,
+                        null,
+                        'presence',
+                        null, // null to get passed all presence types into callback
+                        null
+                    )
                 );
             });
         }.bind(this);
@@ -211,6 +237,7 @@ export default class XmppConnection {
             .then(() => this._createMuc(roomName, resourceName))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
+                    this._isXmppConnectionActive = true;
                     room.addEventListener('xmpp.muc_joined', resolve);
                 });
             })
@@ -257,14 +284,34 @@ export default class XmppConnection {
             ? this.xmppConnection.disconnect(event)
             : Promise.resolve();
 
+        if (this.xmppConnection) {
+            this._connectionEventHandlers.forEach(handler =>
+                this.xmppConnection.xmpp.connection.deleteHandler(handler));
+
+            this.xmppConnection.removeEventListener(
+                JitsiMeetJSProvider.get().events.connection.CONNECTION_FAILED,
+                this._onDisconnect
+            );
+        }
+
         return leavePromise
             .catch(error =>
                 logger.error('XmppConnection error on disconnect', { error }))
             .then(() => {
+                this._connectionEventHandlers.clear();
                 this._participants.clear();
                 this._pendingIQRequestRejections.forEach(reject => reject());
                 this._pendingIQRequestRejections.clear();
             });
+    }
+
+    /**
+     * Returns whether or not the internal XMPP connection is active.
+     *
+     * @returns {boolean}
+     */
+    isConnected() {
+        return this._isXmppConnectionActive;
     }
 
     /**
@@ -308,6 +355,21 @@ export default class XmppConnection {
         // The 'roomLock' argument is optional on the lib-jitsi-meet side and it's fine to pass
         // undefined.
         return this.room.join(roomLock);
+    }
+
+    /**
+     * Reset the simple instance variables stored to keep track of current
+     * xmpp state.
+     *
+     * @private
+     * @returns {void}
+     */
+    _resetToInitialState() {
+        this._hasJoinedMuc = false;
+        this.initPromise = null;
+        this._isXmppConnectionActive = false;
+        this._roomLock = null;
+        this.room = null;
     }
 
     /**
@@ -414,6 +476,44 @@ export default class XmppConnection {
         this.room.connection.send(ack);
 
         return true;
+    }
+
+    /**
+     * Callback invoked when an established xmpp connection has become disconnected.
+     *
+     * @param {string} error - Represents the type of the error.
+     * @param {string} reason - Represents what caused the error.
+     * @private
+     * @returns {void}
+     */
+    _onDisconnect(error, reason) {
+        this._isXmppConnectionActive = false;
+
+        if ((error === 'connection.droppedError'
+            || error === 'item-not-found'
+            || error === 'conflict')
+            && this._joinOptions.shouldAttemptReconnect()) {
+            logger.warn('xmpp connection attempting silent reconnect', {
+                error,
+                reason
+            });
+            this.destroy()
+                .then(() => new Promise(resolve => {
+                    setTimeout(resolve, getJitterDelay(0, 1000));
+                }))
+                .then(() => {
+                    this._resetToInitialState();
+
+                    return this.joinMuc(this._joinOptions);
+                })
+                .then(undefined, reconnectError => {
+                    setTimeout(() => {
+                        this._onDisconnect(reconnectError);
+                    }, getJitterDelay(0, 5000));
+                });
+        } else {
+            this._joinOptions.onDisconnect(error, reason);
+        }
     }
 
     /**

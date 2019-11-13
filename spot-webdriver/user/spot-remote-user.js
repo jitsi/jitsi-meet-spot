@@ -25,6 +25,8 @@ class SpotRemote extends SpotUser {
         this.notifications = new Notifications(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
         this.stopSharePage = new StopSharePage(this.driver);
+
+        this._internalRemoteControlServiceName = 'remoteControlClient';
     }
 
     /**
