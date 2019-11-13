@@ -122,7 +122,7 @@ class BluetoothD {
      */
     setStatus(status) {
         this.status = DEVICE_STATES[status];
-        logger.info(`BluetoothD status updated to ${this.status}`);
+        logger.info(`BluetoothD status updated to ${status} (${this.status || 'unknown'})`);
     }
 
     /**
