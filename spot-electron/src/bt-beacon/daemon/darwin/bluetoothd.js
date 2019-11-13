@@ -1,8 +1,20 @@
+const os = require('os');
 const XpcConnection = require('xpc-connect');
 
 const { logger } = require('../../../logger');
 
+const osRelease = parseFloat(os.release());
 const DEVICE_STATES = [ 'Unknown', 'Resetting', 'Unsupported', 'Unauthorized', 'Powered Off', 'Powered On' ];
+
+let deviceCommands;
+
+switch (osRelease) {
+case 19:
+    deviceCommands = require('./commands.catalina');
+    break;
+default:
+    deviceCommands = require('./commands.mojave');
+}
 
 /**
  * Implements a platform specific daemon to interact with the BLE hardware in the computer/device.
@@ -24,23 +36,23 @@ class BluetoothD {
             const messageArguments = event.kCBMsgArgs;
 
             switch (event.kCBMsgId) {
-            case 4:
+            case deviceCommands.statusUpdate:
                 // Device status update
                 this.setStatus(messageArguments.kCBMsgArgState);
                 break;
-            case 28:
+            case deviceCommands.beaconActivated:
                 // Beacon activation result
                 this.setAdvertisingStatus(!messageArguments.kCBMsgArgResult);
                 break;
-            case 29:
+            case deviceCommands.beaconDeactivated:
                 // Beacon deactivation result
                 this.setAdvertisingStatus(Boolean(messageArguments.kCBMsgArgResult));
                 break;
-            case 38:
+            case deviceCommands.ready:
                 // Device ready
                 this.readyPromise && this.readyPromise();
                 break;
-            case 67:
+            case deviceCommands.connectionRequest:
                 // Connection request. We don't need this.
                 break;
             default:
@@ -58,7 +70,7 @@ class BluetoothD {
         return new Promise(resolve => {
             this.readyPromise = resolve;
             this.xpcConnection.setup();
-            this.sendMessage(1, {
+            this.sendMessage(deviceCommands.initializeDevice, {
                 kCBMsgArgName: `jitsi-bt-beacon-${(new Date()).getTime()}`,
                 kCBMsgArgOptions: {
                     kCBInitOptionShowPowerAlert: 1
@@ -132,7 +144,7 @@ class BluetoothD {
             const minorHex = minor.padStart(4, '0');
             const beaconKey = `${uuidHex}${majorHex}${minorHex}c5`;
 
-            this.sendMessage(17, {
+            this.sendMessage(deviceCommands.activateBeacon, {
                 kCBAdvDataAppleBeaconKey: Buffer.from(beaconKey, 'hex')
             });
         });
@@ -147,7 +159,7 @@ class BluetoothD {
         return new Promise(resolve => {
             if (this.advertisingStatus) {
                 this.advertisingStatusUpdatedCallback = resolve;
-                this.sendMessage(18, undefined);
+                this.sendMessage(deviceCommands.deactivateBeacon, undefined);
             } else {
                 resolve(false);
             }
