@@ -10,7 +10,10 @@
             "entitlementsInherit": "entitlements.mac.plist",
             "gatekeeperAssess": false,
             "hardenedRuntime": true,
-            "target": ["dmg", "zip"]
+            "target": [
+                "dmg",
+                "zip"
+            ]
         },
         "publish": {
             "provider": "github",
