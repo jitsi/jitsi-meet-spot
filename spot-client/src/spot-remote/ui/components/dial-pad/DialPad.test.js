@@ -65,13 +65,13 @@ describe('DialPad', () => {
     test('deleting numbers', () => {
         typePhoneNumber('222');
 
-        dialPad.find('.backspace').simulate('click');
+        dialPad.find('.backspace').simulate('mousedown');
         expect(dialPad.find('input').instance().value).toBe('22');
 
-        dialPad.find('.backspace').simulate('click');
+        dialPad.find('.backspace').simulate('mousedown');
         expect(dialPad.find('input').instance().value).toBe('2');
 
-        dialPad.find('.backspace').simulate('click');
+        dialPad.find('.backspace').simulate('mousedown');
         expect(dialPad.find('input').instance().value).toBe('');
     });
 
