@@ -8,6 +8,8 @@ fi
 DOCKER_REPO=103425057857.dkr.ecr.us-west-2.amazonaws.com/jitsi/spot-client
 
 cd spot-client
+rm -rf node_modules
+rm -rf dist
 npm install
 export SPOT_CLIENT_VERSION=$TAG
 npm run build:prod
