@@ -50,6 +50,7 @@ export class StatelessDialPad extends React.Component {
         this._countryCodePickerWrapperRef = React.createRef();
         this._countryCodePickerTriggerRef = React.createRef();
 
+        this._onBackspaceTouchEnd = this._onBackspaceTouchEnd.bind(this);
         this._onDeleteLastCharacter = this._onDeleteLastCharacter.bind(this);
         this._onDialButtonClick = this._onDialButtonClick.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
@@ -160,7 +161,9 @@ export class StatelessDialPad extends React.Component {
                                 this.props.value
                                     && <button
                                         className = 'backspace'
-                                        onClick = { this._onDeleteLastCharacter }
+                                        onMouseDown = { this._onDeleteLastCharacter }
+                                        onTouchEnd = { this._onBackspaceTouchEnd }
+                                        onTouchStart = { this._onDeleteLastCharacter }
                                         tabIndex = { -1 }
                                         type = 'button'>
                                         <Backspace />
@@ -180,6 +183,19 @@ export class StatelessDialPad extends React.Component {
                 </div>
             </form>
         );
+    }
+
+    /**
+     * Fixes a bug around backspace click handling.
+     *
+     * @param {Object} event - - The React SyntheticEvent for when the user stops touching the window.
+     * @private
+     * @returns {void}
+     */
+    _onBackspaceTouchEnd(event) {
+        // Use preventDefault to avoid an extra call to onMouseDown.
+        // See https://github.com/facebook/react/issues/9809#issuecomment-507640770
+        event.preventDefault();
     }
 
     /**
