@@ -7,6 +7,7 @@ import modal from './modal/reducer';
 import notifications from './notifications/reducer';
 import pairedRemotes from './paired-remotes/reducer';
 import remoteControlService from './remote-control-service/reducer';
+import route from './route/reducer';
 import setup from './setup/reducer';
 import spotTv from './spot-tv/reducer';
 import wiredScreenshare from './wired-screenshare/reducer';
@@ -21,6 +22,7 @@ const reducers = {
     notifications,
     pairedRemotes,
     remoteControlService,
+    route,
     setup,
     spotTv,
     wiredScreenshare
@@ -37,6 +39,7 @@ export * from './modal/actions';
 export * from './notifications/actions';
 export * from './paired-remotes/actions';
 export * from './remote-control-service/actions';
+export * from './route/actions';
 export * from './setup/actions';
 export * from './setup/action-types';
 export * from './spot-tv/actions';
@@ -57,7 +60,7 @@ export * from './notifications/selectors';
 export * from './paired-remotes/selectors';
 export * from './remote-control-service/selectors';
 export * from './modal/selectors';
-export * from './route/actions';
+export * from './route/selectors';
 export * from './setup/selectors';
 export * from './spot-tv/selectors';
 export * from './wired-screenshare/selectors';
