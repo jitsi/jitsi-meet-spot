@@ -13,13 +13,12 @@ import {
     hasCalendarBeenFetched,
     isSetupComplete
 } from 'common/app-state';
-import { UpdateTimeRangeChecker } from 'common/auto-update';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { Clock, LoadingIcon, ScheduledMeetings, FeedbackOpener } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
 
-import { redirectToMeeting, setOkToUpdate } from '../../app-state';
+import { redirectToMeeting } from '../../app-state';
 import {
     JoinInfo,
     SettingsButton,
@@ -102,7 +101,6 @@ export class Home extends React.Component {
      */
     render() {
         const {
-            enableAutoUpdate,
             isSetupComplete: _isSetupComplete,
             spotRoomName
         } = this.props;
@@ -110,9 +108,6 @@ export class Home extends React.Component {
         return (
             <WiredScreenshareChangeListener
                 onDeviceConnected = { this.props.onStartScreenshareMeeting }>
-                { enableAutoUpdate
-                    && <UpdateTimeRangeChecker
-                        onTimeWithinRangeUpdate = { this.props.onTimeWithinRangeUpdate } /> }
                 <div className = 'spot-home'>
                     <Clock />
                     <div className = 'room-name'>
@@ -287,9 +282,6 @@ function mapDispatchToProps(dispatch) {
         },
         onStartScreenshareMeeting() {
             dispatch(redirectToMeeting(getRandomMeetingName(), { screenshare: true }));
-        },
-        onTimeWithinRangeUpdate(isWithinTimeRange) {
-            dispatch(setOkToUpdate(isWithinTimeRange));
         }
     };
 }

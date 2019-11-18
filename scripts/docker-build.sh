@@ -13,6 +13,9 @@ rm -rf dist
 npm install
 export SPOT_CLIENT_VERSION=$TAG
 npm run build:prod
+
+echo "{ \"spotClientVersion\": \"$TAG\" }" > ./dist/spot-client-version.json
+
 $(aws ecr get-login --no-include-email)
 docker build -t $DOCKER_REPO:$TAG .
 docker push $DOCKER_REPO:$TAG
