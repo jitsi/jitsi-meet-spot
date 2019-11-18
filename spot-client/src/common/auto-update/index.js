@@ -1,2 +1,5 @@
-export { default as UpdateTimeRangeChecker } from './UpdateTimeRangeChecker';
-export { default as WebUpdateChecker } from './WebUpdateChecker';
+export * from './actionTypes';
+export * from './selectors';
+
+import './AutoUpdateController';
+import './reducer';

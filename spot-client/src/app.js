@@ -37,6 +37,10 @@ import {
 import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
 import { SpotTvRestrictedRoute } from './spot-tv/routing';
 
+// Enable auto updates
+import 'spot-remote/auto-update';
+import 'spot-tv/auto-update';
+
 // This import enables Spot-TV specific analytics
 import 'spot-tv/analytics';
 

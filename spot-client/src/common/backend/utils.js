@@ -46,6 +46,19 @@ function createHeaders(jwt) {
 }
 
 /**
+ * Retrieves spot-client version from  the current deployment.
+ *
+ * @param {string} versionFileUrl - The URL pointing to JSON version file.
+ * @returns {Promise<string>}
+ */
+export function fetchSpotClientVersion(versionFileUrl) {
+    return fetchWithRetry({
+        url: versionFileUrl,
+        operationName: 'fetch spot client version'
+    }).then(json => json?.spotClientVersion);
+}
+
+/**
  * Sends HTTP request using {@code fetch} with retries on network and server errors.
  *
  * @param {Object} fetchOptions - Options related to the fetch request.

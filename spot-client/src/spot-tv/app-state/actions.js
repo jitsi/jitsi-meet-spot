@@ -17,7 +17,6 @@ import {
     setJwt,
     setTenant
 } from 'common/app-state';
-import { WebUpdateChecker } from 'common/auto-update';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled, setPermanentPairingCode } from 'common/backend';
@@ -38,7 +37,6 @@ import {
     setLongLivedPairingCodeInfo,
     SpotTvBackendService
 } from '../backend';
-import { nativeController } from '../native-functions/native-controller';
 
 import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from './actionTypes';
 import { isValidMeetingName, isValidMeetingUrl } from '../../common/utils';
@@ -501,31 +499,11 @@ function spotTvConnectionFailed({ error, willRetry, ...otherFlags }) {
  * Prepares and executes a page reload to force Spot-TV to download the latest
  * assets. This reload is to get any bundle updates and to clear any memory leaks.
  *
- * @returns {Promise}
- */
-function updateSpotTVSource() {
-    return remoteControlServer.disconnect()
-        .then(() => windowHandler.reload());
-}
-
-/**
- * Action dispatched when it is OK(or not) to do an update meaning there's no ongoing meeting in progress and
- * the current time falls within the pre-configured time range.
- *
- * @param {boolean} isOkToUpdate - Whether or not now it's OK to do an update.
  * @returns {Function}
  */
-export function setOkToUpdate(isOkToUpdate) {
-    return () => {
-        // Let the spot-electron know that it's okay(or not) to do an update if available.
-        nativeController.sendMessage('spot-electron/auto-updater', { updateAllowed: isOkToUpdate });
-
-        if (isOkToUpdate && WebUpdateChecker.isWebUpdateAvailable()) {
-            return updateSpotTVSource();
-        }
-
-        return Promise.resolve();
-    };
+export function updateSpotTVSource() {
+    return () => remoteControlServer.disconnect()
+        .then(() => windowHandler.reload());
 }
 
 /**
