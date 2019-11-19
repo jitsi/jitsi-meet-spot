@@ -92,7 +92,7 @@
         "docs": "jsdoc -c ./jsdoc.config.js",
         "lint": "eslint .",
         "start:dev": "webpack-dev-server",
-        "test": "TZ=America/Los_Angeles jest"
+        "test": "jest"
     },
     "version": "0.0.1"
 }
