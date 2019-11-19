@@ -18,7 +18,12 @@ import {
     setIsNightlyReloadTime,
     updateWebSource
 } from './actions';
-import { isOkToUpdate, isTimeForNightlyReload, isWebUpdateAvailable } from './selectors';
+import {
+    _getLastLoadTime,
+    isOkToUpdate,
+    isTimeForNightlyReload,
+    isWebUpdateAvailable
+} from './selectors';
 import TimeRangePoller from './TimeRangePoller';
 
 /**
@@ -26,16 +31,14 @@ import TimeRangePoller from './TimeRangePoller';
  *
  * @type {number}
  */
-const NIGHTLY_RELOAD_POLL_INTERVAL = 30000;
+export const NIGHTLY_RELOAD_POLL_INTERVAL = 30000;
 
 /**
  * How often the check for web source update happens.
  *
  * @type {number}
  */
-const WEB_UPDATE_POLL_INTERVAL = 30000;
-
-const lastLoadTime = date.getCurrentDate();
+export const WEB_UPDATE_POLL_INTERVAL = 30000;
 
 const allowedRoutes = [];
 
@@ -69,10 +72,10 @@ StateListenerRegistry.register((state, prevSelection) => {
 
     return isEqual(newSelection, prevSelection) ? prevSelection : newSelection;
 // eslint-disable-next-line no-shadow
-}, ({ isInNightlyUpdatesRange, isUpdateAllowed, isWebUpdateAvailable }, { dispatch }) => {
+}, ({ isNightlyReloadTime, isUpdateAllowed, isWebUpdateAvailable }, { dispatch }) => {
     dispatch(setOkToUpdate(isUpdateAllowed));
 
-    if (isUpdateAllowed && (isWebUpdateAvailable || isInNightlyUpdatesRange)) {
+    if (isUpdateAllowed && (isWebUpdateAvailable || isNightlyReloadTime)) {
         dispatch(updateWebSource());
     }
 });
@@ -91,6 +94,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
             TimeRangePoller.TIME_WITHIN_RANGE_UPDATE,
             isTimeWithinRange => {
                 // It's time for a nightly reload if it's been more than 1 day since the last load time
+                const lastLoadTime = _getLastLoadTime(getState());
+
                 dispatch(setIsNightlyReloadTime(isTimeWithinRange && !date.isDateForToday(lastLoadTime)));
             }
         );
