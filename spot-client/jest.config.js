@@ -1,3 +1,4 @@
+/* global process */
 process.env.TZ = 'UTC';
 
 module.exports = {
