@@ -3,9 +3,10 @@ import { fetchSpotClientVersion } from 'common/backend';
 import { logger } from '../logger';
 
 import {
+    SET_IS_NIGHTLY_RELOAD_TIME,
+    SET_LAST_LOAD_TIME,
     SET_OK_TO_UPDATE,
     SET_WEB_UPDATE_AVAILABLE,
-    SET_IS_NIGHTLY_RELOAD_TIME,
     UPDATE_WEB_SOURCE
 } from './actionTypes';
 
@@ -17,7 +18,7 @@ import {
 export function checkForWebUpdateAvailable() {
     return (dispatch, getState) => fetchSpotClientVersion('./dist/spot-client-version.json').then(newVersion => {
         const currentVersion = getSpotClientVersion(getState());
-        const isUpdateAvailable = newVersion && newVersion !== currentVersion;
+        const isUpdateAvailable = Boolean(newVersion) && newVersion !== currentVersion;
 
         isUpdateAvailable && logger.debug(`Retrieved Spot client version: ${newVersion}`, {
             newVersion,
@@ -45,6 +46,23 @@ export function setIsNightlyReloadTime(isNightlyReloadTime) {
     return {
         type: SET_IS_NIGHTLY_RELOAD_TIME,
         isNightlyReloadTime
+    };
+}
+
+/**
+ * Used in the tests to override the lats load time.
+ *
+ * @param {number} _lastLoadTime - The web source load time as timestamp.
+ * @returns {{
+ *     type: SET_LAST_LOAD_TIME,
+ *     _lastLoadTime: number
+ * }}
+ * @private
+ */
+export function _setLastLoadTime(_lastLoadTime) {
+    return {
+        type: SET_LAST_LOAD_TIME,
+        _lastLoadTime: new Date(_lastLoadTime)
     };
 }
 
