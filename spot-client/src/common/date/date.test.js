@@ -34,3 +34,9 @@ describe('getEndOfDate', () => {
         expect(calculatedDate.getMinutes()).toBe(59);
     });
 });
+
+describe('the date in tests', () => {
+    test('should be UTC', () => {
+        expect(new Date().getTimezoneOffset()).toBe(0);
+    });
+});

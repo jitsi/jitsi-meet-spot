@@ -12,7 +12,7 @@ describe('TimeRangePoller', () => {
         callback = jest.fn();
 
         clock = lolex.install(); // Sets time to 0
-        clock.setSystemTime(1561219220000); // June 22, 2019 9am Los Angeles
+        clock.setSystemTime(1574154000000); // Tuesday, 19 November 2019 09:00:00 UTC
 
         timeRangePoller = new TimeRangePoller({
             endHour: 11,
