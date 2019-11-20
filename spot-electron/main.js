@@ -1,3 +1,5 @@
+require('electron-is-dev') && require('dotenv').config();
+
 const { app } = require('electron');
 
 app.setLoginItemSettings({
