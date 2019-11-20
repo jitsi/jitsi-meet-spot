@@ -30,7 +30,7 @@ const levels = Object.keys(require('jitsi-meet-logger').levels).map(l => l.toLow
 const LOG_CACHE_SIZE = 1000;
 
 /**
- * A class
+ * A class.
  */
 class SpotClientLogTransport {
     /**

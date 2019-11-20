@@ -71,7 +71,7 @@ class BluetoothD {
             this.readyPromise = resolve;
             this.xpcConnection.setup();
             this.sendMessage(deviceCommands.initializeDevice, {
-                kCBMsgArgName: `jitsi-bt-beacon-${(new Date()).getTime()}`,
+                kCBMsgArgName: `jitsi-bt-beacon-${Date.now()}`,
                 kCBMsgArgOptions: {
                     kCBInitOptionShowPowerAlert: 1
                 },

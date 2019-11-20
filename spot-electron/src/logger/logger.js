@@ -13,6 +13,7 @@ const jitsiLogger = require('jitsi-meet-logger').getLogger('spot-electron', unde
  * log: 3
  * warn: 4
  * error: 5
+ * .
  */
 module.exports = {
     /**
