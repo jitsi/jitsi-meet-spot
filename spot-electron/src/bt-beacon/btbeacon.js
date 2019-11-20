@@ -7,7 +7,7 @@ const { joinCodeToVersion } = require('../utils');
 const daemon = require('./daemon');
 
 /**
- * Represents a soft-beacon emulated by the computer running Spot TV
+ * Represents a soft-beacon emulated by the computer running Spot TV.
  */
 class BTBeacon {
     remoteJoinCode;

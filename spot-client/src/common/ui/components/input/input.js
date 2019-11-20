@@ -28,8 +28,8 @@ export default function Input(props) {
 
     return (
         <MaterialInput
-            className = { className }
             classes = { classes }
+            className = { className }
             data-qa-id = { props['data-qa-id'] }
             fullWidth = { true }
             id = { props.id }

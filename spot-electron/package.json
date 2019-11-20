@@ -23,17 +23,17 @@
     },
     "description": "",
     "devDependencies": {
-        "babel-eslint": "10.0.1",
+        "babel-eslint": "10.0.3",
         "devtron": "1.4.0",
         "electron": "5.0.3",
         "electron-builder": "20.43.0",
         "electron-notarize": "0.1.1",
         "electron-rebuild": "1.8.5",
-        "eslint": "5.16.0",
+        "eslint": "6.6.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
-        "eslint-plugin-flowtype": "3.10.1",
-        "eslint-plugin-import": "2.17.3",
-        "eslint-plugin-jsdoc": "7.2.3"
+        "eslint-plugin-flowtype": "4.4.1",
+        "eslint-plugin-import": "2.18.2",
+        "eslint-plugin-jsdoc": "18.1.4"
     },
     "dmg": {
         "sign": false

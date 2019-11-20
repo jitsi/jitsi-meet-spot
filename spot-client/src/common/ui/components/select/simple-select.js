@@ -68,12 +68,12 @@ export default class SimpleSelect extends React.Component {
                 className = 'select'
                 variant = 'filled'>
                 <Select
-                    MenuProps = { menuProps }
-                    className = 'select-element'
                     classes = { classes }
+                    className = 'select-element'
                     data-qa-id = { this.props.qaId }
                     displayEmpty = { true }
                     input = { this._renderInput() }
+                    MenuProps = { menuProps }
                     onChange = { this._onChange }
                     value = { isValuePresent ? this.props.value : '' }
                     variant = 'filled'>
