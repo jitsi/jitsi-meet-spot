@@ -100,14 +100,13 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
-     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
-     * commands.
+     * Initializes P2P signaling instance.
      *
      * @protected
      * @returns {void}
      */
-    _createP2PSignalingConnection() {
-        super._createP2PSignalingConnection();
+    _createP2PSignaling() {
+        super._createP2PSignaling();
 
         this._p2pSignaling.addListener(
                 P2PSignalingClient.SPOT_TV_STATUS_UPDATE,
@@ -571,7 +570,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
         }
 
         if (!this._p2pSignaling) {
-            this._createP2PSignalingConnection();
+            this._createP2PSignaling();
 
             // Client initiates the P2P signaling session
             this._p2pSignaling.start(this._getSpotId());
