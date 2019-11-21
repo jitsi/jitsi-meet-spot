@@ -10,7 +10,7 @@ import { PeerConnection } from 'common/webrtc';
  */
 /**
  * @typedef {Object} P2PSignalingOptions
- * @property {RTCIceServer[]} iceServers - An array of TURN/STUN servers. See
+ * @property {Function} getIceServers - A function which returns an array of TURN/STUN servers. See
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/RTCIceServer/urls} for more details about the format.
  */
 /**
@@ -80,7 +80,12 @@ export default class P2PSignalingBase extends Emitter {
             throw new Error(`P2P signaling connection already exists for: ${remoteAddress}`);
         }
 
-        const peerConnection = new PeerConnection(remoteAddress, this._options.iceServers);
+        const iceServers = this._options.getIceServers();
+        const peerConnection = new PeerConnection(remoteAddress, iceServers);
+
+        if (!iceServers || !iceServers.length) {
+            logger.warn('Initialized P2P without ICE servers');
+        }
 
         this._peerConnections.set(remoteAddress, peerConnection);
 
