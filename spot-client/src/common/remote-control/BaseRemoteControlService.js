@@ -149,13 +149,12 @@ export class BaseRemoteControlService extends Emitter {
     }
 
     /**
-     * Creates a P2P signaling connection that if successfully established will be used to send/receive remote control
-     * commands.
+     * Initializes P2P signaling instance.
      *
      * @protected
      * @returns {void}
      */
-    _createP2PSignalingConnection() {
+    _createP2PSignaling() {
         logger.log('Will try to establish P2P signaling channel');
 
         const P2PSignalingType = this._getP2PSignalingType();
