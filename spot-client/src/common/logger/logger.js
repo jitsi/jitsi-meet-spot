@@ -57,7 +57,7 @@ export default {
      * Logs a debug level message.
      *
      * @param {string} message - The main string to be logged as debug level msg.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     debug(message, context) {
@@ -68,7 +68,7 @@ export default {
      * Logs an error level message. Should be used for critical errors.
      *
      * @param {string} message - The main string to be logged as an error.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     error(message, context) {
@@ -80,7 +80,7 @@ export default {
      *
      * @param {string} message - The main string to be logged as essentially an
      * information level log.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     info(message, context) {
@@ -93,7 +93,7 @@ export default {
      *
      * @param {string} message - The main string to be logged as essentially an
      * information level log.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     log(message, context) {
@@ -104,7 +104,7 @@ export default {
      * Logs a trace level message. Should be used for debug messages with the biggest level of details.
      *
      * @param {string} message - The main string to be logged as a trace.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     trace(message, context) {
@@ -116,7 +116,7 @@ export default {
      * indicate recovery from errors.
      *
      * @param {string} message - The main string to be logged a warning.
-     * @param {Object} context - Additional information to be logged.
+     * @param {Object} [context] - Additional information to be logged.
      * @returns {void}
      */
     warn(message, context) {
