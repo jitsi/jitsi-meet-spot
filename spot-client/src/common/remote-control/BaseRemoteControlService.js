@@ -169,7 +169,7 @@ export class BaseRemoteControlService extends Emitter {
                 ).catch(error => logger.error('Failed to send p2p message', { error }));
             }
         }, {
-            iceServers: this.xmppConnection.getJitsiConnection().xmpp.connection.jingle.p2pIceConfig.iceServers
+            getIceServers: () => this._getP2PIceServers()
         });
 
         this._p2pSignaling.addListener(
@@ -229,6 +229,16 @@ export class BaseRemoteControlService extends Emitter {
 
         // Append a random part to allow multiple remotes per type join one XMPP MUC.
         return `${type}-${generate8Characters()}`;
+    }
+
+    /**
+     * Returns the ICE servers to be used to establish the P2P signaling connection.
+     *
+     * @returns {?Array<RTCIceServer>}
+     * @private
+     */
+    _getP2PIceServers() {
+        return this.xmppConnection?.getJitsiConnection()?.xmpp?.connection?.jingle?.p2pIceConfig?.iceServers;
     }
 
     /**
