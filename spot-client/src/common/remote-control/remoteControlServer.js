@@ -179,21 +179,6 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
-     * Processing for {@link MESSAGES.REMOTE_CONTROL_P2P} message which are used to exchange offer/answer and ICE
-     * candidates needed to establish a P2P signaling channel.
-     *
-     * @protected
-     * @returns {void}
-     */
-    _processRemoteControlP2PMessage(...args) {
-        if (!this._p2pSignaling) {
-            this._createP2PSignalingConnection();
-        }
-
-        super._processRemoteControlP2PMessage(...args);
-    }
-
-    /**
      * Method invoked to generate a new join code for instances of
      * {@code RemoteControlClient} to pair with it.
      *
