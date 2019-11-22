@@ -315,6 +315,15 @@ export default class XmppConnection {
     }
 
     /**
+     * Returns whether or not the internal XMPP connection is being reconnected.
+     *
+     * @returns {boolean}
+     */
+    isReconnecting() {
+        return Boolean(this._silentReconnectPromise) || Boolean(this.initPromise);
+    }
+
+    /**
      * Creates a MUC for the Spot and remote controllers to join to communicate
      * with each other.
      *
@@ -487,6 +496,10 @@ export default class XmppConnection {
      * @returns {void}
      */
     _onDisconnect(error, reason) {
+        if (this._silentReconnectPromise) {
+            logger.error('Silent reconnect promise leak - onDisconnect executed twice?');
+        }
+
         this._isXmppConnectionActive = false;
 
         if ((error === 'connection.droppedError'
@@ -497,7 +510,7 @@ export default class XmppConnection {
                 error,
                 reason
             });
-            this.destroy()
+            this._silentReconnectPromise = this.destroy()
                 .then(() => new Promise(resolve => {
                     setTimeout(resolve, getJitterDelay(0, 1000));
                 }))
@@ -506,8 +519,12 @@ export default class XmppConnection {
 
                     return this.joinMuc(this._joinOptions);
                 })
-                .then(undefined, reconnectError => {
+                .then(() => {
+                    this._silentReconnectPromise = undefined;
+                    logger.log('xmpp connection silent reconnect complete');
+                }, reconnectError => {
                     setTimeout(() => {
+                        this._silentReconnectPromise = undefined;
                         this._onDisconnect(reconnectError);
                     }, getJitterDelay(0, 5000));
                 });
