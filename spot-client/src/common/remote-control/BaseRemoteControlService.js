@@ -87,6 +87,9 @@ export class BaseRemoteControlService extends Emitter {
             onPresenceReceived: this._onPresenceReceived
         });
 
+        !this._p2pSignaling || logger.error('Leaked P2PSignaling instance');
+        this._createP2PSignaling();
+
         this.xmppConnectionPromise
             = this._createConnectionPromise(this._options)
                     .catch(error => this.disconnect().then(() => Promise.reject(error)));
@@ -155,8 +158,6 @@ export class BaseRemoteControlService extends Emitter {
      * @returns {void}
      */
     _createP2PSignaling() {
-        logger.log('Will try to establish P2P signaling channel');
-
         const P2PSignalingType = this._getP2PSignalingType();
 
         this._p2pSignaling = new P2PSignalingType({

@@ -501,17 +501,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
     _onPresenceReceived({ from, localUpdate, state, type, unavailableReason }) {
         if (type === 'unavailable') {
             if (this._getSpotId() === from) {
-                logger.log('Spot TV left the MUC');
-                if (this._p2pSignaling) {
-                    this._p2pSignaling.stop();
-                    this._p2pSignaling = null;
-                }
-                if (this._getBackend()) {
-                    // With backend it is okay for remote to sit in the MUC without Spot TV connected.
-                    this._resetSpotTvState();
-                } else {
-                    this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
-                }
+                this._onSpotTvLeftMuc(from);
             } else if (localUpdate && unavailableReason === 'kicked') {
                 this._onDisconnect(CONNECTION_EVENTS.CLOSED_BY_SERVER);
             }
@@ -534,6 +524,49 @@ export class RemoteControlClient extends BaseRemoteControlService {
         }
 
         this._onSpotTvStatusReceived(from, state);
+
+        if (type === 'join') {
+            this._onSpotTvJoinedMuc(from);
+        }
+    }
+
+    /**
+     * Called when Spot TV leaves the MUC.
+     *
+     * @param {string} spotTvAddress - The Spot TV address.
+     * @private
+     * @returns {void}
+     */
+    _onSpotTvLeftMuc(spotTvAddress) {
+        logger.log('Spot TV left the MUC', { spotTvAddress });
+
+        if (this._getBackend()) {
+            // With backend it is okay for remote to sit in the MUC without Spot TV connected.
+            if (!this._p2pSignaling?.getConnectionForAddress(spotTvAddress)?.isDataChannelActive()) {
+                // If there's no active P2P channel then reset the TV state. This result in the waiting for Spot TV.
+                this._resetSpotTvState();
+            }
+        } else {
+            this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
+        }
+    }
+
+    /**
+     * Called when Spot TV joins the MUC.
+     *
+     * @param {string} spotTvAddress - The Spot TV address.
+     * @private
+     * @returns {void}
+     */
+    _onSpotTvJoinedMuc(spotTvAddress) {
+        logger.log('Spot TV joined the MUC', { spotTvAddress });
+
+        // FIXME this doesn't check if the data channels is active. P2P reconnect logic will be added as next step.
+        if (this._p2pSignaling && !this._p2pSignaling.getConnectionForAddress(spotTvAddress)) {
+            // Client initiates the P2P signaling session
+            logger.log('Will try to establish P2P connection with Spot TV');
+            this._p2pSignaling.start(spotTvAddress);
+        }
     }
 
     /**
@@ -567,13 +600,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
         if (this._waitForSpotTvTimeout) {
             clearTimeout(this._waitForSpotTvTimeout);
             this._waitForSpotTvTimeout = null;
-        }
-
-        if (!this._p2pSignaling) {
-            this._createP2PSignaling();
-
-            // Client initiates the P2P signaling session
-            this._p2pSignaling.start(this._getSpotId());
         }
 
         this.emit(
