@@ -503,6 +503,7 @@ export default class XmppConnection {
         this._isXmppConnectionActive = false;
 
         if ((error === 'connection.droppedError'
+            || error === 'connection.otherError'
             || error === 'item-not-found'
             || error === 'conflict')
             && this._joinOptions.shouldAttemptReconnect()) {
