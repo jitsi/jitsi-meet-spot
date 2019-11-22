@@ -549,16 +549,6 @@ export default class XmppConnection {
     }
 
     /**
-     * The identifier for the the muc. Returns the full jid, which has
-     * user@domain.
-     *
-     * @returns {string}
-     */
-    getRoomBareJid() {
-        return this.room.roomjid.split('/')[0];
-    }
-
-    /**
      * Removes a specified MUC participant.
      *
      * @param {string} jid - The full jid of the participant to be removed.
