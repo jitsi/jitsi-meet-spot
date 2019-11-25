@@ -10,7 +10,6 @@ import {
     hangUp,
     hideModal
 } from 'common/app-state';
-import { CallEnd } from 'common/icons';
 import { LoadingIcon, Modal } from 'common/ui';
 
 import {
@@ -19,10 +18,10 @@ import {
 import {
     AudioMuteButton,
     CancelMeetingPrompt,
+    HangupButton,
     KickedNotice,
     MoreButton,
     MeetingHeader,
-    NavButton,
     PasswordPrompt,
     ScreenshareButton,
     VideoMuteButton
@@ -64,9 +63,6 @@ export class InCall extends React.Component {
         };
 
         this._showCancelMeetingTimeout = null;
-
-        this._onHangup = this._onHangup.bind(this);
-        this._onHangUpWithoutFeedback = this._onHangUpWithoutFeedback.bind(this);
     }
 
     /**
@@ -128,7 +124,7 @@ export class InCall extends React.Component {
         if (kicked) {
             return (
                 <Modal>
-                    <KickedNotice onSubmit = { this._onHangUpWithoutFeedback } />
+                    <KickedNotice onSubmit = { this.props.onHangUp } />
                 </Modal>
             );
         }
@@ -137,7 +133,7 @@ export class InCall extends React.Component {
             return (
                 <Modal>
                     <PasswordPrompt
-                        onCancel = { this._onHangUpWithoutFeedback }
+                        onCancel = { this.props.onHangUp }
                         onSubmit = { this.props.onSubmitPassword } />
                 </Modal>
             );
@@ -147,7 +143,7 @@ export class InCall extends React.Component {
             return this.state.showCancelMeeting
                 ? (
                     <Modal>
-                        <CancelMeetingPrompt onSubmit = { this._onHangUpWithoutFeedback } />
+                        <CancelMeetingPrompt onSubmit = { this.props.onHangUp } />
                     </Modal>
                 )
                 : <LoadingIcon />;
@@ -164,38 +160,12 @@ export class InCall extends React.Component {
                 <div className = 'in-call-nav'>
                     <ScreenshareButton />
                     <AudioMuteButton />
-                    <NavButton
-                        className = 'hangup'
-                        onClick = { this._onHangup }
-                        qaId = 'hangup'>
-                        <CallEnd />
-                    </NavButton>
+                    <HangupButton />
                     <VideoMuteButton />
                     <MoreButton />
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Callback invokved to leave the call and allow showing of the feedback
-     * prompt.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onHangup() {
-        this.props.onHangUp(false);
-    }
-
-    /**
-     * Callback invoked to leave the call but without showing feedback.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onHangUpWithoutFeedback() {
-        this.props.onHangUp(true);
     }
 }
 
@@ -251,14 +221,12 @@ function mapDispatchToProps(dispatch) {
         },
 
         /**
-         * Leaves the currently joined meeting.
+         * Leaves the currently joined meeting and skip feedback.
          *
-         * @param {boolean} skipFeedback - True if the post-call feedback should
-         * not be shown.
          * @returns {Promise}
          */
-        onHangUp(skipFeedback) {
-            return dispatch(hangUp(skipFeedback));
+        onHangUp() {
+            return dispatch(hangUp(true));
         },
 
         /**
