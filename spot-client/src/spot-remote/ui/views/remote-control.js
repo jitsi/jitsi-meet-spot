@@ -18,7 +18,7 @@ import {
     ElectronDesktopPickerModal,
     WaitingForSpotTVOverlay
 } from './../components';
-import { WithRemoteControl, withUltrasound } from './../loaders';
+import { WithRemoteControl } from './../loaders';
 import { Feedback, InCall, WaitingForCall } from './remote-views';
 
 /**
@@ -115,8 +115,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default withUltrasound(
-    connect(mapStateToProps)(
-        withTranslation()(RemoteControl)
-    )
-);
+export default connect(mapStateToProps)(withTranslation()(RemoteControl));

@@ -26,7 +26,6 @@ describe('JoinCodeEntry', () => {
     let historyMock,
         locationMock,
         onDisconnectSpy,
-        ultrasoundServiceMock,
         updateReadyStatusSpy;
 
     beforeEach(() => {
@@ -37,9 +36,6 @@ describe('JoinCodeEntry', () => {
             pathname: '/'
         };
         onDisconnectSpy = jest.fn();
-        ultrasoundServiceMock = {
-            setMessage: jest.fn()
-        };
         updateReadyStatusSpy = jest.fn();
     });
 
@@ -57,7 +53,6 @@ describe('JoinCodeEntry', () => {
             onDisconnect: onDisconnectSpy,
             t: mockT,
             updateReadyStatus: updateReadyStatusSpy,
-            ultrasoundService: ultrasoundServiceMock,
             ...propOverrides
         };
 
