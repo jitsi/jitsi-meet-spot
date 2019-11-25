@@ -325,19 +325,23 @@ export default class P2PSignalingBase extends Emitter {
      * @returns {void}
      */
     _processOffer(from, data) {
-        if (this.getConnectionForAddress(from)) {
+        const offer = this._parseJSONorLogError(data.offer, 'offer message');
+
+        if (!offer) {
+            return;
+        }
+
+        const connection = this.getConnectionForAddress(from);
+
+        if (connection && connection.isDataChannelActive()) {
             logger.error('Received offer, but PeerConnection is still there', {
                 data,
                 from
             });
 
             return;
-        }
-
-        const offer = this._parseJSONorLogError(data.offer, 'offer message');
-
-        if (!offer) {
-            return;
+        } else if (connection) {
+            this.closeConnection(from);
         }
 
         // Try catch block in case something's wrong with WebRTC version or not supported
