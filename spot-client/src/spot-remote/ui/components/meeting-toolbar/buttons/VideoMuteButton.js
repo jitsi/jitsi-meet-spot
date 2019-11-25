@@ -10,7 +10,7 @@ import {
 } from 'common/app-state';
 import { VideocamOutlined, VideocamOffOutlined } from 'common/icons';
 
-import NavButton from '../nav-button';
+import { NavButton } from './../../nav';
 
 /**
  * A component for displaying and changing the current video mute of a Spot-TV.

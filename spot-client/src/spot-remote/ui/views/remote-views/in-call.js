@@ -16,16 +16,12 @@ import {
     submitPassword
 } from '../../../app-state';
 import {
-    AudioMuteButton,
     CancelMeetingPrompt,
-    HangupButton,
     KickedNotice,
-    MoreButton,
     MeetingHeader,
-    PasswordPrompt,
-    ScreenshareButton,
-    VideoMuteButton
+    PasswordPrompt
 } from '../../components';
+import { MeetingToolbar } from './../../components/meeting-toolbar';
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 /**
@@ -157,13 +153,7 @@ export class InCall extends React.Component {
                     invitedPhoneNumber = { invitedPhoneNumber }
                     meetingDisplayName = { meetingDisplayName }
                     meetingUrl = { inMeeting } />
-                <div className = 'in-call-nav'>
-                    <ScreenshareButton />
-                    <AudioMuteButton />
-                    <HangupButton />
-                    <VideoMuteButton />
-                    <MoreButton />
-                </div>
+                <MeetingToolbar />
             </div>
         );
     }
