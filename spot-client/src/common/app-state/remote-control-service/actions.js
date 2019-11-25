@@ -115,7 +115,8 @@ export function dialOut(meetingName, phoneNumber) {
                 type: 'phone', // jitsi-meet expects type phone
                 number: phoneNumber
             }
-        ]
+        ],
+        startWithVideoMuted: true
     };
 
     return dispatch => {
