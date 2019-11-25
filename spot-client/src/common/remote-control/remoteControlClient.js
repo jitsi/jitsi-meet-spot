@@ -10,6 +10,7 @@ import {
 } from './constants';
 import P2PSignalingClient from './P2PSignalingClient';
 import ScreenshareService from './screenshare-connection';
+import P2PReconnectTrait from './P2PReconnectTrait';
 import P2PSignalingBase from './P2PSignalingBase';
 
 /**
@@ -53,6 +54,15 @@ export class RemoteControlClient extends BaseRemoteControlService {
          * @private
          */
         this._waitForSpotTvTimeout = null;
+
+        /**
+         * The P2P reconnect trait which will start the P2P connection when Spot TV joins the room as well as make sure
+         * to reconnect in case the connection goes down.
+         *
+         * @type {P2PReconnectTrait|null}
+         * @private
+         */
+        this._spotTvP2PRetry = null;
     }
 
     /**
@@ -119,6 +129,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
                     SERVICE_UPDATES.P2P_SIGNALING_STATE_CHANGE,
                     this._p2pSignaling && this._p2pSignaling.isReady());
             });
+
+        this._spotTvP2PRetry = new P2PReconnectTrait(this._p2pSignaling, this.xmppConnection);
     }
 
     /**
@@ -147,6 +159,9 @@ export class RemoteControlClient extends BaseRemoteControlService {
     disconnect(event) {
         this.destroyWirelessScreenshareConnections();
         this._resetSpotTvState();
+
+        this._spotTvP2PRetry && this._spotTvP2PRetry.deactivate();
+        this._spotTvP2PRetry = null;
 
         return super.disconnect(event);
     }
@@ -546,6 +561,9 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 // If there's no active P2P channel then reset the TV state. This result in the waiting for Spot TV.
                 this._resetSpotTvState();
             }
+
+            // Do not retry when Spot TV is not in the MUC(unable to exchange offer/answer).
+            this._spotTvP2PRetry && this._spotTvP2PRetry.deactivate();
         } else {
             this._onDisconnect(CONNECTION_EVENTS.SERVER_DISCONNECTED);
         }
@@ -561,12 +579,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
     _onSpotTvJoinedMuc(spotTvAddress) {
         logger.log('Spot TV joined the MUC', { spotTvAddress });
 
-        // FIXME this doesn't check if the data channels is active. P2P reconnect logic will be added as next step.
-        if (this._p2pSignaling && !this._p2pSignaling.getConnectionForAddress(spotTvAddress)) {
-            // Client initiates the P2P signaling session
-            logger.log('Will try to establish P2P connection with Spot TV');
-            this._p2pSignaling.start(spotTvAddress);
-        }
+        // Client initiates the P2P signaling session
+        this._spotTvP2PRetry && this._spotTvP2PRetry.activate(spotTvAddress);
     }
 
     /**
