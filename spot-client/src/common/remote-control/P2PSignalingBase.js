@@ -46,6 +46,25 @@ export default class P2PSignalingBase extends Emitter {
     }
 
     /**
+     * Closes {@code PeerConnection}.
+     *
+     * @param {string} remoteAddress - The remote address for which the connection will be closed.
+     * @returns {boolean} - Returns {@code true} if there was connection for the given address.
+     */
+    closeConnection(remoteAddress) {
+        const connection = this.getConnectionForAddress(remoteAddress);
+
+        if (connection) {
+            connection.stop();
+            this._peerConnections.delete(remoteAddress);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Find connection for remote address.
      *
      * @param {string} remoteAddress - The remote address string.
