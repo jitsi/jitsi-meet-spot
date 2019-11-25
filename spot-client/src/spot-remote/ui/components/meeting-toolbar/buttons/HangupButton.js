@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { hangUp } from 'common/app-state';
 import { CallEnd } from 'common/icons';
 
-import NavButton from '../nav-button';
+import { NavButton } from './../../nav';
 
 /**
  * A component for leaving a meeting in progress.
