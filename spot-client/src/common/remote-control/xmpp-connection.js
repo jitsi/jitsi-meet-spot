@@ -1,5 +1,6 @@
 import { Strophe, $iq } from 'strophe.js';
 
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
 import { getJitterDelay } from 'common/utils';
@@ -23,7 +24,12 @@ const SPOT_XMLNS = 'https://jitsi.org/spot';
 /**
  * Represents an XMPP connection to a prosody service.
  */
-export default class XmppConnection {
+export default class XmppConnection extends Emitter {
+    /**
+     * Event emitted when the {@link isConnected} status changes.
+     */
+    static CONNECTED_STATE_CHANGED = 'CONNECTED_STATE_CHANGED';
+
     /**
      * Initializes a new {@code XmppConnection} instance.
      *
@@ -46,6 +52,7 @@ export default class XmppConnection {
      * receiving a new presence.
      */
     constructor(options) {
+        super();
         this.options = options;
 
         /**
@@ -237,8 +244,11 @@ export default class XmppConnection {
             .then(() => this._createMuc(roomName, resourceName))
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
-                    this._isXmppConnectionActive = true;
-                    room.addEventListener('xmpp.muc_joined', resolve);
+                    room.addEventListener('xmpp.muc_joined', () => {
+                        this._isXmppConnectionActive = true;
+                        resolve();
+                        this.emit(XmppConnection.CONNECTED_STATE_CHANGED, this.isConnected());
+                    });
                 });
             })
             .then(() => {
@@ -501,6 +511,7 @@ export default class XmppConnection {
         }
 
         this._isXmppConnectionActive = false;
+        this.emit(XmppConnection.CONNECTED_STATE_CHANGED, this.isConnected());
 
         if ((error === 'connection.droppedError'
             || error === 'connection.otherError'
