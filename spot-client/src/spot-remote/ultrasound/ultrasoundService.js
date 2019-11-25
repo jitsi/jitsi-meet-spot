@@ -91,6 +91,10 @@ class UltrasoundService {
 
             this._isInitialized = true;
             this._transmissionDelay = transmissionDelay;
+
+            if (this._text) {
+                this.setMessage(this._text);
+            }
         })
         .catch(error => {
             logger.error('ultrasound failed to initialize', { error });
