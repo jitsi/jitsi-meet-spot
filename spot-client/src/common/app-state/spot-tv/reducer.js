@@ -15,6 +15,7 @@ const DEFAULT_STATE = {
     screensharing: false,
     screensharingType: undefined,
     spotId: undefined,
+    supportsZoom: false,
     tileView: false,
     videoMuted: true,
     view: undefined
