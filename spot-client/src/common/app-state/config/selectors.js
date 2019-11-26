@@ -290,13 +290,3 @@ export function shouldKickTemporaryRemotes(state) {
 export function isInviteEnabled(state) {
     return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_INVITES;
 }
-
-/**
- * Whether or not the P2P signaling channel should be enabled in the remote control service.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function isP2PSignalingEnabled(state) {
-    return state.config.TEMPORARY_FEATURE_FLAGS.P2P_SIGNALING;
-}

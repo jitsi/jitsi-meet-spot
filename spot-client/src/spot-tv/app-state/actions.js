@@ -7,7 +7,6 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     getTemporaryRemoteIds,
-    isP2PSignalingEnabled,
     reconnectScheduleUpdate,
     removePairedRemote,
     setCustomerId,
@@ -338,7 +337,6 @@ function createConnection(state, permanentPairingCode) {
         = isBackendEnabled(state)
             ? new SpotTvBackendService(getSpotServicesConfig(state))
             : null;
-    const enableP2PSignaling = isP2PSignalingEnabled(state);
 
     logger.log('Spot TV attempting connection', {
         backend: Boolean(backend),
@@ -351,7 +349,6 @@ function createConnection(state, permanentPairingCode) {
 
     return remoteControlServer.connect({
         backend,
-        enableP2PSignaling,
         joinAsSpot: true,
         joinCodeRefreshRate,
         joinCode: permanentPairingCode,

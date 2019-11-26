@@ -272,15 +272,7 @@ export default {
          *
          * @type {boolean}
          */
-        KICK_TEMPORARY_REMOTES: false,
-
-        /**
-         * Whether or not to enable secondary(peer to peer) signaling channel for faster remote command processing.
-         */
-        P2P_SIGNALING:
-            typeof process.env.FEATURE_FLAG_P2P_SIGNALING === 'undefined'
-                ? true
-                : process.env.FEATURE_FLAG_P2P_SIGNALING === 'true'
+        KICK_TEMPORARY_REMOTES: false
     },
 
     /**
