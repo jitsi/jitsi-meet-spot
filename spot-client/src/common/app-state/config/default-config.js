@@ -269,7 +269,7 @@ export default {
         /**
          * Whether or not to display the UI for joining a Zoom meeting.
          */
-        ENABLE_ZOOM_MEETINGS: false,
+        ENABLE_ZOOM_MEETINGS: process.env.ENABLE_ZOOM_MEETINGS || false,
 
         /**
          * Spot-TV should kick temporary remotes after a successfully joined
