@@ -92,3 +92,13 @@ export function isConnectedToSpot(state) {
 export function isVolumeControlSupported(state) {
     return Boolean(state.spotTv.electron);
 }
+
+/**
+ * A selector which returns whether or not the Spot-TV has Zoom meeting support.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function shouldRemoteDisplayZoom(state) {
+    return Boolean(state.spotTv.supportsZoom);
+}

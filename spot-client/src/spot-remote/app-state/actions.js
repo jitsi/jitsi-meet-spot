@@ -62,6 +62,7 @@ const presenceToStore = [
     'screensharing',
     'screensharingType',
     'spotId',
+    'supportsZoom',
     'tenant',
     'tileView',
     'videoMuted',

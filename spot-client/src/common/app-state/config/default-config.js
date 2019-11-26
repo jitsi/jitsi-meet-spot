@@ -261,10 +261,15 @@ export default {
         DTMF_THROTTLE_RATE: 500,
 
         /**
-         * Whether or the note feature for inviting participants to a conference
+         * Whether or the not feature for inviting participants to a conference
          * is available.
          */
         ENABLE_INVITES: false,
+
+        /**
+         * Whether or not to display the UI for joining a Zoom meeting.
+         */
+        ENABLE_ZOOM_MEETINGS: false,
 
         /**
          * Spot-TV should kick temporary remotes after a successfully joined

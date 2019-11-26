@@ -47,16 +47,19 @@ if (queryParams.get('reset') === 'true') {
     clearPersistedState();
 }
 
+const configValues = setDefaultValues(window.JitsiMeetSpotConfig);
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),
     {
         config: {
-            ...setDefaultValues(window.JitsiMeetSpotConfig)
+            ...configValues
         },
         spotTv: {
 
             // Will get overridden on Spot-Remote by Spot-TV updates.
-            electron: isElectron()
+            electron: isElectron(),
+
+            supportsZoom: configValues.TEMPORARY_FEATURE_FLAGS.ENABLE_ZOOM_MEETINGS
         },
         ...getPersistedState()
     },

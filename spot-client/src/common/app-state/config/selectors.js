@@ -281,6 +281,17 @@ export function shouldKickTemporaryRemotes(state) {
 }
 
 /**
+ * A selector which returns whether or not the feature flag for Spot-TV being
+ * able to join Zoom meetings is enabled.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function shouldTVDisplayZoom(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_ZOOM_MEETINGS;
+}
+
+/**
  * A selector which returns whether or not to display on the remote an option
  * to invite people to a meeting.
  *
