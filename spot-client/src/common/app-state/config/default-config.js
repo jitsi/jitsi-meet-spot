@@ -264,15 +264,7 @@ export default {
          * Whether or the note feature for inviting participants to a conference
          * is available.
          */
-        ENABLE_INVITES: false,
-
-        /**
-         * Spot-TV should kick temporary remotes after a successfully joined
-         * meeting has needed.
-         *
-         * @type {boolean}
-         */
-        KICK_TEMPORARY_REMOTES: false
+        ENABLE_INVITES: false
     },
 
     /**

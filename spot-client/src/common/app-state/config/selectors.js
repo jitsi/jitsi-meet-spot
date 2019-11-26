@@ -270,17 +270,6 @@ export function getUpdateEndHour(state) {
 }
 
 /**
- * A selector which returns whether or not the feature flag for Spot-TV kicking
- * out temporary remotes at the end of meeting is enabled or not.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function shouldKickTemporaryRemotes(state) {
-    return state.config.TEMPORARY_FEATURE_FLAGS.KICK_TEMPORARY_REMOTES;
-}
-
-/**
  * A selector which returns whether or not to display on the remote an option
  * to invite people to a meeting.
  *

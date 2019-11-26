@@ -18,7 +18,6 @@ import {
     getPreferredSpeaker,
     getWiredScreenshareInputLabel,
     leaveMeetingWithError,
-    shouldKickTemporaryRemotes,
     storePhoneNumberFromInvites
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
@@ -336,8 +335,7 @@ function mapStateToProps(state) {
         maxDesktopSharingFramerate,
         meetingJoinTimeout: getMeetingJoinTimeout(state),
         minDesktopSharingFramerate,
-        kickTemporaryRemotesOnMeetingEnd: shouldKickTemporaryRemotes(state)
-            && isBackendEnabled(state),
+        kickTemporaryRemotesOnMeetingEnd: isBackendEnabled(state),
         showKickedOverlay: kicked,
         showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),
