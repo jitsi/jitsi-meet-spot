@@ -515,9 +515,16 @@ export function updateSpotTVSource() {
  * @param {boolean} startWithVideoMuted - Whether to start with the video muted.
  * @param {string} meetingDisplayName - An alternative display name for the meeting, such as the event name on
  * a calendar.
+ * @param {string} [meetingType] - The meeting provider which should be used.
  * @returns {Function}
  */
-export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayName, screenshare, startWithVideoMuted }) {
+export function redirectToMeeting(meetingNameOrUrl, {
+    invites,
+    meetingDisplayName,
+    meetingType = 'jitsi',
+    screenshare,
+    startWithVideoMuted
+}) {
     return (dispatch, getState) => {
         let location;
 
@@ -531,7 +538,8 @@ export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayNam
             return;
         }
 
-        let redirectUrl = `${ROUTES.MEETING}?location=${encodeURIComponent(location)}`;
+        let redirectUrl = `${ROUTES.MEETING}?location=${
+            encodeURIComponent(location)}&meetingType=${meetingType}`;
 
         if (screenshare) {
             redirectUrl += '&screenshare=true';

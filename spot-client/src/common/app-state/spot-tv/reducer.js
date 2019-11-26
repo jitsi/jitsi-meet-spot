@@ -9,6 +9,7 @@ const DEFAULT_STATE = {
     electron: false,
     inMeeting: undefined,
     kicked: false,
+    meetingType: undefined,
     needPassword: false,
     remoteJoinCode: undefined,
     roomName: undefined,

@@ -75,12 +75,20 @@ export function joinWithScreensharing(meetingName, screensharingType) {
  * @param {string} meetingName - The Jitsi meeting to join.
  * @param {string} meetingDisplayName - An alternative display name for the
  * meeting, such as the event name on a calendar.
+ * @param {string} meetingType - The meeting provider which should host the meeting
+ * of the provided meetingName.
  * @returns {Function}
  */
-export function joinScheduledMeeting(meetingName, meetingDisplayName) {
+export function joinScheduledMeeting(meetingName, meetingDisplayName, meetingType = 'jitsi') {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlClient.goToMeeting(meetingName, { meetingDisplayName }),
+        () => remoteControlClient.goToMeeting(
+            meetingName,
+            {
+                meetingDisplayName,
+                meetingType
+            }
+        ),
         JOIN_SCHEDULED_MEETING,
         meetingName
     );
@@ -90,12 +98,14 @@ export function joinScheduledMeeting(meetingName, meetingDisplayName) {
  * Requests a Spot to join a ad hoc meeting.
  *
  * @param {string} meetingName - The meeting to join.
+ * @param {string} [meetingType] - The meeting provider intended to be used to
+ * join the meeting with the provided meetingName.
  * @returns {Function}
  */
-export function joinAdHocMeeting(meetingName) {
+export function joinAdHocMeeting(meetingName, meetingType = 'jitsi') {
     return dispatch => createAsyncActionWithStates(
         dispatch,
-        () => remoteControlClient.goToMeeting(meetingName),
+        () => remoteControlClient.goToMeeting(meetingName, { meetingType }),
         JOIN_AD_HOC_MEETING,
         meetingName
     );

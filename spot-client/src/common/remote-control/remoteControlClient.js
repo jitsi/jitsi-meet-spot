@@ -217,6 +217,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
                         {
                             startWithScreensharing: startWithScreensharing === 'wired',
                             startWithVideoMuted: startWithScreensharing === 'wireless',
+                            meetingType: otherOptions.meetingType || 'jitsi',
                             ...otherOptions,
                             meetingName
                         })

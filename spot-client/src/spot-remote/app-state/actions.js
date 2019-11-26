@@ -56,6 +56,7 @@ const presenceToStore = [
     'invitedPhoneNumber',
     'kicked',
     'meetingDisplayName',
+    'meetingType',
     'needPassword',
     'remoteJoinCode',
     'roomName',

@@ -276,12 +276,16 @@ function mapDispatchToProps(dispatch) {
             dispatch(redirectToMeeting(data.meetingName, {
                 invites: data.invites,
                 meetingDisplayName: data.meetingDisplayName,
+                meetingType: data.meetingType,
                 screenshare: data.startWithScreensharing === true,
                 startWithVideoMuted: data.startWithVideoMuted === true
             }));
         },
         onStartScreenshareMeeting() {
-            dispatch(redirectToMeeting(getRandomMeetingName(), { screenshare: true }));
+            dispatch(redirectToMeeting(getRandomMeetingName(), {
+                meetingType: 'jitsi',
+                screenshare: true
+            }));
         }
     };
 }

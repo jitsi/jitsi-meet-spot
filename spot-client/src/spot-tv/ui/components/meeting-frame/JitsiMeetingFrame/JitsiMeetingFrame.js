@@ -240,6 +240,7 @@ export class JitsiMeetingFrame extends React.Component {
             inMeeting: '',
             kicked: false,
             meetingDisplayName: '',
+            meetingType: '',
             needPassword: false,
             screensharingType: undefined,
             tileView: false,
@@ -483,6 +484,7 @@ export class JitsiMeetingFrame extends React.Component {
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
             meetingDisplayName: this.props.meetingDisplayName,
+            meetingType: 'jitsi',
             needPassword: false
         });
 
