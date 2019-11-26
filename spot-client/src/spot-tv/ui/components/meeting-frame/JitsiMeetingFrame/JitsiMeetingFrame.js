@@ -1,7 +1,6 @@
 /* global JitsiMeetExternalAPI */
 
 import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -10,12 +9,13 @@ import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
-import { adjustVolume } from '../../../native-functions';
+import { adjustVolume } from '../../../../native-functions';
 
-import { WiredScreenshareChangeListener } from '../wired-screenshare';
+import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
 import ApiHealthCheck from './ApiHealthCheck';
 import FeedbackHider from './FeedbackHider';
+import meetingFramePropTypes from '../meetingFramePropTypes';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 
@@ -24,7 +24,7 @@ const DEFAULT_DISPLAY_NAME = 'Meeting Room';
  *
  * @extends React.Component
  */
-export class MeetingFrame extends React.Component {
+export class JitsiMeetingFrame extends React.Component {
     static defaultProps = {
         displayName: DEFAULT_DISPLAY_NAME,
         dtmfThrottleRate: -1,
@@ -39,29 +39,7 @@ export class MeetingFrame extends React.Component {
         screenshareDevice: ''
     };
 
-    static propTypes = {
-        avatarUrl: PropTypes.string,
-        displayName: PropTypes.string,
-        dtmfThrottleRate: PropTypes.number,
-        invites: PropTypes.array,
-        jitsiAppName: PropTypes.string,
-        jwt: PropTypes.string,
-        maxDesktopSharingFramerate: PropTypes.number,
-        meetingDisplayName: PropTypes.string,
-        meetingJoinTimeout: PropTypes.number,
-        meetingUrl: PropTypes.string,
-        minDesktopSharingFramerate: PropTypes.number,
-        onMeetingLeave: PropTypes.func,
-        onMeetingStart: PropTypes.func,
-        preferredCamera: PropTypes.string,
-        preferredMic: PropTypes.string,
-        preferredSpeaker: PropTypes.string,
-        remoteControlServer: PropTypes.object,
-        screenshareDevice: PropTypes.string,
-        startWithScreenshare: PropTypes.bool,
-        startWithVideoMuted: PropTypes.bool,
-        updateSpotTvState: PropTypes.func
-    };
+    static propTypes = meetingFramePropTypes;
 
     /**
      * Initializes a new {@code MeetingFrame} instance.
@@ -842,4 +820,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(MeetingFrame);
+export default connect(undefined, mapDispatchToProps)(JitsiMeetingFrame);
