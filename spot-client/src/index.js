@@ -29,7 +29,6 @@ import {
     remoteControlClient
 } from 'common/remote-control';
 import {
-    clearPersistedState,
     getPersistedState,
     loadScript,
     setPersistedState
@@ -40,12 +39,6 @@ import { ExternalApiSubscriber } from 'spot-remote/external-api';
 import App from './app';
 
 const queryParams = new URLSearchParams(window.location.search);
-
-// On Aug 22, 2019, this param is used by old spot-controllers. Remove this code
-// after some time.
-if (queryParams.get('reset') === 'true') {
-    clearPersistedState();
-}
 
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),
