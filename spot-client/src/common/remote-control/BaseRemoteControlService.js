@@ -177,15 +177,21 @@ export class BaseRemoteControlService extends Emitter {
             () => {
                 const hasActiveP2PConnection = this._p2pSignaling?.hasActiveConnection();
                 const hasActiveXmppConnection = this.xmppConnection?.isConnected();
-                const isXmppReconnecting = this.xmppConnection?.isReconnecting();
 
-                if (!hasActiveP2PConnection && !hasActiveXmppConnection && !isXmppReconnecting) {
-                    logger.log('Dropping RCS connection - no active signaling', {
-                        hasActiveP2PConnection,
-                        hasActiveXmppConnection,
-                        isXmppReconnecting
-                    });
-                    this._onDisconnect('no-active-signaling');
+                if (!hasActiveP2PConnection && !hasActiveXmppConnection) {
+                    const isXmppReconnecting = this.xmppConnection?.isReconnecting();
+
+                    if (isXmppReconnecting) {
+                        // This will result in XMPP disconnected callback
+                        this.xmppConnection.abortReconnect();
+                    } else {
+                        logger.log('Dropping RCS connection - no active signaling', {
+                            hasActiveP2PConnection,
+                            hasActiveXmppConnection,
+                            isXmppReconnecting
+                        });
+                        this._onDisconnect('no-active-signaling');
+                    }
                 }
             });
     }

@@ -95,6 +95,15 @@ export default class XmppConnection extends Emitter {
     }
 
     /**
+     * Aborts the silent reconnect if it's in progress.
+     *
+     * @returns {void}
+     */
+    abortReconnect() {
+        this._silentReconnectPromise && this._silentReconnectPromise.cancel();
+    }
+
+    /**
      * Establishes the XMPP connection with a jitsi deployment.
      *
      * @param {Object} options - Information necessary for creating the MUC.
@@ -542,24 +551,53 @@ export default class XmppConnection extends Emitter {
                 error,
                 reason
             });
+
+            // Flag flipped to true when abortReconnect() is called to cancel the silent reconnect.
+            let canceled = false;
+
             this._silentReconnectPromise = this.destroy()
-                .then(() => new Promise(resolve => {
-                    setTimeout(resolve, getJitterDelay(0, 1000));
+                .then(() => new Promise(resolveDelay => {
+                    if (canceled) {
+                        return;
+                    }
+
+                    setTimeout(resolveDelay, getJitterDelay(0, 1000));
                 }))
                 .then(() => {
+                    if (canceled) {
+                        return;
+                    }
+
                     this._resetToInitialState();
 
                     return this.joinMuc(this._joinOptions);
                 })
                 .then(() => {
                     this._silentReconnectPromise = undefined;
-                    logger.log('xmpp connection silent reconnect complete');
+                    canceled || logger.log('xmpp connection silent reconnect complete');
                 }, reconnectError => {
-                    setTimeout(() => {
+                    if (canceled) {
                         this._silentReconnectPromise = undefined;
-                        this._onDisconnect(reconnectError);
-                    }, getJitterDelay(0, 5000));
+                    } else {
+                        setTimeout(() => {
+                            this._silentReconnectPromise = undefined;
+                            canceled || this._onDisconnect(reconnectError);
+                        }, getJitterDelay(0, 5000));
+                    }
                 });
+
+            // Add cancel method
+            this._silentReconnectPromise.cancel = () => {
+                logger.log('canceling xmpp connection silent reconnect');
+                canceled = true;
+
+                return this.destroy().then(() => {
+                    this._joinOptions.onDisconnect(error, reason);
+                }, destroyErorr => {
+                    logger.error('destroy rejected', { error: destroyErorr });
+                    this._joinOptions.onDisconnect(error, reason);
+                });
+            };
         } else {
             this._joinOptions.onDisconnect(error, reason);
         }
