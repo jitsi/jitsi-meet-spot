@@ -78,6 +78,14 @@ export default class XmppConnection extends Emitter {
          */
         this._pendingIQRequestRejections = new Set();
 
+        /**
+         * Flag set to {@code true} after the XMPP connection is established and MUC room joined. Reset on disconnect.
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._isXmppConnectionActive = false;
+
         this._resetToInitialState();
 
         this._onCommand = this._onCommand.bind(this);
@@ -119,7 +127,12 @@ export default class XmppConnection extends Emitter {
         } = options;
 
         if (this.initPromise) {
+            logger.error('joinMuc called before another joinMuc job completed');
+
             return this.initPromise;
+        }
+        if (this._isXmppConnectionActive) {
+            logger.error('joinMuc called while another connection is still active');
         }
 
         this._joinOptions = options;
@@ -245,9 +258,7 @@ export default class XmppConnection extends Emitter {
             .then(room => {
                 mucJoinedPromise = new Promise(resolve => {
                     room.addEventListener('xmpp.muc_joined', () => {
-                        this._isXmppConnectionActive = true;
                         resolve();
-                        this.emit(XmppConnection.CONNECTED_STATE_CHANGED, this.isConnected());
                     });
                 });
             })
@@ -277,7 +288,16 @@ export default class XmppConnection extends Emitter {
                     return Promise.reject(reason);
                 })
             )
-            .then(() => mucJoinedPromise);
+            .then(() => mucJoinedPromise)
+            .then(() => {
+                this.initPromise = undefined;
+                this._isXmppConnectionActive = true;
+                this.emit(XmppConnection.CONNECTED_STATE_CHANGED, this.isConnected());
+            }, error => {
+                this.initPromise = undefined;
+
+                throw error;
+            });
 
         return this.initPromise;
     }
