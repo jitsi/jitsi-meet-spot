@@ -153,7 +153,7 @@ export class InCall extends React.Component {
                     invitedPhoneNumber = { invitedPhoneNumber }
                     meetingDisplayName = { meetingDisplayName }
                     meetingUrl = { inMeeting } />
-                <MeetingToolbar />
+                <MeetingToolbar meetingUrl = { inMeeting } />
             </div>
         );
     }

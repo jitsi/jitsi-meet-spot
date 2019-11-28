@@ -106,6 +106,7 @@
         "isSharing": "You're currently sharing content",
         "isSharingScreen": "You are sharing your screen",
         "notSupported": "This browser is currently not supported. To share content please use Chrome.",
+        "notSupportedMeetingType": "Screensharing is not supported while in {{ type }} meetings",
         "pick": "How would you like to screenshare?",
         "plugWired": "Plug the HDMI dongle into your computer",
         "remoteMode": "Remote control",
