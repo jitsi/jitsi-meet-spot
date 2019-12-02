@@ -64,6 +64,14 @@ export class SpotBackendService extends Emitter {
         if (!endpointIdPersistenceKey) {
             throw Error('No "endpointIdPersistenceKey"');
         }
+
+        /**
+         * Variable used to cache the most recent exit password whenever get room info request is made.
+         *
+         * @type {string|undefined}
+         * @protected
+         */
+        this._cachedExitPassword = undefined;
         this.endpointIdPersistenceKey = endpointIdPersistenceKey;
         this.pairingServiceUrl = pairingServiceUrl;
         this.roomKeeperServiceUrl = roomKeeperServiceUrl;
@@ -96,7 +104,9 @@ export class SpotBackendService extends Emitter {
         );
 
         return this._wrapJwtBackendRequest(requestCreator)
-            .then(({ countryCode, customerId, id, mucUrl, name }) => {
+            .then(({ countryCode, customerId, endpointPassword, id, mucUrl, name }) => {
+                this._cachedExitPassword = endpointPassword;
+
                 return {
                     countryCode,
                     customerId,

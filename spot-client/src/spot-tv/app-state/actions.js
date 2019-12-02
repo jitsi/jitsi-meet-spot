@@ -132,6 +132,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             window.removeEventListener('beforeunload', onBeforeUnloadHandler);
         });
 
+        const backend
+            = isBackendEnabled(getState())
+                ? new SpotTvBackendService(getSpotServicesConfig(getState()))
+                : null;
+
         /**
          * Callback invoked when a connect has been successfully made with
          * {@code remoteControlServer}.
@@ -310,7 +315,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         function doConnect() {
             return createAsyncActionWithStates(
                 dispatch,
-                () => createConnection(getState(), pairingCode),
+                () => createConnection(getState(), backend, pairingCode),
                 CREATE_CONNECTION
             ).then(onSuccessfulConnect)
             .catch(onDisconnect);
@@ -325,18 +330,15 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
  * to be consumed by a Spot-TV client.
  *
  * @param {Object} state - The Redux state.
+ * @param {SpotTvBackendService} [backend] - The backend instance that will be used with the RCS service.
  * @param {string} [permanentPairingCode] - This one is optional and used only in the backend scenario where Spot TV
  * needs a permanent pairing code in order to connect to the service.
  * @returns {Promise<Object>} Resolves with an object containing the latest
  * join code and jwt.
  */
-function createConnection(state, permanentPairingCode) {
+function createConnection(state, backend, permanentPairingCode) {
     const joinCodeRefreshRate = getJoinCodeRefreshRate(state);
     const remoteControlConfiguration = getRemoteControlServerConfig(state);
-    const backend
-        = isBackendEnabled(state)
-            ? new SpotTvBackendService(getSpotServicesConfig(state))
-            : null;
 
     logger.log('Spot TV attempting connection', {
         backend: Boolean(backend),
@@ -406,6 +408,15 @@ export function disconnectSpotTvRemoteControl(event) {
         return remoteControlServer.disconnect(event)
             .then(postDisconnectCleanup, postDisconnectCleanup);
     };
+}
+
+/**
+ * Makes async request to the backend and retrieves the exit password.
+ *
+ * @returns {Promise<?string>}
+ */
+export function fetchExitPassword() {
+    return remoteControlServer.fetchExitPassword();
 }
 
 /**
