@@ -101,14 +101,20 @@ class Sdk {
                 return;
             }
 
-            fetch(`${meetingSignService}/${apiKey}`)
-                .then(response => {
-                    if (response.status === 200) {
-                        resolve(response.responseText || response.text());
-                    } else {
-                        reject();
-                    }
-                });
+            fetch(`${meetingSignService}`, {
+                body: JSON.stringify({
+                    apiKey,
+                    meetingNumber,
+                    role: 0
+                }),
+                headers: {
+                    'content-type': 'application/json',
+                },
+                method: 'POST',
+                mode: 'cors',
+            })
+            .then(response => response.json())
+            .then(({ signature }) => resolve(signature));
         });
 
         return meetingSignPromise
