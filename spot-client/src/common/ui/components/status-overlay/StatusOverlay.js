@@ -12,7 +12,9 @@ import { Background } from '../background';
  */
 export function StatusOverlay(props) {
     return (
-        <div className = 'status-overlay'>
+        <div
+            className = 'status-overlay'
+            data-qa-id = { props.qaId } >
             <Background />
             <div className = 'status-overlay-text-frame'>
                 <h1>{ props.title }</h1>
@@ -26,6 +28,7 @@ export function StatusOverlay(props) {
 
 StatusOverlay.propTypes = {
     children: PropTypes.node,
+    qaId: PropTypes.string,
     showBackground: PropTypes.bool,
     title: PropTypes.string
 };
