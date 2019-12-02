@@ -1,4 +1,4 @@
-import { getRemotePairingCode, SpotBackendService } from 'common/backend';
+import { fetchRoomInfo, getRemotePairingCode, SpotBackendService } from 'common/backend';
 import { logger } from 'common/logger';
 
 /**
@@ -68,6 +68,24 @@ export class SpotTvBackendService extends SpotBackendService {
      */
     getShortLivedPairingCode() {
         return this.remotePairingInfo.code;
+    }
+
+    /**
+     * Makes request to the backend and tries to get the exit password. If the requests fails will return the most
+     * recent cached value.
+     *
+     * @returns {Promise<?string>}
+     */
+    fetchExitPassword() {
+        return fetchRoomInfo(
+            this.roomKeeperServiceUrl,
+            this.getJwt()
+        ).then(({ endpointPassword }) => {
+            this._cachedExitPassword = endpointPassword && endpointPassword.length ? endpointPassword : undefined;
+        }, error => {
+            logger.error('Fetch exit password failed', { error });
+        })
+        .then(() => this._cachedExitPassword);
     }
 
     /**

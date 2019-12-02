@@ -89,6 +89,17 @@ export class RemoteControlServer extends BaseRemoteControlService {
     }
 
     /**
+     * Retrieves the exit password(if any).
+     *
+     * @returns {Promise<?string>} - Resolved either with a password or 'undefined' if there isn't any.
+     */
+    fetchExitPassword() {
+        const backend = this._getBackend();
+
+        return backend ? backend.fetchExitPassword() : Promise.resolve(undefined);
+    }
+
+    /**
      * Returns a pairing code which can be used to set up "permanent" pairing
      * of a Spot-Remote to a Spot-TV.
      *
