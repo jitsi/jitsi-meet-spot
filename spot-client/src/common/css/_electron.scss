@@ -5,3 +5,20 @@
     position: fixed;
     top: 32px;
 }
+
+.close-electron-password-input {
+  flex: 1;
+  margin: 8px 0px 16px;
+
+  input {
+    @include input-reset;
+    color: white;
+    font-size: 32px;
+    line-height: 44px;
+    text-align: center;
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+}

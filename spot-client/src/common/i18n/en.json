@@ -18,6 +18,7 @@
         "devicesNotSaved": "Could not save preferences.",
         "genericError": "Something went wrong.",
         "invalidShareKey": "Invalid share key.",
+        "invalidPassword": "Invalid passcode.",
         "meetingConnectionLost": "Connection to the meeting has been lost",
         "meetingEnded": "The meeting has ended.",
         "meetingJoinFailed": "An error occurred while joining the meeting",
@@ -25,7 +26,9 @@
     },
     "appStatus": {
         "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
+        "exitElectronAskForPassword": "Enter passcode",
         "exitElectronConfirm": "Are you sure you would like to exit {{ productName }}?",
+        "pleaseWait": "Please wait",
         "reconnecting": "Reconnecting",
         "setup": "Currently in setup.",
         "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
