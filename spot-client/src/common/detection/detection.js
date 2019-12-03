@@ -92,8 +92,8 @@ function _isIOSWebView() {
 export function isSupportedSpotTvBrowser() {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    return isDesktopBrowser()
-        && (jitsiBrowserDetection.isChrome() || jitsiBrowserDetection.isElectron());
+    return _isAndroidWebView() || (isDesktopBrowser()
+        && (jitsiBrowserDetection.isChrome() || jitsiBrowserDetection.isElectron()));
 }
 
 /**
