@@ -87,7 +87,7 @@ class Sdk {
             userName = 'Meeting Room'
         } = options;
 
-        const meetingSignPromise = new Promise((resolve, reject) => {
+        const meetingSignPromise = new Promise(resolve => {
             if (typeof API_SECRET === 'string') {
                 const ZoomMtg = this._getZoomMtg();
 
@@ -108,10 +108,10 @@ class Sdk {
                     role: 0
                 }),
                 headers: {
-                    'content-type': 'application/json',
+                    'content-type': 'application/json'
                 },
                 method: 'POST',
-                mode: 'cors',
+                mode: 'cors'
             })
             .then(response => response.json())
             .then(({ signature }) => resolve(signature));
