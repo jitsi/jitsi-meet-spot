@@ -5,7 +5,11 @@
 const API_SECRET = process.env.DEV_ONLY_ZOOM_API_SECRET;
 
 import { events } from 'common/zoom';
-import { AudioMuteController, VideoMuteController } from './mute-controllers';
+import {
+    AudioMuteController,
+    HangUpController,
+    VideoMuteController
+} from './controllers';
 
 /**
  * Encapsulates interacting with Zoom meetings and its DOM.
@@ -57,6 +61,7 @@ class Sdk {
         });
 
         return initPromise.then(() => {
+            this._hangUpController = new HangUpController();
             this._audioMuteController = new AudioMuteController(muted => {
                 this._onStatusChange(events.AUDIO_MUTE_UPDATED, { muted });
             });
@@ -64,6 +69,15 @@ class Sdk {
                 this._onStatusChange(events.VIDEO_MUTE_UPDATED, { muted });
             });
         });
+    }
+
+    /**
+     * Attempts to leave the call.
+     *
+     * @returns {void}
+     */
+    hangUp() {
+        this._hangUpController.hangUp();
     }
 
     /**

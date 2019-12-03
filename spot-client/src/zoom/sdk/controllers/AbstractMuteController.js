@@ -1,3 +1,5 @@
+import { clickIfExists } from './uiUtils';
+
 /**
  * Encapsulates mute interactions with the Zoom UI.
  */
@@ -58,11 +60,7 @@ export default class AbstractMuteController {
      * @returns {void}
      */
     _clickIfExists(selector) {
-        const element = document.querySelector(selector);
-
-        if (element) {
-            element.click();
-        }
+        return clickIfExists(selector);
     }
 
     /**

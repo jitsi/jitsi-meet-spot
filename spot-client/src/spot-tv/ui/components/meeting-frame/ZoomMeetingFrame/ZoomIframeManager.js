@@ -60,6 +60,15 @@ export default class ZoomIframeManager {
     }
 
     /**
+     * Leaves the meeting.
+     *
+     * @returns {void}
+     */
+    hangUp() {
+        this._sendCommand(commands.HANG_UP);
+    }
+
+    /**
      * Instantiates iframe to display of the Zoom meeting.
      *
      * @private

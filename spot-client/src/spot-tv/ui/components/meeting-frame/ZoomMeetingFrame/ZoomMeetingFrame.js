@@ -119,7 +119,7 @@ export class ZoomMeetingFrame extends React.Component {
 
         switch (type) {
         case COMMANDS.HANG_UP:
-            this.props.onMeetingLeave({});
+            this._zoomIframeManager.hangUp();
             break;
 
         case COMMANDS.SET_AUDIO_MUTE:

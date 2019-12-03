@@ -51,6 +51,12 @@ export class IFrameApi {
             sdk.setAudioMute(data.data.mute);
             break;
         }
+
+        case commands.HANG_UP: {
+            sdk.hangUp();
+            break;
+        }
+
         case commands.JOIN: {
             sdk.joinMeeting(data.data)
                 .then(
