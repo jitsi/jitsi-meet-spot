@@ -80,7 +80,7 @@
         "webpack-cli": "3.3.9",
         "webpack-dev-server": "3.8.1",
         "write-file-webpack-plugin": "4.5.1",
-        "zoomus-jssdk": "1.6.1"
+        "zoomus-jssdk": "1.7.0"
     },
     "engines": {
         "node": "8.9.1",
