@@ -6,3 +6,8 @@
 .full-screen-widget {
     visibility: hidden;
 }
+
+#suspension-my-canvas {
+    // FIXME: Since zoomus-jssdk 1.7.0, local video has height 0
+    height: 135px;
+}
