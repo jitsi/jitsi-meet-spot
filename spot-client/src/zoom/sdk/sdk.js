@@ -185,7 +185,7 @@ class Sdk {
      * @returns {Object}
      */
     _getZoomMtg() {
-        const { ZoomMtg } = require('zoomus-jssdk');
+        const { ZoomMtg } = require('@zoomus/websdk');
 
         return ZoomMtg;
     }

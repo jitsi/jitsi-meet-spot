@@ -19,6 +19,7 @@
         "@material-ui/core": "4.4.3",
         "@material-ui/icons": "4.4.3",
         "@microsoft/microsoft-graph-client": "1.7.0",
+        "@zoomus/websdk": "1.7.0",
         "babel-core": "7.0.0-bridge.0",
         "babel-eslint": "10.0.3",
         "babel-jest": "24.9.0",
@@ -79,8 +80,7 @@
         "webpack": "4.41.0",
         "webpack-cli": "3.3.9",
         "webpack-dev-server": "3.8.1",
-        "write-file-webpack-plugin": "4.5.1",
-        "zoomus-jssdk": "1.7.0"
+        "write-file-webpack-plugin": "4.5.1"
     },
     "engines": {
         "node": "8.9.1",
