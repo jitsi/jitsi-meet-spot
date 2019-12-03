@@ -121,6 +121,7 @@ export class ZoomMeetingFrame extends React.Component {
         case COMMANDS.HANG_UP: {
             if (data.skipFeedback) {
                 this.props.onMeetingLeave({});
+
                 return;
             }
 
