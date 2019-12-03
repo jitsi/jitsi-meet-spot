@@ -1,0 +1,29 @@
+{
+    "name": "spot-integrations-service",
+    "version": "0.0.1",
+    "main": "src/server.js",
+    "dependencies": {
+        "body-parser": "1.19.0",
+        "cors": "2.8.5",
+        "crypto-js": "3.1.9-1",
+        "envalid": "6.0.0",
+        "express": "4.17.1",
+        "express-prom-bundle": "5.1.5",
+        "js-base64": "2.5.1",
+        "prom-client": "11.5.3"
+    },
+    "devDependencies": {
+        "babel-eslint": "10.0.3",
+        "eslint": "6.6.0",
+        "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
+        "eslint-plugin-flowtype": "4.4.1",
+        "eslint-plugin-import": "2.18.2",
+        "jest": "24.9.0",
+        "supertest": "4.0.2"
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "start": "node src/server.js",
+        "test": "jest"
+    }
+}
