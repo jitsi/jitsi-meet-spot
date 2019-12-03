@@ -11,12 +11,15 @@ import { ScreenShare, WirelessScreenshare } from 'common/icons';
  * @extends React.Component
  */
 export class ModeSelect extends React.Component {
+    static defaultProps = {
+        wirelessScreenshareDisabledText: ''
+    };
+
     static propTypes = {
-        isScreenshareActive: PropTypes.bool,
-        isWirelessScreenshareSupported: PropTypes.bool,
         onGoToSpotRemoveView: PropTypes.func,
         onStartWirelessScreenshare: PropTypes.func,
-        t: PropTypes.func
+        t: PropTypes.func,
+        wirelessScreenshareDisabledText: PropTypes.string
     };
 
     /**
@@ -27,24 +30,11 @@ export class ModeSelect extends React.Component {
      */
     render() {
         const {
-            isWirelessScreenshareSupported,
-            isScreenshareActive,
             onStartWirelessScreenshare,
             onGoToSpotRemoveView,
+            wirelessScreenshareDisabledText,
             t
         } = this.props;
-
-        let disabled = false;
-
-        let footerMessage = '';
-
-        if (!isWirelessScreenshareSupported) {
-            disabled = true;
-            footerMessage = t('screenshare.notSupported');
-        } else if (isScreenshareActive) {
-            disabled = true;
-            footerMessage = t('screenshare.alreadyActive');
-        }
 
         return (
             <div
@@ -57,7 +47,7 @@ export class ModeSelect extends React.Component {
                     <button
                         className = 'selection'
                         data-qa-id = 'start-share'
-                        disabled = { disabled }
+                        disabled = { Boolean(wirelessScreenshareDisabledText) }
                         onClick = { onStartWirelessScreenshare }>
                         <WirelessScreenshare />
                         <span className = 'selection-label'>
@@ -81,7 +71,7 @@ export class ModeSelect extends React.Component {
                     </button>
                 </div>
                 <div className = 'footer'>
-                    { footerMessage }
+                    { wirelessScreenshareDisabledText }
                 </div>
             </div>
         );

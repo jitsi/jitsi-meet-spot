@@ -18,7 +18,10 @@ module.exports = {
         publicPath: '/dist/'
     },
     devtool: 'source-map',
-    entry: './src/index.js',
+    entry: {
+        app: './src/index.js',
+        zoom: './src/zoom/index.js'
+    },
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     module: {
         rules: [
@@ -100,7 +103,6 @@ module.exports = {
         new WriteFilePlugin()
     ],
     output: {
-        filename: 'app.js',
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {

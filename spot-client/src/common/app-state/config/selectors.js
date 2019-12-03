@@ -270,6 +270,17 @@ export function getUpdateEndHour(state) {
 }
 
 /**
+ * A selector which returns the configuration object describing how to connect
+ * to Zoom meetings.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getZoomConfiguration(state) {
+    return state.config.MEETING_INTEGRATIONS.ZOOM;
+}
+
+/**
  * A selector which returns whether or not to display on the remote an option
  * to invite people to a meeting.
  *
@@ -278,4 +289,16 @@ export function getUpdateEndHour(state) {
  */
 export function isInviteEnabled(state) {
     return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_INVITES;
+}
+
+/**
+ * A selector which returns whether or not to allow joining of Zoom meetings.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isZoomEnabled(state) {
+    const { API_KEY, MEETING_SIGN_SERVICE_URL } = getZoomConfiguration(state);
+
+    return Boolean(API_KEY && MEETING_SIGN_SERVICE_URL);
 }

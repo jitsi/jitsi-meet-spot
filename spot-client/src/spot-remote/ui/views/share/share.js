@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import {
@@ -15,7 +16,7 @@ import {
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { LoadingIcon, RoomName, View } from 'common/ui';
-import { getRandomMeetingName } from 'common/utils';
+import { getRandomMeetingName, isZoomMeetingUrl } from 'common/utils';
 
 import { exitShareMode } from './../../../app-state';
 
@@ -37,11 +38,12 @@ export class Share extends React.PureComponent {
     static propTypes = {
         dispatch: PropTypes.func,
         history: PropTypes.object,
-        inMeeting: PropTypes.bool,
         isConnectedToSpot: PropTypes.bool,
         isScreenshareActiveRemotely: PropTypes.bool,
         isWirelessScreensharing: PropTypes.bool,
-        isWirelessScreensharingPending: PropTypes.bool
+        isWirelessScreensharingPending: PropTypes.bool,
+        meetingUrl: PropTypes.string,
+        t: PropTypes.func
     };
 
     /**
@@ -110,6 +112,26 @@ export class Share extends React.PureComponent {
     }
 
     /**
+     * Returns the notice text, if any, to explain why starting wireless
+     * screensharing is currently not allowed. If no text is returned then
+     * wireless screensharing should be allowed.
+     *
+     * @private
+     * @returns {string|undefined}
+     */
+    _getWirelessScreenshareDisabledText() {
+        const { t } = this.props;
+
+        if (!isWirelessScreenshareSupported()) {
+            return t('screenshare.notSupported');
+        } else if (this.props.isScreenshareActiveRemotely) {
+            return t('screenshare.alreadyActive');
+        } else if (isZoomMeetingUrl(this.props.meetingUrl)) {
+            return t('screenshare.notSupportedMeetingType', { type: 'Zoom' });
+        }
+    }
+
+    /**
      * Redirects to the full Spot-Remove view, exiting share mode.
      *
      * @private
@@ -146,10 +168,9 @@ export class Share extends React.PureComponent {
                     <RoomName />
                 </div>
                 <ModeSelect
-                    isScreenshareActive = { this.props.isScreenshareActiveRemotely }
-                    isWirelessScreenshareSupported = { isWirelessScreenshareSupported() }
                     onGoToSpotRemoveView = { this._onGoToSpotRemoteView }
-                    onStartWirelessScreenshare = { this._onStartWirelessScreenshare } />
+                    onStartWirelessScreenshare = { this._onStartWirelessScreenshare }
+                    wirelessScreenshareDisabledText = { this._getWirelessScreenshareDisabledText() } />
             </>
         );
     }
@@ -164,12 +185,11 @@ export class Share extends React.PureComponent {
             autoPromptScreenshare: false
         });
 
-        if (!isWirelessScreenshareSupported() || this.props.isScreenshareActiveRemotely) {
-
+        if (this._getWirelessScreenshareDisabledText()) {
             return;
         }
 
-        if (this.props.inMeeting) {
+        if (this.props.meetingUrl) {
             this.props.dispatch(startWirelessScreensharing());
 
             return;
@@ -208,14 +228,14 @@ function mapStateToProps(state) {
     const inMeetingState = getInMeetingStatus(state);
 
     return {
-        inMeeting: Boolean(inMeetingState.inMeeting),
         isConnectedToSpot: isConnectedToSpot(state),
         isScreenshareActiveRemotely:
             !isWirelessScreensharing && Boolean(inMeetingState.screensharingType),
         isWirelessScreensharing,
         isWirelessScreensharingPending: isWirelessScreensharingPending(state),
+        meetingUrl: inMeetingState.inMeeting,
         view: getCurrentView(state)
     };
 }
 
-export default connect(mapStateToProps)(Share);
+export default connect(mapStateToProps)(withTranslation()(Share));

@@ -1,0 +1,13 @@
+[aria-label='End meeting confir dialog'],
+#dialog-join,
+#wc-footer,
+.active-user-name,
+.cancel-spotlight,
+.full-screen-widget {
+    visibility: hidden;
+}
+
+#suspension-my-canvas {
+    // FIXME: Since zoomus-jssdk 1.7.0, local video has height 0
+    height: 135px;
+}
