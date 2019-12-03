@@ -118,10 +118,16 @@ export class ZoomMeetingFrame extends React.Component {
         });
 
         switch (type) {
-        case COMMANDS.HANG_UP:
-            this._zoomIframeManager.hangUp();
-            break;
+        case COMMANDS.HANG_UP: {
+            if (data.skipFeedback) {
+                this.props.onMeetingLeave({});
+                return;
+            }
 
+            this._zoomIframeManager.hangUp();
+
+            break;
+        }
         case COMMANDS.SET_AUDIO_MUTE:
             this._zoomIframeManager.setAudioMute(data.mute);
             break;
