@@ -72,6 +72,11 @@ export class ZoomMeetingFrame extends React.Component {
             this._zoomIframeManager.destroy();
         }
 
+        this.props.remoteControlServer.removeListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
+            this._onMeetingCommand
+        );
+
         this.props.updateSpotTvState({
             audioMuted: false,
             inMeeting: '',
