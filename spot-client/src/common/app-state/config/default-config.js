@@ -351,6 +351,8 @@ export default {
      * used by jitsi-meet.
      */
     XMPP_CONFIG: {
+        // FIXME adjust default XMPP config, so that PR test are run with websocket
+        //  (dedicated env with wss but no JWT is needed)
         bosh: process.env.XMPP_BOSH || 'https://meet.jit.si/http-bind',
         hosts: {
             domain: process.env.XMPP_HOSTS_DOMAIN || 'meet.jit.si',

@@ -93,6 +93,18 @@ class SpotUser {
      */
     setNetworkOffline() {
         this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+
+        // It is expected that all services would drop the connection when internet goes offline,
+        // but turns out that Websockets have to be killed, because somehow they avoid the link conditioner setting
+        // once established. They will fail to reconnect while the network is offline though.
+        this.driver.execute(rcsServiceName => {
+            try {
+                window.spot[rcsServiceName].xmppConnection.xmppConnection.xmpp.connection._proto.socket.close();
+                // eslint-disable-next-line no-empty
+            } catch (e) {
+
+            }
+        }, this._remoteControlServiceName);
     }
 
     /**
