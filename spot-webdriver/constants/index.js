@@ -28,6 +28,8 @@ module.exports = {
     JOIN_CODE_ENTRY_URL: TEST_SERVER_URL,
 
     /**
+     * FIXME: lower the timeout once websockets are enabled for PR tests.
+     *
      * The maximum amount of time, in milliseconds, to allow a page to load.
      * Delays can happen when a Spot-TV attempts to create a connection while
      * a previous sessions of Spot-TV is still active.
@@ -53,6 +55,7 @@ module.exports = {
     REMOTE_COMMAND_WAIT: 10000,
 
     /**
+     * FIXME: lower the timeout once websockets are enabled for PR tests.
      * The max amount to wait for the signaling connection (XMPP) to go to a
      * disconnected state.
      */
