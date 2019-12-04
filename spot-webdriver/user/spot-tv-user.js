@@ -14,13 +14,11 @@ class SpotTV extends SpotUser {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
+        super(driver, 'remoteControlServer');
 
         this.adminPage = new AdminPage(this.driver);
         this.calendarPage = new CalendarPage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
-
-        this._internalRemoteControlServiceName = 'remoteControlServer';
     }
 
     /**

@@ -17,7 +17,7 @@ class SpotRemote extends SpotUser {
      * @inheritdoc
      */
     constructor(driver) {
-        super(driver);
+        super(driver, 'remoteControlClient');
 
         this.inMeetingPage = new InMeetingPage(this.driver);
         this.joinCodePage = new JoinCodePage(this.driver);
@@ -25,8 +25,6 @@ class SpotRemote extends SpotUser {
         this.notifications = new Notifications(this.driver);
         this.remoteControlPage = new RemoteControlPage(this.driver);
         this.stopSharePage = new StopSharePage(this.driver);
-
-        this._internalRemoteControlServiceName = 'remoteControlClient';
     }
 
     /**
