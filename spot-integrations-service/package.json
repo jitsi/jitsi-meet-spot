@@ -9,6 +9,7 @@
         "envalid": "6.0.0",
         "express": "4.17.1",
         "express-prom-bundle": "5.1.5",
+        "express-validator": "6.3.0",
         "js-base64": "2.5.1",
         "prom-client": "11.5.3"
     },

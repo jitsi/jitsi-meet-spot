@@ -22,11 +22,32 @@ describe('ZoomSigningController', () => {
         request(integrationsApp.getServer())
             .post(routes.zoom.sign)
             .send({
-                apiKey: 1,
-                meetingNumber: 2,
+                apiKey: '11',
+                meetingNumber: '223',
                 role: 0
             })
             .expect(200)
+            .expect('Content-Type', /json/)
             .then(response => expect(response.body.signature).toEqual(expect.any(String)))
     );
+
+    describe('request validation', () => {
+        it('errors when a required value is missing', () =>
+            request(integrationsApp.getServer())
+                .post(routes.zoom.sign)
+                .send({})
+                .expect(422)
+        );
+
+        it('errors when an invalid type value is sent', () =>
+            request(integrationsApp.getServer())
+                .post(routes.zoom.sign)
+                .send({
+                    apiKey: '11',
+                    meetingNumber: {},
+                    role: 0
+                })
+                .expect(422)
+        );
+    });
 });

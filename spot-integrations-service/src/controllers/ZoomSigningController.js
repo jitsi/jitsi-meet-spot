@@ -2,6 +2,7 @@ const base64JS = require('js-base64');
 const hmacSha256 = require('crypto-js/hmac-sha256');
 const encBase64 = require('crypto-js/enc-base64');
 const express = require('express');
+const validator = require('express-validator');
 
 const routes = require('../common/routes');
 
@@ -21,7 +22,15 @@ class ZoomSigningController {
         // eslint-disable-next-line new-cap
         this.router = express.Router();
 
-        this.router.post(routes.zoom.sign, this._onSignMeetingNumber.bind(this));
+        this.router.post(
+            routes.zoom.sign,
+            [
+                validator.check('apiKey').isString(),
+                validator.check('meetingNumber').isString(),
+                validator.check('role').isInt()
+            ],
+            this._onSignMeetingNumber.bind(this)
+        );
     }
 
     /**
@@ -39,9 +48,15 @@ class ZoomSigningController {
      * @returns {void}
      */
     _onSignMeetingNumber(req, res) {
-        const { apiKey, meetingNumber, role } = req.body;
+        const errors = validator.validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
 
         try {
+            const { apiKey, meetingNumber, role } = req.body;
+
             const timestamp = new Date().getTime();
             const message = base64JS.Base64.encode(`${apiKey}${meetingNumber}${timestamp}${role}`);
             const hash = hmacSha256(message, this._apiSecret);
