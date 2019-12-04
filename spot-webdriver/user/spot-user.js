@@ -15,9 +15,19 @@ class SpotUser {
      * Created new instance.
      *
      * @param {Client} driver - The automation driver for browser control.
+     * @param {string} remoteControlServiceName - The name of the JS var for the RCS service(used when running scripts
+     * on the browser).
      */
-    constructor(driver) {
+    constructor(driver, remoteControlServiceName) {
         this.driver = driver;
+
+        /**
+         * The name of the JS var for the RCS service(used when running scripts on the browser).
+         *
+         * @type {string}
+         * @protected
+         */
+        this._remoteControlServiceName = remoteControlServiceName;
 
         this.loadingScreen = new LoadingScreen(this.driver);
     }
@@ -109,7 +119,7 @@ class SpotUser {
             } catch (e) {
                 // Error means p2p is already destroyed.
             }
-        }, this._internalRemoteControlServiceName);
+        }, this._remoteControlServiceName);
     }
 
     /**
@@ -126,9 +136,9 @@ class SpotUser {
                 } catch (e) {
                     return false;
                 }
-            }, this._internalRemoteControlServiceName),
+            }, this._remoteControlServiceName),
             constants.P2P_ESTABLISHED_WAIT,
-            `p2p not established with ${this._internalRemoteControlServiceName}`
+            `p2p not established with ${this._remoteControlServiceName}`
         );
     }
 
@@ -150,9 +160,9 @@ class SpotUser {
                 } catch (e) {
                     return false;
                 }
-            }, this._internalRemoteControlServiceName),
+            }, this._remoteControlServiceName),
             constants.MAX_PAGE_LOAD_WAIT,
-            `signaling not established with ${this._internalRemoteControlServiceName}`
+            `signaling not established with ${this._remoteControlServiceName}`
         );
     }
 
@@ -170,9 +180,9 @@ class SpotUser {
                 } catch (e) {
                     return true;
                 }
-            }, this._internalRemoteControlServiceName),
+            }, this._remoteControlServiceName),
             constants.SIGNALING_DISCONNECT_TIMEOUT,
-            `signaling still connected with ${this._internalRemoteControlServiceName}`
+            `signaling still connected with ${this._remoteControlServiceName}`
         );
     }
 
