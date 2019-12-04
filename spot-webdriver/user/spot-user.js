@@ -67,7 +67,14 @@ class SpotUser {
      * @protected
      */
     disconnectRemoteControlService() {
-        // Implemented in subclasses
+        this.driver.executeAsync((rcsServiceName, done) => {
+            try {
+                window.spot[rcsServiceName].disconnect()
+                    .then(done, done);
+            } catch (e) {
+                done();
+            }
+        }, this._remoteControlServiceName);
     }
 
     /**
