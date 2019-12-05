@@ -25,6 +25,7 @@ import {
 } from 'common/ui';
 import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
 import {
+    Conflict,
     ExitElectron,
     Home,
     Meeting,
@@ -173,6 +174,9 @@ export class App extends React.Component {
                                  * Spot-TV specific routes.
                                  */
                             }
+                            <Route
+                                path = { ROUTES.CONFLICT }
+                                render = { this._renderConflictView } />
                             <SpotTvRestrictedRoute
                                 path = { ROUTES.MEETING }
                                 render = { this._renderMeetingView } />
@@ -281,6 +285,20 @@ export class App extends React.Component {
      */
     _onTouchStart() {
         /** No-op. */
+    }
+
+    /**
+     * Returns the Spot TV conflict view.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderConflictView() {
+        return (
+            <SpotView name = { 'conflict' }>
+                <Conflict />
+            </SpotView>
+        );
     }
 
     /**

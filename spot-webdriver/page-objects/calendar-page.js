@@ -54,7 +54,8 @@ class CalendarPage extends PageObject {
      *
      * @param {Map} [queryParams] - Query parameters to add to the URL.
      * @param {number} [visibilityWait] - Override for how long page load should
-     * wait for before reporting the page as having failed to load.
+     * wait for before reporting the page as having failed to load. If -1 is passed then the waiting part will be
+     * skipped.
      * @returns {void}
      */
     visit(queryParams, visibilityWait) {
@@ -69,7 +70,7 @@ class CalendarPage extends PageObject {
         }
 
         this.driver.url(calendarPageUrl);
-        this.waitForVisible(visibilityWait);
+        visibilityWait === -1 || this.waitForVisible(visibilityWait);
     }
 }
 

@@ -31,6 +31,7 @@
         "pleaseWait": "Please wait",
         "reconnecting": "Reconnecting",
         "setup": "Currently in setup.",
+        "tvConflict": "Please make sure another window is not open and try again.",
         "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
         "unexpectedError": "An unexpected error occurred.",
         "useChrome": "Please open {{ productName }} on Chrome desktop.",
@@ -44,6 +45,7 @@
         "go": "Join",
         "select": "Select",
         "next": "Next",
+        "retry": "Retry",
         "send": "Send",
         "skip": "Skip",
         "submit": "Submit"
