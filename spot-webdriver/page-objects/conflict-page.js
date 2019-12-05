@@ -9,7 +9,7 @@ const RETRY_BUTTON = '[data-qa-id=conflict-retry';
  */
 class ConflictPage extends PageObject {
     /**
-     * Initializes a new {@code CalendarPage} instance.
+     * Initializes a new {@code ConflictPage} instance.
      *
      * @inheritdoc
      */
