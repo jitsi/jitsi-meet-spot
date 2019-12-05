@@ -250,7 +250,7 @@ export default class XmppConnection extends Emitter {
 
                             if (timeSinceFirstConflict <= CONFLICT_TIMEOUT) {
                                 logger.warn('Retry MUC join on conflict error', { timeSinceFirstConflict });
-                                setTimeout(() => this._joinMuc(roomLock), 5000);
+                                this._conflictRetryTimeout = setTimeout(() => this._joinMuc(roomLock), 5000);
 
                                 return true;
                             }
@@ -345,6 +345,9 @@ export default class XmppConnection extends Emitter {
      * @returns {Promise}
      */
     destroy(event) {
+        clearTimeout(this._conflictRetryTimeout);
+        this._conflictRetryTimeout = undefined;
+
         const leavePromise = this.xmppConnection
             ? this.xmppConnection.disconnect(event)
             : Promise.resolve();
