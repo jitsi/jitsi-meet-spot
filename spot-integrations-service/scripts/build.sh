@@ -9,4 +9,8 @@ if [ -z "$TAG" ]; then
     exit 1
 fi
 
-docker build -t $TAG .
+DOCKER_REPO=103425057857.dkr.ecr.us-west-2.amazonaws.com/jitsi/spot-integrations-service
+
+$(aws ecr get-login --no-include-email)
+docker build -t $DOCKER_REPO:$TAG .
+docker push $DOCKER_REPO:$TAG
