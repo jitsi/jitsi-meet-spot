@@ -1,3 +1,4 @@
+const SpotSession = require('../user/spot-session');
 const spotSessionStore = require('../user/spotSessionStore');
 
 describe('In share mode', () => {
@@ -42,7 +43,7 @@ describe('In share mode', () => {
     });
 
     xit('Spot-Remote is disconnected on share end', () => {
-        if (!session.isBackendEnabled()) {
+        if (!SpotSession.isBackendEnabled()) {
             pending();
 
             return;

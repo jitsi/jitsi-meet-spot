@@ -1,3 +1,4 @@
+const SpotSession = require('../user/spot-session');
 const spotSessionStore = require('../user/spotSessionStore');
 
 describe('The reconnect logic', () => {
@@ -37,7 +38,7 @@ describe('The reconnect logic', () => {
 
     describe('when the internet goes offline', () => {
         it('in the backend mode Spot TV and permanent remote will both reconnect', () => {
-            if (!session.isBackendEnabled()) {
+            if (!SpotSession.isBackendEnabled()) {
                 pending();
 
                 return;
@@ -107,7 +108,7 @@ describe('The reconnect logic', () => {
 
     describe('when signaling goes offline', () => {
         it('does not disconnect while peer-to-peer connections are active', () => {
-            if (!session.isBackendEnabled()) {
+            if (!SpotSession.isBackendEnabled()) {
                 pending();
 
                 return;

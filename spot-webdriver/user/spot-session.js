@@ -71,7 +71,7 @@ class SpotSession {
      *
      * @returns {boolean}
      */
-    isBackendEnabled() {
+    static isBackendEnabled() {
         return Boolean(constants.BACKEND_PAIRING_CODE);
     }
 
@@ -145,15 +145,16 @@ class SpotSession {
     /**
      * Starts the Spot TV and opens the home page(calendar page).
      *
+     * @param {boolean} [skipWaitForVisible] - If set to {@code true} will not wait for the home page to be displayed.
      * @returns {void}
      */
-    startSpotTv() {
+    startSpotTv(skipWaitForVisible) {
         const calendarPage = this.spotTV.getCalendarPage();
         const queryParams = new Map();
 
         queryParams.set(QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE, constants.BACKEND_PAIRING_CODE || '');
 
-        calendarPage.visit(queryParams, constants.MAX_PAGE_LOAD_WAIT);
+        calendarPage.visit(queryParams, skipWaitForVisible ? -1 : constants.MAX_PAGE_LOAD_WAIT);
     }
 
     /**

@@ -1,3 +1,4 @@
+const SpotSession = require('../user/spot-session');
 const spotSessionStore = require('../user/spotSessionStore');
 
 describe('Can start a meeting', () => {
@@ -30,7 +31,7 @@ describe('Can start a meeting', () => {
     });
 
     xit('and disconnects the remote on meeting end', () => {
-        if (!session.isBackendEnabled()) {
+        if (!SpotSession.isBackendEnabled()) {
             pending();
 
             return;
