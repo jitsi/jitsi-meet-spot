@@ -71,7 +71,7 @@ class SpotSession {
      *
      * @returns {boolean}
      */
-    isBackendEnabled() {
+    static isBackendEnabled() {
         return Boolean(constants.BACKEND_PAIRING_CODE);
     }
 

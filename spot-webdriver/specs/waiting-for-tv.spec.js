@@ -1,10 +1,11 @@
+const SpotSession = require('../user/spot-session');
 const spotSessionStore = require('../user/spotSessionStore');
 
 describe('The "waiting for the Spot TV to connect" message', () => {
     const session = spotSessionStore.createSession();
 
     it('should appear if no Spot TV and disappear when it connects', () => {
-        if (!session.isBackendEnabled()) {
+        if (!SpotSession.isBackendEnabled()) {
             pending();
 
             return;
@@ -29,7 +30,7 @@ describe('The "waiting for the Spot TV to connect" message', () => {
         waitingForSpotTvLabel.waitForHidden();
     });
     it('should appear if Spot TV disconnects while Spot Remote is disconnected', () => {
-        if (!session.isBackendEnabled()) {
+        if (!SpotSession.isBackendEnabled()) {
             pending();
 
             return;

@@ -4,6 +4,12 @@ const SpotSession = require('../user/spot-session');
 
 describe('The Spot TV conflict detection logic', () => {
     it('should detect the conflict after timeout and allow to retry', () => {
+        if (!SpotSession.isBackendEnabled()) {
+            pending();
+
+            return;
+        }
+
         const spotTv1 = new SpotTV(spotBrowser);
         const spotTv2 = new SpotTV(remoteControlBrowser);
 
