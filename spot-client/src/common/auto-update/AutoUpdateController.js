@@ -43,6 +43,7 @@ export const WEB_UPDATE_POLL_INTERVAL = 30000;
 const allowedRoutes = [];
 
 // Spot TV
+allowedRoutes.push(ROUTES.CONFLICT);
 allowedRoutes.push(ROUTES.SETUP);
 allowedRoutes.push(ROUTES.UNSUPPORTED_BROWSER);
 allowedRoutes.push(ROUTES.HOME);

@@ -8,6 +8,15 @@ import { getJitterDelay } from 'common/utils';
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
 /**
+ * How long will the join MUC function retry on conflict error before giving up.
+ * The value must be bigger than the idle client connection timeout. It's currently set to 30 seconds for the worst case
+ * scenario.
+ *
+ * @type {number}
+ */
+const CONFLICT_TIMEOUT = 35000;
+
+/**
  * XML element name for spot status added to MUC presence.
  *
  * @type {string}
@@ -214,6 +223,8 @@ export default class XmppConnection extends Emitter {
         );
 
         const createJoinPromise = function () {
+            let firstConflictTimestamp;
+
             return new Promise((resolve, reject) => {
                 const { connection } = this.xmppConnection.xmpp;
 
@@ -229,6 +240,21 @@ export default class XmppConnection extends Emitter {
 
                     if (errors.length) {
                         const error = errors[0].children[0].tagName;
+
+                        if (error === 'conflict') {
+                            if (!firstConflictTimestamp) {
+                                firstConflictTimestamp = Date.now();
+                            }
+
+                            const timeSinceFirstConflict = Date.now() - firstConflictTimestamp;
+
+                            if (timeSinceFirstConflict <= CONFLICT_TIMEOUT) {
+                                logger.warn('Retry MUC join on conflict error', { timeSinceFirstConflict });
+                                this._conflictRetryTimeout = setTimeout(() => this._joinMuc(roomLock), 5000);
+
+                                return true;
+                            }
+                        }
 
                         reject(error);
 
@@ -319,6 +345,9 @@ export default class XmppConnection extends Emitter {
      * @returns {Promise}
      */
     destroy(event) {
+        clearTimeout(this._conflictRetryTimeout);
+        this._conflictRetryTimeout = undefined;
+
         const leavePromise = this.xmppConnection
             ? this.xmppConnection.disconnect(event)
             : Promise.resolve();
@@ -544,8 +573,7 @@ export default class XmppConnection extends Emitter {
 
         if ((error === 'connection.droppedError'
             || error === 'connection.otherError'
-            || error === 'item-not-found'
-            || error === 'conflict')
+            || error === 'item-not-found')
             && this._joinOptions.shouldAttemptReconnect()) {
             logger.warn('xmpp connection attempting silent reconnect', {
                 error,
