@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import { Button } from 'common/ui/components/button';
+import { connect } from 'react-redux';
+
+import { getDisplayName } from 'common/app-state';
 import { history } from 'common/history';
 import { ROUTES } from 'common/routing';
+import { Button } from 'common/ui';
 
 /**
  * The conflict error page displayed when another Spot TV instance is already connected.
@@ -12,6 +15,7 @@ import { ROUTES } from 'common/routing';
  */
 export class Conflict extends React.Component {
     static propTypes = {
+        roomName: PropTypes.string,
         t: PropTypes.func
     };
 
@@ -42,13 +46,13 @@ export class Conflict extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { t } = this.props;
+        const { roomName, t } = this.props;
 
         return (
             <div
                 className = 'conflict'
                 data-qa-id = 'conflict-view' >
-                <div>{ t('appStatus.tvConflict') }</div>
+                <div>{ t('appStatus.tvConflict', { roomName }) }</div>
                 <Button
                     onClick = { this._onRetry }
                     qaId = 'conflict-retry' >
@@ -59,4 +63,17 @@ export class Conflict extends React.Component {
     }
 }
 
-export default withTranslation()(Conflict);
+/**
+ * Selects parts of the Redux state to pass in with the props of {@code Conflict}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        roomName: getDisplayName(state)
+    };
+}
+
+export default connect(mapStateToProps)(withTranslation()(Conflict));
