@@ -8,6 +8,7 @@ import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 import { events } from 'common/zoom';
 
+import { ApiHealthCheck } from '../ApiHealthCheck';
 import meetingFramePropTypes from '../meetingFramePropTypes';
 
 import ZoomIframeManager from './ZoomIframeManager';
@@ -37,6 +38,7 @@ export class ZoomMeetingFrame extends React.Component {
 
         this._rootRef = React.createRef();
 
+        this._onApiHealthCheckError = this._onApiHealthCheckError.bind(this);
         this._onMeetingCommand = this._onMeetingCommand.bind(this);
         this._onMeetingUpdateReceived = this._onMeetingUpdateReceived.bind(this);
     }
@@ -60,6 +62,11 @@ export class ZoomMeetingFrame extends React.Component {
         );
 
         this._zoomIframeManager.load();
+
+        this._zoomApiHealthCheck = new ApiHealthCheck(
+            () => this._zoomIframeManager.ping(),
+            this._onApiHealthCheckError
+        );
     }
 
     /**
@@ -68,9 +75,8 @@ export class ZoomMeetingFrame extends React.Component {
      * @inheritdoc
      */
     componentWillUnmount() {
-        if (this._zoomIframeManager) {
-            this._zoomIframeManager.destroy();
-        }
+        this._zoomApiHealthCheck.stop();
+        this._zoomIframeManager.destroy();
 
         this.props.remoteControlServer.removeListener(
             SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
@@ -99,6 +105,19 @@ export class ZoomMeetingFrame extends React.Component {
                 className = 'meeting-frame'
                 ref = { this._rootRef } />
         );
+    }
+
+    /**
+     * Callback invoked when the iFrame is not responsive.
+     *
+     * @param {string} reason - The detected reason for the failed health check.
+     * @private
+     * @returns {void}
+     */
+    _onApiHealthCheckError(reason) {
+        logger.error('api health check failed', { reason });
+
+        this.props.onMeetingLeave({});
     }
 
     /**
@@ -173,6 +192,8 @@ export class ZoomMeetingFrame extends React.Component {
                 meetingDisplayName: this.props.meetingDisplayName,
                 needPassword: false
             });
+
+            this._zoomApiHealthCheck.start();
 
             break;
         }

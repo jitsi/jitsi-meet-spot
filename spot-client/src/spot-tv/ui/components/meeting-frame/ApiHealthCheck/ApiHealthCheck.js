@@ -1,34 +1,36 @@
 /**
- * Checks if the Jitsi API is responsive.
+ * Checks if the meeting integration iframe is responsive.
  */
 export default class ApiHealthCheck {
     /**
-     * The amount of time to wait in milliseconds for the Jitsi API to return
-     * a response.
+     * The amount of time to wait in milliseconds for the health check function
+     * to return a response.
      */
     static pingTimeLimitMs = 5000;
 
     /**
-     * The amount of time to wait in milliseconds before sending a new request
-     * into the Jitsi API.
+     * The amount of time to wait in milliseconds before executing the health
+     * check function again
      */
     static pingIntervalMs = 5000;
 
     /**
      * Initializes a new {@code ApiHealthCheck} instance.
      *
-     * @param {Object} jitsiApi - An instance of JitsiMeetExternalAPI.
+     * @param {Object} healthCheckFunction - The function to invoke that checks
+     * the health of the iframe.
      * @param {Function} onError - Callback to invoke when a health check fails.
      */
-    constructor(jitsiApi, onError) {
-        this._jitsiApi = jitsiApi;
+    constructor(healthCheckFunction, onError) {
+        this._healthCheckFunction = healthCheckFunction;
         this._onError = onError;
 
         this._isRunning = false;
     }
 
     /**
-     * Begins polling the Jitsi API to check if the iFrame is responsive.
+     * Begins calling the health check function at an interval to check if the
+     * iframe is responsive.
      *
      * @returns {void}
      */
@@ -55,7 +57,7 @@ export default class ApiHealthCheck {
     }
 
     /**
-     * Exercises a request to the Jitsi API and enqueues another request to be
+     * Exercises the health check function and enqueues another request to be
      * made in the future.
      *
      * @private
@@ -82,7 +84,7 @@ export default class ApiHealthCheck {
     }
 
     /**
-     * Executes a request to the Jitsi API to check if the iFrame is responsive.
+     * Executes a request into the iframe to check if the iFrame is responsive.
      * Times out if no response is received within a defined time limit.
      *
      * @private
@@ -94,11 +96,7 @@ export default class ApiHealthCheck {
                 reject('health-check-time-limit-exceeded');
             }, ApiHealthCheck.pingTimeLimitMs);
 
-            // Using video mute is somewhat arbitrary. The intent is to invoke
-            // a method that will make a request into the iframe itself to get a
-            // response back. Video muting looked like an acceptable candidate
-            // as no actual ping method exists.
-            this._jitsiApi.isVideoMuted()
+            this._healthCheckFunction()
                 .then(() => {
                     clearTimeout(timeLimitExceededTimeout);
 

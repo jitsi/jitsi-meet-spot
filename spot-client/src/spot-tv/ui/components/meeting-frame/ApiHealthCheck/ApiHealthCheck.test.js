@@ -3,20 +3,18 @@ import ApiHealthCheck from './ApiHealthCheck';
 describe('ApiHealthCheck', () => {
     let apiHealthCheck;
 
-    let mockJitsiApi;
+    let mockHealthCheckFunction;
 
     let onErrorCallback;
 
     beforeEach(() => {
         jest.useFakeTimers();
 
-        mockJitsiApi = {
-            isVideoMuted: jest.fn().mockReturnValue(Promise.resolve())
-        };
+        mockHealthCheckFunction = jest.fn().mockReturnValue(Promise.resolve());
 
         onErrorCallback = jest.fn();
 
-        apiHealthCheck = new ApiHealthCheck(mockJitsiApi, onErrorCallback);
+        apiHealthCheck = new ApiHealthCheck(mockHealthCheckFunction, onErrorCallback);
     });
 
     afterEach(() => {
@@ -30,13 +28,13 @@ describe('ApiHealthCheck', () => {
 
             jest.runAllTimers();
 
-            expect(mockJitsiApi.isVideoMuted.mock.calls.length).toBe(1);
+            expect(mockHealthCheckFunction.mock.calls.length).toBe(1);
         });
     });
 
     describe('onError', () => {
         it('is called if the health check errors', () => {
-            mockJitsiApi.isVideoMuted.mockReturnValue(Promise.reject());
+            mockHealthCheckFunction.mockReturnValue(Promise.reject());
 
             apiHealthCheck.start();
 
@@ -47,7 +45,7 @@ describe('ApiHealthCheck', () => {
         });
 
         it('is called if the health check times out', () => {
-            mockJitsiApi.isVideoMuted.mockReturnValue(new Promise(() => { /** Hung promise. */ }));
+            mockHealthCheckFunction.mockReturnValue(new Promise(() => { /** Hung promise. */ }));
 
             apiHealthCheck.start();
 
@@ -62,11 +60,12 @@ describe('ApiHealthCheck', () => {
 
     describe('stop', () => {
         it('prevents onError from getting called', () => {
-            mockJitsiApi.isVideoMuted.mockReturnValue(Promise.reject());
+            mockHealthCheckFunction.mockReturnValue(Promise.reject());
 
             apiHealthCheck.start();
 
             apiHealthCheck.stop();
+
             const processHealthCheck = new Promise(resolve => process.nextTick(resolve));
 
             return processHealthCheck
@@ -77,13 +76,14 @@ describe('ApiHealthCheck', () => {
             apiHealthCheck.start();
 
             apiHealthCheck.stop();
+
             const processHealthCheck = new Promise(resolve => process.nextTick(resolve));
 
             return processHealthCheck
                 .then(() => {
                     jest.advanceTimersByTime(ApiHealthCheck.pingTimeLimit);
 
-                    expect(mockJitsiApi.isVideoMuted.mock.calls.length).toBe(1);
+                    expect(mockHealthCheckFunction.mock.calls.length).toBe(1);
                 });
         });
     });

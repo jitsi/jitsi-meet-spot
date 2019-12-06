@@ -13,7 +13,7 @@ import { adjustVolume } from '../../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
-import ApiHealthCheck from './ApiHealthCheck';
+import { ApiHealthCheck } from '../ApiHealthCheck';
 import FeedbackHider from './FeedbackHider';
 import meetingFramePropTypes from '../meetingFramePropTypes';
 
@@ -162,7 +162,7 @@ export class JitsiMeetingFrame extends React.Component {
         });
 
         this._jitsiApiHealthCheck = new ApiHealthCheck(
-            this._jitsiApi,
+            () => this._jitsiApi.isVideoMuted(),
             this._onApiHealthCheckError
         );
 
