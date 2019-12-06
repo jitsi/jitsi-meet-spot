@@ -115,7 +115,6 @@ describe('utils', () => {
             return utils.getRemotePairingCode(MOCK_SERVICE_ENDPOINT, MOCK_JWT)
                 .then(result => expect(result).toEqual({
                     code: MOCK_RESPONSE.code,
-                    emitted: 1,
                     expires: 3
                 }));
         });
@@ -216,7 +215,6 @@ describe('utils', () => {
             return utils.refreshAccessToken(MOCK_SERVICE_ENDPOINT, MOCK_TOKENS)
                 .then(result => expect(result).toEqual({
                     accessToken: MOCK_RESPONSE.accessToken,
-                    emitted: 1,
                     expires: 3,
                     refreshToken: MOCK_TOKENS.refreshToken,
                     tenant: MOCK_RESPONSE.tenant
@@ -282,7 +280,6 @@ describe('utils', () => {
             return utils.registerDevice(MOCK_SERVICE_ENDPOINT, MOCK_PAIRING_CODE)
                 .then(result => expect(result).toEqual({
                     accessToken: MOCK_RESPONSE.accessToken,
-                    emitted: 1,
                     expires: 3,
                     refreshToken: MOCK_RESPONSE.refreshToken,
                     tenant: MOCK_RESPONSE.tenant
@@ -298,7 +295,6 @@ describe('utils', () => {
             return utils.registerDevice(MOCK_SERVICE_ENDPOINT, MOCK_PAIRING_CODE)
                 .then(result => expect(result).toEqual({
                     accessToken: MOCK_RESPONSE.accessToken,
-                    emitted: 1,
                     expires: 3,
                     tenant: MOCK_RESPONSE.tenant
                 }));
