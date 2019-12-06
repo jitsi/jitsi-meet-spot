@@ -25,6 +25,13 @@ describe('In share mode', () => {
     });
 
     it('Spot-Remote can enter full remote control mode', () => {
+        if (SpotSession.isBackendEnabled()) {
+            pending();
+
+            // In the backend mode remote gets disconnected so it doesn't get to the full remote control mode.
+            return;
+        }
+
         const stopSharePage = spotRemote.getStopSharePage();
 
         stopSharePage.stopScreensharing();
@@ -42,7 +49,7 @@ describe('In share mode', () => {
         remoteControlPage.waitWaitingForCallViewToDisplay();
     });
 
-    xit('Spot-Remote is disconnected on share end', () => {
+    it('Spot-Remote is disconnected on share end', () => {
         if (!SpotSession.isBackendEnabled()) {
             pending();
 
@@ -60,7 +67,5 @@ describe('In share mode', () => {
         const joinCodePage = spotRemote.getJoinCodePage();
 
         joinCodePage.waitForVisible();
-
-        spotRemote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
     });
 });
