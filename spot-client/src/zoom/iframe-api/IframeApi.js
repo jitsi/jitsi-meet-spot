@@ -1,3 +1,4 @@
+import { Transport, PostMessageTransportBackend } from 'js-utils/transport';
 import { commands, events } from 'common/zoom';
 import { sdk } from './../sdk';
 
@@ -15,13 +16,21 @@ export class IFrameApi {
         this.parent = globalWindow.parent;
         this.acceptedOrigin = globalWindow.location.origin;
 
-        this._onMessageFromParent = this._onMessageFromParent.bind(this);
         this._onMeetingStatusChange = this._onMeetingStatusChange.bind(this);
 
-        globalWindow.addEventListener('message', this._onMessageFromParent);
+        this._transport = new Transport({
+            backend: new PostMessageTransportBackend({
+                postisOptions: {
+                    scope: 'spot_zoom_integration'
+                }
+            })
+        });
 
-        globalWindow.addEventListener(
-            'beforeunload', () => this._sendMessageToParent(events.MEETING_ENDED));
+        this._transport.on('event', ({ type, data }) => {
+            this._onMessageFromParent(type, data);
+
+            return true;
+        });
 
         sdk.initialize(this._onMeetingStatusChange)
             .then(() => this._sendMessageToParent(events.READY));
@@ -31,24 +40,16 @@ export class IFrameApi {
      * Callback invoked when a message is received from the parent window with
      * a command to take an action in the meeting.
      *
-     * @param {Object} command - Information about the action to take.
-     * @param {string} command.origin - The host of the parent window. Only
-     * commands from a matching host are respected.
-     * @param {Object} command.data - The command itself.
-     * @param {string} command.data.type - The constant representing the command.
-     * @param {Object} command.data.data - Information about how to execute
+     * @param {string} type - The constant representing the command.
+     * @param {Object} data - Information about how to execute
      * the command.
      * @private
      * @returns {void}
      */
-    _onMessageFromParent({ origin, data }) {
-        if (origin !== this.acceptedOrigin) {
-            return;
-        }
-
-        switch (data.type) {
+    _onMessageFromParent(type, data) {
+        switch (type) {
         case commands.AUDIO_MUTE: {
-            sdk.setAudioMute(data.data.mute);
+            sdk.setAudioMute(data.mute);
             break;
         }
 
@@ -58,7 +59,7 @@ export class IFrameApi {
         }
 
         case commands.JOIN: {
-            sdk.joinMeeting(data.data)
+            sdk.joinMeeting(data)
                 .then(
                     () => this._sendMessageToParent(events.MEETING_JOIN_SUCCEEDED),
                     error => this._sendMessageToParent(events.MEETING_JOIN_FAILED, { error })
@@ -67,7 +68,7 @@ export class IFrameApi {
             break;
         }
         case commands.VIDEO_MUTE: {
-            sdk.setVideoMute(data.data.mute);
+            sdk.setVideoMute(data.mute);
             break;
         }
         }
@@ -95,10 +96,10 @@ export class IFrameApi {
      * @returns {void}
      */
     _sendMessageToParent(type, data = {}) {
-        this.parent.postMessage({
-            data,
-            type
-        }, this.targetOrigin);
+        this._transport.sendEvent({
+            type,
+            data
+        });
     }
 }
 
