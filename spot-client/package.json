@@ -48,7 +48,7 @@
         "jest-fetch-mock": "2.1.2",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "jquery": "3.4.1",
-        "js-utils": "github:jitsi/js-utils#4bab5934ff261d5b9c8593e11a2a169e54ffddee",
+        "js-utils": "github:jitsi/js-utils#964294793a7dbb85b2a38c87abe5ae46c4acf0af",
         "jsdoc": "3.6.3",
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",

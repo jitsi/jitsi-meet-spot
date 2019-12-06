@@ -1,3 +1,4 @@
+import { Transport, PostMessageTransportBackend } from 'js-utils/transport';
 import { commands } from 'common/zoom';
 
 /**
@@ -21,10 +22,7 @@ export default class ZoomIframeManager {
         this._options = options;
 
         this._iframe = null;
-
-        this._onMeetingUpdateReceived = this._onMeetingUpdateReceived.bind(this);
-
-        window.addEventListener('message', this._onMeetingUpdateReceived);
+        this._transport = null;
     }
 
     /**
@@ -38,7 +36,9 @@ export default class ZoomIframeManager {
             this._iframe.remove();
         }
 
-        window.removeEventListener('message', this._onMeetingUpdateReceived);
+        if (this._transport) {
+            this._transport.dispose();
+        }
     }
 
     /**
@@ -84,6 +84,21 @@ export default class ZoomIframeManager {
         this._iframe.classList.add('zoom-frame');
 
         this._options.iframeTarget.appendChild(this._iframe);
+
+        this._transport = new Transport({
+            backend: new PostMessageTransportBackend({
+                postisOptions: {
+                    scope: 'spot_zoom_integration',
+                    window: this._iframe.contentWindow
+                }
+            })
+        });
+
+        this._transport.on('event', ({ type, data }) => {
+            this._onMeetingUpdateReceived(type, data);
+
+            return true;
+        });
     }
 
     /**
@@ -110,21 +125,13 @@ export default class ZoomIframeManager {
      * Callback invoked when the Zoom meeting sends a status update through
      * the iframe.
      *
-     * @param {Object} update - Information about a status change in the meeting.
-     * @param {string} update.origin - The host of the parent window. Only
-     * commands from a matching host are respected.
-     * @param {Object} update.data - The status update itself.
-     * @param {string} update.data.type - The constant representing the update.
-     * @param {Object} update.data.data - Details about the update.
+     * @param {string} type - The constant representing the update.
+     * @param {Object} data - Details about the update.
      * @private
      * @returns {void}
      */
-    _onMeetingUpdateReceived({ origin, data }) {
-        if (origin !== window.location.origin) {
-            return;
-        }
-
-        this._options.onMeetingUpdateReceived(data.type, data.data);
+    _onMeetingUpdateReceived(type, data) {
+        this._options.onMeetingUpdateReceived(type, data);
     }
 
     /**
@@ -136,7 +143,7 @@ export default class ZoomIframeManager {
      * @returns {void}
      */
     _sendCommand(type, data) {
-        this._iframe.contentWindow.postMessage({
+        this._transport.sendEvent({
             type,
             data
         });
