@@ -135,22 +135,6 @@ describe('utils', () => {
         };
 
         describe('throws', () => {
-            it('when no access token is passed', () => {
-                try {
-                    const result = utils.refreshAccessToken(
-                        MOCK_SERVICE_ENDPOINT,
-                        {
-                            ...MOCK_TOKENS,
-                            accessToken: undefined
-                        }
-                    );
-
-                    expect(result).toBeFalsy();
-                } catch (error) {
-                    expect(error.message.includes('Access token')).toBe(true);
-                }
-            });
-
             it('when no refresh token is passed', () => {
                 try {
                     const result = utils.refreshAccessToken(
