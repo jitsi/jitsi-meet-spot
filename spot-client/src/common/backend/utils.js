@@ -310,14 +310,10 @@ export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
  * Sends a token refresh request to get a fresh token, before the current one expires.
  *
  * @param {string} serviceEndpointUrl - URL pointing to the token refresh service.
- * @param {string} accessToken -
  * @param {string} refreshToken -
  * @returns {Promise<RefreshTokenResponse>}
  */
-export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshToken }) {
-    if (!accessToken) {
-        throw new Error('Access token is required');
-    }
+export function refreshAccessToken(serviceEndpointUrl, { refreshToken }) {
     if (!refreshToken) {
         throw new Error('Refresh token is required');
     }
@@ -326,7 +322,7 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
         body: JSON.stringify({
             refreshToken
         }),
-        headers: createHeaders(accessToken),
+        headers: createHeaders(),
         method: 'PUT',
         mode: 'cors'
     };
