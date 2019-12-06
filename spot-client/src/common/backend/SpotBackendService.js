@@ -191,12 +191,11 @@ export class SpotBackendService extends Emitter {
         logger.log('Refreshing access token...', { pairingCode });
 
         return refreshAccessToken(`${this.pairingServiceUrl}/regenerate`, registration)
-            .then(({ accessToken, emitted, expires, tenant }) => {
+            .then(({ accessToken, expires, tenant }) => {
                 // copy the fields to preserve the refresh token
                 const newRegistration = {
                     ...registration,
                     accessToken,
-                    emitted,
                     expires,
                     tenant
                 };

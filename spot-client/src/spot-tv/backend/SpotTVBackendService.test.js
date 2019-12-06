@@ -52,7 +52,6 @@ describe('SpotTvBackendService', () => {
             const MOCK_REGISTRATION = {
                 ...MOCK_RESPONSE,
                 pairingCode: MOCK_PAIRING_CODE,
-                expiresIn: undefined,
                 expires: MOCK_RESPONSE.emitted + MOCK_RESPONSE.expiresIn
             };
 

@@ -11,15 +11,13 @@ import { errorConstants } from './constants';
  * has been emitted.
  * @param {string|number} expiresIn - A string with a number of milliseconds which is validity period of a token.
  * @returns {{
- *     emitted: number,
  *     expires: number
  * }}
  */
-function convertToEmittedAndExpires({ emitted, expiresIn }) {
+function convertToExpires({ emitted, expiresIn }) {
     const emittedMillis = Number(emitted);
 
     return {
-        emitted: emittedMillis,
         expires: emittedMillis + Number(expiresIn)
     };
 }
@@ -216,8 +214,6 @@ export function fetchCalendarEvents(serviceEndpointUrl, jwt) {
 
 /**
  * @typedef {Object} RemotePairingInfo - the short lived paring code.
- * @property {number} emitted - A date expressed in milliseconds since the epoch which indicates when
- * the pairing code has been emitted.
  * @property {number} expires - A date expressed in milliseconds since the epoch which indicates when
  * the pairing code will expire.
  * @property {string} remotePairingCode - A short lived remote pairing code to be used by Spot Remotes which connect
@@ -260,7 +256,7 @@ export function getRemotePairingCode(serviceEndpointUrl, jwt) {
 
         return {
             code,
-            ...convertToEmittedAndExpires(json)
+            ...convertToExpires(json)
         };
     });
 }
@@ -306,8 +302,6 @@ export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
 /**
  * @typedef {Object} RefreshTokenResponse
  * @property {string} accessToken - A new/refreshed access token.
- * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when
- * the token has been emitted.
  * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
  * the token will expire.
  * @property {string} [tenant] - A tenant name bound to specific customer for which Spot instance is being registered.
@@ -362,7 +356,7 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
                 accessToken: newAccessToken,
                 refreshToken,
                 tenant,
-                ...convertToEmittedAndExpires(json)
+                ...convertToExpires(json)
             };
         });
 }
@@ -371,8 +365,6 @@ export function refreshAccessToken(serviceEndpointUrl, { accessToken, refreshTok
  * @typedef {Object} SpotRegistration
  * @property {string} accessToken - The authorization token to be used by a Spot TV
  * instance for accessing other services.
- * @property {number} emitted - A date expressed in milliseconds since the epoch which indicate when
- * the token has been emitted.
  * @property {string} [endpointId] - An endpoint ID assigned by the backend which is used to identify the device. It
  * should be persisted on the client side and used in future "register" requests.
  * @property {number} expires - A date expressed in milliseconds since the epoch which indicate when
@@ -430,7 +422,7 @@ export function registerDevice(serviceEndpointUrl, pairingCode, assignedEndpoint
                 endpointId,
                 refreshToken,
                 tenant,
-                ...convertToEmittedAndExpires(json)
+                ...convertToExpires(json)
             };
         });
 }
