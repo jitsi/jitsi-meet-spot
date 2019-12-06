@@ -1,6 +1,6 @@
 const constants = require('./../constants');
 
-const QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE = 'testPermanentPairingCode';
+const QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN = 'testBackendRefreshToken';
 
 /**
  * Represents a session/connection between SpotTV and SpotRemote instances.
@@ -72,7 +72,7 @@ class SpotSession {
      * @returns {boolean}
      */
     static isBackendEnabled() {
-        return Boolean(constants.BACKEND_PAIRING_CODE);
+        return Boolean(constants.BACKEND_REFRESH_TOKEN);
     }
 
     /**
@@ -131,7 +131,7 @@ class SpotSession {
     startPermanentSpotRemote() {
         const queryParams = new Map();
 
-        queryParams.set(QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE, constants.BACKEND_PAIRING_CODE || '');
+        queryParams.set(QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN, constants.BACKEND_REFRESH_TOKEN || '');
 
         this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
 
@@ -152,7 +152,7 @@ class SpotSession {
         const calendarPage = this.spotTV.getCalendarPage();
         const queryParams = new Map();
 
-        queryParams.set(QUERY_PARAM_TEST_PERMANENT_PAIRING_CODE, constants.BACKEND_PAIRING_CODE || '');
+        queryParams.set(QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN, constants.BACKEND_REFRESH_TOKEN || '');
 
         calendarPage.visit(queryParams, skipWaitForVisible ? -1 : constants.MAX_PAGE_LOAD_WAIT);
     }

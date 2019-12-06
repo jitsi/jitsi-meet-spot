@@ -21,7 +21,7 @@ import reducers, {
     setDefaultValues,
     setSetupCompleted
 } from 'common/app-state';
-import { setPermanentPairingCode } from 'common/backend';
+import { setPermanentPairingCode, SpotBackendService } from 'common/backend';
 import 'common/i18n';
 import { MiddlewareRegistry, ReducerRegistry, StateListenerRegistry } from 'common/redux';
 import {
@@ -81,8 +81,18 @@ store.subscribe(() => {
 });
 
 // Allow selenium tests to skip the setup flow.
-if (queryParams.get('testPermanentPairingCode')) {
-    store.dispatch(setPermanentPairingCode(queryParams.get('testPermanentPairingCode')));
+const testRefreshToken = queryParams.get('testBackendRefreshToken');
+
+if (testRefreshToken) {
+    // Permanent paring code is required to get through intermediate layers down to the backend service.
+    // When refresh token is stored the paring code is not really used. This eventually should be refactored in
+    // future to check for refresh token rather than rely on the permanent pairing code being present.
+    // Here come up with just any permanent code, because it doesn't matter.
+    const permanentPairingCode = '12345678';
+
+    SpotBackendService.injectTestRefreshToken(permanentPairingCode, testRefreshToken);
+
+    store.dispatch(setPermanentPairingCode(permanentPairingCode));
     store.dispatch(setSetupCompleted());
 }
 

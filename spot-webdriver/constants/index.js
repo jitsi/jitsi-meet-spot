@@ -2,10 +2,9 @@ const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://localhost:8000';
 
 module.exports = {
     /**
-     * The pairing code to use when testing using the backend integration so
-     * the Spot-TV can connect to the backend.
+     * The refresh token to use when testing using the backend integration so the Spot-TV can connect to the backend.
      */
-    BACKEND_PAIRING_CODE: process.env.BACKEND_PAIRING_CODE,
+    BACKEND_REFRESH_TOKEN: process.env.BACKEND_REFRESH_TOKEN,
 
     /**
      * The name of the video file which should be used by Chrome as the video
