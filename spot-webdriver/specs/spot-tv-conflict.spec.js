@@ -18,7 +18,7 @@ describe('The Spot TV conflict detection logic', () => {
 
         spotSession1.startSpotTv();
 
-        spotSession2.startSpotTv(false);
+        spotSession2.startSpotTv(true);
 
         const conflictPage = spotTv2.getConflictPage();
 
