@@ -102,6 +102,17 @@ export default class ZoomIframeManager {
     }
 
     /**
+     * Sends a message with an expectation of a reply.
+     *
+     * @returns {Promise}
+     */
+    ping() {
+        return this._transport.sendRequest({
+            type: commands.PING
+        });
+    }
+
+    /**
      * Sets audio mute to the desired state.
      *
      * @param {boolean} mute - Whether audio should be set to muted or not muted.

@@ -16,6 +16,9 @@ export class IFrameApi {
         this.parent = globalWindow.parent;
         this.acceptedOrigin = globalWindow.location.origin;
 
+        globalWindow.addEventListener(
+            'beforeunload', () => this._sendMessageToParent(events.MEETING_ENDED));
+
         this._onMeetingStatusChange = this._onMeetingStatusChange.bind(this);
 
         this._transport = new Transport({
@@ -28,6 +31,12 @@ export class IFrameApi {
 
         this._transport.on('event', ({ type, data }) => {
             this._onMessageFromParent(type, data);
+
+            return true;
+        });
+
+        this._transport.on('request', (request, callback) => {
+            this._onRequestFromParent(request.type, callback);
 
             return true;
         });
@@ -83,8 +92,29 @@ export class IFrameApi {
      * @private
      * @returns {void}
      */
-    _onMeetingStatusChange(type, data) {
+    _onMeetingStatusChange(type, data = {}) {
         this._sendMessageToParent(type, data);
+    }
+
+
+    /**
+     * Callback invoked when a message is received from the parent window with
+     * an expectation of a reply.
+     *
+     * @param {string} type - The constant representing the request.
+     * @param {Function} callback - The callback to invoke with information
+     * about the executed request.
+     * @private
+     * @returns {void}
+     */
+    _onRequestFromParent(type, callback) {
+        switch (type) {
+        case commands.PING:
+            callback('pong');
+            break;
+        }
+
+        return true;
     }
 
     /**
