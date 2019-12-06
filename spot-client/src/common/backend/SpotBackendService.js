@@ -45,6 +45,23 @@ export class SpotBackendService extends Emitter {
     static REGISTRATION_UPDATED = 'registration-updated';
 
     /**
+     * Injects test refresh token into the storage, so that automated tests can execute in the backend mode.
+     *
+     * @param {string} pairingCode - The pairing code to be stored together with the registration.
+     * @param {string} refreshToken - The refresh token to be used.
+     * @returns {void}
+     */
+    static injectTestRefreshToken(pairingCode, refreshToken) {
+        persistence.set(
+            PERSISTENCE_KEY, {
+                expires: Date.now() - 60000,
+                pairingCode,
+                refreshToken
+            }
+        );
+    }
+
+    /**
      * Creates new {@link SpotBackendService}.
      *
      * @param {SpotBackendConfig} config - Spot backend configuration.
