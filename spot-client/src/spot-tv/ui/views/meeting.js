@@ -146,9 +146,12 @@ export class Meeting extends React.Component {
             showKickedOverlay,
             showPasswordPrompt
         } = this.props;
+        const {
+            meetingLoaded
+        } = this.state;
 
         return (
-            <div className = 'meeting-view'>
+            <div className = { `meeting-view ${meetingLoaded ? '' : 'loading'}` }>
                 <MeetingFrame
                     avatarUrl = { avatarUrl }
                     displayName = { displayName }
@@ -171,7 +174,7 @@ export class Meeting extends React.Component {
                     startWithScreenshare = { screenshare }
                     startWithVideoMuted = { startWithVideoMuted } />
                 {
-                    !this.state.meetingLoaded
+                    !meetingLoaded
                         && <div className = 'loading-curtain'>
                             <Loading />
                         </div>

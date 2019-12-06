@@ -2,6 +2,12 @@
     height: 100vh;
     width: 100vw;
 
+    &.loading {
+        .meeting-frame {
+            opacity: 0;
+        }
+    }
+
     .loading-curtain,
     .meetingMouseHider {
         height: 100vh;
