@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
+import { mockT } from 'common/test-mocks';
 import * as utils from 'common/utils';
 
 jest.mock('common/utils', () => {
@@ -26,7 +27,9 @@ describe('SelfFillingNameEntry', () => {
         onSubmitCallback = jest.fn();
 
         selfFillingNameEntry = mount(
-            <SelfFillingNameEntry onSubmit = { onSubmitCallback } />
+            <SelfFillingNameEntry
+                onSubmit = { onSubmitCallback }
+                t = { mockT } />
         );
     });
 

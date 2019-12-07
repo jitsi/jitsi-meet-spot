@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { logger } from 'common/logger';
 import { getRandomMeetingName } from 'common/utils';
@@ -16,7 +17,7 @@ import MeetingNameEntry from './MeetingNameEntry';
 export class SelfFillingNameEntry extends React.Component {
     static defaultProps = {
         animationRevealRate: 100,
-        animationStartDelay: 5000
+        animationStartDelay: 6000
     };
 
     static propTypes = {
@@ -24,6 +25,7 @@ export class SelfFillingNameEntry extends React.Component {
         animationStartDelay: PropTypes.number,
         domain: PropTypes.string,
         onSubmit: PropTypes.func,
+        t: PropTypes.func,
         tenant: PropTypes.string
     };
 
@@ -99,6 +101,14 @@ export class SelfFillingNameEntry extends React.Component {
      * @returns {ReactElement}
      */
     render() {
+        let placeholder = '';
+
+        if (this.state.animatingPlaceholder) {
+            placeholder = this.state.animatingPlaceholder;
+        } else if (this.props.tenant) {
+            placeholder = this.props.t('adhoc.enterNameWithTenant');
+        }
+
         return (
             <MeetingNameEntry
                 domain = { this._getDomainToDisplay() }
@@ -106,7 +116,7 @@ export class SelfFillingNameEntry extends React.Component {
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }
                 onSubmit = { this._onSubmit }
-                placeholder = { this.state.animatingPlaceholder } />
+                placeholder = { placeholder } />
         );
     }
 
@@ -256,4 +266,4 @@ export class SelfFillingNameEntry extends React.Component {
     }
 }
 
-export default SelfFillingNameEntry;
+export default withTranslation()(SelfFillingNameEntry);
