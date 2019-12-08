@@ -3,14 +3,13 @@ import isEqual from 'lodash.isequal';
 import { calendarTypes } from 'common/app-state';
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
+import { findWhitelistedMeetingUrl } from 'common/utils';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';
 import google from './google';
 import outlook from './outlook';
 import { hasUpdatedEvents } from './utils';
-
-import { getMeetingUrl } from './event-parsers';
 
 /**
  * A mapping of a {@code calendarTypes} enum with its associated calendar
@@ -272,7 +271,7 @@ export class CalendarService extends Emitter {
 
             return {
                 ...event,
-                meetingUrl: getMeetingUrl(fieldsToSearch, this.knownDomains)
+                meetingUrl: findWhitelistedMeetingUrl(fieldsToSearch, this.knownDomains)
             };
         });
     }
