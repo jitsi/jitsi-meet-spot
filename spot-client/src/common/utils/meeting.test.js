@@ -1,4 +1,5 @@
-import { findWhitelistedMeetingUrl } from './meeting';
+import { findWhitelistedMeetingUrl, isValidMeetingUrl } from './meeting';
+
 describe('meeting utils', () => {
     describe('findWhitelistedMeetingUrl', () => {
         it('returns the first url that matching the known domains', () => {
@@ -23,6 +24,29 @@ describe('meeting utils', () => {
             const knownDomains = [ '.*jitsi.net' ];
 
             expect(findWhitelistedMeetingUrl(fields, knownDomains)).toEqual(meetingUrl);
+        });
+    });
+
+    describe('isValidMeetingUrl', () => {
+        it('for non-urls returns false', () => {
+            expect(isValidMeetingUrl('a meeting name')).toBe(false);
+        });
+
+        it('for urls without a meeting name returns false', () => {
+            expect(isValidMeetingUrl('https://meet.jit.si')).toBe(false);
+        });
+
+        it('for urls without whitelist returns true', () => {
+            expect(isValidMeetingUrl('https://meet.jit.si/testname1234')).toBe(true);
+
+        });
+
+        it('for urls matching the whitelist returns true', () => {
+            expect(isValidMeetingUrl('https://meet.jit.si/testname1234', [ 'meet.jit.si' ])).toBe(true);
+        });
+
+        it('for urls not matching the whitelist returns false', () => {
+            expect(isValidMeetingUrl('https://any.jitsi.net/testname1234', [ 'meet.jit.si' ])).toBe(false);
         });
     });
 });

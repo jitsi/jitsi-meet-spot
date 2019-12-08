@@ -1,4 +1,5 @@
 const LoadingScreen = require('../page-objects/loading-screen');
+const Notifications = require('../page-objects/notifications');
 const constants = require('../constants');
 
 const _OFFLINE_NETWORK_CONDITIONS = {
@@ -30,6 +31,7 @@ class SpotUser {
         this._remoteControlServiceName = remoteControlServiceName;
 
         this.loadingScreen = new LoadingScreen(this.driver);
+        this.notifications = new Notifications(this.driver);
     }
 
     /**
@@ -84,6 +86,16 @@ class SpotUser {
      */
     getLoadingScreen() {
         return this.loadingScreen;
+    }
+
+    /**
+     * Returns an instance of {@code Notifications} which wraps interactions
+     * with app notifications.
+     *
+     * @returns {Notifications}
+     */
+    getNotifications() {
+        return this.notifications;
     }
 
     /**

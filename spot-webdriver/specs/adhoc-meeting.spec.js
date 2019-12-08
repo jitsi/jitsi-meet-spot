@@ -20,12 +20,26 @@ describe('Can start a meeting', () => {
         const spotRemote = session.getSpotRemote();
         const inMeetingPage = spotRemote.getInMeetingPage();
 
-        // Go to an invalid meeting url to prevent any meeting loaded confirmation
-        // from firing and to make the cancel button display.
-        session.joinMeeting('https://something.invalid1234.com/meeting12323');
+        // Go to an invalid meeting url, but a url that has a whitelisted domain,
+        // to prevent any meeting loaded confirmation from firing and to make
+        // the cancel button display.
+        session.joinMeeting('https://meet.jit.si/config.js', { skipJoinVerification: true });
 
         inMeetingPage.waitForCancelMeetingToDisplay();
         inMeetingPage.cancelMeetingJoin();
+
+        spotTV.getCalendarPage().waitForVisible();
+    });
+
+    it('prevents trying to join a non-whitelisted url', () => {
+        const spotTV = session.getSpotTV();
+
+        // Go to an invalid meeting url, but a url that has a whitelisted domain,
+        // to prevent any meeting loaded confirmation from firing and to make
+        // the cancel button display.
+        session.joinMeeting('https://something.invalid1234.com/meeting12323');
+
+        spotTV.getNotifications().waitForErrorToDisplay();
 
         spotTV.getCalendarPage().waitForVisible();
     });

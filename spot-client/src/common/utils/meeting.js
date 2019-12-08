@@ -76,13 +76,26 @@ export function isValidMeetingName(meetingName) {
  *
  * @param {string} meetingUrl - The url which may or may not be a url to a jitsi
  * meeting.
+ * @param {Array<string>} [knownDomains] - The whitelist of meeting urls which
+ * are valid matches. If not provided then all valid meeting urls are considered
+ * whitelisted.
  * @returns {boolean}
  */
-export function isValidMeetingUrl(meetingUrl) {
+export function isValidMeetingUrl(meetingUrl, knownDomains) {
     try {
         const { meetingName } = parseMeetingUrl(meetingUrl);
 
-        return Boolean(meetingName) && isValidMeetingName(meetingName);
+        if (!meetingName) {
+            return false;
+        }
+
+        const isValidName = isValidMeetingName(meetingName);
+
+        if (!isValidName) {
+            return false;
+        }
+
+        return !knownDomains || Boolean(findWhitelistedMeetingUrl([ meetingUrl ], knownDomains));
     } catch (e) {
         return false;
     }

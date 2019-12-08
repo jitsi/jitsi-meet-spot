@@ -80,9 +80,10 @@ class SpotSession {
      * provided the session selects a random one.
      *
      * @param {string} [meetingName] - The name of the meeting to join (optional).
+     * @param {Object} [options] - Additional ways to perform the join meeting.
      * @returns {string} - The name of the meeting that the Spot TV tried to join.
      */
-    joinMeeting(meetingName) {
+    joinMeeting(meetingName, options = {}) {
         const remoteControlPage = this.spotRemote.getRemoteControlPage();
 
         remoteControlPage.waitForVisible();
@@ -94,7 +95,9 @@ class SpotSession {
 
         const meetingPage = this.spotTV.getMeetingPage();
 
-        meetingPage.waitForVisible();
+        if (options.skipJoinVerification) {
+            meetingPage.waitForVisible();
+        }
 
         return testMeetingName;
     }
