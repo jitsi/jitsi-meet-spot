@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import {
+    addNotification,
     getCalendarError,
     getCalendarEvents,
     getDisplayName,
@@ -278,7 +279,13 @@ function mapDispatchToProps(dispatch) {
                 meetingDisplayName: data.meetingDisplayName,
                 screenshare: data.startWithScreensharing === true,
                 startWithVideoMuted: data.startWithVideoMuted === true
-            }));
+            }))
+            .catch(() => {
+                dispatch(addNotification(
+                    'error',
+                    'appEvents.invalidMeetingName'
+                ));
+            });
         },
         onStartScreenshareMeeting() {
             dispatch(redirectToMeeting(getRandomMeetingName(), { screenshare: true }));

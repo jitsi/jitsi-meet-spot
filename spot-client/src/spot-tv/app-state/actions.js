@@ -4,6 +4,7 @@ import {
     clearAllPairedRemotes,
     destroyConnection,
     getJoinCodeRefreshRate,
+    getMeetingDomainsWhitelist,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     getTemporaryRemoteIds,
@@ -536,14 +537,14 @@ export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayNam
     return (dispatch, getState) => {
         let location;
 
-        if (isValidMeetingUrl(meetingNameOrUrl)) {
+        if (isValidMeetingUrl(meetingNameOrUrl, getMeetingDomainsWhitelist(getState()))) {
             location = meetingNameOrUrl;
         } else if (isValidMeetingName(meetingNameOrUrl)) {
             location = `https://${getDefaultMeetingDomain(getState())}/${meetingNameOrUrl}`;
         } else {
             logger.error(`redirectToMeeting - invalid meeting URL: ${meetingNameOrUrl}`);
 
-            return;
+            return Promise.reject();
         }
 
         let redirectUrl = `${ROUTES.MEETING}?location=${encodeURIComponent(location)}`;
@@ -565,5 +566,7 @@ export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayNam
         }
 
         history.push(redirectUrl);
+
+        return Promise.resolve();
     };
 }

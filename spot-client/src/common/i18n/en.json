@@ -18,6 +18,7 @@
     "appEvents": {
         "devicesNotSaved": "Could not save preferences.",
         "genericError": "Something went wrong.",
+        "invalidMeetingName": "Cannot join entered meeting.",
         "invalidShareKey": "Invalid share key.",
         "invalidPassword": "Invalid passcode.",
         "meetingConnectionLost": "Connection to the meeting has been lost",
