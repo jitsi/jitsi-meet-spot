@@ -183,6 +183,18 @@ export class ZoomMeetingFrame extends React.Component {
             break;
         }
 
+        case events.MEETING_JOIN_FAILED: {
+            // https://marketplace.zoom.us/docs/sdk/native-sdks/web/error-codes
+            logger.warn('Failed to join zoom meeting', {
+                errorCode: data?.error?.code
+            });
+            this.props.onMeetingLeave({
+                errorCode: 'failed-to-join',
+                error: 'appEvents.meetingJoinFailed'
+            });
+            break;
+        }
+
         case events.MEETING_JOIN_SUCCEEDED: {
             logger.log('zoom meeting joined');
 
