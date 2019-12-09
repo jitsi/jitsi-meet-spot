@@ -187,16 +187,23 @@ export class ZoomMeetingFrame extends React.Component {
             // [1]: https://marketplace.zoom.us/docs/sdk/native-sdks/web/error-codes
             const zoomErrorCode = data?.error?.code;
 
-            logger.warn('Failed to join zoom meeting', { zoomErrorCode });
             if (zoomErrorCode === 1 || zoomErrorCode === 3001) {
                 // The error code 1 is defined as a general failure in [1], but according to the internets[2] and local
                 // testing it can happen is other cases as well including when trying to join invalid meeting ID.
                 // [2]: https://devforum.zoom.us/t/joining-fail-with-error-code-1/6417
+                logger.log('Zoom meeting does not exist');
                 this.props.onMeetingLeave({
                     errorCode: 'meeting-not-found',
                     error: 'appEvents.meetingDoesNotExist'
                 });
+            } else if (zoomErrorCode === 3008) {
+                logger.log('Zoom meeting has not started');
+                this.props.onMeetingLeave({
+                    errorCode: 'meeting-not-started',
+                    error: 'appEvents.meetingNotStarted'
+                });
             } else {
+                logger.warn('Failed to join zoom meeting', { zoomErrorCode });
                 this.props.onMeetingLeave({
                     errorCode: 'failed-to-join',
                     error: 'appEvents.meetingJoinFailed'

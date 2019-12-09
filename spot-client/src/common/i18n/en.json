@@ -24,6 +24,7 @@
         "meetingDoesNotExist": "Meeting does not exist",
         "meetingEnded": "The meeting has ended.",
         "meetingJoinFailed": "An error occurred while joining the meeting",
+        "meetingNotStarted": "Please try again once the meeting has started",
         "numberNotAllowed": "Calling {{ phoneNumber }} is not allowed at this time"
     },
     "appStatus": {
