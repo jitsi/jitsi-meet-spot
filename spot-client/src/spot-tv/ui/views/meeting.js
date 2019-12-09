@@ -261,7 +261,10 @@ export class Meeting extends React.Component {
         }
 
         if (error) {
-            logger.log('Leaving meeting due to error', { error });
+            logger.log('Leaving meeting due to error', {
+                error,
+                errorCode
+            });
             this.props.onError(errorCode, error);
         } else if (this.props.kickTemporaryRemotesOnMeetingEnd) {
             logger.log('Kicking temporary remotes');
