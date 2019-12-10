@@ -133,6 +133,16 @@ export default class ZoomIframeManager {
     }
 
     /**
+     * Enters a password to be used to join a meeting.
+     *
+     * @param {string} password - The meeting password to use.
+     * @returns {void}
+     */
+    submitPassword(password) {
+        this._sendCommand(commands.SUBMIT_PASSWORD, { password });
+    }
+
+    /**
      * Callback invoked when the Zoom meeting sends a status update through
      * the iframe.
      *

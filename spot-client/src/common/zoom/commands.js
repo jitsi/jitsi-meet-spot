@@ -3,5 +3,6 @@ export default {
     JOIN: 'join',
     HANG_UP: 'hang-up',
     PING: 'ping',
+    SUBMIT_PASSWORD: 'submit-password',
     VIDEO_MUTE: 'video-mute'
 };
