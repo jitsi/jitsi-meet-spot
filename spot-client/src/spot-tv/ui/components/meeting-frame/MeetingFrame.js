@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { isZoomEnabled } from 'common/app-state';
 import { isZoomMeetingUrl } from 'common/utils';
 
+import AbstractMeetingFrame from './AbstractMeetingFrame';
 import { JitsiMeetingFrame } from './JitsiMeetingFrame';
 import { ZoomMeetingFrame } from './ZoomMeetingFrame';
 
-import meetingFramePropTypes from './meetingFramePropTypes';
 
 /**
  * Displays the appropriate iFrame for displaying the current meeting.
@@ -17,7 +17,7 @@ import meetingFramePropTypes from './meetingFramePropTypes';
  */
 export class MeetingFrame extends Component {
     static propTypes = {
-        ...meetingFramePropTypes,
+        ...AbstractMeetingFrame.propTypes,
         allowZoomMeetings: PropTypes.bool
     };
 
