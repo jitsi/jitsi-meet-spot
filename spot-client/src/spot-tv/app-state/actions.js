@@ -8,6 +8,7 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     getTemporaryRemoteIds,
+    isZoomEnabled,
     reconnectScheduleUpdate,
     removePairedRemote,
     setCustomerId,
@@ -535,12 +536,17 @@ export function updateSpotTVSource() {
  */
 export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayName, screenshare, startWithVideoMuted }) {
     return (dispatch, getState) => {
+        const state = getState();
+        const domainWhitelist = getMeetingDomainsWhitelist(state);
+
+        isZoomEnabled(state) && domainWhitelist.push('zoom.us');
+
         let location;
 
-        if (isValidMeetingUrl(meetingNameOrUrl, getMeetingDomainsWhitelist(getState()))) {
+        if (isValidMeetingUrl(meetingNameOrUrl, domainWhitelist)) {
             location = meetingNameOrUrl;
         } else if (isValidMeetingName(meetingNameOrUrl)) {
-            location = `https://${getDefaultMeetingDomain(getState())}/${meetingNameOrUrl}`;
+            location = `https://${getDefaultMeetingDomain(state)}/${meetingNameOrUrl}`;
         } else {
             logger.error(`redirectToMeeting - invalid meeting URL: ${meetingNameOrUrl}`);
 

@@ -1,8 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-import { isZoomEnabled } from 'common/app-state';
 import { isZoomMeetingUrl } from 'common/utils';
 
 import AbstractMeetingFrame from './AbstractMeetingFrame';
@@ -16,10 +13,7 @@ import { ZoomMeetingFrame } from './ZoomMeetingFrame';
  * @extends React.Component
  */
 export class MeetingFrame extends Component {
-    static propTypes = {
-        ...AbstractMeetingFrame.propTypes,
-        allowZoomMeetings: PropTypes.bool
-    };
+    static propTypes = AbstractMeetingFrame.propTypes;
 
     /**
      * Implements React's {@link Component#render()}.
@@ -28,30 +22,12 @@ export class MeetingFrame extends Component {
      * @returns {ReactElement}
      */
     render() {
-        const {
-            allowZoomMeetings,
-            ...otherProps
-        } = this.props;
-
-        if (allowZoomMeetings && isZoomMeetingUrl(otherProps.meetingUrl)) {
-            return <ZoomMeetingFrame { ...otherProps } />;
+        if (isZoomMeetingUrl(this.props.meetingUrl)) {
+            return <ZoomMeetingFrame { ...this.props } />;
         }
 
-        return <JitsiMeetingFrame { ...otherProps } />;
+        return <JitsiMeetingFrame { ...this.props } />;
     }
 }
 
-/**
- * Selects parts of the Redux state to pass in with the props of {@code MeetingFrame}.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {Object}
- */
-function mapStateToProps(state) {
-    return {
-        allowZoomMeetings: isZoomEnabled(state)
-    };
-}
-
-export default connect(mapStateToProps)(MeetingFrame);
+export default MeetingFrame;
