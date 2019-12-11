@@ -199,12 +199,10 @@ class Sdk {
      * @returns {void}
      */
     submitPassword(passWord) {
-        this._cachedJoinOptions = {
+        return this.joinMeeting({
             ...this._cachedJoinOptions,
             passWord
-        };
-
-        return this.joinMeeting(this._cachedJoinOptions);
+        });
     }
 
     /**
