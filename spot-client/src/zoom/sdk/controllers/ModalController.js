@@ -2,7 +2,6 @@
  * Encapsulates interacting with the Zoom main modal.
  */
 export default class ModalController {
-    static modalContentSelector = '.zm-modal .zm-modal-body-content .content';
     static actionButtonsSelector = '.zm-modal-footer-default button'
 
     /**
@@ -24,19 +23,5 @@ export default class ModalController {
 
             return false;
         });
-    }
-
-    /**
-     * Closes the modal informing specifically about needing a password to join
-     * the call. If not found, no modal will be dismissed.
-     *
-     * @returns {void}
-     */
-    dismissIncorrectPasswordModal() {
-        const modalText = document.querySelector(ModalController.modalContentSelector);
-
-        if (modalText && modalText.textContent === 'password wrong') {
-            this.dismiss();
-        }
     }
 }

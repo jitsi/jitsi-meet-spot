@@ -34,6 +34,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         super(props);
 
         this._zoomIframeManager = null;
+        this._joinRetryTimeout = null;
 
         this._rootRef = React.createRef();
 
@@ -72,6 +73,8 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
 
         this._zoomIframeManager.destroy();
 
+        clearTimeout(this._joinRetryTimeout);
+
         this.props.remoteControlServer.removeListener(
             SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onMeetingCommand
@@ -83,7 +86,8 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             kicked: false,
             meetingDisplayName: '',
             needPassword: false,
-            videoMuted: false
+            videoMuted: false,
+            waitingForMeetingStart: false
         });
     }
 
@@ -98,6 +102,34 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             <div
                 className = 'meeting-frame'
                 ref = { this._rootRef } />
+        );
+    }
+
+    /**
+     * Sets a timeout to attempt to join the Zoom meeting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _enqueueJoinRetry() {
+        clearTimeout(this._joinRetryTimeout);
+
+        this._joinRetryTimeout = setTimeout(() => {
+            this._goToMeeting();
+        }, 15000);
+    }
+
+    /**
+     * Attempt to join the Zoom meeting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _goToMeeting() {
+        this._zoomIframeManager.goToMeeting(
+            parseMeetingUrl(this.props.meetingUrl).meetingName,
+            '', // first try an empty password
+            this.props.displayName
         );
     }
 
@@ -185,14 +217,16 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                 });
             } else if (zoomErrorCode === errorCodes.MEETING_NOT_START) {
                 logger.log('Zoom meeting has not started');
-                this.props.onMeetingLeave({
-                    errorCode: 'meeting-not-started',
-                    error: 'appEvents.meetingNotStarted'
-                });
+
+                this.props.updateSpotTvState({ waitingForMeetingStart: true });
+                this._enqueueJoinRetry();
             } else if (zoomErrorCode === errorCodes.WRONG_MEETING_PASSWORD) {
                 logger.log('password required');
 
-                this.props.updateSpotTvState({ needPassword: true });
+                this.props.updateSpotTvState({
+                    needPassword: true,
+                    waitingForMeetingStart: true
+                });
             } else {
                 logger.warn('Failed to join zoom meeting', { zoomErrorCode });
                 this.props.onMeetingLeave({
@@ -210,7 +244,8 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             this.props.updateSpotTvState({
                 inMeeting: this.props.meetingUrl,
                 meetingDisplayName: this.props.meetingDisplayName,
-                needPassword: false
+                needPassword: false,
+                waitingForMeetingStart: false
             });
 
             this._enableApiHealthChecks(() => this._zoomIframeManager.ping());
@@ -219,11 +254,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         }
 
         case events.READY: {
-            this._zoomIframeManager.goToMeeting(
-                parseMeetingUrl(this.props.meetingUrl).meetingName,
-                '', // first try an empty password
-                this.props.displayName
-            );
+            this._goToMeeting();
 
             break;
         }

@@ -25,7 +25,6 @@
         "meetingDoesNotExist": "Meeting does not exist",
         "meetingEnded": "The meeting has ended.",
         "meetingJoinFailed": "An error occurred while joining the meeting",
-        "meetingNotStarted": "Please try again once the meeting has started",
         "numberNotAllowed": "Calling {{ phoneNumber }} is not allowed at this time"
     },
     "appStatus": {
@@ -79,9 +78,11 @@
         "exitingConference": "The conference will be exited automatically in",
         "howToEnterPassword": "You can use the remote control device to submit a password.",
         "kicked": "You have been removed from the conference.",
+        "meetingNotStarted": "The conference has not started.",
         "password": "Password",
         "passwordRequired": "Password required to join.",
-        "slowJoin": "The conference is taking a while to join. Cancel?"
+        "slowJoin": "The conference is taking a while to join. Cancel?",
+        "waitingForStart": "Currently waiting for the conference to start."
     },
     "countdown": {
         "timeLeft": "{{ count }} second",
