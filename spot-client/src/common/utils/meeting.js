@@ -13,6 +13,9 @@ export function findWhitelistedMeetingUrl(fieldsToSearch, knownDomains) {
     const linkTerminatorPattern = '[^\\s<>$]';
     const urlRegExp
         = `http(s)?://(${knownDomains.join('|')})/${linkTerminatorPattern}+`;
+
+    // Exclude static because jitsi meeting events may include urls to the
+    // dial in info page, hosted in the static directory.
     const excludePattern = '/static/';
 
     for (const field of fieldsToSearch) {

@@ -17,7 +17,19 @@ describe('meeting utils', () => {
         it('can match vanity urls', () => {
             const meetingUrl = 'https://lenny.jitsi.net/testmeeting';
             const fields = [
-                'location is in this url https://meet.jit.si./testing',
+                'location is in this url https://meet.jit.si/testing',
+                `alternative testing meeting url at ${meetingUrl}`,
+                'agenda is to talk about work'
+            ];
+            const knownDomains = [ '.*jitsi.net' ];
+
+            expect(findWhitelistedMeetingUrl(fields, knownDomains)).toEqual(meetingUrl);
+        });
+
+        it('excludes any urls with static in the path due to the jitsi dial in info page', () => {
+            const meetingUrl = 'https://lenny.jitsi.net/testmeeting';
+            const fields = [
+                'get dial in numbers here https://lenny.jitsi.net/static/dialin',
                 `alternative testing meeting url at ${meetingUrl}`,
                 'agenda is to talk about work'
             ];
