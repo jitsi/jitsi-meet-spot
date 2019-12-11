@@ -145,7 +145,7 @@ export function getLoggingEndpoint(state) {
  * meetings on Jitsi-Meet deployments.
  *
  * @param {Object} state - The Redux state.
- * @returns {Object}
+ * @returns {string[]}
  */
 export function getMeetingDomainsWhitelist(state) {
     return state.config.MEETING_DOMAINS_WHITELIST;
