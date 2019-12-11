@@ -248,15 +248,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         }
 
         case events.MEETING_JOIN_SUCCEEDED: {
-            logger.log('zoom meeting joined');
-
-            this.props.onMeetingStart();
-            this.props.updateSpotTvState({
-                inMeeting: this.props.meetingUrl,
-                meetingDisplayName: this.props.meetingDisplayName,
-                needPassword: false,
-                waitingForMeetingStart: false
-            });
+            this._onMeetingJoined();
 
             this._enableApiHealthChecks(() => this._zoomIframeManager.ping());
 
