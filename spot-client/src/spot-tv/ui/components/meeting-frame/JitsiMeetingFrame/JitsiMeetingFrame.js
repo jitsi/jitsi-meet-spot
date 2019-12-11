@@ -14,7 +14,6 @@ import { adjustVolume } from '../../../../native-functions';
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
 import AbstractMeetingFrame from '../AbstractMeetingFrame';
-import { ApiHealthCheck } from '../ApiHealthCheck';
 import FeedbackHider from './FeedbackHider';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
@@ -65,7 +64,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._participants = new Map();
 
         bindAll(this, [
-            '_onApiHealthCheckError',
             '_onAudioMuteChange',
             '_onFeedbackPromptDisplayed',
             '_onFeedbackSubmitted',
@@ -90,7 +88,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         ]);
 
         this._jitsiApi = null;
-        this._jitsiApiHealthCheck = null;
         this._maxParticipantCount = 1;
         this._meetingContainer = null;
         this._meetingLoaded = false;
@@ -161,11 +158,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             roomName: meetingName
         });
 
-        this._jitsiApiHealthCheck = new ApiHealthCheck(
-            () => this._jitsiApi.isVideoMuted(),
-            this._onApiHealthCheckError
-        );
-
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
         this._jitsiApi.addListener(
@@ -223,10 +215,11 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @inheritdoc
      */
     componentWillUnmount() {
+        super.componentWillUnmount();
+
         clearTimeout(this._assumeMeetingFailedTimeout);
         clearTimeout(this._playToneTimeout);
 
-        this._jitsiApiHealthCheck.stop();
         this._jitsiApi.dispose();
 
         this.props.remoteControlServer.removeListener(
@@ -265,7 +258,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             url: this.props.meetingUrl
         };
 
-        this.props.onMeetingLeave(leaveEvent);
+        super._onMeetingLeave(leaveEvent);
     }
 
     /**
@@ -330,22 +323,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         if (shouldFilmstripBeVisible !== this._isFilmstripVisible) {
             this._jitsiApi.executeCommand('toggleFilmStrip');
         }
-    }
-
-    /**
-     * Callback invoked when the iFrame is not responsive.
-     *
-     * @param {string} reason - The detected reason for the failed health check.
-     * @private
-     * @returns {void}
-     */
-    _onApiHealthCheckError(reason) {
-        logger.error('jitsi api health check failed', { reason });
-
-        this._onMeetingLeave({
-            errorCode: reason,
-            error: 'appEvents.meetingConnectionLost'
-        });
     }
 
     /**
@@ -479,7 +456,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._meetingStartTime = Date.now();
 
         this.props.onMeetingStart(this._jitsiApi);
-        this._jitsiApiHealthCheck.start();
+        this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
             meetingDisplayName: this.props.meetingDisplayName,

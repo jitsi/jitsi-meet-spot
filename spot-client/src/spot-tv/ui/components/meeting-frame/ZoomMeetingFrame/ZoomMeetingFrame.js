@@ -9,7 +9,6 @@ import { parseMeetingUrl } from 'common/utils';
 import { errorCodes, events } from 'common/zoom';
 
 import AbstractMeetingFrame from '../AbstractMeetingFrame';
-import { ApiHealthCheck } from '../ApiHealthCheck';
 
 import ZoomIframeManager from './ZoomIframeManager';
 
@@ -38,7 +37,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
 
         this._rootRef = React.createRef();
 
-        this._onApiHealthCheckError = this._onApiHealthCheckError.bind(this);
         this._onMeetingCommand = this._onMeetingCommand.bind(this);
         this._onMeetingUpdateReceived = this._onMeetingUpdateReceived.bind(this);
     }
@@ -62,11 +60,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         );
 
         this._zoomIframeManager.load();
-
-        this._zoomApiHealthCheck = new ApiHealthCheck(
-            () => this._zoomIframeManager.ping(),
-            this._onApiHealthCheckError
-        );
     }
 
     /**
@@ -75,7 +68,8 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this._zoomApiHealthCheck.stop();
+        super.componentWillUnmount();
+
         this._zoomIframeManager.destroy();
 
         this.props.remoteControlServer.removeListener(
@@ -105,19 +99,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                 className = 'meeting-frame'
                 ref = { this._rootRef } />
         );
-    }
-
-    /**
-     * Callback invoked when the iFrame is not responsive.
-     *
-     * @param {string} reason - The detected reason for the failed health check.
-     * @private
-     * @returns {void}
-     */
-    _onApiHealthCheckError(reason) {
-        logger.error('api health check failed', { reason });
-
-        this.props.onMeetingLeave({});
     }
 
     /**
@@ -232,7 +213,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                 needPassword: false
             });
 
-            this._zoomApiHealthCheck.start();
+            this._enableApiHealthChecks(() => this._zoomIframeManager.ping());
 
             break;
         }
