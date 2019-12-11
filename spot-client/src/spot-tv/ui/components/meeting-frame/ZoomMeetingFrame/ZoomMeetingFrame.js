@@ -6,7 +6,7 @@ import { getZoomConfiguration, setSpotTVState } from 'common/app-state';
 import { logger } from 'common/logger';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
-import { events } from 'common/zoom';
+import { errorCodes, events } from 'common/zoom';
 
 import { ApiHealthCheck } from '../ApiHealthCheck';
 import meetingFramePropTypes from '../meetingFramePropTypes';
@@ -155,6 +155,12 @@ export class ZoomMeetingFrame extends React.Component {
         case COMMANDS.SET_VIDEO_MUTE:
             this._zoomIframeManager.setVideoMute(data.mute);
             break;
+
+        case COMMANDS.SUBMIT_PASSWORD:
+            this.props.updateSpotTvState({ needPassword: false });
+            this._zoomIframeManager.submitPassword(data);
+
+            break;
         }
     }
 
@@ -187,21 +193,25 @@ export class ZoomMeetingFrame extends React.Component {
             // [1]: https://marketplace.zoom.us/docs/sdk/native-sdks/web/error-codes
             const zoomErrorCode = data?.error?.code;
 
-            if (zoomErrorCode === 1 || zoomErrorCode === 3001) {
-                // The error code 1 is defined as a general failure in [1], but according to the internets[2] and local
-                // testing it can happen is other cases as well including when trying to join invalid meeting ID.
+            if (zoomErrorCode === errorCodes.FAIL || zoomErrorCode === errorCodes.ERROR_NOT_EXIST) {
+                // The error code FAIL is defined as a general failure in [1], but according to the internets[2] and
+                // local testing it can happen is other cases as well including when trying to join invalid meeting ID.
                 // [2]: https://devforum.zoom.us/t/joining-fail-with-error-code-1/6417
                 logger.log('Zoom meeting does not exist');
                 this.props.onMeetingLeave({
                     errorCode: 'meeting-not-found',
                     error: 'appEvents.meetingDoesNotExist'
                 });
-            } else if (zoomErrorCode === 3008) {
+            } else if (zoomErrorCode === errorCodes.MEETING_NOT_START) {
                 logger.log('Zoom meeting has not started');
                 this.props.onMeetingLeave({
                     errorCode: 'meeting-not-started',
                     error: 'appEvents.meetingNotStarted'
                 });
+            } else if (zoomErrorCode === errorCodes.WRONG_MEETING_PASSWORD) {
+                logger.log('password required');
+
+                this.props.updateSpotTvState({ needPassword: true });
             } else {
                 logger.warn('Failed to join zoom meeting', { zoomErrorCode });
                 this.props.onMeetingLeave({

@@ -76,6 +76,16 @@ export class IFrameApi {
 
             break;
         }
+
+        case commands.SUBMIT_PASSWORD: {
+            sdk.submitPassword(data.password)
+                .then(
+                    () => this._sendMessageToParent(events.MEETING_JOIN_SUCCEEDED),
+                    error => this._sendMessageToParent(events.MEETING_JOIN_FAILED, { error })
+                );
+            break;
+        }
+
         case commands.VIDEO_MUTE: {
             sdk.setVideoMute(data.mute);
             break;

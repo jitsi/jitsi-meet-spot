@@ -4,10 +4,11 @@
 // into the codebase.
 const API_SECRET = process.env.DEV_ONLY_ZOOM_API_SECRET;
 
-import { events } from 'common/zoom';
+import { errorCodes, events } from 'common/zoom';
 import {
     AudioMuteController,
     HangUpController,
+    ModalController,
     VideoMuteController
 } from './controllers';
 
@@ -20,8 +21,11 @@ class Sdk {
      */
     constructor() {
         this._audioMuteController = null;
+        this._modalController = null;
         this._onStatusChange = null;
         this._videoMuteController = null;
+
+        this._cachedJoinOptions = {};
     }
 
     /**
@@ -65,6 +69,7 @@ class Sdk {
             this._audioMuteController = new AudioMuteController(muted => {
                 this._onStatusChange(events.AUDIO_MUTE_UPDATED, { muted });
             });
+            this._modalController = new ModalController();
             this._videoMuteController = new VideoMuteController(muted => {
                 this._onStatusChange(events.VIDEO_MUTE_UPDATED, { muted });
             });
@@ -93,6 +98,8 @@ class Sdk {
      * @returns {Promise}
      */
     joinMeeting(options) {
+        this._cachedJoinOptions = options;
+
         const {
             apiKey,
             meetingNumber,
@@ -144,9 +151,17 @@ class Sdk {
                         userEmail: '',
                         passWord,
                         success: res => resolve(res),
-                        error: res => reject({
-                            code: res.errorCode
-                        })
+                        error: ({ errorCode }) => {
+                            if (errorCode === errorCodes.WRONG_MEETING_PASSWORD) {
+                                setTimeout(() => {
+                                    this._modalController.dismissIncorrectPasswordModal();
+                                });
+                            }
+
+                            reject({
+                                code: errorCode
+                            });
+                        }
                     }
                 );
             })).then(() => {
@@ -175,6 +190,19 @@ class Sdk {
      */
     setVideoMute(mute) {
         this._videoMuteController.setMute(mute);
+    }
+
+    /**
+     * Tries to rejoin the meeting but with a password.
+     *
+     * @param {string} passWord - The password to use for joining the meeting.
+     * @returns {void}
+     */
+    submitPassword(passWord) {
+        return this.joinMeeting({
+            ...this._cachedJoinOptions,
+            passWord
+        });
     }
 
     /**

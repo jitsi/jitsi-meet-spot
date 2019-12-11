@@ -1,0 +1,6 @@
+export default {
+    FAIL: 1,
+    ERROR_NOT_EXIST: 3001,
+    MEETING_NOT_START: 3008,
+    WRONG_MEETING_PASSWORD: 3004
+};
