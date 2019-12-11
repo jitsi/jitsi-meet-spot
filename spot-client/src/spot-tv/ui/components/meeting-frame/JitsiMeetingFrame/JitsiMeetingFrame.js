@@ -454,7 +454,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._meetingJoined = true;
         this._meetingStartTime = Date.now();
 
-        this.props.onMeetingStart(this._jitsiApi);
+        this.props.onMeetingStart();
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
