@@ -13,9 +13,9 @@ import { adjustVolume } from '../../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
+import AbstractMeetingFrame from '../AbstractMeetingFrame';
 import { ApiHealthCheck } from '../ApiHealthCheck';
 import FeedbackHider from './FeedbackHider';
-import meetingFramePropTypes from '../meetingFramePropTypes';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 
@@ -24,7 +24,7 @@ const DEFAULT_DISPLAY_NAME = 'Meeting Room';
  *
  * @extends React.Component
  */
-export class JitsiMeetingFrame extends React.Component {
+export class JitsiMeetingFrame extends AbstractMeetingFrame {
     static defaultProps = {
         displayName: DEFAULT_DISPLAY_NAME,
         dtmfThrottleRate: -1,
@@ -39,7 +39,7 @@ export class JitsiMeetingFrame extends React.Component {
         screenshareDevice: ''
     };
 
-    static propTypes = meetingFramePropTypes;
+    static propTypes = AbstractMeetingFrame.propTypes;
 
     /**
      * Initializes a new {@code MeetingFrame} instance.

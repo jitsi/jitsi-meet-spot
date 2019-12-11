@@ -8,8 +8,8 @@ import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 import { events } from 'common/zoom';
 
+import AbstractMeetingFrame from '../AbstractMeetingFrame';
 import { ApiHealthCheck } from '../ApiHealthCheck';
-import meetingFramePropTypes from '../meetingFramePropTypes';
 
 import ZoomIframeManager from './ZoomIframeManager';
 
@@ -18,9 +18,9 @@ import ZoomIframeManager from './ZoomIframeManager';
  *
  * @extends React.Component
  */
-export class ZoomMeetingFrame extends React.Component {
+export class ZoomMeetingFrame extends AbstractMeetingFrame {
     static propTypes = {
-        ...meetingFramePropTypes,
+        ...AbstractMeetingFrame.propTypes,
         apiKey: PropTypes.string,
         meetingSignService: PropTypes.string
     };
