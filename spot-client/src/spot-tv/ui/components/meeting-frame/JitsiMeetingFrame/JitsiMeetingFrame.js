@@ -69,7 +69,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onFeedbackSubmitted',
             '_onFilmstripDisplayChanged',
             '_onMeetingCommand',
-            '_onMeetingJoined',
             '_onMeetingLeft',
             '_onMeetingLoaded',
             '_onParticipantJoined',
@@ -91,7 +90,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
-        this._meetingStartTime = undefined;
         this.state = {
             feedbackDisplayed: false
         };
@@ -449,18 +447,12 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _onMeetingJoined() {
-        logger.log('meeting joined');
-
         this._meetingJoined = true;
         this._meetingStartTime = Date.now();
 
-        this.props.onMeetingStart();
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
-        this.props.updateSpotTvState({
-            inMeeting: this.props.meetingUrl,
-            meetingDisplayName: this.props.meetingDisplayName,
-            needPassword: false
-        });
+
+        super._onMeetingJoined();
 
         if (this.props.invites && this.props.invites.length) {
             this._jitsiApi.invite(this.props.invites);

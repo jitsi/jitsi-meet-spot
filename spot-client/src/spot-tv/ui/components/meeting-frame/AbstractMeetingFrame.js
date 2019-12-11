@@ -53,6 +53,7 @@ export default class AbstractMeetingFrame extends React.Component {
 
         bindAll(this, [
             '_onApiHealthCheckError',
+            '_onMeetingJoined',
             '_onMeetingLeave'
         ]);
     }
@@ -98,6 +99,25 @@ export default class AbstractMeetingFrame extends React.Component {
             errorCode: reason,
             error: 'appEvents.meetingConnectionLost'
         });
+    }
+
+    /**
+     * The method should be called be implementing subclasses when the meeting has been successfully joined.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _onMeetingJoined() {
+        logger.log('meeting joined');
+
+        this.props.updateSpotTvState({
+            inMeeting: this.props.meetingUrl,
+            meetingDisplayName: this.props.meetingDisplayName,
+            needPassword: false,
+            waitingForMeetingStart: false
+        });
+
+        this.props.onMeetingStart();
     }
 
     /**
