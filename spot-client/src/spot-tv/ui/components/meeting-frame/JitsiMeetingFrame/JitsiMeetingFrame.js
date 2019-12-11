@@ -70,7 +70,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onFilmstripDisplayChanged',
             '_onMeetingCommand',
             '_onMeetingJoined',
-            '_onMeetingLeave',
             '_onMeetingLeft',
             '_onMeetingLoaded',
             '_onParticipantJoined',
