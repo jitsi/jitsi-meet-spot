@@ -1,3 +1,4 @@
+import bindAll from 'lodash.bindall';
 import React from 'react';
 
 import PropTypes from 'prop-types';
@@ -50,7 +51,10 @@ export default class AbstractMeetingFrame extends React.Component {
          */
         this._apiHealthChecks = undefined;
 
-        this._onApiHealthCheckError = this._onApiHealthCheckError.bind(this);
+        bindAll(this, [
+            '_onApiHealthCheckError',
+            '_onMeetingLeave'
+        ]);
     }
 
     /**
