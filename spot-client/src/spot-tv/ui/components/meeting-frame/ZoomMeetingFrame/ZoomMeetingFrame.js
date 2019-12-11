@@ -197,8 +197,6 @@ export class ZoomMeetingFrame extends React.Component {
                 // The error code FAIL is defined as a general failure in [1], but according to the internets[2] and
                 // local testing it can happen is other cases as well including when trying to join invalid meeting ID.
                 // [2]: https://devforum.zoom.us/t/joining-fail-with-error-code-1/6417
-                logger.warn('Failed to join zoom meeting', { zoomErrorCode });
-
                 logger.log('Zoom meeting does not exist');
                 this.props.onMeetingLeave({
                     errorCode: 'meeting-not-found',
