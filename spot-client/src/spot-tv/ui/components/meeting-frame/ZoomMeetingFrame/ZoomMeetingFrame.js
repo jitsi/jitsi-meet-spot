@@ -126,9 +126,19 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _goToMeeting() {
+        let password = '';
+
+        try {
+            const url = new URL(this.props.meetingUrl);
+
+            password = url.searchParams.get('pwd') || '';
+        } catch (e) {
+            logger.error('Failed to parse meeting url for password', { e });
+        }
+
         this._zoomIframeManager.goToMeeting(
             parseMeetingUrl(this.props.meetingUrl).meetingName,
-            '', // first try an empty password
+            password,
             this.props.displayName
         );
     }
