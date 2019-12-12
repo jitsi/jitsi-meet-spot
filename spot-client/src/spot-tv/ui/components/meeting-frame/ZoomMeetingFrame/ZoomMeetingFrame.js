@@ -225,7 +225,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
 
                 this.props.updateSpotTvState({
                     needPassword: true,
-                    waitingForMeetingStart: true
+                    waitingForMeetingStart: false
                 });
             } else {
                 logger.warn('Failed to join zoom meeting', { zoomErrorCode });
