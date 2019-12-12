@@ -14,6 +14,42 @@ describe('meeting utils', () => {
             expect(findWhitelistedMeetingUrl(fields, knownDomains)).toEqual(meetingUrl);
         });
 
+        it('handles parent domain corner cases', () => {
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://alpha.beta.meet.jit.si/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual('https://alpha.beta.meet.jit.si/m');
+
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://beta.meet.jit.si/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual('https://beta.meet.jit.si/m');
+
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://meet.jit.si/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual('https://meet.jit.si/m');
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://meet.jit.si/m' ],
+                [ 'si' ]))
+                .toEqual('https://meet.jit.si/m');
+
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://1meet.jit.si/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual(undefined);
+
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://meet.jit1.si/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual(undefined);
+
+            expect(findWhitelistedMeetingUrl(
+                [ 'https://meet.jit.si1/m' ],
+                [ 'meet.jit.si' ]))
+                .toEqual(undefined);
+        });
+
         it('can match vanity urls', () => {
             const meetingUrl = 'https://lenny.jitsi.net/testmeeting';
             const fields = [
@@ -21,7 +57,7 @@ describe('meeting utils', () => {
                 `alternative testing meeting url at ${meetingUrl}`,
                 'agenda is to talk about work'
             ];
-            const knownDomains = [ '.*jitsi.net' ];
+            const knownDomains = [ 'jitsi.net' ];
 
             expect(findWhitelistedMeetingUrl(fields, knownDomains)).toEqual(meetingUrl);
         });
