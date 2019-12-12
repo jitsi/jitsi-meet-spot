@@ -162,7 +162,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         switch (type) {
         case COMMANDS.HANG_UP: {
             if (data.skipFeedback) {
-                this.props.onMeetingLeave({});
+                this._onMeetingLeave();
 
                 return;
             }
@@ -208,7 +208,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         }
 
         case events.MEETING_ENDED: {
-            this.props.onMeetingLeave({});
+            this._onMeetingLeave();
             break;
         }
 
@@ -221,7 +221,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                 // local testing it can happen is other cases as well including when trying to join invalid meeting ID.
                 // [2]: https://devforum.zoom.us/t/joining-fail-with-error-code-1/6417
                 logger.log('Zoom meeting does not exist');
-                this.props.onMeetingLeave({
+                this._onMeetingLeave({
                     errorCode: 'meeting-not-found',
                     error: 'appEvents.meetingDoesNotExist'
                 });
@@ -239,7 +239,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                 });
             } else {
                 logger.warn('Failed to join zoom meeting', { zoomErrorCode });
-                this.props.onMeetingLeave({
+                this._onMeetingLeave({
                     errorCode: 'failed-to-join',
                     error: 'appEvents.meetingJoinFailed'
                 });

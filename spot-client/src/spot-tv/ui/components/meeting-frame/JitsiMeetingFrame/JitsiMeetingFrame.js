@@ -246,13 +246,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      */
     _onMeetingLeave(leaveEvent = { }) {
         leaveEvent.meetingSummary = {
-            duration: this._meetingStartTime
-                ? (Date.now() - this._meetingStartTime) / 1000
-                : 0,
-            error: leaveEvent.error,
-            errorCode: leaveEvent.errorCode,
-            participantCount: this._maxParticipantCount,
-            url: this.props.meetingUrl
+            participantCount: this._maxParticipantCount
         };
 
         super._onMeetingLeave(leaveEvent);
@@ -448,7 +442,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      */
     _onMeetingJoined() {
         this._meetingJoined = true;
-        this._meetingStartTime = Date.now();
 
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
 
