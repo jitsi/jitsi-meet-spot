@@ -9,6 +9,7 @@ import { parseMeetingUrl } from 'common/utils';
 import { errorCodes, events } from 'common/zoom';
 
 import AbstractMeetingFrame from '../AbstractMeetingFrame';
+import MeetingType from '../MeetingType';
 
 import ZoomIframeManager from './ZoomIframeManager';
 
@@ -31,7 +32,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props);
+        super(props, MeetingType.ZOOM);
 
         this._zoomIframeManager = null;
         this._joinRetryTimeout = null;

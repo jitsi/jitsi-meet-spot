@@ -39,8 +39,9 @@ export default class AbstractMeetingFrame extends React.Component {
      * Creates new instance.
      *
      * @param {Object} props - The read-only properties with which the new instance is to be initialized.
+     * @param {MeetingType} meetingType  - A constant for the meeting type reported to analytics.
      */
-    constructor(props) {
+    constructor(props, meetingType) {
         super(props);
 
         /**
@@ -58,6 +59,8 @@ export default class AbstractMeetingFrame extends React.Component {
          * @protected
          */
         this._meetingStartTime = undefined;
+
+        this.meetingType = meetingType;
 
         bindAll(this, [
             '_onApiHealthCheckError',
@@ -146,6 +149,7 @@ export default class AbstractMeetingFrame extends React.Component {
                 : 0;
         meetingSummary.error = leaveEvent.error;
         meetingSummary.errorCode = leaveEvent.errorCode;
+        meetingSummary.type = this.meetingType;
         meetingSummary.url = this.props.meetingUrl;
 
         this.props.onMeetingLeave({
