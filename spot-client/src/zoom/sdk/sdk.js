@@ -152,14 +152,18 @@ class Sdk {
                         passWord,
                         success: res => resolve(res),
                         error: ({ errorCode }) => {
-                            if (errorCode === errorCodes.WRONG_MEETING_PASSWORD) {
-                                setTimeout(() => {
-                                    this._modalController.dismissIncorrectPasswordModal();
-                                });
-                            }
+                            // Use a timeout to let the error modal display.
+                            setTimeout(() => {
+                                switch (errorCode) {
+                                case errorCodes.WRONG_MEETING_PASSWORD:
+                                case errorCodes.MEETING_NOT_START:
+                                    this._modalController.dismiss();
+                                    break;
+                                }
 
-                            reject({
-                                code: errorCode
+                                reject({
+                                    code: errorCode
+                                });
                             });
                         }
                     }

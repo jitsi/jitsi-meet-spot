@@ -30,7 +30,8 @@ import {
     KickedOverlay,
     MeetingFrame,
     MeetingStatus,
-    PasswordRequiredOverlay
+    PasswordRequiredOverlay,
+    WaitingForMeetingStartOverlay
 } from './../components';
 
 /**
@@ -63,7 +64,8 @@ export class Meeting extends React.Component {
         screenshareDevice: PropTypes.string,
         showKickedOverlay: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool,
-        storePhoneNumberFromInvites: PropTypes.func
+        storePhoneNumberFromInvites: PropTypes.func,
+        waitingForMeetingStart: PropTypes.bool
     };
 
     /**
@@ -144,7 +146,8 @@ export class Meeting extends React.Component {
             remoteControlServer,
             screenshareDevice,
             showKickedOverlay,
-            showPasswordPrompt
+            showPasswordPrompt,
+            waitingForMeetingStart
         } = this.props;
         const {
             meetingLoaded
@@ -179,6 +182,7 @@ export class Meeting extends React.Component {
                             <Loading />
                         </div>
                 }
+                { waitingForMeetingStart && <WaitingForMeetingStartOverlay /> }
                 { showPasswordPrompt && this._renderPasswordPrompt() }
                 {
                     showKickedOverlay
@@ -328,7 +332,8 @@ function mapStateToProps(state) {
     } = getDesktopSharingFramerate(state);
     const {
         kicked,
-        needPassword
+        needPassword,
+        waitingForMeetingStart
     } = getInMeetingStatus(state);
 
     return {
@@ -347,7 +352,8 @@ function mapStateToProps(state) {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
         preferredSpeaker: getPreferredSpeaker(state),
-        screenshareDevice: getWiredScreenshareInputLabel(state)
+        screenshareDevice: getWiredScreenshareInputLabel(state),
+        waitingForMeetingStart
     };
 }
 

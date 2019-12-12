@@ -24,6 +24,7 @@ export function getInMeetingStatus(state) {
         screensharingType: state.spotTv.screensharingType,
         tileView: state.spotTv.tileView,
         videoMuted: state.spotTv.videoMuted,
+        waitingForMeetingStart: state.spotTv.waitingForMeetingStart,
         wiredScreensharingEnabled:
             state.spotTv.wiredScreensharingEnabled
     };

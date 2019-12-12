@@ -65,6 +65,7 @@ const presenceToStore = [
     'tileView',
     'videoMuted',
     'view',
+    'waitingForMeetingStart',
     'wiredScreensharingEnabled'
 ];
 

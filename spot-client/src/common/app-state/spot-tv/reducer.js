@@ -17,7 +17,8 @@ const DEFAULT_STATE = {
     spotId: undefined,
     tileView: false,
     videoMuted: true,
-    view: undefined
+    view: undefined,
+    waitingForMeetingStart: false
 
     // FIXME: setting the default prevents wired screensharing from being
     // set to true.

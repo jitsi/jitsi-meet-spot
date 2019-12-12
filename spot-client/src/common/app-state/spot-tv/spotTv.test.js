@@ -20,6 +20,7 @@ describe('spotTv state', () => {
             screensharingType: undefined,
             tileView: false,
             videoMuted: true,
+            waitingForMeetingStart: false,
             wiredScreensharingEnabled: undefined
         };
 
