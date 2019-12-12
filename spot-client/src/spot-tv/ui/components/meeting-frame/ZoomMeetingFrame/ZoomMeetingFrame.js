@@ -239,7 +239,10 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
                     waitingForMeetingStart: false
                 });
             } else {
-                logger.warn('Failed to join zoom meeting', { zoomErrorCode });
+                logger.warn('Failed to join zoom meeting', {
+                    data,
+                    zoomErrorCode
+                });
                 this._onMeetingLeave({
                     errorCode: 'failed-to-join',
                     error: 'appEvents.meetingJoinFailed'
