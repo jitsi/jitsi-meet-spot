@@ -14,6 +14,7 @@ import { adjustVolume } from '../../../../native-functions';
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
 import AbstractMeetingFrame from '../AbstractMeetingFrame';
+import MeetingType from '../MeetingType';
 import FeedbackHider from './FeedbackHider';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
@@ -47,7 +48,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * instance is to be initialized.
      */
     constructor(props) {
-        super(props);
+        super(props, MeetingType.JITSI);
 
         /**
          * The external api exposes toggle actions. Various states are stored
