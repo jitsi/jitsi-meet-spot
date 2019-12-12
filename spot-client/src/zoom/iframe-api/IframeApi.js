@@ -136,6 +136,19 @@ export class IFrameApi {
      * @returns {void}
      */
     _sendMessageToParent(type, data = {}) {
+        // Special case for Error as it  doesn't convert to JSON auto magically
+        if (data.error && (data.error.message || data.error.stack)) {
+            this._transport.sendEvent({
+                type,
+                data: {
+                    error: {
+                        message: data.error.message,
+                        stack: data.error.stack
+                    }
+                }
+            });
+        }
+
         this._transport.sendEvent({
             type,
             data
