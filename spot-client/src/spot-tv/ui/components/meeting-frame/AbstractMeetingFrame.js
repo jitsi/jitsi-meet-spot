@@ -51,6 +51,14 @@ export default class AbstractMeetingFrame extends React.Component {
          */
         this._apiHealthChecks = undefined;
 
+        /**
+         * A timestamp indicates when the meeting was joined.
+         *
+         * @type {number|undefined}
+         * @protected
+         */
+        this._meetingStartTime = undefined;
+
         bindAll(this, [
             '_onApiHealthCheckError',
             '_onMeetingJoined',
@@ -110,6 +118,8 @@ export default class AbstractMeetingFrame extends React.Component {
     _onMeetingJoined() {
         logger.log('meeting joined');
 
+        this._meetingStartTime = Date.now();
+
         this.props.updateSpotTvState({
             inMeeting: this.props.meetingUrl,
             meetingDisplayName: this.props.meetingDisplayName,
@@ -128,6 +138,19 @@ export default class AbstractMeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLeave(leaveEvent = { }) {
-        this.props.onMeetingLeave(leaveEvent);
+        const meetingSummary = leaveEvent?.meetingSummary ?? { };
+
+        meetingSummary.duration
+            = this._meetingStartTime
+                ? (Date.now() - this._meetingStartTime) / 1000
+                : 0;
+        meetingSummary.error = leaveEvent.error;
+        meetingSummary.errorCode = leaveEvent.errorCode;
+        meetingSummary.url = this.props.meetingUrl;
+
+        this.props.onMeetingLeave({
+            ...leaveEvent,
+            meetingSummary
+        });
     }
 }
