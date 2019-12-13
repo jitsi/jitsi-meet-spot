@@ -34,6 +34,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
     constructor(props) {
         super(props, MeetingType.ZOOM);
 
+        this._maxParticipantCount = 1;
         this._zoomIframeManager = null;
         this._joinRetryTimeout = null;
 
@@ -189,6 +190,21 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
     }
 
     /**
+     * Method called when the meeting is about to be left and the app is supposed to navigate to another path.
+     *
+     * @param {Object} leaveEvent - The leave event.
+     * @private
+     * @returns {void}
+     */
+    _onMeetingLeave(leaveEvent = { }) {
+        leaveEvent.meetingSummary = {
+            participantCount: this._maxParticipantCount
+        };
+
+        super._onMeetingLeave(leaveEvent);
+    }
+
+    /**
      * Callback invoked when the Zoom meeting has an update of its meeting state.
      *
      * @param {string} type - The constant representing the update.
@@ -255,6 +271,16 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             this._onMeetingJoined();
 
             this._enableApiHealthChecks(() => this._zoomIframeManager.ping());
+
+            break;
+        }
+
+        case events.PARTICIPANTS_COUNT_UPDATED: {
+            const { count } = data;
+
+            if (typeof count === 'number' && this._maxParticipantCount < count) {
+                this._maxParticipantCount = count;
+            }
 
             break;
         }
