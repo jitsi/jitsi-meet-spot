@@ -517,7 +517,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         const newMax = this._participants.size + 1;
 
         if (this._maxParticipantCount < newMax) {
-            this._maxParticipantCount += newMax;
+            this._maxParticipantCount = newMax;
         }
 
         this._maybeToggleFilmstripVisibility();
