@@ -5,12 +5,18 @@ const IntegrationsApp = require('../../IntegrationsApp');
 const ZoomSigningController = require('../ZoomSigningController');
 
 describe('ZoomSigningController', () => {
-    let zoomSigningController;
-
     let integrationsApp;
 
+    let mockJwtValidator;
+
+    let zoomSigningController;
+
     beforeEach(() => {
-        zoomSigningController = new ZoomSigningController('api-secret');
+        mockJwtValidator = {
+            isValidJwt: jest.fn().mockReturnValue(Promise.resolve())
+        };
+
+        zoomSigningController = new ZoomSigningController('api-secret', mockJwtValidator);
 
         integrationsApp = new IntegrationsApp(
             1135,
@@ -21,6 +27,7 @@ describe('ZoomSigningController', () => {
     it('returns 200', () =>
         request(integrationsApp.getServer())
             .post(routes.zoom.sign)
+            .set('Authorization', 'Bearer any-jwt')
             .send({
                 apiKey: '11',
                 meetingNumber: '223',
@@ -35,6 +42,7 @@ describe('ZoomSigningController', () => {
         it('errors when a required value is missing', () =>
             request(integrationsApp.getServer())
                 .post(routes.zoom.sign)
+                .set('Authorization', 'Bearer any-jwt')
                 .send({})
                 .expect(422)
         );
@@ -42,6 +50,7 @@ describe('ZoomSigningController', () => {
         it('errors when an invalid type value is sent', () =>
             request(integrationsApp.getServer())
                 .post(routes.zoom.sign)
+                .set('Authorization', 'Bearer any-jwt')
                 .send({
                     apiKey: '11',
                     meetingNumber: {},

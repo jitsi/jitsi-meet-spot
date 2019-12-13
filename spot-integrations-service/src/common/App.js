@@ -1,5 +1,7 @@
 const express = require('express');
 
+const errorHandlingMiddleware = require('../middleware/error');
+
 /**
  * Encapsulates the creation of an HTTP server.
  */
@@ -24,6 +26,9 @@ class App {
 
         this._initializeControllers();
 
+        // Error handling middleware must be applied after all middleware,
+        // including those applied by controllers, so it may capture all errors.
+        this._app.use(errorHandlingMiddleware);
     }
 
     /**

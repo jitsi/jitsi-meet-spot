@@ -10,8 +10,12 @@
         "express": "4.17.1",
         "express-prom-bundle": "5.1.5",
         "express-validator": "6.3.0",
+        "fetch-retry": "2.2.3",
         "js-base64": "2.5.1",
-        "prom-client": "11.5.3"
+        "jsonwebtoken": "8.5.1",
+        "node-cache": "5.1.0",
+        "prom-client": "11.5.3",
+        "sha256": "0.2.0"
     },
     "devDependencies": {
         "babel-eslint": "10.0.3",
@@ -20,6 +24,7 @@
         "eslint-plugin-flowtype": "4.4.1",
         "eslint-plugin-import": "2.18.2",
         "jest": "24.9.0",
+        "node-mocks-http": "1.8.1",
         "supertest": "4.0.2"
     },
     "scripts": {
