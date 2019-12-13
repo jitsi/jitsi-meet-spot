@@ -5,6 +5,7 @@ const express = require('express');
 const validator = require('express-validator');
 
 const routes = require('../common/routes');
+const initializeJwtAuthenticationMiddleware = require('../middleware/authentication');
 
 /**
  * Encapsulates interactions necessary to join a Zoom meeting.
@@ -15,8 +16,10 @@ class ZoomSigningController {
      *
      * @param {string} apiSecret - The Zoom api secret associated with a client
      * integration application.
+     * @param {JwtValidator} jwtValidator - An instance of a JwtValidator
+     * to validate JWTs used when making requests to the controller.
      */
-    constructor(apiSecret) {
+    constructor(apiSecret, jwtValidator) {
         this._apiSecret = apiSecret;
 
         // eslint-disable-next-line new-cap
@@ -27,7 +30,8 @@ class ZoomSigningController {
             [
                 validator.check('apiKey').isString(),
                 validator.check('meetingNumber').isString(),
-                validator.check('role').isInt()
+                validator.check('role').isInt(),
+                initializeJwtAuthenticationMiddleware(jwtValidator)
             ],
             this._onSignMeetingNumber.bind(this)
         );

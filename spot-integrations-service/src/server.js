@@ -3,15 +3,17 @@ const envalid = require('envalid');
 const HealthCheckController = require('./controllers/HealthCheckController');
 const MetricsController = require('./controllers/MetricsController');
 const ZoomSigningController = require('./controllers/ZoomSigningController');
-
 const App = require('./common/App');
+const JwtValidator = require('./authentication/JwtValidator');
 const IntegrationsApp = require('./IntegrationsApp');
 
 // Validate required environment variables
 envalid.cleanEnv(process.env, {
     API_PORT: envalid.num(),
+    ASAP_KEY_SERVER: envalid.str(),
     METRICS_PORT: envalid.num(),
-    ZOOM_API_SECRET: envalid.str()
+    ZOOM_API_SECRET: envalid.str(),
+    ZOOM_JWT_CONFIG: envalid.json()
 });
 
 const metricsApp = new App(
@@ -20,10 +22,14 @@ const metricsApp = new App(
         new MetricsController()
     ]
 );
+const zoomJwtValidator = new JwtValidator(
+    process.env.ASAP_KEY_SERVER,
+    JSON.parse(process.env.ZOOM_JWT_CONFIG)
+);
 const integrationsApp = new IntegrationsApp(
     process.env.API_PORT,
     [
-        new ZoomSigningController(process.env.ZOOM_API_SECRET)
+        new ZoomSigningController(process.env.ZOOM_API_SECRET, zoomJwtValidator)
     ],
     {
         enableCors: process.env.ENABLE_ALL_CORS,
