@@ -11,6 +11,7 @@ import {
     ModalController,
     VideoMuteController
 } from './controllers';
+import { ParticipantCountObserver } from './observers';
 
 /**
  * Encapsulates interacting with Zoom meetings and its DOM.
@@ -66,6 +67,9 @@ class Sdk {
 
         return initPromise.then(() => {
             this._hangUpController = new HangUpController();
+            this._participantCountController = new ParticipantCountObserver(count => {
+                this._onStatusChange(events.PARTICIPANTS_COUNT_UPDATED, { count });
+            });
             this._audioMuteController = new AudioMuteController(muted => {
                 this._onStatusChange(events.AUDIO_MUTE_UPDATED, { muted });
             });
@@ -171,6 +175,7 @@ class Sdk {
             })).then(() => {
                 this._audioMuteController.start();
                 this._videoMuteController.start();
+                this._participantCountController.start();
             })
             .then(() => this._audioMuteController.initializeAudio())
             .then(() => this.setVideoMute(false));
