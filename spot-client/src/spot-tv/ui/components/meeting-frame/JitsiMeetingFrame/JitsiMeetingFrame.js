@@ -87,7 +87,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         ]);
 
         this._jitsiApi = null;
-        this._maxParticipantCount = 1;
         this._meetingContainer = null;
         this._meetingLoaded = false;
         this._meetingJoined = false;
@@ -236,21 +235,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             tileView: false,
             videoMuted: false
         });
-    }
-
-    /**
-     * Method called when the meeting is about to be left and the app is supposed to navigate to another path.
-     *
-     * @param {Object} leaveEvent - The leave event.
-     * @private
-     * @returns {void}
-     */
-    _onMeetingLeave(leaveEvent = { }) {
-        leaveEvent.meetingSummary = {
-            participantCount: this._maxParticipantCount
-        };
-
-        super._onMeetingLeave(leaveEvent);
     }
 
     /**

@@ -53,6 +53,15 @@ export default class AbstractMeetingFrame extends React.Component {
         this._apiHealthChecks = undefined;
 
         /**
+         * The max number of participants that was at some point in the meeting. The value should be updated by
+         * the vendor specific meeting frame class.
+         *
+         * @type {number}
+         * @protected
+         */
+        this._maxParticipantCount = 1;
+
+        /**
          * A timestamp indicates when the meeting was joined.
          *
          * @type {number|undefined}
@@ -141,16 +150,14 @@ export default class AbstractMeetingFrame extends React.Component {
      * @returns {void}
      */
     _onMeetingLeave(leaveEvent = { }) {
-        const meetingSummary = leaveEvent?.meetingSummary ?? { };
-
-        meetingSummary.duration
-            = this._meetingStartTime
-                ? (Date.now() - this._meetingStartTime) / 1000
-                : 0;
-        meetingSummary.error = leaveEvent.error;
-        meetingSummary.errorCode = leaveEvent.errorCode;
-        meetingSummary.type = this.meetingType;
-        meetingSummary.url = this.props.meetingUrl;
+        const meetingSummary = {
+            duration: this._meetingStartTime ? (Date.now() - this._meetingStartTime) / 1000 : 0,
+            error: leaveEvent.error,
+            errorCode: leaveEvent.errorCode,
+            participantCount: this._maxParticipantCount,
+            type: this.meetingType,
+            url: this.props.meetingUrl
+        };
 
         this.props.onMeetingLeave({
             ...leaveEvent,
