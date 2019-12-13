@@ -34,7 +34,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
     constructor(props) {
         super(props, MeetingType.ZOOM);
 
-        this._maxParticipantCount = 1;
         this._zoomIframeManager = null;
         this._joinRetryTimeout = null;
 
@@ -187,21 +186,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
 
             break;
         }
-    }
-
-    /**
-     * Method called when the meeting is about to be left and the app is supposed to navigate to another path.
-     *
-     * @param {Object} leaveEvent - The leave event.
-     * @private
-     * @returns {void}
-     */
-    _onMeetingLeave(leaveEvent = { }) {
-        leaveEvent.meetingSummary = {
-            participantCount: this._maxParticipantCount
-        };
-
-        super._onMeetingLeave(leaveEvent);
     }
 
     /**
