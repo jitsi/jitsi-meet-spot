@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 /**
  * A selector which returns the name of an application to advertise which has
  * integration with Jitsi-Meet-Spot.
@@ -141,8 +143,34 @@ export function getLoggingEndpoint(state) {
 }
 
 /**
- * A selector which gets the list of meeting domains that are known to support
- * meetings on Jitsi-Meet deployments.
+ * A selector which gets the full list of domains which can be shown in the
+ * meeting view. The list is calculated based on not only on the explicit
+ * whitelist but other enabled features.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string[]}
+ */
+export const getAllAllowedMeetingDomains = createSelector(
+    getMeetingDomainsWhitelist,
+    getJwtDomains,
+    isZoomEnabled,
+    (whitelistedDomains, jwtDomains, allowZoomDomains) => {
+        const explicitlyWhitelisted = [
+            ...whitelistedDomains,
+            ...jwtDomains
+        ];
+
+        if (allowZoomDomains) {
+            explicitlyWhitelisted.push('zoom.us');
+        }
+
+        return Array.from(new Set(explicitlyWhitelisted));
+    }
+);
+
+/**
+ * A selector which gets the list of meeting domains which are allowed to be
+ * joined as meetings.
  *
  * @param {Object} state - The Redux state.
  * @returns {string[]}

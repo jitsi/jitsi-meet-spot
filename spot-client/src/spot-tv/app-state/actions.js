@@ -4,11 +4,10 @@ import {
     clearAllPairedRemotes,
     destroyConnection,
     getJoinCodeRefreshRate,
-    getMeetingDomainsWhitelist,
+    getAllAllowedMeetingDomains,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     getTemporaryRemoteIds,
-    isZoomEnabled,
     reconnectScheduleUpdate,
     removePairedRemote,
     setCustomerId,
@@ -537,9 +536,7 @@ export function updateSpotTVSource() {
 export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayName, screenshare, startWithVideoMuted }) {
     return (dispatch, getState) => {
         const state = getState();
-        const domainWhitelist = getMeetingDomainsWhitelist(state);
-
-        isZoomEnabled(state) && domainWhitelist.push('zoom.us');
+        const domainWhitelist = getAllAllowedMeetingDomains(state);
 
         let location;
 
