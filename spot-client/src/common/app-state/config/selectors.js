@@ -127,9 +127,32 @@ export function getJoinCodeRefreshRate(state) {
  * @param {Object} state - The Redux state.
  * @returns {Array<string>}
  */
-export function getJwtDomains(state) {
+function _getConfiguredJwtDomains(state) {
     return state.config.SPOT_SERVICES.jwtDomains;
 }
+
+/**
+ * A selector which returns domains for which the backend-provided JWT is valid.
+ * Injects Zoom support if Zoom support is enabled.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Array<string>}
+ */
+export const getJwtDomains = createSelector(
+    _getConfiguredJwtDomains,
+    isZoomEnabled,
+    (configuredJwtDomains, allowZoomDomains) => {
+        const explicitlyWhitelisted = [
+            ...configuredJwtDomains
+        ];
+
+        if (allowZoomDomains) {
+            explicitlyWhitelisted.push('zoom.us');
+        }
+
+        return Array.from(new Set(explicitlyWhitelisted));
+    }
+);
 
 /**
 * A selector which returns a unique id used for identifying the current client
@@ -152,7 +175,7 @@ export function getLoggingEndpoint(state) {
  */
 export const getAllAllowedMeetingDomains = createSelector(
     getMeetingDomainsWhitelist,
-    getJwtDomains,
+    _getConfiguredJwtDomains,
     isZoomEnabled,
     (whitelistedDomains, jwtDomains, allowZoomDomains) => {
         const explicitlyWhitelisted = [

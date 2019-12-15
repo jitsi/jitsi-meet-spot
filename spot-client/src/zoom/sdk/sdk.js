@@ -102,6 +102,7 @@ class Sdk {
 
         const {
             apiKey,
+            jwt,
             meetingNumber,
             meetingSignService,
             passWord = '',
@@ -129,6 +130,7 @@ class Sdk {
                     role: 0
                 }),
                 headers: {
+                    'Authorization': `Bearer ${jwt}`,
                     'content-type': 'application/json'
                 },
                 method: 'POST',
