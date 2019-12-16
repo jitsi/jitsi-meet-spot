@@ -143,11 +143,14 @@ export default class P2PSignalingClient extends P2PSignalingBase {
         };
 
         const promise = new Promise(function (resolve, reject) {
-            this._peerConnection.sendDataChannelMessage(JSON.stringify({
+            if (!this._peerConnection.sendDataChannelMessage(JSON.stringify({
                 requestId,
                 command,
                 data
-            }));
+            }))) {
+                this._p2pSignalingRequests.delete(requestId);
+                reject('Failed to send command over P2P');
+            }
 
             this.resolve = resolve;
             this.reject = reject;
