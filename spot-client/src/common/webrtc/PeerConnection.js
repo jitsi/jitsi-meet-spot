@@ -182,15 +182,22 @@ export default class PeerConnection extends Emitter {
      * Sends a message over the data channel. Can be used only if the data channel is currently active.
      *
      * @param {string} message - A string to send.
-     * @returns {void}
-     * @throws an error if {@link isDataChannelActive} returns {@code false}.
+     * @returns {boolean}
      */
     sendDataChannelMessage(message) {
         if (!this.isDataChannelActive()) {
-            throw new Error('Data channel is not ready');
+            return false;
         }
 
-        this._dataChannel.send(message);
+        try {
+            this._dataChannel.send(message);
+
+            return true;
+        } catch (error) {
+            logger.error('sendDataChannelMessage failed', { error });
+
+            return false;
+        }
     }
 
     /**
