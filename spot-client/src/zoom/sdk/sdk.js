@@ -11,6 +11,7 @@ import {
     ModalController,
     VideoMuteController
 } from './controllers';
+import { fetchMeetingSignature } from './functions';
 import { ParticipantCountObserver } from './observers';
 
 /**
@@ -111,41 +112,21 @@ class Sdk {
             passWord = '',
             userName = 'Meeting Room'
         } = options;
+        const ZoomMtg = this._getZoomMtg();
 
-        const meetingSignPromise = new Promise(resolve => {
-            if (typeof API_SECRET === 'string') {
-                const ZoomMtg = this._getZoomMtg();
-
-                resolve(ZoomMtg.generateSignature({
-                    meetingNumber,
-                    apiKey,
-                    apiSecret: API_SECRET,
-                    role: 0
-                }));
-
-                return;
-            }
-
-            fetch(`${meetingSignService}`, {
-                body: JSON.stringify({
-                    apiKey,
-                    meetingNumber,
-                    role: 0
-                }),
-                headers: {
-                    'content-type': 'application/json'
-                },
-                method: 'POST',
-                mode: 'cors'
-            })
-            .then(response => response.json())
-            .then(({ signature }) => resolve(signature));
-        });
+        const meetingSignPromise
+            = typeof API_SECRET === 'string'
+                ? Promise.resolve(
+                    ZoomMtg.generateSignature({
+                        meetingNumber,
+                        apiKey,
+                        apiSecret: API_SECRET,
+                        role: 0
+                    }))
+                : fetchMeetingSignature(meetingSignService, meetingNumber, apiKey);
 
         return meetingSignPromise
             .then(signature => new Promise((resolve, reject) => {
-                const ZoomMtg = this._getZoomMtg();
-
                 ZoomMtg.join(
                     {
                         meetingNumber,
