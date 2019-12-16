@@ -8,8 +8,6 @@ import { ROUTES } from 'common/routing';
 
 import { Countdown, StatusOverlay } from './../components';
 
-import View from './view';
-
 /**
  * A component for showing a potentially fatal error has occurred and providing
  * the ability to reload the app or reset app state.
@@ -42,14 +40,12 @@ export class FatalError extends React.Component {
      */
     render() {
         return (
-            <View name = 'error'>
-                <StatusOverlay title = { this.props.t('appStatus.unexpectedError') }>
-                    <div>{ this.props.t('appStatus.willReload') }</div>
-                    <Countdown
-                        onCountdownComplete = { this._onReload }
-                        startTime = { 10 } />
-                </StatusOverlay>
-            </View>
+            <StatusOverlay title = { this.props.t('appStatus.unexpectedError') }>
+                <div>{ this.props.t('appStatus.willReload') }</div>
+                <Countdown
+                    onCountdownComplete = { this._onReload }
+                    startTime = { 10 } />
+            </StatusOverlay>
         );
     }
 
