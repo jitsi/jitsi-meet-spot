@@ -1,4 +1,5 @@
 import { MiddlewareRegistry } from 'common/redux';
+import { ERROR_BOUNDARY_DISPLAYED } from 'common/app-state/ui';
 
 import { SET_CUSTOMER_ID, SET_ROOM_ID, SUBMIT_FEEDBACK, getSpotClientVersion } from '../app-state';
 import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
@@ -9,7 +10,8 @@ import { VIEW_DISPLAYED } from '../ui/actionTypes';
 import analytics from './analytics';
 import {
     feedbackEvents,
-    permanentPairingCodeEvents
+    permanentPairingCodeEvents,
+    uiEvents
 } from './events';
 import { CUSTOMER_ID, SPOT_ROOM_ID } from './properties';
 
@@ -19,6 +21,20 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
         analytics.updateProperty('spotClientVersion', getSpotClientVersion(getState()));
 
         break;
+    case ERROR_BOUNDARY_DISPLAYED: {
+        const {
+            error,
+            info
+        } = action;
+
+        analytics.log(uiEvents.ERROR_BOUNDARY_DISPLAYED, {
+            errorName: error?.name,
+            errorMessage: error?.message,
+            errorStack: error?.stack,
+            componentStack: info?.componentStack
+        });
+        break;
+    }
 
     case SET_CUSTOMER_ID:
         analytics.updateProperty(CUSTOMER_ID, action.customerId);

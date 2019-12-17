@@ -50,3 +50,10 @@ export const shareModeEvents = {
     ENTER_SHARE_MODE: 'enter-share-mode',
     EXIT_SHARE_MODE: 'exit-share-mode'
 };
+
+export const uiEvents = {
+    /**
+     * When React error boundary is triggered.
+     */
+    ERROR_BOUNDARY_DISPLAYED: 'error-boundary'
+};
