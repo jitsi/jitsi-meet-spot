@@ -41,6 +41,7 @@
         "eslint-plugin-import": "2.18.2",
         "eslint-plugin-jsdoc": "18.1.4",
         "eslint-plugin-react": "7.16.0",
+        "fetch-retry": "2.2.3",
         "file-loader": "4.2.0",
         "i18next": "17.0.16",
         "inspectpack": "4.2.2",

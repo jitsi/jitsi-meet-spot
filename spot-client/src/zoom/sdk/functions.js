@@ -1,3 +1,8 @@
+import fetch from 'fetch-retry';
+
+import { logger } from 'common/logger';
+import { getJitterDelay } from 'common/utils';
+
 /**
  * Communicates with 'spot-intebration-service' in order to get a Zoom signature generated for the meeting.
  *
@@ -17,8 +22,23 @@ export function fetchMeetingSignature(apiKey, serviceUrl, meetingNumber) {
             'content-type': 'application/json'
         },
         method: 'POST',
-        mode: 'cors'
+        mode: 'cors',
+        retries: 3,
+        retryOn: (attempt, error, response) => error !== null || response.status >= 500,
+        retryDelay: attempt => getJitterDelay(attempt, 1000, 3)
     })
-        .then(response => response.json())
+        .then(response => response.json().then(json => {
+            if (!response.ok) {
+                logger.error('fetchMeetingSignature failed', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    json
+                });
+
+                return Promise.reject('fetchMeetingSignature failed');
+            }
+
+            return json;
+        }))
         .then(({ signature }) => signature);
 }
