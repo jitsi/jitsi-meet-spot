@@ -1,4 +1,5 @@
 import PostLogsRequest from './PostLogsRequest';
+import { runAllTimersNTimes, runNTimes } from 'common/test-utils';
 
 jest.mock('./internalLogger');
 
@@ -28,30 +29,6 @@ describe('PostLogsRequest', () => {
     });
 
     describe('retry', () => {
-        /**
-         * Executes timeouts and proceeds to the next promise chain.
-         *
-         * @returns {Promise}
-         */
-        function tickProcess() {
-            jest.runAllTimers();
-
-            return new Promise(resolve => process.nextTick(resolve));
-        }
-
-        /**
-         * Executes a function a specified number of times.
-         *
-         * @param {Function} func - The function to invoke.
-         * @param {number} count - How many times to invoke the function.
-         * @returns {void}
-         */
-        function runNTimes(func, count) {
-            for (let i = 0; i < count; i++) {
-                func();
-            }
-        }
-
         it('retries on failed send', () => {
             fetch.mockResponses(
                 [
@@ -66,8 +43,7 @@ describe('PostLogsRequest', () => {
 
             const request = postLogsRequest.send();
 
-            return tickProcess()
-                .then(() => tickProcess())
+            return runAllTimersNTimes(2)
                 .then(() => request);
         });
 
@@ -92,14 +68,8 @@ describe('PostLogsRequest', () => {
 
             const request = postLogsRequest.send();
 
-            let ticks = tickProcess();
-
-            runNTimes(() => {
-                ticks = ticks.then(() => tickProcess());
-            }, PostLogsRequest.MAX_RETRIES);
-
-
-            return ticks.then(() => request);
+            return runAllTimersNTimes(PostLogsRequest.MAX_RETRIES)
+                .then(() => request);
         });
 
         it('stops after reaching MAX_RETRIES', () => {
@@ -118,14 +88,7 @@ describe('PostLogsRequest', () => {
 
             const request = postLogsRequest.send();
 
-            let ticks = tickProcess();
-
-            runNTimes(() => {
-                ticks = ticks.then(() => tickProcess());
-            }, PostLogsRequest.MAX_RETRIES + 1);
-
-
-            return ticks
+            return runAllTimersNTimes(PostLogsRequest.MAX_RETRIES + 1)
                 .then(() => request)
                 .then(
                     () => {
