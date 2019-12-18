@@ -8,7 +8,6 @@ import {
     getRemoteControlServerConfig,
     getSpotServicesConfig,
     getTemporaryRemoteIds,
-    isZoomEnabled,
     reconnectScheduleUpdate,
     removePairedRemote,
     setCustomerId,
@@ -538,8 +537,6 @@ export function redirectToMeeting(meetingNameOrUrl, { invites, meetingDisplayNam
     return (dispatch, getState) => {
         const state = getState();
         const domainWhitelist = getMeetingDomainsWhitelist(state);
-
-        isZoomEnabled(state) && domainWhitelist.push('zoom.us');
 
         let location;
 
