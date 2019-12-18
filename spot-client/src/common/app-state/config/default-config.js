@@ -171,10 +171,10 @@ export default {
      *
      * @type {Array<string>}
      */
-    MEETING_DOMAINS_WHITELIST: [
-        'beta.meet.jit.si',
-        'meet.jit.si'
-    ],
+    MEETING_DOMAINS_WHITELIST:
+        process.env.MEETING_DOMAINS_WHITELIST
+            ? process.env.MEETING_DOMAINS_WHITELIST.split(',')
+            : [ 'beta.meet.jit.si', 'meet.jit.si' ],
 
     /**
      * Configurations for joining meetings from various meeting providers.
