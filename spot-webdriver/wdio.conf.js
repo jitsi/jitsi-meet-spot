@@ -2,6 +2,7 @@
 
 const path = require('path');
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
+const video = require('wdio-video-reporter');
 
 const constants = require('./constants');
 const screenInfo = require('./screen-info');
@@ -73,7 +74,13 @@ exports.config = {
                 outputDir: './webdriver-results',
                 screenshotStrategy: 'before:click'
             }
-        ]
+        ],
+        [
+            video,
+            {
+                outputDir: './webdriver-results'
+            }
+        ],
     ],
 
     // Use selenium-standalone to automatically download and launch selenium.
