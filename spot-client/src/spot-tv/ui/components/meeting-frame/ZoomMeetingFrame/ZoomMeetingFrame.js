@@ -52,6 +52,7 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         this._zoomIframeManager = new ZoomIframeManager({
             apiKey: this.props.apiKey,
             iframeTarget: this._rootRef.current,
+            jwt: this.props.jwt,
             meetingSignService: this.props.meetingSignService,
             onMeetingUpdateReceived: this._onMeetingUpdateReceived
         });

@@ -19,11 +19,12 @@ describe('zoom/functions', () => {
             signature: TEST_SIGNATURE
         };
         const TEST_MEETING_ID = '123456';
+        const TEST_JWT = 'any-jwt';
 
         it('makes a request and returns a signature', () => {
             fetch.mockResponseOnce(JSON.stringify(MOCK_RESPONSE));
 
-            return fetchMeetingSignature(MOCK_API_KEY, MOCK_SERVICE_ENDPOINT, TEST_MEETING_ID)
+            return fetchMeetingSignature(MOCK_API_KEY, MOCK_SERVICE_ENDPOINT, TEST_MEETING_ID, TEST_JWT)
                 .then(signature => {
                     expect(fetch).toHaveBeenCalledWith(
                         MOCK_SERVICE_ENDPOINT,
@@ -34,6 +35,7 @@ describe('zoom/functions', () => {
                                 role: 0
                             }),
                             headers: {
+                                'Authorization': `Bearer ${TEST_JWT}`,
                                 'content-type': 'application/json'
                             },
                             method: 'POST',

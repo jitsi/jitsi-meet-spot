@@ -107,6 +107,7 @@ class Sdk {
 
         const {
             apiKey,
+            jwt,
             meetingNumber,
             meetingSignService,
             passWord = '',
@@ -123,7 +124,7 @@ class Sdk {
                         apiSecret: API_SECRET,
                         role: 0
                     }))
-                : fetchMeetingSignature(meetingSignService, meetingNumber, apiKey);
+                : fetchMeetingSignature(meetingSignService, meetingNumber, apiKey, jwt);
 
         return meetingSignPromise
             .then(signature => new Promise((resolve, reject) => {

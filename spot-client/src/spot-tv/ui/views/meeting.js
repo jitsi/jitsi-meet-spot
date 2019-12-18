@@ -24,6 +24,7 @@ import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
+import { findWhitelistedMeetingUrl } from 'common/utils';
 
 import { disconnectAllTemporaryRemotes, setMeetingSummary } from './../../app-state';
 import {
@@ -82,9 +83,9 @@ export class Meeting extends React.Component {
         this._useJwt = false;
 
         if (this._queryParams.location && props.jwt) {
-            const { host } = new URL(this._queryParams.location);
-
-            this._useJwt = props.jwtDomains.includes(host);
+            this._useJwt = this._useJwt = Boolean(findWhitelistedMeetingUrl(
+                [ this._queryParams.location ], props.jwtDomains
+            ));
         }
 
         this.state = {

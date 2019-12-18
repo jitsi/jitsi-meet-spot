@@ -11,6 +11,9 @@ export default class ZoomIframeManager {
      * @param {Object} options - Configuration for the new instance.
      * @param {string} options.apiKey - The Zoom client key to use for joining
      * meetings.
+     * @param {string} options.jwt - The JWT used to verify the Spot-TV instance
+     * while interacting with integration services that provide information on
+     * how to join Zoom meetings.
      * @param {string} options.meetingSignService - The url to call to encode
      * the meeting ID, per Zoom's requirements.
      * @param {HTMLElement} options.iframeTarget - The element to which to
@@ -52,6 +55,7 @@ export default class ZoomIframeManager {
     goToMeeting(meetingNumber, passWord, userName) {
         this._sendCommand(commands.JOIN, {
             apiKey: this._options.apiKey,
+            jwt: this._options.jwt,
             userName,
             passWord,
             meetingNumber,
