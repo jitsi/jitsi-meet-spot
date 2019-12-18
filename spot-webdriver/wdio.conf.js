@@ -80,7 +80,7 @@ exports.config = {
             {
                 outputDir: './webdriver-results'
             }
-        ],
+        ]
     ],
 
     // Use selenium-standalone to automatically download and launch selenium.
