@@ -83,7 +83,7 @@ export class Meeting extends React.Component {
         this._useJwt = false;
 
         if (this._queryParams.location && props.jwt) {
-            this._useJwt = this._useJwt = Boolean(findWhitelistedMeetingUrl(
+            this._useJwt = Boolean(findWhitelistedMeetingUrl(
                 [ this._queryParams.location ], props.jwtDomains
             ));
         }
