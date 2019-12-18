@@ -9,9 +9,10 @@ import { getJitterDelay } from 'common/utils';
  * @param {string} apiKey - The ZOOM API key assigned to the app.
  * @param {string} serviceUrl - The meeting signature service URL.
  * @param {string} meetingNumber - The ZOOM meeting number for which a signature is to be generated.
+ * @param {string} jwt - The JWT to use to verify this Spot-TV is authenticated to use the signature service.
  * @returns {Promise<string>}
  */
-export function fetchMeetingSignature(apiKey, serviceUrl, meetingNumber) {
+export function fetchMeetingSignature(apiKey, serviceUrl, meetingNumber, jwt) {
     return fetch(`${serviceUrl}`, {
         body: JSON.stringify({
             apiKey,
@@ -19,6 +20,7 @@ export function fetchMeetingSignature(apiKey, serviceUrl, meetingNumber) {
             role: 0
         }),
         headers: {
+            'Authorization': `Bearer ${jwt}`,
             'content-type': 'application/json'
         },
         method: 'POST',
