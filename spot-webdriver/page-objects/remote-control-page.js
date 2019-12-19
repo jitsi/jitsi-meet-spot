@@ -32,7 +32,7 @@ class RemoteControlPage extends PageObject {
     getMeetingInput() {
         const meetNowButton = this.waitForElementDisplayed(MEET_NOW_BUTTON);
 
-        meetNowButton.click(MEET_NOW_BUTTON);
+        meetNowButton.click();
 
         return this.meetingInput;
     }
@@ -94,7 +94,7 @@ class RemoteControlPage extends PageObject {
     startWirelessScreenshareWithoutPicker() {
         const shareContentButton = this.waitForElementDisplayed(SHARE_CONTENT_BUTTON);
 
-        shareContentButton.click(SHARE_CONTENT_BUTTON);
+        shareContentButton.click();
     }
 }
 

@@ -39,7 +39,7 @@ class MeetingInput extends PageObject {
     submit() {
         const submitButton = this.select(SUBMIT_BUTTON);
 
-        submitButton.click(SUBMIT_BUTTON);
+        submitButton.click();
     }
 
     /**
