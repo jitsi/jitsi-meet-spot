@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-// const { addAttachment } = require('@wdio/allure-reporter').default;
+const { addAttachment } = require('@wdio/allure-reporter').default;
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 
 const constants = require('./constants');
@@ -104,15 +104,14 @@ exports.config = {
         path.resolve(__dirname, 'specs', '**/adhoc-meeting.spec.js')
     ],
 
-    // afterTest: test => {
-    afterTest: () => {
-        // if (!test.passed) {
-        //     const browserLogs = browser.getLogs('browser');
-        //     const messages = browserLogs.map(group => group.map(log => log.message));
+    afterTest: test => {
+        if (!test.passed) {
+            const browserLogs = browser.getLogs('browser');
+            const messages = browserLogs.map(group => group.map(log => log.message));
 
-        //     addAttachment('browserA', JSON.stringify(messages[0], null, 2));
-        //     addAttachment('browserB', JSON.stringify(messages[1], null, 2));
-        // }
+            addAttachment('browserA', JSON.stringify(messages[0], null, 2));
+            addAttachment('browserB', JSON.stringify(messages[1], null, 2));
+        }
 
         spotSessionStore.clearSessions();
     },
