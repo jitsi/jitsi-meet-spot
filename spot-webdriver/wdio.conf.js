@@ -1,6 +1,7 @@
 /* global __dirname */
 
 const path = require('path');
+const { addAttachment } = require('@wdio/allure-reporter').default
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 
 const constants = require('./constants');
@@ -29,6 +30,10 @@ exports.config = {
                         'use-fake-ui-for-media-stream',
                         `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`
                     ]
+                },
+                'goog:loggingPrefs': {
+                    'browser': 'INFO',
+                    'driver': 'INFO'
                 }
             }
         },
@@ -39,6 +44,10 @@ exports.config = {
                     args: [
                         `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`
                     ]
+                },
+                'goog:loggingPrefs': {
+                    'browser': 'INFO',
+                    'driver': 'INFO'
                 }
             }
         }
@@ -73,6 +82,14 @@ exports.config = {
                 outputDir: './webdriver-results',
                 screenshotStrategy: 'before:click'
             }
+        ],
+        [
+            'allure',
+            {
+                outputDir: './webdriver-results',
+                disableWebdriverStepsReporting: true,
+                disableWebdriverScreenshotsReporting: true
+            }
         ]
     ],
 
@@ -86,8 +103,32 @@ exports.config = {
         path.resolve(__dirname, 'specs', '**/*.spec.js')
     ],
 
-    afterTest: () => {
+    afterTest: (test) => {
+        if (!test.passed) {
+            const browserLogs = browser.getLogs('browser');
+            const messages = browserLogs.map(group => group.map(log => log.message));
+
+            addAttachment('browserA', JSON.stringify(messages[0], null, 2));
+            addAttachment('browserB', JSON.stringify(messages[1],  null, 2))
+        }
+
         spotSessionStore.clearSessions();
+    },
+
+    seleniumInstallArgs: {
+        drivers: {
+            chrome: {
+                version: '79.0.3945.36',
+                arch: process.arch,
+                baseURL: 'https://chromedriver.storage.googleapis.com',
+            },
+        },
+    },
+
+    seleniumArgs: {
+        drivers: {
+            chrome: { version: '79.0.3945.36' },
+        }
     },
 
     // Default wait time for all webdriverio wait-related functions.

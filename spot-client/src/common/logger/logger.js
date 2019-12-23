@@ -37,7 +37,7 @@ function formatMessage(level, message, context) {
         formattedMessage.context = contextCopy;
     }
 
-    return formattedMessage;
+    return JSON.stringify(formattedMessage);
 }
 
 /**

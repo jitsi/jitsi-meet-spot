@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@wdio/allure-reporter": "5.16.16",
         "@wdio/cli": "5.17.0",
         "@wdio/jasmine-framework": "5.16.15",
         "@wdio/junit-reporter": "5.16.11",

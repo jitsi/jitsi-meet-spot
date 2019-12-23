@@ -1,6 +1,7 @@
 # Project specific
 #
 .env
+allure-report
 dist
 webdriver-results
 
