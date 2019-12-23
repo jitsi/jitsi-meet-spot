@@ -117,21 +117,21 @@ exports.config = {
         spotSessionStore.clearSessions();
     },
 
-    // seleniumInstallArgs: {
-    //     drivers: {
-    //         chrome: {
-    //             version: '79.0.3945.36',
-    //             arch: process.arch,
-    //             baseURL: 'https://chromedriver.storage.googleapis.com'
-    //         }
-    //     }
-    // },
+    seleniumInstallArgs: {
+        drivers: {
+            chrome: {
+                version: '79.0.3945.36',
+                arch: process.arch,
+                baseURL: 'https://chromedriver.storage.googleapis.com'
+            }
+        }
+    },
 
-    // seleniumArgs: {
-    //     drivers: {
-    //         chrome: { version: '79.0.3945.36' }
-    //     }
-    // },
+    seleniumArgs: {
+        drivers: {
+            chrome: { version: '79.0.3945.36' }
+        }
+    },
 
     // Default wait time for all webdriverio wait-related functions.
     waitforTimeout: 10000
