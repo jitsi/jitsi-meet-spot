@@ -1,7 +1,7 @@
 /* global __dirname */
 
 const path = require('path');
-const { addAttachment } = require('@wdio/allure-reporter').default
+const { addAttachment } = require('@wdio/allure-reporter').default;
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 
 const constants = require('./constants');
@@ -103,13 +103,13 @@ exports.config = {
         path.resolve(__dirname, 'specs', '**/*.spec.js')
     ],
 
-    afterTest: (test) => {
+    afterTest: test => {
         if (!test.passed) {
             const browserLogs = browser.getLogs('browser');
             const messages = browserLogs.map(group => group.map(log => log.message));
 
             addAttachment('browserA', JSON.stringify(messages[0], null, 2));
-            addAttachment('browserB', JSON.stringify(messages[1],  null, 2))
+            addAttachment('browserB', JSON.stringify(messages[1], null, 2));
         }
 
         spotSessionStore.clearSessions();
@@ -120,14 +120,14 @@ exports.config = {
             chrome: {
                 version: '79.0.3945.36',
                 arch: process.arch,
-                baseURL: 'https://chromedriver.storage.googleapis.com',
-            },
-        },
+                baseURL: 'https://chromedriver.storage.googleapis.com'
+            }
+        }
     },
 
     seleniumArgs: {
         drivers: {
-            chrome: { version: '79.0.3945.36' },
+            chrome: { version: '79.0.3945.36' }
         }
     },
 
