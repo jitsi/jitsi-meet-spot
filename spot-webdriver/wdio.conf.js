@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { addAttachment } = require('@wdio/allure-reporter').default;
+// const { addAttachment } = require('@wdio/allure-reporter').default;
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 
 const constants = require('./constants');
@@ -10,7 +10,7 @@ const screenInfo = require('./screen-info');
 
 const DESKTOP_SOURCE_NAME
     = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 const PATH_TO_FAKE_VIDEO
     = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
 
@@ -104,14 +104,15 @@ exports.config = {
         path.resolve(__dirname, 'specs', '**/adhoc-meeting.spec.js')
     ],
 
-    afterTest: test => {
-        if (!test.passed) {
-            const browserLogs = browser.getLogs('browser');
-            const messages = browserLogs.map(group => group.map(log => log.message));
+    // afterTest: test => {
+    afterTest: () => {
+        // if (!test.passed) {
+        //     const browserLogs = browser.getLogs('browser');
+        //     const messages = browserLogs.map(group => group.map(log => log.message));
 
-            addAttachment('browserA', JSON.stringify(messages[0], null, 2));
-            addAttachment('browserB', JSON.stringify(messages[1], null, 2));
-        }
+        //     addAttachment('browserA', JSON.stringify(messages[0], null, 2));
+        //     addAttachment('browserB', JSON.stringify(messages[1], null, 2));
+        // }
 
         spotSessionStore.clearSessions();
     },
@@ -129,7 +130,11 @@ exports.config = {
     seleniumArgs: {
         drivers: {
             chrome: { version: '79.0.3945.36' }
-        }
+        },
+        javaArgs: [
+            '-Dwebdriver.chrome.logfile=webdriver-results/chromedriver.log',
+            '-Dwebdriver.chrome.verboseLogging=true'
+        ]
     },
 
     // Default wait time for all webdriverio wait-related functions.
