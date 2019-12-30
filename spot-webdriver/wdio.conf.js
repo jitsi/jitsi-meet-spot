@@ -20,6 +20,8 @@ exports.config = {
     // How many fails should trigger stopping the tests. Zero skips stopping.
     bail: 0,
 
+    hostname: process.env.SELENIUM_URL,
+
     // Use multi-remote support for one Spot-TV and one Spot-Remote.
     capabilities: {
         spotBrowser: {
