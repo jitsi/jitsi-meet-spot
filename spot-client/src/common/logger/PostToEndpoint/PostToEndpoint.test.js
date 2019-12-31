@@ -12,7 +12,9 @@ describe('PostToEndpoint', () => {
         clock = lolex.install();
         clock.setSystemTime(1561219220000);
 
-        postToEndpoint = new PostToEndpoint({});
+        postToEndpoint = new PostToEndpoint({
+            endpointUrl: ''
+        });
 
         sendSpy = jest.spyOn(PostLogsRequest.prototype, 'send');
     });

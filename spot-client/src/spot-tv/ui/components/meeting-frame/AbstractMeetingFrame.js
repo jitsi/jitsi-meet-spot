@@ -39,7 +39,7 @@ export default class AbstractMeetingFrame extends React.Component {
      * Creates new instance.
      *
      * @param {Object} props - The read-only properties with which the new instance is to be initialized.
-     * @param {MeetingType} meetingType  - A constant for the meeting type reported to analytics.
+     * @param {MeetingType} meetingType - A constant for the meeting type reported to analytics.
      */
     constructor(props, meetingType) {
         super(props);
