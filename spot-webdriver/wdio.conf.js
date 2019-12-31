@@ -19,8 +19,10 @@ const spotSessionStore = require('./user/spotSessionStore');
 exports.config = {
     // How many fails should trigger stopping the tests. Zero skips stopping.
     bail: 0,
-
-    hostname: process.env.SELENIUM_URL,
+    protocol: process.env.SELENIUM_URL_PROTOCOL,
+    hostname: process.env.SELENIUM_URL_HOSTNAME,
+    port: process.env.SELENIUM_URL_PORT,
+    path: process.env.SELENIUM_URL_PATH,
 
     // Use multi-remote support for one Spot-TV and one Spot-Remote.
     capabilities: {
