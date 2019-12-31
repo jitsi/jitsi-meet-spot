@@ -49,7 +49,7 @@ export default class CountryCodeButton extends React.PureComponent {
                 type = 'button'>
                 <ReactCountryFlag
                     className = 'country-flag'
-                    code = { this.props.code } />
+                    countryCode = { this.props.code } />
                 <span className = 'country-search-trigger-name'>
                     { this._findNameFromList() }
                 </span>

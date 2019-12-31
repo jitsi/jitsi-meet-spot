@@ -121,7 +121,7 @@ export class CountryCodePicker extends React.PureComponent {
                     <div className = 'flag-container'>
                         <ReactCountryFlag
                             className = 'country-flag'
-                            code = { countryInfo.code } />
+                            countryCode = { countryInfo.code } />
                     </div>
                     <div className = 'country-name'>
                         { countryInfo.name }

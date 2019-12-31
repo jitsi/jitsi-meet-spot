@@ -511,7 +511,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * Callback invoked when the local participant has been removed from the
      * conference by another participant.
      *
-     * @param {event} param0  - The event returned from the external api.
+     * @param {event} param0 - The event returned from the external api.
      * @param {Object} kicked - The participant that was kicked.
      * @private
      * @returns {void}

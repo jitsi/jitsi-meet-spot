@@ -83,7 +83,7 @@ export function setJwt(jwt) {
  * device to use.
  * @param {string} micLabel - The device label associated with the microphone
  * device to use.
- * @param {string} speakerLabel  - The device label associated with the speaker
+ * @param {string} speakerLabel - The device label associated with the speaker
  * device to use.
  * @returns {Object}
  */
