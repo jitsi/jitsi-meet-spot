@@ -1,7 +1,7 @@
 {
     "adhoc": {
         "enterName": "Enter a meeting name.",
-        "enterNameWithTenant": "Enter a meeting name. Enter \"/\" to specify a custom tenant.",
+        "enterNameWithTenant": "Enter \"/\" for custom tenant.",
         "label": "Join a meeting",
         "meetNow": "Join with ID"
     },
