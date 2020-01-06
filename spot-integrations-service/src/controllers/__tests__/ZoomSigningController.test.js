@@ -12,11 +12,20 @@ describe('ZoomSigningController', () => {
     let zoomSigningController;
 
     beforeEach(() => {
+        const mockZoomSecretFetcher = {
+            getSecret() {
+                return Promise.resolve('api-secret');
+            }
+        };
+
         mockJwtValidator = {
             isValidJwt: jest.fn().mockReturnValue(Promise.resolve())
         };
 
-        zoomSigningController = new ZoomSigningController('api-secret', mockJwtValidator);
+        zoomSigningController = new ZoomSigningController(
+            mockZoomSecretFetcher,
+            mockJwtValidator
+        );
 
         integrationsApp = new IntegrationsApp(
             1135,

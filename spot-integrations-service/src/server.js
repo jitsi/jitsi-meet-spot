@@ -5,34 +5,45 @@ const MetricsController = require('./controllers/MetricsController');
 const ZoomSigningController = require('./controllers/ZoomSigningController');
 const App = require('./common/App');
 const JwtValidator = require('./authentication/JwtValidator');
+const ZoomApiSecretRetriever = require('./authentication/ZoomApiSecretRetriever');
 const IntegrationsApp = require('./IntegrationsApp');
 
 // Validate required environment variables
-envalid.cleanEnv(process.env, {
-    API_PORT: envalid.num(),
+const environment = envalid.cleanEnv(process.env, {
+    API_PORT: envalid.port({ default: 3789 }),
     ASAP_KEY_SERVER: envalid.str(),
-    METRICS_PORT: envalid.num(),
-    ZOOM_API_SECRET: envalid.str(),
+    ENABLE_ALL_CORS: envalid.bool({ default: false }),
+    METRICS_PORT: envalid.port({ default: 2112 }),
+    ZOOM_API_SECRET: envalid.str({ default: '' }),
+    ZOOM_AWS_SECRET_NAME: envalid.str({ default: '' }),
+    ZOOM_AWS_SECRET_REGION: envalid.str({ default: 'us-west-2' }),
     ZOOM_JWT_CONFIG: envalid.json()
 });
 
 const metricsApp = new App(
-    process.env.METRICS_PORT,
+    environment.METRICS_PORT,
     [
         new MetricsController()
     ]
 );
+const zoomApiSecretRetriever = new ZoomApiSecretRetriever(
+    {
+        localApiSecret: environment.ZOOM_API_SECRET,
+        region: environment.ZOOM_AWS_SECRET_REGION,
+        secretName: environment.ZOOM_AWS_SECRET_NAME
+    }
+);
 const zoomJwtValidator = new JwtValidator(
-    process.env.ASAP_KEY_SERVER,
-    JSON.parse(process.env.ZOOM_JWT_CONFIG)
+    environment.ASAP_KEY_SERVER,
+    environment.ZOOM_JWT_CONFIG
 );
 const integrationsApp = new IntegrationsApp(
-    process.env.API_PORT,
+    environment.API_PORT,
     [
-        new ZoomSigningController(process.env.ZOOM_API_SECRET, zoomJwtValidator)
+        new ZoomSigningController(zoomApiSecretRetriever, zoomJwtValidator)
     ],
     {
-        enableCors: process.env.ENABLE_ALL_CORS,
+        enableCors: environment.ENABLE_ALL_CORS,
         healthCheckController: new HealthCheckController(),
         metricsConfiguration: {
             autoregister: false, // Will manually register /metrics in separate app
@@ -47,6 +58,7 @@ const integrationsApp = new IntegrationsApp(
 );
 
 metricsApp.start()
+    .then(() => zoomApiSecretRetriever.getSecret())
     .then(() => integrationsApp.start())
-    .then(() => console.log('app started on ports', process.env.API_PORT, process.env.METRICS_PORT))
+    .then(() => console.log('app started on ports', environment.API_PORT, environment.METRICS_PORT))
     .catch(error => console.error('App start failed:', error));
