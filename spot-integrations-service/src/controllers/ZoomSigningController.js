@@ -14,13 +14,14 @@ class ZoomSigningController {
     /**
      * Instantiates a new instance.
      *
-     * @param {string} apiSecret - The Zoom api secret associated with a client
-     * integration application.
+     * @param {ZoomApiSecretRetriever} apiSecretRetriever - An instance of the
+     * class ZoomApiSecretRetriever which knows how to retrieve the Zoom api
+     * client secret.
      * @param {JwtValidator} jwtValidator - An instance of a JwtValidator
      * to validate JWTs used when making requests to the controller.
      */
-    constructor(apiSecret, jwtValidator) {
-        this._apiSecret = apiSecret;
+    constructor(apiSecretRetriever, jwtValidator) {
+        this._apiSecretRetriever = apiSecretRetriever;
 
         // eslint-disable-next-line new-cap
         this.router = express.Router();
@@ -51,7 +52,7 @@ class ZoomSigningController {
      * @private
      * @returns {void}
      */
-    _onSignMeetingNumber(req, res) {
+    async _onSignMeetingNumber(req, res) {
         const errors = validator.validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -63,8 +64,8 @@ class ZoomSigningController {
 
             const timestamp = new Date().getTime();
             const message = base64JS.Base64.encode(`${apiKey}${meetingNumber}${timestamp}${role}`);
-            const hash = hmacSha256(message, this._apiSecret);
-
+            const secret = await this._apiSecretRetriever.getSecret();
+            const hash = hmacSha256(message, secret);
             const signature = base64JS.Base64.encodeURI(
                 `${apiKey}.${meetingNumber}.${timestamp}.${role}.${encBase64.stringify(hash)}`
             );
