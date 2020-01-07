@@ -8,6 +8,7 @@ import { ROUTES } from 'common/routing';
 
 jest.mock('common/detection', () => {
     return {
+        isElectron: jest.fn(),
         isSupportedSpotTvBrowser: jest.fn()
     };
 });

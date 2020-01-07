@@ -53,7 +53,7 @@ class SpotClientLogTransport {
                         context
                     } = delayedLog;
 
-                    clientController.sendClientMessage('spot-electron-logs', level, message, context);
+                    clientController.sendClientMessage('spot-container-logs', level, message, context);
                 }
                 this._logsCache = [];
             }
@@ -75,7 +75,7 @@ class SpotClientLogTransport {
         this._logToElectronLog(level, loggerName, message, context);
 
         if (clientController.canSendClientMessage()) {
-            clientController.sendClientMessage('spot-electron-logs', level, msgString, context);
+            clientController.sendClientMessage('spot-container-logs', level, msgString, context);
         } else {
             if (this._logsCache.length >= LOG_CACHE_SIZE) {
                 this._logsCache.shift();
