@@ -15,13 +15,13 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case BOOTSTRAP_STARTED:
-        nativeController.addMessageListener('spot-electron-logs', (level, message, context) => {
+        nativeController.addMessageListener('spot-container-logs', (level, message, context) => {
             const method = logger[level];
 
             if (method) {
                 method(message, context);
             } else {
-                logger.warn('Received logs with invalid level from electron logger', {
+                logger.warn('Received logs with invalid level from parent container logger', {
                     level,
                     message,
                     context
