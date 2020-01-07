@@ -3,10 +3,12 @@ const XpcConnection = require('xpc-connect');
 
 const { logger } = require('../../../logger');
 
-const osRelease = parseFloat(os.release());
+const osRelease = parseInt(os.release(), 10);
 const DEVICE_STATES = [ 'Unknown', 'Resetting', 'Unsupported', 'Unauthorized', 'Powered Off', 'Powered On' ];
 
 let deviceCommands;
+
+logger.log(`Launching BT beacon for os release ${osRelease}`);
 
 switch (osRelease) {
 case 19:
@@ -15,6 +17,8 @@ case 19:
 default:
     deviceCommands = require('./commands.mojave');
 }
+
+!deviceCommands && logger.warn('BT beacon is not supported on this os release');
 
 /**
  * Implements a platform specific daemon to interact with the BLE hardware in the computer/device.
