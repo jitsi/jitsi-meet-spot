@@ -124,7 +124,7 @@ class Sdk {
                         apiSecret: API_SECRET,
                         role: 0
                     }))
-                : fetchMeetingSignature(meetingSignService, meetingNumber, apiKey, jwt);
+                : fetchMeetingSignature(apiKey, meetingSignService, meetingNumber, jwt);
 
         return meetingSignPromise
             .then(signature => new Promise((resolve, reject) => {
