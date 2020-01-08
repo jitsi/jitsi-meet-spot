@@ -8,11 +8,22 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case SPOT_TV_SET_STATE:
-        if (action.newState.audioMuted !== undefined) {
-            nativeController.sendMessage('mutedState', action.newState.audioMuted);
-        }
+        updateAPIMutedState(action.newState);
         break;
     }
 
     return result;
 });
+
+/**
+ * Sends part of the new state through the external API if necessary.
+ *
+ * @param {Object} newState - The new state.
+ * @returns {void}
+ */
+function updateAPIMutedState(newState) {
+    const { audioMuted, videoMuted } = newState;
+
+    audioMuted !== undefined && nativeController.sendMessage('audioMutedState', audioMuted);
+    videoMuted !== undefined && nativeController.sendMessage('videoMutedState', videoMuted);
+}

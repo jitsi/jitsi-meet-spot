@@ -19,8 +19,12 @@ MiddlewareRegistry.register(({ dispatch }) => next => action => {
         nativeController._sendSpotClientReady();
 
         // Setting up native controller listeners
-        nativeController.addMessageListener('setMutedState', newState => {
-            setMutedState(newState, dispatch);
+        nativeController.addMessageListener('setAudioMutedState', newState => {
+            setMutedState('audio', newState, dispatch);
+        });
+
+        nativeController.addMessageListener('setVideoMutedState', newState => {
+            setMutedState('video', newState, dispatch);
         });
         break;
     }
@@ -31,12 +35,13 @@ MiddlewareRegistry.register(({ dispatch }) => next => action => {
 /**
  * Function to update the muted state initiated by an API command.
  *
+ * @param {string} media - The medie to mute/unmute.
  * @param {boolean} newState - The state to set.
  * @param {Dispatch} dispatch - The Redux Dispatch function.
  * @returns {void}
  */
-function setMutedState(newState, dispatch) {
+function setMutedState(media, newState, dispatch) {
     dispatch(setSpotTVState({
-        audioMuted: newState
+        [`${media}Muted`]: newState
     }));
 }
