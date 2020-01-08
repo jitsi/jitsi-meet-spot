@@ -35,8 +35,21 @@ class NativeController {
             });
         } else if (this.parentWindow) {
             window.addEventListener('message', evt => {
-                if (evt.channelName === channelName) {
-                    listener(evt.args);
+                let channelMessage;
+
+                try {
+                    channelMessage = JSON.parse(evt.data);
+                } catch (error) {
+                    // Nothing to do here (messages just come and go over this channel,
+                    // we don't want to log every error).
+                }
+
+                if (channelMessage && channelMessage.channelName === channelName) {
+                    try {
+                        listener(channelMessage.args);
+                    } catch (error) {
+                        logger.error('Failed to execute listener for channel message', channelMessage, error);
+                    }
                 }
             });
         }
