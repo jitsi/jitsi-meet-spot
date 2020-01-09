@@ -4,6 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { logger } from 'common/logger';
+import { SERVICE_UPDATES } from 'common/remote-control';
+import { MESSAGE_TYPES, nativeController } from 'spot-tv/native-functions/native-controller';
 
 import { ApiHealthCheck } from './ApiHealthCheck';
 
@@ -73,6 +75,7 @@ export default class AbstractMeetingFrame extends React.Component {
 
         bindAll(this, [
             '_onApiHealthCheckError',
+            '_onMeetingCommandReceived',
             '_onMeetingJoined',
             '_onMeetingLeave'
         ]);
@@ -97,12 +100,39 @@ export default class AbstractMeetingFrame extends React.Component {
     }
 
     /**
+     * Initialize the frame.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this.props.remoteControlServer.addListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
+            this._onMeetingCommandReceived
+        );
+
+        nativeController.addMessageListener(
+            MESSAGE_TYPES.MEETING_COMMAND,
+            this._onMeetingCommandReceived
+        );
+    }
+
+    /**
      * Cleanup.
      *
      * @returns {void}
      */
     componentWillUnmount() {
         this._apiHealthChecks && this._apiHealthChecks.stop();
+
+        this.props.remoteControlServer.removeListener(
+            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
+            this._onMeetingCommandReceived
+        );
+
+        nativeController.removeMessageListener(
+            MESSAGE_TYPES.MEETING_COMMAND,
+            this._onMeetingCommandReceived
+        );
     }
 
     /**
@@ -119,6 +149,33 @@ export default class AbstractMeetingFrame extends React.Component {
             errorCode: reason,
             error: 'appEvents.meetingConnectionLost'
         });
+    }
+
+    /**
+     * Callback invoked when a Spot-Remote is requesting a change to the
+     * meeting.
+     *
+     * @param {string} type - The constant representing the command.
+     * @param {Object} data - Additional information about how to perform the
+     * command.
+     * @private
+     * @returns {void}
+     */
+    _onMeetingCommandReceived(type, data) {
+        logger.log('MeetingFrame handling remote command', {
+            data,
+            type
+        });
+
+        if (typeof type === 'object') {
+            // This is a native controller command that has type and data wrapped
+            // into an object, so we need to deconstruct it.
+            const { command, args } = type;
+
+            this._onMeetingCommand(command, args);
+        } else {
+            this._onMeetingCommand(type, data);
+        }
     }
 
     /**

@@ -62,6 +62,7 @@ export * from './remote-control-service/selectors';
 export * from './modal/selectors';
 export * from './route/selectors';
 export * from './setup/selectors';
+export * from './spot-tv/middleware';
 export * from './spot-tv/selectors';
 export * from './wired-screenshare/selectors';
 
