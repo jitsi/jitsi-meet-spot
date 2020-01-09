@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getZoomConfiguration, setSpotTVState } from 'common/app-state';
 import { logger } from 'common/logger';
-import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
+import { COMMANDS } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 import { errorCodes, events } from 'common/zoom';
 
@@ -39,7 +39,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
 
         this._rootRef = React.createRef();
 
-        this._onMeetingCommand = this._onMeetingCommand.bind(this);
         this._onMeetingUpdateReceived = this._onMeetingUpdateReceived.bind(this);
     }
 
@@ -49,6 +48,8 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
      * @inheritdoc
      */
     componentDidMount() {
+        super.componentDidMount();
+
         this._zoomIframeManager = new ZoomIframeManager({
             apiKey: this.props.apiKey,
             iframeTarget: this._rootRef.current,
@@ -56,11 +57,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             meetingSignService: this.props.meetingSignService,
             onMeetingUpdateReceived: this._onMeetingUpdateReceived
         });
-
-        this.props.remoteControlServer.addListener(
-            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
-            this._onMeetingCommand
-        );
 
         this._zoomIframeManager.load();
     }
@@ -76,11 +72,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
         this._zoomIframeManager.destroy();
 
         clearTimeout(this._joinRetryTimeout);
-
-        this.props.remoteControlServer.removeListener(
-            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
-            this._onMeetingCommand
-        );
 
         this.props.updateSpotTvState({
             audioMuted: false,
@@ -156,11 +147,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _onMeetingCommand(type, data) {
-        logger.log('MeetingFrame handling remote command', {
-            data,
-            type
-        });
-
         switch (type) {
         case COMMANDS.HANG_UP: {
             if (data.skipFeedback) {

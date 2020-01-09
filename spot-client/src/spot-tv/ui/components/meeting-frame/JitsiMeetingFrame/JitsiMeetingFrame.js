@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { setSpotTVState } from 'common/app-state';
 import { logger } from 'common/logger';
-import { COMMANDS, MESSAGES, SERVICE_UPDATES } from 'common/remote-control';
+import { COMMANDS, MESSAGES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
 import { adjustVolume } from '../../../../native-functions';
@@ -69,7 +69,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onFeedbackPromptDisplayed',
             '_onFeedbackSubmitted',
             '_onFilmstripDisplayChanged',
-            '_onMeetingCommand',
             '_onMeetingLeft',
             '_onMeetingLoaded',
             '_onParticipantJoined',
@@ -117,6 +116,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @inheritdoc
      */
     componentDidMount() {
+        super.componentDidMount();
+
         const {
             host,
             meetingName,
@@ -196,11 +197,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             this.props.displayName
         );
 
-        this.props.remoteControlServer.addListener(
-            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
-            this._onMeetingCommand
-        );
-
         this._assumeMeetingFailedTimeout = setTimeout(() => {
             this._leaveIfErrorDetected();
         }, this.props.meetingJoinTimeout);
@@ -218,11 +214,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         clearTimeout(this._playToneTimeout);
 
         this._jitsiApi.dispose();
-
-        this.props.remoteControlServer.removeListener(
-            SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
-            this._onMeetingCommand
-        );
 
         // TODO: create an action to reset the in-meeting state
         this.props.updateSpotTvState({
@@ -344,11 +335,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _onMeetingCommand(type, data) {
-        logger.log('MeetingFrame handling remote command', {
-            data,
-            type
-        });
-
         switch (type) {
         case COMMANDS.ADJUST_VOLUME:
             adjustVolume(data.direction);

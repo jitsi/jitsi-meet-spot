@@ -1,4 +1,5 @@
 import { isElectron } from 'common/detection';
+import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 
 /**
@@ -6,13 +7,52 @@ import { logger } from 'common/logger';
  *
  * Using it will enable SpotTVs running wrapped in Electron access OS-native functions.
  */
-class NativeController {
+class NativeController extends Emitter {
     /**
      * Instantiates a new instance of the controller.
      */
     constructor() {
-        // eslint-disable-next-line
-        this.ipcRenderer = isElectron() && window.require('electron').ipcRenderer;
+        super();
+
+        // eslint-disable-next-linee
+        if (isElectron()) {
+            this.ipcRenderer = window.require('electron').ipcRenderer;
+            logger.info('Native controller functionality is enabled via Electron.');
+        } else {
+            this.messageTransport = window;
+            logger.info('Native controller functionality is enabled via iFrame.');
+        }
+
+        // message transports (such as 'window') handles the messages differently, so we need to subscribe
+        // for messages here, and forward the channel message as an event once filtered.
+        if (this.messageTransport) {
+            this.messageTransport.addEventListener('message', evt => {
+                // First check, if we got allocated a new tranport port
+                if (evt.ports.length) {
+                    this.messageSender = evt.ports[0];
+
+                    logger.info('New transport port allocated for native controller.');
+                }
+
+                // Then go on to see if we got an actual message
+                let channelMessage;
+
+                try {
+                    channelMessage = JSON.parse(evt.data);
+                } catch (error) {
+                    // Nothing to do here (messages just come and go over this channel,
+                    // we don't want to log every error).
+                    return;
+                }
+
+                const { channelName, ...rest } = channelMessage;
+
+                if (channelName) {
+                    logger.info(`Received message over channel ${channelName}: ${JSON.stringify(rest)}`);
+                    this.emit(channelName, rest);
+                }
+            });
+        }
     }
 
     /**
@@ -25,11 +65,26 @@ class NativeController {
      * @returns {void}
      */
     addMessageListener(channelName, listener) {
-        // Intentionally do not expose Electron's 'eventObject' - the reason is: there's no need at this point and
-        // trying to think of NativeController as an abstraction layer.
-        this.ipcRenderer && this.ipcRenderer.on(channelName, (eventObject, ...args) => {
-            listener(...args);
-        });
+        if (this.ipcRenderer) {
+            this.ipcRenderer.on(channelName, listener);
+        } else if (this.messageTransport) {
+            this.addListener(channelName, listener);
+        }
+    }
+
+    /**
+     * Removes the listener for a given channel name.
+     *
+     * @param {string} channelName - The channel name we want to remove the listener for.
+     * @param {Function} listener - The listener to remove.
+     * @returns {void}
+     */
+    removeMessageListener(channelName, listener) {
+        if (this.ipcRenderer) {
+            this.ipcRenderer.removeListener(channelName, listener);
+        } else if (this.messageTransport) {
+            this.removeListener(channelName, listener);
+        }
     }
 
     /**
@@ -40,13 +95,18 @@ class NativeController {
      * @returns {void}
      */
     sendMessage(command, args) {
-        if (isElectron()) {
-            this.ipcRenderer.send('native-command', {
-                command,
-                args
-            });
-        } else {
-            logger.log(`Native functions are not available to do '${command}'`);
+        const commandObject = {
+            command,
+            args
+        };
+
+        if (this.ipcRenderer) {
+            this.ipcRenderer.send('native-command', commandObject);
+        } else if (this.messageSender) {
+            this.messageSender.postMessage(JSON.stringify(commandObject));
+        } else if (this.messageTransport) {
+            (this.messageTransport.parent || this.messageTransport)
+                .postMessage(JSON.stringify(commandObject), '*');
         }
     }
 
