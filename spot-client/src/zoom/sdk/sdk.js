@@ -50,6 +50,7 @@ class Sdk {
 
         const ZoomMtg = this._getZoomMtg();
 
+        ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.0/lib', '/av');
         ZoomMtg.preLoadWasm();
         ZoomMtg.prepareJssdk();
 
