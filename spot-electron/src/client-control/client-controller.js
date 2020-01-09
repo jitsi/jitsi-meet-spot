@@ -20,23 +20,22 @@ class ClientController extends EventEmitter {
         const self = this;
 
         ipcMain.on('native-command', (event, message) => {
-            if (message.command === 'clientReady') {
-                self._spotClientRef = event.sender;
+            self._handleClientMessage(event, message);
+        });
+        ipcMain.on('spot-client/ready', event => {
+            self._spotClientRef = event.sender;
 
-                const clearReference = () => {
-                    if (self._spotClientRef === event.sender) {
-                        this._spotClientRef = undefined;
-                        self.emit(EVENTS.CAN_SEND_MSG_EVENT, self.canSendClientMessage());
-                    }
-                };
+            const clearReference = () => {
+                if (self._spotClientRef === event.sender) {
+                    this._spotClientRef = undefined;
+                    self.emit(EVENTS.CAN_SEND_MSG_EVENT, self.canSendClientMessage());
+                }
+            };
 
-                self._spotClientRef.once('crashed', clearReference);
-                self._spotClientRef.once('destroyed', clearReference);
+            self._spotClientRef.once('crashed', clearReference);
+            self._spotClientRef.once('destroyed', clearReference);
 
-                self.emit(EVENTS.CAN_SEND_MSG_EVENT, self.canSendClientMessage());
-            } else {
-                self._handleClientMessage(event, message);
-            }
+            self.emit(EVENTS.CAN_SEND_MSG_EVENT, self.canSendClientMessage());
         });
     }
 

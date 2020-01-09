@@ -9,7 +9,6 @@ import { JoinCodeEntry } from './join-code-entry';
 jest.mock('common/detection', () => {
     return {
         isAutoFocusSupported: jest.fn(),
-        isElectron: jest.fn(),
         isSpotControllerApp: jest.fn()
     };
 });
