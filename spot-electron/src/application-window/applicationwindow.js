@@ -29,14 +29,12 @@ function createApplicationWindow() {
     applicationWindow = new BrowserWindow({
         // By default the application should always run in kiosk mode.
         kiosk: !isDev,
-        show: false,
         webPreferences: {
             nodeIntegration: true
         }
     });
 
     // Set event handlers
-    applicationWindow.once('ready-to-show', _onWindowReady);
     applicationWindow.webContents.on('crashed', () => {
         // The setTimeout 0 is necessary clear the current stack or else
         // navigation will cause the main app to crash as well.
@@ -55,15 +53,6 @@ function createApplicationWindow() {
     });
 
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
-}
-
-/**
- * Callback to handle 'ready-to-show' event of the main window.
- *
- * @returns {void}
- */
-function _onWindowReady() {
-    applicationWindow.show();
 }
 
 module.exports = {
