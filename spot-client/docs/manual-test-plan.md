@@ -118,12 +118,10 @@ Wired available and wireless unavailable
 - [ ] Click start opens the modal showing connect cable message
 - [ ] Click start with wired in progress shows stop button
 - [ ] Clicking stop button stops screenshare, displays start again
-- [ ] On browser, clicking start button opens modal asking to use different browser
-- [ ] On mobile, clicking start button opens modal asking to go to a different site
+- [ ] Clicking start wireless screensharing button opens modal asking to use different browser
 
 Wired unavailable and wireless unavailable
-- [ ] On browser, clicking start button opens modal asking to use different browser
-- [ ] On mobile, clicking start button opens modal asking to go to a different site
+- [ ] Clicking start wireless screensharing button opens modal asking to use different browser
 - [ ] There is no mention of wired screensharing
 
 Share Mode
@@ -142,3 +140,13 @@ Share Mode
 Auto-updates - Backend flow only
 ------
 - [ ] Automatically reloads the page at the configured time (default 2am). This can be faked in console via spot.remoteControlClient.disconnect().then(() => window.location.reload()) and spot.remoteControlServer.disconnect().then(() => window.location.reload()).
+- [ ] Automatically reloads when a new client version is made available.
+
+Zoom integration -- Backend flow only
+------
+- [ ] Can join a zoom meeting through the ad-hoc input
+- [ ] Can wait for a meeting to start
+- [ ] Can cancel out of waiting for a meeting to start
+- [ ] Can audio mute
+- [ ] Can video mute
+- [ ] Can hang up
