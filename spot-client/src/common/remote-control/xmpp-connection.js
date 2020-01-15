@@ -95,6 +95,8 @@ export default class XmppConnection extends Emitter {
          */
         this._isXmppConnectionActive = false;
 
+        this._reconnectsAttempted = 0;
+
         this._resetToInitialState();
 
         this._onCommand = this._onCommand.bind(this);
@@ -589,7 +591,22 @@ export default class XmppConnection extends Emitter {
                         return;
                     }
 
-                    setTimeout(resolveDelay, getJitterDelay(0, 1000));
+                    const backoff = Math.min(
+                        (2 ** (this._reconnectsAttempted * 2)) * 1000,
+                        30000
+                    );
+                    const jitter = getJitterDelay(
+                        Math.min(this._reconnectsAttempted, 3),
+                        1000
+                    );
+
+                    logger.warn('xmpp connection will continue reconnect after delay', {
+                        backoff,
+                        jitter,
+                        reconnectsAttempted: this._reconnectsAttempted
+                    });
+
+                    setTimeout(resolveDelay, backoff + jitter);
                 }))
                 .then(() => {
                     if (canceled) {
@@ -601,16 +618,16 @@ export default class XmppConnection extends Emitter {
                     return this.joinMuc(this._joinOptions);
                 })
                 .then(() => {
+                    this._reconnectsAttempted = 0;
                     this._silentReconnectPromise = undefined;
                     canceled || logger.log('xmpp connection silent reconnect complete');
                 }, reconnectError => {
-                    if (canceled) {
-                        this._silentReconnectPromise = undefined;
-                    } else {
-                        setTimeout(() => {
-                            this._silentReconnectPromise = undefined;
-                            canceled || this._onDisconnect(reconnectError);
-                        }, getJitterDelay(0, 5000));
+                    this._reconnectsAttempted += 1;
+
+                    this._silentReconnectPromise = undefined;
+
+                    if (!canceled) {
+                        this._onDisconnect(reconnectError);
                     }
                 });
 
