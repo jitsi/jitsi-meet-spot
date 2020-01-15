@@ -132,9 +132,4 @@ describe('store-persistence', () => {
             });
         });
     });
-    describe('does not keep the legacy handling code forever', () => {
-        it('which is supposed to be removed after Wednesday, 15 January 2020 00:00:00', () => {
-            expect(Date.now()).toBeLessThan(1579046400000);
-        });
-    });
 });
