@@ -564,7 +564,7 @@ export default class XmppConnection extends Emitter {
      * @returns {void}
      */
     _onDisconnect(error, reason) {
-        if (this._silentReconnectPromise) {
+        if (this._silentReconnectPromise || this._isReconnecting) {
             logger.error('Silent reconnect promise leak - onDisconnect executed twice?');
         }
 
@@ -575,6 +575,11 @@ export default class XmppConnection extends Emitter {
             || error === 'connection.otherError'
             || error === 'item-not-found')
             && this._joinOptions.shouldAttemptReconnect()) {
+            if (this._isReconnecting) {
+                return;
+            }
+
+            this._isReconnecting = true;
             logger.warn('xmpp connection attempting silent reconnect', {
                 error,
                 reason
@@ -601,13 +606,16 @@ export default class XmppConnection extends Emitter {
                     return this.joinMuc(this._joinOptions);
                 })
                 .then(() => {
+                    this._isReconnecting = false;
                     this._silentReconnectPromise = undefined;
                     canceled || logger.log('xmpp connection silent reconnect complete');
                 }, reconnectError => {
                     if (canceled) {
+                        this._isReconnecting = false;
                         this._silentReconnectPromise = undefined;
                     } else {
                         setTimeout(() => {
+                            this._isReconnecting = false;
                             this._silentReconnectPromise = undefined;
                             canceled || this._onDisconnect(reconnectError);
                         }, getJitterDelay(0, 5000));
