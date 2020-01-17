@@ -95,6 +95,12 @@ export default class XmppConnection extends Emitter {
          */
         this._isXmppConnectionActive = false;
 
+        /**
+         * The number of consecutive reconnects of the XMPP connection that have
+         * been attempted without success.
+         */
+        this._reconnectsAttempted = 0;
+
         this._resetToInitialState();
 
         this._onCommand = this._onCommand.bind(this);
@@ -579,10 +585,17 @@ export default class XmppConnection extends Emitter {
                 return;
             }
 
+            this._reconnectsAttempted += 1;
+
+            const reconnectJitter = getJitterDelay(Math.min(4, this._reconnectsAttempted), 1000, 3);
+
             this._isReconnecting = true;
+
             logger.warn('xmpp connection attempting silent reconnect', {
                 error,
-                reason
+                jitter: reconnectJitter,
+                reason,
+                reconnectAttempts: this._reconnectsAttempted
             });
 
             // Flag flipped to true when abortReconnect() is called to cancel the silent reconnect.
@@ -594,7 +607,7 @@ export default class XmppConnection extends Emitter {
                         return;
                     }
 
-                    setTimeout(resolveDelay, getJitterDelay(0, 1000));
+                    setTimeout(resolveDelay, reconnectJitter);
                 }))
                 .then(() => {
                     if (canceled) {
@@ -606,19 +619,15 @@ export default class XmppConnection extends Emitter {
                     return this.joinMuc(this._joinOptions);
                 })
                 .then(() => {
+                    this._reconnectsAttempted = 0;
                     this._isReconnecting = false;
                     this._silentReconnectPromise = undefined;
                     canceled || logger.log('xmpp connection silent reconnect complete');
                 }, reconnectError => {
-                    if (canceled) {
-                        this._isReconnecting = false;
-                        this._silentReconnectPromise = undefined;
-                    } else {
-                        setTimeout(() => {
-                            this._isReconnecting = false;
-                            this._silentReconnectPromise = undefined;
-                            canceled || this._onDisconnect(reconnectError);
-                        }, getJitterDelay(0, 5000));
+                    this._isReconnecting = false;
+                    this._silentReconnectPromise = undefined;
+                    if (!canceled) {
+                        this._onDisconnect(reconnectError);
                     }
                 });
 
