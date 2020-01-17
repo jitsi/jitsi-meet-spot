@@ -585,14 +585,17 @@ export default class XmppConnection extends Emitter {
                 return;
             }
 
+            this._reconnectsAttempted += 1;
+
             const reconnectJitter = getJitterDelay(Math.min(4, this._reconnectsAttempted), 1000, 3);
 
             this._isReconnecting = true;
 
             logger.warn('xmpp connection attempting silent reconnect', {
                 error,
+                jitter: reconnectJitter,
                 reason,
-                jitter: reconnectJitter
+                reconnectAttempts: this._reconnectsAttempted
             });
 
             // Flag flipped to true when abortReconnect() is called to cancel the silent reconnect.
@@ -621,7 +624,6 @@ export default class XmppConnection extends Emitter {
                     this._silentReconnectPromise = undefined;
                     canceled || logger.log('xmpp connection silent reconnect complete');
                 }, reconnectError => {
-                    this._reconnectsAttempted += 1;
                     this._isReconnecting = false;
                     this._silentReconnectPromise = undefined;
                     if (!canceled) {
