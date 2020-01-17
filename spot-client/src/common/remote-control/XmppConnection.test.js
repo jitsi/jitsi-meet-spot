@@ -1,4 +1,13 @@
 import XmppConnection from './xmpp-connection';
+import { tickProcess } from 'common/test-utils';
+
+jest.mock('common/vendor', () => {
+    const { mockJitsiMeetJSProvider } = require('../test-mocks');
+
+    return {
+        JitsiMeetJSProvider: mockJitsiMeetJSProvider
+    };
+});
 
 describe('XmppConnection', () => {
     const IQ_FROM = 'localPart2@domainPart2/resource2';
@@ -158,6 +167,64 @@ describe('XmppConnection', () => {
                     id: 'message-id',
                     from: IQ_FROM,
                     messageType: 'update-message-from-remote-control'
+                });
+        });
+    });
+
+    describe('on disconnect', () => {
+        let xmppConnection;
+
+        /**
+         * Helper for mocking out XMPPConnection calls so the connection is
+         * simulated as being made.
+         *
+         * @param {XMPPConnection} connection - The instance of XMPPConnection
+         * to simulate becoming connected to an xmpp server.
+         * @returns {void}
+         */
+        function joinMuc(connection) {
+            const joinPromise = connection.joinMuc({
+                shouldAttemptReconnect: () => true
+            });
+
+            connection.xmppConnection._simulateConnectionEstablished();
+            connection.xmppConnection._simulatePresenceUpdate();
+
+            return tickProcess(1)
+                .then(() => connection.room._simulateJoinEvent())
+                .then(() => joinPromise);
+        }
+
+        beforeEach(() => {
+            jest.useFakeTimers();
+
+            xmppConnection = new XmppConnection({
+                configuration: {},
+                onPresenceReceived: jest.fn()
+            });
+
+            return joinMuc(xmppConnection);
+        });
+
+        it('enqueues one reconnect at a time', () => {
+            const error = 'connection.droppedError';
+            const joinMucSpy = jest.spyOn(xmppConnection, 'joinMuc')
+                .mockReturnValue(new Promise(() => {
+                    /* intentionally leave unresolved */
+                }));
+
+            xmppConnection.xmppConnection._simulateConnectionFailed(error);
+            xmppConnection.xmppConnection._simulateConnectionFailed(error);
+            xmppConnection.xmppConnection._simulateConnectionFailed(error);
+
+            return tickProcess(1)
+                .then(() => {
+                    jest.runAllTimers();
+
+                    return tickProcess(1);
+                })
+                .then(() => {
+                    expect(joinMucSpy.mock.calls.length).toEqual(1);
                 });
         });
     });
