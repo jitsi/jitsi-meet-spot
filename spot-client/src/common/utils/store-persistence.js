@@ -126,38 +126,7 @@ export function clearPersistedState() {
  * @returns {Object}
  */
 export function getPersistedState() {
-    const restoredState = persistence.get(STORE_PERSISTENCE_KEY) || {};
-
-    return _restoreLegacyPermanentCode(restoredState);
-}
-
-/**
- * Shenanigans necessary to restore a permanent pairing code stored on older version of the client.
- *
- * @param {Object} state - Restored Redux state.
- * @returns {Object}
- * @private
- */
-function _restoreLegacyPermanentCode(state) {
-    if (!state || (state.backend && state.backend.permanentPairingCode)) {
-        return state;
-    }
-
-    const legacyPermanentCode
-        = (state['spot-tv/backend'] && state['spot-tv/backend'].permanentPairingCode)
-            || (state.spotRemote && state.spotRemote.permanentPairingCode);
-
-    if (!legacyPermanentCode) {
-        return state;
-    }
-
-    return {
-        ...state,
-        backend: {
-            ...state.backend,
-            permanentPairingCode: legacyPermanentCode
-        }
-    };
+    return persistence.get(STORE_PERSISTENCE_KEY) || {};
 }
 
 /**
