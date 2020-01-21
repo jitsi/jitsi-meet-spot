@@ -14,28 +14,28 @@ kill_webpack_dev_server_pid
 
 echo "Running basic tests"
 
-echo "Testing Spot-Controller"
-cd spot-controller
-npm install
-npm run lint
+# echo "Testing Spot-Controller"
+# cd spot-controller
+# npm install
+# npm run lint
 
-echo "Testing Spot-Electron"
-cd ../spot-electron
-npm install
-npm run lint
+# echo "Testing Spot-Electron"
+# cd ../spot-electron
+# npm install
+# npm run lint
 
 echo "Testing Spot-Client"
-cd ../spot-client
+cd spot-client
 npm install
-npm run lint
-npm run test
-npm run build:prod
+# npm run lint
+# npm run test
+# npm run build:prod
 
-echo "Testing Spot-Integrations-Service"
-cd ../spot-integrations-service
-npm install
-npm run lint
-npm test
+# echo "Testing Spot-Integrations-Service"
+# cd ../spot-integrations-service
+# npm install
+# npm run lint
+# npm test
 
 echo "Testing Spot-Webdriver"
 cd ../spot-webdriver

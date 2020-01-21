@@ -27,7 +27,9 @@ exports.config = {
                     args: [
                         'use-fake-device-for-media-stream',
                         'use-fake-ui-for-media-stream',
-                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`
+                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`,
+                        'window-size=1200x600',
+                        'headless'
                     ]
                 }
             }
@@ -37,7 +39,9 @@ exports.config = {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
                     args: [
-                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`
+                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`,
+                        'window-size=1200x600',
+                        'headless'
                     ]
                 }
             }
@@ -81,6 +85,18 @@ exports.config = {
         'selenium-standalone',
         [ TimelineService ]
     ],
+
+    seleniumInstallArgs: {
+        drivers: {
+            chrome: { version: '79.0.3945.16' }
+        }
+    },
+
+    seleniumArgs: {
+        drivers: {
+            chrome: { version: '79.0.3945.16' }
+        }
+    },
 
     specs: [
         path.resolve(__dirname, 'specs', '**/*.spec.js')
