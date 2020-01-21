@@ -11,11 +11,11 @@ import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
 import url from 'url';
 
-import api from './api';
-import { BeaconOverlay } from './beacons';
+import api from '../api';
+import { BeaconOverlay } from '../beacons';
 
-import LoadingScreen from './LoadingScreen';
-import styles from './styles';
+import LoadingScreen from '../LoadingScreen';
+import styles from '../styles';
 
 const { AppInfo } = NativeModules;
 
@@ -34,13 +34,13 @@ const SPOT_CLIENT_FEATURE_VERSION = 'SpotController/1';
  *
  * @extends React.Component
  */
-export default class RemoteControl extends React.PureComponent {
+export default class SpotRemoteWebView extends React.PureComponent {
     static propTypes = {
         url: PropTypes.string
     };
 
     /**
-     * Initializes a new {@code RemoteControl} instance.
+     * Initializes a new {@code SpotRemoteWebView} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
