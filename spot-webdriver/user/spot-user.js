@@ -125,7 +125,7 @@ class SpotUser {
      * @returns {void}
      */
     setNetworkOnline() {
-        this.driver.deleteNetworkConditions();
+        this.driver.setNetworkConditions({}, 'No throttling');
     }
 
     /**
