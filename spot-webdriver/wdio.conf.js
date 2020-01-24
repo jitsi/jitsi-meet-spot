@@ -27,9 +27,7 @@ exports.config = {
                     args: [
                         'use-fake-device-for-media-stream',
                         'use-fake-ui-for-media-stream',
-                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`,
-                        'window-size=1200x600',
-                        'headless'
+                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`
                     ]
                 }
             }
@@ -39,9 +37,7 @@ exports.config = {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
                     args: [
-                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`,
-                        'window-size=1200x600',
-                        'headless'
+                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`
                     ]
                 }
             }
@@ -101,11 +97,6 @@ exports.config = {
     specs: [
         path.resolve(__dirname, 'specs', '**/*.spec.js')
     ],
-
-    exclude: process.env.SKIP_SCREENSHARE_TESTS ? [
-        path.resolve(__dirname, 'specs', '**/share-mode.spec.js'),
-        path.resolve(__dirname, 'specs', '**/wireless-screenshare.spec.js')
-    ] : undefined,
 
     afterTest: () => {
         spotSessionStore.clearSessions();
