@@ -3,6 +3,7 @@ import {
     addPairedRemote,
     clearAllPairedRemotes,
     destroyConnection,
+    getFixedCodeSegment,
     getJoinCodeRefreshRate,
     getMeetingDomainsWhitelist,
     getRemoteControlServerConfig,
@@ -359,6 +360,7 @@ function createConnection(state, backend, permanentPairingCode) {
 
     return remoteControlServer.connect({
         backend,
+        fixedCodeSegment: getFixedCodeSegment(state),
         joinAsSpot: true,
         joinCodeRefreshRate,
         joinCode: permanentPairingCode,

@@ -38,6 +38,7 @@ const keysToStore = [
     'setup.preferredMic',
     'setup.preferredSpeaker',
     'spot-tv/backend.longLivedPairingCodeInfo',
+    'spotTv.fixedCodeSegment',
     'spotRemote.completedOnboarding',
     'spotRemote.mostRecentCountryCode',
     'wiredScreenshare.deviceLabel',
@@ -99,9 +100,11 @@ function parsePersistedState(state) {
             deviceLabel: state.wiredScreenshare.deviceLabel,
             idleValue: state.wiredScreenshare.idleValue
         },
-
         'spot-tv/backend': {
             longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo
+        },
+        spotTv: {
+            fixedCodeSegment: state.spotTv.fixedCodeSegment
         },
         spotRemote: {
             completedOnboarding: state.spotRemote.completedOnboarding,

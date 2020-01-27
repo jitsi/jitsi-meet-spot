@@ -10,8 +10,11 @@
         "code": "Pairing Code",
         "devices": "Preferred devices",
         "display": "Display",
+        "fixedSegment": "Fixed pairing code segment",
+        "fixedSegmentPlaceholder": "Example: AB",
         "reset": "Reset app",
         "resetting": "Resetting",
+        "save": "Save",
         "wizard": "Setup wizard",
         "wizardStart": "Start wizard"
     },
