@@ -33,7 +33,10 @@ export default function Input(props) {
             data-qa-id = { props['data-qa-id'] }
             fullWidth = { true }
             id = { props.id }
-            inputProps = { inputProps }
+            inputProps = {{
+                ...inputProps,
+                ...props.inputProps
+            }}
             onBlur = { props.onBlur }
             onChange = { props.onChange }
             onFocus = { props.onFocus }
@@ -50,6 +53,7 @@ Input.propTypes = {
     'data-qa-id': PropTypes.string,
     gradientStart: PropTypes.string,
     id: PropTypes.string,
+    inputProps: PropTypes.object,
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,

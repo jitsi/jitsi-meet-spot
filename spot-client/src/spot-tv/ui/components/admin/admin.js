@@ -8,6 +8,7 @@ import { Modal } from 'common/ui';
 
 import { SelectMedia } from '../setup';
 
+import FixedPairingCodeSegment from './FixedPairingCodeSegment';
 import PermanentPairingCode from './PermanentPairingCode';
 import PreferredDevices from './preferred-devices';
 import ResetApp from './reset-app';
@@ -76,6 +77,9 @@ class AdminModal extends React.Component {
                 this.props.isBackendEnabled
                     ? <PermanentPairingCode key = 'permanent-pairing-code' />
                     : null,
+                this.props.isBackendEnabled
+                    ? null
+                    : <FixedPairingCodeSegment key = 'key-fixedPairingCodeSegment' />,
                 <PreferredDevices
                     key = 'key=preferredDevices'
                     onClick = { this._onChangeDevices } />,

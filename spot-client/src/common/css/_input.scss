@@ -69,3 +69,13 @@
         margin-right: 7px;
     }
 }
+
+.field-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+
+    >* {
+        margin-right: 10px;
+    }
+}
