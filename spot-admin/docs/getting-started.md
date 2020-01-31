@@ -13,7 +13,7 @@
 1. Add backend endpoints in your .env file:
     ```
     PAIRING_SERVICE_URL="http://localhost:8001/pair"
-    ROOM_KEEPER_SERVICE_URL="http://localhost:8001/room-info"
+    ROOM_KEEPER_SERVICE_URL="http://localhost:8001/room/info"
     CALENDAR_SERVICE_URL="http://localhost:8001/calendar?tzid={tzid}"
     ```
     The `{tzid}' part is replaced with the current timezone ID of the Spot TV machine.
