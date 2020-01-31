@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal, isModalOpen, showModal } from 'common/app-state';
@@ -9,51 +9,30 @@ import AdminModal from './admin';
 
 /**
  * A cog that controls displays of the admin settings.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
  */
-class SettingsButton extends React.Component {
-    static propTypes = {
-        isAdminModalOpen: PropTypes.bool,
-        onChangeModalDisplay: PropTypes.func
-    };
+function SettingsButton(props) {
+    const toggleAdminModal = useCallback(() => {
+        props.onChangeModalDisplay(!props.isAdminModalOpen);
+    }, [ props.isAdminModalOpen ]);
 
-    /**
-     * Initializes a new {@code SettingsButton} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onToggleAdminModal = this._onToggleAdminModal.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        return (
-            <a
-                className = 'cog'
-                data-qa-id = 'admin-settings'
-                onClick = { this._onToggleAdminModal }>
-                <Settings />
-            </a>
-        );
-    }
-
-    /**
-     * Callback invoked to toggle the display of the {@code AdminModal}.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleAdminModal() {
-        this.props.onChangeModalDisplay(!this.props.isAdminModalOpen);
-    }
+    return (
+        <a
+            className = 'cog'
+            data-qa-id = 'admin-settings'
+            onClick = { toggleAdminModal }>
+            <Settings />
+        </a>
+    );
 }
+
+SettingsButton.propTypes = {
+    isAdminModalOpen: PropTypes.bool,
+    onChangeModalDisplay: PropTypes.func
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
