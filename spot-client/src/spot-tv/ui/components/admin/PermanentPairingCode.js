@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -14,84 +14,55 @@ import AdminEntry from './admin-entry';
  * Displays and refreshes the long lived code for Spot-Remotes to connect to
  * a Spot-TV.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
  */
-export class PermanentPairingCode extends React.Component {
-    static propTypes = {
-        pairingCode: PropTypes.string,
-        refreshPairingCode: PropTypes.func,
-        t: PropTypes.func
-    };
+export function PermanentPairingCode(props) {
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ displayPairingCode, setDisplayPairingCode ] = useState(false);
 
-    /**
-     * Initializes a new {@code PermanentPairingCode} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            stateToDisplay: 'button'
-        };
-
-        this._onShowCode = this._onShowCode.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     * @returns {ReactElement}
-     */
-    render() {
-        let content = null;
-
-        if (this.state.stateToDisplay === 'loading') {
-            content = <LoadingIcon />;
-        } else if (this.state.stateToDisplay === 'code') {
-            content = (
-                <span className = 'pairing-code'>
-                    { this.props.pairingCode }
-                </span>
-            );
-        } else {
-            content = (
-                <Button onClick = { this._onShowCode }>
-                    { this.props.t('admin.display') }
-                </Button>
-            );
-        }
-
-        return (
-            <AdminEntry entryLabel = { this.props.t('admin.code') }>
-                { content }
-            </AdminEntry>
-        );
-    }
-
-    /**
-     * Callback invoked when the pairing code is to be revealed. Will call
-     * to refresh the code.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onShowCode() {
-        if (this.state.stateToDisplay !== 'button') {
+    const onClick = useCallback(() => {
+        if (isLoading) {
             return;
         }
 
-        const loadingPromise = new Promise(resolve => this.setState({
-            stateToDisplay: 'loading'
-        }, resolve));
+        setIsLoading(true);
 
-        loadingPromise
-            .then(() => this.props.refreshPairingCode())
-            .then(() => this.setState({ stateToDisplay: 'code' }));
+        props.refreshPairingCode()
+            .then(() => setDisplayPairingCode(true));
+    }, [ setIsLoading ]);
+
+    let content = null;
+
+    if (displayPairingCode) {
+        content = (
+            <span className = 'pairing-code'>
+                { props.pairingCode }
+            </span>
+        );
+    } else if (isLoading) {
+        content = <LoadingIcon />;
+    } else {
+        content = (
+            <Button onClick = { onClick }>
+                { props.t('admin.display') }
+            </Button>
+        );
     }
+
+    return (
+        <AdminEntry entryLabel = { props.t('admin.code') }>
+            { content }
+        </AdminEntry>
+    );
 }
+
+PermanentPairingCode.propTypes = {
+    pairingCode: PropTypes.string,
+    refreshPairingCode: PropTypes.func,
+    t: PropTypes.func
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
