@@ -12,7 +12,7 @@ describe('PermanentPairingCode', () => {
     let permanentPairingCode, refreshPairingCodeSpy;
 
     beforeEach(() => {
-        refreshPairingCodeSpy = jest.fn();
+        refreshPairingCodeSpy = jest.fn().mockReturnValue(Promise.resolve());
 
         permanentPairingCode = mount(
             <PermanentPairingCode
