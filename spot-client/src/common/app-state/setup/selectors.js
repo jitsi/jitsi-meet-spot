@@ -64,6 +64,16 @@ export function getPreferredSpeaker(state) {
 }
 
 /**
+ * Returns the params the app was started with.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {Object}
+ */
+export function getStartParams(state) {
+    return state.setup.startParams || {};
+}
+
+/**
  * Returns the tenant name stored in the Redux state.
  *
  * @param {Object} state - The Redux store.

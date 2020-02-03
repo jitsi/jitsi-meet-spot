@@ -19,7 +19,8 @@ import reducers, {
     routeChanged,
     setBootstrapStarted,
     setDefaultValues,
-    setSetupCompleted
+    setSetupCompleted,
+    setStartParams
 } from 'common/app-state';
 import { setPermanentPairingCode, SpotBackendService } from 'common/backend';
 import 'common/i18n';
@@ -142,6 +143,17 @@ remoteControlClient.configureWirelessScreensharing({
 history.listen(location => {
     store.dispatch(routeChanged(location));
 });
+
+/**
+ * Persisting query params.
+ */
+const rawParamsObject = {};
+
+for (const [ key, value ] of queryParams.entries()) {
+    rawParamsObject[key] = value;
+}
+
+store.dispatch(setStartParams(rawParamsObject));
 
 loadScript(getExternalApiUrl(reduxState))
     .then(() => {
