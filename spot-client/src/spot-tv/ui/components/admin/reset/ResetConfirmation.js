@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next';
 import { logger } from 'common/logger';
 import { clearPersistedState } from 'common/utils';
 
-import { Button } from './../button';
+import { Button } from 'common/ui/components/button';
 
 /**
  * Displays a menu option, with confirmation, to clear all saved Spot state,
@@ -13,7 +13,7 @@ import { Button } from './../button';
  *
  * @extends React.Component
  */
-export class ResetState extends React.Component {
+export class ResetConfirmation extends React.Component {
     static propTypes = {
         t: PropTypes.func
     };
@@ -24,7 +24,7 @@ export class ResetState extends React.Component {
     };
 
     /**
-     * Initializes a new {@code ResetState} instance.
+     * Initializes a new {@code ResetConfirmation} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
@@ -142,4 +142,4 @@ export class ResetState extends React.Component {
     }
 }
 
-export default withTranslation()(ResetState);
+export default withTranslation()(ResetConfirmation);
