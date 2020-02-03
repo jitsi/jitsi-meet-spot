@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { ResetState } from 'common/ui';
+import ResetConfirmation from './ResetConfirmation';
 
-import AdminEntry from './admin-entry';
+import AdminEntry from '../admin-entry';
 
 /**
  * Implements an admin modal entry to reset the app state.
@@ -13,16 +13,16 @@ import AdminEntry from './admin-entry';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-function ResetApp({ t }) {
+function Reset({ t }) {
     return (
         <AdminEntry entryLabel = { t('admin.reset') }>
-            <ResetState />
+            <ResetConfirmation />
         </AdminEntry>
     );
 }
 
-ResetApp.propTypes = {
+Reset.propTypes = {
     t: PropTypes.func
 };
 
-export default withTranslation()(ResetApp);
+export default withTranslation()(Reset);

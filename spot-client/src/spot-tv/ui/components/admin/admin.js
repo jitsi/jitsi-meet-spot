@@ -11,7 +11,7 @@ import { SelectMedia } from '../setup';
 import FixedPairingCodeSegment from './FixedPairingCodeSegment';
 import PermanentPairingCode from './PermanentPairingCode';
 import PreferredDevices from './preferred-devices';
-import ResetApp from './reset-app';
+import { Reset } from './reset';
 import SetupWizard from './setup-wizard';
 
 /**
@@ -86,7 +86,7 @@ class AdminModal extends React.Component {
                 this.props.isBackendEnabled
                     ? null
                     : <SetupWizard key = 'key-setupWizard' />,
-                <ResetApp key = 'key-resetState' />
+                <Reset key = 'key-resetState' />
             ];
         }
     }

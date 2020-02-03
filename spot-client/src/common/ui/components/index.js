@@ -12,7 +12,6 @@ export * from './modal';
 export * from './notifications';
 export * from './reconnect-indicator';
 export * from './remote-join-code';
-export * from './reset';
 export * from './room-name';
 export * from './scheduled-meetings';
 export * from './select';
