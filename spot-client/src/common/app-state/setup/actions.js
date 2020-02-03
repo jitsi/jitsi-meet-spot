@@ -7,6 +7,7 @@ import {
     SET_JWT,
     SET_PREFERRED_DEVICES,
     SET_ROOM_ID,
+    SET_START_PARAMS,
     SET_TENANT
 } from './action-types';
 
@@ -118,6 +119,19 @@ export function setRoomId(roomId) {
 export function setSetupCompleted() {
     return {
         type: SETUP_COMPLETED
+    };
+}
+
+/**
+ * Stores the params the app was started with.
+ *
+ * @param {Object} params - The params the app was started with.
+ * @returns {Object}
+ */
+export function setStartParams(params) {
+    return {
+        type: SET_START_PARAMS,
+        params
     };
 }
 
