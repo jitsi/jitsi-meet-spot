@@ -40,7 +40,7 @@ describe('SyncWithBackend', () => {
     }
 
     it('shows a loading icon', () => {
-        onAttemptSyncSpy.mockImplementation(() => new Promise());
+        onAttemptSyncSpy.mockImplementation(() => Promise.resolve());
 
         expect(syncWithBackend.find(LoadingIcon).length).toBe(0);
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { addNotification, getProductName } from 'common/app-state';
+import { addNotification, getProductName, getStartParams } from 'common/app-state';
 import { CodeInput, LoadingIcon } from 'common/ui';
 import { logger } from 'common/logger';
 
@@ -16,8 +16,15 @@ import { pairWithBackend } from '../../../app-state';
  * @extends React.Component
  */
 export class SyncWithBackend extends React.Component {
+    static defaultProps = {
+        codeLength: 8
+    };
+
     static propTypes = {
+        codeLength: PropTypes.number,
+        llpc: PropTypes.string,
         onAttemptSync: PropTypes.func,
+        onStartAutoSync: PropTypes.func,
         onSuccess: PropTypes.func,
         onSyncError: PropTypes.func,
         productName: PropTypes.string,
@@ -34,10 +41,20 @@ export class SyncWithBackend extends React.Component {
         super(props);
 
         this.state = {
+            autoSyncing: Boolean(props.llpc),
             loading: false
         };
 
         this._onChange = this._onChange.bind(this);
+    }
+
+    /**
+     * Implements {@code Component#componentDidMount}.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._tryAutoSync();
     }
 
     /**
@@ -47,7 +64,12 @@ export class SyncWithBackend extends React.Component {
      * @returns {ReactElement}
      */
     render() {
-        const { productName, t } = this.props;
+        const { codeLength, productName, t } = this.props;
+        const { autoSyncing, loading } = this.state;
+
+        if (autoSyncing) {
+            return null;
+        }
 
         return (
             <div className = 'setup-sync-with-backend'>
@@ -59,11 +81,11 @@ export class SyncWithBackend extends React.Component {
                         { t('setup.enterCode') }
                     </div>
                 </div>
-                <div className = { `code-input ${this.state.loading ? 'with-loading' : ''}` }>
+                <div className = { `code-input ${loading ? 'with-loading' : ''}` }>
                     <CodeInput
-                        length = { 8 }
+                        length = { codeLength }
                         onChange = { this._onChange } />
-                    { this.state.loading && <LoadingIcon /> }
+                    { loading && <LoadingIcon /> }
                 </div>
             </div>
         );
@@ -77,28 +99,56 @@ export class SyncWithBackend extends React.Component {
      * @returns {void}
      */
     _onChange(value) {
-        if (value.length !== 8) {
+        if (value.length !== this.props.codeLength) {
             return;
         }
 
-        const setLoadingPromise = new Promise(resolve => {
-            this.setState({
-                loading: true
-            }, resolve);
+        this.setState({
+            loading: true
+        }, () => {
+            this._sync(value);
         });
+    }
 
-        setLoadingPromise
-            .then(() => this.props.onAttemptSync(value))
-            .then(
-                this.props.onSuccess,
-                error => {
-                    this.setState({
-                        loading: false
-                    });
-
-                    logger.error('connectSpotTvToBackend failed', { error });
-                    this.props.onSyncError(error);
+    /**
+     * Syncs with backend with the provided pairing code.
+     *
+     * @param {string} value - The pairing code to sync with.
+     * @returns {void}
+     */
+    _sync(value) {
+        this.props.onAttemptSync(value).then(
+            this.props.onSuccess,
+            error => {
+                this.setState({
+                    autoSyncing: false,
+                    loading: false
                 });
+
+                logger.error('connectSpotTvToBackend failed', { error });
+                this.props.onSyncError(error);
+            }
+        );
+    }
+
+    /**
+     * Tries to perform an auto sync if a pairing code is provided on start.
+     *
+     * NOTE: llpc stands for Long Time Pairing Code (per backend terminology).
+     *
+     * @returns {void}
+     */
+    _tryAutoSync() {
+        const { codeLength, llpc } = this.props;
+
+        if (!llpc || llpc.length !== codeLength) {
+            this.setState({
+                autoSyncing: false
+            });
+        } else {
+            this.props.onStartAutoSync();
+            this._sync(llpc);
+        }
     }
 }
 
@@ -112,7 +162,8 @@ export class SyncWithBackend extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        productName: getProductName(state)
+        productName: getProductName(state),
+        llpc: getStartParams(state).llpc
     };
 }
 
@@ -127,6 +178,10 @@ function mapDispatchToProps(dispatch) {
     return {
         onAttemptSync(pairingCode) {
             return dispatch(pairWithBackend(pairingCode));
+        },
+
+        onStartAutoSync() {
+            dispatch(addNotification('message', 'setup.autoSyncing'));
         },
 
         onSyncError(error) {
