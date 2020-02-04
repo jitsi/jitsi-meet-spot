@@ -3,11 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { setSetupCompleted } from 'common/app-state';
+import { setSetupCompleted, getStartParams } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Modal } from 'common/ui';
+import { getBoolean } from 'common/utils';
 
 import { withCalendar } from '../loaders';
 
@@ -29,7 +30,9 @@ export class Setup extends React.Component {
     static propTypes = {
         dispatch: PropTypes.func,
         history: PropTypes.object,
-        isBackendEnabled: PropTypes.bool
+        isBackendEnabled: PropTypes.bool,
+        skipPairRemote: PropTypes.bool,
+        skipSelectMedia: PropTypes.bool
     };
 
     /**
@@ -41,18 +44,16 @@ export class Setup extends React.Component {
     constructor(props) {
         super(props);
 
-        this.steps = props.isBackendEnabled
-            ? [
-                SyncWithBackend,
-                SelectMedia,
-                PairRemote
-            ]
-            : [
-                CalendarAuth,
-                SelectRoom,
-                Profile,
-                SelectMedia
-            ];
+        const { isBackendEnabled: backendEnabled, skipPairRemote, skipSelectMedia } = props;
+
+        this.steps = [];
+
+        backendEnabled && this.steps.push(SyncWithBackend);
+        !backendEnabled && this.steps.push(CalendarAuth);
+        !backendEnabled && this.steps.push(SelectRoom);
+        !backendEnabled && this.steps.push(Profile);
+        !skipSelectMedia && this.steps.push(SelectMedia);
+        backendEnabled && !skipPairRemote && this.steps.push(PairRemote);
 
         this.state = {
             currentStep: this.steps[0]
@@ -148,8 +149,12 @@ export class Setup extends React.Component {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const { skipPairRemote, skipSelectMedia } = getStartParams(state);
+
     return {
-        isBackendEnabled: isBackendEnabled(state)
+        isBackendEnabled: isBackendEnabled(state),
+        skipPairRemote: getBoolean(skipPairRemote),
+        skipSelectMedia: getBoolean(skipSelectMedia)
     };
 }
 
