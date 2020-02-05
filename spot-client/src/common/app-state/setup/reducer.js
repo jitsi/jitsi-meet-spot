@@ -5,7 +5,6 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
-    SET_START_PARAMS,
     SET_TENANT
 } from './action-types';
 
@@ -66,12 +65,6 @@ const setup = (state = DEFAULT_STATE, action) => {
             preferredCamera: action.cameraLabel,
             preferredMic: action.micLabel,
             preferredSpeaker: action.speakerLabel
-        };
-
-    case SET_START_PARAMS:
-        return {
-            ...state,
-            startParams: action.params
         };
 
     case SET_TENANT:

@@ -1,3 +1,4 @@
+import defaultsDeep from 'lodash.defaultsdeep';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -19,8 +20,7 @@ import reducers, {
     routeChanged,
     setBootstrapStarted,
     setDefaultValues,
-    setSetupCompleted,
-    setStartParams
+    setSetupCompleted
 } from 'common/app-state';
 import { setPermanentPairingCode, SpotBackendService } from 'common/backend';
 import 'common/i18n';
@@ -40,20 +40,27 @@ import { ExternalApiSubscriber } from 'spot-remote/external-api';
 import App from './app';
 
 const queryParams = new URLSearchParams(window.location.search);
+const startParams = {};
+
+for (const [ key, value ] of queryParams.entries()) {
+    startParams[key] = value;
+}
 
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),
-    {
+    defaultsDeep({}, getPersistedState(), {
         config: {
             ...setDefaultValues(window.JitsiMeetSpotConfig)
+        },
+        setup: {
+            startParams
         },
         spotTv: {
 
             // Will get overridden on Spot-Remote by Spot-TV updates.
             electron: isElectron()
-        },
-        ...getPersistedState()
-    },
+        }
+    }),
     MiddlewareRegistry.applyMiddleware(thunk)
 );
 
@@ -143,17 +150,6 @@ remoteControlClient.configureWirelessScreensharing({
 history.listen(location => {
     store.dispatch(routeChanged(location));
 });
-
-/**
- * Persisting query params.
- */
-const rawParamsObject = {};
-
-for (const [ key, value ] of queryParams.entries()) {
-    rawParamsObject[key] = value;
-}
-
-store.dispatch(setStartParams(rawParamsObject));
 
 loadScript(getExternalApiUrl(reduxState))
     .then(() => {
