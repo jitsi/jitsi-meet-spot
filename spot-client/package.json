@@ -57,6 +57,7 @@
         "libphonenumber-js": "1.7.29",
         "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",
+        "lodash.defaultsdeep": "^4.6.1",
         "lodash.isequal": "4.5.0",
         "lodash.merge": "4.6.2",
         "lodash.throttle": "4.1.1",
