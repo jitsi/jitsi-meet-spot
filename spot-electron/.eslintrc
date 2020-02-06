@@ -6,6 +6,17 @@
         "eslint-config-jitsi",
         "eslint-config-jitsi/jsdoc"
     ],
+    "overrides": [
+        {
+            "files": [
+                "**/*.test.js"
+            ],
+            "env": {
+                "jest": true,
+                "node": true
+            }
+        }
+    ],
     "rules": {
         "no-console": 1,
         "space-before-function-paren": ["error", {

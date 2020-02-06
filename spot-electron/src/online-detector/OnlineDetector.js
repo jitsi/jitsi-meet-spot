@@ -6,8 +6,6 @@ const EventEmitter = require('events');
  * the connectivity changes, emits an update.
  */
 class OnlineDetector extends EventEmitter {
-    static ONLINE_STATUS_CHANGED = 'online-status-changed';
-
     /**
      * Instantiates a new instance.
      *
@@ -80,7 +78,7 @@ class OnlineDetector extends EventEmitter {
         }
 
         this._nextOnlineCheck = setTimeout(() => {
-            isOnline()
+            OnlineDetector._isOnline()
                 .then(onlineStatus => {
                     if (onlineStatus !== this._lastOnlineStatus) {
                         this._lastOnlineStatus = onlineStatus;
@@ -95,5 +93,8 @@ class OnlineDetector extends EventEmitter {
         }, this._onlineCheckInterval);
     }
 }
+
+OnlineDetector._isOnline = isOnline;
+OnlineDetector.ONLINE_STATUS_CHANGED = 'online-status-changed';
 
 module.exports = OnlineDetector;
