@@ -30,6 +30,7 @@ import {
     remoteControlClient
 } from 'common/remote-control';
 import {
+    getBoolean,
     getPersistedState,
     loadScript,
     setPersistedState
@@ -48,7 +49,14 @@ for (const [ key, value ] of queryParams.entries()) {
 
 const store = createStore(
     ReducerRegistry.combineReducers(reducers),
-    defaultsDeep({}, getPersistedState(), {
+    defaultsDeep({}, {
+        spotTv: {
+            // This needs to overwrite the persisted value if it's defined in the params
+            volumeControlSupported: startParams.volumeControlSupported
+                ? getBoolean(startParams.volumeControlSupported)
+                : undefined
+        }
+    }, getPersistedState(), {
         config: {
             ...setDefaultValues(window.JitsiMeetSpotConfig)
         },
