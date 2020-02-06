@@ -23,6 +23,7 @@ echo "Testing Spot-Electron"
 cd ../spot-electron
 npm install
 npm run lint
+npm run test
 
 echo "Testing Spot-Client"
 cd ../spot-client
