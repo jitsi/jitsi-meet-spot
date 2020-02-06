@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel = "stylesheet" type = "text/css" href = "./static.css">
+</head>
+<body>
+    <div class = "error-message">
+        <h1>Network offline.</h1>
+        <div>Your application will automatically restart when an active connection is detected.</div>
+        <div class = 'message-footer'>
+            <button class = 'button' id = 'exit'>Exit Application</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('exit').addEventListener('click', function onExitClick() {
+            window.require('electron').ipcRenderer.send('native-command', { command: 'exitApp' });
+        });
+    </script>
+</body>
+</html>
