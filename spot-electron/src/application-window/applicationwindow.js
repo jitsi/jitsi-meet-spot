@@ -43,7 +43,7 @@ function createApplicationWindow() {
         clearTimeout(showCrashPageTimeout);
 
         if (isOnline) {
-            loadDefaultUrl(applicationWindow);
+            applicationWindow.loadURL(defaultSpotURL);
         } else {
             applicationWindow.loadFile('src/static/offline.html');
         }
@@ -59,8 +59,10 @@ function createApplicationWindow() {
         setTimeout(() => {
             applicationWindow.loadFile('src/static/crashed.html')
                 .then(() => {
-                    showCrashPageTimeout = setTimeout(() =>
-                        loadDefaultUrl(applicationWindow), 5000);
+                    showCrashPageTimeout = setTimeout(
+                        () => applicationWindow.loadURL(defaultSpotURL),
+                        5000
+                    );
                 });
         });
     });
@@ -69,23 +71,14 @@ function createApplicationWindow() {
         onlineDetector.destroy();
     });
 
-    loadDefaultUrl(applicationWindow);
+    applicationWindow.webContents.webContents.setUserAgent(
+        `${applicationWindow.webContents.getUserAgent()} ${SPOT_ELECTRON_FEATURE_VERSION}`
+    );
+
+    applicationWindow.loadURL(defaultSpotURL);
 
     onlineDetector.start();
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
-}
-
-/**
- * Loads the root Spot-TV url on the provided window.
- *
- * @param {BrowserWindow} browserWindow - The BrowserWindow instance in which
- * the Spot-TV url should be opened.
- * @returns {void}
- */
-function loadDefaultUrl(browserWindow) {
-    browserWindow.loadURL(defaultSpotURL, {
-        userAgent: `${browserWindow.webContents.getUserAgent()} ${SPOT_ELECTRON_FEATURE_VERSION}`
-    });
 }
 
 module.exports = {
