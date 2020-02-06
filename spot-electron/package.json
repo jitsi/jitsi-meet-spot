@@ -23,6 +23,7 @@
     },
     "description": "",
     "devDependencies": {
+        "@jest-runner/electron": "2.0.3",
         "babel-eslint": "10.0.3",
         "devtron": "1.4.0",
         "dotenv": "8.1.0",
@@ -34,7 +35,8 @@
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
         "eslint-plugin-flowtype": "4.4.1",
         "eslint-plugin-import": "2.18.2",
-        "eslint-plugin-jsdoc": "18.1.4"
+        "eslint-plugin-jsdoc": "18.1.4",
+        "jest": "25.1.0"
     },
     "dmg": {
         "sign": false
@@ -48,7 +50,8 @@
         "lint": "eslint .",
         "pack": "electron-builder --dir",
         "postinstall": "electron-rebuild",
-        "start": "electron ."
+        "start": "electron .",
+        "test": "jest ."
     },
     "version": "1.0.0",
     "dependencies": {
