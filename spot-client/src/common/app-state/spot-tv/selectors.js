@@ -101,5 +101,7 @@ export function isConnectedToSpot(state) {
  * @returns {boolean}
  */
 export function isVolumeControlSupported(state) {
-    return Boolean(state.spotTv.electron);
+    const { electron, volumeControlSupported } = state.spotTv;
+
+    return Boolean(electron || volumeControlSupported);
 }

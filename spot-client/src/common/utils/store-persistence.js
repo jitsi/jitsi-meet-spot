@@ -39,6 +39,7 @@ const keysToStore = [
     'setup.preferredSpeaker',
     'spot-tv/backend.longLivedPairingCodeInfo',
     'spotTv.fixedCodeSegment',
+    'spotTv.volumeControlSupported',
     'spotRemote.completedOnboarding',
     'spotRemote.mostRecentCountryCode',
     'wiredScreenshare.deviceLabel',
@@ -104,7 +105,8 @@ function parsePersistedState(state) {
             longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo
         },
         spotTv: {
-            fixedCodeSegment: state.spotTv.fixedCodeSegment
+            fixedCodeSegment: state.spotTv.fixedCodeSegment,
+            volumeControlSupported: state.spotTv.volumeControlSupported
         },
         spotRemote: {
             completedOnboarding: state.spotRemote.completedOnboarding,
@@ -142,9 +144,7 @@ export function getPersistedState() {
 export function setPersistedState(store) {
     const newState = parsePersistedState(store.getState());
 
-    // Check if cached state exists to intentionally skip a save request being
-    // triggered due to the initial hydrating of the redux store.
-    if (cachedState && hasUpdateOfInterest(cachedState, newState)) {
+    if (!cachedState || hasUpdateOfInterest(cachedState, newState)) {
         persistence.set(STORE_PERSISTENCE_KEY, newState);
     }
 

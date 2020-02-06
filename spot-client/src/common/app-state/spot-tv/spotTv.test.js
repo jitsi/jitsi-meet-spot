@@ -93,7 +93,19 @@ describe('spotTv state', () => {
         });
 
         it('is enabled when in electron', () => {
-            dispatch(actions.setSpotTVState({ electron: true }));
+            dispatch(actions.setSpotTVState({
+                electron: true,
+                volumeControlSupported: false
+            }));
+
+            expect(selectors.isVolumeControlSupported(getState())).toBe(true);
+        });
+
+        it('is enabled when receives start param', () => {
+            dispatch(actions.setSpotTVState({
+                electron: false,
+                volumeControlSupported: true
+            }));
 
             expect(selectors.isVolumeControlSupported(getState())).toBe(true);
         });

@@ -20,6 +20,7 @@ const DEFAULT_STATE = {
     tileView: false,
     videoMuted: true,
     view: undefined,
+    volumeControlSupported: false,
     waitingForMeetingStart: false
 
     // FIXME: setting the default prevents wired screensharing from being
