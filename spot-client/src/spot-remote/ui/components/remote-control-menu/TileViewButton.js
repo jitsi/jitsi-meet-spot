@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -16,65 +16,41 @@ import { NavButton } from './../nav';
 /**
  * A component for displaying and changing the current audio mute of a Spot-TV.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new instance
+ * is to be initialized.
+ * @returns {ReactElement}
  */
-export class TileViewButton extends React.Component {
-    static propTypes = {
-        changePending: PropTypes.bool,
-        setTileView: PropTypes.func,
-        t: PropTypes.func,
-        tileView: PropTypes.bool
-    };
+export function TileViewButton({ changePending, onSetTileView, t, tileView }) {
+    const translationKey = tileView
+        ? 'commands.tileViewExit'
+        : 'commands.tileViewEnter';
+    const qaId = tileView ? 'exit-tile-view' : 'enter-tile-view';
 
-    /**
-     * Initializes a new {@code TileViewButton} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onToggleTileView = this._onToggleTileView.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        const { tileView, t } = this.props;
-        const translationKey = tileView
-            ? 'commands.tileViewExit'
-            : 'commands.tileViewEnter';
-        const qaId = tileView ? 'exit-tile-view' : 'enter-tile-view';
-
-        return (
-            <NavButton
-                active = { tileView }
-                label = { t(translationKey) }
-                onClick = { this._onToggleTileView }
-                qaId = { qaId }>
-                <BorderAllOutlined />
-            </NavButton>
-        );
-    }
-
-    /**
-     * Changes the current local audio mute state of a Spot-TV.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleTileView() {
-        if (this.props.changePending) {
+    const onClick = useCallback(() => {
+        if (changePending) {
             return;
         }
 
-        this.props.setTileView(!this.props.tileView);
-    }
+        onSetTileView(!tileView);
+    }, [ changePending, onSetTileView, tileView ]);
+
+    return (
+        <NavButton
+            active = { tileView }
+            label = { t(translationKey) }
+            onClick = { onClick }
+            qaId = { qaId }>
+            <BorderAllOutlined />
+        </NavButton>
+    );
 }
+
+TileViewButton.propTypes = {
+    changePending: PropTypes.bool,
+    onSetTileView: PropTypes.func,
+    t: PropTypes.func,
+    tileView: PropTypes.bool
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
@@ -103,7 +79,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
-        setTileView(tileView) {
+        onSetTileView(tileView) {
             dispatch(setTileView(tileView));
         }
     };
