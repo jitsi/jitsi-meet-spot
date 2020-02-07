@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -15,61 +15,35 @@ import { NavButton } from './../../nav';
 /**
  * A component for displaying and changing the current audio mute of a Spot-TV.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new instance
+ * is to be initialized.
+ * @returns {ReactElement}
  */
-export class AudioMuteButton extends React.Component {
-    static propTypes = {
-        audioMuted: PropTypes.bool,
-        changePending: PropTypes.bool,
-        setAudioMute: PropTypes.func,
-        t: PropTypes.func
-    };
-
-    /**
-     * Initializes a new {@code AudioMuteButton} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onToggleAudioMute = this._onToggleAudioMute.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        const { audioMuted, changePending } = this.props;
-
-        return (
-            <NavButton
-                active = { changePending ? audioMuted : !audioMuted }
-                className = { changePending ? 'pending' : '' }
-                onClick = { this._onToggleAudioMute }
-                qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' }>
-                { audioMuted ? <MicOffOutlined /> : <MicNoneOutlined /> }
-            </NavButton>
-        );
-    }
-
-    /**
-     * Changes the current local audio mute state of a Spot-TV.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleAudioMute() {
-        if (this.props.changePending) {
+export function AudioMuteButton({ audioMuted, changePending, onSetAudioMute }) {
+    const onClick = useCallback(() => {
+        if (changePending) {
             return;
         }
 
-        this.props.setAudioMute(!this.props.audioMuted);
-    }
+        onSetAudioMute(!audioMuted);
+    }, [ audioMuted, changePending, onSetAudioMute ]);
+
+    return (
+        <NavButton
+            active = { changePending ? audioMuted : !audioMuted }
+            className = { changePending ? 'pending' : '' }
+            onClick = { onClick }
+            qaId = { audioMuted ? 'unmute-audio' : 'mute-audio' }>
+            { audioMuted ? <MicOffOutlined /> : <MicNoneOutlined /> }
+        </NavButton>
+    );
 }
+
+AudioMuteButton.propTypes = {
+    audioMuted: PropTypes.bool,
+    changePending: PropTypes.bool,
+    onSetAudioMute: PropTypes.func
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
@@ -98,7 +72,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
-        setAudioMute(mute) {
+        onSetAudioMute(mute) {
             dispatch(setAudioMute(mute));
         }
     };
