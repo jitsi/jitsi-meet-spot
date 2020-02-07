@@ -17,7 +17,7 @@ describe('AudioMuteButton', () => {
         audioMuteButton = mount(
             <AudioMuteButton
                 audioMuted = { false }
-                setAudioMute = { setAudioMuteCallback }
+                onSetAudioMute = { setAudioMuteCallback }
                 t = { mockT } />
         );
     });
