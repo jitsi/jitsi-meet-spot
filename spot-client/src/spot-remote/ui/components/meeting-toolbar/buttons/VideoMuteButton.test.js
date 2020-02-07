@@ -16,7 +16,7 @@ describe('VideoMuteButton', () => {
 
         videoMuteButton = mount(
             <VideoMuteButton
-                setVideoMute = { setVideoMuteCallback }
+                onSetVideoMute = { setVideoMuteCallback }
                 t = { mockT }
                 videoMuted = { false } />
         );
