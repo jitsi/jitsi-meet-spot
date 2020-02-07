@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -15,61 +15,35 @@ import { NavButton } from './../../nav';
 /**
  * A component for displaying and changing the current video mute of a Spot-TV.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new instance
+ * is to be initialized.
+ * @returns {ReactElement}
  */
-export class VideoMuteButton extends React.Component {
-    static propTypes = {
-        changePending: PropTypes.bool,
-        setVideoMute: PropTypes.func,
-        t: PropTypes.func,
-        videoMuted: PropTypes.bool
-    };
-
-    /**
-     * Initializes a new {@code VideoMuteButton} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onToggleVideoMute = this._onToggleVideoMute.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        const { changePending, videoMuted } = this.props;
-
-        return (
-            <NavButton
-                active = { changePending ? videoMuted : !videoMuted }
-                className = { `video-mute-button ${changePending ? 'pending' : ''}` }
-                onClick = { this._onToggleVideoMute }
-                qaId = { videoMuted ? 'unmute-video' : 'mute-video' }>
-                { videoMuted ? <VideocamOffOutlined /> : <VideocamOutlined /> }
-            </NavButton>
-        );
-    }
-
-    /**
-     * Changes the current local video mute state of a Spot-TV.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleVideoMute() {
-        if (this.props.changePending) {
+export function VideoMuteButton({ changePending, onSetVideoMute, videoMuted }) {
+    const onClick = useCallback(() => {
+        if (changePending) {
             return;
         }
 
-        this.props.setVideoMute(!this.props.videoMuted);
-    }
+        onSetVideoMute(!videoMuted);
+    }, [ changePending, onSetVideoMute, videoMuted ]);
+
+    return (
+        <NavButton
+            active = { changePending ? videoMuted : !videoMuted }
+            className = { `video-mute-button ${changePending ? 'pending' : ''}` }
+            onClick = { onClick }
+            qaId = { videoMuted ? 'unmute-video' : 'mute-video' }>
+            { videoMuted ? <VideocamOffOutlined /> : <VideocamOutlined /> }
+        </NavButton>
+    );
 }
+
+VideoMuteButton.propTypes = {
+    changePending: PropTypes.bool,
+    onSetVideoMute: PropTypes.func,
+    videoMuted: PropTypes.bool
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
@@ -98,7 +72,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
-        setVideoMute(mute) {
+        onSetVideoMute(mute) {
             dispatch(setVideoMute(mute));
         }
     };
