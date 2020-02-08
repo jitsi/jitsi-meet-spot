@@ -1,6 +1,8 @@
 const isOnline = require('is-online');
 const EventEmitter = require('events');
 
+const { logger } = require('../logger');
+
 /**
  * Encapsulates logic to check if there is an active network connection. When
  * the connectivity changes, emits an update.
@@ -81,6 +83,8 @@ class OnlineDetector extends EventEmitter {
             OnlineDetector._isOnline()
                 .then(onlineStatus => {
                     if (onlineStatus !== this._lastOnlineStatus) {
+                        logger.info(`Network active status changed to: ${onlineStatus}`);
+
                         this._lastOnlineStatus = onlineStatus;
 
                         this.emit(OnlineDetector.ONLINE_STATUS_CHANGED, onlineStatus);
