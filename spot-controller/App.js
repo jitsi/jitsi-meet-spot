@@ -7,6 +7,7 @@ import { createStore } from 'redux';
 
 import LoadingScreen from './src/LoadingScreen';
 import { appMounted, appWillUnmount } from './src/app';
+import { logger } from './src/logger';
 import { RemoteControl } from './src/remote-control';
 import { SettingsMenu } from './src/settings-menu';
 import Setup from './src/setup';
@@ -177,7 +178,27 @@ export default class App extends React.Component {
     _onResetApp() {
         this._sideMenuRef.current.openMenu(false);
 
-        this._remoteControlViewRef.current.clearStorageAndReload();
+        this._remoteControlViewRef.current.clearStorage();
+
+        AsyncStorage.removeItem(STORAGE_KEY_RC_URL)
+            .catch(error => {
+                logger.error(`Failed to remove ${STORAGE_KEY_RC_URL} from storage`, error && error.message);
+            })
+            .then(() => {
+                // The purpose of doing a timeout is to give 'clearStorage' method some time to execute
+                // the injected javascript.
+                setTimeout(() => {
+                    // Reload if the URL hasn't changed
+                    if (this._remoteControlViewRef.current && this.state.remoteControlUrl === DEFAULT_URL) {
+                        this._remoteControlViewRef.current.reload();
+                    } else {
+                        this.setState({
+                            loading: false,
+                            remoteControlUrl: DEFAULT_URL
+                        });
+                    }
+                }, 1500);
+            });
     }
 
     /**

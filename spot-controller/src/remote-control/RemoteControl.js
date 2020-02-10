@@ -53,9 +53,20 @@ export default class RemoteControl extends React.Component {
      *
      * @returns {void}
      */
-    clearStorageAndReload() {
+    clearStorage() {
         if (this.state.active && this._webViewRef.current) {
-            this._webViewRef.current.clearStorageAndReload();
+            this._webViewRef.current.clearStorage();
+        }
+    }
+
+    /**
+     * Calls into the webview to reload the page.
+     *
+     * @returns {void}
+     */
+    reload() {
+        if (this.state.active && this._webViewRef.current) {
+            this._webViewRef.current.reload();
         }
     }
 

@@ -88,19 +88,24 @@ export default class SpotRemoteWebView extends React.PureComponent {
     }
 
     /**
-     * Clears all local storage, which would generally be used to save app
-     * state, and reloads the page.
+     * Clears all local storage, which would generally be used to save app state.
      *
      * @returns {void}
      */
-    clearStorageAndReload() {
-        if (this._ref) {
-            this._ref.injectJavaScript(`
-                localStorage.clear();
-                true;
-            `);
-            this._ref.reload();
-        }
+    clearStorage() {
+        this._ref && this._ref.injectJavaScript(`
+            localStorage.clear();
+            true;
+        `);
+    }
+
+    /**
+     * Reloads the page.
+     *
+     * @returns {void}
+     */
+    reload() {
+        this._ref && this._ref.reload();
     }
 
     /**
