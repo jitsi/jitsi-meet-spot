@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -16,57 +16,33 @@ import MoreModal from './MoreModal';
 /**
  * A component for displaying and hiding the {@link MoreModal}.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
  */
-export class MoreButton extends React.Component {
-    static propTypes = {
-        isMoreModalOpen: PropTypes.bool,
-        onHideModal: PropTypes.func,
-        onShowMoreModal: PropTypes.func,
-        t: PropTypes.func
-    };
-
-    /**
-     * Initializes a new {@code MoreButton} instance.
-     *
-     * @param {Object} props - The read-only properties with which the new
-     * instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-
-        this._onToggleMoreModal = this._onToggleMoreModal.bind(this);
-    }
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        return (
-            <NavButton
-                onClick = { this._onToggleMoreModal }
-                qaId = 'more'>
-                <MoreVert />
-            </NavButton>
-        );
-    }
-
-    /**
-     * Displays the {@code MoreModal} or hides the currently displayed modal.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToggleMoreModal() {
-        if (this.props.isMoreModalOpen) {
-            this.props.onHideModal();
+export function MoreButton({ isMoreModalOpen, onHideModal, onShowMoreModal }) {
+    const onClick = useCallback(() => {
+        if (isMoreModalOpen) {
+            onHideModal();
         } else {
-            this.props.onShowMoreModal();
+            onShowMoreModal();
         }
-    }
+    }, [ isMoreModalOpen, onHideModal, onShowMoreModal ]);
+
+    return (
+        <NavButton
+            onClick = { onClick }
+            qaId = 'more'>
+            <MoreVert />
+        </NavButton>
+    );
 }
+
+MoreButton.propTypes = {
+    isMoreModalOpen: PropTypes.bool,
+    onHideModal: PropTypes.func,
+    onShowMoreModal: PropTypes.func
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
