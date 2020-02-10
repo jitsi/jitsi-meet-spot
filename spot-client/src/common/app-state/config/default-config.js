@@ -287,6 +287,12 @@ export default {
         DTMF_THROTTLE_RATE: 500,
 
         /**
+         * When set to true the TV will automatically join a random meeting if a change to video image detected on
+         * the screensharing device occurs. In other words joins a meeting if the screensharing device gets connected.
+         */
+        ENABLE_AUTO_SS_JOIN: process.env.ENABLE_AUTO_SS_JOIN || false,
+
+        /**
          * Whether or the note feature for inviting participants to a conference
          * is available.
          */
