@@ -27,10 +27,10 @@
         "babel-eslint": "10.0.3",
         "devtron": "1.4.0",
         "dotenv": "8.1.0",
-        "electron": "5.0.3",
+        "electron": "8.0.0",
         "electron-builder": "20.43.0",
         "electron-notarize": "0.1.1",
-        "electron-rebuild": "1.8.5",
+        "electron-rebuild": "1.10.0",
         "eslint": "6.6.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#1.0.1",
         "eslint-plugin-flowtype": "4.4.1",
@@ -65,6 +65,6 @@
     },
     "optionalDependencies": {
         "win-audio": "2.0.2",
-        "xpc-connect": "github:jongear/xpc-connect#fadfcdb1e43ed8c53fef781e792c73050df3d02d"
+        "xpc-connect": "github:jongear/xpc-connect#e824a743e021d9013494866d5e17f7b6804d3eb7"
     }
 }
