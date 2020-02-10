@@ -19,6 +19,13 @@ import './src/notifications';
 const DEFAULT_URL = 'https://spot.8x8.vc';
 
 /**
+ * The async storage key which holds the remote control URL.
+ *
+ * @type {string}
+ */
+const STORAGE_KEY_RC_URL = 'remote-control-url';
+
+/**
  * The entry point of the InRoomController application. Essentially acts as a
  * router and global state store.
  *
@@ -58,7 +65,7 @@ export default class App extends React.Component {
     componentDidMount() {
         this.store.dispatch(appMounted());
 
-        AsyncStorage.getItem('remote-control-url')
+        AsyncStorage.getItem(STORAGE_KEY_RC_URL)
             .then(remoteControlUrl => {
                 this.setState({
                     loading: false,
@@ -104,7 +111,7 @@ export default class App extends React.Component {
      */
     _onSubmitEnteredUrl(remoteControlUrl) {
         AsyncStorage.setItem(
-            'remote-control-url',
+            STORAGE_KEY_RC_URL,
             remoteControlUrl
         ).then(() => {
             this.setState({
