@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import { ExpandLess, ExpandMore } from 'common/icons';
@@ -11,48 +11,29 @@ const TYPE_UP = 'up';
 
 /**
  * Implements a volume control button.
+ *
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
  */
-class VolumeButton extends React.Component {
-    static propTypes = {
-        _adjustVolume: PropTypes.func,
-        type: PropTypes.oneOf([ TYPE_DOWN, TYPE_UP ])
-    };
+function VolumeButton({ _adjustVolume, type }) {
+    const onClick = useCallback(() => {
+        _adjustVolume(type);
+    }, [ _adjustVolume, type ]);
 
-    /**
-     * Instantiates a new instance of the {@code Component}.
-     *
-     * @inheritdoc
-     */
-    constructor(props) {
-        super(props);
-
-        this._onClick = this._onClick.bind(this);
-    }
-
-    /**
-     * Implements {@code Component#render}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        return (
-            <button
-                className = 'button volume touch-highlight'
-                onClick = { this._onClick } >
-                { this.props.type === TYPE_UP ? <ExpandLess /> : <ExpandMore /> }
-            </button>
-        );
-    }
-
-    /**
-     * Callback to handle the onClick event of the button.
-     *
-     * @returns {void}
-     */
-    _onClick() {
-        this.props._adjustVolume(this.props.type);
-    }
+    return (
+        <button
+            className = 'button volume touch-highlight'
+            onClick = { onClick } >
+            { type === TYPE_UP ? <ExpandLess /> : <ExpandMore /> }
+        </button>
+    );
 }
+
+VolumeButton.propTypes = {
+    _adjustVolume: PropTypes.func,
+    type: PropTypes.oneOf([ TYPE_DOWN, TYPE_UP ])
+};
 
 /**
  * Creates actions which can update Redux state.
