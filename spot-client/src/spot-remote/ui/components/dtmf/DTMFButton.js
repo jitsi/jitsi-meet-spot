@@ -9,28 +9,23 @@ import { NavButton } from '../nav';
 /**
  * A component for accessing the DTMF dial pad.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new instance
+ * is to be initialized.
+ * @returns {ReactElement}
  */
-export class DTMFButton extends React.Component {
-    static propTypes = {
-        onClick: PropTypes.func,
-        t: PropTypes.func
-    };
-
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        return (
-            <NavButton
-                label = { this.props.t('commands.dialTones') }
-                onClick = { this.props.onClick }>
-                <Dialpad />
-            </NavButton>
-        );
-    }
+export function DTMFButton({ onClick, t }) {
+    return (
+        <NavButton
+            label = { t('commands.dialTones') }
+            onClick = { onClick }>
+            <Dialpad />
+        </NavButton>
+    );
 }
+
+DTMFButton.propTypes = {
+    onClick: PropTypes.func,
+    t: PropTypes.func
+};
 
 export default withTranslation()(DTMFButton);
