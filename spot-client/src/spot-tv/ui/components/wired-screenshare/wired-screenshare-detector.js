@@ -7,6 +7,7 @@ import {
     getWiredScreenshareInputIdleValue,
     getWiredScreenshareInputLabel,
     isDeviceConnectedForWiredScreensharing,
+    isScreensharingAutoJoinEnabled,
     setSpotTVState,
     setWiredScreenshareDeviceConnected,
     setWiredScreenshareInputAvailable
@@ -27,6 +28,7 @@ class WiredScreenshareDetector extends React.PureComponent {
         dispatch: PropTypes.func,
         hasScreenshareDevice: PropTypes.bool,
         inMeeting: PropTypes.string,
+        isScreensharingAutoJoinEnabled: PropTypes.bool,
         wiredScreenshareDevice: PropTypes.string,
         wiredScreenshareDeviceIdleValue: PropTypes.number
     };
@@ -135,6 +137,7 @@ class WiredScreenshareDetector extends React.PureComponent {
 
         const listHasSelectedScreenshareDevice = Boolean(deviceList.find(
             device => device.label === this.props.wiredScreenshareDevice));
+        const { isScreensharingAutoJoinEnabled: autoJoinEnabled } = this.props;
 
         this.props.dispatch(setSpotTVState({
             wiredScreensharingEnabled: listHasSelectedScreenshareDevice
@@ -143,7 +146,7 @@ class WiredScreenshareDetector extends React.PureComponent {
         this.props.dispatch(setWiredScreenshareInputAvailable(
             listHasSelectedScreenshareDevice));
 
-        if (listHasSelectedScreenshareDevice) {
+        if (listHasSelectedScreenshareDevice && autoJoinEnabled) {
             wiredScreenshareService.startListeningForConnection(
                 this.props.wiredScreenshareDevice,
                 this._onWiredScreenshareChange,
@@ -193,6 +196,7 @@ function mapStateToProps(state) {
     return {
         hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state),
         inMeeting,
+        isScreensharingAutoJoinEnabled: isScreensharingAutoJoinEnabled(state),
         wiredScreenshareDevice: getWiredScreenshareInputLabel(state),
         wiredScreenshareDeviceIdleValue:
             getWiredScreenshareInputIdleValue(state)

@@ -281,6 +281,17 @@ export function getZoomConfiguration(state) {
 }
 
 /**
+ * A selector which returns whether or not a random meeting will be automatically joined as soon as
+ * there's a video change detected in the wired screensharing device.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isScreensharingAutoJoinEnabled(state) {
+    return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_AUTO_SS_JOIN;
+}
+
+/**
  * A selector which returns whether or not to display on the remote an option
  * to invite people to a meeting.
  *
