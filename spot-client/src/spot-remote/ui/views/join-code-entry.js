@@ -94,6 +94,12 @@ export class JoinCodeEntry extends React.Component {
             code = queryParams.get('code');
         }
 
+        if (this._isInShareModeEnv() && isSpotControllerApp()) {
+            this.props.history.push(ROUTES.SHARE_HELP);
+
+            return;
+        }
+
         if (!code) {
             code = this.props.permanentPairingCode;
 

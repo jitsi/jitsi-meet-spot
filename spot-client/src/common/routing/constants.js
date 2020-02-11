@@ -12,6 +12,7 @@ export const ROUTES = {
     REMOTE_CONTROL: '/remote-control',
     SETUP: '/setup',
     SHARE: '/share',
+    SHARE_HELP: '/share-help',
     CONFLICT: '/conflict',
     UNSUPPORTED_BROWSER: '/unsupported-browser'
 };

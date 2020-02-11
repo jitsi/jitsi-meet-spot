@@ -36,6 +36,7 @@
         "exitElectronConfirm": "Are you sure you would like to exit {{ productName }}?",
         "pleaseWait": "Please wait",
         "reconnecting": "Reconnecting",
+        "noPermanentRemoteShare": "Sharing is not possible with this remote. Please reset the deployment URL.",
         "setup": "Currently in setup.",
         "tvConflict": "An instance of {{ roomName }} is already open. Please close all other instances and try again.",
         "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
