@@ -34,6 +34,7 @@
         "checkTvConnection": "Please make sure the associated {{ productName }} TV is currently running and connected to the Internet.",
         "exitElectronAskForPassword": "Enter passcode",
         "exitElectronConfirm": "Are you sure you would like to exit {{ productName }}?",
+        "noPermanentRemoteShare": "Sharing is not possible with this remote. Please reset the deployment URL.",
         "pleaseWait": "Please wait",
         "reconnecting": "Reconnecting",
         "setup": "Currently in setup.",

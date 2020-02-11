@@ -23,7 +23,13 @@ import {
     Notifications,
     ReconnectIndicator
 } from 'common/ui';
-import { Help, JoinCodeEntry, RemoteControl, ShareView } from 'spot-remote/ui';
+import {
+    Help,
+    JoinCodeEntry,
+    RemoteControl,
+    ShareHelp,
+    ShareView
+} from 'spot-remote/ui';
 import {
     Conflict,
     ExitElectron,
@@ -90,6 +96,7 @@ export class App extends React.Component {
             = this._renderUnsupportedBrowserView.bind(this);
 
         this._renderHelpView = this._renderHelpView.bind(this);
+        this._renderShareHelpView = this._renderShareHelpView.bind(this);
         this._renderShareView = this._renderShareView.bind(this);
         this._renderJoinCodeEntry = this._renderJoinCodeEntry.bind(this);
         this._renderRemoteControlView = this._renderRemoteControlView.bind(this);
@@ -209,6 +216,9 @@ export class App extends React.Component {
                             <Route
                                 path = { ROUTES.SHARE }
                                 render = { this._renderShareView } />
+                            <Route
+                                path = { ROUTES.SHARE_HELP }
+                                render = { this._renderShareHelpView } />
                             <Route
                                 path = { ROUTES.REMOTE_CONTROL }
                                 render = { this._renderRemoteControlView } />
@@ -374,6 +384,16 @@ export class App extends React.Component {
                 <FeedbackOpener />
             </SpotView>
         );
+    }
+
+    /**
+     * Returns the Spot-Remote view explaining how to use share mode.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderShareHelpView() {
+        return this._renderSpotRemoteViewWithHelp(ShareHelp);
     }
 
     /**

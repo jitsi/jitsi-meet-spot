@@ -48,6 +48,7 @@ allowedRoutes.push(ROUTES.SETUP);
 allowedRoutes.push(ROUTES.UNSUPPORTED_BROWSER);
 allowedRoutes.push(ROUTES.HOME);
 allowedRoutes.push(ROUTES.OLD_HOME);
+allowedRoutes.push(ROUTES.SHARE_HELP);
 
 // Spot Remote
 allowedRoutes.push(ROUTES.CODE);
