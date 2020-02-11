@@ -25,6 +25,8 @@ Pairing
 ------
 - [ ] Spot-Remote can pair with Spot-TV
 - [ ] Backend flow only: both temporary and permanent remotes can be paired
+- [ ] Backend flow only: Spot TV pairing code can be passed as a URL param (llpc)
+- [ ] Backend flow only: Permanent remote pairing screen can be skipped with URL param (skipPairRemote)
 
 Calendar
 ------
@@ -36,6 +38,7 @@ Setup
 - [ ] Selected devices are used in a meeting
 - [ ] Wired screensharing can be enabled and disabled
 - [ ] Room name is saved and displayed in the app and meeting
+- [ ] Device selection screen can be skipped with URL param (skipSelectMedia)
 
 Home
 ------
@@ -62,6 +65,7 @@ Spot In Meeting (with two remotes)
 - [ ] Spot-Remote submits feedback
 - [ ] Spot-TV and Spot-Remote proceed to Home after feedback submission
 - [ ] Spot-Remote can send touch tones (when dialing into a jitsi-meet call for example)
+- [ ] If native volume control is supported on the Spot-TV (URL param volumeControlSupported), volume control UI appears on the Spot-Remote
 
 Wireless SS
 ------
