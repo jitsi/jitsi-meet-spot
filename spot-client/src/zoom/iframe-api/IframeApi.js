@@ -1,6 +1,6 @@
 import { Transport, PostMessageTransportBackend } from 'js-utils/transport';
 import { commands, events } from 'common/zoom';
-import { sdk as ZoomSdk } from './../sdk';
+import { Sdk as ZoomSdk } from './../sdk';
 
 /**
  * Encapsulates logic for sending and receiving messages from the parent window.
