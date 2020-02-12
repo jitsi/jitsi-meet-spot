@@ -6,12 +6,7 @@ import {
 import { MiddlewareRegistry, StateListenerRegistry } from 'common/redux';
 import { logger } from 'common/logger';
 
-import ultrasoundService from './ultrasoundService';
-
-StateListenerRegistry.register(
-    state => getRemoteJoinCode(state),
-    joinCode => ultrasoundService.setMessage(joinCode)
-);
+import UltrasoundTransmitter from './UltrasoundTransmitter';
 
 MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
@@ -34,7 +29,19 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
             break;
         }
 
-        ultrasoundService.initialize(EMSCRIPTEN_PATH, MEM_INITIALIZER_PATH)
+        UltrasoundTransmitter.loadDependencies(EMSCRIPTEN_PATH, MEM_INITIALIZER_PATH)
+            .then(() => {
+                logger.log('ultrasound initialized successfully');
+
+                const ultrasoundTransmitter = new UltrasoundTransmitter();
+
+                ultrasoundTransmitter.setMessage(getRemoteJoinCode(getState()));
+
+                StateListenerRegistry.register(
+                    state => getRemoteJoinCode(state),
+                    joinCode => ultrasoundTransmitter.setMessage(joinCode)
+                );
+            })
             .catch(error => logger.error('Failed to initialize ultrasound', { error }));
 
         break;
