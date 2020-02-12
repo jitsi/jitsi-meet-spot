@@ -67,7 +67,9 @@ export default class UltrasoundTransmitter {
          */
         this._text = null;
 
-        this.sendMessage(initialText);
+        if (initialText) {
+            this.sendMessage(initialText);
+        }
     }
 
     /**
@@ -77,7 +79,7 @@ export default class UltrasoundTransmitter {
      */
     destroy() {
         this._transmitter.destroy();
-        clearTimeout(this._nextTransmissionTimeout);
+        this.stopSending();
         this._text = null;
     }
 
@@ -89,16 +91,17 @@ export default class UltrasoundTransmitter {
      * @returns {void}
      */
     sendMessage(text = '') {
-        const newText = (text || '').trim();
-        const oldText = this._text;
+        this._text = str2ab(text.trim());
 
-        this._text = newText ? str2ab(newText) : null;
-
-        if (!this._text) {
-            clearTimeout(this._nextTransmissionTimeout);
-        } else if (!this._nextTransmissionTimeout || !oldText) {
+        // Transmit immediately if not already transmitting.
+        if (!this._nextTransmissionTimeout) {
             this._transmit();
         }
+    }
+
+    stopSending() {
+        clearTimeout(this._nextTransmissionTimeout);
+        this._nextTransmissionTimeout = null;
     }
 
     /**

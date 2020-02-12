@@ -43,8 +43,8 @@ describe('UltrasoundTransmitter', () => {
         expect(transmitSpy.mock.calls.length).toBe(2);
     });
 
-    it('emits only when text is set', () => {
-        ultrasoundService.sendMessage('');
+    it('stops emitting when explicitly stopped', () => {
+        ultrasoundService.stopSending();
 
         jest.runOnlyPendingTimers();
 
