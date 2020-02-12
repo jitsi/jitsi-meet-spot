@@ -23,34 +23,18 @@ import { ParticipantCountObserver } from './observers';
 /**
  * Encapsulates interacting with Zoom meetings and its DOM.
  */
-class Sdk {
+export default class Sdk {
     /**
-     * Initializes a new instance.
-     */
-    constructor() {
-        this._audioMuteController = null;
-        this._modalController = null;
-        this._onStatusChange = null;
-        this._videoMuteController = null;
-
-        this._cachedJoinOptions = {};
-    }
-
-    /**
-     * Performs the bootstrapping required by the Zoom JS SDK.
+     * Calls to load any other files ZoomMtg needs and configures Zoom Mtg for use.
      *
-     * @param {Function} onStatusChange - Callback to invoke when there is
-     * a meeting-related update.
-     * @returns {Promise} Resolve if initialization was successful.
+     * @returns {void}
      */
-    initialize(onStatusChange) {
-        this._onStatusChange = onStatusChange;
-
+    static loadDependencies() {
         ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.0/lib', '/av');
         ZoomMtg.preLoadWasm();
         ZoomMtg.prepareJssdk();
 
-        const initPromise = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             ZoomMtg.init({
                 leaveUrl: '/dist/zoom-close.html',
                 isSupportAV: true,
@@ -62,19 +46,31 @@ class Sdk {
                 }
             });
         });
+    }
 
-        return initPromise.then(() => {
-            this._hangUpController = new HangUpController();
-            this._participantCountController = new ParticipantCountObserver(count => {
-                this._onStatusChange(events.PARTICIPANTS_COUNT_UPDATED, { count });
-            });
-            this._audioMuteController = new AudioMuteController(muted => {
-                this._onStatusChange(events.AUDIO_MUTE_UPDATED, { muted });
-            });
-            this._modalController = new ModalController();
-            this._videoMuteController = new VideoMuteController(muted => {
-                this._onStatusChange(events.VIDEO_MUTE_UPDATED, { muted });
-            });
+    /**
+     * Initializes a new instance.
+     *
+     * @param {Function} onStatusChange - Callback to invoke when there is
+     * a meeting-related update.
+     */
+    constructor(onStatusChange) {
+        this._cachedJoinOptions = {};
+
+        this._hangUpController = new HangUpController();
+
+        this._participantCountController = new ParticipantCountObserver(count => {
+            onStatusChange(events.PARTICIPANTS_COUNT_UPDATED, { count });
+        });
+
+        this._audioMuteController = new AudioMuteController(muted => {
+            onStatusChange(events.AUDIO_MUTE_UPDATED, { muted });
+        });
+
+        this._modalController = new ModalController();
+
+        this._videoMuteController = new VideoMuteController(muted => {
+            onStatusChange(events.VIDEO_MUTE_UPDATED, { muted });
         });
     }
 
@@ -192,5 +188,3 @@ class Sdk {
         });
     }
 }
-
-export default new Sdk();

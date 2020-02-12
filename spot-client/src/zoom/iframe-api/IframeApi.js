@@ -1,6 +1,6 @@
 import { Transport, PostMessageTransportBackend } from 'js-utils/transport';
 import { commands, events } from 'common/zoom';
-import { sdk } from './../sdk';
+import { sdk as ZoomSdk } from './../sdk';
 
 /**
  * Encapsulates logic for sending and receiving messages from the parent window.
@@ -13,8 +13,7 @@ export class IFrameApi {
      * page.
      */
     constructor(globalWindow) {
-        this.parent = globalWindow.parent;
-        this.acceptedOrigin = globalWindow.location.origin;
+        this._onMeetingStatusChange = this._onMeetingStatusChange.bind(this);
 
         globalWindow.addEventListener(
             'beforeunload', () => this._sendMessageToParent(events.MEETING_ENDED));
@@ -29,20 +28,24 @@ export class IFrameApi {
             })
         });
 
-        this._transport.on('event', ({ type, data }) => {
-            this._onMessageFromParent(type, data);
+        ZoomSdk.loadDependencies()
+            .then(() => {
+                this._zoomSdk = new ZoomSdk(this._onMeetingStatusChange);
 
-            return true;
-        });
+                this._transport.on('event', ({ type, data }) => {
+                    this._onMessageFromParent(type, data);
 
-        this._transport.on('request', (request, callback) => {
-            this._onRequestFromParent(request.type, callback);
+                    return true;
+                });
 
-            return true;
-        });
+                this._transport.on('request', (request, callback) => {
+                    this._onRequestFromParent(request.type, callback);
 
-        sdk.initialize(this._onMeetingStatusChange)
-            .then(() => this._sendMessageToParent(events.READY));
+                    return true;
+                });
+
+                this._sendMessageToParent(events.READY);
+            });
     }
 
     /**
@@ -58,17 +61,17 @@ export class IFrameApi {
     _onMessageFromParent(type, data) {
         switch (type) {
         case commands.AUDIO_MUTE: {
-            sdk.setAudioMute(data.mute);
+            this._zoomSdk.setAudioMute(data.mute);
             break;
         }
 
         case commands.HANG_UP: {
-            sdk.hangUp();
+            this._zoomSdk.hangUp();
             break;
         }
 
         case commands.JOIN: {
-            sdk.joinMeeting(data)
+            this._zoomSdk.joinMeeting(data)
                 .then(
                     () => this._sendMessageToParent(events.MEETING_JOIN_SUCCEEDED),
                     error => this._sendMessageToParent(events.MEETING_JOIN_FAILED, { error })
@@ -78,7 +81,7 @@ export class IFrameApi {
         }
 
         case commands.SUBMIT_PASSWORD: {
-            sdk.submitPassword(data.password)
+            this._zoomSdk.submitPassword(data.password)
                 .then(
                     () => this._sendMessageToParent(events.MEETING_JOIN_SUCCEEDED),
                     error => this._sendMessageToParent(events.MEETING_JOIN_FAILED, { error })
@@ -87,7 +90,7 @@ export class IFrameApi {
         }
 
         case commands.VIDEO_MUTE: {
-            sdk.setVideoMute(data.mute);
+            this._zoomSdk.setVideoMute(data.mute);
             break;
         }
         }
