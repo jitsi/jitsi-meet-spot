@@ -49,11 +49,7 @@ function createApplicationWindow() {
         }
     });
 
-    applicationWindow.webContents.on('crashed', () => {
-        if (!onlineDetector.getLastOnlineStatus()) {
-            return;
-        }
-
+    const loadCrashedPage = () => {
         // The setTimeout 0 is necessary clear the current stack or else
         // navigation will cause the main app to crash as well.
         setTimeout(() => {
@@ -65,6 +61,27 @@ function createApplicationWindow() {
                     );
                 });
         });
+    };
+
+    applicationWindow.webContents.on('crashed', () => {
+        if (!onlineDetector.getLastOnlineStatus()) {
+            return;
+        }
+
+        loadCrashedPage();
+    });
+
+    applicationWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+        logger.error('Failed to load', {
+            errorCode,
+            errorDescription
+        });
+
+        if (!onlineDetector.getLastOnlineStatus()) {
+            return;
+        }
+
+        loadCrashedPage();
     });
 
     applicationWindow.on('closed', () => {
