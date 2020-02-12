@@ -68,7 +68,7 @@ export default class UltrasoundTransmitter {
         this._text = null;
 
         if (initialText) {
-            this.sendMessage(initialText);
+            this.broadcast(initialText);
         }
     }
 
@@ -79,7 +79,7 @@ export default class UltrasoundTransmitter {
      */
     destroy() {
         this._transmitter.destroy();
-        this.stopSending();
+        this.stopBroadcasting();
         this._text = null;
     }
 
@@ -90,7 +90,7 @@ export default class UltrasoundTransmitter {
      * @param {string} text - The message to be transmitted via ultrasound.
      * @returns {void}
      */
-    sendMessage(text) {
+    broadcast(text) {
         this._text = str2ab(text.trim());
 
         // Transmit immediately if not already transmitting.
@@ -104,7 +104,7 @@ export default class UltrasoundTransmitter {
      *
      * @returns {void}
      */
-    stopSending() {
+    stopBroadcasting() {
         clearTimeout(this._nextTransmissionTimeout);
         this._nextTransmissionTimeout = null;
     }

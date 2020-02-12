@@ -40,9 +40,9 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
                     state => getRemoteJoinCode(state),
                     joinCode => {
                         if (joinCode) {
-                            ultrasoundTransmitter.sendMessage(joinCode);
+                            ultrasoundTransmitter.broadcast(joinCode);
                         } else {
-                            ultrasoundTransmitter.stopSending();
+                            ultrasoundTransmitter.stopBroadcasting();
                         }
                     }
                 );

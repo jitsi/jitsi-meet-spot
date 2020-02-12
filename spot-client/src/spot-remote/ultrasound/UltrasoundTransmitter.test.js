@@ -24,7 +24,7 @@ describe('UltrasoundTransmitter', () => {
         ultrasoundService = new UltrasoundTransmitter(transmitInterval);
         transmitSpy = jest.spyOn(ultrasoundService, '_transmit');
 
-        ultrasoundService.sendMessage('12345');
+        ultrasoundService.broadcast('12345');
     });
 
     afterEach(() => {
@@ -44,7 +44,7 @@ describe('UltrasoundTransmitter', () => {
     });
 
     it('stops emitting when explicitly stopped', () => {
-        ultrasoundService.stopSending();
+        ultrasoundService.stopBroadcasting();
 
         jest.runOnlyPendingTimers();
 
