@@ -29,12 +29,12 @@ export default class UltrasoundTransmitter {
     /**
      * Initializes a new {@code ultrasoundTransmitter} instance.
      *
-     * @param {number} transmissionDelay - The gap between emitting ultrasonic
-     * messages.
+     * @param {number} transmissionDelayMS - The gap between emitting ultrasonic
+     * messages, in milliseconds.
      * @param {string} initialText - Any text to start transmitting immediately
      * after instantiation.
      */
-    constructor(transmissionDelay = 3000, initialText) {
+    constructor(transmissionDelayMS = 3000, initialText) {
         /**
          * The instance plays ultrasound to transmit text and then enqueues
          * another transmission to be transmitted after a timeout. A timeout is
@@ -50,7 +50,7 @@ export default class UltrasoundTransmitter {
          *
          * @type {number}
          */
-        this._transmissionDelay = transmissionDelay;
+        this._transmissionDelayMS = transmissionDelayMS;
 
         /**
          * The instance of {@code Transmitter} used to emit ultrasound.
@@ -110,7 +110,7 @@ export default class UltrasoundTransmitter {
         clearTimeout(this._nextTransmissionTimeout);
 
         this._nextTransmissionTimeout
-            = setTimeout(() => this._transmit(), this._transmissionDelay);
+            = setTimeout(() => this._transmit(), this._transmissionDelayMS);
     }
 
     /**
