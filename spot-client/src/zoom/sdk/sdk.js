@@ -4,6 +4,12 @@
 // into the codebase.
 const API_SECRET = process.env.DEV_ONLY_ZOOM_API_SECRET;
 
+// Zoom assumes jQuery will be available globally. Use require to explicitly
+// set the order of loading between the two libraries.
+window.$ = window.jQuery = require('jquery');
+
+const { ZoomMtg } = require('@zoomus/websdk');
+
 import { errorCodes, events } from 'common/zoom';
 import {
     AudioMuteController,
@@ -39,16 +45,6 @@ class Sdk {
      */
     initialize(onStatusChange) {
         this._onStatusChange = onStatusChange;
-
-        // Zoom assumes jQuery will be available globally.
-        if (!window.jQuery || !window.$) {
-            const $ = require('jquery');
-
-            window.jQuery = $;
-            window.$ = $;
-        }
-
-        const ZoomMtg = this._getZoomMtg();
 
         ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.0/lib', '/av');
         ZoomMtg.preLoadWasm();
@@ -114,7 +110,6 @@ class Sdk {
             passWord = '',
             userName = 'Meeting Room'
         } = options;
-        const ZoomMtg = this._getZoomMtg();
 
         const meetingSignPromise
             = typeof API_SECRET === 'string'
@@ -195,19 +190,6 @@ class Sdk {
             ...this._cachedJoinOptions,
             passWord
         });
-    }
-
-    /**
-     * Retrieves the library provided by Zoom for creating the Zoom meeting. This
-     * is hidden behind a function so its loading can be delayed until other
-     * globals have been set.
-     *
-     * @returns {Object}
-     */
-    _getZoomMtg() {
-        const { ZoomMtg } = require('@zoomus/websdk');
-
-        return ZoomMtg;
     }
 }
 
