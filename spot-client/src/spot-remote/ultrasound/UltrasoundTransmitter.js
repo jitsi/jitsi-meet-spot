@@ -67,7 +67,7 @@ export default class UltrasoundTransmitter {
          */
         this._text = null;
 
-        this.setMessage(initialText);
+        this.sendMessage(initialText);
     }
 
     /**
@@ -88,7 +88,7 @@ export default class UltrasoundTransmitter {
      * @param {string} text - The message to be transmitted via ultrasound.
      * @returns {void}
      */
-    setMessage(text = '') {
+    sendMessage(text = '') {
         const newText = (text || '').trim();
         const oldText = this._text;
 

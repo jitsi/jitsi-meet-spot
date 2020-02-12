@@ -35,11 +35,11 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
 
                 const ultrasoundTransmitter = new UltrasoundTransmitter();
 
-                ultrasoundTransmitter.setMessage(getRemoteJoinCode(getState()));
+                ultrasoundTransmitter.sendMessage(getRemoteJoinCode(getState()));
 
                 StateListenerRegistry.register(
                     state => getRemoteJoinCode(state),
-                    joinCode => ultrasoundTransmitter.setMessage(joinCode)
+                    joinCode => ultrasoundTransmitter.sendMessage(joinCode)
                 );
             })
             .catch(error => logger.error('Failed to initialize ultrasound', { error }));
