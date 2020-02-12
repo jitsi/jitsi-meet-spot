@@ -90,7 +90,7 @@ export default class UltrasoundTransmitter {
      * @param {string} text - The message to be transmitted via ultrasound.
      * @returns {void}
      */
-    sendMessage(text = '') {
+    sendMessage(text) {
         this._text = str2ab(text.trim());
 
         // Transmit immediately if not already transmitting.
@@ -99,6 +99,11 @@ export default class UltrasoundTransmitter {
         }
     }
 
+    /**
+     * Stops ultrasound from being emitting the current message.
+     *
+     * @returns {void}
+     */
     stopSending() {
         clearTimeout(this._nextTransmissionTimeout);
         this._nextTransmissionTimeout = null;
