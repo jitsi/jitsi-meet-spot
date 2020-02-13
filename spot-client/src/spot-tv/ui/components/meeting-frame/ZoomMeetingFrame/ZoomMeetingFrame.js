@@ -57,8 +57,6 @@ export class ZoomMeetingFrame extends AbstractMeetingFrame {
             meetingSignService: this.props.meetingSignService,
             onMeetingUpdateReceived: this._onMeetingUpdateReceived
         });
-
-        this._zoomIframeManager.load();
     }
 
     /**
