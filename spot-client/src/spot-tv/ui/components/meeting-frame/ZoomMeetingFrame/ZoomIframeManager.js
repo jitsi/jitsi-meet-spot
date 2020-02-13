@@ -24,8 +24,28 @@ export default class ZoomIframeManager {
     constructor(options) {
         this._options = options;
 
-        this._iframe = null;
         this._transport = null;
+
+        this._iframe = document.createElement('iframe');
+        this._iframe.src = 'dist/zoom-meeting.html';
+        this._iframe.classList.add('zoom-frame');
+
+        this._options.iframeTarget.appendChild(this._iframe);
+
+        this._transport = new Transport({
+            backend: new PostMessageTransportBackend({
+                postisOptions: {
+                    scope: 'spot_zoom_integration',
+                    window: this._iframe.contentWindow
+                }
+            })
+        });
+
+        this._transport.on('event', ({ type, data }) => {
+            this._onMeetingUpdateReceived(type, data);
+
+            return true;
+        });
     }
 
     /**
@@ -35,13 +55,8 @@ export default class ZoomIframeManager {
      * @returns {void}
      */
     destroy() {
-        if (this._iframe) {
-            this._iframe.remove();
-        }
-
-        if (this._transport) {
-            this._transport.dispose();
-        }
+        this._iframe.remove();
+        this._transport.dispose();
     }
 
     /**
@@ -70,39 +85,6 @@ export default class ZoomIframeManager {
      */
     hangUp() {
         this._sendCommand(commands.HANG_UP);
-    }
-
-    /**
-     * Instantiates iframe to display of the Zoom meeting.
-     *
-     * @private
-     * @returns {void}
-     */
-    load() {
-        if (this._iframe) {
-            return;
-        }
-
-        this._iframe = document.createElement('iframe');
-        this._iframe.src = 'dist/zoom-meeting.html';
-        this._iframe.classList.add('zoom-frame');
-
-        this._options.iframeTarget.appendChild(this._iframe);
-
-        this._transport = new Transport({
-            backend: new PostMessageTransportBackend({
-                postisOptions: {
-                    scope: 'spot_zoom_integration',
-                    window: this._iframe.contentWindow
-                }
-            })
-        });
-
-        this._transport.on('event', ({ type, data }) => {
-            this._onMeetingUpdateReceived(type, data);
-
-            return true;
-        });
     }
 
     /**
