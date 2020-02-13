@@ -100,6 +100,8 @@ class NativeController extends Emitter {
             args
         };
 
+        logger.info(`Sending native command ${JSON.stringify(commandObject)}`);
+
         if (this.ipcRenderer) {
             this.ipcRenderer.send('native-command', commandObject);
         } else if (this.messageSender) {
