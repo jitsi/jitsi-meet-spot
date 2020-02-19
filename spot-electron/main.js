@@ -38,7 +38,7 @@ app.on('ready', () => {
     console.info(`Checking write access to the app path: ${appPath}`);
 
     // FIXME work in progress - works on Mac only
-    execute(`test -w ${appPath}`).then(() => {
+    execute(`test -w "${appPath}"`).then(() => {
         createApplicationWindow();
     }, error => {
         console.error('The app path is not writeable', { error });
