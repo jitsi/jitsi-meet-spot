@@ -64,6 +64,7 @@ function createApplicationWindow() {
     };
 
     applicationWindow.webContents.on('crashed', () => {
+        logger.error('On crashed');
         if (!onlineDetector.getLastOnlineStatus()) {
             return;
         }
@@ -95,6 +96,7 @@ function createApplicationWindow() {
     applicationWindow.loadURL(defaultSpotURL);
 
     onlineDetector.start();
+    logger.info(`is online: ${onlineDetector.getLastOnlineStatus()}`);
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 }
 

@@ -82,6 +82,7 @@ class OnlineDetector extends EventEmitter {
         this._nextOnlineCheck = setTimeout(() => {
             OnlineDetector._isOnline()
                 .then(onlineStatus => {
+
                     if (onlineStatus !== this._lastOnlineStatus) {
                         logger.info(`Network active status changed to: ${onlineStatus}`);
 
@@ -97,6 +98,10 @@ class OnlineDetector extends EventEmitter {
         }, this._onlineCheckInterval);
     }
 }
+
+isOnline().then(onlineStatus => {
+    console.info(`IS ONLINE: ${onlineStatus}`);
+});
 
 OnlineDetector._isOnline = isOnline;
 OnlineDetector.ONLINE_STATUS_CHANGED = 'online-status-changed';
