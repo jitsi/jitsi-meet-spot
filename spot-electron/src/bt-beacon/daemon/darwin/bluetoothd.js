@@ -111,7 +111,7 @@ class BluetoothD {
      */
     setAdvertisingStatus(status) {
         this.advertisingStatus = status;
-        logger.info('BluetoothD advertising', this.advertisingStatus ? 'started' : 'stopped');
+        logger.info(`BluetoothD advertising: ${this.advertisingStatus}`);
         if (typeof this.advertisingStatusUpdatedCallback === 'function') {
             this.advertisingStatusUpdatedCallback(status);
             this.advertisingStatusUpdatedCallback = undefined;
