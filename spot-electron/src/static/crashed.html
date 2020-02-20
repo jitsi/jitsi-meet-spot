@@ -7,6 +7,14 @@
     <div class = "error-message">
         <h1>We encountered an error.</h1>
         <div>Your application will automatically restart soon.</div>
+        <div class = 'message-footer'>
+            <button class = 'button' id = 'exit'>Exit Application</button>
+        </div>
     </div>
+    <script>
+        document.getElementById('exit').addEventListener('click', function onExitClick() {
+            window.require('electron').ipcRenderer.send('native-command', { command: 'exitApp' });
+        });
+    </script>
 </body>
 </html>
