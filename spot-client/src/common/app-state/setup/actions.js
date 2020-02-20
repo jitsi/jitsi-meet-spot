@@ -3,6 +3,7 @@ import {
     SET_AVATAR_URL,
     SET_CUSTOMER_ID,
     SET_DISPLAY_NAME,
+    SET_IS_PERMANENT_REMOTE_PAIRED,
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
@@ -73,6 +74,20 @@ export function setJwt(jwt) {
     return {
         type: SET_JWT,
         jwt
+    };
+}
+
+/**
+ * Sets whether or not any permanent Spot Remote is connected to the Spot TV.
+ *
+ * @param {boolean} isPermanentRemotePaired - Whether or not a permanent remote
+ * is paired.
+ * @returns {Object}
+ */
+export function setIsPermanentRemotePaired(isPermanentRemotePaired) {
+    return {
+        type: SET_IS_PERMANENT_REMOTE_PAIRED,
+        isPermanentRemotePaired
     };
 }
 

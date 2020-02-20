@@ -5,7 +5,7 @@ import { logger } from 'common/logger';
 import { generateRandomString } from 'common/utils';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
-import { MESSAGES, SERVICE_UPDATES } from './constants';
+import { CLIENT_TYPES, MESSAGES, SERVICE_UPDATES } from './constants';
 import P2PSignalingServer from './P2PSignalingServer';
 
 /**
@@ -153,6 +153,39 @@ export class RemoteControlServer extends BaseRemoteControlService {
         logger.log('Kicking out remote control', { jid });
 
         return this.xmppConnection.kick(jid);
+    }
+
+    /**
+     * Disconnects temporary remote controls.
+     *
+     * @returns {Array<Promise>} Promises for kicking out each temporary remote
+     * control.
+     */
+    disconnectAllTemporaryRemotes() {
+        return Array.from(this.xmppConnection.getParticipantJids())
+            .reduce((acc, jid) => {
+                if (this._getTypeFromResource(jid) === CLIENT_TYPES.SPOT_REMOTE_TEMPORARY) {
+                    acc.push(this.disconnectRemoteControl(jid));
+                }
+
+                return acc;
+            }, []);
+    }
+
+    /**
+     * Returns how many permanent remotes are currently connected via XMPP.
+     *
+     * @returns {number} The count of permanent remotes connected to the TV.
+     */
+    getPermanentRemoteCount() {
+        return Array.from(this.xmppConnection.getParticipantJids())
+            .reduce((acc, jid) => {
+                if (this._getTypeFromResource(jid) === CLIENT_TYPES.SPOT_REMOTE_PERMANENT) {
+                    return acc + 1;
+                }
+
+                return acc;
+            }, 0);
     }
 
     /**
@@ -385,7 +418,8 @@ export class RemoteControlServer extends BaseRemoteControlService {
             this.emit(
                 SERVICE_UPDATES.CLIENT_LEFT,
                 {
-                    id: from
+                    id: from,
+                    type: this._getTypeFromResource(from)
                 }
             );
 
