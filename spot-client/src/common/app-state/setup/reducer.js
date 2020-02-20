@@ -2,6 +2,7 @@ import {
     SETUP_COMPLETED,
     SET_AVATAR_URL,
     SET_DISPLAY_NAME,
+    SET_IS_PERMANENT_REMOTE_PAIRED,
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
@@ -12,6 +13,7 @@ const DEFAULT_STATE = {
     avatarUrl: '',
     completed: false,
     displayName: undefined,
+    isPermanentRemotePaired: false,
     isSpot: false,
     preferredCamera: undefined,
     preferredMic: undefined,
@@ -45,6 +47,12 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             displayName: action.displayName
+        };
+
+    case SET_IS_PERMANENT_REMOTE_PAIRED:
+        return {
+            ...state,
+            isPermanentRemotePaired: action.isPermanentRemotePaired
         };
 
     case SET_IS_SPOT:

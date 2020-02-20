@@ -6,6 +6,8 @@ export const SET_CUSTOMER_ID = 'SET_CUSTOMER_ID';
 
 export const SET_DISPLAY_NAME = 'SET_DISPLAY_NAME';
 
+export const SET_IS_PERMANENT_REMOTE_PAIRED = 'SET_IS_PERMANENT_REMOTE_PAIRED';
+
 export const SET_IS_SPOT = 'SET_IS_SPOT';
 
 export const SET_JWT = 'SET_JWT_TOKEN';

@@ -1,18 +1,15 @@
 import {
     CREATE_CONNECTION,
-    addPairedRemote,
-    clearAllPairedRemotes,
     destroyConnection,
     getFixedCodeSegment,
     getJoinCodeRefreshRate,
     getMeetingDomainsWhitelist,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
-    getTemporaryRemoteIds,
     reconnectScheduleUpdate,
-    removePairedRemote,
     setCustomerId,
     setDisplayName,
+    setIsPermanentRemotePaired,
     setRemoteJoinCode,
     setRoomId,
     setJwt,
@@ -24,6 +21,7 @@ import { isBackendEnabled, setPermanentPairingCode } from 'common/backend';
 import { history } from 'common/history';
 import { logger } from 'common/logger';
 import {
+    CLIENT_TYPES,
     SERVICE_UPDATES,
     remoteControlServer
 } from 'common/remote-control';
@@ -191,7 +189,9 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 type
             });
 
-            dispatch(addPairedRemote(id, type));
+            if (type === CLIENT_TYPES.SPOT_REMOTE_PERMANENT) {
+                dispatch(setIsPermanentRemotePaired(true));
+            }
         }
 
         /**
@@ -201,10 +201,16 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @param {Object} remote - Identifying about the Spot-Remote.
          * @returns {void}
          */
-        function onRemoteDisconnected({ id }) {
-            logger.log('Detected remote control disconnect', { id });
+        function onRemoteDisconnected({ id, type }) {
+            logger.log('Detected remote control disconnect', {
+                id,
+                type
+            });
 
-            dispatch(removePairedRemote(id));
+            if (type === CLIENT_TYPES.SPOT_REMOTE_PERMANENT
+                && !remoteControlServer.getPermanentRemoteCount()) {
+                dispatch(setIsPermanentRemotePaired(false));
+            }
         }
 
         /**
@@ -256,7 +262,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
 
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
-            dispatch(clearAllPairedRemotes());
+            dispatch(setIsPermanentRemotePaired(false));
 
             if (usingPermanentPairingCode && !isRecoverableError) {
                 logger.log('Clearing permanent pairing code on unrecoverable disconnect');
@@ -384,12 +390,9 @@ function createConnection(state, backend, permanentPairingCode) {
  * removal requests were successfully sent.
  */
 export function disconnectAllTemporaryRemotes() {
-    return (dispatch, getState) => {
-        const disconnectPromises = getTemporaryRemoteIds(getState())
-            .map(remoteId => remoteControlServer.disconnectRemoteControl(remoteId));
-
-        return Promise.all(disconnectPromises);
-    };
+    return () => Promise.all(
+        remoteControlServer.disconnectAllTemporaryRemotes()
+    );
 }
 
 /**
@@ -412,7 +415,7 @@ export function disconnectSpotTvRemoteControl(event) {
             dispatch(reconnectScheduleUpdate(false));
             dispatch(destroyConnection());
             dispatch(setRemoteJoinCode(''));
-            dispatch(clearAllPairedRemotes());
+            dispatch(setIsPermanentRemotePaired(false));
         };
 
         return remoteControlServer.disconnect(event)

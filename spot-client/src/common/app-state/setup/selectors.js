@@ -84,6 +84,16 @@ export function getTenant(state) {
 }
 
 /**
+ * Returns whether or not any permanent Spot Remote is currently connected.
+ *
+ * @param {Object} state - The Redux store.
+ * @returns {boolean}
+ */
+export function isPermanentRemotePaired(state) {
+    return state.setup.isPermanentRemotePaired;
+}
+
+/**
  * A selector which returns whether or not the application has been configured.
  *
  * @param {Object} state - The Redux state.

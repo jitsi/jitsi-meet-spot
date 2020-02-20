@@ -16,8 +16,8 @@ describe('PairRemote', () => {
         pairRemote = mount(
             <PairRemote
                 code = { MOCK_PAIR_CODE }
+                isPairingComplete = { false }
                 onSuccess = { onSuccessSpy }
-                permanentRemotesCount = { 0 }
                 t = { mockT } />
         );
     });
@@ -25,7 +25,7 @@ describe('PairRemote', () => {
     it('proceeds automatically when a remote is paired', () => {
         expect(onSuccessSpy).not.toHaveBeenCalled();
 
-        pairRemote.setProps({ permanentRemotesCount: 1 });
+        pairRemote.setProps({ isPairingComplete: true });
 
         expect(onSuccessSpy).toHaveBeenCalled();
     });

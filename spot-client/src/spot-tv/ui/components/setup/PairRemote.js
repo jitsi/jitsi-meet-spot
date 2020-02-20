@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { getPermanentPairedRemotesCount } from 'common/app-state';
+import { isPermanentRemotePaired } from 'common/app-state';
 import { Button } from 'common/ui';
 
 import { getLongLivedPairingCodeInfo } from '../../../backend';
@@ -12,64 +12,54 @@ import { getLongLivedPairingCodeInfo } from '../../../backend';
  * Displays a setup step showing a join code for a Spot-Remote to use to connect
  * to a Spot-TV.
  *
- * @extends React.Component
+ * @param {Object} props - The read-only properties with which the new
+ * instance is to be initialized.
+ * @returns {ReactElement}
  */
-export class PairRemote extends React.Component {
-    static propTypes = {
-        code: PropTypes.string,
-        onSuccess: PropTypes.func,
-        permanentRemotesCount: PropTypes.number,
-        t: PropTypes.func
-    };
+export function PairRemote(props) {
+    const {
+        code,
+        isPairingComplete,
+        onSuccess,
+        t
+    } = props;
 
-    /**
-     * Completes this setup step if a permanent remote has been paired.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate(prevProps) {
-        if (this.props.permanentRemotesCount > prevProps.permanentRemotesCount) {
-            this.props.onSuccess();
+    useEffect(() => {
+        if (isPairingComplete) {
+            onSuccess();
         }
-    }
+    });
 
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     * @returns {ReactElement}
-     */
-    render() {
-        const {
-            code,
-            onSuccess,
-            t
-        } = this.props;
-
-        return (
-            <div className = 'spot-setup pair-remote'>
-                <div className = 'setup-title'>
-                    { t('setup.pair') }
+    return (
+        <div className = 'spot-setup pair-remote'>
+            <div className = 'setup-title'>
+                { t('setup.pair') }
+            </div>
+            <div className = 'setup-content'>
+                <div className = 'description'>
+                    { t('setup.pairAsk') }
                 </div>
-                <div className = 'setup-content'>
-                    <div className = 'description'>
-                        { t('setup.pairAsk') }
-                    </div>
-                    <div className = 'join-code'>
-                        { code }
-                    </div>
-                </div>
-                <div className = 'setup-buttons'>
-                    <Button
-                        appearance = 'subtle'
-                        onClick = { onSuccess }>
-                        { t('buttons.skip') }
-                    </Button>
+                <div className = 'join-code'>
+                    { code }
                 </div>
             </div>
-        );
-    }
+            <div className = 'setup-buttons'>
+                <Button
+                    appearance = 'subtle'
+                    onClick = { onSuccess }>
+                    { t('buttons.skip') }
+                </Button>
+            </div>
+        </div>
+    );
 }
+
+PairRemote.propTypes = {
+    code: PropTypes.string,
+    isPairingComplete: PropTypes.bool,
+    onSuccess: PropTypes.func,
+    t: PropTypes.func
+};
 
 /**
  * Selects parts of the Redux state to pass in with the props of
@@ -82,7 +72,7 @@ export class PairRemote extends React.Component {
 function mapStateToProps(state) {
     return {
         code: (getLongLivedPairingCodeInfo(state) || {}).code,
-        permanentRemotesCount: getPermanentPairedRemotesCount(state)
+        isPairingComplete: isPermanentRemotePaired(state)
     };
 }
 

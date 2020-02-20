@@ -7,7 +7,6 @@ import deviceId from './device-id/reducer';
 import feedback from './feedback/reducer';
 import modal from './modal/reducer';
 import notifications from './notifications/reducer';
-import pairedRemotes from './paired-remotes/reducer';
 import remoteControlService from './remote-control-service/reducer';
 import route from './route/reducer';
 import setup from './setup/reducer';
@@ -22,7 +21,6 @@ const reducers = {
     feedback,
     modal,
     notifications,
-    pairedRemotes,
     remoteControlService,
     route,
     setup,
@@ -39,7 +37,6 @@ export * from './device-id';
 export * from './feedback/actions';
 export * from './modal/actions';
 export * from './notifications/actions';
-export * from './paired-remotes/actions';
 export * from './remote-control-service/actions';
 export * from './route/actions';
 export * from './setup/actions';
@@ -59,7 +56,6 @@ export * from './calendars/selectors';
 export * from './config/selectors';
 export * from './feedback/selectors';
 export * from './notifications/selectors';
-export * from './paired-remotes/selectors';
 export * from './remote-control-service/selectors';
 export * from './modal/selectors';
 export * from './route/selectors';

@@ -681,6 +681,15 @@ export default class XmppConnection extends Emitter {
     }
 
     /**
+     * Returns the list of all known participants current connected.
+     *
+     * @returns {Set<string>}
+     */
+    getParticipantJids() {
+        return new Set(this._participants);
+    }
+
+    /**
      * Removes a specified MUC participant.
      *
      * @param {string} jid - The full jid of the participant to be removed.
