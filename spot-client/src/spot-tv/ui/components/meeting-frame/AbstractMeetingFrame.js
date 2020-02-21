@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES } from 'common/remote-control';
-import { MESSAGE_TYPES, nativeController } from 'spot-tv/native-functions/native-controller';
+import { MESSAGE_TYPES, nativeController } from 'spot-tv/native-functions';
 
 import { ApiHealthCheck } from './ApiHealthCheck';
 

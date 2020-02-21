@@ -9,7 +9,7 @@ import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
 
-import { adjustVolume } from '../../../../native-functions';
+import { nativeCommands } from '../../../../native-functions';
 
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
 
@@ -338,7 +338,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
     _onMeetingCommand(type, data) {
         switch (type) {
         case COMMANDS.ADJUST_VOLUME:
-            adjustVolume(data.direction);
+            nativeCommands.sendAdjustVolume(data.direction);
             break;
 
         case COMMANDS.HANG_UP:

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Cancel } from 'common/icons';
 
-import { exitApp } from '../../../native-functions';
+import { nativeCommands } from '../../../native-functions';
 
 import ExitVerification from './ExitVerification';
 
@@ -39,7 +39,7 @@ export default class ExitElectron extends React.Component {
             return (
                 <ExitVerification
                     onCancel = { this._onHideOverlay }
-                    onVerification = { exitApp } />
+                    onVerification = { this._onExit } />
             );
         }
 
@@ -50,6 +50,16 @@ export default class ExitElectron extends React.Component {
                 <Cancel />
             </a>
         );
+    }
+
+
+    /**
+     * Instructs the electron app to exit.
+     *
+     * @returns {void}
+     */
+    _onExit() {
+        nativeCommands.sendExitApp();
     }
 
     /**

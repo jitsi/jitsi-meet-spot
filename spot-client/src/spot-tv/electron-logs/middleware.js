@@ -2,7 +2,7 @@ import { BOOTSTRAP_STARTED } from 'common/app-state/bootstrap';
 import { logger } from 'common/logger';
 import { MiddlewareRegistry } from 'common/redux';
 
-import { nativeController } from '../native-functions/native-controller';
+import { nativeController } from '../native-functions';
 
 /**
  * The redux middleware for the electron logs tunnel.
