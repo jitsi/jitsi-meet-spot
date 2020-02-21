@@ -7,6 +7,8 @@ import { clearPersistedState } from 'common/utils';
 
 import { Button } from 'common/ui/components/button';
 
+import { nativeCommands } from 'spot-tv/native-functions';
+
 /**
  * Displays a menu option, with confirmation, to clear all saved Spot state,
  * including any spot-tv setup.
@@ -25,6 +27,7 @@ export function ResetConfirmation({ t }) {
         setIsResetting(true);
 
         clearPersistedState();
+        nativeCommands.sendResetApp();
 
         setTimeout(() => {
             logger.log('reset reloading application');

@@ -8,6 +8,7 @@ import { CodeInput, LoadingIcon } from 'common/ui';
 import { logger } from 'common/logger';
 
 import { pairWithBackend } from '../../../app-state';
+import { nativeCommands } from '../../../native-functions';
 
 /**
  * Displays the setup step for Spot-TV to enter a code to create a connection
@@ -127,6 +128,7 @@ export class SyncWithBackend extends React.Component {
 
                 logger.error('connectSpotTvToBackend failed', { error });
                 this.props.onSyncError(error);
+                nativeCommands.sendBackendSyncNeeded(true);
             }
         );
     }
@@ -145,6 +147,7 @@ export class SyncWithBackend extends React.Component {
             this.setState({
                 autoSyncing: false
             });
+            nativeCommands.sendBackendSyncNeeded(false);
         } else {
             this.props.onStartAutoSync();
             this._sync(llpc);

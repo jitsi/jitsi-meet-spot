@@ -3,6 +3,7 @@ import { SPOT_TV_SET_REMOTE_JOIN_CODE, SPOT_TV_SET_STATE } from 'common/app-stat
 import { BOOTSTRAP_COMPLETE } from 'common/app-state/bootstrap';
 import { MiddlewareRegistry } from 'common/redux';
 import { SET_LONG_LIVED_PAIRING_CODE_INFO, getLongLivedPairingCodeInfo } from 'spot-tv/backend';
+import nativeCommands from './native-commands';
 import nativeController from './native-controller';
 
 /**
@@ -17,15 +18,13 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
     switch (action.type) {
     case BOOTSTRAP_COMPLETE:
         nativeController._sendSpotClientReady();
-        sendLongLivedPairingCode(getLongLivedPairingCodeInfo(getState()));
+        nativeCommands.sendUpdateLongLivedPairingCode((getLongLivedPairingCodeInfo(getState()) || {}).code);
         break;
     case SET_LONG_LIVED_PAIRING_CODE_INFO:
-        sendLongLivedPairingCode(action.longLivedPairingCodeInfo);
+        nativeCommands.sendUpdateLongLivedPairingCode((action.longLivedPairingCodeInfo || {}).code);
         break;
     case SPOT_TV_SET_REMOTE_JOIN_CODE:
-        nativeController.sendMessage('updateJoinCode', {
-            remoteJoinCode: action.remoteJoinCode
-        });
+        nativeCommands.sendUpdateRemoteJoinCode(action.remoteJoinCode);
         break;
     case SPOT_TV_SET_STATE:
         updateAPIMutedState(action.newState);
@@ -36,18 +35,6 @@ MiddlewareRegistry.register(({ getState }) => next => action => {
 });
 
 /**
- * Sends the long lived pairing code through the external API when updated.
- *
- * @param {Object} codeInfo - The pairing code info we have on record.
- * @returns {void}
- */
-function sendLongLivedPairingCode(codeInfo) {
-    nativeController.sendMessage('updateLongLivedPairingCode', {
-        longLivedPairingCode: (codeInfo || {}).code
-    });
-}
-
-/**
  * Sends part of the new state through the external API if necessary.
  *
  * @param {Object} newState - The new state.
@@ -56,6 +43,6 @@ function sendLongLivedPairingCode(codeInfo) {
 function updateAPIMutedState(newState) {
     const { audioMuted, videoMuted } = newState;
 
-    audioMuted !== undefined && nativeController.sendMessage('audioMutedState', audioMuted);
-    videoMuted !== undefined && nativeController.sendMessage('videoMutedState', videoMuted);
+    audioMuted !== undefined && nativeCommands.sendUpdateMutedState('audio', audioMuted);
+    videoMuted !== undefined && nativeCommands.sendUpdateMutedState('video', videoMuted);
 }
