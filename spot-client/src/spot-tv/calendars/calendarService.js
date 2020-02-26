@@ -138,6 +138,7 @@ export class CalendarService extends Emitter {
     setConfig(config, knownDomains) {
         this.config = config;
         this.knownDomains = knownDomains;
+        this.pollingInterval = config.POLLING_INTERVAL || 60 * 1000;
     }
 
     /**
@@ -156,6 +157,9 @@ export class CalendarService extends Emitter {
         this._currentCalendarPollingOptions = { ...options };
 
         this.stopPollingForEvents();
+
+        logger.info('Calendar start polling', { interval: this.pollingInterval });
+
         this._pollForEvents(this._currentCalendarPollingOptions);
     }
 
@@ -226,7 +230,7 @@ export class CalendarService extends Emitter {
                 }
 
                 // Try again in 1 minute
-                this._enqueueNextCalendarPoll(options, 1000 * 60);
+                this._enqueueNextCalendarPoll(options, this.pollingInterval);
             }, error => {
                 if (!this._pollingOptionsAreEqual(options)) {
                     return;

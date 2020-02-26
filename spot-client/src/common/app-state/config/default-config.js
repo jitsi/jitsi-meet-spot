@@ -25,6 +25,10 @@ export default {
      */
     CALENDARS: {
 
+        BACKEND: {
+            SERVICE_URL: process.env.CALENDAR_SERVICE_URL || ''
+        },
+
         /**
          * The configuration specifically for Google Calendar integration.
          */
@@ -54,9 +58,14 @@ export default {
              */
             CLIENT_ID: process.env.OUTLOOK_CLIENT_ID || ''
         },
-        BACKEND: {
-            SERVICE_URL: process.env.CALENDAR_SERVICE_URL || ''
-        }
+
+        /**
+         * How often the calendar service should be checking for calendar updates.
+         * A number given in milliseconds.
+         *
+         * @type {number}
+         */
+        POLLING_INTERVAL: Number(process.env.CALENDAR_POLLING_INTERVAL) || 60 * 1000
     },
 
     /**
