@@ -19,6 +19,18 @@
             "provider": "github",
             "private": false,
             "publishAutoUpdate": true
+        },
+        "win": {
+            "extraFiles": [
+                {
+                    "from": "C:/Windows/System32/vcruntime140.dll",
+                    "to": "."
+                },
+                {
+                    "from": "C:/Windows/System32/vcruntime140_1.dll",
+                    "to": "."
+                }
+            ]
         }
     },
     "description": "",
@@ -63,6 +75,8 @@
         "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
+        "@jitsi/windows.devices.bluetooth.advertisement": "0.2.0",
+        "@jitsi/windows.storage.streams": "0.2.0",
         "win-audio": "2.0.2",
         "xpc-connect": "github:jongear/xpc-connect#e824a743e021d9013494866d5e17f7b6804d3eb7"
     }

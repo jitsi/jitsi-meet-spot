@@ -30,3 +30,7 @@ Then run:
 ```scripts/docker-build <TAG>```
 
 This will build and push a new image
+
+## Notes
+
+Spot Electron uses native libraries for various platforms. For up to date build instructions of those modules see the README of the appropriate modules (e.g. https://github.com/jitsi/winrt-libs/blob/master/README.md)
