@@ -47,14 +47,14 @@ class BTBeacon {
 
             daemon.stopBeacon().then(() => {
                 daemon.startBeacon(this.region, majorMinorVersion[0], majorMinorVersion[1]).then(() => {
-                    this.joinCode = remoteJoinCode;
+                    this.remoteJoinCode = remoteJoinCode;
                     logger.info(`BT Beacon updated with join code ${remoteJoinCode}`);
                 });
             });
         } else {
             // No join code, we disable the beacon.
             daemon.stopBeacon().then(() => {
-                logger.info('BT beacon stoppped.');
+                logger.info('BT beacon stopped.');
             });
         }
     }
