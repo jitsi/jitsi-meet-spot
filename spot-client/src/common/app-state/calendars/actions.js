@@ -40,11 +40,15 @@ export function setCalendarError(error) {
  * Signals to replace the currently known calendar events.
  *
  * @param {Array<Object>} events - The calendar events to display.
+ * @param  {Object} [extras] - Extra flags supplied by the calendar service.
+ * @param  {boolean} isPolling - When set to true it means that the update was sourced by polling, when set to false it
+ * means the update came as a result of the calendar push notification.
  * @returns {Object}
  */
-export function setCalendarEvents(events = []) {
+export function setCalendarEvents(events = [], { isPolling } = { }) {
     return {
         type: CALENDAR_SET_EVENTS,
-        events
+        events,
+        isPolling
     };
 }

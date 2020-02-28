@@ -1,9 +1,11 @@
 import { SPOT_ROOM_DISPLAY_NAME, TENANT, analytics } from 'common/analytics';
 import {
     CALENDAR_SET_ERROR,
+    CALENDAR_SET_EVENTS,
     SET_DISPLAY_NAME,
     SET_TENANT,
-    SPOT_TV_LEAVE_MEETING
+    SPOT_TV_LEAVE_MEETING,
+    isCalendarPushEnabled
 } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
@@ -21,12 +23,31 @@ import {
     meetingEvents,
     meetingLeaveEvents
 } from './events';
+import MissedCalendarPushDetection from './MissedCalendarPushDetection';
 
-MiddlewareRegistry.register(() => next => action => {
+const missedCalendarPushDetection = new MissedCalendarPushDetection(analytics);
+
+MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
-    case CALENDAR_SET_ERROR:
-        analytics.log(calendarEvents.CALENDAR_ERROR, { error: action.error });
+    case CALENDAR_SET_ERROR: {
+        const {
+            error,
+            isPolling
+        } = action;
+
+        analytics.log(calendarEvents.CALENDAR_ERROR, {
+            error,
+            isPolling
+        });
         break;
+    }
+    case CALENDAR_SET_EVENTS: {
+        const { events, isPolling } = action;
+        const isPushEnabled = isCalendarPushEnabled(store.getState());
+
+        missedCalendarPushDetection.onCalendarServiceUpdate(events, isPolling, isPushEnabled);
+        break;
+    }
     case SET_DISPLAY_NAME:
         analytics.updateProperty(SPOT_ROOM_DISPLAY_NAME, action.displayName);
         break;

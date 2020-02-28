@@ -39,6 +39,14 @@ export class BaseRemoteControlService extends Emitter {
          * @protected
          */
         this._p2pSignaling = null;
+
+        /**
+         * A collection of methods to remove XMPPConnection listeners.
+         *
+         * @type {Array<Function>}
+         * @private
+         */
+        this._listeners = [];
     }
 
     /**
@@ -86,6 +94,11 @@ export class BaseRemoteControlService extends Emitter {
             onMessageReceived: this._onMessageReceived,
             onPresenceReceived: this._onPresenceReceived
         });
+
+        this._listeners.push(
+            this.xmppConnection.addListener(
+                XmppConnection.CALENDAR_REFRESH_REQUESTED,
+                () => this.emit(SERVICE_UPDATES.CALENDAR_REFRESH_REQUESTED)));
 
         !this._p2pSignaling || logger.error('Leaked P2PSignaling instance');
         this._createP2PSignaling();
@@ -365,6 +378,8 @@ export class BaseRemoteControlService extends Emitter {
 
         return destroyPromise
             .then(() => {
+                this._listeners.forEach(removeListener => removeListener());
+                this._listeners = [];
                 this.xmppConnection = null;
                 this.xmppConnectionPromise = null;
                 backend && backend.stop();
