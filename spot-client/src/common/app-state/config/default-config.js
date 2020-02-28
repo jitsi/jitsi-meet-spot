@@ -65,7 +65,12 @@ export default {
          *
          * @type {number}
          */
-        POLLING_INTERVAL: Number(process.env.CALENDAR_POLLING_INTERVAL) || 60 * 1000
+        POLLING_INTERVAL: Number(process.env.CALENDAR_POLLING_INTERVAL) || 60 * 1000,
+
+        /**
+         * Tells the app whether or not the push calendar notifications have been enabled on the deployment.
+         */
+        PUSH_NOTIFICATIONS_ENABLED: process.env.CALENDAR_PUSH_NOTIFICATIONS_ENABLED === 'true'
     },
 
     /**

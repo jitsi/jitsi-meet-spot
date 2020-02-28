@@ -281,6 +281,16 @@ export function getZoomConfiguration(state) {
 }
 
 /**
+ * A selector which tells the app whether or not the calendar push notifications are enabled on the current deployment.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isCalendarPushEnabled(state) {
+    return state.config.CALENDARS.PUSH_NOTIFICATIONS_ENABLED;
+}
+
+/**
  * A selector which returns whether or not a random meeting will be automatically joined as soon as
  * there's a video change detected in the wired screensharing device.
  *

@@ -35,6 +35,15 @@ const SPOT_XMLNS = 'https://jitsi.org/spot';
  */
 export default class XmppConnection extends Emitter {
     /**
+     * Event emitted when a message with <refreshCalendar xmlns='jitsi.org/spot'/> is received, which means that
+     * the app should update the calendar. It's placed weirdly inside the XmppConnection, because the message comes from
+     * the Prosody module.
+     *
+     * @type {string}
+     */
+    static CALENDAR_REFRESH_REQUESTED = 'CALENDAR_REFRESH_REQUESTED';
+
+    /**
      * Event emitted when the {@link isConnected} status changes.
      */
     static CONNECTED_STATE_CHANGED = 'CONNECTED_STATE_CHANGED';
@@ -107,6 +116,7 @@ export default class XmppConnection extends Emitter {
         this._onDisconnect = this._onDisconnect.bind(this);
         this._onMessage = this._onMessage.bind(this);
         this._onPresence = this._onPresence.bind(this);
+        this._onRefreshCalendarMsg = this._onRefreshCalendarMsg.bind(this);
     }
 
     /**
@@ -225,6 +235,13 @@ export default class XmppConnection extends Emitter {
                 'set',
                 null,
                 null
+            )
+        );
+        this._connectionEventHandlers.add(
+            this.xmppConnection.xmpp.connection.addHandler(
+                this._onRefreshCalendarMsg,
+                'jitsi.org/spot',
+                'message'
             )
         );
 
@@ -667,6 +684,21 @@ export default class XmppConnection extends Emitter {
         });
 
         this.room.connection.send(ack);
+
+        return true;
+    }
+
+    /**
+     * Processing for the calendar refresh XMPP message.
+     *
+     * @param {Element} msg - The message element.
+     * @private
+     * @returns {void}
+     */
+    _onRefreshCalendarMsg(msg) {
+        const refreshCalendar = msg.getElementsByTagNameNS('jitsi.org/spot', 'refreshCalendar').length > 0;
+
+        refreshCalendar && this.emit(XmppConnection.CALENDAR_REFRESH_REQUESTED);
 
         return true;
     }

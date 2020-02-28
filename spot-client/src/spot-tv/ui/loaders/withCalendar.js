@@ -12,6 +12,7 @@ import {
     setCalendarEvents,
     setCalendarError
 } from 'common/app-state';
+import { logger } from 'common/logger';
 import { AbstractLoader, generateWrapper } from 'common/ui';
 
 import { calendarService, SERVICE_UPDATES } from './../../calendars';
@@ -143,7 +144,17 @@ export class CalendarLoader extends AbstractLoader {
      * @returns {void}
      */
     _onEventsUpdated(data) {
-        this.props.dispatch(setCalendarEvents(data.events));
+        const {
+            events,
+            ...extras
+        } = data;
+
+        logger.log('calendar events updated', {
+            eventsCount: events.length,
+            ...extras
+        });
+
+        this.props.dispatch(setCalendarEvents(events, extras));
     }
 
     /**

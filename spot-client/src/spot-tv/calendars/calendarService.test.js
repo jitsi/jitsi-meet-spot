@@ -65,7 +65,12 @@ describe('calendarService', () => {
             calendarService.startPollingForEvents();
 
             return firstEventsListener
-                .then(events => expect(events).toEqual({ events: calendarGetResults }));
+                .then(events => {
+                    expect(events).toEqual({
+                        events: calendarGetResults,
+                        isPolling: true
+                    });
+                });
         });
 
         test('notifies if event updates have been detected', () => {
@@ -94,7 +99,10 @@ describe('calendarService', () => {
 
             return firstResultPromise
                 .then(events => {
-                    expect(events).toEqual({ events: firstPayload });
+                    expect(events).toEqual({
+                        events: firstPayload,
+                        isPolling: true
+                    });
                     calendarGetResults = secondPayload;
 
                     const secondResultPromise = createOneTimeCalendarServiceListener(
@@ -105,7 +113,12 @@ describe('calendarService', () => {
 
                     return secondResultPromise;
                 })
-                .then(events => expect(events).toEqual({ events: secondPayload }));
+                .then(events => {
+                    expect(events).toEqual({
+                        events: secondPayload,
+                        isPolling: true
+                    });
+                });
         });
 
         test('notifies of errors', () => {
@@ -121,7 +134,12 @@ describe('calendarService', () => {
             calendarService.startPollingForEvents();
 
             return errorPromise
-                .then(error => expect(error).toEqual({ error: mockError }));
+                .then(error => {
+                    expect(error).toEqual({
+                        error: mockError,
+                        isPolling: true
+                    });
+                });
         });
 
         it('adds the meeting url to the events', () => {
@@ -271,6 +289,82 @@ describe('calendarService', () => {
                     jest.runAllTimers();
 
                     return successPromise;
+                });
+        });
+        it('delays the next polling refresh if push notification arrives', () => {
+            jest.useFakeTimers();
+            const firstEvents = [
+                {
+                    meetingUrlFields: [],
+                    title: 1
+                }
+            ];
+            const secondEvents = [
+                {
+                    meetingUrlFields: [],
+                    title: 2
+                }
+            ];
+            const thirdEvents = [
+                {
+                    meetingUrlFields: [],
+                    title: 3
+                }
+            ];
+
+            jest.spyOn(backendCalendar, 'getCalendar')
+                .mockImplementation(() => Promise.resolve(firstEvents));
+
+            const firstEventsPromise = createOneTimeCalendarServiceListener(
+                SERVICE_UPDATES.EVENTS_UPDATED
+            );
+
+            const pollingUpdateHappened = jest.fn();
+            const pollingInterval = calendarService.pollingInterval;
+
+            calendarService.startPollingForEvents();
+
+            return firstEventsPromise
+                .then(() => {
+                    jest.spyOn(backendCalendar, 'getCalendar')
+                        .mockImplementation(() => Promise.resolve(secondEvents));
+
+                    // Add the polling update now, because the first event update always comes from polling
+                    calendarService.addListener(
+                        SERVICE_UPDATES.EVENTS_UPDATED,
+                        result => result.isPolling && pollingUpdateHappened());
+
+                    const updatePromise = createOneTimeCalendarServiceListener(
+                        SERVICE_UPDATES.EVENTS_UPDATED
+                    );
+
+                    jest.advanceTimersByTime(pollingInterval / 2);
+
+                    // Here comes the push notification call
+                    calendarService.refreshCalendarEvents();
+
+                    return updatePromise;
+                }).then(({ isPolling }) => {
+                    expect(isPolling).toEqual(false);
+                    expect(pollingUpdateHappened).toHaveBeenCalledTimes(0);
+
+                    jest.spyOn(backendCalendar, 'getCalendar')
+                        .mockImplementation(() => Promise.resolve(thirdEvents));
+
+                    jest.advanceTimersByTime(pollingInterval / 2);
+
+                    return new Promise(resolve => process.nextTick(resolve));
+                })
+                .then(() => {
+                    // It would have been called here already if not delayed
+                    expect(pollingUpdateHappened).toHaveBeenCalledTimes(0);
+
+                    jest.advanceTimersByTime(pollingInterval / 2);
+
+                    return new Promise(resolve => process.nextTick(resolve));
+                })
+                .then(() => {
+                    expect(pollingUpdateHappened).toHaveBeenCalledTimes(1);
                 });
         });
     });

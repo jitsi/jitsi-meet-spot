@@ -136,6 +136,12 @@ export const MESSAGES = {
 
 export const SERVICE_UPDATES = {
     /**
+     * Event emitted when the calendar push notification is received. It's a signal that the calendar events have
+     * changed and should be updated.
+     */
+    CALENDAR_REFRESH_REQUESTED: 'calendar-refresh-requested',
+
+    /**
      * A {@code RemoteControlClient} has established a new connection with
      * a {@code RemoteControlServer}.
      */

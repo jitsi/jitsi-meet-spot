@@ -15,6 +15,10 @@ export const connectionEvents = {
     CONNECTION_FAILED: 'connection-failed'
 };
 
+export const debugEvents = {
+    CALENDAR_PUSH_MISSED: 'calendar-push-missed'
+};
+
 export const meetingEvents = {
     SUMMARY: 'meeting-summary'
 };

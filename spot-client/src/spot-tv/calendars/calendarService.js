@@ -208,10 +208,14 @@ export class CalendarService extends Emitter {
      *
      * @param {Object} options - Options required for fetch the calendar events.
      * See {@code getCalendar} for details.
+     * @param {Object} extras - Extra flags which are not specified  through the config.
+     * @param {boolean} isPolling - Indicates whether or not the call is being executed as part of scheduled polling
+     * logic. Falsy value means that events are being checked in response to a push event. Is sent as part of
+     * the calendar update event to be consumed by analytics.
      * @private
      * @returns {void}
      */
-    _pollForEvents(options) {
+    _pollForEvents(options, { isPolling } = { isPolling: true }) {
         this.getCalendar(options)
             .then(formattedEvents => {
                 if (!this._pollingOptionsAreEqual(options)) {
@@ -225,7 +229,10 @@ export class CalendarService extends Emitter {
 
                     this.emit(
                         SERVICE_UPDATES.EVENTS_UPDATED,
-                        { events: this._calendarEvents }
+                        {
+                            events: this._calendarEvents,
+                            isPolling
+                        }
                     );
                 }
 
@@ -238,12 +245,34 @@ export class CalendarService extends Emitter {
 
                 this._calendarEvents = undefined;
 
-                logger.error('Calendar _pollForEvents error: ', { error });
-                this.emit(SERVICE_UPDATES.EVENTS_ERROR, { error });
+                logger.error('Calendar _pollForEvents error: ', {
+                    error,
+                    isPolling
+                });
+                this.emit(
+                    SERVICE_UPDATES.EVENTS_ERROR,
+                    {
+                        error,
+                        isPolling
+                    }
+                );
 
                 // Try again in 5 minutes
                 this._enqueueNextCalendarPoll(options, 1000 * 60 * 5);
             });
+    }
+
+    /**
+     * This method is to be called when the application wants to update the calendar events on demand. For example when
+     * there's push mechanism enabled. It will first cancel any polling task, refresh the events and reschedule
+     * the polling according to the configured interval.
+     *
+     * @returns {void}
+     */
+    refreshCalendarEvents() {
+        this.stopPollingForEvents();
+
+        this._pollForEvents(this._currentCalendarPollingOptions, { isPolling: false });
     }
 
     /**

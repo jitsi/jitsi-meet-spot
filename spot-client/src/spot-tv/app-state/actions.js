@@ -6,6 +6,7 @@ import {
     getMeetingDomainsWhitelist,
     getRemoteControlServerConfig,
     getSpotServicesConfig,
+    isCalendarPushEnabled,
     reconnectScheduleUpdate,
     setCustomerId,
     setDisplayName,
@@ -36,6 +37,7 @@ import {
     setLongLivedPairingCodeInfo,
     SpotTvBackendService
 } from '../backend';
+import { calendarService } from './../calendars';
 
 import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from './actionTypes';
 import { isValidMeetingName, isValidMeetingUrl } from '../../common/utils';
@@ -99,6 +101,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         }
 
         eventHandlerRemovers = [
+            [
+                SERVICE_UPDATES.CALENDAR_REFRESH_REQUESTED,
+                onCalendarRefreshRequested
+            ],
             [
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
                 onDisconnect
@@ -165,6 +171,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             roomProfile && dispatch(setCustomerId(roomProfile.customerId));
             dispatch(reconnectScheduleUpdate(false));
 
+            // With push enabled it is required to re-initialize calendar after reconnect, as the polling interval is
+            // usually much longer and it would take a lot of time to hide the calendar error UI.
+            isCalendarPushEnabled(getState()) && calendarService.refreshCalendarEvents();
+
             if (isBackendEnabled(getState())) {
                 dispatch(setRoomId(roomProfile.id));
                 dispatch(setSpotInstanceInfo({
@@ -211,6 +221,16 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
                 && !remoteControlServer.getPermanentRemoteCount()) {
                 dispatch(setIsPermanentRemotePaired(false));
             }
+        }
+
+        /**
+         * Handles the calendar push notification received by the RCS.
+         *
+         * @returns {void}
+         */
+        function onCalendarRefreshRequested() {
+            logger.log('calendar refresh requested');
+            calendarService.refreshCalendarEvents();
         }
 
         /**
