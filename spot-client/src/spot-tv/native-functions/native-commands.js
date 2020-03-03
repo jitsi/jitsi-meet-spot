@@ -39,6 +39,22 @@ export default class NativeCommands {
     }
 
     /**
+     * Informs the runtime that the meeting status has changed.
+     *
+     * 0: Idle (not in meeting)
+     * 1: In meeting
+     * (More statuses to come, e.g. content sharing).
+     *
+     * @param {number} status - The new meeting status.
+     * @returns {void}
+     */
+    static sendMeetingStatus(status) {
+        nativeController.sendMessage('meetingStatus', {
+            status
+        });
+    }
+
+    /**
      * Informs the runtime that the state of update-ability has changed.
      *
      * @param {boolean} okToUpdate - True if ok to update, false otherwise.
