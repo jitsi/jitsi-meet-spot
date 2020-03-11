@@ -47,6 +47,7 @@ export class JoinCodeEntry extends React.Component {
         onDisconnect: PropTypes.func,
         permanentPairingCode: PropTypes.string,
         productName: PropTypes.string,
+        sendJoinCodeNeeded: PropTypes.func,
         shareDomain: PropTypes.string,
         t: PropTypes.func,
         updateReadyStatus: PropTypes.func
@@ -121,6 +122,11 @@ export class JoinCodeEntry extends React.Component {
 
             return;
         }
+
+        // By this time, we determined that we're waiting for
+        // a join code to be entered, so we're telling it to the
+        // API to react (if need be).
+        this.props.sendJoinCodeNeeded();
     }
 
     /**
@@ -400,6 +406,15 @@ function mapDispatchToProps(dispatch) {
          */
         onDisconnect() {
             dispatch(disconnectFromSpotTV());
+        },
+
+        /**
+         * Tells the API that the remote is waiting for a join code.
+         *
+         * @returns {void}
+         */
+        sendJoinCodeNeeded() {
+            dispatch(sendApiMessage('joinCodeNeeded'));
         },
 
         /**

@@ -31,8 +31,7 @@ MiddlewareRegistry.register(store => next => action => {
 
     switch (action.type) {
     case APP_MOUNTED:
-        _initBeacons(store);
-        _subscribeToJoinReady(store);
+        _subscribeToApiEvents(store);
         break;
     case APP_WILL_UNMOUNT:
         _shutDownBeacons();
@@ -100,6 +99,14 @@ function _beaconsDidRange(data, { dispatch, getState }) {
  * @returns {void}
  */
 function _initBeacons(store) {
+    logger.info('Initializing beacons...');
+
+    // Removing listeners, if any
+    Beacons.BeaconsEventEmitter.removeAllListeners('authorizationStatusDidChange');
+    Beacons.BeaconsEventEmitter.removeAllListeners('beaconsDidRange');
+    Beacons.BeaconsEventEmitter.removeAllListeners('regionDidEnter');
+    Beacons.BeaconsEventEmitter.removeAllListeners('regionDidExit');
+
     // Setting up event listeners
     Beacons.BeaconsEventEmitter.addListener('authorizationStatusDidChange', auth => _authUpdate(auth, store));
     Beacons.BeaconsEventEmitter.addListener('beaconsDidRange', data => _beaconsDidRange(data, store));
@@ -155,14 +162,18 @@ function _shutDownBeacons() {
 }
 
 /**
- * Subscribe to the join ready updates so then we know when to show the
- * beacon picker and try to initiate a connection.
+ * Subscribe to the API event updates so then we know when to activate or deactivate the
+ * beacons functionality.
  *
  * @param {Object} store - The Redux store.
  * @returns {void}
  */
-function _subscribeToJoinReady({ dispatch }) {
+function _subscribeToApiEvents(store) {
+    api.addListener('joinCodeNeeded', () => {
+        _initBeacons(store);
+    });
+
     api.addListener('joinReady', state => {
-        dispatch(updateJoinReady(state));
+        store.dispatch(updateJoinReady(state));
     });
 }
