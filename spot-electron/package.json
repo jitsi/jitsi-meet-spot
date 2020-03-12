@@ -23,6 +23,10 @@
         "win": {
             "extraFiles": [
                 {
+                    "from": "C:/Windows/System32/vccorlib140.dll",
+                    "to": "."
+                },
+                {
                     "from": "C:/Windows/System32/vcruntime140.dll",
                     "to": "."
                 },
@@ -33,7 +37,7 @@
             ]
         }
     },
-    "description": "",
+    "description": "An electron application intended to be used to host a Spot-TV, to provide it additional functionality not available in browsers.",
     "devDependencies": {
         "@jest-runner/electron": "2.0.3",
         "babel-eslint": "10.0.3",
