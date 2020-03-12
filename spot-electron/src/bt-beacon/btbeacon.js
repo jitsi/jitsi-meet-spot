@@ -21,6 +21,7 @@ class BTBeacon {
         if (daemon && this.region) {
             logger.info('Starting beacon service...');
             daemon.connect().then(() => {
+                logger.info('Beacon service connected');
                 clientController.on('updateJoinCode', ({ remoteJoinCode }) => {
                     this.joinCodeUpdated(remoteJoinCode);
                 });
