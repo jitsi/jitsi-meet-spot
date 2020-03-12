@@ -18,7 +18,7 @@ Environments supported as a Spot-Remote
 
 Hosting
 ------
-- [ ] Spot-TV can only be opened from Chrome
+- [ ] Spot-TV can only be opened either from Chrome or the native electron wrapper(spot-electron)
 - [ ] Spot-TV displays a compatibility message for non-Chrome browsers
 
 Pairing
