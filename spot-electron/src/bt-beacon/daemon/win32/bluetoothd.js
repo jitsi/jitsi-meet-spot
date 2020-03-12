@@ -30,6 +30,10 @@ class BluetoothD {
 
         this.advertiser.on('StatusChanged', ({ status }) => {
             this.status = status;
+            if (this.advertisingStatusUpdatedCallback === 'function') {
+                this.advertisingStatusUpdatedCallback(status === 2);
+                this.advertisingStatusUpdatedCallback = undefined;
+            }
             logger.info(`BluetoothD advertising: ${HW_STATUSES[status]}`);
         });
 
@@ -76,14 +80,18 @@ class BluetoothD {
      *
      * @returns {Promise<boolean>}
      */
-    async stopBeacon() {
-        if (this.status === 2) {
-            this.advertiser.stop();
-
-            return true;
+    stopBeacon() {
+        if (this.status !== 2) {
+            return Promise.resolve(false);
         }
 
-        return false;
+        // If we're in started state, we need to invoke stop and then
+        // only resolve the promise (with the new state) when the hardware
+        // sends us a new state. Any state other than started is ok for us.
+        return new Promise(resolve => {
+            this.advertisingStatusUpdatedCallback = resolve;
+            this.advertiser.stop();
+        });
     }
 }
 
