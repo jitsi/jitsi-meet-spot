@@ -75,9 +75,9 @@
         "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
+        "@jitsi/node-ibeacons": "git+https://github.com/jitsi/node-ibeacons.git",
         "@jitsi/windows.devices.bluetooth.advertisement": "0.2.0",
         "@jitsi/windows.storage.streams": "0.2.0",
-        "win-audio": "2.0.2",
-        "xpc-connect": "github:jongear/xpc-connect#e824a743e021d9013494866d5e17f7b6804d3eb7"
+        "win-audio": "2.0.2"
     }
 }
