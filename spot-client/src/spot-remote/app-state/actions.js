@@ -102,6 +102,7 @@ export function connectToSpotTV(joinCode, shareMode) {
                 ? new SpotRemoteBackendService(getSpotServicesConfig(state))
                 : null;
         const serverConfig = getRemoteControlServerConfig(state);
+        let retryAttempt = 0;
 
         /**
          * The things done after successful connect.
@@ -115,6 +116,8 @@ export function connectToSpotTV(joinCode, shareMode) {
                 joinCode,
                 shareMode
             });
+
+            retryAttempt = 0;
 
             if (backend && backend.isPairingPermanent()) {
                 logger.log('This remote will be paired permanently');
@@ -153,12 +156,15 @@ export function connectToSpotTV(joinCode, shareMode) {
             const usingPermanentPairingCode = getPermanentPairingCode(getState()) === joinCode;
             const isRecoverableError = remoteControlClient.isRecoverableRequestError(error);
 
+            retryAttempt += 1;
+
             // Retry for permanent pairing as long as the backend accepts the code
-            const willRetry = usingPermanentPairingCode && isRecoverableError;
+            const willRetry = (usingPermanentPairingCode || retryAttempt <= 3) && isRecoverableError;
 
             logger.error('On Spot Remote disconnect', {
                 error,
                 isRecoverableError,
+                retryAttempt,
                 usingPermanentPairingCode,
                 willRetry
             });
