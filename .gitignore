@@ -2,6 +2,7 @@
 #
 .env
 dist
+lib
 webdriver-results
 
 # CocoaPods
