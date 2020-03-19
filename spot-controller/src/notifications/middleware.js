@@ -8,6 +8,11 @@ import { CANCEL_LOCAL_NOTIFICATION, SEND_LOCAL_NOTIFICATION } from './actionType
 import { notificationReceived } from './actions';
 
 /**
+ * A list of notification IDs currently visible.
+ */
+const ONGOING_NOTIFICATIONS = [];
+
+/**
  * The redux middleware for the beacons feature.
  *
  * NOTE: Some platforms are not supported at the moment, so we just skip
@@ -37,11 +42,19 @@ MiddlewareRegistry.register(store => next => action => {
 /**
  * Cancels a local notification.
  *
- * @param {string} id - The ID of the notification.
+ * @param {number} id - The ID of the notification.
  * @returns {void}
  */
 function _cancelLocalNotification(id) {
-    PushNotification.cancelLocalNotifications({ id });
+    const visibleId = ONGOING_NOTIFICATIONS.indexOf(id);
+
+    logger.warn('Cancelling notification', id);
+
+    if (visibleId !== -1) {
+        ONGOING_NOTIFICATIONS.splice(visibleId, 1);
+        PushNotification.cancelLocalNotifications({ id });
+        logger.warn('Notification cancelled', id);
+    }
 }
 
 /**
@@ -77,16 +90,20 @@ function _configurePushNotifications({ dispatch }) {
 /**
  * Sends (or updates) a local push notification.
  *
- * @param {string} id - The ID of the notification.
+ * @param {number} id - The ID of the notification.
  * @param {string} title - The notification title.
  * @param {string} text - The notification text (content).
  * @returns {void}
  */
 function _sendLocalNotification(id, title, text) {
+    if (ONGOING_NOTIFICATIONS.indexOf(id) !== -1) {
+        // Notification with this ID is already displaying.
+        return;
+    }
+
     logger.info('Sending notification', id, title, text);
 
-    // Cancels the previous one, if any
-    _cancelLocalNotification(id);
+    ONGOING_NOTIFICATIONS.push(id);
 
     // Sends a new, updated one
     PushNotification.localNotification({
