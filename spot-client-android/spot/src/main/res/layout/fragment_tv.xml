@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/home_background">
+
+    <com.github.silvestrpredko.dotprogressbar.DotProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        custom:amount="3"
+        android:layout_centerInParent="true"
+        custom:duration="@android:integer/config_mediumAnimTime"
+        custom:endColor="@color/white"
+        custom:startColor="@color/transparentWhite"
+        custom:animationDirection="right"/>
+
+    <WebView
+        android:id="@+id/webView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>
