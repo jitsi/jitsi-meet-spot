@@ -75,7 +75,7 @@
         "electron-updater": "4.1.2",
         "is-online": "8.2.1",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
-        "lodash": "4.17.13",
+        "lodash": "4.17.19",
         "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
