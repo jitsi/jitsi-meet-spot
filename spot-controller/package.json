@@ -31,7 +31,7 @@
         "events": "3.0.0",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5ec92357570dc8f0b7ffc1528820721c84c6af8b",
         "jitsi-meet-redux": "github:jitsi/jitsi-meet-redux#56bd059b64d0aa73a9309f57bf69bbaef3df7991",
-        "lodash": "4.17.15",
+        "lodash": "4.17.19",
         "react-native-beacons-manager": "github:jitsi/react-native-beacons-manager#d9e8040082570a951f3c8a7a5c96c073821841d6",
         "react-native-keep-awake": "4.0.0",
         "react-native-push-notification": "github:zo0r/react-native-push-notification#4e53d8cbbf5fe0f623b3ca6b58e0ef097834b48b",
