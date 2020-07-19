@@ -4,7 +4,7 @@
   "dependencies": {
     "eventemitter3": "4.0.0",
     "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
-    "lodash": "4.17.15"
+    "lodash": "4.17.19"
   },
   "devDependencies": {
     "@types/lodash": "4.14.138",
