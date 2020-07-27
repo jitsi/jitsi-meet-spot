@@ -84,13 +84,13 @@ exports.config = {
 
     seleniumInstallArgs: {
         drivers: {
-            chrome: { version: '79.0.3945.16' }
+            chrome: { version: '84.0.4147.30' }
         }
     },
 
     seleniumArgs: {
         drivers: {
-            chrome: { version: '79.0.3945.16' }
+            chrome: { version: '84.0.4147.30' }
         }
     },
 
