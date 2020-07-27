@@ -978,20 +978,56 @@ export default class XmppConnection extends Emitter {
             return parsedPresence;
         }
 
-        try {
-            const statusElement = presence.getElementsByTagNameNS('https://jitsi.org/spot', 'spot-status')[0];
+        const statusElement = presence.getElementsByTagNameNS('https://jitsi.org/spot', 'spot-status')[0];
 
-            parsedPresence.state = statusElement ? JSON.parse(statusElement.textContent) : {};
-        } catch (error) {
-            logger.error('Failed to parse presence', {
-                errorMsg: error.message,
-                from,
-                type
-            });
+        // eslint-disable-next-line no-negated-condition
+        if (!statusElement) {
+            parsedPresence.state = this._legacyConvertXMLPresenceToObject(presence);
+        } else {
+            try {
+                parsedPresence.state = statusElement ? JSON.parse(statusElement.textContent) : { };
+            } catch (error) {
+                logger.error('Failed to parse presence', {
+                    from,
+                    type
+                });
 
-            return undefined;
+                return undefined;
+            }
         }
 
         return parsedPresence;
+    }
+
+    /**
+     * Legacy handling for presence to Spot TV state conversion.
+     *
+     * @param {XML} presence - The presence to convert.
+     * @returns {Object}
+     * @private
+     */
+    _legacyConvertXMLPresenceToObject(presence) {
+        return Array.from(presence.children)
+            .reduce((acc, child) => {
+                let value = child.textContent;
+
+                if (child.tagName === 'calendar') {
+                    try {
+                        value = JSON.parse(value);
+                    } catch (error) {
+                        logger.error(
+                            'Spot-Remote could not parse calendar events',
+                            { error }
+                        );
+                        value = [];
+                    }
+                } else if (value === 'true' || value === 'false') {
+                    value = value === 'true';
+                }
+
+                acc[child.tagName] = value;
+
+                return acc;
+            }, {});
     }
 }
