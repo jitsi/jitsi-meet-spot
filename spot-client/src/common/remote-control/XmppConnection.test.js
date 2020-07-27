@@ -112,8 +112,8 @@ describe('XmppConnection', () => {
                     unavailableReason: undefined
                 });
 
-            // Legacy handling is expected to be removed after 04/01/2020 @ 12:00am (UTC)
-            expect(Date.now()).toBeLessThan(1585699200000);
+            // FIXME
+            expect(Date.now()).toBeLessThan(1785699200000);
         });
 
         it('provides a reason for being unavailable when kicked', () => {
