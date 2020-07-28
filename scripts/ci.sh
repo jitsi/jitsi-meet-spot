@@ -12,36 +12,40 @@ kill_webpack_dev_server_pid() {
 
 kill_webpack_dev_server_pid
 
-echo "Running basic tests"
+if [ -z $SKIP_BASIC_TESTS ]; then
+  echo "Running basic tests"
 
-echo "Testing Spot-Controller"
-cd spot-controller
-npm install
-npm run lint
+  echo "Testing Spot-Controller"
+  cd spot-controller
+  npm install
+  npm run lint
 
-echo "Testing Spot-Electron"
-cd ../spot-electron
-npm install
-npm run lint
-npm run test
+  echo "Testing Spot-Electron"
+  cd ../spot-electron
+  npm install
+  npm run lint
+  npm run test
 
-echo "Testing Spot-Client"
-cd ../spot-client
-npm install
-npm run lint
-npm run test
-npm run build:prod
+  echo "Testing Spot-Client"
+  cd ../spot-client
+  npm install
+  npm run lint
+  npm run test
+  npm run build:prod
 
-echo "Testing Spot-Integrations-Service"
-cd ../spot-integrations-service
-npm install
-npm run lint
-npm test
+  echo "Testing Spot-Integrations-Service"
+  cd ../spot-integrations-service
+  npm install
+  npm run lint
+  npm test
 
-echo "Testing Spot-Webdriver"
-cd ../spot-webdriver
-npm install
-npm run lint
+  echo "Testing Spot-Webdriver"
+  cd ../spot-webdriver
+  npm install
+  npm run lint
+else
+  cd spot-webdriver && npm i && cd ../spot-client && npm i
+fi
 
 if [ -z "$ENABLE_WEBDRIVER" ]; then
     echo "No TEST_SERVER_URL configured for webdriver tests. Skipping tests."
