@@ -1,7 +1,9 @@
 const {
-    BrowserWindow
+    BrowserWindow,
+    app
 } = require('electron');
 const isDev = require('electron-is-dev');
+const path = require('path');
 const { OnlineDetector } = require('../online-detector');
 const { defaultSpotURL } = require('../../config');
 
@@ -31,8 +33,10 @@ function createApplicationWindow() {
     let showCrashPageTimeout = null;
 
     applicationWindow = new BrowserWindow({
+        icon: path.join(__dirname, 'resources', 'icon.png'),
         // By default the application should always run in kiosk mode.
         kiosk: !isDev,
+        title: app.name,
         webPreferences: {
             nodeIntegration: true
         }

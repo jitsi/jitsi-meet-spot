@@ -1,110 +1,116 @@
 {
   "images" : [
     {
+      "filename" : "Product Icon – iOSspotlight@1x.png",
       "idiom" : "iphone",
-      "size" : "20x20",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "20x20"
     },
     {
+      "filename" : "Product Icon – iOS@1x.png",
       "idiom" : "iphone",
-      "size" : "20x20",
-      "scale" : "3x"
+      "scale" : "3x",
+      "size" : "20x20"
     },
     {
-      "size" : "29x29",
+      "filename" : "Product Icon – iOSsettings@2x.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-29@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "29x29"
     },
     {
-      "size" : "29x29",
+      "filename" : "Product Icon – iOSsettings@3x.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-29@3x.png",
-      "scale" : "3x"
+      "scale" : "3x",
+      "size" : "29x29"
     },
     {
-      "size" : "40x40",
+      "filename" : "Product Icon – iOSspotlight@2x.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-40@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "40x40"
     },
     {
-      "size" : "40x40",
+      "filename" : "Product Icon – iOS@2x.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-40@3x-1.png",
-      "scale" : "3x"
+      "scale" : "3x",
+      "size" : "40x40"
     },
     {
-      "size" : "60x60",
+      "filename" : "Product Icon – iOS@2x-1.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-60@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "60x60"
     },
     {
-      "size" : "60x60",
+      "filename" : "Product Icon – iOS@3x.png",
       "idiom" : "iphone",
-      "filename" : "AppIcon-60@3x.png",
-      "scale" : "3x"
+      "scale" : "3x",
+      "size" : "60x60"
     },
     {
+      "filename" : "Product Icon – iOSNotification.png",
       "idiom" : "ipad",
-      "size" : "20x20",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "20x20"
     },
     {
+      "filename" : "Product Icon – iOSspotlight@1x-2.png",
       "idiom" : "ipad",
-      "size" : "20x20",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "20x20"
     },
     {
+      "filename" : "Product Icon – iOSsettings@1x.png",
       "idiom" : "ipad",
-      "size" : "29x29",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "29x29"
     },
     {
-      "size" : "29x29",
+      "filename" : "Product Icon – iOSsettings@2x-1.png",
       "idiom" : "ipad",
-      "filename" : "AppIcon-29@2x-1.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "29x29"
     },
     {
+      "filename" : "Product Icon – iOSspotlight@1x-1.png",
       "idiom" : "ipad",
-      "size" : "40x40",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "40x40"
     },
     {
-      "size" : "40x40",
+      "filename" : "Product Icon – iOSspotlight@2x-1.png",
       "idiom" : "ipad",
-      "filename" : "AppIcon-40@2x-1.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "40x40"
     },
     {
-      "size" : "76x76",
+      "filename" : "Product Icon – iOSiPad.png",
       "idiom" : "ipad",
-      "filename" : "AppIcon-76@1x.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "76x76"
     },
     {
-      "size" : "76x76",
+      "filename" : "Product Icon – iOSiPad@2x.png",
       "idiom" : "ipad",
-      "filename" : "AppIcon-76@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "76x76"
     },
     {
-      "size" : "83.5x83.5",
+      "filename" : "Product Icon – iOSiPadPro@2x.png",
       "idiom" : "ipad",
-      "filename" : "AppIcon-83.5@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "size" : "83.5x83.5"
     },
     {
-      "size" : "1024x1024",
+      "filename" : "Product Icon – iOSAppStore.png",
       "idiom" : "ios-marketing",
-      "filename" : "AppIcon-1024@1x.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "size" : "1024x1024"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

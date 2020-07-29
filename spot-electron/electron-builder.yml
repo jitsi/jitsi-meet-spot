@@ -1,0 +1,26 @@
+afterSign: "scripts/notarize.js"
+productName: "Spot"
+appId: "org.jitsi.spot"
+mac: 
+  category: "public.app-category.business"
+  entitlements: "entitlements.mac.plist"
+  entitlementsInherit: "entitlements.mac.plist"
+  gatekeeperAssess: false
+  hardenedRuntime: true
+  target: 
+    - dmg
+    - zip
+publish: 
+  provider: github
+  private: false
+  publishAutoUpdate: true
+win: 
+  extraFiles: 
+    - from: "C:/Windows/System32/vccorlib140.dll"
+      to: "."
+    - from: "C:/Windows/System32/vcruntime140.dll"
+      to: "."
+    - from: "C:/Windows/System32/vcruntime140_1.dll"
+      to: "."
+directories: 
+  buildResources: "resources"

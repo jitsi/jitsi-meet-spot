@@ -1,7 +1,7 @@
 const { app, Menu } = require('electron');
 const isDev = require('electron-is-dev');
 
-const productName = app.getName();
+const productName = app.name;
 
 /**
  * Generates the configuration for the menu items to display in the app toolbar.
