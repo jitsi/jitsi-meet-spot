@@ -14,6 +14,7 @@ module.exports = {
         contentBase: path.join(__dirname, '/'),
         historyApiFallback: true,
         host: '0.0.0.0',
+        https: true,
         port: 8000,
         publicPath: '/dist/'
     },
