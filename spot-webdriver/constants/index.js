@@ -1,4 +1,4 @@
-const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://localhost:8000';
+const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'https://localhost:8000';
 
 module.exports = {
     /**
