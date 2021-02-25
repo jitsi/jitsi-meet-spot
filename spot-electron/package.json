@@ -41,7 +41,6 @@
     "devDependencies": {
         "@jest-runner/electron": "2.0.3",
         "babel-eslint": "10.0.3",
-        "devtron": "1.4.0",
         "dotenv": "8.1.0",
         "electron": "8.0.0",
         "electron-builder": "22.3.2",
@@ -74,12 +73,12 @@
         "electron-log": "3.0.8",
         "electron-updater": "4.1.2",
         "is-online": "8.2.1",
-        "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
+        "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#v1.0.0",
         "lodash": "4.17.13",
         "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
-        "@jitsi/node-ibeacons": "git+https://github.com/jitsi/node-ibeacons.git",
+        "@jitsi/node-ibeacons": "github:jitsi/node-ibeacons#4262466013f8f486366a607e9aa14b95f51adf91",
         "@jitsi/windows.devices.bluetooth.advertisement": "0.2.0",
         "@jitsi/windows.storage.streams": "0.2.0",
         "win-audio": "2.0.2"
