@@ -88,7 +88,7 @@ function createApplicationWindow() {
         onlineDetector.destroy();
     });
 
-    applicationWindow.webContents.webContents.setUserAgent(
+    applicationWindow.webContents.setUserAgent(
         `${applicationWindow.webContents.getUserAgent()} ${SPOT_ELECTRON_FEATURE_VERSION}`
     );
 
