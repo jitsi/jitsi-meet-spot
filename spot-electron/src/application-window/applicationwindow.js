@@ -2,6 +2,7 @@ const {
     BrowserWindow
 } = require('electron');
 const isDev = require('electron-is-dev');
+const process = require('process');
 const { OnlineDetector } = require('../online-detector');
 const { defaultSpotURL } = require('../../config');
 
@@ -30,9 +31,11 @@ function createApplicationWindow() {
 
     let showCrashPageTimeout = null;
 
+    // By default the application should always run in kiosk mode.
+    const kiosk = (!isDev && process.argv.indexOf('--no-kiosk') === -1) || process.argv.indexOf('--force-kiosk') !== -1;
+
     applicationWindow = new BrowserWindow({
-        // By default the application should always run in kiosk mode.
-        kiosk: !isDev,
+        kiosk,
         webPreferences: {
             nodeIntegration: true
         }
