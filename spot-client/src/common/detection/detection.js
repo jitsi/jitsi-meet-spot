@@ -35,7 +35,7 @@ export function isDesktopBrowser() {
  * @returns {boolean}
  */
 export function isElectron() {
-    return Boolean(window && window.process && window.process.emit && window.require);
+    return navigator.userAgent.includes('Electron');
 }
 
 /**
