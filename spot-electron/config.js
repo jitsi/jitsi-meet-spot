@@ -16,20 +16,5 @@ module.exports = {
     /**
      * The default URL to connect to.
      */
-    defaultSpotURL: process.env.SPOT_URL || 'https://spot.jitsi.net/tv',
-
-    /**
-     * The details of the spash screen, if any.
-     */
-    // spashScreen: {
-    //     height: 192,
-    //     logo: 'static/applogo.png',
-    //     width: 192
-    // },
-
-    window: {
-        fullscreen: true,
-        height: 800,
-        width: 1200
-    }
+    defaultSpotURL: process.env.SPOT_URL || 'https://spot.jitsi.net/tv'
 };
