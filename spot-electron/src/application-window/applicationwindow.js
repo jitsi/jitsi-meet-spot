@@ -31,11 +31,7 @@ function createApplicationWindow() {
 
     let showCrashPageTimeout = null;
 
-    // By default the application should always run in kiosk mode.
-    const kiosk = (!isDev && process.argv.indexOf('--no-kiosk') === -1) || process.argv.indexOf('--force-kiosk') !== -1;
-
     applicationWindow = new BrowserWindow({
-        kiosk,
         webPreferences: {
             nodeIntegration: true
         }
@@ -96,9 +92,19 @@ function createApplicationWindow() {
     );
 
     applicationWindow.loadURL(defaultSpotURL);
+    logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 
     onlineDetector.start();
-    logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
+
+    // Kiosk mode. On by default in production mode. It can either be forced or
+    // disabled, both in development and production modes.
+    //
+    // NOTE: While kiosk mode can be set as part of the BrowserWindow options, it was moved
+    //       here due to some obscure issues with Big Sur: the iframe API events were not
+    //       received when in kiosk mode, only in Big Sur. Weird, I know. -saghul
+    const kiosk = (!isDev && process.argv.indexOf('--no-kiosk') === -1) || process.argv.indexOf('--force-kiosk') !== -1;
+
+    applicationWindow.setKiosk(kiosk);
 }
 
 module.exports = {
