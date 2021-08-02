@@ -18,7 +18,7 @@
     "eslint-plugin-react": "7.16.0",
     "husky": "3.0.9",
     "react": "16.8.6",
-    "react-native": "0.60.5",
+    "react-native": "0.62.3",
     "react-native-beacons-manager": "github:MacKentoch/react-native-beacons-manager#53c1bda81f032e775f29327a7bab28a14528cf39",
     "react-native-svg": "9.9.5",
     "react-native-svg-transformer": "0.13.0",
