@@ -7,7 +7,7 @@ The Spot SDK is a React native package to provide the Spot controller functional
 ### 1. Install the module
 
 ```
-npm install jitsi-spot-sdk
+npm install @jitsi/spot-sdk
 ```
 
 ### 2. Add and install peer dependencies
