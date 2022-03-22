@@ -89,7 +89,7 @@ export class JoinCodeEntry extends React.Component {
         let code = codeMatch && (codeMatch[1] || codeMatch[2]);
 
         if (!code && this.props.location.hash && this.props.location.hash.includes('#/?')) {
-            const parts = this.props.location.hash.substr(3);
+            const parts = this.props.location.hash.slice(3);
             const queryParams = new URLSearchParams(parts);
 
             code = queryParams.get('code');

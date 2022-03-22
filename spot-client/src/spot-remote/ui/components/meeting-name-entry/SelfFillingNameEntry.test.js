@@ -60,7 +60,7 @@ describe('SelfFillingNameEntry', () => {
             jest.advanceTimersByTime(animationRevealRate + 1);
 
             expect(selfFillingNameEntry.state().animatingPlaceholder)
-                .toBe(RANDOM_MEETING.substr(0, 1));
+                .toBe(RANDOM_MEETING.slice(0, 1));
         });
 
         it('shows one character at a time', () => {
@@ -69,7 +69,7 @@ describe('SelfFillingNameEntry', () => {
             for (let i = 0; i < RANDOM_MEETING.length; i++) {
                 jest.advanceTimersByTime(100);
                 expect(selfFillingNameEntry.state().animatingPlaceholder)
-                    .toBe(RANDOM_MEETING.substr(0, i + 1));
+                    .toBe(RANDOM_MEETING.slice(0, i + 1));
             }
         });
 
