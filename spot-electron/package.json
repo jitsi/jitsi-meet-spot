@@ -11,8 +11,14 @@
             "gatekeeperAssess": false,
             "hardenedRuntime": true,
             "target": [
-                "dmg",
-                "zip"
+                {
+                  "arch": "universal",
+                  "target": "dmg"
+                },
+                {
+                  "arch": "universal",
+                  "target": "zip"
+                }
             ],
             "extendInfo": {
                 "NSCameraUsageDescription": "Camera access is required in order to make video-calls.",
