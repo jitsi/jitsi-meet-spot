@@ -84,7 +84,7 @@
         "node-osascript": "2.1.0"
     },
     "optionalDependencies": {
-        "@jitsi/node-ibeacons": "github:jitsi/node-ibeacons#4262466013f8f486366a607e9aa14b95f51adf91",
+        "@jitsi/node-ibeacons": "github:jitsi/node-ibeacons#a2c650458fe2767ad6434f6fe99125bde137e076",
         "@jitsi/windows.devices.bluetooth.advertisement": "0.2.1",
         "@jitsi/windows.storage.streams": "0.2.1",
         "win-audio": "2.0.2"
