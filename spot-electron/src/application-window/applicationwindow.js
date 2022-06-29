@@ -33,6 +33,7 @@ function createApplicationWindow() {
 
     applicationWindow = new BrowserWindow({
         webPreferences: {
+            contextIsolation: false,
             nodeIntegration: true
         }
     });
