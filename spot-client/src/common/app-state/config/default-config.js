@@ -1,5 +1,7 @@
 /* global process */
 
+const DEFAULT_DOMAIN = 'alpha.jitsi.net';
+
 /**
  * A version of the configuration with default values set. The dotenv plugin
  * is used here so that during development values can be overridden easily
@@ -80,7 +82,7 @@ export default {
      * @type {string}
      */
     DEFAULT_AVATAR_URL: process.env.DEFAULT_AVATAR_URL
-        || 'https://meet.jit.si/images/avatar.png',
+        || `https://${DEFAULT_DOMAIN}/images/avatar.png`,
 
     /**
      * The app background image to display. By default a solid color is
@@ -98,7 +100,7 @@ export default {
      *
      * @type {string}
      */
-    DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || 'meet.jit.si',
+    DEFAULT_MEETING_DOMAIN: process.env.DEFAULT_MEETING_DOMAIN || DEFAULT_DOMAIN,
 
     /**
      * The URL from which to load the Jitsi Meet External API used for
@@ -107,7 +109,7 @@ export default {
      * @type {string}
      */
     EXTERNAL_API_SRC: process.env.EXTERNAL_API_SRC
-        || 'https://meet.jit.si/external_api.js',
+        || `https://${DEFAULT_DOMAIN}/external_api.js`,
 
     /**
      * Configuration object for websites which can be opened from the app.
@@ -188,7 +190,7 @@ export default {
     MEETING_DOMAINS_WHITELIST:
         process.env.MEETING_DOMAINS_WHITELIST
             ? process.env.MEETING_DOMAINS_WHITELIST.split(',')
-            : [ 'beta.meet.jit.si', 'meet.jit.si' ],
+            : [ 'alpha.jitsi.net', 'beta.meet.jit.si', 'meet.jit.si' ],
 
     /**
      * Configurations for joining meetings from various meeting providers.
@@ -373,11 +375,10 @@ export default {
     XMPP_CONFIG: {
         // FIXME adjust default XMPP config, so that PR test are run with websocket
         //  (dedicated env with wss but no JWT is needed)
-        bosh: process.env.XMPP_BOSH || 'https://meet.jit.si/http-bind',
+        bosh: process.env.XMPP_BOSH || `https://${DEFAULT_DOMAIN}/http-bind`,
         hosts: {
-            domain: process.env.XMPP_HOSTS_DOMAIN || 'meet.jit.si',
-            muc: process.env.XMPP_HOSTS_MUC_URL
-                || 'conference.meet.jit.si'
+            domain: process.env.XMPP_HOSTS_DOMAIN || DEFAULT_DOMAIN,
+            muc: process.env.XMPP_HOSTS_MUC_URL || `conference.${DEFAULT_DOMAIN}`
         }
     }
 };
