@@ -132,6 +132,26 @@ export default {
     },
 
     /**
+     * Configuration object for film strip container size.
+     */
+    FILMSTRIP_SIZE: {
+        /**
+         * The threshold width from where to start changing the filmstrip size.
+         */
+        THRESHOLD_WIDTH: 920,
+
+        /**
+         * The ratio between client width and client height 2:1.
+         */
+        ASPECT_RATIO: 2,
+
+        /**
+         * The ratio between client width and film strip width.
+         */
+        ASPECT_RATIO_SPLIT: 2
+    },
+
+    /**
      * Configuration object related to printing, collecting, and reporting of
      * event logs and errors.
      */
