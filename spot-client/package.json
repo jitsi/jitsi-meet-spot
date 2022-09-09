@@ -63,7 +63,6 @@
         "lodash.throttle": "4.1.1",
         "lolex": "5.1.2",
         "md5": "2.2.1",
-        "node-sass": "4.13.0",
         "prop-types": "15.7.2",
         "react": "16.12.0",
         "react-country-flag": "2.0.1",
@@ -73,7 +72,8 @@
         "react-router-dom": "5.1.2",
         "redux": "4.0.5",
         "redux-thunk": "2.3.0",
-        "sass-loader": "8.0.0",
+        "sass": "1.54.9",
+        "sass-loader": "10.3.1",
         "string-replace-loader": "2.2.0",
         "strophe.js": "1.2.16",
         "style-loader": "1.1.2",
@@ -85,8 +85,8 @@
         "write-file-webpack-plugin": "4.5.1"
     },
     "engines": {
-        "node": "8.9.1",
-        "npm": "5.5.1"
+        "node": ">=14.0.0",
+        "npm": ">=6.14.4"
     },
     "name": "spot",
     "scripts": {
