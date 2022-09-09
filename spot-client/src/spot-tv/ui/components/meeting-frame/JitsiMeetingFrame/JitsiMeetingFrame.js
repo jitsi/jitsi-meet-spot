@@ -4,7 +4,12 @@ import bindAll from 'lodash.bindall';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSpotTVState } from 'common/app-state';
+import {
+    getClientAspectRatio,
+    getFilmStripAspectRatioSplit,
+    getFilmStripThresholdWidth,
+    setSpotTVState
+} from 'common/app-state';
 import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
@@ -420,6 +425,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
 
         super._onMeetingJoined();
 
+        this._trySendResizeFilmStripCommand();
+
         if (this.props.invites && this.props.invites.length) {
             this._jitsiApi.invite(this.props.invites);
         }
@@ -670,6 +677,49 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._isInTileView = enabled;
 
         this.props.updateSpotTvState({ tileView: enabled });
+
+        // Try send resize filmstrip command when tile view mode is turned off.
+        if (!enabled) {
+            this._trySendResizeFilmStripCommand();
+        }
+    }
+
+    /**
+     * Handler logic to send resize film strip command.
+     *
+     * @returns {void}
+     */
+    _trySendResizeFilmStripCommand() {
+        const clientWidth = this._getWidth();
+        const clientHeight = this._getHeight();
+        const currentAspectRatio = clientWidth / clientHeight;
+
+        if (clientWidth >= this.props.filmStripThresholdWidth && currentAspectRatio >= this.props.clientAspectRatio) {
+            this._jitsiApi.executeCommand('resizeFilmStrip',
+                { width: clientWidth / this.props.filmStripAspectRatioSplit });
+        }
+    }
+
+    /**
+     * Gets the current client width.
+     *
+     * @returns {number}
+     */
+    _getWidth() {
+        return window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
+    }
+
+    /**
+     * Gets the current client height.
+     *
+     * @returns {number}
+     */
+    _getHeight() {
+        return window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
     }
 
     /**
@@ -740,6 +790,21 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
 }
 
 /**
+ * Selects parts of the Redux state to pass in with the props of {@code Help}.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state) {
+    return {
+        filmStripThresholdWidth: getFilmStripThresholdWidth(state),
+        clientAspectRatio: getClientAspectRatio(state),
+        filmStripAspectRatioSplit: getFilmStripAspectRatioSplit(state)
+    };
+}
+
+/**
  * Creates actions which can update Redux state.
  *
  * @param {Function} dispatch - The Redux dispatch function to update state.
@@ -754,4 +819,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(undefined, mapDispatchToProps)(JitsiMeetingFrame);
+export default connect(mapStateToProps, mapDispatchToProps)(JitsiMeetingFrame);

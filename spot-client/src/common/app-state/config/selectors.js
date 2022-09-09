@@ -237,6 +237,36 @@ export function getTermsAndConditionsURL(state) {
 }
 
 /**
+ * A selector which returns the WIDTH for changing the film strip width.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getFilmStripThresholdWidth(state) {
+    return state.config.FILMSTRIP_SIZE.THRESHOLD_WIDTH;
+}
+
+/**
+ * A selector which returns the ASPECT_RATIO of width and height for starting to change the film strip width.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getClientAspectRatio(state) {
+    return state.config.FILMSTRIP_SIZE.ASPECT_RATIO;
+}
+
+/**
+ * A selector which returns the ASPECT_RATIO_SPLIT between client width and film strip width.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getFilmStripAspectRatioSplit(state) {
+    return state.config.FILMSTRIP_SIZE.ASPECT_RATIO_SPLIT;
+}
+
+/**
 * A selector which returns ultrasound configuration for creating loading
 * dependencies required by the ultrasound service.
 *
