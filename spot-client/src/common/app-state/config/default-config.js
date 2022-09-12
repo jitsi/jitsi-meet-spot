@@ -215,28 +215,7 @@ export default {
     /**
      * Configurations for joining meetings from various meeting providers.
      */
-    MEETING_INTEGRATIONS: {
-        ZOOM: {
-            /**
-             * The key provided by Zoom when creating an integration client, to
-             * be used by the Zoom SDK when joining a meeting.
-             */
-            API_KEY: process.env.ZOOM_API_KEY,
-
-            /**
-             * Zoom meetings require meeting IDs be signed with the api key
-             * and api secret. The service does the signing so the client secret
-             * can stay out of the client code.
-             *
-             * Note: for development purposes, Spot's Zoom integration code
-             * checks for the environment variable DEV_ONLY_ZOOM_API_SECRET
-             * and, if defined, will use that instead to sign the meeting
-             * locally with arbitrary api keys. A value must still be assigned
-             * to MEETING_SIGN_SERVICE_URL, but it can be any string.
-             */
-            MEETING_SIGN_SERVICE_URL: process.env.ZOOM_MEETING_SIGN_SERVICE_URL
-        }
-    },
+    MEETING_INTEGRATIONS: {},
 
     /**
      * Domains which Spot can be hosted on which should place Spot into a

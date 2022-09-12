@@ -1,4 +1,3 @@
 export default {
-    JITSI: 'jitsi',
-    ZOOM: 'zoom'
+    JITSI: 'jitsi'
 };

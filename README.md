@@ -6,7 +6,6 @@ This is the mono-repo for Jitsi Meet's room integration, named Spot. This projec
 - spot-client/ contains the Spot-TV and Spot-Remote codebase. This is the main application folder.
 - spot-controller/ contains the iOS and Android application for the Spot-Remote. It shows the spot-client in a webview.
 - spot-electron/ contains the desktop application for displaying a Spot-TV in an iframe. It has additional functionality on top of what the spot-client can provide.
-- spot-integrations-service is a backend service used for facilitating joining meetings from providers other than jitsi. For example, the service provides a signed meeting number for Spot to use when joining a zoom meeting.
 - spot-webdriver/ contains selenium webdriver tests for spot-client
 
 # Spot SDKs

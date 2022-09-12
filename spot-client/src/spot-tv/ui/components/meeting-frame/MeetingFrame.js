@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
-import { isZoomMeetingUrl } from 'common/utils';
-
 import AbstractMeetingFrame from './AbstractMeetingFrame';
 import { JitsiMeetingFrame } from './JitsiMeetingFrame';
-import { ZoomMeetingFrame } from './ZoomMeetingFrame';
 
 
 /**
@@ -22,10 +19,6 @@ export class MeetingFrame extends Component {
      * @returns {ReactElement}
      */
     render() {
-        if (isZoomMeetingUrl(this.props.meetingUrl)) {
-            return <ZoomMeetingFrame { ...this.props } />;
-        }
-
         return <JitsiMeetingFrame { ...this.props } />;
     }
 }

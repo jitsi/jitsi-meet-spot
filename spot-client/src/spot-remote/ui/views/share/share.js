@@ -16,7 +16,7 @@ import {
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { LoadingIcon, RoomName, View } from 'common/ui';
-import { getRandomMeetingName, isZoomMeetingUrl } from 'common/utils';
+import { getRandomMeetingName } from 'common/utils';
 
 import { exitShareMode } from './../../../app-state';
 
@@ -126,8 +126,6 @@ export class Share extends React.PureComponent {
             return t('screenshare.notSupported');
         } else if (this.props.isScreenshareActiveRemotely) {
             return t('screenshare.alreadyActive');
-        } else if (isZoomMeetingUrl(this.props.meetingUrl)) {
-            return t('screenshare.notSupportedMeetingType', { type: 'Zoom' });
         }
     }
 

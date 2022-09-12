@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { isZoomMeetingUrl } from 'common/utils';
 
 import JitsiMeetingToolbar from './JitsiMeetingToolbar';
-import ZoomMeetingToolbar from './ZoomMeetingToolbar';
 
 /**
  * A component for showing in-meeting controls for a Spot-Remote to control
@@ -13,11 +11,7 @@ import ZoomMeetingToolbar from './ZoomMeetingToolbar';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function MeetingToolbar(props) {
-    if (isZoomMeetingUrl(props.meetingUrl)) {
-        return <ZoomMeetingToolbar />;
-    }
-
+export default function MeetingToolbar(props) { // eslint-disable-line no-unused-vars
     return <JitsiMeetingToolbar />;
 }
 

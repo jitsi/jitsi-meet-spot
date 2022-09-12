@@ -19,8 +19,7 @@ module.exports = {
     },
     devtool: 'source-map',
     entry: {
-        app: './src/index.js',
-        zoom: './src/zoom/index.js'
+        app: './src/index.js'
     },
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     module: {

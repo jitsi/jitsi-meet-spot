@@ -3,8 +3,7 @@ import merge from 'lodash.merge';
 import defaultConfig from './default-config';
 import {
     getJwtDomains,
-    getMeetingDomainsWhitelist,
-    isZoomEnabled
+    getMeetingDomainsWhitelist
 } from './selectors';
 
 /**
@@ -27,11 +26,6 @@ export function setDefaultValues(config) {
     const allJwtDomains = [
         ...configuredJwtDomains
     ];
-
-    if (isZoomEnabled(state)) {
-        allWhitelistedDomains.push('zoom.us');
-        allJwtDomains.push('zoom.us');
-    }
 
     const dedupedWhitelist = Array.from(new Set(allWhitelistedDomains));
 

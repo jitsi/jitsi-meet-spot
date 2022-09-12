@@ -105,16 +105,6 @@ export function isValidMeetingUrl(meetingUrl, knownDomains) {
 }
 
 /**
- * Determines if a url is for a Zoom meeting.
- *
- * @param {string} meetingUrl - The meeting url to check if it is for Zoom.
- * @returns {boolean}
- */
-export function isZoomMeetingUrl(meetingUrl) {
-    return Boolean(meetingUrl && meetingUrl.startsWith('https://zoom.us'));
-}
-
-/**
  * Parses a meeting url so its parts can be accessed through meeting-related
  * keys. For example: 'https://meet.jit.si/path/meeting' would be returned as:
  * {

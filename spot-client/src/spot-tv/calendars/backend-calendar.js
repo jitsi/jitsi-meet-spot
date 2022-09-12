@@ -49,8 +49,7 @@ export default {
                         id: i,
                         meetingUrlFields: [
                             inputEvent.meetingLink,
-                            inputEvent.summary,
-                            inputEvent.zoomLink
+                            inputEvent.summary
                         ],
                         start: inputEvent.start,
                         title: inputEvent.summary
