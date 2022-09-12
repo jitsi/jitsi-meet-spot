@@ -82,8 +82,8 @@ export class InCall extends React.Component {
      */
     componentDidUpdate() {
         if (this._showCancelMeetingTimeout && this.props.inMeeting) {
-            this._showCancelMeetingTimeout = null;
             clearTimeout(this._showCancelMeetingTimeout);
+            this._showCancelMeetingTimeout = null;
         }
     }
 
