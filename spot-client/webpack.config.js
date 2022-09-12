@@ -68,20 +68,6 @@ module.exports = {
         }),
         new CopyWebpackPlugin([
             {
-                from: './node_modules/lib-quiet-js/dist/quiet-emscripten.js',
-                to: '.'
-            },
-            {
-                from:
-                    './node_modules/lib-quiet-js/dist/quiet-emscripten.js.mem',
-                to: '.'
-            },
-            {
-                from:
-                    './node_modules/lib-quiet-js/dist/quiet-emscripten.js.mem',
-                to: '.'
-            },
-            {
                 from: './static',
                 to: '.'
             },

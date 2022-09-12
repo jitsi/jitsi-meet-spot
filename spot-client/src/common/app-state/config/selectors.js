@@ -267,17 +267,6 @@ export function getFilmStripAspectRatioSplit(state) {
 }
 
 /**
-* A selector which returns ultrasound configuration for creating loading
-* dependencies required by the ultrasound service.
-*
-* @param {Object} state - The Redux state.
-* @returns {Object}
-*/
-export function getUltrasoundConfig(state) {
-    return state.config.ULTRASOUND;
-}
-
-/**
  * A selector which returns the starting hour in the day when the app may reload
  * itself to get updates.
  *

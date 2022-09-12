@@ -54,9 +54,6 @@ import 'spot-tv/analytics';
 // This import enables tunneling Electron logs through the spot-client logging service
 import 'spot-tv/electron-logs';
 
-// This import enables the Spot Controller app emitting ultrasound with the join code.
-import 'spot-remote/ultrasound';
-
 /**
  * The root of the application which determines what view should be displayed.
  *

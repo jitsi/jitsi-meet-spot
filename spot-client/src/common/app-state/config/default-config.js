@@ -314,45 +314,6 @@ export default {
         ENABLE_INVITES: false
     },
 
-    /**
-     * Configuration object for loading the ultrasound library.
-     */
-    ULTRASOUND: {
-
-        /**
-         * The URL pathname of the quiet-emscripten.js file necessary for
-         * lib-quiet-js to process ultrasound.
-         *
-         * @type {string}
-         */
-        EMSCRIPTEN_PATH: process.env.ULTRASOUND_EMSCRIPTEN_PATH,
-
-        /**
-         * The URL pathname of the quiet-emscriptem.js.mem file used by
-         * lib-quiet-js's emscripten.
-         *
-         * @type {string}
-         */
-        MEM_INITIALIZER_PATH:
-            process.env.ULTRASOUND_MEM_INITIALIZER_PATH,
-
-        /**
-         * A string to convert to regex which will be run against the user
-         * agent to determine if a Spot-Remote should play ultrasound.
-         *
-         * @type {string}
-         */
-        SUPPORTED_ENV_REGEX: process.env.ULTRASOUND_SUPPORT_ENV,
-
-        /**
-         * The amount of time in milliseconds to wait until playing an
-         * ultrasound message after a message has finished playing.
-         *
-         * @type {number}
-         */
-        TRANSMISSION_DELAY: undefined
-    },
-
     UPDATES: {
         START_HOUR: typeof process.env.UPDATE_START_HOUR === 'undefined'
             ? 2

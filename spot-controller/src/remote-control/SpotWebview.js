@@ -185,7 +185,7 @@ export default class SpotRemoteWebView extends React.PureComponent {
 
                     injectedJavaScript = { this._preventWebViewZoomScript }
 
-                    // Allow immediate playing of any media, like ultrasound.
+                    // Allow immediate playing of any media.
                     mediaPlaybackRequiresUserAction = { false }
 
                     onError = { this._onWebViewLoadError }

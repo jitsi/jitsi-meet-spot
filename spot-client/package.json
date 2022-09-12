@@ -52,7 +52,6 @@
         "jsdoc": "3.6.3",
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",
-        "lib-quiet-js": "github:jitsi/quiet-js#939beeaa824c0a088958cbbefab19e549f2e0deb",
         "libphonenumber-js": "1.7.29",
         "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",

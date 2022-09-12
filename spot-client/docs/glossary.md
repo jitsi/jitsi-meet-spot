@@ -34,9 +34,6 @@ A distinction of Spot-Remote type for the backend flow. These Spot-Remotes do no
 ### Prosody
 An XMPP server implementation. Used as the communiction hub between Spot-TVs and Spot-Remotes.
 
-### Quiet
-A library for ultrasound transmitting and decoding. The main library is lib-quiet, written in C, but the maintainer provides iOS, Android, and JS libraries to use lib-quiet. See Ultrasound.
-
 ### RCS, Remote Control Service
 The objects which encapsulates setting up a connection between a Spot-Remote and a Spot-TV and encapsulates how they communicate with each other. Spot-TV and Spot-Remote have their own versions of the service, with Spot-Remote having more functionality around sending commands whereas Spot-TV has more functionality around processing commands and sending status updates.
 
@@ -66,9 +63,6 @@ The physical location in which the Spot-TV is located. It is expected this be a 
 
 ### Temporary Remote
 A distinction of Spot-Remote type for the backend flow. Temporary Spot-Remotes do not attempt to maintain a connection to a Spot-TV; these Spot-Remotes are intended to be used for one meeting and dropped. Temporary remotes are paired using a 6-character code.
-
-### Ultrasonic, Ultrasound
-Sound that is not readily perceivable by adults due to its high frequency. Can be used to send messages between devices without cables. This is a feature of Spot in which a Spot-Remote, likely an iPad set up as a dedicated Spot-Remote, can emit the join code using ultrasound. Receivers, such as a web page implementing an ultrasonic receiver, can listen for the join code and take action. The goal is to allow a device to become a Spot-Remote without having to manually navigate to a URL and manually enter a join code.
 
 ### Waiting View
 A UI state within the Spot-Remote where it is connected to a Spot-TV while the Spot-TV is displaying a calendar. At this point the Spot-TV is waiting for further action to be taken, such as a Spot-Remote entering a meeting.
