@@ -23,7 +23,7 @@ The 6-character or 8-character code a user needs to enter in order to get a Spot
 The javascript library which contains XMPP, MUC, and WebRTC code used by Jitsi-Meet for its video conferencing. Spot re-uses the library for its own needs.
 
 ### Open-source flow
-Spot supports two modes of operation: backend and open-source. For the open-source flow, Spot-TV connects to a configured prosody deployment on its own, without the use of a proprietary backend. Spot-TVs use Google and Outlook integrations to get calendar information.
+Spot supports two modes of operation: backend and open-source. For the open-source flow, Spot-TV connects to a configured prosody deployment on its own, without the use of a proprietary backend.
 
 ### P2P
 Stands for peer-to-peer. Reference to p2p will generally be avoid a peer-to-peer connection created between a Spot-TV and a Spot-Remote for sending and receiving commands. Peer-to-peer is used for speed, as prosody's round trip times could take several hundred milliseconds.

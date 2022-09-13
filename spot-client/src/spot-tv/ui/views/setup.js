@@ -13,9 +13,7 @@ import { getBoolean } from 'common/utils';
 import { withCalendar } from '../loaders';
 
 import {
-    CalendarAuth,
     SelectMedia,
-    SelectRoom,
     SyncWithBackend,
     PairRemote,
     Profile
@@ -49,8 +47,6 @@ export class Setup extends React.Component {
         this.steps = [];
 
         backendEnabled && this.steps.push(SyncWithBackend);
-        !backendEnabled && this.steps.push(CalendarAuth);
-        !backendEnabled && this.steps.push(SelectRoom);
         !backendEnabled && this.steps.push(Profile);
         !skipSelectMedia && this.steps.push(SelectMedia);
         backendEnabled && !skipPairRemote && this.steps.push(PairRemote);

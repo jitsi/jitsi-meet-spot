@@ -3,6 +3,18 @@ import { getCalendarConfig } from '../config/selectors';
 import { calendarTypes } from './constants';
 
 /**
+ * A selector which returns whether the calendar backend has been enabled or not.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isCalendarEnabled(state) {
+    const { BACKEND } = getCalendarConfig(state);
+
+    return Boolean(BACKEND && BACKEND.SERVICE_URL);
+}
+
+/**
  * A selector which returns the email associated with the currently configured
  * calendar.
  *

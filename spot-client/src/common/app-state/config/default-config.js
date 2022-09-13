@@ -32,36 +32,6 @@ export default {
         },
 
         /**
-         * The configuration specifically for Google Calendar integration.
-         */
-        GOOGLE: {
-
-            /**
-             * The Google application client id to be used for interacting with
-             * a Google Calendar. Please see the docs directory for a guide on
-             * creating a calendar integration application.
-             *
-             * @type {string}
-             */
-            CLIENT_ID: process.env.GOOGLE_CLIENT_ID || ''
-        },
-
-        /**
-         * The configuration specifically for Outlook integration.
-         */
-        OUTLOOK: {
-
-            /**
-             * The Microsoft application client id to be used for interacting
-             * with an Outlook calendar. Please see the docs directory for a
-             * guide on creating a calendar integration application.
-             *
-             * @type {string}
-             */
-            CLIENT_ID: process.env.OUTLOOK_CLIENT_ID || ''
-        },
-
-        /**
          * How often the calendar service should be checking for calendar updates.
          * A number given in milliseconds.
          *

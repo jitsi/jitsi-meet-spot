@@ -12,6 +12,7 @@ import {
     getProductName,
     getRemoteJoinCode,
     hasCalendarBeenFetched,
+    isCalendarEnabled,
     isSetupComplete
 } from 'common/app-state';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
@@ -44,6 +45,7 @@ export class Home extends React.Component {
         events: PropTypes.array,
         hasFetchedEvents: PropTypes.bool,
         history: PropTypes.object,
+        isCalendarEnabled: PropTypes.bool,
         isSetupComplete: PropTypes.bool,
         onGoToMeetingCommand: PropTypes.func,
         onStartScreenshareMeeting: PropTypes.func,
@@ -145,6 +147,10 @@ export class Home extends React.Component {
             return this._renderSetupMessage();
         }
 
+        if (!this.props.isCalendarEnabled) {
+            return this._renderNoCalendar();
+        }
+
         if (this.props.calendarError) {
             return this._renderError();
         }
@@ -189,6 +195,30 @@ export class Home extends React.Component {
             <div className = 'no-events-message'>
                 <div>{ t('calendar.errorGettingEvents') }</div>
                 <div> { t('calendar.retrySync') }</div>
+            </div>
+        );
+    }
+
+    /**
+     * Instantiates a React Element with a message without calendar data.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderNoCalendar() {
+        const { productName, remoteJoinCode, t } = this.props;
+
+        return (
+            <div className = 'no-events-message'>
+                <h1>{ t('welcome', { productName }) }</h1>
+                {
+                    remoteJoinCode
+                        && (
+                            <div className = 'setup-join-code'>
+                                <JoinInfo />
+                            </div>
+                        )
+                }
             </div>
         );
     }
@@ -257,6 +287,7 @@ function mapStateToProps(state) {
             && Boolean(getPermanentPairingCode(state)),
         events: getCalendarEvents(state),
         hasFetchedEvents: hasCalendarBeenFetched(state),
+        isCalendarEnabled: isCalendarEnabled(state),
         isSetupComplete: isSetupComplete(state),
         productName: getProductName(state),
         remoteJoinCode: getRemoteJoinCode(state),

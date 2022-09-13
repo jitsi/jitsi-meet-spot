@@ -7,8 +7,6 @@ import { findWhitelistedMeetingUrl } from 'common/utils';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';
-import google from './google';
-import outlook from './outlook';
 import { hasUpdatedEvents } from './utils';
 
 /**
@@ -19,9 +17,7 @@ import { hasUpdatedEvents } from './utils';
  * @type {Object}
  */
 const calendarIntegrations = {
-    [calendarTypes.BACKEND]: backendCalendar,
-    [calendarTypes.GOOGLE]: google,
-    [calendarTypes.OUTLOOK]: outlook
+    [calendarTypes.BACKEND]: backendCalendar
 };
 
 /**
