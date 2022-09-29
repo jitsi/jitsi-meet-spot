@@ -31,3 +31,15 @@ require('./src/exit');
 require('./src/volume-control');
 
 app.on('ready', createApplicationWindow);
+
+app.on('certificate-error',
+    // eslint-disable-next-line max-params
+    (event, webContents, url, error, certificate, callback) => {
+        if (isDev) {
+            event.preventDefault();
+            callback(true);
+        } else {
+            callback(false);
+        }
+    }
+);
