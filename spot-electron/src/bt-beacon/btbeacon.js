@@ -3,7 +3,9 @@ const { config } = require('../config');
 const { clientController } = require('../client-control');
 const { logger } = require('../logger');
 const { joinCodeToVersion } = require('../utils');
+const os = require('os');
 
+const platform = os.platform();
 const daemon = require('./daemon');
 
 /**
@@ -17,8 +19,9 @@ class BTBeacon {
      */
     constructor() {
         this.region = config.getValue('beacon.region');
+        const isWin = platform === 'win32';
 
-        if (daemon && this.region) {
+        if (!isWin && daemon && this.region) {
             logger.info('Starting beacon service...');
             daemon.connect().then(() => {
                 logger.info('Beacon service connected');
