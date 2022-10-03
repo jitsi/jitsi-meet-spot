@@ -1,3 +1,12 @@
 const os = require('os');
 
-module.exports = require(`./${os.platform()}`);
+const platform = os.platform();
+
+/**
+ * Import bt-beacon only for darwin platforms.
+ */
+if (platform === 'darwin') {
+    module.exports = require(`./${os.platform()}`);
+} else {
+    module.exports = undefined;
+}
