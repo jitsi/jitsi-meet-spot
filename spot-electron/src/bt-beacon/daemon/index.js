@@ -7,4 +7,6 @@ const platform = os.platform();
  */
 if (platform === 'darwin') {
     module.exports = require(`./${os.platform()}`);
+} else {
+    module.exports = undefined;
 }
