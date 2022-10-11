@@ -343,6 +343,10 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise} Resolves if the command has been acknowledged.
      */
     setScreensharing(screensharing) {
+        if (!screensharing) {
+            this.destroyWirelessScreenshareConnections();
+        }
+
         return this._sendCommand(
             COMMANDS.SET_SCREENSHARING,
             { on: screensharing }
@@ -689,8 +693,6 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {Promise}
      */
     _stopWirelessScreenshare() {
-        this.destroyWirelessScreenshareConnections();
-
         return this.setScreensharing(false);
     }
 }
