@@ -15,3 +15,6 @@ These are standalone webdriver tests to run against a Spot instance.
 
 ## Running tests
 1. Execute `npm start` to run the tests
+
+Running just one spec file use:
+1. Execute `npx wdio run ./wdio.conf.js --spec specs/join-code.spec.js` to run only join-code spec
