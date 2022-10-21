@@ -39,11 +39,11 @@ class SpotUser {
      *
      * @returns {void}
      */
-    cleanup() {
-        this.setNetworkOnline();
-        this.disconnectRemoteControlService();
-        this.clearStorage();
-        this.stop();
+    async cleanup() {
+        await this.setNetworkOnline();
+        await this.disconnectRemoteControlService();
+        await this.clearStorage();
+        await this.stop();
     }
 
     /**
@@ -51,8 +51,8 @@ class SpotUser {
      *
      * @returns {void}
      */
-    clearStorage() {
-        this.driver.executeAsync(done => {
+    async clearStorage() {
+        await this.driver.executeAsync(done => {
             try {
                 localStorage.clear();
                 done();
@@ -68,8 +68,8 @@ class SpotUser {
      * @returns {void}
      * @protected
      */
-    disconnectRemoteControlService() {
-        this.driver.executeAsync((rcsServiceName, done) => {
+    async disconnectRemoteControlService() {
+        await this.driver.executeAsync((rcsServiceName, done) => {
             try {
                 window.spot[rcsServiceName].disconnect()
                     .then(done, done);
@@ -124,8 +124,8 @@ class SpotUser {
      *
      * @returns {void}
      */
-    setNetworkOnline() {
-        this.driver.setNetworkConditions({}, 'No throttling');
+    async setNetworkOnline() {
+        await this.driver.setNetworkConditions({}, 'No throttling');
     }
 
     /**
@@ -133,9 +133,9 @@ class SpotUser {
      *
      * @returns {void}
      */
-    stop() {
-        this.disconnectRemoteControlService();
-        this.driver.url('about:blank');
+    async stop() {
+        await this.disconnectRemoteControlService();
+        await browser[this.driver].url('about:blank');
     }
 
     /**

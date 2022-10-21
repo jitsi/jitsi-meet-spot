@@ -72,7 +72,7 @@ class SpotTV extends SpotUser {
      * @returns {string}
      */
     async getShortLivedPairingCode() {
-        const calendarPage = this.getCalendarPage()
+        const calendarPage = this.getCalendarPage();
 
         return await calendarPage.getJoinCode();
     }

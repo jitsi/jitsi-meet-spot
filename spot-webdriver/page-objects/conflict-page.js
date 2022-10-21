@@ -22,8 +22,8 @@ class ConflictPage extends PageObject {
      *
      * @returns {void}
      */
-    clickRetry() {
-        this.select(RETRY_BUTTON).click();
+    async clickRetry() {
+        await this.select(RETRY_BUTTON).click();
     }
 
     /**
@@ -36,8 +36,8 @@ class ConflictPage extends PageObject {
      * wait for the element to exist.
      * @returns {void}
      */
-    waitForVisible(timeout = 60000) {
-        super.waitForVisible(timeout);
+    async waitForVisible(timeout = 60000) {
+        await super.waitForVisible(timeout);
     }
 }
 
