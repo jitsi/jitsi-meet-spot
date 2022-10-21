@@ -58,10 +58,10 @@ class SpotTV extends SpotUser {
      *
      * @returns {string}
      */
-    getMeetingName() {
+    async getMeetingName() {
         const meetingPage = this.getMeetingPage();
 
-        meetingPage.waitForVisible();
+        await meetingPage.waitForVisible();
 
         return meetingPage.getMeetingName();
     }
@@ -71,8 +71,10 @@ class SpotTV extends SpotUser {
      *
      * @returns {string}
      */
-    getShortLivedPairingCode() {
-        return this.getCalendarPage().getJoinCode();
+    async getShortLivedPairingCode() {
+        const calendarPage = this.getCalendarPage()
+
+        return await calendarPage.getJoinCode();
     }
 
     /**

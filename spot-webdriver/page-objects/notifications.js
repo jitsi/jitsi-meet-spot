@@ -23,12 +23,10 @@ class Notifications extends PageObject {
      *
      * @returns {void}
      */
-    waitForErrorToDisplay() {
-        this.waitForElementDisplayed(ERROR_NOTIFICATIONS);
+    async waitForErrorToDisplay() {
+        const element = await this.waitForElementDisplayed(ERROR_NOTIFICATIONS);
 
-        // Workaround to make sure the notification is displayed and is
-        // displayed on top of other elements.
-        this.select(ERROR_NOTIFICATIONS).click();
+        await element.click();
     }
 }
 

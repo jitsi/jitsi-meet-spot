@@ -158,9 +158,9 @@ class SpotUser {
      *
      * @returns {void}
      */
-    waitForP2PConnectionEstablished() {
-        this.driver.waitUntil(
-            () => this.driver.execute(rcsName => {
+    async waitForP2PConnectionEstablished() {
+        await browser[this.driver].waitUntil(
+            async () => await browser[this.driver].execute(rcsName => {
                 // browser context - you may not access client or console
                 try {
                     return window.spot[rcsName]._p2pSignaling.hasActiveConnection();

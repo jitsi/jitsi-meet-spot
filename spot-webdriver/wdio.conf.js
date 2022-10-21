@@ -4,16 +4,10 @@ const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const constants = require('./constants');
 const screenInfo = require('./screen-info');
 
-const drivers = {
-    // latest stable release of chrome driver can be checked at https://chromedriver.chromium.org/
-    // when version is not found, a message is displayed as is trying to download chrome driver from https://chromedriver.storage.googleapis.com/VERSION_SPECIFIED/chromedriver_mac64.zip
-    chrome: { version: '106.0.5249.61' },
-}
-
 
 const DESKTOP_SOURCE_NAME
     = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'warn';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
 const PATH_TO_FAKE_VIDEO
     = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
 
@@ -23,6 +17,7 @@ exports.config = {
     ],
 
     exclude: [
+
         // 'path/to/excluded/files'
     ],
 
@@ -87,12 +82,15 @@ exports.config = {
     connectionRetryCount: 3,
 
     services: [
-        ['selenium-standalone', {
-            logPath: 'logs',
-            installArgs: { drivers }, // drivers to install
-            args: { drivers } // drivers to use
-        }],
-        [ TimelineService ]],
+        [
+            'chromedriver',
+            {
+                logFileName: 'wdio-chromedriver.log', // default
+                outputDir: 'driver-logs', // overwrites the config.outputDir
+                args: [ '--silent' ]
+            }
+        ],
+        [ TimelineService ] ],
 
     framework: 'jasmine',
 
@@ -118,6 +116,6 @@ exports.config = {
         // When running tests against the backend integration, Spot-TVs might
         // encounter JID conflicts while loading the app, so give ample time to
         // recover from them.
-        defaultTimeoutInterval:  constants.MAX_PAGE_LOAD_WAIT + 30000,
-    },
-}
+        defaultTimeoutInterval: constants.MAX_PAGE_LOAD_WAIT + 30000
+    }
+};
