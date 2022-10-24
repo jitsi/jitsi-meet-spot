@@ -1,6 +1,6 @@
 const PageObject = require('./page-object');
 
-const INPUT = '[data-qa-id=meeting-name-input]';
+const INPUT = '.meeting-name-submit';
 const SUBMIT_BUTTON = '[data-qa-id=meeting-name-submit]';
 
 /**
@@ -23,12 +23,12 @@ class MeetingInput extends PageObject {
      * @param {string} meetingName - Text to enter into {@code MeetingInput}.
      * @returns {void}
      */
-    setMeetingName(meetingName) {
-        this.waitForVisible();
+    async setMeetingName(meetingName) {
+        await this.waitForVisible();
 
-        const meetingNameEntry = this.select(INPUT);
+        const meetingNameEntry = await this.select('INPUT');
 
-        meetingNameEntry.setValue(meetingName);
+        await meetingNameEntry.setValue(meetingName);
     }
 
     /**
@@ -36,10 +36,10 @@ class MeetingInput extends PageObject {
      *
      * @returns {void}
      */
-    submit() {
-        const submitButton = this.select(SUBMIT_BUTTON);
+    async submit() {
+        const submitButton = await this.select(SUBMIT_BUTTON);
 
-        submitButton.click();
+        await submitButton.click();
     }
 
     /**
@@ -49,9 +49,9 @@ class MeetingInput extends PageObject {
      * {@code MeetingInput}.
      * @returns {void}
      */
-    submitMeetingName(meetingName) {
-        this.setMeetingName(meetingName);
-        this.submit();
+    async submitMeetingName(meetingName) {
+        await this.setMeetingName(meetingName);
+        await this.submit();
     }
 }
 

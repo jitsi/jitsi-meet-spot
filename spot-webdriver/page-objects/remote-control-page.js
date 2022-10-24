@@ -29,10 +29,10 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {MeetingInput}
      */
-    getMeetingInput() {
-        const meetNowButton = this.waitForElementDisplayed(MEET_NOW_BUTTON);
+    async getMeetingInput() {
+        const meetNowButton = await this.waitForElementDisplayed(MEET_NOW_BUTTON);
 
-        meetNowButton.click();
+        await meetNowButton.click();
 
         return this.meetingInput;
     }

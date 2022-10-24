@@ -89,9 +89,9 @@ class SpotSession {
         await remoteControlPage.waitForVisible();
 
         const testMeetingName = meetingName ? meetingName : `ui-test-${Date.now()}`;
-        const meetingInput = remoteControlPage.getMeetingInput();
+        const meetingInput = await remoteControlPage.getMeetingInput();
 
-        meetingInput.submitMeetingName(testMeetingName);
+        await meetingInput.submitMeetingName(testMeetingName);
 
         const meetingPage = this.spotTV.getMeetingPage();
 

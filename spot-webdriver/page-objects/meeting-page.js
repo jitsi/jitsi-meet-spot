@@ -29,9 +29,11 @@ class MeetingPage extends PageObject {
      *
      * @returns {string}
      */
-    getMeetingName() {
-        const iframe = this.select(MEETING_IFRAME);
-        const meetingUrl = iframe.getAttribute('src');
+    async getMeetingName() {
+        const iframe = await this.select(MEETING_IFRAME);
+
+        const meetingUrl = await iframe.getAttribute('src');
+
         const urlParts = new URL(meetingUrl);
 
         return urlParts.pathname.split('/').pop();

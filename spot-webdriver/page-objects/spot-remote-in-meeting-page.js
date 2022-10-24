@@ -2,21 +2,21 @@ const constants = require('../constants');
 const PageObject = require('./page-object');
 const ScreensharePicker = require('./screenshare-picker');
 
-const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
-const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
-const CANCEL_MEETING_BUTTON = '[data-qa-id=cancel-meeting]';
-const HANG_UP_BUTTON = '[data-qa-id=hangup]';
-const MORE_BUTTON = '[data-qa-id=more]';
-const MORE_MODAL = '[data-qa-id=more-modal]';
-const REMOTE_CONTROL = '[data-qa-id=in-call]';
-const SKIP_FEEDBACK_BUTTON = '[data-qa-id=skip-feedback]';
-const START_SHARE_BUTTON = '[data-qa-id=start-share]';
-const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
-const TILE_VIEW_ENABLE_BUTTON = '[data-qa-id=enter-tile-view]';
-const TILE_VIEW_DISABLE_BUTTON = '[data-qa-id=exit-tile-view]';
-const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
-const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
-const VOLUME_BUTTON = '[data-qa-id=volume]';
+const AUDIO_MUTE_BUTTON = '.mute-audio';
+const AUDIO_UNMUTE_BUTTON = '.unmute-audio';
+const CANCEL_MEETING_BUTTON = '.cancel-meeting';
+const HANG_UP_BUTTON = '.hangup';
+const MORE_BUTTON = '.more';
+const MORE_MODAL = '.more-modal';
+const REMOTE_CONTROL = '.in-call';
+const SKIP_FEEDBACK_BUTTON = '.skip-feedback';
+const START_SHARE_BUTTON = '.start-share';
+const STOP_SHARE_BUTTON = '.stop-share';
+const TILE_VIEW_ENABLE_BUTTON = '.enter-tile-view';
+const TILE_VIEW_DISABLE_BUTTON = '.exit-tile-view';
+const VIDEO_MUTE_BUTTON = '.mute-video';
+const VIDEO_UNMUTE_BUTTON = '.unmute-video';
+const VOLUME_BUTTON = '.volume';
 
 /**
  * A page object for interacting with the in-meeting view of Spot-Remote.
@@ -38,9 +38,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    cancelMeetingJoin() {
-        this.waitForCancelMeetingToDisplay();
-        this.select(CANCEL_MEETING_BUTTON).click();
+    async cancelMeetingJoin() {
+        await this.waitForCancelMeetingToDisplay();
+
+        const element = await this.select(CANCEL_MEETING_BUTTON);
+
+        await element.click();
     }
 
     /**
@@ -230,8 +233,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    waitForCancelMeetingToDisplay() {
-        this.waitForElementDisplayed(CANCEL_MEETING_BUTTON, 20000);
+    async waitForCancelMeetingToDisplay() {
+        await this.waitForElementDisplayed(CANCEL_MEETING_BUTTON, 20000);
     }
 
     /**

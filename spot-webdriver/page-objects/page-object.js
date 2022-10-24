@@ -38,7 +38,7 @@ class PageObject {
     async waitForElementDisplayed(selector, waitTime) {
         const element = await this.select(selector);
 
-        await element.waitForDisplayed(waitTime);
+        await element.waitForDisplayed({ timeout: waitTime });
 
         return element;
     }
