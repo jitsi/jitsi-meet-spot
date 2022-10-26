@@ -37,7 +37,7 @@ class View extends React.Component {
      * @inheritdoc
      */
     render() {
-        const className = `view ${this.props.isAnyModalOpen ? 'modal-open' : ''}`;
+        const className = `view ${this.props.name}-view ${this.props.isAnyModalOpen ? 'modal-open' : ''}`;
 
         return (
             <div

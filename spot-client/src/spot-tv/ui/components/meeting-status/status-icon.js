@@ -21,7 +21,7 @@ export default class StatusIcon extends React.Component {
     render() {
         return (
             <div
-                className = 'status-icon'
+                className = { `status-icon ${this.props.qaId}` }
                 data-qa-id = { this.props.qaId }>
                 { this.props.children }
             </div>

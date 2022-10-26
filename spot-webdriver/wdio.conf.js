@@ -42,7 +42,8 @@ exports.config = {
                     args: [
                         'use-fake-device-for-media-stream',
                         'use-fake-ui-for-media-stream',
-                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`
+                        `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`,
+                        '--ignore-certificate-errors'
                     ]
                 }
             }
@@ -52,7 +53,8 @@ exports.config = {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
                     args: [
-                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`
+                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`,
+                        '--ignore-certificate-errors'
                     ]
                 }
             }

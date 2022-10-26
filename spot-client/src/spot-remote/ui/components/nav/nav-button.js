@@ -82,7 +82,7 @@ export default class NavButton extends React.Component {
 
         return (
             <button
-                className = { rootClassName }
+                className = { `${rootClassName} ${qaId}` }
                 data-qa-id = { qaId }
                 disabled = { disabled }
                 onClick = { this._onClick }

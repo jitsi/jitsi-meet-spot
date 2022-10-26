@@ -4,10 +4,10 @@ const constants = require('../constants');
 
 const PageObject = require('./page-object');
 
-const AUDIO_MUTED_INDICATOR = '[data-qa-id=audio-muted-status]';
+const AUDIO_MUTED_INDICATOR = '.audio-muted-status';
 const MEETING_IFRAME = '#jitsiConferenceFrame0';
-const MEETING_VIEW = '[data-qa-id=meeting-view]';
-const VIDEO_MUTED_INDICATOR = '[data-qa-id=video-muted-status]';
+const MEETING_VIEW = '.meeting-view';
+const VIDEO_MUTED_INDICATOR = '.video-muted-status';
 
 const JITSI_MEET_TILE_VIEW_LAYOUT = '#videoconference_page.tile-view';
 
@@ -54,12 +54,13 @@ class MeetingPage extends PageObject {
      *
      * @returns {boolean}
      */
-    isInTileView() {
+    async isInTileView() {
         let tileViewDisplayed;
 
-        this._executeWithingMeetingFrame(() => {
-            tileViewDisplayed
-                = this.select(JITSI_MEET_TILE_VIEW_LAYOUT).isExisting();
+        await this._executeWithingMeetingFrame(async () => {
+            const tileViewLayoutEl = await this.select(JITSI_MEET_TILE_VIEW_LAYOUT);
+
+            tileViewDisplayed = await tileViewLayoutEl.isExisting();
         });
 
         return tileViewDisplayed;
@@ -72,11 +73,11 @@ class MeetingPage extends PageObject {
      * indicator needs to be in.
      * @returns {void}
      */
-    waitForAudioMutedStateToBe(muted) {
+    async waitForAudioMutedStateToBe(muted) {
         if (muted) {
-            this.waitForElementDisplayed(AUDIO_MUTED_INDICATOR);
+            await this.waitForElementDisplayed(AUDIO_MUTED_INDICATOR);
         } else {
-            this.waitForElementHidden(AUDIO_MUTED_INDICATOR);
+            await this.waitForElementHidden(AUDIO_MUTED_INDICATOR);
         }
     }
 
@@ -100,13 +101,14 @@ class MeetingPage extends PageObject {
      * displayed or not.
      * @returns {void}
      */
-    waitForTileViewStateToBe(enabled) {
-        this._executeWithingMeetingFrame(() => {
+    async waitForTileViewStateToBe(enabled) {
+        await this._executeWithingMeetingFrame(async () => {
             if (enabled) {
-                this.waitForElementDisplayed(JITSI_MEET_TILE_VIEW_LAYOUT);
+                await this.waitForElementDisplayed(JITSI_MEET_TILE_VIEW_LAYOUT);
             } else {
-                this.select(JITSI_MEET_TILE_VIEW_LAYOUT)
-                    .waitForExist(undefined, true);
+                const meetTileViewLayout = await this.select(JITSI_MEET_TILE_VIEW_LAYOUT);
+
+                await meetTileViewLayout.waitForExist({ reverse: true });
             }
         });
     }
@@ -118,11 +120,11 @@ class MeetingPage extends PageObject {
      * indicator needs to be in.
      * @returns {void}
      */
-    waitForVideoMutedStateToBe(muted) {
+    async waitForVideoMutedStateToBe(muted) {
         if (muted) {
-            this.waitForElementDisplayed(VIDEO_MUTED_INDICATOR);
+            await this.waitForElementDisplayed(VIDEO_MUTED_INDICATOR);
         } else {
-            this.waitForElementHidden(VIDEO_MUTED_INDICATOR);
+            await this.waitForElementHidden(VIDEO_MUTED_INDICATOR);
         }
     }
 
@@ -135,16 +137,18 @@ class MeetingPage extends PageObject {
      * @private
      * @returns {void}
      */
-    _executeWithingMeetingFrame(task) {
-        this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
+    async _executeWithingMeetingFrame(task) {
+        const meetingFrameEl = await this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
 
-        this.driver.switchToFrame(this.select(MEETING_IFRAME));
+        await browser[this.driver].switchToFrame(meetingFrameEl);
 
-        this.select('#largeVideoContainer').waitForDisplayed();
+        const largeVideoContainerEl = await browser[this.driver].$('#largeVideoContainer');
 
-        task();
+        await largeVideoContainerEl.waitForDisplayed();
 
-        this.driver.switchToParentFrame();
+        await task();
+
+        await browser[this.driver].switchToParentFrame();
     }
 }
 

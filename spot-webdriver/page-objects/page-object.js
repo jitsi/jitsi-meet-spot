@@ -54,7 +54,8 @@ class PageObject {
     async waitForElementHidden(selector, waitTime) {
         const element = await this.select(selector);
 
-        await element.waitForDisplayed(waitTime, true);
+        await element.waitForDisplayed({ timeout: waitTime,
+            reverse: true });
 
         return element;
     }
@@ -104,7 +105,7 @@ class PageObject {
     async waitForVisible(timeout) {
         const rootElement = await this.select(this.rootSelector);
 
-        await rootElement.waitForExist(timeout);
+        await rootElement.waitForExist({ timeout });
     }
 }
 
