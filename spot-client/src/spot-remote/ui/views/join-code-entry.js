@@ -194,7 +194,9 @@ export class JoinCodeEntry extends React.Component {
                     <div className = { `code-entry-wrapper boxes-${codeLength}` }>
                         <form
                             onSubmit = { this._onFormSubmit }>
-                            <div data-qa-id = { 'join-code-input' }>
+                            <div
+                                className = 'join-code-input'
+                                data-qa-id = { 'join-code-input' }>
                                 <CodeInput
                                     length = { codeLength }
                                     onChange = { this._onCodeChange } />

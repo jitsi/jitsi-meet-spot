@@ -1,9 +1,9 @@
 const constants = require('../constants');
 const PageObject = require('./page-object');
 
-const JOIN_CODE_INPUT = '[data-qa-id=join-code-input]';
-const JOIN_CODE_SUBMIT_BUTTON = '[data-qa-id=join-code-submit]';
-const JOIN_CODE_VIEW = '[data-qa-id=join-code-view]';
+const JOIN_CODE_INPUT = '.join-code-input';
+const JOIN_CODE_SUBMIT_BUTTON = '.join-code-submit';
+const JOIN_CODE_VIEW = '.join-code-view';
 
 /**
  * A page object for interacting with the join code entry view of Spot-Remote.
