@@ -86,11 +86,12 @@ class MeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    waitForMeetingJoined() {
-        this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
+    async waitForMeetingJoined() {
+        await this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
 
-        this.select('.loading-curtain')
-            .waitForExist(constants.MEETING_LOAD_WAIT, true);
+        const loadingCurtainEl = await this.select('.loading-curtain');
+
+        await loadingCurtainEl.waitForExist({ timeout: constants.MEETING_LOAD_WAIT, reverse: true});
     }
 
     /**

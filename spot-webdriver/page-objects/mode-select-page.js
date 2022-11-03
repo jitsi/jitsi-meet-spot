@@ -1,7 +1,7 @@
 const PageObject = require('./page-object');
 
-const MODE_SELECTION = '[data-qa-id=mode-select]';
-const REMOTE_CONTROL_BUTTON = '[data-qa-id=remote-control]';
+const MODE_SELECTION = '.mode-select';
+const REMOTE_CONTROL_BUTTON = '.remote-control';
 
 /**
  * A page object for interacting with the Share Mode view for choosing to
@@ -22,10 +22,10 @@ class ModeSelectPage extends PageObject {
      *
      * @returns {void}
      */
-    selectFullRemoteControlMode() {
-        const remoteControlButton = this.waitForElementDisplayed(REMOTE_CONTROL_BUTTON);
+    async selectFullRemoteControlMode() {
+        const remoteControlButton = await this.waitForElementDisplayed(REMOTE_CONTROL_BUTTON);
 
-        remoteControlButton.click();
+        await remoteControlButton.click();
     }
 }
 

@@ -58,7 +58,7 @@ export class ModeSelect extends React.Component {
                         </span>
                     </button>
                     <button
-                        className = 'selection'
+                        className = 'selection remote-control'
                         data-qa-id = 'remote-control'
                         onClick = { onGoToSpotRemoveView }>
                         <ScreenShare />

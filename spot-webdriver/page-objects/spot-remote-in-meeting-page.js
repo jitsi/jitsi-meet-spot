@@ -193,12 +193,13 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    stopScreensharing() {
-        this.waitForScreensharingStateToBe(true);
+    async stopScreensharing() {
+        await this.waitForScreensharingStateToBe(true);
+        const stopShareEl = await this.select(STOP_SHARE_BUTTON);
 
-        this.select(STOP_SHARE_BUTTON).click();
+        await stopShareEl.click();
 
-        this.screensharePicker.stopScreensharing();
+        await this.screensharePicker.stopScreensharing();
     }
 
     /**

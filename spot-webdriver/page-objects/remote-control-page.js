@@ -5,7 +5,7 @@ const ScreensharePicker = require('./screenshare-picker');
 const MEET_NOW_BUTTON = '[data-qa-id=meet-now]';
 const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
 const SHARE_CONTENT_BUTTON = '[data-qa-id=share-content]';
-const WAITING_FOR_CALL_SUBVIEW = '[data-qa-id=waiting-for-call-view]';
+const WAITING_FOR_CALL_SUBVIEW = '.waiting-for-call-view';
 const WAITING_FOR_SPOT_TV_LABEL = '[data-qa-id=waiting-for-spot-tv]';
 
 /**
@@ -52,8 +52,8 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    waitWaitingForCallViewToDisplay() {
-        this.waitForElementDisplayed(WAITING_FOR_CALL_SUBVIEW);
+    async waitWaitingForCallViewToDisplay() {
+        await this.waitForElementDisplayed(WAITING_FOR_CALL_SUBVIEW);
     }
 
     /**

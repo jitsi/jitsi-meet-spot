@@ -1,7 +1,7 @@
 const PageObject = require('./page-object');
 
-const STOP_SHARE_CTA = '[data-qa-id=stop-share]';
-const STOP_SHARE_BUTTON = '[data-qa-id=stop-share-button]';
+const STOP_SHARE_CTA = '.stop-share';
+const STOP_SHARE_BUTTON = '.stop-share-button';
 
 /**
  * A page object for interacting with the Share Mode view of Spot-Remote for
@@ -14,6 +14,7 @@ class StopSharePage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
+        console.log('[Bogdan] StopSharePage ctor driver', driver, STOP_SHARE_CTA);
         super(driver, STOP_SHARE_CTA);
     }
 
@@ -22,10 +23,10 @@ class StopSharePage extends PageObject {
      *
      * @returns {void}
      */
-    stopScreensharing() {
-        const stopShareButton = this.waitForElementDisplayed(STOP_SHARE_BUTTON);
+    async stopScreensharing() {
+        const stopShareButton = await this.waitForElementDisplayed(STOP_SHARE_BUTTON);
 
-        stopShareButton.click();
+        await stopShareButton.click();
     }
 }
 

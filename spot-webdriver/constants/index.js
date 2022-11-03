@@ -42,6 +42,11 @@ module.exports = {
     MEETING_JOIN_WAIT: 15000,
 
     /**
+     * The maximum amount of time, in milliseconds, to allow Jitsi-Meet to load
+     */
+    MEETING_LOAD_WAIT: 20000,
+
+    /**
      * The amount of time to wait for a Spot-Remote and Spot-TV to create a
      * peer-to-peer connection to each other.
      */

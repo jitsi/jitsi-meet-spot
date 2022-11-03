@@ -86,7 +86,7 @@ class WaitingForCallView extends React.Component {
 
         return (
             <div
-                className = 'waiting-view'
+                className = 'waiting-view waiting-for-call-view'
                 data-qa-id = 'waiting-for-call-view'>
                 <div className = 'view-header'>
                     <RoomName />

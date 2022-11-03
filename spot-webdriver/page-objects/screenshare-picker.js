@@ -36,11 +36,11 @@ class ScreensharePicker extends PageObject {
      *
      * @returns {void}
      */
-    stopScreensharing() {
+    async stopScreensharing() {
         const stopShareButton
-            = this.waitForElementDisplayed(STOP_SHARE_CONFIRM);
+            = await this.waitForElementDisplayed(STOP_SHARE_CONFIRM);
 
-        stopShareButton.click();
+        await stopShareButton.click();
     }
 }
 
