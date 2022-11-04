@@ -89,7 +89,10 @@ exports.config = {
             {
                 logFileName: 'wdio-chromedriver.log', // default
                 outputDir: 'driver-logs', // overwrites the config.outputDir
-                args: [ '--silent' ]
+                args: [ '--silent' ],
+                // force use chrome driver 105 from a different folder as the one from "Applications" gets updated automatically by company rules
+                // TODO - find a way to reference it from node_modules/chromedriver as in package json we take the version 105 version
+                chromedriverCustomPath: '/Users/bduduman/Downloads/chromedriver',
             }
         ],
         [ TimelineService ] ],

@@ -52,7 +52,7 @@ class SpotUser {
      * @returns {void}
      */
     async clearStorage() {
-        await this.driver.executeAsync(done => {
+        await browser[this.driver].executeAsync(done => {
             try {
                 localStorage.clear();
                 done();
@@ -69,7 +69,7 @@ class SpotUser {
      * @protected
      */
     async disconnectRemoteControlService() {
-        await this.driver.executeAsync((rcsServiceName, done) => {
+        await browser[this.driver].executeAsync((rcsServiceName, done) => {
             try {
                 window.spot[rcsServiceName].disconnect()
                     .then(done, done);
@@ -103,13 +103,15 @@ class SpotUser {
      *
      * @returns {void}
      */
-    setNetworkOffline() {
-        this.driver.setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+    async setNetworkOffline() {
+        console.log('Bogdan setNetworkOffline1')
+        await browser[this.driver].setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
+        console.log('Bogdan setNetworkOffline2')
 
         // It is expected that all services would drop the connection when internet goes offline,
         // but turns out that Websockets have to be killed, because somehow they avoid the link conditioner setting
         // once established. They will fail to reconnect while the network is offline though.
-        this.driver.execute(rcsServiceName => {
+        await browser[this.driver].execute(rcsServiceName => {
             try {
                 window.spot[rcsServiceName].xmppConnection.xmppConnection.xmpp.connection._proto.socket.close();
                 // eslint-disable-next-line no-empty
@@ -117,6 +119,8 @@ class SpotUser {
 
             }
         }, this._remoteControlServiceName);
+
+        console.log('Bogdan setNetworkOffline3 (closed socket)')
     }
 
     /**
@@ -125,7 +129,7 @@ class SpotUser {
      * @returns {void}
      */
     async setNetworkOnline() {
-        await this.driver.setNetworkConditions({}, 'No throttling');
+        await browser[this.driver].setNetworkConditions({}, 'No throttling');
     }
 
     /**
@@ -143,8 +147,8 @@ class SpotUser {
      *
      * @returns {void}
      */
-    stopP2PConnection() {
-        this.driver.execute(rcsName => {
+    async stopP2PConnection() {
+        await browser[this.driver].execute(rcsName => {
             try {
                 window.spot[rcsName]._p2pSignaling.stop();
             } catch (e) {
@@ -167,9 +171,10 @@ class SpotUser {
                 } catch (e) {
                     return false;
                 }
-            }, this._remoteControlServiceName),
-            constants.P2P_ESTABLISHED_WAIT,
-            `p2p not established with ${this._remoteControlServiceName}`
+            }, this._remoteControlServiceName), {
+                timeout: constants.P2P_ESTABLISHED_WAIT,
+                timeoutMsg: `p2p not established with ${this._remoteControlServiceName}`
+            }
         );
     }
 
@@ -178,9 +183,9 @@ class SpotUser {
      *
      * @returns {void}
      */
-    waitForSignalingConnectionEstablished() {
-        this.driver.waitUntil(
-            () => this.driver.execute(rcsName => {
+    async waitForSignalingConnectionEstablished() {
+        await browser[this.driver].waitUntil(
+            async () => await browser[this.driver].execute(rcsName => {
                 // browser context - you may not access client or console
                 try {
                     const internalXmppConnection = window.spot[rcsName].xmppConnection;
@@ -191,9 +196,10 @@ class SpotUser {
                 } catch (e) {
                     return false;
                 }
-            }, this._remoteControlServiceName),
-            constants.MAX_PAGE_LOAD_WAIT,
-            `signaling not established with ${this._remoteControlServiceName}`
+            }, this._remoteControlServiceName), {
+                timeout: constants.MAX_PAGE_LOAD_WAIT,
+                timeoutMsg: `signaling not established with ${this._remoteControlServiceName}`
+            }
         );
     }
 
@@ -202,19 +208,34 @@ class SpotUser {
      *
      * @returns {void}
      */
-    waitForSignalingConnectionStopped() {
-        this.driver.waitUntil(
-            () => this.driver.execute(rcsName => {
+    async waitForSignalingConnectionStopped() {
+        console.log('Bogdan waitForSignalingConnectionStopped 1', this.driver);
+
+        if (this.driver === 'remoteControlBrowser') {
+            console.log('Bogdan pausing');
+            // await browser[this.driver].pause(30000);
+        }
+
+        await browser[this.driver].waitUntil(
+            async () => await browser[this.driver].execute(rcsName => {
                 // browser context - you may not access client or console
                 try {
+                    console.log('Bogdan waitForSignalingConnectionStopped 2')
+                    console.log('BOGDAN waitForSignalingConnectionStopped', window.spot[rcsName], window.spot[rcsName].xmppConnection.isConnected())
+
                     return !window.spot[rcsName].xmppConnection.isConnected();
                 } catch (e) {
+                    console.log('Bogdan waitForSignalingConnectionStopped 3')
                     return true;
                 }
-            }, this._remoteControlServiceName),
-            constants.SIGNALING_DISCONNECT_TIMEOUT,
-            `signaling still connected with ${this._remoteControlServiceName}`
-        );
+            }, this._remoteControlServiceName), {
+                timeout: constants.SIGNALING_DISCONNECT_TIMEOUT,
+                timeoutMsg: `signaling still connected with ${this._remoteControlServiceName}`
+            }
+            );
+
+        // await browser[this.driver].pause(120000);
+        console.log('Bogdan waitForSignalingConnectionStopped 4', this.driver);
     }
 
 }

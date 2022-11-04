@@ -131,18 +131,18 @@ class SpotSession {
      *
      * @returns {void}
      */
-    startPermanentSpotRemote() {
+    async startPermanentSpotRemote() {
         const queryParams = new Map();
 
         queryParams.set(QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN, constants.BACKEND_REFRESH_TOKEN || '');
 
-        this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
+        await this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
 
         // The join code page once feed with the pairing code will redirect to remote-control.
         // It can't go directly to the remote control page, because the join code page starts the connection.
-        this.spotRemote.getRemoteControlPage().waitForVisible();
+        await this.spotRemote.getRemoteControlPage().waitForVisible();
 
-        this.spotRemote.waitForP2PConnectionEstablished();
+        await this.spotRemote.waitForP2PConnectionEstablished();
     }
 
     /**
