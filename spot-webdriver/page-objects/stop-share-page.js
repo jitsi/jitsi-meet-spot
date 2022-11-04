@@ -14,7 +14,6 @@ class StopSharePage extends PageObject {
      * @inheritdoc
      */
     constructor(driver) {
-        console.log('[Bogdan] StopSharePage ctor driver', driver, STOP_SHARE_CTA);
         super(driver, STOP_SHARE_CTA);
     }
 

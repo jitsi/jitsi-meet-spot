@@ -18,7 +18,6 @@ describe('While in a meeting ', () => {
         const spotTVMeetingPage = spotTV.getMeetingPage();
 
         await spotRemoteInMeetingPage.muteAudio();
-        console.log('Bogdan toggle after muteAudio');
 
         await spotRemoteInMeetingPage.waitForAudioMutedStateToBe(true);
         await spotTVMeetingPage.waitForAudioMutedStateToBe(true);

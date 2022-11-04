@@ -104,9 +104,7 @@ class SpotUser {
      * @returns {void}
      */
     async setNetworkOffline() {
-        console.log('Bogdan setNetworkOffline1')
         await browser[this.driver].setNetworkConditions(_OFFLINE_NETWORK_CONDITIONS);
-        console.log('Bogdan setNetworkOffline2')
 
         // It is expected that all services would drop the connection when internet goes offline,
         // but turns out that Websockets have to be killed, because somehow they avoid the link conditioner setting
@@ -119,8 +117,6 @@ class SpotUser {
 
             }
         }, this._remoteControlServiceName);
-
-        console.log('Bogdan setNetworkOffline3 (closed socket)')
     }
 
     /**
@@ -209,23 +205,12 @@ class SpotUser {
      * @returns {void}
      */
     async waitForSignalingConnectionStopped() {
-        console.log('Bogdan waitForSignalingConnectionStopped 1', this.driver);
-
-        if (this.driver === 'remoteControlBrowser') {
-            console.log('Bogdan pausing');
-            // await browser[this.driver].pause(30000);
-        }
-
         await browser[this.driver].waitUntil(
             async () => await browser[this.driver].execute(rcsName => {
                 // browser context - you may not access client or console
                 try {
-                    console.log('Bogdan waitForSignalingConnectionStopped 2')
-                    console.log('BOGDAN waitForSignalingConnectionStopped', window.spot[rcsName], window.spot[rcsName].xmppConnection.isConnected())
-
                     return !window.spot[rcsName].xmppConnection.isConnected();
                 } catch (e) {
-                    console.log('Bogdan waitForSignalingConnectionStopped 3')
                     return true;
                 }
             }, this._remoteControlServiceName), {
@@ -233,9 +218,6 @@ class SpotUser {
                 timeoutMsg: `signaling still connected with ${this._remoteControlServiceName}`
             }
             );
-
-        // await browser[this.driver].pause(120000);
-        console.log('Bogdan waitForSignalingConnectionStopped 4', this.driver);
     }
 
 }

@@ -44,8 +44,10 @@ class MeetingPage extends PageObject {
      *
      * @returns {boolean}
      */
-    isDisplayingMeeting() {
-        return this.select(MEETING_IFRAME).isDisplayed();
+    async isDisplayingMeeting() {
+        const meetingIframeEl = await this.select(MEETING_IFRAME);
+
+        return await meetingIframeEl.isDisplayed();
     }
 
     /**
