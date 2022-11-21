@@ -16,7 +16,9 @@ export function WaitingForSpotTVOverlay({ productName, t }) {
         <StatusOverlay
             showBackground = { true }
             title = { t('appStatus.waitingForTv', { productName }) }>
-            <div data-qa-id = 'waiting-for-spot-tv'>
+            <div
+                data-qa-id = 'waiting-for-spot-tv'
+                id = 'waiting-for-spot-tv'>
                 { t('appStatus.checkTvConnection', { productName }) }
             </div>
         </StatusOverlay>

@@ -103,6 +103,7 @@ class WaitingForCallView extends React.Component {
                     </NavItem>
                     <NavItem
                         active = { activeTab === 'input' }
+                        id = 'meet-now'
                         label = { t('adhoc.meetNow') }
                         onClick = { this._onSetInputActive }
                         qaId = 'meet-now'>
@@ -116,6 +117,7 @@ class WaitingForCallView extends React.Component {
                     </NavItem>
                     <NavItem
                         active = { activeTab === 'share' }
+                        id = 'share-content'
                         label = { t('commands.share') }
                         onClick = { this._onSetScreenshareSelectActive }
                         qaId = 'share-content'>

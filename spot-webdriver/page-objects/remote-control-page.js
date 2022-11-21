@@ -2,11 +2,11 @@ const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 const ScreensharePicker = require('./screenshare-picker');
 
-const MEET_NOW_BUTTON = '[data-qa-id=meet-now]';
-const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
-const SHARE_CONTENT_BUTTON = '[data-qa-id=share-content]';
+const MEET_NOW_BUTTON = '#meet-now';
+const REMOTE_CONTROL = '.remoteControl-view';
+const SHARE_CONTENT_BUTTON = '#share-content';
 const WAITING_FOR_CALL_SUBVIEW = '.waiting-for-call-view';
-const WAITING_FOR_SPOT_TV_LABEL = '[data-qa-id=waiting-for-spot-tv]';
+const WAITING_FOR_SPOT_TV_LABEL = '#waiting-for-spot-tv]';
 
 /**
  * A page object for interacting with the waiting view of Spot-Remote.
