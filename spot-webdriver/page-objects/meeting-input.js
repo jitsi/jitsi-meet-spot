@@ -1,7 +1,7 @@
 const PageObject = require('./page-object');
 
-const INPUT = '.meeting-name-submit';
-const SUBMIT_BUTTON = '[data-qa-id=meeting-name-submit]';
+const INPUT = '.meeting-name-input';
+const SUBMIT_BUTTON = '.meeting-name-submit';
 
 /**
  * A page object for interacting with Spot-Remote's input field for entering a
@@ -26,7 +26,7 @@ class MeetingInput extends PageObject {
     async setMeetingName(meetingName) {
         await this.waitForVisible();
 
-        const meetingNameEntry = await this.select('INPUT');
+        const meetingNameEntry = await this.select(INPUT);
 
         await meetingNameEntry.setValue(meetingName);
     }

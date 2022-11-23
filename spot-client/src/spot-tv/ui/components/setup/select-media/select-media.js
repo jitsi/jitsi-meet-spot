@@ -150,6 +150,7 @@ class SelectMedia extends React.Component {
             <MediaSelector
                 device = { selectedScreenshareDongle }
                 devices = { screenshareDongles }
+                id = 'screenshare'
                 key = 'screenshare'
                 label = { t('setup.screenShare') }
                 onChange = { this._onScreenshareChange }
@@ -189,6 +190,7 @@ class SelectMedia extends React.Component {
                 </div>
                 <div className = 'setup-buttons'>
                     <Button
+                        className = 'device-selection-submit'
                         disabled = { saving }
                         onClick = { this._onSubmit }
                         qaId = 'device-selection-submit'>

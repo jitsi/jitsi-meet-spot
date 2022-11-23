@@ -2,7 +2,7 @@ const constants = require('../constants');
 const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
-const ADMIN_SETTINGS_BUTTON = '[data-qa-id=admin-settings]';
+const ADMIN_SETTINGS_BUTTON = '.admin-settings';
 const CALENDAR_VIEW = '//div[@class="spot-home"]';
 const INFO_CODE = '//span[@class="info-code-container"]/span';
 
@@ -40,12 +40,12 @@ class CalendarPage extends PageObject {
      * @returns {void}
      */
     async goToAdminPage() {
-        const adminSettingsButtons = await browser[this.driver].$(ADMIN_SETTINGS_BUTTON);
+        const adminSettingsButtons = await this.select(ADMIN_SETTINGS_BUTTON);
 
-        adminSettingsButtons.waitForExist();
-        adminSettingsButtons.moveTo();
-        adminSettingsButtons.waitForDisplayed();
-        adminSettingsButtons.click();
+        await adminSettingsButtons.waitForExist();
+        await adminSettingsButtons.moveTo();
+        await adminSettingsButtons.waitForDisplayed();
+        await adminSettingsButtons.click();
     }
 
     /**

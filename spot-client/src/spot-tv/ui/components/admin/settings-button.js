@@ -21,7 +21,7 @@ function SettingsButton(props) {
 
     return (
         <a
-            className = 'cog'
+            className = 'cog admin-settings'
             data-qa-id = 'admin-settings'
             onClick = { toggleAdminModal }>
             <Settings />

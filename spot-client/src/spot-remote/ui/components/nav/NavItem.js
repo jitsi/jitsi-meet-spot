@@ -8,13 +8,14 @@ import React from 'react';
  * instance is to be initialized.
  * @returns {ReactElement}
  */
-export default function NavItem({ active, children, label, onClick, qaId }) {
+export default function NavItem({ id, active, children, label, onClick, qaId }) {
     const className = `nav-item ${active ? 'active' : ''}`;
 
     return (
         <button
             className = { className }
             data-qa-id = { qaId }
+            id = { id }
             onClick = { onClick }
             type = 'button'>
             <div className = 'nav-item-content'>
@@ -30,6 +31,7 @@ export default function NavItem({ active, children, label, onClick, qaId }) {
 NavItem.propTypes = {
     active: PropTypes.bool,
     children: PropTypes.node,
+    id: PropTypes.string,
     label: PropTypes.string,
     onClick: PropTypes.func,
     qaId: PropTypes.string

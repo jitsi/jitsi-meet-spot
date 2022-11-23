@@ -74,7 +74,7 @@ export class ScreensharePicker extends React.Component {
     render() {
         return (
             <div
-                className = 'nav screenshare-select'
+                className = 'nav screenshare-select screenshare-picker'
                 data-qa-id = 'screenshare-picker'>
                 { this._renderContent() }
             </div>
@@ -172,7 +172,7 @@ export class ScreensharePicker extends React.Component {
                 </div>
                 <div className = 'options'>
                     <NavButton
-                        className = 'screenshare'
+                        className = 'screenshare start-wireless-screenshare'
                         label = { t('screenshare.wireless') }
                         onClick = { this._onShowStartWireless }
                         qaId = 'start-wireless-screenshare'>
@@ -268,7 +268,7 @@ export class ScreensharePicker extends React.Component {
                 <div className = 'footer'>
                     <Button
                         appearance = 'subtle'
-                        className = 'cta-button'
+                        className = 'cta-button stop-share-button'
                         onClick = { onStopScreensharing }
                         qaId = 'stop-share-button'>
                         { t('screenshare.stopSharing') }

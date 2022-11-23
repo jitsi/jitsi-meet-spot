@@ -1,10 +1,10 @@
 const PageObject = require('./page-object');
 
-const ADMIN_VIEW = '[data-qa-id=admin-view]';
-const DEVICE_SELECTION_START_BUTTON = '[data-qa-id=device-selection-button]';
-const DEVICE_SELECTION_SUBMIT_BUTTON = '[data-qa-id=device-selection-submit]';
-const EXIT_BUTTON = '[data-qa-id=modal-close]';
-const SCREENSHARE_SELECTOR = '[data-qa-id=screenshare]';
+const ADMIN_VIEW = '.admin-view';
+const DEVICE_SELECTION_START_BUTTON = '.device-selection-button';
+const DEVICE_SELECTION_SUBMIT_BUTTON = '.device-selection-submit';
+const EXIT_BUTTON = '.modal-close';
+const SCREENSHARE_SELECTOR = '#screenshare';
 
 /**
  * A page object for interacting with the admin configuration view of a Spot-TV.
@@ -24,10 +24,10 @@ class AdminPage extends PageObject {
      *
      * @returns {void}
      */
-    exit() {
-        const exitButton = this.waitForElementDisplayed(EXIT_BUTTON);
+    async exit() {
+        const exitButton = await this.waitForElementDisplayed(EXIT_BUTTON);
 
-        exitButton.click();
+        await exitButton.click();
     }
 
     /**
@@ -39,32 +39,32 @@ class AdminPage extends PageObject {
      * passed then any configured screensharing input will be unset.
      * @returns {void}
      */
-    setScreenshareInput(deviceLabel) {
+    async setScreenshareInput(deviceLabel) {
         const changeScreenshareButton
-            = this.waitForElementDisplayed(DEVICE_SELECTION_START_BUTTON);
+        = await this.waitForElementDisplayed(DEVICE_SELECTION_START_BUTTON);
 
-        changeScreenshareButton.click();
+        await changeScreenshareButton.click();
 
         const screenshareSelector
-            = this.waitForElementDisplayed(SCREENSHARE_SELECTOR);
+            = await this.waitForElementDisplayed(SCREENSHARE_SELECTOR);
 
-        screenshareSelector.click();
+        await screenshareSelector.click();
 
         const deviceSelection = `li*=${deviceLabel}`;
-        const deviceLabelOption = this.waitForElementDisplayed(deviceSelection);
+        const deviceLabelOption = await this.waitForElementDisplayed(deviceSelection);
 
-        deviceLabelOption.click();
+        await deviceLabelOption.click();
 
-        this.waitForElementHidden(deviceSelection);
+        await this.waitForElementHidden(deviceSelection);
 
         const submitButton
-            = this.waitForElementDisplayed(DEVICE_SELECTION_SUBMIT_BUTTON);
+            = await this.waitForElementDisplayed(DEVICE_SELECTION_SUBMIT_BUTTON);
 
-        submitButton.click();
+        await submitButton.click();
 
         // Wait for the screenshare selector to be hidden to signal submission
         // complete.
-        this.waitForElementHidden(SCREENSHARE_SELECTOR);
+        await this.waitForElementHidden(SCREENSHARE_SELECTOR);
     }
 }
 

@@ -171,9 +171,9 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithPicker() {
-        this.startWirelessScreenshareWithoutPicker();
-        this.screensharePicker.startWirelessScreenshare();
+    async startWirelessScreenshareWithPicker() {
+        await this.startWirelessScreenshareWithoutPicker();
+        await this.screensharePicker.startWirelessScreenshare();
     }
 
     /**
@@ -182,10 +182,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithoutPicker() {
-        this.waitForScreensharingStateToBe(false);
+    async startWirelessScreenshareWithoutPicker() {
+        await this.waitForScreensharingStateToBe(false);
 
-        this.select(START_SHARE_BUTTON).click();
+        const startShareButton = await this.select(START_SHARE_BUTTON)
+
+        await startShareButton.click();
     }
 
     /**
@@ -269,7 +271,6 @@ class SpotRemoteInMeetingPage extends PageObject {
                 onStateSelector: STOP_SHARE_BUTTON,
                 offStateSelector: START_SHARE_BUTTON,
                 waitTime: constants.REMOTE_COMMAND_WAIT
-
             });
     }
 

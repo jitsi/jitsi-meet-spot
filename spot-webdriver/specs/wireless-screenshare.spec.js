@@ -16,27 +16,27 @@ describe('A Spot-Remote can screenshare wirelessly', () => {
      * @private
      * @returns {void}
      */
-    function startScreenshareFromHome(isPickerExpected) {
+    async function startScreenshareFromHome(isPickerExpected) {
         const remoteControlPage = spotRemote.getRemoteControlPage();
 
-        remoteControlPage.waitForVisible();
+        await remoteControlPage.waitForVisible();
 
         if (isPickerExpected) {
-            remoteControlPage.startWirelessScreenshareWithPicker();
+            await remoteControlPage.startWirelessScreenshareWithPicker();
         } else {
-            remoteControlPage.startWirelessScreenshareWithoutPicker();
+            await remoteControlPage.startWirelessScreenshareWithoutPicker();
         }
 
         const meetingPage = spotTV.getMeetingPage();
 
-        meetingPage.waitForVisible();
-        meetingPage.waitForMeetingJoined();
+        await meetingPage.waitForVisible();
+        await meetingPage.waitForMeetingJoined();
 
         const inMeetingPage = spotRemote.getInMeetingPage();
 
-        inMeetingPage.waitForScreensharingStateToBe(true);
-        inMeetingPage.stopScreensharing();
-        inMeetingPage.waitForScreensharingStateToBe(false);
+        await inMeetingPage.waitForScreensharingStateToBe(true);
+        await inMeetingPage.stopScreensharing();
+        await inMeetingPage.waitForScreensharingStateToBe(false);
     }
 
     /**
@@ -48,60 +48,61 @@ describe('A Spot-Remote can screenshare wirelessly', () => {
      * @private
      * @returns {void}
      */
-    function startScreenshareFromMeeting(isPickerExpected) {
+    async function startScreenshareFromMeeting(isPickerExpected) {
         const remoteControlPage = spotRemote.getRemoteControlPage();
-        const meetingInput = remoteControlPage.getMeetingInput();
+        const meetingInput = await remoteControlPage.getMeetingInput();
 
-        meetingInput.submitMeetingName();
+        await meetingInput.submitMeetingName();
 
         const meetingPage = spotTV.getMeetingPage();
 
-        meetingPage.waitForVisible();
+        await meetingPage.waitForVisible();
+        await meetingPage.waitForMeetingJoined();
 
         const inMeetingPage = spotRemote.getInMeetingPage();
 
         if (isPickerExpected) {
-            inMeetingPage.startWirelessScreenshareWithPicker();
+            await inMeetingPage.startWirelessScreenshareWithPicker();
         } else {
-            inMeetingPage.startWirelessScreenshareWithoutPicker();
+            await inMeetingPage.startWirelessScreenshareWithoutPicker();
         }
 
-        inMeetingPage.waitForScreensharingStateToBe(true);
+        await inMeetingPage.waitForScreensharingStateToBe(true);
     }
 
-    beforeEach(() => {
-        session.connectRemoteToTV();
+    beforeEach(async () => {
+        await session.connectRemoteToTV();
     });
 
     describe('with no wired screenshare setup', () => {
-        it('from the waiting screen', () => {
-            startScreenshareFromHome(false);
+        it('from the waiting screen', async () => {
+            await startScreenshareFromHome(false);
         });
 
-        it('from in a call', () => {
-            startScreenshareFromMeeting(false);
+        it('from in a call', async () => {
+            await startScreenshareFromMeeting(false);
         });
     });
 
     describe('with wired screenshare set up', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             // Ensure wired screensharing is set up.
             const calendarPage = spotTV.getCalendarPage();
 
-            calendarPage.goToAdminPage();
+            await calendarPage.goToAdminPage();
 
             const adminPage = spotTV.getAdminPage();
 
-            adminPage.setScreenshareInput(constants.FAKE_SCREENSHARE_FILE_NAME);
-            adminPage.exit();
+            await adminPage.setScreenshareInput(constants.FAKE_SCREENSHARE_FILE_NAME);
+            await adminPage.exit();
         });
 
-        it('from the waiting screen', () => {
-            startScreenshareFromHome(true);
+        it('from the waiting screen', async () => {
+            await startScreenshareFromHome(true);
         });
 
-        it('from in a call', () => {
-            startScreenshareFromMeeting(true);
+        it('from in a call', async () => {
+            await startScreenshareFromMeeting(true);
         });
     });
 });

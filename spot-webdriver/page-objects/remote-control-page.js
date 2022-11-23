@@ -62,13 +62,13 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithPicker() {
+    async startWirelessScreenshareWithPicker() {
         // Poll the javascript until wired screensharing is enabled. This is
         // currently necessary because the presence update of wired screensharing
         // becoming enabled can take a variable amount of time and there is no
         // UI indicator that it has become available.
-        this.driver.waitUntil(
-            () => this.driver.execute(() => {
+        await browser[this.driver].waitUntil(
+            async () => await browser[this.driver].execute(() => {
                 // browser context - you may not access client or console
                 try {
                     return window.spot.store.getState().spotTv.wiredScreensharingEnabled;
@@ -80,9 +80,9 @@ class RemoteControlPage extends PageObject {
             'wireless screensharing not available'
         );
 
-        this.startWirelessScreenshareWithoutPicker();
+        await this.startWirelessScreenshareWithoutPicker();
 
-        this.screensharePicker.startWirelessScreenshare();
+        await this.screensharePicker.startWirelessScreenshare();
     }
 
     /**
@@ -91,10 +91,10 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithoutPicker() {
-        const shareContentButton = this.waitForElementDisplayed(SHARE_CONTENT_BUTTON);
+    async startWirelessScreenshareWithoutPicker() {
+        const shareContentButton = await this.waitForElementDisplayed(SHARE_CONTENT_BUTTON);
 
-        shareContentButton.click();
+        await shareContentButton.click();
     }
 }
 
