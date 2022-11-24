@@ -7,7 +7,7 @@ const screenInfo = require('./screen-info');
 
 const DESKTOP_SOURCE_NAME
     = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 const PATH_TO_FAKE_VIDEO
     = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
 
@@ -90,9 +90,9 @@ exports.config = {
                 logFileName: 'wdio-chromedriver.log', // default
                 outputDir: 'driver-logs', // overwrites the config.outputDir
                 args: [ '--silent' ],
-                // force use chrome driver 105 from a different folder as the one from "Applications" gets updated automatically by company rules
-                // TODO - find a way to reference it from node_modules/chromedriver as in package json we take the version 105 version
-                chromedriverCustomPath: '/Users/bduduman/Downloads/chromedriver',
+
+                // localhost run: force use chrome driver 105 from a different folder as the one from "Applications" gets updated automatically by company rules; latest chromedriver 106, 107 have an issue
+                // chromedriverCustomPath: '/Users/bduduman/Downloads/chromedriver',
             }
         ],
         [ TimelineService ] ],
