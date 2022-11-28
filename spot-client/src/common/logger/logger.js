@@ -20,21 +20,25 @@ function formatMessage(level, message, context) {
     };
 
     if (context) {
-        const contextCopy = { ...context };
+        if (typeof context === 'string') {
+            formattedMessage.context = context;
+        } else {
+            const contextCopy = { ...context };
 
-        for (const key in contextCopy) {
-            if (contextCopy.hasOwnProperty(key)
-                && contextCopy[key] instanceof Error) {
-                const error = contextCopy[key];
+            for (const key in contextCopy) {
+                if (contextCopy.hasOwnProperty(key)
+                    && contextCopy[key] instanceof Error) {
+                    const error = contextCopy[key];
 
-                contextCopy[key] = JSON.stringify(
-                    error,
-                    Object.getOwnPropertyNames(error)
-                );
+                    contextCopy[key] = JSON.stringify(
+                        error,
+                        Object.getOwnPropertyNames(error)
+                    );
+                }
             }
+            formattedMessage.context = contextCopy;
         }
 
-        formattedMessage.context = contextCopy;
     }
 
     return formattedMessage;
