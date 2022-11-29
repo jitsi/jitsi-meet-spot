@@ -23,6 +23,7 @@ class ClientController extends EventEmitter {
             self._handleClientMessage(event, message);
         });
         ipcMain.on('spot-client/ready', event => {
+            logger.info('Spot client is loaded and ready.');
             self._spotClientRef = event.sender;
 
             const clearReference = () => {

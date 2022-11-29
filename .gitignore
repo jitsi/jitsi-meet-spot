@@ -68,3 +68,6 @@ buck-out/
 
 # script
 *.pid
+
+# logs
+8x8-spaces-logs*

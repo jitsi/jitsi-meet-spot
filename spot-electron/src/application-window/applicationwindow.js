@@ -3,6 +3,7 @@ const {
 } = require('electron');
 const isDev = require('electron-is-dev');
 const process = require('process');
+const path = require('path');
 const { OnlineDetector } = require('../online-detector');
 const { defaultSpotURL } = require('../../config');
 
@@ -34,7 +35,8 @@ function createApplicationWindow() {
     applicationWindow = new BrowserWindow({
         webPreferences: {
             contextIsolation: false,
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, '..', 'preload', 'index.js')
         }
     });
 

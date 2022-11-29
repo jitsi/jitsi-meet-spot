@@ -2,7 +2,8 @@
 
 import { getLogger } from 'jitsi-meet-logger';
 
-const jitsiLogger = getLogger(null, null, { disableCallerInfo: true });
+const LOG_CONTEXT = 'spot-client';
+const jitsiLogger = getLogger(LOG_CONTEXT, null, { disableCallerInfo: true });
 
 /**
  * Helper to format how logs should be stored with meta data.
@@ -20,25 +21,21 @@ function formatMessage(level, message, context) {
     };
 
     if (context) {
-        if (typeof context === 'string') {
-            formattedMessage.context = context;
-        } else {
-            const contextCopy = { ...context };
+        const contextCopy = { ...context };
 
-            for (const key in contextCopy) {
-                if (contextCopy.hasOwnProperty(key)
-                    && contextCopy[key] instanceof Error) {
-                    const error = contextCopy[key];
+        for (const key in contextCopy) {
+            if (contextCopy.hasOwnProperty(key)
+                && contextCopy[key] instanceof Error) {
+                const error = contextCopy[key];
 
-                    contextCopy[key] = JSON.stringify(
-                        error,
-                        Object.getOwnPropertyNames(error)
-                    );
-                }
+                contextCopy[key] = JSON.stringify(
+                    error,
+                    Object.getOwnPropertyNames(error)
+                );
             }
-            formattedMessage.context = contextCopy;
         }
 
+        formattedMessage.context = contextCopy;
     }
 
     return formattedMessage;
@@ -62,10 +59,15 @@ export default {
      *
      * @param {string} message - The main string to be logged as debug level msg.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    debug(message, context) {
+    debug(message, context, toFile = true) {
         jitsiLogger.debug(formatMessage('debug', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'debug', message, context);
+        }
     },
 
     /**
@@ -73,10 +75,15 @@ export default {
      *
      * @param {string} message - The main string to be logged as an error.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    error(message, context) {
+    error(message, context = '', toFile = true) {
         jitsiLogger.error(formatMessage('error', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'error', message, context);
+        }
     },
 
     /**
@@ -85,10 +92,15 @@ export default {
      * @param {string} message - The main string to be logged as essentially an
      * information level log.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    info(message, context) {
+    info(message, context, toFile = true) {
         jitsiLogger.info(formatMessage('info', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'info', message, context);
+        }
     },
 
     /**
@@ -98,10 +110,15 @@ export default {
      * @param {string} message - The main string to be logged as essentially an
      * information level log.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    log(message, context) {
+    log(message, context, toFile = true) {
         jitsiLogger.log(formatMessage('log', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'log', message, context);
+        }
     },
 
     /**
@@ -109,10 +126,16 @@ export default {
      *
      * @param {string} message - The main string to be logged as a trace.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    trace(message, context) {
+    trace(message, context, toFile = true) {
         jitsiLogger.trace(formatMessage('trace', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'trace', message, context);
+        }
+
     },
 
     /**
@@ -121,9 +144,14 @@ export default {
      *
      * @param {string} message - The main string to be logged a warning.
      * @param {Object} [context] - Additional information to be logged.
+     * @param {boolean} toFile - Logs message to file or not.
      * @returns {void}
      */
-    warn(message, context) {
+    warn(message, context, toFile = true) {
         jitsiLogger.warn(formatMessage('warn', message, context));
+
+        if (toFile && window.api && typeof window.api.logToFile === 'function') {
+            window.api.logToFile(LOG_CONTEXT, 'warn', message, context);
+        }
     }
 };

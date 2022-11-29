@@ -15,17 +15,20 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case BOOTSTRAP_STARTED:
+        // receive logs from main process in order to be displayed in web console.
         nativeController.addMessageListener('spot-electron-logs', (eventObject, level, message, context) => {
             const method = logger[level];
+            const toFile = false;
 
             if (method) {
-                method(message, context);
+                // show log in console but skip save to log file as it was logged to file from main process.
+                method(message, context, toFile);
             } else {
                 logger.warn('Received logs with invalid level from electron logger', {
                     level,
                     message,
                     context
-                });
+                }, toFile);
             }
         });
         break;
