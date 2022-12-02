@@ -70,4 +70,4 @@ buck-out/
 *.pid
 
 # logs
-8x8-spaces-logs*
+spot-logs*
