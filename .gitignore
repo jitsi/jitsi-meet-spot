@@ -68,6 +68,3 @@ buck-out/
 
 # script
 *.pid
-
-# logs
-spot-logs*

@@ -3,7 +3,7 @@ const { app } = require('electron');
 const path = require('path');
 
 log.transports.ipc.level = false;
-log.transports.file.resolvePath = () => path.join(app.getPath('logs'), 'spot-logs.log');
+log.transports.file.resolvePath = () => path.join(app.getPath('logs'), 'spot-console.log');
 log.transports.file.format = '{iso} {text}';
 log.transports.file.maxSize = 1048576 * 20; // 20mb
 
@@ -28,14 +28,13 @@ const ELECTRON_LEVEL_INDEX_MAP = {
  *
  * @param {string} level - The log level index.
  * @param {string} message - The main string to be logged a warning.
- * @param {Object} [context] - Additional information to be logged.
  * @returns {void}
  */
-function logToFile(level, message, context) {
+function logToFile(level, message) {
     const logType = ELECTRON_LEVEL_INDEX_MAP[level];
     const logMethod = log[logType] || log.log;
 
-    logMethod && logMethod(`[${logType}]`, message, context ? JSON.stringify(context) : '');
+    logMethod && logMethod(`[${logType}]`, message);
 }
 
 module.exports = {
