@@ -15,7 +15,6 @@ MiddlewareRegistry.register(() => next => action => {
 
     switch (action.type) {
     case BOOTSTRAP_STARTED:
-        // receive logs from main process in order to be displayed in web console.
         nativeController.addMessageListener('spot-electron-logs', (eventObject, level, message, context) => {
             const method = logger[level];
 

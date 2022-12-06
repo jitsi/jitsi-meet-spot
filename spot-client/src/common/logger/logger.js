@@ -2,7 +2,7 @@
 
 import { getLogger } from 'jitsi-meet-logger';
 
-const jitsiLogger = getLogger('spot-client', null, { disableCallerInfo: true });
+const jitsiLogger = getLogger(null, null, { disableCallerInfo: true });
 
 /**
  * Helper to format how logs should be stored with meta data.
@@ -13,7 +13,6 @@ const jitsiLogger = getLogger('spot-client', null, { disableCallerInfo: true });
  * @returns {string} The log object, which includes metadata, as a string.
  */
 function formatMessage(level, message, context) {
-    const timestamp = Date.now();
     let contextValue;
 
     if (context) {
@@ -33,13 +32,11 @@ function formatMessage(level, message, context) {
         }
     }
 
-    const finalMessage = `[level]: ${level}, [timestamp]: ${timestamp}, [message]: ${message}`;
-
     if (contextValue) {
-        return `${finalMessage}, [context]: ${contextValue}`;
+        return `${message} ${contextValue}`;
     }
 
-    return finalMessage;
+    return message;
 }
 
 /**
