@@ -13,35 +13,30 @@ const jitsiLogger = getLogger(null, null, { disableCallerInfo: true });
  * @returns {string} The log object, which includes metadata, as a string.
  */
 function formatMessage(level, message, context) {
-    const formattedMessage = {
-        level,
-        timestamp: Date.now(),
-        message
-    };
+    let contextValue;
 
     if (context) {
         if (typeof context === 'string') {
-            formattedMessage.context = context;
+            contextValue = context;
         } else {
             const contextCopy = { ...context };
 
             for (const key in contextCopy) {
-                if (contextCopy.hasOwnProperty(key)
-                    && contextCopy[key] instanceof Error) {
+                if (contextCopy.hasOwnProperty(key) && contextCopy[key] instanceof Error) {
                     const error = contextCopy[key];
 
-                    contextCopy[key] = JSON.stringify(
-                        error,
-                        Object.getOwnPropertyNames(error)
-                    );
+                    contextCopy[key] = JSON.stringify(error, Object.getOwnPropertyNames(error));
                 }
             }
-            formattedMessage.context = contextCopy;
+            contextValue = JSON.stringify(contextCopy);
         }
-
     }
 
-    return formattedMessage;
+    if (contextValue) {
+        return `${message} ${contextValue}`;
+    }
+
+    return message;
 }
 
 /**

@@ -1,12 +1,10 @@
-const {
-    BrowserWindow
-} = require('electron');
+const { BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
 const process = require('process');
 const { OnlineDetector } = require('../online-detector');
 const { defaultSpotURL } = require('../../config');
 
-const { logger } = require('../logger');
+const { logger, fileLogger } = require('../logger');
 
 /**
  * The constant is included into the user agent part to allow feature detection in future.
@@ -94,6 +92,10 @@ function createApplicationWindow() {
 
     applicationWindow.loadURL(defaultSpotURL);
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
+
+    applicationWindow.webContents.on('console-message', (_, level, message) => {
+        fileLogger.logToFile(level, message);
+    });
 
     onlineDetector.start();
 
