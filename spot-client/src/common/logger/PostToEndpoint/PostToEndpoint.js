@@ -54,7 +54,7 @@ export default class PostToEndpoint {
                     return accumulator;
                 }
 
-                accumulator.push(JSON.parse(event));
+                accumulator.push(event);
 
                 return accumulator;
             } catch (e) {
