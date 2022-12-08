@@ -140,6 +140,9 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
                 displayName: this.props.displayName,
                 enableDisplayNameInStats: true,
                 prejoinPageEnabled: false,
+                prejoinConfig: {
+                    enabled: false
+                },
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
                 startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
