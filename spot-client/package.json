@@ -48,7 +48,7 @@
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
         "jquery": "3.4.1",
         "js-utils": "github:jitsi/js-utils#400ce825d3565019946ee75d86ed773c6f21e117",
-        "jsdoc": "3.6.3",
+        "jsdoc": "4.0.0",
         "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",
         "libphonenumber-js": "1.7.29",
