@@ -308,7 +308,7 @@ export default {
         bosh: process.env.XMPP_BOSH || `https://${DEFAULT_DOMAIN}/http-bind`,
         hosts: {
             domain: process.env.XMPP_HOSTS_DOMAIN || DEFAULT_DOMAIN,
-            muc: process.env.XMPP_HOSTS_MUC_URL || `conference.${DEFAULT_DOMAIN}`
+            muc: process.env.XMPP_HOSTS_MUC_URL || `spot.${DEFAULT_DOMAIN}`
         }
     }
 };
