@@ -66,7 +66,8 @@ module.exports = {
             exclude: /node_modules/,
             failOnError: true
         }),
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin({
+            patterns: [
             {
                 from: './static',
                 to: '.'
@@ -75,7 +76,7 @@ module.exports = {
                 from: './config.js',
                 to: './config'
             }
-        ]),
+        ]}),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
