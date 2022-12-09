@@ -11,11 +11,15 @@ const webpack = require('webpack');
 module.exports = {
     devServer: {
         compress: true,
-        contentBase: path.join(__dirname, '/'),
         historyApiFallback: true,
         host: '0.0.0.0',
         port: 8000,
-        publicPath: '/dist/'
+        static: {
+            directory: path.join(__dirname, '/'),
+        },
+        devMiddleware: {
+            publicPath: '/dist/'
+          },
     },
     devtool: 'source-map',
     entry: {
