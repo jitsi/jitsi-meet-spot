@@ -11,15 +11,11 @@ const webpack = require('webpack');
 module.exports = {
     devServer: {
         compress: true,
+        contentBase: path.join(__dirname, '/'),
         historyApiFallback: true,
         host: '0.0.0.0',
         port: 8000,
-        static: {
-            directory: path.join(__dirname, '/'),
-        },
-        devMiddleware: {
-            publicPath: '/dist/'
-          },
+        publicPath: '/dist/'
     },
     devtool: 'source-map',
     entry: {
@@ -72,15 +68,15 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-            {
-                from: './static',
-                to: '.'
-            },
-            {
-                from: './config.js',
-                to: './config'
-            }
-        ]}),
+                {
+                    from: './static',
+                    to: '.'
+                },
+                {
+                    from: './config.js',
+                    to: './config'
+                }
+            ] }),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
