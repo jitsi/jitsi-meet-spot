@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
-import { getLogger } from 'jitsi-meet-logger';
+import Logger from '@jitsi/logger';
 
-const jitsiLogger = getLogger(null, null, { disableCallerInfo: true });
+const jitsiLogger = Logger.getLogger(null, null, { disableCallerInfo: true });
 
 /**
  * Helper to format how logs should be stored with meta data.

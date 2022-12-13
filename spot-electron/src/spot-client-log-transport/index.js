@@ -1,1 +1,1 @@
-require('jitsi-meet-logger').addGlobalTransport(require('./SpotClientLogTransport'));
+require('@jitsi/logger').addGlobalTransport(require('./SpotClientLogTransport'));
