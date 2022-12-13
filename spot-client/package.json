@@ -45,7 +45,7 @@
         "inspectpack": "4.7.1",
         "jest": "24.9.0",
         "jest-fetch-mock": "3.0.3",
-        "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5da3033d647054457597920252b3387fa43a17fa",
+        "@jitsi/logger": "2.0.0",
         "jquery": "3.4.1",
         "jsdoc": "4.0.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",

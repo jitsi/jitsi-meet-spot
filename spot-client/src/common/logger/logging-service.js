@@ -1,6 +1,4 @@
-
-import Logger from 'jitsi-meet-logger';
-
+import Logger from '@jitsi/logger';
 
 /**
  * A class responsible for aggregating logs and sending them to a third party
