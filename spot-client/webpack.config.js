@@ -32,11 +32,7 @@ module.exports = {
             },
             {
                 test: /\.(css|scss)$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
+                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
             },
             {
                 test: /\.(jpg|gif)$/,
@@ -66,16 +62,18 @@ module.exports = {
             exclude: /node_modules/,
             failOnError: true
         }),
-        new CopyWebpackPlugin([
-            {
-                from: './static',
-                to: '.'
-            },
-            {
-                from: './config.js',
-                to: './config'
-            }
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: './static',
+                    to: '.'
+                },
+                {
+                    from: './config.js',
+                    to: './config'
+                }
+            ]
+        }),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
@@ -91,9 +89,6 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {
-        modules: [
-            path.resolve('./src'),
-            path.resolve('./node_modules')
-        ]
+        modules: [ path.resolve('./src'), path.resolve('./node_modules') ]
     }
 };

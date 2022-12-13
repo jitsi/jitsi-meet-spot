@@ -12,7 +12,7 @@ module.exports = {
         '<rootDir>/src/**/?(*.)+(test).js?(x)'
     ],
     transformIgnorePatterns: [
-        '<rootDir>/node_modules/(?!js-utils)'
+        '<rootDir>/node_modules/(?!@jitsi/js-utils)'
     ],
     verbose: true
 };

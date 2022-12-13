@@ -1,4 +1,4 @@
-import { generateRoomWithoutSeparator } from 'js-utils/random';
+import { generateRoomWithoutSeparator } from '@jitsi/js-utils/random';
 
 /**
  * Generates a new room name.
