@@ -48,7 +48,6 @@
         "jquery": "3.4.1",
         "@jitsi/js-utils": "2.0.5",
         "jsdoc": "4.0.0",
-        "jwt-decode": "2.2.0",
         "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",
         "libphonenumber-js": "1.7.29",
         "lodash.bindall": "4.4.0",
