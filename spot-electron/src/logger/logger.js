@@ -1,4 +1,4 @@
-const jitsiLogger = require('jitsi-meet-logger').getLogger('spot-electron', undefined, {
+const jitsiLogger = require('@jitsi/logger').getLogger('spot-electron', undefined, {
     disableCallerInfo: true
 });
 

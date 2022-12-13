@@ -4,7 +4,7 @@ const { clientController, events } = require('../client-control');
 /**
  * Log levels supported by the jitsi logger.
  */
-const levels = Object.keys(require('jitsi-meet-logger').levels).map(l => l.toLowerCase());
+const levels = Object.keys(require('@jitsi/logger').levels).map(l => l.toLowerCase());
 
 const LOG_CACHE_SIZE = 1000;
 
