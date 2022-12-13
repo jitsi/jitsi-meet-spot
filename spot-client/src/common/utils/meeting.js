@@ -1,4 +1,4 @@
-import { parseURIString } from 'js-utils/uri';
+import { parseURIString } from '@jitsi/js-utils/uri';
 
 /**
  * Extrapolates a url for a meeting from given strings and matching domains.
@@ -23,6 +23,8 @@ export function findWhitelistedMeetingUrl(fieldsToSearch, knownDomains) {
             const match = _checkPattern(field, urlRegExp, excludePattern);
 
             if (match) {
+                // console.log('BOGDAN match parseURIString');
+
                 const url = parseURIString(match);
 
                 if (url) {
