@@ -43,9 +43,6 @@ module.exports = {
                 loader: 'url-loader'
             },
             {
-                // Parts of lib-jitsi-meet bring in jitsi's js-utils, which
-                // has flow annotations that need processing through babel.
-                exclude: new RegExp(`${__dirname}/node_modules/(?!js-utils)`),
                 loader: 'babel-loader',
                 options: {
                     plugins: [

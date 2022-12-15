@@ -3,7 +3,7 @@ const jQuery = require('jquery');
 
 window.$ = jQuery;
 
-import JitsiMeetJS from 'lib-jitsi-meet/lib-jitsi-meet.min';
+import JitsiMeetJS from 'lib-jitsi-meet';
 
 /**
  * Prevent JitsiMeetJS from spamming the console.

@@ -48,7 +48,7 @@
         "jest-fetch-mock": "3.0.3",
         "jquery": "3.4.1",
         "jsdoc": "4.0.0",
-        "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#a909e594868b17f0c72c85f2a231384f4cb1ea61",
+        "lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1557.0.0+8df33524/lib-jitsi-meet.tgz",
         "libphonenumber-js": "1.10.15",
         "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",
