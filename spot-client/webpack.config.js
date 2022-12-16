@@ -43,7 +43,7 @@ module.exports = () => {
                 },
                 {
                     test: /\.(svg|ttf|eot|woff)$/,
-                    type: 'asset/resource'
+                    type: 'asset/inline'
                 },
                 {
                     loader: 'babel-loader',
