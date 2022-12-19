@@ -1,8 +1,3 @@
-// lib-jitsi-meet assumes jQuery is available globally.
-const jQuery = require('jquery');
-
-window.$ = jQuery;
-
 import JitsiMeetJS from 'lib-jitsi-meet';
 
 /**
