@@ -1,14 +1,6 @@
 import XmppConnection from './xmpp-connection';
 import { tickProcess } from 'common/test-utils';
 
-jest.mock('common/vendor', () => {
-    const { mockJitsiMeetJSProvider } = require('../test-mocks');
-
-    return {
-        JitsiMeetJSProvider: mockJitsiMeetJSProvider
-    };
-});
-
 describe('XmppConnection', () => {
     const IQ_FROM = 'localPart2@domainPart2/resource2';
     const IQ_TO = 'localPart1@domainPart1/resource1';
@@ -52,7 +44,7 @@ describe('XmppConnection', () => {
                     from = "${IQ_FROM}"
                     to = "${IQ_TO}">
                     <spot-status xmlns="https://jitsi.org/spot">
-                        ${spotStatus}                    
+                        ${spotStatus}
                     </spot-status>
                 </presence>
             `;
