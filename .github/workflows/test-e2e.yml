@@ -1,0 +1,25 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    container:
+      image: node:16
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event, running on ${{ runner.os}}, branch name ${{ github.ref}}, ."
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - run: echo "Install and setup Google Chrome version"
+      - uses: browser-actions/setup-chrome@latest
+      - with:
+        chrome-version: 105.0.5195.52
+      - run: chrome --version
+      - run: echo "Prepare run e2e tests"
+      - run: npm run wdio
+      - run: echo "🍏 This job's status is ${{ job.status }}."
