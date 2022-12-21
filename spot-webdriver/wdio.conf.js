@@ -4,20 +4,14 @@ const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const constants = require('./constants');
 const screenInfo = require('./screen-info');
 
-
-const DESKTOP_SOURCE_NAME
-    = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
+const DESKTOP_SOURCE_NAME = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
-const PATH_TO_FAKE_VIDEO
-    = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
+const PATH_TO_FAKE_VIDEO = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
 
 exports.config = {
-    specs: [
-        path.resolve(__dirname, 'specs', '**/*.spec.js')
-    ],
+    specs: [path.resolve(__dirname, 'specs', '**/*.spec.js')],
 
     exclude: [
-
         // 'path/to/excluded/files'
     ],
 
@@ -52,10 +46,7 @@ exports.config = {
             capabilities: {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
-                    args: [
-                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`,
-                        '--ignore-certificate-errors'
-                    ]
+                    args: [`auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`, '--ignore-certificate-errors']
                 }
             }
         }
@@ -89,13 +80,14 @@ exports.config = {
             {
                 logFileName: 'wdio-chromedriver.log', // default
                 outputDir: 'driver-logs', // overwrites the config.outputDir
-                args: [ '--silent' ],
+                args: ['--silent']
 
                 // localhost run: force use chrome driver 105 from a different folder as the one from "Applications" gets updated automatically by company rules; latest chromedriver 106, 107 have an issue
                 // chromedriverCustomPath: '/Users/bduduman/Downloads/chromedriver',
             }
         ],
-        [ TimelineService ] ],
+        [TimelineService]
+    ],
 
     framework: 'jasmine',
 

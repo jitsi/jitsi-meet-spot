@@ -1,7 +1,7 @@
 const SpotSession = require('../user/spot-session');
 const spotSessionStore = require('../user/spotSessionStore');
 
-describe('In share mode', () => {
+xdescribe('In share mode', () => {
     const session = spotSessionStore.createSession();
     const spotTV = session.getSpotTV();
     const spotRemote = session.getSpotRemote();

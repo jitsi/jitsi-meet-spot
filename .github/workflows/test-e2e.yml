@@ -9,49 +9,20 @@ jobs:
             - name: Step 1 - info
               run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event, running on ${{ runner.os}}, branch name ${{ github.ref}}, ."
 
-            - uses: actions/checkout@v3
+            - name: Step 2 - checkout
+              uses: actions/checkout@v3
 
-            - name: cd spot-webdriver
-              run: cd spot-webdriver
-
-            - uses: nanasess/setup-chromedriver@v1
-              with:
-                  chromedriver-version: '105.0.5195.52'
-
-            - name: Step 3 - setup chrome 105
-              uses: browser-actions/setup-chrome@latest
-              with:
-                  chrome-version: 1022525
-
-            - name: Use xvfb
-              if: ${{ false }}
-              run: |
-                  export DISPLAY=:99
-                  chromedriver --url-base=/wd/hub &
-                  sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-
-            - name: Step 4 - check chrome version
-              if: ${{ false }}
-              run: chrome --version
-
-            - name: Step 5 - prepare run e2e tests
-              run: echo "Prepare run e2e tests"
-
-            - name: Step 6.1 - run install [spot-client]
+            - name: Step 3 - run install [spot-client]
               working-directory: spot-client
               run: npm install
 
-            - name: Step 6.2 - start [spot-client]
-              working-directory: spot-client
-              run: npm run start:dev
-
-            - name: Step 6.3 - run install [spot-webdriver]
+            - name: Step 4 - run install [spot-webdriver]
               working-directory: spot-webdriver
               run: npm install
 
-            - name: Step 7 - run tests [spot-webdriver]
+            - name: Step 5 - run tests [spot-webdriver]
               working-directory: spot-webdriver
-              run: npm run start
+              run: npm run start-cli
 
-            - name: Step 8 - job status
+            - name: Step 6 - job status
               run: echo "🍏 This job's status is ${{ job.status }}."

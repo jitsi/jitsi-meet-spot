@@ -2,7 +2,7 @@ const constants = require('../constants');
 
 const spotSessionStore = require('../user/spotSessionStore');
 
-describe('A Spot-Remote can screenshare wirelessly', () => {
+xdescribe('A Spot-Remote can screenshare wirelessly', () => {
     const session = spotSessionStore.createSession();
     const spotTV = session.getSpotTV();
     const spotRemote = session.getSpotRemote();

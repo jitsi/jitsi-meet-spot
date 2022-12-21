@@ -4,6 +4,7 @@
 dist
 lib
 webdriver-results
+driver-logs
 
 # CocoaPods
 Pods/
