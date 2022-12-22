@@ -1,8 +1,8 @@
 const PageObject = require('./page-object');
 
-const SCREENSHARE_PICKER = '[data-qa-id=screenshare-picker]';
-const START_WIRELESS_SCREENSHARE = '[data-qa-id=start-wireless-screenshare]';
-const STOP_SHARE_CONFIRM = '[data-qa-id=stop-share-button]';
+const SCREENSHARE_PICKER = '.screenshare-picker';
+const START_WIRELESS_SCREENSHARE = '.start-wireless-screenshare';
+const STOP_SHARE_CONFIRM = '.stop-share-button';
 
 /**
  * A page object for interacting with the UI for starting wired or wireless
@@ -24,11 +24,11 @@ class ScreensharePicker extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshare() {
+    async startWirelessScreenshare() {
         const startWirelessScreenshareButton
-            = this.waitForElementDisplayed(START_WIRELESS_SCREENSHARE);
+            = await this.waitForElementDisplayed(START_WIRELESS_SCREENSHARE);
 
-        startWirelessScreenshareButton.click();
+        await startWirelessScreenshareButton.click();
     }
 
     /**
@@ -36,11 +36,11 @@ class ScreensharePicker extends PageObject {
      *
      * @returns {void}
      */
-    stopScreensharing() {
+    async stopScreensharing() {
         const stopShareButton
-            = this.waitForElementDisplayed(STOP_SHARE_CONFIRM);
+            = await this.waitForElementDisplayed(STOP_SHARE_CONFIRM);
 
-        stopShareButton.click();
+        await stopShareButton.click();
     }
 }
 

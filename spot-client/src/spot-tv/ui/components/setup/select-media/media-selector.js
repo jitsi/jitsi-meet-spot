@@ -13,6 +13,7 @@ export class MediaSelector extends React.Component {
     static propTypes = {
         device: PropTypes.string,
         devices: PropTypes.array,
+        id: PropTypes.string,
         label: PropTypes.string,
         onChange: PropTypes.func,
         qaId: PropTypes.string,
@@ -38,6 +39,7 @@ export class MediaSelector extends React.Component {
      */
     render() {
         const {
+            id,
             devices,
             device,
             label: selectorLabel,
@@ -45,7 +47,9 @@ export class MediaSelector extends React.Component {
         } = this.props;
 
         return (
-            <div className = 'selector'>
+            <div
+                className = 'selector'
+                id = { id }>
                 <div className = 'select-label'>{ selectorLabel }</div>
                 <SimpleSelect
                     onChange = { this._onChange }

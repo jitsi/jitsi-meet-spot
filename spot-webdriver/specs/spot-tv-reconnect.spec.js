@@ -10,16 +10,17 @@ describe('The reconnect logic', () => {
      * @private
      * @returns {void}
      */
-    function joinMeeting() {
+    async function joinMeeting() {
         const tv = session.getSpotTV();
         const remote = session.getSpotRemote();
 
-        session.connectRemoteToTV();
+        await session.connectRemoteToTV();
 
-        session.joinMeeting();
+        await session.joinMeeting(null, { skipJoinVerification: true });
 
-        remote.getInMeetingPage().waitForVisible();
-        tv.getMeetingPage().waitForMeetingJoined();
+        // wait first for TV to join as remote is a bit slower (loads after tv is connected)
+        await tv.getMeetingPage().waitForMeetingJoined();
+        await remote.getInMeetingPage().waitForVisible();
     }
 
     /**
@@ -30,116 +31,117 @@ describe('The reconnect logic', () => {
      * should disconnect from signaling.
      * @returns {void}
      */
-    function disconnectFromCommunicationPlane(spotUser) {
-        spotUser.setNetworkOffline();
-        spotUser.waitForSignalingConnectionStopped();
-        spotUser.stopP2PConnection();
+    async function disconnectFromCommunicationPlane(spotUser) {
+        await spotUser.setNetworkOffline();
+        await spotUser.waitForSignalingConnectionStopped();
+        await spotUser.stopP2PConnection();
     }
 
     describe('when the internet goes offline', () => {
-        it('in the backend mode Spot TV and permanent remote will both reconnect', () => {
+        it('in the backend mode Spot TV and permanent remote will both reconnect', async () => {
             if (!SpotSession.isBackendEnabled()) {
                 pending();
 
                 return;
             }
 
-            session.startSpotTv();
-            session.startPermanentSpotRemote();
+            await session.startSpotTv();
+            await session.startPermanentSpotRemote();
 
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
 
-            disconnectFromCommunicationPlane(tv);
-            disconnectFromCommunicationPlane(remote);
+            await disconnectFromCommunicationPlane(tv);
+            await disconnectFromCommunicationPlane(remote);
 
-            tv.getLoadingScreen().waitForReconnectingToAppear();
-            remote.getLoadingScreen().waitForLoadingToAppear();
-            remote.getLoadingScreen().waitForReconnectingToAppear();
+            await tv.getLoadingScreen().waitForReconnectingToAppear();
+            await remote.getLoadingScreen().waitForLoadingToAppear();
+            await remote.getLoadingScreen().waitForReconnectingToAppear();
 
-            tv.setNetworkOnline();
-            remote.setNetworkOnline();
+            await tv.setNetworkOnline();
+            await remote.setNetworkOnline();
 
-            remote.getLoadingScreen().waitForLoadingToDisappear();
+            await remote.getLoadingScreen().waitForLoadingToDisappear();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+            await tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
 
-            remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
+            await remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
         });
 
-        it('both Spot TV and temporary Spot Remote will reconnect', () => {
+        it('both Spot TV and temporary Spot Remote will reconnect', async () => {
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
 
-            session.connectRemoteToTV();
+            await session.connectRemoteToTV();
 
-            disconnectFromCommunicationPlane(tv);
-            disconnectFromCommunicationPlane(remote);
+            await disconnectFromCommunicationPlane(tv);
 
-            tv.getLoadingScreen().waitForReconnectingToAppear();
+            await disconnectFromCommunicationPlane(remote);
 
-            tv.setNetworkOnline();
-            remote.setNetworkOnline();
+            await tv.getLoadingScreen().waitForReconnectingToAppear();
+
+            await tv.setNetworkOnline();
+            await remote.setNetworkOnline();
 
             // Spot TV needs more time, because of the MUC JID conflict
-            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+            await tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
 
-            remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
+            await remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
         });
 
-        it('does not disconnect the TV from the meeting', () => {
-            joinMeeting();
+        it('does not disconnect the TV from the meeting', async () => {
+            await joinMeeting();
 
             const tv = session.getSpotTV();
 
-            disconnectFromCommunicationPlane(tv);
+            await disconnectFromCommunicationPlane(tv);
 
-            tv.getLoadingScreen().waitForReconnectingToAppear();
-            expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
+            await tv.getLoadingScreen().waitForReconnectingToAppear();
+            expect(await tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
 
-            tv.setNetworkOnline();
+            await tv.setNetworkOnline();
 
-            tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
-            expect(tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
+            await tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
+            expect(await tv.getMeetingPage().isDisplayingMeeting()).toBe(true);
         });
     });
 
     describe('when signaling goes offline', () => {
-        it('does not disconnect while peer-to-peer connections are active', () => {
+        it('does not disconnect while peer-to-peer connections are active', async () => {
             if (!SpotSession.isBackendEnabled()) {
                 pending();
 
                 return;
             }
 
-            joinMeeting();
+            await joinMeeting();
 
             const tv = session.getSpotTV();
             const remote = session.getSpotRemote();
 
             // Kill the network but allow P2P to persist.
-            tv.setNetworkOffline();
-            tv.waitForSignalingConnectionStopped();
+            await tv.setNetworkOffline();
+            await tv.waitForSignalingConnectionStopped();
 
             // Execute audio mute to test if the peer-to-peer connection is
             // active
             const remoteInMeetingPage = remote.getInMeetingPage();
             const tvMeetingPage = tv.getMeetingPage();
 
-            remoteInMeetingPage.muteAudio();
-            remoteInMeetingPage.waitForAudioMutedStateToBe(true);
-            tvMeetingPage.waitForAudioMutedStateToBe(true);
+            await remoteInMeetingPage.muteAudio();
+            await remoteInMeetingPage.waitForAudioMutedStateToBe(true);
+            await tvMeetingPage.waitForAudioMutedStateToBe(true);
 
             // Now switch signaling online and turn off p2p
-            tv.setNetworkOnline();
-            tv.waitForSignalingConnectionEstablished();
-            tv.stopP2PConnection();
+            await tv.setNetworkOnline();
+            await tv.waitForSignalingConnectionEstablished();
+            await tv.stopP2PConnection();
 
             // Execute audio unmute to check if the connection is still active.
-            remoteInMeetingPage.unmuteAudio();
-            remoteInMeetingPage.waitForAudioMutedStateToBe(false);
-            tvMeetingPage.waitForAudioMutedStateToBe(false);
+            await remoteInMeetingPage.unmuteAudio();
+            await remoteInMeetingPage.waitForAudioMutedStateToBe(false);
+            await tvMeetingPage.waitForAudioMutedStateToBe(false);
         });
     });
 });

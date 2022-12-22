@@ -42,7 +42,7 @@ export default function Button(props) {
         <MaterialButton
             { ...mappedProps }
             classes = { classes }
-            className = { `${mappedProps.className} ${props.className}` }
+            className = { `${mappedProps.className} ${props.className} ${props.qaId}` }
             data-qa-id = { props.qaId }
             disabled = { props.disabled }
             disableRipple = { true }

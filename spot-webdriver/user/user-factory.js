@@ -2,6 +2,7 @@
 
 const SpotTV = require('./spot-tv-user');
 const SpotRemote = require('./spot-remote-user');
+const constants = require('../constants');
 
 /**
  * The current webdriver.io configuration creates two browser drivers. Both
@@ -18,7 +19,7 @@ module.exports = {
      */
     getSpotTV() {
         if (!spotTV) {
-            spotTV = new SpotTV(spotBrowser);
+            spotTV = new SpotTV(constants.SPOT_BROWSER);
         }
 
         return spotTV;
@@ -32,7 +33,7 @@ module.exports = {
      */
     getSpotRemote() {
         if (!spotRemote) {
-            spotRemote = new SpotRemote(remoteControlBrowser);
+            spotRemote = new SpotRemote(constants.REMOTE_CONTROL_BROWSER);
         }
 
         return spotRemote;

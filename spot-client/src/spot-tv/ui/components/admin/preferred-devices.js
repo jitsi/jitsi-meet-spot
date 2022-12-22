@@ -17,6 +17,7 @@ export function PreferredDevices({ onClick, t }) {
     return (
         <AdminEntry entryLabel = { t('admin.devices') }>
             <Button
+                className = 'device-selection-button'
                 onClick = { onClick }
                 qaId = 'device-selection-button'>
                 { t('admin.change') }

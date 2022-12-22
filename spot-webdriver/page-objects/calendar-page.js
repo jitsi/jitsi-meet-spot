@@ -2,9 +2,9 @@ const constants = require('../constants');
 const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 
-const ADMIN_SETTINGS_BUTTON = '[data-qa-id=admin-settings]';
-const CALENDAR_VIEW = '[data-qa-id=home-view]';
-const INFO_CODE = '[data-qa-id=info-code]';
+const ADMIN_SETTINGS_BUTTON = '.admin-settings';
+const CALENDAR_VIEW = '//div[@class="spot-home"]';
+const INFO_CODE = '//span[@class="info-code-container"]/span';
 
 /**
  * A page object for interacting with the calendar view of Spot-TV.
@@ -27,12 +27,11 @@ class CalendarPage extends PageObject {
      *
      * @returns {string}
      */
-    getJoinCode() {
-        const joinCodeDisplay = this.waitForElementDisplayed(INFO_CODE);
-        const fullText = joinCodeDisplay.getText();
-        const parts = fullText.split('/');
+    async getJoinCode() {
+        const joinCodeDisplay = await this.waitForElementDisplayed(INFO_CODE);
+        const fullText = await joinCodeDisplay.getText();
 
-        return parts[parts.length - 1];
+        return fullText;
     }
 
     /**
@@ -40,13 +39,13 @@ class CalendarPage extends PageObject {
      *
      * @returns {void}
      */
-    goToAdminPage() {
-        const adminSettingsButtons = this.driver.$(ADMIN_SETTINGS_BUTTON);
+    async goToAdminPage() {
+        const adminSettingsButtons = await this.select(ADMIN_SETTINGS_BUTTON);
 
-        adminSettingsButtons.waitForExist();
-        adminSettingsButtons.moveTo();
-        adminSettingsButtons.waitForDisplayed();
-        adminSettingsButtons.click();
+        await adminSettingsButtons.waitForExist();
+        await adminSettingsButtons.moveTo();
+        await adminSettingsButtons.waitForDisplayed();
+        await adminSettingsButtons.click();
     }
 
     /**
@@ -58,7 +57,7 @@ class CalendarPage extends PageObject {
      * skipped.
      * @returns {void}
      */
-    visit(queryParams, visibilityWait) {
+    async visit(queryParams, visibilityWait) {
         let calendarPageUrl = constants.SPOT_URL;
 
         if (queryParams) {
@@ -69,8 +68,9 @@ class CalendarPage extends PageObject {
             }
         }
 
-        this.driver.url(calendarPageUrl);
-        visibilityWait === -1 || this.waitForVisible(visibilityWait);
+        await browser[this.driver].url(calendarPageUrl);
+
+        visibilityWait === -1 || await this.waitForVisible(visibilityWait);
     }
 }
 

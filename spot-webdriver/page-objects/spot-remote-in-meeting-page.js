@@ -2,21 +2,21 @@ const constants = require('../constants');
 const PageObject = require('./page-object');
 const ScreensharePicker = require('./screenshare-picker');
 
-const AUDIO_MUTE_BUTTON = '[data-qa-id=mute-audio]';
-const AUDIO_UNMUTE_BUTTON = '[data-qa-id=unmute-audio]';
-const CANCEL_MEETING_BUTTON = '[data-qa-id=cancel-meeting]';
-const HANG_UP_BUTTON = '[data-qa-id=hangup]';
-const MORE_BUTTON = '[data-qa-id=more]';
-const MORE_MODAL = '[data-qa-id=more-modal]';
-const REMOTE_CONTROL = '[data-qa-id=in-call]';
-const SKIP_FEEDBACK_BUTTON = '[data-qa-id=skip-feedback]';
-const START_SHARE_BUTTON = '[data-qa-id=start-share]';
-const STOP_SHARE_BUTTON = '[data-qa-id=stop-share]';
-const TILE_VIEW_ENABLE_BUTTON = '[data-qa-id=enter-tile-view]';
-const TILE_VIEW_DISABLE_BUTTON = '[data-qa-id=exit-tile-view]';
-const VIDEO_MUTE_BUTTON = '[data-qa-id=mute-video]';
-const VIDEO_UNMUTE_BUTTON = '[data-qa-id=unmute-video]';
-const VOLUME_BUTTON = '[data-qa-id=volume]';
+const AUDIO_MUTE_BUTTON = '.mute-audio';
+const AUDIO_UNMUTE_BUTTON = '.unmute-audio';
+const CANCEL_MEETING_BUTTON = '.cancel-meeting';
+const HANG_UP_BUTTON = '.hangup';
+const MORE_BUTTON = '.more';
+const MORE_MODAL = '.more-modal';
+const REMOTE_CONTROL = '.in-call';
+const SKIP_FEEDBACK_BUTTON = '.skip-feedback';
+const START_SHARE_BUTTON = '.start-share';
+const STOP_SHARE_BUTTON = '.stop-share';
+const TILE_VIEW_ENABLE_BUTTON = '.enter-tile-view';
+const TILE_VIEW_DISABLE_BUTTON = '.exit-tile-view';
+const VIDEO_MUTE_BUTTON = '.mute-video';
+const VIDEO_UNMUTE_BUTTON = '.unmute-video';
+const VOLUME_BUTTON = '.volume';
 
 /**
  * A page object for interacting with the in-meeting view of Spot-Remote.
@@ -38,9 +38,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    cancelMeetingJoin() {
-        this.waitForCancelMeetingToDisplay();
-        this.select(CANCEL_MEETING_BUTTON).click();
+    async cancelMeetingJoin() {
+        await this.waitForCancelMeetingToDisplay();
+
+        const element = await this.select(CANCEL_MEETING_BUTTON);
+
+        await element.click();
     }
 
     /**
@@ -59,8 +62,10 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {boolean}
      */
-    hasMoreButton() {
-        return this.select(MORE_BUTTON).isExisting();
+    async hasMoreButton() {
+        const element = await this.select(MORE_BUTTON);
+
+        return await element.isExisting();
     }
 
     /**
@@ -68,12 +73,14 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {boolean}
      */
-    hasVolumeControls() {
-        if (this.hasMoreButton()) {
-            this.openMoreMenu();
+    async hasVolumeControls() {
+        if (await this.hasMoreButton()) {
+            await this.openMoreMenu();
         }
 
-        return this.select(VOLUME_BUTTON).isExisting();
+        const element = await this.select(VOLUME_BUTTON);
+
+        return await element.isExisting();
     }
 
     /**
@@ -81,10 +88,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    muteAudio() {
-        this.waitForAudioMutedStateToBe(false);
+    async muteAudio() {
+        await this.waitForAudioMutedStateToBe(false);
 
-        this.select(AUDIO_MUTE_BUTTON).click();
+        const audioMuteButton = await this.select(AUDIO_MUTE_BUTTON);
+
+        await audioMuteButton.click();
     }
 
     /**
@@ -92,10 +101,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    muteVideo() {
-        this.waitForVideoMutedStateToBe(false);
+    async muteVideo() {
+        await this.waitForVideoMutedStateToBe(false);
 
-        this.select(VIDEO_MUTE_BUTTON).click();
+        const videoMuteButton = await this.select(VIDEO_MUTE_BUTTON);
+
+        await videoMuteButton.click();
     }
 
     /**
@@ -103,14 +114,15 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    openMoreMenu() {
-        this.waitForElementDisplayed(MORE_BUTTON);
+    async openMoreMenu() {
+        const moreButtonEl = await this.waitForElementDisplayed(MORE_BUTTON);
+        const moreModalEl = await this.select(MORE_MODAL);
 
-        if (!this.select(MORE_MODAL).isExisting()) {
-            this.select(MORE_BUTTON).click();
+        if (!await moreModalEl.isExisting()) {
+            await moreButtonEl.click();
         }
 
-        this.waitForElementDisplayed(MORE_MODAL);
+        await this.waitForElementDisplayed(MORE_MODAL);
     }
 
     /**
@@ -120,16 +132,16 @@ class SpotRemoteInMeetingPage extends PageObject {
      * disabled.
      * @returns {void}
      */
-    setTileView(enabled) {
-        if (this.hasMoreButton()) {
-            this.openMoreMenu();
+    async setTileView(enabled) {
+        if (await this.hasMoreButton()) {
+            await this.openMoreMenu();
         }
 
-        const buttonToClick = enabled
+        const buttonToClickSelector = enabled
             ? TILE_VIEW_ENABLE_BUTTON
             : TILE_VIEW_DISABLE_BUTTON;
 
-        this.waitForBooleanState(
+        await this.waitForBooleanState(
             enabled,
             {
                 onStateSelector: TILE_VIEW_ENABLE_BUTTON,
@@ -137,7 +149,9 @@ class SpotRemoteInMeetingPage extends PageObject {
                 waitTime: constants.REMOTE_COMMAND_WAIT
             });
 
-        this.select(buttonToClick).click();
+        const buttonToClick = await this.select(buttonToClickSelector);
+
+        await buttonToClick.click();
     }
 
     /**
@@ -157,9 +171,9 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithPicker() {
-        this.startWirelessScreenshareWithoutPicker();
-        this.screensharePicker.startWirelessScreenshare();
+    async startWirelessScreenshareWithPicker() {
+        await this.startWirelessScreenshareWithoutPicker();
+        await this.screensharePicker.startWirelessScreenshare();
     }
 
     /**
@@ -168,10 +182,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithoutPicker() {
-        this.waitForScreensharingStateToBe(false);
+    async startWirelessScreenshareWithoutPicker() {
+        await this.waitForScreensharingStateToBe(false);
 
-        this.select(START_SHARE_BUTTON).click();
+        const startShareButton = await this.select(START_SHARE_BUTTON)
+
+        await startShareButton.click();
     }
 
     /**
@@ -179,12 +195,13 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    stopScreensharing() {
-        this.waitForScreensharingStateToBe(true);
+    async stopScreensharing() {
+        await this.waitForScreensharingStateToBe(true);
+        const stopShareEl = await this.select(STOP_SHARE_BUTTON);
 
-        this.select(STOP_SHARE_BUTTON).click();
+        await stopShareEl.click();
 
-        this.screensharePicker.stopScreensharing();
+        await this.screensharePicker.stopScreensharing();
     }
 
     /**
@@ -192,10 +209,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    unmuteAudio() {
-        this.waitForAudioMutedStateToBe(true);
+    async unmuteAudio() {
+        await this.waitForAudioMutedStateToBe(true);
 
-        this.select(AUDIO_UNMUTE_BUTTON).click();
+        const element = await this.select(AUDIO_UNMUTE_BUTTON);
+
+        await element.click();
     }
 
     /**
@@ -203,10 +222,12 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    unmuteVideo() {
-        this.waitForVideoMutedStateToBe(true);
+    async unmuteVideo() {
+        await this.waitForVideoMutedStateToBe(true);
 
-        this.select(VIDEO_UNMUTE_BUTTON).click();
+        const element = await this.select(VIDEO_UNMUTE_BUTTON);
+
+        await element.click();
     }
 
     /**
@@ -215,8 +236,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @param {boolean} muted - The state in which the audio buttons needs to be in.
      * @returns {void}
      */
-    waitForAudioMutedStateToBe(muted) {
-        this.waitForBooleanState(
+    async waitForAudioMutedStateToBe(muted) {
+        await this.waitForBooleanState(
             muted,
             {
                 onStateSelector: AUDIO_UNMUTE_BUTTON,
@@ -230,8 +251,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      *
      * @returns {void}
      */
-    waitForCancelMeetingToDisplay() {
-        this.waitForElementDisplayed(CANCEL_MEETING_BUTTON, 20000);
+    async waitForCancelMeetingToDisplay() {
+        await this.waitForElementDisplayed(CANCEL_MEETING_BUTTON, 20000);
     }
 
     /**
@@ -243,14 +264,13 @@ class SpotRemoteInMeetingPage extends PageObject {
      * is inactive.
      * @returns {void}
      */
-    waitForScreensharingStateToBe(enabled) {
-        this.waitForBooleanState(
+    async waitForScreensharingStateToBe(enabled) {
+        await this.waitForBooleanState(
             enabled,
             {
                 onStateSelector: STOP_SHARE_BUTTON,
                 offStateSelector: START_SHARE_BUTTON,
                 waitTime: constants.REMOTE_COMMAND_WAIT
-
             });
     }
 
@@ -260,8 +280,8 @@ class SpotRemoteInMeetingPage extends PageObject {
      * @param {boolean} muted - The state in which the video buttons needs to be in.
      * @returns {void}
      */
-    waitForVideoMutedStateToBe(muted) {
-        this.waitForBooleanState(
+    async waitForVideoMutedStateToBe(muted) {
+        await this.waitForBooleanState(
             muted,
             {
                 onStateSelector: VIDEO_UNMUTE_BUTTON,

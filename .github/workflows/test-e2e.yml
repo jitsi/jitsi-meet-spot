@@ -1,0 +1,28 @@
+name: 'Spot Webdriver'
+on: [push]
+jobs:
+    build:
+        name: Run e2e spot webdriver
+        runs-on: macos-latest
+
+        steps:
+            - name: Step 1 - info
+              run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event, running on ${{ runner.os}}, branch name ${{ github.ref}}, ."
+
+            - name: Step 2 - checkout
+              uses: actions/checkout@v3
+
+            - name: Step 3 - run install [spot-client]
+              working-directory: spot-client
+              run: npm install
+
+            - name: Step 4 - run install [spot-webdriver]
+              working-directory: spot-webdriver
+              run: npm install
+
+            - name: Step 5 - run tests [spot-webdriver]
+              working-directory: spot-webdriver
+              run: npm run start-cli
+
+            - name: Step 6 - job status
+              run: echo "🍏 This job's status is ${{ job.status }}."

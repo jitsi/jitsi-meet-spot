@@ -6,7 +6,7 @@ class PageObject {
     /**
      * Initializes a new {@code PageObject} instance.
      *
-     * @param {Object} driver - The webdriver.io browser instance which can
+     * @param {Object} driver - The webdriver.io browser name instance defined in configuration which can
      * interact with Spot.
      * @param {string} rootSelector - The selector to locate the root element of the new page
      * object.
@@ -23,8 +23,8 @@ class PageObject {
      * the element.
      * @returns {Element}
      */
-    select(selector) {
-        return this.driver.$(selector);
+    async select(selector) {
+        return await browser[this.driver].$(selector);
     }
 
     /**
@@ -35,10 +35,10 @@ class PageObject {
      * @param {number} [waitTime] - Optional wait time given in milliseconds.
      * @returns {Element} - Returns the selected element for future use.
      */
-    waitForElementDisplayed(selector, waitTime) {
-        const element = this.select(selector);
+    async waitForElementDisplayed(selector, waitTime) {
+        const element = await this.select(selector);
 
-        element.waitForDisplayed(waitTime);
+        await element.waitForDisplayed({ timeout: waitTime });
 
         return element;
     }
@@ -51,10 +51,11 @@ class PageObject {
      * @param {number} [waitTime] - Optional wait time given in milliseconds.
      * @returns {Element} - Returns the selected element for future use.
      */
-    waitForElementHidden(selector, waitTime) {
-        const element = this.select(selector);
+    async waitForElementHidden(selector, waitTime) {
+        const element = await this.select(selector);
 
-        element.waitForDisplayed(waitTime, true);
+        await element.waitForDisplayed({ timeout: waitTime,
+            reverse: true });
 
         return element;
     }
@@ -71,7 +72,7 @@ class PageObject {
      * milliseconds).
      * @returns {void}
      */
-    waitForBooleanState(state, options) {
+    async waitForBooleanState(state, options) {
         const {
             onStateSelector,
             offStateSelector,
@@ -79,7 +80,7 @@ class PageObject {
         } = options;
         const selector = state ? onStateSelector : offStateSelector;
 
-        this.waitForElementDisplayed(selector, waitTime);
+        await this.waitForElementDisplayed(selector, waitTime);
     }
 
     /**
@@ -88,8 +89,8 @@ class PageObject {
      * @param {number} [timeToWait] - How many seconds to wait before failing the test.
      * @returns {PageObject} - Returns this instance for calls chaining.
      */
-    waitForHidden(timeToWait) {
-        this.waitForElementHidden(this.rootSelector, timeToWait);
+    async waitForHidden(timeToWait) {
+        await this.waitForElementHidden(this.rootSelector, timeToWait);
 
         return this;
     }
@@ -101,10 +102,10 @@ class PageObject {
      * wait for the element to exist.
      * @returns {void}
      */
-    waitForVisible(timeout) {
-        const rootElement = this.select(this.rootSelector);
+    async waitForVisible(timeout) {
+        const rootElement = await this.select(this.rootSelector);
 
-        rootElement.waitForExist(timeout);
+        await rootElement.waitForExist({ timeout });
     }
 }
 

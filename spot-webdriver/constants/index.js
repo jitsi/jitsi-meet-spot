@@ -42,6 +42,11 @@ module.exports = {
     MEETING_JOIN_WAIT: 15000,
 
     /**
+     * The maximum amount of time, in milliseconds, to allow Jitsi-Meet to load
+     */
+    MEETING_LOAD_WAIT: 20000,
+
+    /**
      * The amount of time to wait for a Spot-Remote and Spot-TV to create a
      * peer-to-peer connection to each other.
      */
@@ -54,11 +59,21 @@ module.exports = {
     REMOTE_COMMAND_WAIT: 10000,
 
     /**
+     * Name of capability for the multiremote WDIO testrunner of the remote control browser
+     */
+    REMOTE_CONTROL_BROWSER: 'remoteControlBrowser',
+
+    /**
      * FIXME: lower the timeout once websockets are enabled for PR tests.
      * The max amount to wait for the signaling connection (XMPP) to go to a
      * disconnected state.
      */
     SIGNALING_DISCONNECT_TIMEOUT: 60000,
+
+    /**
+     * Name of capability for the multiremote WDIO testrunner of the spot browser
+     */
+    SPOT_BROWSER: 'spotBrowser',
 
     /**
      * The direct URL to visit to for a browser to act as a Spot-TV.

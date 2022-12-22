@@ -64,7 +64,7 @@ export class MeetingNameEntry extends React.Component {
                             </span>
                             <input
                                 autoComplete = 'off'
-                                className = 'input'
+                                className = 'input meeting-name-input'
                                 data-qa-id = 'meeting-name-input'
                                 onBlur = { onBlur }
                                 onChange = { this._onMeetingNameChange }
@@ -74,6 +74,7 @@ export class MeetingNameEntry extends React.Component {
                                 value = { meetingName } />
                         </div>
                         <Button
+                            className = 'meeting-name-submit'
                             qaId = 'meeting-name-submit'
                             type = 'submit'>
                             { t('buttons.go') }

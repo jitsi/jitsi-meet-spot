@@ -24,14 +24,14 @@ class SpotSession {
      *
      * @returns {void}
      */
-    connectRemoteToTV() {
-        this._submitJoinCode();
+    async connectRemoteToTV() {
+        await this._submitJoinCode();
 
         const remoteControlPage = this.spotRemote.getRemoteControlPage();
 
-        remoteControlPage.waitForVisible();
+        await remoteControlPage.waitForVisible();
 
-        this.spotRemote.waitForP2PConnectionEstablished();
+        await this.spotRemote.waitForP2PConnectionEstablished();
     }
 
     /**
@@ -40,12 +40,12 @@ class SpotSession {
      *
      * @returns {void}
      */
-    connectScreeshareOnlyRemoteToTV() {
+    async connectScreeshareOnlyRemoteToTV() {
         const queryParams = new Map();
 
         queryParams.set('share', true);
 
-        this._submitJoinCode({ queryParams });
+        await this._submitJoinCode({ queryParams });
     }
 
     /**
@@ -83,20 +83,20 @@ class SpotSession {
      * @param {Object} [options] - Additional ways to perform the join meeting.
      * @returns {string} - The name of the meeting that the Spot TV tried to join.
      */
-    joinMeeting(meetingName, options = {}) {
+    async joinMeeting(meetingName, options = {}) {
         const remoteControlPage = this.spotRemote.getRemoteControlPage();
 
-        remoteControlPage.waitForVisible();
+        await remoteControlPage.waitForVisible();
 
         const testMeetingName = meetingName ? meetingName : `ui-test-${Date.now()}`;
-        const meetingInput = remoteControlPage.getMeetingInput();
+        const meetingInput = await remoteControlPage.getMeetingInput();
 
-        meetingInput.submitMeetingName(testMeetingName);
+        await meetingInput.submitMeetingName(testMeetingName);
 
         const meetingPage = this.spotTV.getMeetingPage();
 
         if (options.skipJoinVerification) {
-            meetingPage.waitForVisible();
+            await meetingPage.waitForVisible();
         }
 
         return testMeetingName;
@@ -119,11 +119,11 @@ class SpotSession {
      * @param {Map}[queryParams] - Any extra query params to be added to the Spot Remote URL.
      * @returns {void}
      */
-    startSpotRemote(joinCode, queryParams) {
+    async startSpotRemote(joinCode, queryParams) {
         const joinCodePage = this.spotRemote.getJoinCodePage();
 
-        joinCodePage.visit(queryParams);
-        joinCodePage.enterCode(joinCode);
+        await joinCodePage.visit(queryParams);
+        await joinCodePage.enterCode(joinCode);
     }
 
     /**
@@ -131,18 +131,18 @@ class SpotSession {
      *
      * @returns {void}
      */
-    startPermanentSpotRemote() {
+    async startPermanentSpotRemote() {
         const queryParams = new Map();
 
         queryParams.set(QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN, constants.BACKEND_REFRESH_TOKEN || '');
 
-        this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
+        await this.spotRemote.getJoinCodePage().visit(queryParams, /* do not wait for join code page */ -1);
 
         // The join code page once feed with the pairing code will redirect to remote-control.
         // It can't go directly to the remote control page, because the join code page starts the connection.
-        this.spotRemote.getRemoteControlPage().waitForVisible();
+        await this.spotRemote.getRemoteControlPage().waitForVisible();
 
-        this.spotRemote.waitForP2PConnectionEstablished();
+        await this.spotRemote.waitForP2PConnectionEstablished();
     }
 
     /**
@@ -151,13 +151,13 @@ class SpotSession {
      * @param {boolean} [skipWaitForVisible] - If set to {@code true} will not wait for the home page to be displayed.
      * @returns {void}
      */
-    startSpotTv(skipWaitForVisible) {
+    async startSpotTv(skipWaitForVisible) {
         const calendarPage = this.spotTV.getCalendarPage();
         const queryParams = new Map();
 
         queryParams.set(QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN, constants.BACKEND_REFRESH_TOKEN || '');
 
-        calendarPage.visit(queryParams, skipWaitForVisible ? -1 : constants.MAX_PAGE_LOAD_WAIT);
+        await calendarPage.visit(queryParams, skipWaitForVisible ? -1 : constants.MAX_PAGE_LOAD_WAIT);
     }
 
     /**
@@ -169,12 +169,12 @@ class SpotSession {
      * @private
      * @returns {void}
      */
-    _submitJoinCode(options = {}) {
-        this.startSpotTv();
+    async _submitJoinCode(options = {}) {
+        await this.startSpotTv();
 
-        const joinCode = this.spotTV.getShortLivedPairingCode();
+        const joinCode = await this.spotTV.getShortLivedPairingCode();
 
-        this.startSpotRemote(joinCode, options.queryParams);
+        await this.startSpotRemote(joinCode, options.queryParams);
     }
 }
 

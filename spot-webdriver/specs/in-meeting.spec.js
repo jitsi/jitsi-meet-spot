@@ -5,60 +5,60 @@ describe('While in a meeting ', () => {
     const spotTV = session.getSpotTV();
     const spotRemote = session.getSpotRemote();
 
-    beforeEach(() => {
-        session.connectRemoteToTV();
-        session.joinMeeting();
-        spotRemote
+    beforeEach(async () => {
+        await session.connectRemoteToTV();
+        await session.joinMeeting('', { skipJoinVerification: true });
+        await spotRemote
             .getInMeetingPage()
-            .waitForVisible();
+            .waitForVisible(15000);
     });
 
-    it('can toggle audio mute', () => {
+    it('can toggle audio mute', async () => {
         const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
         const spotTVMeetingPage = spotTV.getMeetingPage();
 
-        spotRemoteInMeetingPage.muteAudio();
+        await spotRemoteInMeetingPage.muteAudio();
 
-        spotRemoteInMeetingPage.waitForAudioMutedStateToBe(true);
-        spotTVMeetingPage.waitForAudioMutedStateToBe(true);
+        await spotRemoteInMeetingPage.waitForAudioMutedStateToBe(true);
+        await spotTVMeetingPage.waitForAudioMutedStateToBe(true);
 
-        spotRemoteInMeetingPage.unmuteAudio();
+        await spotRemoteInMeetingPage.unmuteAudio();
 
-        spotRemoteInMeetingPage.waitForAudioMutedStateToBe(false);
-        spotTVMeetingPage.waitForAudioMutedStateToBe(false);
+        await spotRemoteInMeetingPage.waitForAudioMutedStateToBe(false);
+        await spotTVMeetingPage.waitForAudioMutedStateToBe(false);
     });
 
-    it('can toggle video mute', () => {
+    it('can toggle video mute', async () => {
         const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
         const spotTVMeetingPage = spotTV.getMeetingPage();
 
-        spotRemoteInMeetingPage.muteVideo();
+        await spotRemoteInMeetingPage.muteVideo();
 
-        spotRemoteInMeetingPage.waitForVideoMutedStateToBe(true);
-        spotTVMeetingPage.waitForVideoMutedStateToBe(true);
+        await spotRemoteInMeetingPage.waitForVideoMutedStateToBe(true);
+        await spotTVMeetingPage.waitForVideoMutedStateToBe(true);
 
-        spotRemoteInMeetingPage.unmuteVideo();
+        await spotRemoteInMeetingPage.unmuteVideo();
 
-        spotRemoteInMeetingPage.waitForVideoMutedStateToBe(false);
-        spotTVMeetingPage.waitForVideoMutedStateToBe(false);
+        await spotRemoteInMeetingPage.waitForVideoMutedStateToBe(false);
+        await spotTVMeetingPage.waitForVideoMutedStateToBe(false);
     });
 
-    it('can toggle tile view', () => {
+    it('can toggle tile view', async () => {
         const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
         const spotTVMeetingPage = spotTV.getMeetingPage();
-        const inTileView = spotTVMeetingPage.isInTileView();
+        const inTileView = await spotTVMeetingPage.isInTileView();
 
         // The tests use the current value of inTileView to toggle instead of
         // assuming true/false in case some previous test already toggled tile
         // view and so jitsi-meet has opened with tile view already enabled.
-        spotRemoteInMeetingPage.setTileView(!inTileView);
-        spotTVMeetingPage.waitForTileViewStateToBe(!inTileView);
+        await spotRemoteInMeetingPage.setTileView(!inTileView);
+        await spotTVMeetingPage.waitForTileViewStateToBe(!inTileView);
 
         spotRemoteInMeetingPage.setTileView(inTileView);
-        spotTVMeetingPage.waitForTileViewStateToBe(inTileView);
+        await spotTVMeetingPage.waitForTileViewStateToBe(inTileView);
     });
 
-    it('does not have volume control when Spot-TV is in a browser', () => {
-        expect(spotRemote.getInMeetingPage().hasVolumeControls()).toBe(false);
+    it('does not have volume control when Spot-TV is in a browser', async () => {
+        expect(await spotRemote.getInMeetingPage().hasVolumeControls()).toBe(false);
     });
 });

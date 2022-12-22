@@ -1,9 +1,9 @@
 const constants = require('../constants');
 const PageObject = require('./page-object');
 
-const JOIN_CODE_INPUT = '[data-qa-id=join-code-input]';
-const JOIN_CODE_SUBMIT_BUTTON = '[data-qa-id=join-code-submit]';
-const JOIN_CODE_VIEW = '[data-qa-id=join-code-view]';
+const JOIN_CODE_INPUT = '.join-code-input';
+const JOIN_CODE_SUBMIT_BUTTON = '.join-code-submit';
+const JOIN_CODE_VIEW = '.join-code-view';
 
 /**
  * A page object for interacting with the join code entry view of Spot-Remote.
@@ -24,12 +24,13 @@ class JoinCodePage extends PageObject {
      * @param {string} code - The code to be entered.
      * @returns {void}
      */
-    enterCode(code) {
-        this.waitForElementDisplayed(JOIN_CODE_INPUT);
+    async enterCode(code) {
+        await this.waitForElementDisplayed(JOIN_CODE_INPUT);
 
-        Array.prototype.forEach.call(code, character => {
-            this.driver.keys(character);
-        });
+        for (const character of code) {
+            await browser[this.driver].keys(character);
+        }
+
     }
 
     /**
@@ -37,10 +38,12 @@ class JoinCodePage extends PageObject {
      *
      * @returns {void}
      */
-    submitCode() {
-        this.waitForElementDisplayed(JOIN_CODE_SUBMIT_BUTTON);
+    async submitCode() {
+        await this.waitForElementDisplayed(JOIN_CODE_SUBMIT_BUTTON);
 
-        this.select(JOIN_CODE_SUBMIT_BUTTON).click();
+        const submitButton = await this.select(JOIN_CODE_SUBMIT_BUTTON);
+
+        await submitButton.click();
     }
 
     /**
@@ -52,9 +55,11 @@ class JoinCodePage extends PageObject {
      * having failed to load. Pass '-1' to skip the waiting.
      * @returns {void}
      */
-    visit(queryParams, visibilityWait) {
-        this.driver.url(this._getJoinCodePageUrl(queryParams));
-        visibilityWait === -1 || this.waitForVisible(visibilityWait);
+    async visit(queryParams, visibilityWait) {
+        const joinCodePageUrl = this._getJoinCodePageUrl(queryParams);
+
+        await browser[this.driver].url(joinCodePageUrl);
+        visibilityWait === -1 || await this.waitForVisible(visibilityWait);
     }
 
     /**

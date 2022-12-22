@@ -2,11 +2,11 @@ const MeetingInput = require('./meeting-input');
 const PageObject = require('./page-object');
 const ScreensharePicker = require('./screenshare-picker');
 
-const MEET_NOW_BUTTON = '[data-qa-id=meet-now]';
-const REMOTE_CONTROL = '[data-qa-id=remoteControl-view]';
-const SHARE_CONTENT_BUTTON = '[data-qa-id=share-content]';
-const WAITING_FOR_CALL_SUBVIEW = '[data-qa-id=waiting-for-call-view]';
-const WAITING_FOR_SPOT_TV_LABEL = '[data-qa-id=waiting-for-spot-tv]';
+const MEET_NOW_BUTTON = '#meet-now';
+const REMOTE_CONTROL = '.remoteControl-view';
+const SHARE_CONTENT_BUTTON = '#share-content';
+const WAITING_FOR_CALL_SUBVIEW = '.waiting-for-call-view';
+const WAITING_FOR_SPOT_TV_LABEL = '#waiting-for-spot-tv]';
 
 /**
  * A page object for interacting with the waiting view of Spot-Remote.
@@ -29,10 +29,10 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {MeetingInput}
      */
-    getMeetingInput() {
-        const meetNowButton = this.waitForElementDisplayed(MEET_NOW_BUTTON);
+    async getMeetingInput() {
+        const meetNowButton = await this.waitForElementDisplayed(MEET_NOW_BUTTON);
 
-        meetNowButton.click();
+        await meetNowButton.click();
 
         return this.meetingInput;
     }
@@ -52,8 +52,8 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    waitWaitingForCallViewToDisplay() {
-        this.waitForElementDisplayed(WAITING_FOR_CALL_SUBVIEW);
+    async waitWaitingForCallViewToDisplay() {
+        await this.waitForElementDisplayed(WAITING_FOR_CALL_SUBVIEW);
     }
 
     /**
@@ -62,13 +62,13 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithPicker() {
+    async startWirelessScreenshareWithPicker() {
         // Poll the javascript until wired screensharing is enabled. This is
         // currently necessary because the presence update of wired screensharing
         // becoming enabled can take a variable amount of time and there is no
         // UI indicator that it has become available.
-        this.driver.waitUntil(
-            () => this.driver.execute(() => {
+        await browser[this.driver].waitUntil(
+            async () => await browser[this.driver].execute(() => {
                 // browser context - you may not access client or console
                 try {
                     return window.spot.store.getState().spotTv.wiredScreensharingEnabled;
@@ -80,9 +80,9 @@ class RemoteControlPage extends PageObject {
             'wireless screensharing not available'
         );
 
-        this.startWirelessScreenshareWithoutPicker();
+        await this.startWirelessScreenshareWithoutPicker();
 
-        this.screensharePicker.startWirelessScreenshare();
+        await this.screensharePicker.startWirelessScreenshare();
     }
 
     /**
@@ -91,10 +91,10 @@ class RemoteControlPage extends PageObject {
      *
      * @returns {void}
      */
-    startWirelessScreenshareWithoutPicker() {
-        const shareContentButton = this.waitForElementDisplayed(SHARE_CONTENT_BUTTON);
+    async startWirelessScreenshareWithoutPicker() {
+        const shareContentButton = await this.waitForElementDisplayed(SHARE_CONTENT_BUTTON);
 
-        shareContentButton.click();
+        await shareContentButton.click();
     }
 }
 
