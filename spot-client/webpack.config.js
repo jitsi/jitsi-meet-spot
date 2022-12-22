@@ -18,15 +18,15 @@ module.exports = () => {
             host: '0.0.0.0',
             port: 8000,
             static: {
-                directory: path.join(__dirname, '/'),
+                directory: path.join(__dirname, '/')
             },
             devMiddleware: {
-                publicPath: '/dist/',
-            },
+                publicPath: '/dist/'
+            }
         },
         devtool: 'source-map',
         entry: {
-            app: './src/index.js',
+            app: './src/index.js'
         },
         mode,
         module: {
@@ -35,11 +35,11 @@ module.exports = () => {
                     enforce: 'pre',
                     exclude: /(node_modules)/,
                     loader: 'eslint-loader',
-                    test: /\.js$/,
+                    test: /\.js$/
                 },
                 {
                     test: /\.(css|scss)$/,
-                    use: ['style-loader', 'css-loader', 'sass-loader'],
+                    use: [ 'style-loader', 'css-loader', 'sass-loader' ]
                 },
                 {
                     test: /\.(svg|ttf|eot|woff)$/,
@@ -50,46 +50,46 @@ module.exports = () => {
                     options: {
                         plugins: [
                             require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
-                            require.resolve('@babel/plugin-proposal-optional-chaining'),
-                        ],
+                            require.resolve('@babel/plugin-proposal-optional-chaining')
+                        ]
                     },
-                    test: /\.js$/,
-                },
-            ],
+                    test: /\.js$/
+                }
+            ]
         },
         plugins: [
             new CircularDependencyPlugin({
                 exclude: /node_modules/,
-                failOnError: true,
+                failOnError: true
             }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         from: './static',
-                        to: '.',
+                        to: '.'
                     },
                     {
                         from: './config.js',
-                        to: './config',
-                    },
-                ],
+                        to: './config'
+                    }
+                ]
             }),
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify(mode),
+                'process.env.NODE_ENV': JSON.stringify(mode)
             }),
             new Dotenv({
-                systemvars: true, // Respect existing environment variables
+                systemvars: true // Respect existing environment variables
             }),
             new DuplicatesPlugin({
-                emitErrors: true,
+                emitErrors: true
             }),
-            new WriteFilePlugin(),
+            new WriteFilePlugin()
         ],
         output: {
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'dist')
         },
         resolve: {
-            modules: [path.resolve('./src'), path.resolve('./node_modules')],
-        },
+            modules: [ path.resolve('./src'), path.resolve('./node_modules') ]
+        }
     };
 };
