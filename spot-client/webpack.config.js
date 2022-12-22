@@ -3,6 +3,7 @@
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { DuplicatesPlugin } = require('inspectpack/plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -31,12 +32,6 @@ module.exports = () => {
         mode,
         module: {
             rules: [
-                {
-                    enforce: 'pre',
-                    exclude: /(node_modules)/,
-                    loader: 'eslint-loader',
-                    test: /\.js$/
-                },
                 {
                     test: /\.(css|scss)$/,
                     use: [ 'style-loader', 'css-loader', 'sass-loader' ]
@@ -83,6 +78,7 @@ module.exports = () => {
             new DuplicatesPlugin({
                 emitErrors: true
             }),
+            new ESLintPlugin(),
             new WriteFilePlugin()
         ],
         output: {

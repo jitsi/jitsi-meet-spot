@@ -15,15 +15,10 @@ module.exports = {
         '@babel/plugin-syntax-import-meta',
         [ '@babel/plugin-proposal-class-properties', { loose: false } ],
         '@babel/plugin-proposal-json-strings',
+    ],
+    presets: ['@babel/preset-env', '@babel/preset-react'],
+    // plugins: [],
 
-        // lib-jitsi-meet
-        '@babel/plugin-transform-flow-strip-types'
-    ],
-    presets: [
-        '@babel/env',
-        '@babel/preset-flow',
-        '@babel/react'
-    ],
     env: {
         production: {
             plugins: [
