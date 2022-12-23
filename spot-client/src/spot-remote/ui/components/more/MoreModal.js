@@ -1,22 +1,20 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     hideModal,
     isInviteEnabled,
     isVolumeControlSupported
 } from 'common/app-state';
-
 import { VolumeUp } from 'common/icons';
 import { Modal } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { DTMFButton, DTMFModal } from './../dtmf';
 import { InviteButton, InviteModal } from './../invite';
-import { TileViewButton } from './../remote-control-menu';
 import { NavButton } from './../nav';
-
+import { TileViewButton } from './../remote-control-menu';
 import VolumeModal from './VolumeModal';
 
 /**

@@ -1,16 +1,14 @@
+import { getAllNotifications, removeNotification } from 'common/app-state';
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getAllNotifications, removeNotification } from 'common/app-state';
-import { logger } from 'common/logger';
 
 import Notification from './notification';
 
 /**
  * The container for handling showing and dismissing notifications.
- *
- * @extends React.PureComponent
  */
 export class Notifications extends React.PureComponent {
     static propTypes = {

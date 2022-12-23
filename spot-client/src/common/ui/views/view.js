@@ -1,17 +1,15 @@
+import { isAnyModalOpen } from 'common/app-state';
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isAnyModalOpen } from 'common/app-state';
-import { logger } from 'common/logger';
 
 import { viewDisplayed } from '../actions';
 
 /**
  * A React Component representing a single screen in the single-page application
  * and is responsible for basic layout.
- *
- * @extends React.Component
  */
 class View extends React.Component {
     static propTypes = {

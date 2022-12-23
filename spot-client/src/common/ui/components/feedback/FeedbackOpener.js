@@ -1,8 +1,8 @@
+import { getCurrentView, showFeedback } from 'common/app-state';
+import { Feedback } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Feedback } from 'common/icons';
-import { getCurrentView, showFeedback } from 'common/app-state';
 
 /**
  * Functional component for showing a button that opens the feedback overlay.

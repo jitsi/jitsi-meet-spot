@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-
 import {
     getAvatarUrl,
     getCalendarName,
@@ -11,12 +6,15 @@ import {
     setDisplayName
 } from 'common/app-state';
 import { Button, Input } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 /**
  * Prompts to set a display name and an avatar url for the Spot-TV to use during
  * meetings.
- *
- * @extends React.Component
  */
 export class Profile extends React.Component {
     static propTypes = {

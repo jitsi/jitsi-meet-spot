@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
 
 import { analytics } from 'common/analytics';
 import {
@@ -13,6 +10,9 @@ import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { remoteControlServer } from 'common/remote-control';
 import { Loading } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     createSpotTVRemoteControlConnection
@@ -22,8 +22,6 @@ import {
 /**
  * Loads application services while displaying a loading icon. Will display
  * the passed-in children when loading is complete.
- *
- * @extends React.Component
  */
 export class SpotTVRemoteControlLoader extends React.Component {
     static propTypes = {

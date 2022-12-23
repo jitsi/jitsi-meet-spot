@@ -1,11 +1,10 @@
+import { date } from 'common/date';
 import React from 'react';
 
-import { date } from 'common/date';
 
 /**
  * Displays the current time and updates itself at an interval.
  *
- * @extends React.Component
  */
 export default class Clock extends React.Component {
     /**

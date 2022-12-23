@@ -1,8 +1,8 @@
+import { ExpandLess, ExpandMore } from 'common/icons';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
-import { ExpandLess, ExpandMore } from 'common/icons';
 
 import { adjustVolume } from '../../../remote-control';
 

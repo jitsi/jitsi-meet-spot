@@ -1,8 +1,8 @@
+import { Dialpad } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Dialpad } from 'common/icons';
 
 import { NavButton } from '../nav';
 

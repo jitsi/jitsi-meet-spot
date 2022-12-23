@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     getAdvertisementAppName,
     getShareDomain
@@ -10,13 +5,16 @@ import {
 import { WiredScreenshare, WirelessScreenshare } from 'common/icons';
 import { Button, RemoteJoinCode } from 'common/ui';
 import { windowHandler } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { NavButton } from '../nav';
 
 /**
  * Displays information and prompts to start screensharing.
- *
- * @extends React.Component
  */
 export class ScreensharePicker extends React.Component {
     static propTypes = {

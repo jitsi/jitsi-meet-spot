@@ -1,10 +1,8 @@
-import bindAll from 'lodash.bindall';
-import React from 'react';
-
-import PropTypes from 'prop-types';
-
 import { logger } from 'common/logger';
 import { SERVICE_UPDATES } from 'common/remote-control';
+import bindAll from 'lodash.bindall';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { MESSAGE_TYPES, nativeController } from 'spot-tv/native-functions';
 
 import { ApiHealthCheck } from './ApiHealthCheck';

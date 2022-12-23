@@ -38,12 +38,12 @@ export default class NativeCommands {
         nativeController.sendMessage('exitApp');
     }
 
-    /**
+    /** .
      * Informs the runtime that the meeting status has changed.
      *
      * 0: Idle (not in meeting)
      * 1: In meeting
-     * (More statuses to come, e.g. content sharing).
+     * (More statuses to come, e.g. Content sharing).
      *
      * @param {number} status - The new meeting status.
      * @returns {void}

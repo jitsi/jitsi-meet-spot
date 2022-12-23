@@ -14,16 +14,15 @@ module.exports = {
         '@babel/plugin-syntax-dynamic-import',
         '@babel/plugin-syntax-import-meta',
         [ '@babel/plugin-proposal-class-properties', { loose: false } ],
-        '@babel/plugin-proposal-json-strings',
+        '@babel/plugin-proposal-json-strings'
     ],
-    presets: ['@babel/preset-env', '@babel/preset-react'],
+    presets: [ '@babel/preset-env', '@babel/preset-react' ],
+
     // plugins: [],
 
     env: {
         production: {
-            plugins: [
-                'transform-react-remove-prop-types'
-            ]
+            plugins: [ 'transform-react-remove-prop-types' ]
         }
     }
 };

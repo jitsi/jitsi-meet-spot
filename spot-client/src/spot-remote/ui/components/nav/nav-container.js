@@ -3,8 +3,6 @@ import React from 'react';
 
 /**
  * A component intended for hold nav buttons. Useful for re-using styling.
- *
- * @extends React.Component
  */
 export default class NavContainer extends React.Component {
     static propTypes = {

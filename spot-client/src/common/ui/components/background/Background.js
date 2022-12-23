@@ -1,7 +1,7 @@
+import { getBackgroundUrl } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getBackgroundUrl } from 'common/app-state';
 
 /**
  * Functional component for showing the configured background image URL with

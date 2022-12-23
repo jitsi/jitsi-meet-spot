@@ -3,8 +3,6 @@ import React from 'react';
 
 /**
  * Displays an input for entering and showing the entered phone number.
- *
- * @extends React.Component
  */
 export default class NumberInput extends React.Component {
     static propTypes = {

@@ -1,8 +1,8 @@
+import * as detection from 'common/detection';
+import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { mockT } from 'common/test-mocks';
-import * as detection from 'common/detection';
 
 import { JoinCodeEntry } from './join-code-entry';
 

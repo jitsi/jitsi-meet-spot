@@ -1,8 +1,8 @@
 import throttle from 'lodash.throttle';
 
-import internalLogger from './internalLogger';
 import LogQueue from './LogQueue';
 import PostLogsRequest from './PostLogsRequest';
+import internalLogger from './internalLogger';
 
 /**
  * A lightweight class for sending a POST to an endpoint with collected logs.

@@ -49,7 +49,7 @@ function formatMessage(level, message, context) {
  * info: 2
  * log: 3
  * warn: 4
- * error: 5
+ * error: 5.
  */
 export default {
     /**

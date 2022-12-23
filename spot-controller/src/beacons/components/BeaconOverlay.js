@@ -23,8 +23,6 @@ import styles from './styles';
 /**
  * An overlay that shows up over the webview when there is a spot beacon detected, and
  * lets the user pick a detected spot TV and join that with a touch.
- *
- * @extends React.Component
  */
 class BeaconOverlay extends React.PureComponent {
     static propTypes = {

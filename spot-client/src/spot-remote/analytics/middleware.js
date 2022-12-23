@@ -30,6 +30,8 @@ import {
     remoteControlClient
 } from 'common/remote-control';
 
+import { shareModeEvents } from '../../common/analytics';
+
 import {
     SPOT_REMOTE_CONNECTION_FAILED,
     SPOT_REMOTE_EXIT_SHARE_MODE,
@@ -37,10 +39,8 @@ import {
     SPOT_REMOTE_JOIN_CODE_VALID,
     SPOT_REMOTE_WILL_VALIDATE_JOIN_CODE
 } from './../app-state';
-import { shareModeEvents } from '../../common/analytics';
-
-import { SPOT_REMOTE_P2P_ACTIVE } from './properties';
 import { connectionEvents } from './events';
+import { SPOT_REMOTE_P2P_ACTIVE } from './properties';
 
 const requestStateToEventSuffix = {
     [requestStates.DONE]: eventStatusSuffixes.SUCCESS,

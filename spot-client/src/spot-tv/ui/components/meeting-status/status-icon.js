@@ -3,8 +3,6 @@ import React from 'react';
 
 /**
  * Wraps an icon for displaying the status of a Spot-TV state.
- *
- * @extends React.Component
  */
 export default class StatusIcon extends React.Component {
     static propTypes = {

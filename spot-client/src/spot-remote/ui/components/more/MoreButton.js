@@ -1,16 +1,15 @@
+import {
+    hideModal,
+    isModalOpen,
+    showModal
+} from 'common/app-state';
+import { MoreVert } from 'common/icons';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 
-import {
-    isModalOpen,
-    showModal,
-    hideModal
-} from 'common/app-state';
-import { MoreVert } from 'common/icons';
 
 import { NavButton } from './../nav';
-
 import MoreModal from './MoreModal';
 
 /**

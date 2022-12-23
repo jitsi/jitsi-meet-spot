@@ -1,28 +1,26 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
-import { setSetupCompleted, getStartParams } from 'common/app-state';
+import { getStartParams, setSetupCompleted } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Modal } from 'common/ui';
 import { getBoolean } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { withCalendar } from '../loaders';
 
 import {
-    SelectMedia,
-    SyncWithBackend,
     PairRemote,
-    Profile
+    Profile,
+    SelectMedia,
+    SyncWithBackend
 } from './../components/setup';
 
 /**
  * Displays the Spot-TV setup flow.
- *
- * @extends React.Component
  */
 export class Setup extends React.Component {
     static propTypes = {

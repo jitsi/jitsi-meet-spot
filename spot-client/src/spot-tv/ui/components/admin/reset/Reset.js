@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
+import AdminEntry from '../admin-entry';
+
 import ResetConfirmation from './ResetConfirmation';
 
-import AdminEntry from '../admin-entry';
 
 /**
  * Implements an admin modal entry to reset the app state.

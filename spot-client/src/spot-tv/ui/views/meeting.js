@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import {
     addNotification,
     getAvatarUrl,
@@ -25,6 +21,10 @@ import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
 import { findWhitelistedMeetingUrl } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { disconnectAllTemporaryRemotes, setMeetingSummary } from './../../app-state';
 import {
@@ -37,8 +37,6 @@ import {
 
 /**
  * Displays a Jitsi-Meet meeting.
- *
- * @extends React.Component
  */
 export class Meeting extends React.Component {
     static propTypes = {

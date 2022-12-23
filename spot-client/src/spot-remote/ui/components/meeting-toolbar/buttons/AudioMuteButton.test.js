@@ -1,8 +1,8 @@
+import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
+import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
-import { mockT } from 'common/test-mocks';
 
 import { AudioMuteButton } from './AudioMuteButton';
 

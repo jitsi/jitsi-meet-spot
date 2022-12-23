@@ -1,17 +1,15 @@
+import { logger } from 'common/logger';
+import { Button } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { logger } from 'common/logger';
-import { Button } from 'common/ui';
 
 import SourcePreview from './source-preview';
 
 /**
  * Displays desktop capturer sources provided by Electron. Note: this component
  * assumes the environment has access to Electron's desktopCapturer.
- *
- * @extends React.Component
  */
 export class DesktopPicker extends React.Component {
     static propTypes = {

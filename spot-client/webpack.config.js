@@ -1,13 +1,14 @@
 /* global __dirname, process */
 
+
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { DuplicatesPlugin } = require('inspectpack/plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const { DuplicatesPlugin } = require('inspectpack/plugin');
 const path = require('path');
 const webpack = require('webpack');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = () => {
     const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';

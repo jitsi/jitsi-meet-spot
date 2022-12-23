@@ -1,12 +1,10 @@
+import { FeedbackForm, RoomName } from 'common/ui';
 import React from 'react';
 
-import { FeedbackForm, RoomName } from 'common/ui';
 
 /**
  * A view for Spot-Remote that displays a feedback form for a meeting that has
  * been exited.
- *
- * @extends React.PureComponent
  */
 export default class FeedbackView extends React.PureComponent {
     /**

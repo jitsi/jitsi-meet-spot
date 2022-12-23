@@ -1,8 +1,8 @@
+import { Countdown, StatusOverlay } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Countdown, StatusOverlay } from 'common/ui';
 
 /**
  * Renders a text overlay which hides Jitsi-Meet iFrame when the local

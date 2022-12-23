@@ -1,6 +1,7 @@
-import PostToEndpoint from './PostToEndpoint';
-import PostLogsRequest from './PostLogsRequest';
 import lolex from 'lolex';
+
+import PostLogsRequest from './PostLogsRequest';
+import PostToEndpoint from './PostToEndpoint';
 
 jest.mock('./internalLogger');
 
@@ -45,7 +46,7 @@ describe('PostToEndpoint', () => {
     });
 
     it('has one request in flight at a time', () => {
-        sendSpy.mockImplementation(() => new Promise(() => { /** no logic needed */ }));
+        sendSpy.mockImplementation(() => new Promise(() => { /** No logic needed. */ }));
 
         postToEndpoint.send([ '1' ]);
         advanceThrottle();

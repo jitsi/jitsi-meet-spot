@@ -1,10 +1,10 @@
-import { MiddlewareRegistry } from 'common/redux';
 import { ERROR_BOUNDARY_DISPLAYED } from 'common/app-state/ui';
+import { MiddlewareRegistry } from 'common/redux';
 
 import { SET_CUSTOMER_ID, SET_ROOM_ID, SUBMIT_FEEDBACK, getSpotClientVersion } from '../app-state';
 import { BOOTSTRAP_COMPLETE } from '../app-state/bootstrap';
 import { SET_DEVICE_ID } from '../app-state/device-id';
-import { getPermanentPairingCode, SET_PERMANENT_PAIRING_CODE } from '../backend';
+import { SET_PERMANENT_PAIRING_CODE, getPermanentPairingCode } from '../backend';
 import { VIEW_DISPLAYED } from '../ui/actionTypes';
 
 import analytics from './analytics';

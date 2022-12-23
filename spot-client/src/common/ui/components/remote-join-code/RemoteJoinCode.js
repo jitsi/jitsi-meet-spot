@@ -1,8 +1,8 @@
+import { getRemoteJoinCode } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getRemoteJoinCode } from 'common/app-state';
 
 /**
  * Displays the (temporary) code for connecting a Spot-Remote to a Spot-TV.

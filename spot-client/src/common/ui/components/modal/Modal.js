@@ -3,8 +3,6 @@ import React from 'react';
 
 /**
  * Displays a modal dialog in the middle of the screen, above other UI elemnts.
- *
- * @extends React.Component
  */
 export default class Modal extends React.PureComponent {
     static propTypes = {

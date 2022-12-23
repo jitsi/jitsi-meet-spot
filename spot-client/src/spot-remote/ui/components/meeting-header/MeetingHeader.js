@@ -1,13 +1,11 @@
+import { RoomName } from 'common/ui';
+import { parseMeetingUrl } from 'common/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { RoomName } from 'common/ui';
-import { parseMeetingUrl } from 'common/utils';
 
 /**
  * Displays current meeting information.
- *
- * @extends React.Component
  */
 export default class MeetingHeader extends React.Component {
     static propTypes = {

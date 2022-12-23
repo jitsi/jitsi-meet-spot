@@ -1,13 +1,11 @@
+import { Button } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Button } from 'common/ui';
 
 /**
  * Informs that the Spot-TV has been removed from the conference.
- *
- * @extends React.Component
  */
 export class KickedNotice extends React.Component {
     static propTypes = {

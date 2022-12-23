@@ -89,14 +89,18 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
     function internalFetchWithRetry() {
         return new Promise((resolve, reject) => {
             fetch(url, requestOptions)
-                .then(response => response.json()
-                    .catch(() => { /* Ignore json rejection */ })
-                    .then(json => {
-                        return {
-                            response,
-                            json
-                        };
-                    })
+                .then(response =>
+                    response
+                        .json()
+                        .catch(() => {
+                            /* Ignore json rejection */
+                        })
+                        .then(json => {
+                            return {
+                                response,
+                                json
+                            };
+                        })
                 )
                 .then(({ response, json }) => {
                     if (response.ok) {
@@ -105,8 +109,8 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                         return;
                     }
 
-                    const error = `Failed to ${operationName}:`
-                        + `${response.statusText}, HTTP code: ${response.status}`;
+                    const error
+                        = `Failed to ${operationName}: ${response.statusText}, HTTP code: ${response.status}`;
 
                     logger.error(error, {
                         json,
@@ -120,8 +124,10 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                         delayLevel = maxRetries;
                     }
 
-                    if (httpStatusCode === 401
-                        || (httpStatusCode === 400 && json?.messageKey === 'pairing.code.not.found')) {
+                    if (
+                        httpStatusCode === 401
+                        || (httpStatusCode === 400 && json?.messageKey === 'pairing.code.not.found')
+                    ) {
                         reject(errorConstants.NOT_AUTHORIZED);
 
                         return;
@@ -155,8 +161,7 @@ function fetchWithRetry(fetchOptions, maxRetries = 3) {
                     logger.log(`${operationName} retry: ${retry} delay level: ${delayLevel} delay: ${timeout}`);
 
                     setTimeout(() => {
-                        internalFetchWithRetry()
-                            .then(resolve, reject);
+                        internalFetchWithRetry().then(resolve, reject);
                     }, timeout);
                 });
         });
@@ -287,16 +292,15 @@ export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
         operationName: 'phoneAuthorize',
         requestOptions,
         url: `${serviceEndpointUrl}?phone=${encodeURIComponent(phoneNumber)}`
-    })
-        .then(({ message, allow }) => {
-            if (typeof allow === 'undefined') {
-                throw new Error('phoneAuthorize - no "allow" field in the response');
-            }
+    }).then(({ message, allow }) => {
+        if (typeof allow === 'undefined') {
+            throw new Error('phoneAuthorize - no "allow" field in the response');
+        }
 
-            if (!allow) {
-                throw message;
-            }
-        });
+        if (!allow) {
+            throw message;
+        }
+    });
 }
 
 /**
@@ -310,7 +314,7 @@ export function phoneAuthorize(serviceEndpointUrl, phoneNumber) {
  * Sends a token refresh request to get a fresh token, before the current one expires.
  *
  * @param {string} serviceEndpointUrl - URL pointing to the token refresh service.
- * @param {string} refreshToken -
+ * @param {string} refreshToken -.
  * @returns {Promise<RefreshTokenResponse>}
  */
 export function refreshAccessToken(serviceEndpointUrl, { refreshToken }) {
@@ -331,30 +335,24 @@ export function refreshAccessToken(serviceEndpointUrl, { refreshToken }) {
         operationName: 'refresh token',
         requestOptions,
         url: serviceEndpointUrl
-    })
-        .then(json => {
-            const {
-                accessToken: newAccessToken,
-                emitted,
-                expiresIn,
-                tenant
-            } = json;
+    }).then(json => {
+        const { accessToken: newAccessToken, emitted, expiresIn, tenant } = json;
 
-            if (!newAccessToken) {
-                throw new Error('No "accessToken" field in the response');
-            } else if (!emitted) {
-                throw new Error('No "emitted" field in the response');
-            } else if (!expiresIn) {
-                throw new Error('No "expiresIn" field in the response');
-            }
+        if (!newAccessToken) {
+            throw new Error('No "accessToken" field in the response');
+        } else if (!emitted) {
+            throw new Error('No "emitted" field in the response');
+        } else if (!expiresIn) {
+            throw new Error('No "expiresIn" field in the response');
+        }
 
-            return {
-                accessToken: newAccessToken,
-                refreshToken,
-                tenant,
-                ...convertToExpires(json)
-            };
-        });
+        return {
+            accessToken: newAccessToken,
+            refreshToken,
+            tenant,
+            ...convertToExpires(json)
+        };
+    });
 }
 
 /**
@@ -394,33 +392,25 @@ export function registerDevice(serviceEndpointUrl, pairingCode, assignedEndpoint
         operationName: 'pair device',
         requestOptions,
         url: serviceEndpointUrl
-    })
-        .then(json => {
-            const {
-                accessToken,
-                emitted,
-                endpointId,
-                expiresIn,
-                refreshToken,
-                tenant
-            } = json;
+    }).then(json => {
+        const { accessToken, emitted, endpointId, expiresIn, refreshToken, tenant } = json;
 
-            if (!accessToken) {
-                throw new Error('No "accessToken" field in the response');
-            } else if (!emitted) {
-                throw new Error('No "emitted" field in the response');
-            } else if (!expiresIn) {
-                throw new Error('No "expiresIn" field in the response');
-            }
+        if (!accessToken) {
+            throw new Error('No "accessToken" field in the response');
+        } else if (!emitted) {
+            throw new Error('No "emitted" field in the response');
+        } else if (!expiresIn) {
+            throw new Error('No "expiresIn" field in the response');
+        }
 
-            return {
-                accessToken,
-                endpointId,
-                refreshToken,
-                tenant,
-                ...convertToExpires(json)
-            };
-        });
+        return {
+            accessToken,
+            endpointId,
+            refreshToken,
+            tenant,
+            ...convertToExpires(json)
+        };
+    });
 }
 
 /**
@@ -473,19 +463,18 @@ export function fetchRoomInfo(serviceEndpointUrl, jwt) {
         operationName: 'get room info',
         requestOptions,
         url: serviceEndpointUrl
-    })
-        .then(json => {
-            if (!json.mucUrl) {
-                throw new Error('No "mucUrl" in the response');
-            }
+    }).then(json => {
+        if (!json.mucUrl) {
+            throw new Error('No "mucUrl" in the response');
+        }
 
-            return {
-                countryCode: json.countryCode,
-                customerId: json.customerId,
-                endpointPassword: json.endpointPassword,
-                id: json.id,
-                mucUrl: json.mucUrl,
-                name: json.name
-            };
-        });
+        return {
+            countryCode: json.countryCode,
+            customerId: json.customerId,
+            endpointPassword: json.endpointPassword,
+            id: json.id,
+            mucUrl: json.mucUrl,
+            name: json.name
+        };
+    });
 }

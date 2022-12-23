@@ -14,8 +14,6 @@ const menuProps = {
 
 /**
  * Displays a custom select/dropdown element.
- *
- * @extends React.Component
  */
 export default class SimpleSelect extends React.Component {
     static defaultProps = {
@@ -68,12 +66,12 @@ export default class SimpleSelect extends React.Component {
                 className = 'select'
                 variant = 'filled'>
                 <Select
-                    classes = { classes }
+                    MenuProps = { menuProps }
                     className = 'select-element'
+                    classes = { classes }
                     data-qa-id = { this.props.qaId }
                     displayEmpty = { true }
                     input = { this._renderInput() }
-                    MenuProps = { menuProps }
                     onChange = { this._onChange }
                     value = { isValuePresent ? this.props.value : '' }
                     variant = 'filled'>

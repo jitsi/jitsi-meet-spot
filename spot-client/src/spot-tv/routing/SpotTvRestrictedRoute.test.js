@@ -1,10 +1,10 @@
+import * as detection from 'common/detection';
+import { ROUTES } from 'common/routing';
 import { mount } from 'enzyme';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { SpotTvRestrictedRoute } from './SpotTvRestrictedRoute';
-import * as detection from 'common/detection';
-import { ROUTES } from 'common/routing';
 
 jest.mock('common/detection', () => {
     return {

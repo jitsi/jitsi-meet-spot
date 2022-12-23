@@ -4,8 +4,6 @@ import React from 'react';
 /**
  * Displays a button with a main value in the center and a sub value smaller
  * and below the main value.
- *
- * @extends React.Component
  */
 export default class DialButton extends React.Component {
     static defaultProps = {
@@ -18,7 +16,7 @@ export default class DialButton extends React.Component {
         onClick: PropTypes.func,
         onLongClick: PropTypes.func,
         sub: PropTypes.string
-    }
+    };
 
     /**
      * Initializes a new {@code DialButton} instance.

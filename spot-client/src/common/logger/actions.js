@@ -1,9 +1,9 @@
+import { PostToEndpoint } from './PostToEndpoint';
 import {
     SET_LOGGING_SERVICE
 } from './action-types';
 import logger from './logger';
 import LoggingService from './logging-service';
-import { PostToEndpoint } from './PostToEndpoint';
 
 /**
  * Initializes new logging service instance.

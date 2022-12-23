@@ -1,9 +1,9 @@
+import { HighlightOff, Search } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { withTranslation } from 'react-i18next';
 
-import { HighlightOff, Search } from 'common/icons';
 import countriesInfo from './countriesInfo';
 
 // FIXME verify all codes are actually ISO 3166-1 alpha-2 and verify which
@@ -12,8 +12,6 @@ import countriesInfo from './countriesInfo';
 /**
  * Displays a list of country codes in ISO 3166-1 alpha-2 and provides a
  * search bar for filtering.
- *
- * @extends React.PureComponent
  */
 export class CountryCodePicker extends React.PureComponent {
     static propTypes = {

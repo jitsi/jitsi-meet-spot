@@ -2,16 +2,16 @@ import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
+import P2PReconnectTrait from './P2PReconnectTrait';
+import P2PSignalingBase from './P2PSignalingBase';
+import P2PSignalingClient from './P2PSignalingClient';
 import {
     COMMANDS,
     CONNECTION_EVENTS,
     MESSAGES,
     SERVICE_UPDATES
 } from './constants';
-import P2PSignalingClient from './P2PSignalingClient';
 import ScreenshareService from './screenshare-connection';
-import P2PReconnectTrait from './P2PReconnectTrait';
-import P2PSignalingBase from './P2PSignalingBase';
 
 /**
  * @typedef {Object} GoToMeetingOptions
@@ -24,8 +24,6 @@ import P2PSignalingBase from './P2PSignalingBase';
 /**
  * Communication service to send commands and receive updates from an instance
  * of {@code RemoteControlServer}.
- *
- * @extends BaseRemoteControlService
  */
 export class RemoteControlClient extends BaseRemoteControlService {
     /**

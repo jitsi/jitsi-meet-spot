@@ -1,18 +1,16 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-
 import { sendTouchTones } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Modal } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { StatelessDialPad } from './../dial-pad';
 
 /**
  * Displays a dial pad for requesting touch tones to be played.
- *
- * @extends React.Component
  */
 export class DTMFModal extends React.Component {
     static propTypes = {

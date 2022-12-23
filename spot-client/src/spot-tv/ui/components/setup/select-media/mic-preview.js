@@ -1,15 +1,13 @@
+import { logger } from 'common/logger';
+import { avUtils } from 'common/media';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from 'common/logger';
-import { avUtils } from 'common/media';
 
 import PreviewTrack from './PreviewTrack';
 
 /**
  * Displays a volume meter for previewing the selected audio input device.
- *
- * @extends React.PureComponent
  */
 export default class MicPreview extends React.PureComponent {
     static propTypes = {

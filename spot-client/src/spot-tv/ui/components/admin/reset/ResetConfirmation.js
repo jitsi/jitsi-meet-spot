@@ -1,12 +1,9 @@
+import { logger } from 'common/logger';
+import { Button } from 'common/ui/components/button';
+import { clearPersistedState } from 'common/utils';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import { withTranslation } from 'react-i18next';
-
-import { logger } from 'common/logger';
-import { clearPersistedState } from 'common/utils';
-
-import { Button } from 'common/ui/components/button';
-
 import { nativeCommands } from 'spot-tv/native-functions';
 
 /**

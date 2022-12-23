@@ -1,9 +1,10 @@
+import { logger } from 'common/logger';
+import { getRandomMeetingName } from 'common/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { logger } from 'common/logger';
-import { getRandomMeetingName } from 'common/utils';
+
 import MeetingNameEntry from './MeetingNameEntry';
 
 /**
@@ -11,8 +12,6 @@ import MeetingNameEntry from './MeetingNameEntry';
  * placeholder after an inactivity timeout. The methods
  * _clearRandomMeetingNameProcess and _createGenerateMeetingNameTimeout are
  * called circularly to create the effect.
- *
- * @extends React.Component
  */
 export class SelfFillingNameEntry extends React.Component {
     static defaultProps = {

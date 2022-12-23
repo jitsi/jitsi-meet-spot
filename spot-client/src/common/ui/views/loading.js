@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { LoadingIcon } from './../components';
-
 import View from './view';
 
 /**

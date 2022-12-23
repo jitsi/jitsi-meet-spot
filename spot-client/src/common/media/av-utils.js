@@ -1,7 +1,7 @@
-import debounce from 'lodash.debounce';
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
+import debounce from 'lodash.debounce';
 
 /**
  * Encapsulates all media and media-devices related calls into one object.

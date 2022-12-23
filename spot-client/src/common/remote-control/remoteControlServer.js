@@ -1,17 +1,15 @@
-import { $iq } from 'strophe.js';
 
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 import { generateRandomString } from 'common/utils';
+import { $iq } from 'strophe.js';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
-import { CLIENT_TYPES, MESSAGES, SERVICE_UPDATES } from './constants';
 import P2PSignalingServer from './P2PSignalingServer';
+import { CLIENT_TYPES, MESSAGES, SERVICE_UPDATES } from './constants';
 
 /**
  * Communication service to send updates and receive commands.
- *
- * @extends BaseRemoteControlService
  */
 export class RemoteControlServer extends BaseRemoteControlService {
     /**

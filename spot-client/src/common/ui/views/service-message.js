@@ -7,8 +7,6 @@ import View from './view';
  * A component for displaying a message about a current operation in progress.
  * Used for displaying a message about a recoverable error as recovery is in
  * progress.
- *
- * @extends React.Component
  */
 export default class ServiceMessage extends React.Component {
     static propTypes = {

@@ -1,15 +1,13 @@
+import { PersonAdd } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { PersonAdd } from 'common/icons';
 
 import { NavButton } from '../nav';
 
 /**
  * A component for accessing the DTMF dial pad.
- *
- * @extends React.Component
  */
 export class InviteButton extends React.Component {
     static propTypes = {

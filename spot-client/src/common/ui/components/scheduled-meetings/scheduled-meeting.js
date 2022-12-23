@@ -1,18 +1,15 @@
+import { date } from 'common/date';
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { date } from 'common/date';
-import { logger } from 'common/logger';
 
 import { Button } from './../button';
-
 import Avatar from './avatar';
 
 /**
  * Displays details about a meeting and response to clicks.
- *
- * @extends React.Component
  */
 export class ScheduledMeeting extends React.Component {
     static propTypes = {

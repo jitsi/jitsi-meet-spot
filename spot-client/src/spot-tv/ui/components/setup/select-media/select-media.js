@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     addNotification,
     getPreferredCamera,
@@ -15,15 +10,20 @@ import {
     setWiredScreenshareInputLabel
 } from 'common/app-state';
 import { logger } from 'common/logger';
-import { Button } from 'common/ui';
 import { avUtils } from 'common/media';
+import { Button } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 
-import CameraPreview from './camera-preview';
-import MicPreview from './mic-preview';
-import MediaSelector from './media-selector';
-import SpeakerPreview from './speaker-preview';
 
 import { wiredScreenshareService } from './../../../../wired-screenshare-service';
+import CameraPreview from './camera-preview';
+import MediaSelector from './media-selector';
+import MicPreview from './mic-preview';
+import SpeakerPreview from './speaker-preview';
+
 
 /**
  * @typedef {Object} Device
@@ -36,8 +36,6 @@ import { wiredScreenshareService } from './../../../../wired-screenshare-service
 
 /**
  * Displays a selector for choosing a media source.
- *
- * @extends React.Component
  */
 class SelectMedia extends React.Component {
     static propTypes = {

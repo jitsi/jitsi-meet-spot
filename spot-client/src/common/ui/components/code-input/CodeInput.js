@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-
 import {
     hasVisibleCaretOnInitialFocus,
     isAutoFocusSupported
 } from 'common/detection';
+import PropTypes from 'prop-types';
+import React from 'react';
+
 
 /**
  * A mapping of keyboard key names to keyboard key codes for readability while
@@ -19,8 +19,6 @@ const keyCodes = {
 
 /**
  * A component for entering a code, with each character in a separate box.
- *
- * @extends React.Component
  */
 export default class CodeInput extends React.Component {
     static defaultProps = {

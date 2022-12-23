@@ -1,12 +1,10 @@
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from 'common/logger';
 
 /**
  * Displays a button with an icon and a label below.
- *
- * @extends React.Component
  */
 export default class NavButton extends React.Component {
     static defaultProps = {

@@ -1,10 +1,9 @@
+import { isReconnecting } from 'common/app-state';
+import { Sync } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-
-import { isReconnecting } from 'common/app-state';
-import { Sync } from 'common/icons';
 
 /**
  * A UI element to denote a remote control connection is being stored.
@@ -76,8 +75,7 @@ export class ReconnectIndicator extends React.Component {
     /**
      * Implements React's {@link Component#render()}.
      *
-     * @inheritdoc
-     * @returns {ReactElement}
+     * @returns {ReactElement}.
      */
     render() {
         if (!this.props.isReconnecting || !this.state.showIndicator) {

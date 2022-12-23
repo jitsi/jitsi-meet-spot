@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import {
     addNotification,
@@ -16,19 +11,22 @@ import { HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Button, CodeInput, Loading, View } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import {
     connectToSpotTV,
-    getApiReceivedJoinCode,
     disconnectFromSpotTV,
+    getApiReceivedJoinCode,
     isOnboardingComplete,
     setAPiReceivedJoinCode
 } from './../../app-state';
 
 /**
  * Displays a view to enter a join code for connecting with a Spot-TV instance.
- *
- * @extends React.Component
  */
 export class JoinCodeEntry extends React.Component {
     static defaultProps = {

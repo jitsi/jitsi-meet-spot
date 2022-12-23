@@ -1,7 +1,7 @@
 import P2PReconnectTrait from 'common/remote-control/P2PReconnectTrait';
+import P2PSignalingBase from 'common/remote-control/P2PSignalingBase';
 import P2PSignalingClient from 'common/remote-control/P2PSignalingClient';
 import XmppConnection from 'common/remote-control/xmpp-connection';
-import P2PSignalingBase from 'common/remote-control/P2PSignalingBase';
 
 describe('P2PReconnectTrait', () => {
     let p2pClient, reconnectTrait, startMock, stopMock, xmppConnection;

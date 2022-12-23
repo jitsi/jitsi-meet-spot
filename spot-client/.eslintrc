@@ -12,21 +12,11 @@
     "parser": "@babel/eslint-parser",
     "plugins": ["@babel", "import", "jest", "react"],
     "rules": {
-        "jsdoc/check-tag-names": 0,
-        "jsdoc/require-description-complete-sentence": 0,
-        "no-console": 1,
-        "space-before-function-paren": [
-            "error",
-            {
-                "anonymous": "always",
-                "named": "never",
-                "asyncArrow": "always"
-            }
-        ]
+        "no-console": 1
     },
     "settings": {
         "react": {
-            "version": "16.8.2"
+            "version": "detect"
         }
     }
 }

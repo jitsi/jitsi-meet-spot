@@ -11,7 +11,7 @@ export class VolumeModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
         t: PropTypes.func
-    }
+    };
 
     /**
      * Implements React's {@link Component#render()}.

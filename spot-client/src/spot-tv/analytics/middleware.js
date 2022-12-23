@@ -16,6 +16,7 @@ import {
     SPOT_TV_PAIR_TO_BACKEND_SUCCESS
 } from '../backend';
 
+import MissedCalendarPushDetection from './MissedCalendarPushDetection';
 import {
     backendPairingEvents,
     calendarEvents,
@@ -23,7 +24,6 @@ import {
     meetingEvents,
     meetingLeaveEvents
 } from './events';
-import MissedCalendarPushDetection from './MissedCalendarPushDetection';
 
 const missedCalendarPushDetection = new MissedCalendarPushDetection(analytics);
 

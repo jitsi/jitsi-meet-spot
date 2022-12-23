@@ -1,7 +1,7 @@
+import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { mockT } from 'common/test-mocks';
 
 import { MeetingNameEntry } from './MeetingNameEntry';
 

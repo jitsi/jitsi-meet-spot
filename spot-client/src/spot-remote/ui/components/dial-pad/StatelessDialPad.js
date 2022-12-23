@@ -1,19 +1,17 @@
+import { Backspace, Call } from 'common/icons';
+import { LoadingIcon } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Backspace, Call } from 'common/icons';
-import { LoadingIcon } from 'common/ui';
 
 import CountryCodeButton from './CountryCodeButton';
 import CountryCodePicker from './CountryCodePicker';
-import DialButton from './dial-button';
 import NumberInput from './NumberInput';
+import DialButton from './dial-button';
 
 /**
  * Displays numbers and an input for entering a phone number.
- *
- * @extends React.Component
  */
 export class StatelessDialPad extends React.Component {
     static defaultProps = {

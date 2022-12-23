@@ -1,9 +1,9 @@
-import isEqual from 'lodash.isequal';
 
 import { calendarTypes } from 'common/app-state';
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
 import { findWhitelistedMeetingUrl } from 'common/utils';
+import isEqual from 'lodash.isequal';
 
 import backendCalendar from './backend-calendar';
 import { SERVICE_UPDATES } from './constants';

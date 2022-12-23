@@ -1,12 +1,10 @@
+import { Modal } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Modal } from 'common/ui';
 
 /**
  * Displays a people search for inviting to a meeting.
- *
- * @extends React.Component
  */
 export class InviteModal extends React.Component {
     static propTypes = {

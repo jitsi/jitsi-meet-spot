@@ -1,15 +1,12 @@
+import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-
-import { mockT } from 'common/test-mocks';
-
 jest.mock('spot-tv/app-state');
 import { fetchExitPassword } from 'spot-tv/app-state';
 
 import { ExitVerification } from './ExitVerification';
-
 
 const SELECT_EXIT_CONFIRMATION = { 'data-qa-id': 'exit-electron-confirmation' };
 const SELECT_LOADING_SCREEN = { 'data-qa-id': 'exit-electron-loading' };
@@ -111,16 +108,14 @@ describe('ExitVerification', () => {
 
             expect(exitComponent.exists(SELECT_PASSWORD_PROMPT)).toEqual(true);
 
-            exitComponent.find(SELECT_PASSWORD_INPUT)
-                .simulate('change', { target: { value: `${TEST_PASSWORD}1234` } });
+            exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: `${TEST_PASSWORD}1234` } });
 
             selectConfirmButton().simulate('click');
 
             expect(onVerification).not.toHaveBeenCalled();
             expect(onPasswordInvalid).toHaveBeenCalled();
 
-            exitComponent.find(SELECT_PASSWORD_INPUT)
-                .simulate('change', { target: { value: TEST_PASSWORD } });
+            exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: TEST_PASSWORD } });
 
             selectConfirmButton().simulate('click');
 

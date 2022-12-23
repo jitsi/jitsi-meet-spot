@@ -1,9 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-
 import {
     addNotification,
     getCalendarError,
@@ -17,10 +11,17 @@ import {
 } from 'common/app-state';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { COMMANDS, SERVICE_UPDATES } from 'common/remote-control';
-import { Clock, LoadingIcon, ScheduledMeetings, FeedbackOpener } from 'common/ui';
+import { Clock, FeedbackOpener, LoadingIcon, ScheduledMeetings } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+
 
 import { redirectToMeeting } from '../../app-state';
+
 import {
     JoinInfo,
     SettingsButton,
@@ -30,8 +31,6 @@ import { withCalendar } from './../loaders';
 
 /**
  * A view of all known meetings in the calendar connected with Spot-TV.
- *
- * @extends React.Component
  */
 export class Home extends React.Component {
     static defaultProps = {

@@ -1,7 +1,7 @@
 import { MiddlewareRegistry } from 'common/redux';
 
-import { getDeviceId, SET_DEVICE_ID } from '../app-state/device-id';
 import { getLoggingEndpoint } from '../app-state/config/selectors';
+import { SET_DEVICE_ID, getDeviceId } from '../app-state/device-id';
 
 import { createLoggingService } from './actions';
 import logger from './logger';

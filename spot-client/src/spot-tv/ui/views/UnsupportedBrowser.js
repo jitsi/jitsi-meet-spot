@@ -1,9 +1,9 @@
+import { getProductName } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { getProductName } from 'common/app-state';
 
 /**
  * Displays a message stating the current browser cannot be used for Spot-TV.

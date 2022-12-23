@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     getOptimisticAudioMuteState,
@@ -9,6 +5,10 @@ import {
     setAudioMute
 } from 'common/app-state';
 import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+
 
 import { NavButton } from './../../nav';
 

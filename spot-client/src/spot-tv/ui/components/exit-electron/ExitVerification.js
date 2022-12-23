@@ -1,12 +1,10 @@
+import { addNotification, getProductName } from 'common/app-state';
+import { logger } from 'common/logger';
+import { Button, LoadingIcon, StatusOverlay } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-
-import { addNotification, getProductName } from 'common/app-state';
-import { logger } from 'common/logger';
-import { Button, LoadingIcon, StatusOverlay } from 'common/ui';
-
 import { fetchExitPassword } from 'spot-tv/app-state';
 
 const VIEW_LOADING = 'loading';

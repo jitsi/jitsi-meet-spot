@@ -1,4 +1,5 @@
 import { ReducerRegistry } from '../redux';
+
 import { SET_LOGGING_SERVICE } from './action-types';
 
 ReducerRegistry.register('logger', (state = { }, action) => {

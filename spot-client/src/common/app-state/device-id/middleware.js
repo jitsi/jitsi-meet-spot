@@ -1,7 +1,6 @@
 import { MiddlewareRegistry } from 'common/redux';
 
 import { generate8Characters, generateGuid } from '../../utils';
-
 import { BOOTSTRAP_STARTED } from '../bootstrap';
 
 import { SET_SPOT_INSTANCE_INFO } from './action-types';

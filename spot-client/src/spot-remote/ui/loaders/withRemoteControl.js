@@ -1,21 +1,19 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import { isConnectionEstablished } from 'common/app-state';
 import { history } from 'common/history';
 import { remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { AbstractLoader, Loading } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { disconnectFromSpotTV } from '../../app-state';
 
 /**
  * Loads application services while displaying a loading icon. Will display
  * the passed-in children when loading is complete.
- *
- * @extends React.Component
  */
 export class RemoteControlLoader extends AbstractLoader {
     static propTypes = {

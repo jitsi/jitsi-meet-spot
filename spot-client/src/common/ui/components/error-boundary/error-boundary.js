@@ -1,14 +1,11 @@
+import { errorBoundaryDisplayed } from 'common/app-state/ui';
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import { logger } from 'common/logger';
-import { errorBoundaryDisplayed } from 'common/app-state/ui';
 import { connect } from 'react-redux';
 
 /**
  * A component for catching uncaught errors and displaying an error message.
- *
- * @extends React.Component
  */
 export class ErrorBoundary extends React.Component {
     static propTypes = {

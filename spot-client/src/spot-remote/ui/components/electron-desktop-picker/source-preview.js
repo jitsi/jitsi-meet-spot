@@ -4,8 +4,6 @@ import React from 'react';
 /**
  * A component for displaying a desktop source preview by showing its thumbnail
  * and label.
- *
- * @extends React.Component
  */
 export default class SourcePreview extends React.Component {
     static propTypes = {
@@ -13,7 +11,7 @@ export default class SourcePreview extends React.Component {
         onDoubleClick: PropTypes.func,
         selected: PropTypes.bool,
         source: PropTypes.object
-    }
+    };
 
     /**
      * Initializes a new {@code SourcePreview} instance.
