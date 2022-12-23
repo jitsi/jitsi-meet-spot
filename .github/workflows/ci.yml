@@ -8,10 +8,11 @@ jobs:
         steps:
             - name: Step 1 - setup node 16
               uses: actions/setup-node@v3
+              working-directory: spot-client
               with:
                   node-version: '16'
                   cache: 'npm'
-                  cache-dependency-path: spot-client/package-lock.json
+                  cache-dependency-path: package-lock.json
 
             - name: Step 2 - checkout
               uses: actions/checkout@v3
