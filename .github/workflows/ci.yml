@@ -5,24 +5,29 @@ jobs:
         name: Lint [spot-client]
         runs-on: ubuntu-latest
 
+        container:
+            image: node:16
+
         steps:
-            - name: Step 1 - setup node 16
-              uses: actions/setup-node@v3
-              working-directory: spot-client
+            - name: Step 1 - checkout
+              uses: actions/checkout@v3
+
+            - name: cd spot-client
+              run: cd spot-client
+
+            - name: Step 2 - setup node 16
+              uses: actions/setup-node@v2
               with:
                   node-version: '16'
                   cache: 'npm'
-                  cache-dependency-path: package-lock.json
-
-            - name: Step 2 - checkout
-              uses: actions/checkout@v3
+                  cache-dependency-path: spot-client/package-lock.json
 
             - name: Step 3 - run install
-              working-directory: spot-client
+              working-directory: 'spot-client'
               run: npm install
 
             - name: Step 4 - run lint
-              working-directory: spot-client
+              working-directory: 'spot-client'
               run: npm run lint
 
     e2e:
