@@ -1,15 +1,13 @@
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { logger } from 'common/logger';
 
 import PreviewTrack from './PreviewTrack';
 
 /**
  * Displays a video element previewing the selected video input device.
- *
- * @extends React.PureComponent
  */
 export class CameraPreview extends React.PureComponent {
     static propTypes = {

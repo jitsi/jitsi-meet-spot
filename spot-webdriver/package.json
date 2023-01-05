@@ -25,8 +25,8 @@
     "scripts": {
         "lint": "eslint .",
         "start": "./node_modules/.bin/wdio wdio.conf.js",
-        "start-spot": "npm --prefix ../spot-client run start:dev",
-        "start-cli": "start-server-and-test start-spot http://localhost:8000/ start"
+        "start-spot-client": "npm --prefix ../spot-client run start:dev",
+        "ci": "start-server-and-test start-spot-client http://localhost:8000/ start"
     },
     "version": "0.0.1"
 }

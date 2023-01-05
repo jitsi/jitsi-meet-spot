@@ -14,21 +14,13 @@ module.exports = {
         '@babel/plugin-syntax-dynamic-import',
         '@babel/plugin-syntax-import-meta',
         [ '@babel/plugin-proposal-class-properties', { loose: false } ],
-        '@babel/plugin-proposal-json-strings',
+        '@babel/plugin-proposal-json-strings'
+    ],
+    presets: [ '@babel/preset-env', '@babel/preset-react' ],
 
-        // lib-jitsi-meet
-        '@babel/plugin-transform-flow-strip-types'
-    ],
-    presets: [
-        '@babel/env',
-        '@babel/preset-flow',
-        '@babel/react'
-    ],
     env: {
         production: {
-            plugins: [
-                'transform-react-remove-prop-types'
-            ]
+            plugins: [ 'transform-react-remove-prop-types' ]
         }
     }
 };

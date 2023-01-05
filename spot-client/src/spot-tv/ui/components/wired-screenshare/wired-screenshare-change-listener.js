@@ -1,15 +1,13 @@
+import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
 
 /**
  * A wrapper component for responding to a screenshare input device connecting
  * and redirecting to a meeting with screensharing.
- *
- * @extends React.Component
  */
 export class WiredScreenshareChangeListener extends React.PureComponent {
     static propTypes = {

@@ -29,8 +29,6 @@ const STORAGE_KEY_RC_URL = 'remote-control-url';
 /**
  * The entry point of the InRoomController application. Essentially acts as a
  * router and global state store.
- *
- * @extends React.Component
  */
 export default class App extends React.Component {
     /**

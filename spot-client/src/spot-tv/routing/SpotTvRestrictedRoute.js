@@ -1,17 +1,15 @@
+import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
+import { isSupportedSpotTvBrowser } from 'common/detection';
+import { ROUTES } from 'common/routing';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
-import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
-import { ROUTES } from 'common/routing';
-import { isSupportedSpotTvBrowser } from 'common/detection';
 
 /**
  * Creates a Route which only allows the view to be displayed if on a supported
  * browser, otherwise redirects to the unsupported browser route.
- *
- * @extends Rect.PureComponent
  */
 export class SpotTvRestrictedRoute extends React.PureComponent {
     static defaultProps = {

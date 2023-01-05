@@ -1,9 +1,9 @@
+import { Button, LoadingIcon } from 'common/ui';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { Button, LoadingIcon } from 'common/ui';
 
 import { generateLongLivedPairingCodeIfExpired } from '../../../app-state';
 import { getLongLivedPairingCodeInfo } from '../../../backend';

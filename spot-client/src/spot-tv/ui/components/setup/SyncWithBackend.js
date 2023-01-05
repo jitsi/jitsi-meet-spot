@@ -1,11 +1,11 @@
+import { addNotification, getProductName, getStartParams } from 'common/app-state';
+import { logger } from 'common/logger';
+import { CodeInput, LoadingIcon } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { addNotification, getProductName, getStartParams } from 'common/app-state';
-import { CodeInput, LoadingIcon } from 'common/ui';
-import { logger } from 'common/logger';
 
 import { pairWithBackend } from '../../../app-state';
 import { nativeCommands } from '../../../native-functions';
@@ -13,8 +13,6 @@ import { nativeCommands } from '../../../native-functions';
 /**
  * Displays the setup step for Spot-TV to enter a code to create a connection
  * with a backend.
- *
- * @extends React.Component
  */
 export class SyncWithBackend extends React.Component {
     static defaultProps = {

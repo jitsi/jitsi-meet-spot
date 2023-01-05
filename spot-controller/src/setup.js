@@ -46,8 +46,6 @@ const styles = StyleSheet.create({
 /**
  * A view for entering the default Spot-Remote url to visit on application
  * launch.
- *
- * @extends React.Component
  */
 export default class Setup extends React.Component {
     static propTypes = {

@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     getWiredScreenshareInputIdleValue,
@@ -14,14 +10,16 @@ import {
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+
 
 import { wiredScreenshareService } from './../../../wired-screenshare-service';
 
 /**
  * Responsible for listening for wired screenshare connection updates and
  * updating the rest of the app.
- *
- * @extends React.Component
  */
 class WiredScreenshareDetector extends React.PureComponent {
     static propTypes = {

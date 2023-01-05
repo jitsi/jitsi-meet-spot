@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from 'redux';
 
-import spotTvReducer from './reducer';
 import * as actions from './actions';
+import spotTvReducer from './reducer';
 import * as selectors from './selectors';
 
 describe('spotTv state', () => {

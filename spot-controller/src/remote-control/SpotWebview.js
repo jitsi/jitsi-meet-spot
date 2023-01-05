@@ -31,8 +31,6 @@ const SPOT_CLIENT_FEATURE_VERSION = 'SpotController/1';
 /**
  * A view for showing Spot-Remote within a WebView. A WebView is being used
  * until the needs of Spot-Remote cannot be satisfied with a WebView.
- *
- * @extends React.Component
  */
 export default class SpotRemoteWebView extends React.PureComponent {
     static propTypes = {

@@ -1,12 +1,12 @@
+import { addNotification, getSpotServicesConfig } from 'common/app-state';
+import { phoneAuthorize } from 'common/backend';
+import { logger } from 'common/logger';
+import { getRandomMeetingName } from 'common/utils';
 import { formatIncompletePhoneNumber, parsePhoneNumberFromString } from 'libphonenumber-js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addNotification, getSpotServicesConfig } from 'common/app-state';
-import { phoneAuthorize } from 'common/backend';
-import { logger } from 'common/logger';
-import { getRandomMeetingName } from 'common/utils';
 
 import {
     getCountryCode,
@@ -81,8 +81,6 @@ function removeFormatting(formattedPhoneNumber) {
 
 /**
  * Displays numbers and an input for entering a phone number.
- *
- * @extends React.Component
  */
 export class DialPad extends React.Component {
     static defaultProps = {

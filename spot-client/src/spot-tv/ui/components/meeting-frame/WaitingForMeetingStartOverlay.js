@@ -1,8 +1,8 @@
+import { StatusOverlay } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { StatusOverlay } from 'common/ui';
 
 /**
  * Renders a text overlay which hides meeting frame when actively attempting to

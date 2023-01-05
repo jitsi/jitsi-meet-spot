@@ -1,10 +1,10 @@
+import { isPermanentRemotePaired } from 'common/app-state';
+import { Button } from 'common/ui';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { isPermanentRemotePaired } from 'common/app-state';
-import { Button } from 'common/ui';
 
 import { getLongLivedPairingCodeInfo } from '../../../backend';
 

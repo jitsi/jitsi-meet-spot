@@ -11,9 +11,9 @@ import {
     setCustomerId,
     setDisplayName,
     setIsPermanentRemotePaired,
+    setJwt,
     setRemoteJoinCode,
     setRoomId,
-    setJwt,
     setTenant
 } from 'common/app-state';
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
@@ -29,18 +29,18 @@ import {
 import { ROUTES } from 'common/routing';
 import { getJitterDelay, windowHandler } from 'common/utils';
 
-import {
-    SPOT_TV_PAIR_TO_BACKEND_PENDING,
-    SPOT_TV_PAIR_TO_BACKEND_FAIL,
-    SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
-    getLongLivedPairingCodeInfo,
-    setLongLivedPairingCodeInfo,
-    SpotTvBackendService
-} from '../backend';
-import { calendarService } from './../calendars';
-
-import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from './actionTypes';
 import { isValidMeetingName, isValidMeetingUrl } from '../../common/utils';
+import {
+    SPOT_TV_PAIR_TO_BACKEND_FAIL,
+    SPOT_TV_PAIR_TO_BACKEND_PENDING,
+    SPOT_TV_PAIR_TO_BACKEND_SUCCESS,
+    SpotTvBackendService,
+    getLongLivedPairingCodeInfo,
+    setLongLivedPairingCodeInfo
+} from '../backend';
+
+import { calendarService } from './../calendars';
+import { SPOT_TV_CONNECTION_FAILED, SPOT_TV_SET_MEETING_SUMMARY } from './actionTypes';
 import { getDefaultMeetingDomain } from './selectors';
 
 let eventHandlerRemovers;

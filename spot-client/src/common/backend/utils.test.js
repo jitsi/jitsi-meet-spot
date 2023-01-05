@@ -1,5 +1,5 @@
-import * as utils from './utils';
 import { errorConstants } from './constants';
+import * as utils from './utils';
 
 jest.mock('common/utils', () => {
     return {

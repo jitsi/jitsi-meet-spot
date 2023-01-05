@@ -1,10 +1,10 @@
+import { ROUTES } from 'common/routing';
+import { Button } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { ROUTES } from 'common/routing';
-import { Button } from 'common/ui';
 
 import AdminEntry from './admin-entry';
 

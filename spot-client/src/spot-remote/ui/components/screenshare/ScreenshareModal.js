@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     hideModal,
@@ -11,13 +7,15 @@ import {
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { Modal } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+
 
 import ScreensharePicker from './ScreensharePicker';
 
 /**
  * Wraps {@code ScreensharePicker} so it can be displayed in a modal.
- *
- * @extends React.Component
  */
 export class ScreenshareModal extends React.Component {
     static propTypes = {

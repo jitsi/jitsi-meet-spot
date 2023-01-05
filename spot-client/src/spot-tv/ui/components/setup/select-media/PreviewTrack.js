@@ -5,8 +5,6 @@ import { avUtils } from 'common/media';
  * A model which wraps a JitsiLocalTrack so the JitsiLocalTrack can be
  * automatically destroyed if getUserMedia finishes after the model is
  * destroyed.
- *
- * @extends Emitter
  */
 export default class PreviewTrack extends Emitter {
     _createPromise = null;
@@ -48,9 +46,10 @@ export default class PreviewTrack extends Emitter {
             return this._createPromise;
         }
 
-        this._createPromise = this._type === 'audio'
-            ? avUtils.createLocalAudioTrack(this._deviceId)
-            : avUtils.createLocalVideoTrack(this._deviceId);
+        this._createPromise
+            = this._type === 'audio'
+                ? avUtils.createLocalAudioTrack(this._deviceId)
+                : avUtils.createLocalVideoTrack(this._deviceId);
 
         return this._createPromise
             .then(jitsiLocalTrack => {
@@ -89,10 +88,7 @@ export default class PreviewTrack extends Emitter {
         this._destroyed = true;
 
         if (this._jitsiLocalTrack) {
-            this._jitsiLocalTrack.off(
-                avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED,
-                this._emitAudioLevelChange
-            );
+            this._jitsiLocalTrack.off(avUtils.getTrackEvents().TRACK_AUDIO_LEVEL_CHANGED, this._emitAudioLevelChange);
 
             this._jitsiLocalTrack.dispose();
         }
@@ -104,8 +100,7 @@ export default class PreviewTrack extends Emitter {
      * @returns {MediaTrack|undefined}
      */
     getOriginalStream() {
-        return this._jitsiLocalTrack
-            && this._jitsiLocalTrack.getOriginalStream();
+        return this._jitsiLocalTrack && this._jitsiLocalTrack.getOriginalStream();
     }
 
     /**

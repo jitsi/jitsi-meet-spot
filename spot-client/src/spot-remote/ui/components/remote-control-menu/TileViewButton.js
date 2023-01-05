@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     getOptimisticTileViewState,
@@ -10,6 +5,11 @@ import {
     setTileView
 } from 'common/app-state';
 import { BorderAllOutlined } from 'common/icons';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { NavButton } from './../nav';
 

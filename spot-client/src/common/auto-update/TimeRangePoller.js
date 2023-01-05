@@ -5,8 +5,6 @@ const defaultFrequency = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 /**
  * Polls for if the current time falls within a provided range of hours.
- *
- * @extends Emitter
  */
 export default class TimeRangePoller extends Emitter {
     static TIME_WITHIN_RANGE_UPDATE = 'TIME_WITHIN_RANGE_UPDATE';

@@ -1,5 +1,6 @@
-import { SpotBackendService } from './SpotBackendService';
 import { persistence } from 'common/utils';
+
+import { SpotBackendService } from './SpotBackendService';
 
 jest.mock('common/utils', () => {
     return {

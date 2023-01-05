@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     hideFeedback,
     isAppFeedbackShown,
     submitFeedback
 } from 'common/app-state';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { Background } from '../background';
 

@@ -1,16 +1,13 @@
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { logger } from 'common/logger';
 
 import { Loading } from './../views';
 
 /**
  * An abstract class with templates for how to ensure a service is loaded
  * for child components to use.
- *
- * @abstract
- * @extends React.PureComponent
  */
 export class AbstractLoader extends React.PureComponent {
     /**

@@ -10,7 +10,7 @@ export default class ApiHealthCheck {
 
     /**
      * The amount of time to wait in milliseconds before executing the health
-     * check function again
+     * check function again.
      */
     static pingIntervalMs = 5000;
 

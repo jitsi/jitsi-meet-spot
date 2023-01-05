@@ -1,17 +1,4 @@
-import defaultsDeep from 'lodash.defaultsdeep';
-import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createStore } from 'redux';
-import thunk from 'redux-thunk';
-
-import 'common/css';
 import { SegmentHandler, analytics } from 'common/analytics';
-import { globalDebugger } from 'common/debugging';
-import { isElectron } from 'common/detection';
-import { history } from 'common/history';
-import { logger } from 'common/logger';
 import reducers, {
     getAnalyticsAppKey,
     getDesktopSharingFramerate,
@@ -22,7 +9,11 @@ import reducers, {
     setDefaultValues,
     setSetupCompleted
 } from 'common/app-state';
-import { setPermanentPairingCode, SpotBackendService } from 'common/backend';
+import { SpotBackendService, setPermanentPairingCode } from 'common/backend';
+import { globalDebugger } from 'common/debugging';
+import { isElectron } from 'common/detection';
+import { history } from 'common/history';
+import { logger } from 'common/logger';
 import 'common/i18n';
 import { MiddlewareRegistry, ReducerRegistry, StateListenerRegistry } from 'common/redux';
 import {
@@ -35,7 +26,14 @@ import {
     loadScript,
     setPersistedState
 } from 'common/utils';
-
+import defaultsDeep from 'lodash.defaultsdeep';
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { createStore } from 'redux';
+import thunk from 'redux-thunk';
+import 'common/css';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
 
 import App from './app';

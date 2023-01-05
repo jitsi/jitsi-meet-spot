@@ -4,8 +4,6 @@ import { withTranslation } from 'react-i18next';
 
 /**
  * Displays a number in seconds which decrements each second.
- *
- * @extends React.Component
  */
 export class Countdown extends React.Component {
     static defaultProps = {

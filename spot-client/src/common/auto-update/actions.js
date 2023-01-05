@@ -1,5 +1,6 @@
 import { getSpotClientVersion } from 'common/app-state';
 import { fetchSpotClientVersion } from 'common/backend';
+
 import { logger } from '../logger';
 
 import {

@@ -1,6 +1,6 @@
+import { Cancel } from 'common/icons';
 import React from 'react';
 
-import { Cancel } from 'common/icons';
 
 import { nativeCommands } from '../../../native-functions';
 

@@ -3,8 +3,6 @@ import React from 'react';
 /**
  * Landing page for client-side Microsoft Outlook oauth redirects to pass back
  * any auth tokens to the main Spot-TV window.
- *
- * @extends React.Component
  */
 export class OutlookOauth extends React.Component {
     /**

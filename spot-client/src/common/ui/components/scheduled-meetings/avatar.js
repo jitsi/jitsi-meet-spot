@@ -1,16 +1,14 @@
 
+import { getDefaultAvatarUrl } from 'common/app-state';
+import { hash } from 'common/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getDefaultAvatarUrl } from 'common/app-state';
-import { hash } from 'common/utils';
 
 /**
  * A component that displays the gravatar of a provided email or a configured
  * default avatar.
- *
- * @extends React.Component
  */
 export class Avatar extends React.Component {
     static defaultProps = {

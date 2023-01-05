@@ -1,10 +1,10 @@
+import { hideModal } from 'common/app-state';
+import { isBackendEnabled } from 'common/backend';
+import { Modal } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { hideModal } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
-import { Modal } from 'common/ui';
 
 import { SelectMedia } from '../setup';
 
@@ -16,8 +16,6 @@ import SetupWizard from './setup-wizard';
 
 /**
  * A component for providing post-setup Spot-TV configuration.
- *
- * @extends React.Component
  */
 class AdminModal extends React.Component {
     static propTypes = {

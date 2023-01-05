@@ -1,9 +1,9 @@
+import { getDisplayName, setSpotTVState } from 'common/app-state';
+import { View } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getDisplayName, setSpotTVState } from 'common/app-state';
-import { View } from 'common/ui';
 
 import { JoinInfo } from './../components';
 
@@ -11,7 +11,6 @@ import { JoinInfo } from './../components';
  * A React Component representing a single screen in Spot-TV. Wraps {@code View}
  * to include notifying this component's parent of the current displayed view.
  *
- * @extends React.Component
  */
 class SpotView extends React.Component {
     static propTypes = {

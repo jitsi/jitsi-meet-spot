@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     getOptimisticVideoMuteState,
     isVideoMutePending,
     setVideoMute
 } from 'common/app-state';
-import { VideocamOutlined, VideocamOffOutlined } from 'common/icons';
+import { VideocamOffOutlined, VideocamOutlined } from 'common/icons';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+
 
 import { NavButton } from './../../nav';
 

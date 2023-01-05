@@ -1,6 +1,6 @@
+import { API_MESSAGE_RECEIVED } from 'common/app-state';
 import { MiddlewareRegistry } from 'common/redux';
 
-import { API_MESSAGE_RECEIVED } from 'common/app-state';
 
 import { setAPiReceivedJoinCode } from './actions';
 

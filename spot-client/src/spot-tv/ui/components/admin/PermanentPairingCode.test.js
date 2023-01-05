@@ -1,8 +1,8 @@
-import React from 'react';
-import { mount } from 'enzyme';
 
 import { mockT } from 'common/test-mocks';
 import { LoadingIcon } from 'common/ui';
+import { mount } from 'enzyme';
+import React from 'react';
 
 import { PermanentPairingCode } from './PermanentPairingCode';
 

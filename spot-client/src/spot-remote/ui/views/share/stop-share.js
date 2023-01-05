@@ -1,19 +1,17 @@
+import { getInMeetingStatus, getInvitedPhoneNumber } from 'common/app-state';
+import { ScreenShare } from 'common/icons';
+import { Button, LoadingIcon } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { getInMeetingStatus, getInvitedPhoneNumber } from 'common/app-state';
-import { ScreenShare } from 'common/icons';
-import { Button, LoadingIcon } from 'common/ui';
 
 import { MeetingHeader } from '../../components';
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 /**
  * Displays a button for stopping wireless screenshare in progress.
- *
- * @extends React.Component
  */
 export class StopShare extends React.Component {
     static propTypes = {

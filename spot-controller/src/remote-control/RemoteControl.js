@@ -6,8 +6,6 @@ import SpotWebview from './SpotWebview';
 
 /**
  * Displays the Spot remote control and handles its lifecycle.
- *
- * @extends React.Component
  */
 export default class RemoteControl extends React.Component {
     static propTypes = SpotWebview.propTypes;

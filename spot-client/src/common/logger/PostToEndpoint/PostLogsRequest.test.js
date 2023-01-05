@@ -1,5 +1,6 @@
-import PostLogsRequest from './PostLogsRequest';
 import { runAllTimersNTimes, runNTimes } from 'common/test-utils';
+
+import PostLogsRequest from './PostLogsRequest';
 
 jest.mock('./internalLogger');
 

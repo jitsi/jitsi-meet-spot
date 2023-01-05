@@ -1,14 +1,12 @@
+import { logger } from 'common/logger';
+import { Button, Input } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { logger } from 'common/logger';
-import { Button, Input } from 'common/ui';
 
 /**
  * Requests entry of a password.
- *
- * @extends React.Component
  */
 export class PasswordPrompt extends React.Component {
     static propTypes = {

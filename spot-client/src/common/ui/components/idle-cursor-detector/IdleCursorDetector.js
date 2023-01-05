@@ -5,8 +5,6 @@ import React from 'react';
 /**
  * Encapsulates logic for detecting when the mouse cursor has not been moved for
  * a specified period (has become idle).
- *
- * @extends React.Component
  */
 export class IdleCursorDetector extends React.Component {
     static defaultProps = {

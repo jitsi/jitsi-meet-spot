@@ -1,9 +1,9 @@
+import { hangUp } from 'common/app-state';
+import { CallEnd } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { hangUp } from 'common/app-state';
-import { CallEnd } from 'common/icons';
 
 import { NavButton } from './../../nav';
 

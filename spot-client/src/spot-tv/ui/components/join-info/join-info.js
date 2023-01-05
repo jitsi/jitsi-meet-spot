@@ -1,15 +1,13 @@
+import { getRemoteJoinCode, getShareDomain } from 'common/app-state';
+import { RemoteJoinCode } from 'common/ui';
+import { windowHandler } from 'common/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getRemoteJoinCode, getShareDomain } from 'common/app-state';
-import { windowHandler } from 'common/utils';
-import { RemoteJoinCode } from 'common/ui';
 
 /**
  * Displays information about how a Spot-Remote can pair with a Spot-TV.
- *
- * @extends React.Component
  */
 class JoinInfo extends React.Component {
     static propTypes = {

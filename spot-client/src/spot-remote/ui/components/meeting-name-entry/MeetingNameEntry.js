@@ -1,13 +1,11 @@
+import { Button } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { Button } from 'common/ui';
 
 /**
  * Displays an input for entering the name of a meeting.
- *
- * @extends React.Component
  */
 export class MeetingNameEntry extends React.Component {
     static propTypes = {

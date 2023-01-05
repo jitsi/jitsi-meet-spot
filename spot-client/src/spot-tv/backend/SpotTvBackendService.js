@@ -1,4 +1,4 @@
-import { fetchRoomInfo, getRemotePairingCode, SpotBackendService } from 'common/backend';
+import { SpotBackendService, fetchRoomInfo, getRemotePairingCode } from 'common/backend';
 import { logger } from 'common/logger';
 
 /**

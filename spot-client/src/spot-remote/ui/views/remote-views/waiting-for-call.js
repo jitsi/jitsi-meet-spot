@@ -1,13 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 
 import {
-    getConfiguredMeetingDomain,
-    getSpotTVTenant,
     dialOut,
+    getConfiguredMeetingDomain,
     getInMeetingStatus,
+    getSpotTVTenant,
     joinAdHocMeeting,
     joinScheduledMeeting,
     joinWithScreensharing
@@ -22,11 +18,15 @@ import {
     ScheduledMeetings
 } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 
 import {
     DialPad,
-    NavList,
     NavItem,
+    NavList,
     ScreensharePicker,
     SelfFillingNameEntry
 } from './../../components';
@@ -34,8 +34,6 @@ import {
 /**
  * Returns the React Element to display while the Spot-TV instance is not in a
  * meeting. Displays controls for starting a meeting.
- *
- * @extends React.PureComponent
  */
 class WaitingForCallView extends React.Component {
     static propTypes = {

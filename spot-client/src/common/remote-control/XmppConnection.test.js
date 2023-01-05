@@ -1,5 +1,6 @@
-import XmppConnection from './xmpp-connection';
 import { tickProcess } from 'common/test-utils';
+
+import XmppConnection from './xmpp-connection';
 
 describe('XmppConnection', () => {
     const IQ_FROM = 'localPart2@domainPart2/resource2';

@@ -1,9 +1,8 @@
-import isEqual from 'lodash.isequal';
 
 import {
     BOOTSTRAP_COMPLETE,
-    getCurrentView,
     getCurrentRoute,
+    getCurrentView,
     getUpdateEndHour,
     getUpdateStartHour
 } from 'common/app-state';
@@ -11,11 +10,13 @@ import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { date } from 'common/date';
 import { MiddlewareRegistry, StateListenerRegistry } from 'common/redux';
 import { ROUTES } from 'common/routing';
+import isEqual from 'lodash.isequal';
 
+import TimeRangePoller from './TimeRangePoller';
 import {
     checkForWebUpdateAvailable,
-    setOkToUpdate,
     setIsNightlyReloadTime,
+    setOkToUpdate,
     updateWebSource
 } from './actions';
 import {
@@ -24,7 +25,6 @@ import {
     isTimeForNightlyReload,
     isWebUpdateAvailable
 } from './selectors';
-import TimeRangePoller from './TimeRangePoller';
 
 /**
  * How often the controller checks if it's the nightly reload time.

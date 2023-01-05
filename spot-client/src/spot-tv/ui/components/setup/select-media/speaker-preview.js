@@ -1,14 +1,12 @@
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { logger } from 'common/logger';
 
 /**
  * Displays UI to play a sound, and actually play the sound, from a selected
  * speaker.
- *
- * @extends React.PureComponent
  */
 export class SpeakerPreview extends React.PureComponent {
     static propTypes = {

@@ -1,13 +1,11 @@
+import { SimpleSelect } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { SimpleSelect } from 'common/ui';
 
 /**
  * Displays a select element for choosing a media device.
- *
- * @extends React.Component
  */
 export class MediaSelector extends React.Component {
     static propTypes = {

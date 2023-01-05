@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
 import {
     apiMessageReceived,
@@ -23,6 +19,10 @@ import {
     Notifications,
     ReconnectIndicator
 } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import {
     Help,
     JoinCodeEntry,
@@ -41,8 +41,9 @@ import {
     UnsupportedBrowser,
     WiredScreenshareDetector
 } from 'spot-tv/ui';
-import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
+
 import { SpotTvRestrictedRoute } from './spot-tv/routing';
+import { SpotTVRemoteControlLoader } from './spot-tv/ui/loaders';
 
 // Enable auto updates
 import 'spot-remote/auto-update';
@@ -56,8 +57,6 @@ import 'spot-tv/electron-logs';
 
 /**
  * The root of the application which determines what view should be displayed.
- *
- * @extends React.Component
  */
 export class App extends React.Component {
     static propTypes = {

@@ -1,11 +1,12 @@
+import { submitFeedback } from 'common/app-state';
+import { Star, StarBorder } from 'common/icons';
+import { logger } from 'common/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { submitFeedback } from 'common/app-state';
-import { Star, StarBorder } from 'common/icons';
-import { logger } from 'common/logger';
+
 import { Button } from '../button';
 
 /**
@@ -18,8 +19,6 @@ const DEFAULT_INACTIVITY_TIMEOUT = 60 * 1000;
 /**
  * A React Component for inputting and submitting feedback by leaving
  * a rating and an explanation for the rating.
- *
- * @extends React.Component
  */
 export class FeedbackForm extends React.Component {
     static propTypes = {

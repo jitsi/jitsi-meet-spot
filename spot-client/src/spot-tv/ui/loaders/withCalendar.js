@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import {
     calendarTypes,
@@ -9,19 +7,19 @@ import {
     getJwt,
     getMeetingDomainsWhitelist,
     isSetupComplete,
-    setCalendarEvents,
-    setCalendarError
+    setCalendarError,
+    setCalendarEvents
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { AbstractLoader, generateWrapper } from 'common/ui';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { calendarService, SERVICE_UPDATES } from './../../calendars';
+import { SERVICE_UPDATES, calendarService } from './../../calendars';
 
 /**
  * Loads the calendar service so it can be used to interact with calendar
  * integrations.
- *
- * @extends React.Component
  */
 export class CalendarLoader extends AbstractLoader {
     static propTypes = {

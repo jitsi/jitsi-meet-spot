@@ -3,6 +3,7 @@ import { SPOT_TV_SET_REMOTE_JOIN_CODE, SPOT_TV_SET_STATE, getCurrentView } from 
 import { BOOTSTRAP_COMPLETE } from 'common/app-state/bootstrap';
 import { MiddlewareRegistry, StateListenerRegistry } from 'common/redux';
 import { SET_LONG_LIVED_PAIRING_CODE_INFO, getLongLivedPairingCodeInfo } from 'spot-tv/backend';
+
 import nativeCommands from './native-commands';
 import nativeController from './native-controller';
 

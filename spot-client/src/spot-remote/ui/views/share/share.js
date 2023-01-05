@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     getCurrentView,
     getInMeetingStatus,
@@ -17,22 +12,23 @@ import {
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { LoadingIcon, RoomName, View } from 'common/ui';
 import { getRandomMeetingName } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import { exitShareMode } from './../../../app-state';
-
 import {
     ElectronDesktopPickerModal,
     WaitingForSpotTVOverlay
 } from './../../components';
 import { WithRemoteControl } from './../../loaders';
-
 import ModeSelect from './mode-select';
 import StopShare from './stop-share';
 
 /**
  * Controls what UI components display while in share mode.
- *
- * @extends React.PureComponent
  */
 export class Share extends React.PureComponent {
     static propTypes = {

@@ -1,6 +1,7 @@
 import { date } from 'common/date';
 
 import { ReducerRegistry } from '../redux';
+
 import {
     SET_IS_NIGHTLY_RELOAD_TIME,
     SET_LAST_LOAD_TIME,

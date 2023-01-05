@@ -1,13 +1,11 @@
+import { getCurrentModal } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getCurrentModal } from 'common/app-state';
 
 /**
  * Displays a modal component stored in Redux.
- *
- * @extends React.PureComponent
  */
 export class ModalManager extends React.PureComponent {
     static defaultProps = {

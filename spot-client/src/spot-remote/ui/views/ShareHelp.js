@@ -1,8 +1,8 @@
+import { View } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { View } from 'common/ui';
 
 /**
  * Displays a message stating the permanent remotes cannot enter share mode.

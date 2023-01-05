@@ -1,14 +1,12 @@
+import { ScreenShare, WirelessScreenshare } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
-import { ScreenShare, WirelessScreenshare } from 'common/icons';
 
 /**
  * Displays buttons for starting wireless screenshare or becoming a full
  * featured Spot-Remote.
- *
- * @extends React.Component
  */
 export class ModeSelect extends React.Component {
     static defaultProps = {

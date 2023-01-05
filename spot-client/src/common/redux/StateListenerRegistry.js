@@ -32,8 +32,8 @@ import logger from '../logger/logger';
  * the values derived from a redux store/state by the {@code Selector}.
  *
  * @typedef {Object} SelectorListener
- * @property {Listener} Listens to changes in the values selected by {@link selector}.
- * @property {Selector} Selects values whose changes are listened to by {@link listener}.
+ * @property {Listener} Listens To changes in the values selected by {@link selector}.
+ * @property {Selector} Selects Values whose changes are listened to by {@link listener}.
  */
 
 /**

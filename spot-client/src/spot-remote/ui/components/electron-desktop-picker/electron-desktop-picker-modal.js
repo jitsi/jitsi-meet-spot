@@ -1,13 +1,11 @@
+import { Modal } from 'common/ui';
 import React from 'react';
 
-import { Modal } from 'common/ui';
 
 import DesktopPicker from './desktop-picker';
 
 /**
  * Modal for displaying the component {@code DesktopPicker}.
- *
- * @extends React.Component
  */
 export default class ElectronDesktopPickerModal extends React.Component {
     /**

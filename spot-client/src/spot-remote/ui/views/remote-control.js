@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     getCalendarEvents,
     getCurrentView,
@@ -11,6 +6,11 @@ import {
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { LoadingIcon, View } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import './../../analytics';
 
@@ -25,8 +25,6 @@ import { Feedback, InCall, WaitingForCall } from './remote-views';
  * Displays the remote control view for controlling a Spot-TV instance from an
  * instance of Spot-Remote. This view has sub-views for interacting with
  * Spot-TV in its different states.
- *
- * @extends React.PureComponent
  */
 export class RemoteControl extends React.PureComponent {
     static propTypes = {

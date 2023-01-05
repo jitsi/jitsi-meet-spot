@@ -1,13 +1,12 @@
+import { KeyboardArrowDown } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
-import { KeyboardArrowDown } from 'common/icons';
+
 import countriesInfo from './countriesInfo';
 
 /**
  * Displays a button with a country flag and country name based on a country code.
- *
- * @extends React.Component
  */
 export default class CountryCodeButton extends React.PureComponent {
     /**

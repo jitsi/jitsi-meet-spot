@@ -1,17 +1,17 @@
-import lolex from 'lolex';
-import { createStore } from 'redux';
-import thunk from 'redux-thunk';
 
 import reducers, { routeChanged, setBootstrapComplete, setDefaultValues, setSpotTVState } from 'common/app-state';
 import { setPermanentPairingCode } from 'common/backend';
 import { MiddlewareRegistry, ReducerRegistry, StateListenerRegistry } from 'common/redux';
 import { ROUTES } from 'common/routing';
+import lolex from 'lolex';
+import { createStore } from 'redux';
+import thunk from 'redux-thunk';
 
 import { NIGHTLY_RELOAD_POLL_INTERVAL, WEB_UPDATE_POLL_INTERVAL } from './AutoUpdateController';
 import './reducer';
-import { isOkToUpdate, isTimeForNightlyReload, isWebUpdateAvailable } from './selectors';
-import { _setLastLoadTime } from './actions';
 import { UPDATE_WEB_SOURCE } from './actionTypes';
+import { _setLastLoadTime } from './actions';
+import { isOkToUpdate, isTimeForNightlyReload, isWebUpdateAvailable } from './selectors';
 
 const DATE_TIME_AT_2_10_AM = 1574043000000; // 18 November 2019 02:10:00
 const DATE_TIME_AT_1_10_AM = 1574039400000; // 18 November 2019 01:10:00

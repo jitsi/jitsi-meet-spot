@@ -1,8 +1,5 @@
 /* global JitsiMeetExternalAPI */
 
-import bindAll from 'lodash.bindall';
-import React from 'react';
-import { connect } from 'react-redux';
 
 import {
     getClientAspectRatio,
@@ -13,21 +10,21 @@ import {
 import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES } from 'common/remote-control';
 import { parseMeetingUrl } from 'common/utils';
+import bindAll from 'lodash.bindall';
+import React from 'react';
+import { connect } from 'react-redux';
 
 import { nativeCommands } from '../../../../native-functions';
-
 import { WiredScreenshareChangeListener } from '../../wired-screenshare';
-
 import AbstractMeetingFrame from '../AbstractMeetingFrame';
 import MeetingType from '../MeetingType';
+
 import FeedbackHider from './FeedbackHider';
 
 const DEFAULT_DISPLAY_NAME = 'Meeting Room';
 
 /**
  * The iFrame used to to display a Jitsi-Meet meeting.
- *
- * @extends React.Component
  */
 export class JitsiMeetingFrame extends AbstractMeetingFrame {
     static defaultProps = {

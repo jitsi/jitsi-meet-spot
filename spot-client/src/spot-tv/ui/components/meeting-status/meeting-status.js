@@ -1,16 +1,14 @@
+import { getInMeetingStatus } from 'common/app-state';
+import { MicOff, VideocamOff } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getInMeetingStatus } from 'common/app-state';
-import { MicOff, VideocamOff } from 'common/icons';
 
 import StatusIcon from './status-icon';
 
 /**
  * Displays Spot-TV in-meeting status, such as mute states.
- *
- * @extends React.Component
  */
 export class MeetingStatus extends React.Component {
     static propTypes = {

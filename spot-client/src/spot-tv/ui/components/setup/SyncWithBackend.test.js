@@ -1,8 +1,8 @@
+import { mockT } from 'common/test-mocks';
+import { LoadingIcon } from 'common/ui';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { mockT } from 'common/test-mocks';
-import { LoadingIcon } from 'common/ui';
 
 import { SyncWithBackend } from './SyncWithBackend';
 

@@ -1,9 +1,9 @@
-import { Strophe, $iq } from 'strophe.js';
 
 import { Emitter } from 'common/emitter';
 import { logger } from 'common/logger';
-import { JitsiMeetJSProvider } from 'common/vendor';
 import { getJitterDelay } from 'common/utils';
+import { JitsiMeetJSProvider } from 'common/vendor';
+import { $iq, Strophe } from 'strophe.js';
 
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
@@ -245,7 +245,7 @@ export default class XmppConnection extends Emitter {
             )
         );
 
-        const createJoinPromise = function () {
+        const createJoinPromise = function() {
             let firstConflictTimestamp;
 
             return new Promise((resolve, reject) => {

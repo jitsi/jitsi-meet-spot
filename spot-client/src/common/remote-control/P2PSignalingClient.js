@@ -142,7 +142,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
             _peerConnection: peerConnection
         };
 
-        const promise = new Promise(function (resolve, reject) {
+        const promise = new Promise(function(resolve, reject) {
             if (!this._peerConnection.sendDataChannelMessage(JSON.stringify({
                 requestId,
                 command,

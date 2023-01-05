@@ -1,8 +1,8 @@
+import { VideocamOffOutlined, VideocamOutlined } from 'common/icons';
+import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { VideocamOutlined, VideocamOffOutlined } from 'common/icons';
-import { mockT } from 'common/test-mocks';
 
 import { VideoMuteButton } from './VideoMuteButton';
 

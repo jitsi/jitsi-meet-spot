@@ -4,11 +4,10 @@ import { avUtils } from 'common/media';
 import { remoteControlClient } from 'common/remote-control';
 
 import { setSpotTVState } from './../spot-tv/actions';
-
 import {
     AUDIO_MUTE,
-    DIAL_OUT,
     DESTROY_CONNECTION,
+    DIAL_OUT,
     HANG_UP,
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,

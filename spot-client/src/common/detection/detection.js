@@ -1,5 +1,4 @@
 import Bowser from 'bowser';
-
 import { JitsiMeetJSProvider } from 'common/vendor';
 
 const browser = Bowser.getParser(window.navigator.userAgent);

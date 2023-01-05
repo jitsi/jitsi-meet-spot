@@ -1,7 +1,7 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-
 import { mockT } from 'common/test-mocks';
+import { shallow } from 'enzyme';
+import React from 'react';
+
 
 import { Countdown } from './Countdown';
 

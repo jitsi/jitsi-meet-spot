@@ -1,16 +1,14 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-
 import {
     getDisplayName,
     getRemoteSpotTVRoomName
 } from 'common/app-state';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+
 
 /**
  * Displays the currently configured Spot-Room name.
- *
- * @extends React.Component
  */
 export class RoomName extends React.Component {
     static propTypes = {

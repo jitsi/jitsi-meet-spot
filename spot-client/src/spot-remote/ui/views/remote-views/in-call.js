@@ -1,8 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-
 import {
     forceStopWirelessScreenshare,
     getInMeetingStatus,
@@ -11,6 +6,11 @@ import {
     hideModal
 } from 'common/app-state';
 import { LoadingIcon, Modal } from 'common/ui';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 
 import {
     submitPassword
@@ -21,14 +21,13 @@ import {
     MeetingHeader,
     PasswordPrompt
 } from '../../components';
-import { MeetingToolbar } from './../../components/meeting-toolbar';
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
+
+import { MeetingToolbar } from './../../components/meeting-toolbar';
 
 /**
  * A view for displaying ways to interact with the Spot-TV while Spot-TV is in a
  * meeting.
- *
- * @extends React.Component
  */
 export class InCall extends React.Component {
     static propTypes = {

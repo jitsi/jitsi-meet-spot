@@ -1,10 +1,10 @@
+import { getProductName } from 'common/app-state';
+import { StatusOverlay } from 'common/ui';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { getProductName } from 'common/app-state';
-import { StatusOverlay } from 'common/ui';
 
 /**
  * Renders a text overlay which hides Jitsi-Meet iFrame when it's asking for

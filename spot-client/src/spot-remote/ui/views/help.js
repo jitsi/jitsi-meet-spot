@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 
 import {
     getPrivacyPolicyURL,
@@ -14,13 +10,15 @@ import { history } from 'common/history';
 import { ROUTES } from 'common/routing';
 import { Button, View } from 'common/ui';
 import { windowHandler } from 'common/utils';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 
 import { setHasCompletedOnboarding } from '../../app-state';
 
 /**
  * Displays a view with basic usage instructions for Spot Remote.
- *
- * @extends React.Component
  */
 class Help extends React.Component {
     static propTypes = {

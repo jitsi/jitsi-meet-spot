@@ -1,7 +1,3 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-
 import {
     getInMeetingStatus,
     hideModal,
@@ -11,15 +7,16 @@ import {
 } from 'common/app-state';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { ScreenShareOutlined } from 'common/icons';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+
 
 import { NavButton } from './../nav';
-
 import ScreenshareModal from './ScreenshareModal';
 
 /**
  * A component for displaying and hiding {@code ScreenshareModal}.
- *
- * @extends React.Component
  */
 export class ScreenshareButton extends React.Component {
     static propTypes = {

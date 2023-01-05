@@ -6,8 +6,6 @@ import { JitsiMeetingFrame } from './JitsiMeetingFrame';
 
 /**
  * Displays the appropriate iFrame for displaying the current meeting.
- *
- * @extends React.Component
  */
 export class MeetingFrame extends Component {
     static propTypes = AbstractMeetingFrame.propTypes;
