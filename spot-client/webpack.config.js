@@ -3,7 +3,6 @@
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const { DuplicatesPlugin } = require('inspectpack/plugin');
 const path = require('path');
 const webpack = require('webpack');
@@ -83,7 +82,6 @@ module.exports = () => {
             new DuplicatesPlugin({
                 emitErrors: true
             }),
-            new ESLintPlugin(),
             new WriteFilePlugin()
         ].filter(Boolean),
         output: {
