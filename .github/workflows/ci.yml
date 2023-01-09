@@ -16,11 +16,9 @@ jobs:
               run: cd spot-client
 
             - name: Step 2 - setup node 16
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
-                  node-version: '16'
-                  cache: 'npm'
-                  cache-dependency-path: spot-client/package-lock.json
+                  node-version: 16
 
             - name: Step 3 - run install
               working-directory: 'spot-client'
