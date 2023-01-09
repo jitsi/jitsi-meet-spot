@@ -15,16 +15,11 @@ jobs:
             - name: cd spot-client
               run: cd spot-client
 
-            - name: Step 2 - setup node 16
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-
-            - name: Step 3 - run install
+            - name: Step 2 - run install
               working-directory: 'spot-client'
               run: npm install
 
-            - name: Step 4 - run lint
+            - name: Step 3 - run lint
               working-directory: 'spot-client'
               run: npm run lint
 
