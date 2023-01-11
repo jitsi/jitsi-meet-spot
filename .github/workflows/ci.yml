@@ -49,6 +49,3 @@ jobs:
             - name: Step 5 - run tests [spot-webdriver]
               working-directory: spot-webdriver
               run: npm run ci
-
-            - name: Step 6 - job status
-              run: echo "🍏 This job's status is ${{ job.status }}."
