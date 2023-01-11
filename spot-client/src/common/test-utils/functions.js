@@ -1,5 +1,3 @@
-/* globals jest, process */
-
 /**
  * Executes timeouts and proceeds to the next promise chain.
  *
