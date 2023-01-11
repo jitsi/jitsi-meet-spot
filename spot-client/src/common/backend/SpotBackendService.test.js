@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import { persistence } from 'common/utils';
 
 import { SpotBackendService } from './SpotBackendService';
@@ -140,7 +141,7 @@ describe('SpotBackendService', () => {
                 const MOCK_TENANT_2 = 'tenant2';
                 const MOCK_ACESS_TOKEN_2 = 'access-token-2';
 
-                jest.useFakeTimers();
+                jest.useFakeTimers({ advanceTimers: true });
 
                 const onUpdateCallback = jest.fn();
 

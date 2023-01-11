@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import { mount } from 'enzyme';
 import React from 'react';
 
@@ -53,7 +54,7 @@ describe('DialPad', () => {
 
     test('formats international phone numbers', () => {
         // Long press on 0 to produce +
-        jest.useFakeTimers();
+        jest.useFakeTimers({ advanceTimers: true });
         dialPad.find('#dial-button-0').simulate('mousedown');
         jest.runAllTimers();
 
@@ -95,7 +96,7 @@ describe('DialPad', () => {
     });
 
     test('replaces 0 with + on long press', () => {
-        jest.useFakeTimers();
+        jest.useFakeTimers({ advanceTimers: true });
 
         dialPad.find('#dial-button-1').simulate('mousedown');
         dialPad.find('#dial-button-0').simulate('mousedown');

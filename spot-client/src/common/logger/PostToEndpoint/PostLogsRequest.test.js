@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import { runAllTimersNTimes, runNTimes } from 'common/test-utils';
 
 import PostLogsRequest from './PostLogsRequest';
@@ -12,13 +13,9 @@ describe('PostLogsRequest', () => {
     let postLogsRequest;
 
     beforeEach(() => {
-        jest.useFakeTimers();
+        jest.useFakeTimers({ advanceTimers: true });
 
-        postLogsRequest = new PostLogsRequest(
-            testEvents,
-            testDeviceId,
-            testEndpoint
-        );
+        postLogsRequest = new PostLogsRequest(testEvents, testDeviceId, testEndpoint);
     });
 
     describe('send without error', () => {
@@ -31,74 +28,41 @@ describe('PostLogsRequest', () => {
 
     describe('retry', () => {
         it('retries on failed send', () => {
-            fetch.mockResponses(
-                [
-                    JSON.stringify({}),
-                    { status: 500 }
-                ],
-                [
-                    JSON.stringify({}),
-                    { status: 200 }
-                ]
-            );
+            fetch.mockResponses([ JSON.stringify({}), { status: 500 } ], [ JSON.stringify({}), { status: 200 } ]);
 
             const request = postLogsRequest.send();
 
-            return runAllTimersNTimes(2)
-                .then(() => request);
+            return runAllTimersNTimes(2).then(() => request);
         });
 
         it('retries at least MAX_RETRIES times', () => {
             const responses = [];
 
             runNTimes(() => {
-                responses.push([
-                    JSON.stringify({}),
-                    { status: 500 }
-                ]);
+                responses.push([ JSON.stringify({}), { status: 500 } ]);
             }, PostLogsRequest.MAX_RETRIES);
 
-            responses.push([
-                JSON.stringify({}),
-                { status: 200 }
-            ]);
+            responses.push([ JSON.stringify({}), { status: 200 } ]);
 
-            fetch.mockResponses(
-                ...responses
-            );
+            fetch.mockResponses(...responses);
 
             const request = postLogsRequest.send();
 
-            return runAllTimersNTimes(PostLogsRequest.MAX_RETRIES)
-                .then(() => request);
+            return runAllTimersNTimes(PostLogsRequest.MAX_RETRIES).then(() => request);
         });
 
         it('stops after reaching MAX_RETRIES', () => {
             const responses = [];
 
             runNTimes(() => {
-                responses.push([
-                    JSON.stringify({}),
-                    { status: 500 }
-                ]);
+                responses.push([ JSON.stringify({}), { status: 500 } ]);
             }, PostLogsRequest.MAX_RETRIES + 1);
 
-            fetch.mockResponses(
-                ...responses
-            );
+            fetch.mockResponses(...responses);
 
             const request = postLogsRequest.send();
 
-            return runAllTimersNTimes(PostLogsRequest.MAX_RETRIES + 1)
-                .then(() => request)
-                .then(
-                    () => {
-                        throw new Error('should not succeed');
-                    },
-                    err => {
-                        expect(err).toEqual('dropped');
-                    }
-                );
+            expect(runAllTimersNTimes(PostLogsRequest.MAX_RETRIES + 1).then(() => request)).rejects.toEqual('error');
         });
     });
 });

@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import { calendarTypes } from 'common/app-state';
 
 import backendCalendar from './backend-calendar';
@@ -74,7 +75,7 @@ describe('calendarService', () => {
         });
 
         test('notifies if event updates have been detected', () => {
-            jest.useFakeTimers();
+            jest.useFakeTimers({ advanceTimers: true });
 
             const firstPayload = [
                 {
@@ -204,7 +205,7 @@ describe('calendarService', () => {
         });
 
         it('notifies of new events after a restart', () => {
-            jest.useFakeTimers();
+            jest.useFakeTimers({ advanceTimers: true });
 
             const firstEvents = [
                 {
@@ -256,7 +257,7 @@ describe('calendarService', () => {
         });
 
         it('emits an update if a fetch succeeds after a failure', () => {
-            jest.useFakeTimers();
+            jest.useFakeTimers({ advanceTimers: true });
 
             jest.spyOn(backendCalendar, 'getCalendar')
                 .mockImplementation(() => Promise.resolve([]));
@@ -292,7 +293,7 @@ describe('calendarService', () => {
                 });
         });
         it('delays the next polling refresh if push notification arrives', () => {
-            jest.useFakeTimers();
+            jest.useFakeTimers({ advanceTimers: true });
             const firstEvents = [
                 {
                     meetingUrlFields: [],
