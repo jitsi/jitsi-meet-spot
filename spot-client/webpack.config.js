@@ -1,10 +1,8 @@
 /* global __dirname, process */
 
-
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const { DuplicatesPlugin } = require('inspectpack/plugin');
 const path = require('path');
 const webpack = require('webpack');
@@ -12,6 +10,8 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = () => {
     const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+    const isProduction = mode === 'production';
+    const detectCircularDeps = Boolean(process.env.DETECT_CIRCULAR_DEPS);
 
     return {
         devServer: {
@@ -26,7 +26,7 @@ module.exports = () => {
                 publicPath: '/dist/'
             }
         },
-        devtool: 'source-map',
+        devtool: isProduction ? 'source-map' : 'eval-source-map',
         entry: {
             app: './src/index.js'
         },
@@ -43,6 +43,8 @@ module.exports = () => {
                 },
                 {
                     loader: 'babel-loader',
+
+                    exclude: /node_modules/,
                     options: {
                         plugins: [
                             require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
@@ -54,10 +56,11 @@ module.exports = () => {
             ]
         },
         plugins: [
-            new CircularDependencyPlugin({
-                exclude: /node_modules/,
-                failOnError: true
-            }),
+            detectCircularDeps
+                && new CircularDependencyPlugin({
+                    exclude: /node_modules/,
+                    failOnError: true
+                }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
@@ -79,11 +82,14 @@ module.exports = () => {
             new DuplicatesPlugin({
                 emitErrors: true
             }),
-            new ESLintPlugin(),
             new WriteFilePlugin()
-        ],
+        ].filter(Boolean),
         output: {
             path: path.resolve(__dirname, 'dist')
+        },
+        optimization: {
+            concatenateModules: isProduction,
+            minimize: isProduction
         },
         resolve: {
             modules: [ path.resolve('./src'), path.resolve('./node_modules') ]

@@ -5,9 +5,6 @@ jobs:
         name: Lint [spot-client]
         runs-on: ubuntu-latest
 
-        container:
-            image: node:16
-
         steps:
             - name: Step 1 - checkout
               uses: actions/checkout@v3
@@ -16,9 +13,9 @@ jobs:
               run: cd spot-client
 
             - name: Step 2 - setup node 16
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
-                  node-version: '16'
+                  node-version: 16
                   cache: 'npm'
                   cache-dependency-path: spot-client/package-lock.json
 
@@ -52,6 +49,3 @@ jobs:
             - name: Step 5 - run tests [spot-webdriver]
               working-directory: spot-webdriver
               run: npm run ci
-
-            - name: Step 6 - job status
-              run: echo "🍏 This job's status is ${{ job.status }}."
