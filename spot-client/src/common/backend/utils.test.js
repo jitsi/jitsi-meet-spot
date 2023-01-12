@@ -1,3 +1,5 @@
+import { expect, jest } from '@jest/globals';
+
 import { errorConstants } from './constants';
 import * as utils from './utils';
 
@@ -322,7 +324,7 @@ describe('utils', () => {
 
         describe('fetchWithRetry', () => {
             beforeEach(() => {
-                jest.useFakeTimers();
+                jest.useFakeTimers({ advanceTimers: true });
             });
 
             it('retries when the xhr fails', () => {

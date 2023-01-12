@@ -1,3 +1,5 @@
+import { expect, jest } from '@jest/globals';
+
 import ApiHealthCheck from './ApiHealthCheck';
 
 describe('ApiHealthCheck', () => {
@@ -8,7 +10,7 @@ describe('ApiHealthCheck', () => {
     let onErrorCallback;
 
     beforeEach(() => {
-        jest.useFakeTimers();
+        jest.useFakeTimers({ advanceTimers: true });
 
         mockHealthCheckFunction = jest.fn().mockReturnValue(Promise.resolve());
 

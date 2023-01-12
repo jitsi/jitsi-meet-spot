@@ -1,14 +1,5 @@
 {
     "extends": ["@jitsi/eslint-config", "@jitsi/eslint-config/jsdoc", "@jitsi/eslint-config/react"],
-    "overrides": [
-        {
-            "files": ["setupTests.js", "**/*.test.js"],
-            "env": {
-                "jest": true,
-                "node": true
-            }
-        }
-    ],
     "parser": "@babel/eslint-parser",
     "plugins": ["@babel", "import", "jest", "react"],
     "rules": {
@@ -18,5 +9,21 @@
         "react": {
             "version": "detect"
         }
-    }
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "mocha": true,
+        "jest": true,
+        "node": true
+      },
+    "globals": {
+        "afterAll": true,
+        "afterEach": true,
+        "beforeAll": true,
+        "beforeEach": true,
+        "describe": true,
+        "expect": true,
+        "jest": true
+      }
 }

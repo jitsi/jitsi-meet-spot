@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import { tickProcess } from 'common/test-utils';
 
 import XmppConnection from './xmpp-connection';
@@ -148,7 +149,7 @@ describe('XmppConnection', () => {
         }
 
         beforeEach(() => {
-            jest.useFakeTimers();
+            jest.useFakeTimers({ advanceTimers: true });
 
             xmppConnection = new XmppConnection({
                 configuration: {},

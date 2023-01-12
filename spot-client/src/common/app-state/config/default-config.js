@@ -1,5 +1,3 @@
-/* global process */
-
 const DEFAULT_DOMAIN = 'alpha.jitsi.net';
 
 /**

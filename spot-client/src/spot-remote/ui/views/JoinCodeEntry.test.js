@@ -1,3 +1,4 @@
+import { expect, jest } from '@jest/globals';
 import * as detection from 'common/detection';
 import { mockT } from 'common/test-mocks';
 import { mount } from 'enzyme';
@@ -15,7 +16,7 @@ jest.mock('common/detection', () => {
 });
 
 jest.mock('common/ui', () => {
-    const realCommonUi = require.requireActual('common/ui');
+    const realCommonUi = jest.requireActual('common/ui');
 
     return {
         ...realCommonUi,
@@ -65,7 +66,7 @@ describe('JoinCodeEntry', () => {
 
     describe('onboarding', () => {
         it('is redirect to if spot-controller and not completed yet', () => {
-            spyOn(detection, 'isSpotControllerApp').mockReturnValue(true);
+            jest.spyOn(detection, 'isSpotControllerApp').mockReturnValue(true);
 
             mountWithMocks();
 
@@ -73,7 +74,7 @@ describe('JoinCodeEntry', () => {
         });
 
         it('is not redirect if already completed', () => {
-            spyOn(detection, 'isSpotControllerApp').mockReturnValue(true);
+            jest.spyOn(detection, 'isSpotControllerApp').mockReturnValue(true);
 
             mountWithMocks({ completedOnboarding: true });
             expect(historyMock.push).not.toHaveBeenCalled();
