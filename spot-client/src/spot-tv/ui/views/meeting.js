@@ -345,7 +345,7 @@ function mapStateToProps(state) {
         maxDesktopSharingFramerate,
         meetingJoinTimeout: getMeetingJoinTimeout(state),
         minDesktopSharingFramerate,
-        kickTemporaryRemotesOnMeetingEnd: false,
+        kickTemporaryRemotesOnMeetingEnd: isBackendEnabled(state),
         showKickedOverlay: kicked,
         showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),
