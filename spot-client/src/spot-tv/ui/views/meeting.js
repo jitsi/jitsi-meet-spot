@@ -8,6 +8,7 @@ import {
     getJitsiAppName,
     getJwt,
     getJwtDomains,
+    getKickTemporaryRemotesOnMeetingEnd,
     getMeetingJoinTimeout,
     getPreferredCamera,
     getPreferredMic,
@@ -16,7 +17,6 @@ import {
     leaveMeetingWithError,
     storePhoneNumberFromInvites
 } from 'common/app-state';
-import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
 import { ROUTES } from 'common/routing';
 import { Loading } from 'common/ui';
@@ -345,7 +345,7 @@ function mapStateToProps(state) {
         maxDesktopSharingFramerate,
         meetingJoinTimeout: getMeetingJoinTimeout(state),
         minDesktopSharingFramerate,
-        kickTemporaryRemotesOnMeetingEnd: isBackendEnabled(state),
+        kickTemporaryRemotesOnMeetingEnd: getKickTemporaryRemotesOnMeetingEnd(state),
         showKickedOverlay: kicked,
         showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),

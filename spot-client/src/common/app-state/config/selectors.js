@@ -130,6 +130,16 @@ export function getJwtDomains(state) {
 }
 
 /**
+ * A boolean selector to know on meeting end if remotes should be kick out or not.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function getKickTemporaryRemotesOnMeetingEnd(state) {
+    return state.config.KICK_TEMPORARY_REMOTES_ON_MEETING_END;
+}
+
+/**
 * A selector which returns a unique id used for identifying the current client
 * in logs aggregations.
 *

@@ -120,6 +120,11 @@ export default {
     },
 
     /**
+     * Configuration related to kicking remotes on meeting ends.
+     */
+    KICK_TEMPORARY_REMOTES_ON_MEETING_END: false,
+
+    /**
      * Configuration object related to printing, collecting, and reporting of
      * event logs and errors.
      */
