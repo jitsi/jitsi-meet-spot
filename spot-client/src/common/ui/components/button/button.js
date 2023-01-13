@@ -1,4 +1,4 @@
-import { Button as MaterialButton } from '@material-ui/core';
+import { Button as MaterialButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 

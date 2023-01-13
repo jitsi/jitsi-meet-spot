@@ -1,4 +1,4 @@
-import { FormControl, Input, MenuItem, Select } from '@material-ui/core';
+import { FormControl, Input, MenuItem, Select } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 
