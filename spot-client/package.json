@@ -78,5 +78,8 @@
         "start:dev": "webpack-dev-server",
         "test": "jest"
     },
+    "overrides": {
+        "json5": "2.2.3"
+    },
     "version": "0.0.1"
 }
