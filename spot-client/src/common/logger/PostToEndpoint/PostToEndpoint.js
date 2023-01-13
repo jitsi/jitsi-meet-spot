@@ -22,9 +22,13 @@ export default class PostToEndpoint {
         this._logQueue = new LogQueue();
         this._requestInFlight = null;
 
-        this._throttledSend = throttle(() => {
-            this._sendLogs();
-        }, 10000, { leading: false });
+        this._throttledSend = throttle(
+            () => {
+                this._sendLogs();
+            },
+            10000,
+            { leading: false }
+        );
     }
 
     /**
@@ -45,7 +49,13 @@ export default class PostToEndpoint {
                 if (event.text) {
                     internalLogger.warn('re-duping events', event);
 
-                    const jsonEvent = JSON.parse(event.text);
+                    let jsonEvent;
+
+                    try {
+                        jsonEvent = JSON.parse(event.text);
+                    } catch {
+                        jsonEvent = event.text;
+                    }
 
                     for (let i = 0; i < event.count; i++) {
                         accumulator.push(jsonEvent);
@@ -88,13 +98,10 @@ export default class PostToEndpoint {
 
         const events = this._logQueue.pullAllLogs();
 
-        this._requestInFlight = new PostLogsRequest(
-            events,
-            this._deviceId,
-            this._endpointUrl
-        );
+        this._requestInFlight = new PostLogsRequest(events, this._deviceId, this._endpointUrl);
 
-        this._requestInFlight.send()
+        this._requestInFlight
+            .send()
             .catch(error => {
                 internalLogger.error('Failed to send logs', error);
             })
