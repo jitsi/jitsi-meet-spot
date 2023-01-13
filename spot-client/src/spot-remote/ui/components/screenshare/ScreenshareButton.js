@@ -57,7 +57,7 @@ export class ScreenshareButton extends React.Component {
             <NavButton
                 className = { screenshareButtonStyles }
                 onClick = { this._onToggleScreenshare }
-                qaId = { screensharingType ? 'stop-share' : 'start-share' }
+                qaId = { screensharingType ? 'stop-share-button' : 'start-share-button' }
                 subIcon = { this._renderScreenshareSubIcon() }>
                 <ScreenShareOutlined />
             </NavButton>
