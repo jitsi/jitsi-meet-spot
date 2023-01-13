@@ -62,13 +62,18 @@ describe('ExitVerification', () => {
             });
         });
         it('and calls onVerified when the confirm button is clicked', () => {
-            selectConfirmButton().simulate('click');
+            const button = selectConfirmButton().find('button');
+
+            button.simulate('click');
 
             expect(onCancel).not.toHaveBeenCalled();
             expect(onVerification).toHaveBeenCalled();
         });
         it('and calls onCancel when the cancel button is clicked', () => {
-            selectCancelButton().simulate('click');
+            // https://github.com/wojtekmaj/enzyme-adapter-react-17/issues/45
+            const button = selectCancelButton().find('button');
+
+            button.simulate('click');
 
             expect(onVerification).not.toHaveBeenCalled();
             expect(onCancel).toHaveBeenCalled();
@@ -110,14 +115,16 @@ describe('ExitVerification', () => {
 
             exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: `${TEST_PASSWORD}1234` } });
 
-            selectConfirmButton().simulate('click');
+            const button = selectConfirmButton().find('button');
+
+            button.simulate('click');
 
             expect(onVerification).not.toHaveBeenCalled();
             expect(onPasswordInvalid).toHaveBeenCalled();
 
             exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: TEST_PASSWORD } });
 
-            selectConfirmButton().simulate('click');
+            button.simulate('click');
 
             expect(onVerification).toHaveBeenCalled();
         });
