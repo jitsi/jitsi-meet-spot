@@ -185,7 +185,7 @@ class SpotRemoteInMeetingPage extends PageObject {
     async startWirelessScreenshareWithoutPicker() {
         await this.waitForScreensharingStateToBe(false);
 
-        const startShareButton = await this.select(START_SHARE_BUTTON)
+        const startShareButton = await this.select(START_SHARE_BUTTON);
 
         await startShareButton.click();
     }
