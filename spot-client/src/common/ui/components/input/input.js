@@ -1,4 +1,4 @@
-import { Input as MaterialInput } from '@material-ui/core';
+import { Input as MaterialInput } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 

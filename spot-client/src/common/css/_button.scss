@@ -16,6 +16,7 @@
     &.primary {
         background-color: var(--button-color);
         border: 1px solid var(--button-color);
+        text-transform: unset;
 
         &:hover {
             background-color: var(--button-active-color);
@@ -34,9 +35,11 @@
     &.subtle {
         border: 1px solid white;
         color: white;
+        text-transform: unset;
 
         &:hover {
             background-color: var(--container-content-highlight-bg-color);
+            border: 1px solid white;
         }
     }
 
@@ -70,7 +73,7 @@
         border: 1px solid white;
         font-size: 48px;
         padding: 0;
-    
+
         svg {
             font-size: 48px;
             fill: white;

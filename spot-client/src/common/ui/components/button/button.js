@@ -1,4 +1,4 @@
-import { Button as MaterialButton } from '@material-ui/core';
+import { Button as MaterialButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -8,22 +8,18 @@ const classes = {
 const mapActionTypeToStyle = {
     'subtle-danger': {
         className: 'button subtle-danger',
-        color: 'default',
         variant: 'outlined'
     },
     primary: {
         className: 'button primary',
-        color: 'primary',
         variant: 'contained'
     },
     secondary: {
         className: 'button secondary',
-        color: 'default',
         variant: 'contained'
     },
     subtle: {
         className: 'button subtle',
-        color: 'default',
         variant: 'outlined'
     }
 };

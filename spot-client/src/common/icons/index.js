@@ -25,14 +25,14 @@ export {
     Videocam,
     VideocamOff,
     VolumeUp
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
-export { default as BorderAllOutlined } from '@material-ui/icons/BorderAllOutlined';
-export { default as MicNoneOutlined } from '@material-ui/icons/MicNoneOutlined';
-export { default as MicOffOutlined } from '@material-ui/icons/MicOffOutlined';
-export { default as ScreenShareOutlined } from '@material-ui/icons/ScreenShareOutlined';
-export { default as VideocamOutlined } from '@material-ui/icons/VideocamOutlined';
-export { default as VideocamOffOutlined } from '@material-ui/icons/VideocamOffOutlined';
+export { default as BorderAllOutlined } from '@mui/icons-material/BorderAllOutlined';
+export { default as MicNoneOutlined } from '@mui/icons-material/MicNoneOutlined';
+export { default as MicOffOutlined } from '@mui/icons-material/MicOffOutlined';
+export { default as ScreenShareOutlined } from '@mui/icons-material/ScreenShareOutlined';
+export { default as VideocamOutlined } from '@mui/icons-material/VideocamOutlined';
+export { default as VideocamOffOutlined } from '@mui/icons-material/VideocamOffOutlined';
 
 export { default as WiredScreenshare } from './wired-screenshare-icon';
 export { default as WirelessScreenshare } from './wireless-screenshare-icon';
