@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const isOnline = require('is-online');
 
-const { logger } = require('../logger');
+const logger = require('../logger/logger');
 
 /**
  * Encapsulates logic to check if there is an active network connection. When

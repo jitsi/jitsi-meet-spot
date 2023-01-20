@@ -1,3 +1,5 @@
+jest.mock('../logger/logger');
+
 const OnlineDetector = require('./OnlineDetector');
 
 describe('OnlineDetector', () => {
@@ -21,7 +23,7 @@ describe('OnlineDetector', () => {
     }
 
     beforeEach(() => {
-        jest.useFakeTimers();
+        jest.useFakeTimers({ advanceTimers: true });
 
         isOnlineSpy = jest.spyOn(OnlineDetector, '_isOnline');
         onlineChangeSpy = jest.fn();
