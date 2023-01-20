@@ -1,15 +1,13 @@
 require('electron-is-dev') && require('dotenv').config();
-
 const { app } = require('electron');
+const debug = require('electron-debug');
 const isDev = require('electron-is-dev');
+const process = require('process');
 
 app.setLoginItemSettings({
     openAtLogin: true
 });
 
-// Helper for troubleshooting.
-const debug = require('electron-debug');
-const process = require('process');
 
 if (isDev || process.argv.indexOf('--show-devtools') !== -1) {
     debug({
@@ -32,7 +30,8 @@ require('./src/volume-control');
 
 app.on('ready', createApplicationWindow);
 
-app.on('certificate-error',
+app.on(
+    'certificate-error',
     // eslint-disable-next-line max-params
     (event, webContents, url, error, certificate, callback) => {
         if (isDev) {

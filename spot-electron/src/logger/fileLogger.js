@@ -1,8 +1,8 @@
-const log = require('electron-log');
 const { app } = require('electron');
+const log = require('electron-log');
 const fs = require('fs');
-const path = require('path');
 const schedule = require('node-schedule');
+const path = require('path');
 
 log.transports.ipc.level = false;
 log.transports.file.resolvePath = () => path.join(app.getPath('logs'), 'spot-console.log');

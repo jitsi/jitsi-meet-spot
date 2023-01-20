@@ -1,5 +1,5 @@
-const isOnline = require('is-online');
 const EventEmitter = require('events');
+const isOnline = require('is-online');
 
 const { logger } = require('../logger');
 

@@ -3,8 +3,8 @@ const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 
-const { logger } = require('../logger');
 const defaultConfig = require('../../config');
+const { logger } = require('../logger');
 
 const PERSISTED_CONFIG = path.join(app.getPath('userData'), 'config.json');
 
