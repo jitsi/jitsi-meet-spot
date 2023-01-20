@@ -1,4 +1,5 @@
 module.exports = {
-    runner: '@jest-runner/electron',
-    testMatch: [ '**/*.test.js' ]
+    testMatch: [ '**/*.test.js' ],
+    transformIgnorePatterns: [ '/node_modules/' ]
+
 };

@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const os = require('os');
 const osascript = require('node-osascript');
+const os = require('os');
 
 const { clientController } = require('../client-control');
 const { logger } = require('../logger');

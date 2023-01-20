@@ -1,6 +1,5 @@
-const { config } = require('../config');
-
 const { clientController } = require('../client-control');
+const { config } = require('../config');
 const { logger } = require('../logger');
 const { joinCodeToVersion } = require('../utils');
 

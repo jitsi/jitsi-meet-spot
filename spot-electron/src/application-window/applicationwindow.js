@@ -1,10 +1,10 @@
 const { BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
 const process = require('process');
-const { OnlineDetector } = require('../online-detector');
-const { defaultSpotURL } = require('../../config');
 
+const { defaultSpotURL } = require('../../config');
 const { logger, fileLogger } = require('../logger');
+const { OnlineDetector } = require('../online-detector');
 
 /**
  * The constant is included into the user agent part to allow feature detection in future.

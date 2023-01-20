@@ -1,30 +1,11 @@
 {
-    "env": {
-        "node": true
-    },
     "extends": [
-        "eslint-config-jitsi",
-        "eslint-config-jitsi/jsdoc"
+        "@jitsi/eslint-config"
     ],
-    "overrides": [
-        {
-            "files": [
-                "**/*.test.js"
-            ],
-            "env": {
-                "jest": true,
-                "node": true
-            }
-        }
-    ],
-    "rules": {
-        "no-console": 1,
-        "space-before-function-paren": ["error", {
-            "anonymous": "always",
-            "named": "never",
-            "asyncArrow": "always"
-        }]
-    },
-    "settings": {
-    }
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true,
+        "node": true
+      }
 }
