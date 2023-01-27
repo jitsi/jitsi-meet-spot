@@ -174,7 +174,7 @@ export class SelfFillingNameEntry extends React.Component {
 
             // Otherwise show the random name letter-by-letter.
             this.setState({
-                animatingPlaceholder: this._fullGeneratedMeetingName.substr(
+                animatingPlaceholder: this._fullGeneratedMeetingName.slice(
                     0, currentLengthToShow)
             });
 

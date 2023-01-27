@@ -8,5 +8,5 @@ export function generateRandomString(length) {
     // XXX the method may not always give desired length above 9
     return Math.random()
         .toString(36)
-        .substr(2, length);
+        .slice(2, 2 + length);
 }
