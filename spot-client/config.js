@@ -10,4 +10,11 @@ window.JitsiMeetSpotConfig = {
     //         muc: 'conference.meet.jit.si'
     //     }
     // }
+
+    // Example override for spot-admin:
+    // SPOT_SERVICES: {
+    //     pairingServiceUrl: 'http://localhost:8001/pair',
+    //     roomKeeperServiceUrl: 'http://localhost:8001/room/info'
+    // },
+    // CALENDARS: { BACKEND: { SERVICE_URL: 'http://localhost:8001/calendar?tzid={tzid}' } }
 };
