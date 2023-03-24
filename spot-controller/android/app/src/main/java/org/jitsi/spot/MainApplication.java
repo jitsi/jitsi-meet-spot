@@ -15,7 +15,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
-import com.mackentoch.beaconsandroid.BeaconsAndroidPackage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.asList(
           new MainReactPackage(),
             new AsyncStoragePackage(),
-            new BeaconsAndroidPackage(),
             new KCKeepAwakePackage(),
             new RNCWebViewPackage(),
             new ReactNativePushNotificationPackage(),

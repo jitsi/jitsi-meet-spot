@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '12.0'
 
 workspace 'spot-controller'
 
@@ -10,7 +10,7 @@ target 'spot-controller' do
   pod 'Firebase/Core', '~> 5.18.0'
 
   pod 'FBLazyVector', :path => '../node_modules/react-native/Libraries/FBLazyVector/'
-  pod 'FBReactNativeSpec', :path => '../node_modules/react-native/Libraries/FBReactNativeSpec/'
+  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/React/FBReactNativeSpec"
 
   pod 'RCTRequired', :path => '../node_modules/react-native/Libraries/RCTRequired/'
   pod 'RCTTypeSafety', :path => '../node_modules/react-native/Libraries/TypeSafety/'
@@ -40,13 +40,12 @@ target 'spot-controller' do
   ]
 
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
-  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'RCT-Folly', :podspec => './RN/node_modules/react-native/third-party-podspecs/RCT-Folly.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod "Yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
-  pod 'ReactNativeBeaconsManager', :path => '../node_modules/react-native-beacons-manager'
   pod 'react-native-keep-awake', :path => '../node_modules/react-native-keep-awake'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 end

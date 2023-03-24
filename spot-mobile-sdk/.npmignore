@@ -1,7 +1,0 @@
-node_modules
-src
-typings
-.eslintignore
-.eslintrc.js
-tsconfig.json
-*.tgz

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MiddlewareRegistry, ReducerRegistry } from 'jitsi-meet-redux';
 import React from 'react';
 import SideMenu from 'react-native-side-menu';
@@ -13,7 +13,6 @@ import { SettingsMenu } from './src/settings-menu';
 import Setup from './src/setup';
 
 // Modules that doesn't necessarily export anything, but must be imported to function
-import './src/beacons';
 import './src/notifications';
 
 // FIXME make it possible to configure default URL on the build time
