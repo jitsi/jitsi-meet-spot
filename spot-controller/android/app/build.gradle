@@ -138,7 +138,6 @@ android {
 dependencies {
     implementation project(':react-native-async-storage')
     implementation project(':react-native-keep-awake')
-    implementation project(':react-native-push-notification')
     implementation project(':react-native-svg')
     implementation project(':react-native-webview')
     implementation fileTree(dir: "libs", include: ["*.jar"])

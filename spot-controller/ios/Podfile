@@ -27,7 +27,6 @@ target 'spot-controller' do
   pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
   pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
   pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-  pod 'React-RCTPushNotification', :path => '../node_modules/react-native/Libraries/PushNotificationIOS'
   pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
   pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'

@@ -3,7 +3,6 @@ package org.jitsi.spot;
 import android.app.Application;
 
 import com.corbt.keepawake.KCKeepAwakePackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -36,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
             new AsyncStoragePackage(),
             new KCKeepAwakePackage(),
             new RNCWebViewPackage(),
-            new ReactNativePushNotificationPackage(),
             new SpotControllerPackage(),
             new SvgPackage()
       );
