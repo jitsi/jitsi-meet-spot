@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0EFFC489221C7E4F00D2DC0F /* libPods-spot-controller.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EFFC488221C7E4F00D2DC0F /* libPods-spot-controller.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		46898D3F097B8C0CBE15EB66 /* libPods-spot-controller.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE8698521C29446C1B8C0A9B /* libPods-spot-controller.a */; };
 		E566902923034808000D1DF7 /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E566902823034808000D1DF7 /* AppInfo.m */; };
 		E5C8CCD2233D404800366113 /* FIRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C8CCD1233D404800366113 /* FIRUtilities.m */; };
 /* End PBXBuildFile section */
@@ -191,7 +191,6 @@
 		0E349904220149EC00EF3A15 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		0E56D48B22178B44003DEFA2 /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCWebView.xcodeproj; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; };
 		0E934677222F35F50005B4A5 /* spot-controller.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "spot-controller.entitlements"; path = "spot-controller/spot-controller.entitlements"; sourceTree = "<group>"; };
-		0EFFC488221C7E4F00D2DC0F /* libPods-spot-controller.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-spot-controller.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* spot-controller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "spot-controller.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,20 +200,19 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "spot-controller/Images.xcassets"; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "spot-controller/Info.plist"; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "spot-controller/main.m"; sourceTree = "<group>"; };
-		174179B42ECEE49A5C946190 /* libPods-spot-controllerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-spot-controllerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A9F086B1A2993CE0468D9EB /* libPods-spot-controller.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-spot-controller.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A3B3EF1DB0DB9A65FD98CD6 /* Pods-spot-controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spot-controller.release.xcconfig"; path = "Target Support Files/Pods-spot-controller/Pods-spot-controller.release.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
-		7A0E8429BBF61BDB7DBA5232 /* Pods-spot-controller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spot-controller.debug.xcconfig"; path = "Pods/Target Support Files/Pods-spot-controller/Pods-spot-controller.debug.xcconfig"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		A58A9A976A5180AC6EE989D0 /* Pods-spot-controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spot-controller.release.xcconfig"; path = "Pods/Target Support Files/Pods-spot-controller/Pods-spot-controller.release.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		C98006D0AAAF47474A504581 /* Pods-spot-controller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spot-controller.debug.xcconfig"; path = "Target Support Files/Pods-spot-controller/Pods-spot-controller.debug.xcconfig"; sourceTree = "<group>"; };
 		E566902823034808000D1DF7 /* AppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppInfo.m; path = "spot-controller/AppInfo.m"; sourceTree = "<group>"; };
 		E5C8CCBA233D404800366113 /* FIRUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIRUtilities.h; path = "spot-controller/FIRUtilities.h"; sourceTree = "<group>"; };
 		E5C8CCD1233D404800366113 /* FIRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIRUtilities.m; path = "spot-controller/FIRUtilities.m"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		FE8698521C29446C1B8C0A9B /* libPods-spot-controller.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-spot-controller.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,7 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EFFC489221C7E4F00D2DC0F /* libPods-spot-controller.a in Frameworks */,
+				46898D3F097B8C0CBE15EB66 /* libPods-spot-controller.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,14 +325,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0EFFC488221C7E4F00D2DC0F /* libPods-spot-controller.a */,
 				0E56D48B22178B44003DEFA2 /* RNCWebView.xcodeproj */,
 				0E349904220149EC00EF3A15 /* QuickLook.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				3A9F086B1A2993CE0468D9EB /* libPods-spot-controller.a */,
-				174179B42ECEE49A5C946190 /* libPods-spot-controllerTests.a */,
+				FE8698521C29446C1B8C0A9B /* libPods-spot-controller.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -355,15 +351,6 @@
 				3DAD3E881DF850E9000B6D8A /* libRCTLinking-tvOS.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		7BA0614BEE658DF51196CF74 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7A0E8429BBF61BDB7DBA5232 /* Pods-spot-controller.debug.xcconfig */,
-				A58A9A976A5180AC6EE989D0 /* Pods-spot-controller.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -400,7 +387,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				7BA0614BEE658DF51196CF74 /* Pods */,
+				FCA5757614AC901E01CA4F20 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -423,6 +410,15 @@
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FCA5757614AC901E01CA4F20 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3A3B3EF1DB0DB9A65FD98CD6 /* Pods-spot-controller.release.xcconfig */,
+				C98006D0AAAF47474A504581 /* Pods-spot-controller.debug.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -450,14 +446,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "spot-controller" */;
 			buildPhases = (
-				AAC6FA00455D8D2A44F92F8C /* [CP] Check Pods Manifest.lock */,
+				1E4AD3914A8EACA28E176C82 /* [CP] Check Pods Manifest.lock */,
 				0E3E4F19221C82BF00760E9E /* Run React packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				E5C8CCD3233D413600366113 /* Copy Google Plist file */,
-				E53702F623395009009D0141 /* Setup Fabric */,
+				FADEA1E7049DCA62CEC77913 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -778,7 +774,7 @@
 			shellPath = /bin/sh;
 			shellScript = "./scripts/run-packager.sh\n\n";
 		};
-		AAC6FA00455D8D2A44F92F8C /* [CP] Check Pods Manifest.lock */ = {
+		1E4AD3914A8EACA28E176C82 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -800,24 +796,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E53702F623395009009D0141 /* Setup Fabric */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Setup Fabric";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "${PODS_ROOT}/Fabric/run\n";
-		};
 		E5C8CCD3233D413600366113 /* Copy Google Plist file */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -835,6 +813,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "GOOGLE_PLIST_NAME=\"GoogleService-Info.plist\"\nGOOGLE_PLIST=\"$PROJECT_DIR/$GOOGLE_PLIST_NAME\"\nBUILD_APP_DIR=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app\"\n\necho \"GOOGLE PLIST= ${GOOGLE_PLIST} BUILD DIR= ${BUILD_APP_DIR}\"\n\nif [[ -f $GOOGLE_PLIST ]]; then\n    echo \"COPY GOOGLE PLIST\"\n    cp $GOOGLE_PLIST \"$BUILD_APP_DIR/$GOOGLE_PLIST_NAME\"\nfi\n";
+		};
+		FADEA1E7049DCA62CEC77913 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-spot-controller/Pods-spot-controller-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-spot-controller/Pods-spot-controller-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -901,7 +897,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A58A9A976A5180AC6EE989D0 /* Pods-spot-controller.release.xcconfig */;
+			baseConfigurationReference = 3A3B3EF1DB0DB9A65FD98CD6 /* Pods-spot-controller.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "spot-controller/spot-controller.entitlements";
@@ -958,6 +954,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1006,6 +1003,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1024,7 +1022,7 @@
 		};
 		E55165532281D3300090AD4F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A0E8429BBF61BDB7DBA5232 /* Pods-spot-controller.debug.xcconfig */;
+			baseConfigurationReference = C98006D0AAAF47474A504581 /* Pods-spot-controller.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "spot-controller/spot-controller.entitlements";
