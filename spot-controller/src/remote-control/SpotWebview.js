@@ -12,7 +12,6 @@ import { WebView } from 'react-native-webview';
 import url from 'url';
 
 import api from '../api';
-import { BeaconOverlay } from '../beacons';
 
 import LoadingScreen from '../LoadingScreen';
 import styles from '../styles';
@@ -213,7 +212,6 @@ export default class SpotRemoteWebView extends React.PureComponent {
 
                     source = {{ uri: resolvedUrl }}
                     startInLoadingState = { true } />
-                <BeaconOverlay />
             </View>
         );
     }

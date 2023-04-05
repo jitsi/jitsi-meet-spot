@@ -1,20 +1,12 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import { MiddlewareRegistry, ReducerRegistry } from 'jitsi-meet-redux';
-import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { Fragment } from 'react';
 import SideMenu from 'react-native-side-menu';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
 
 import LoadingScreen from './src/LoadingScreen';
-import { appMounted, appWillUnmount } from './src/app';
 import { logger } from './src/logger';
 import { RemoteControl } from './src/remote-control';
 import { SettingsMenu } from './src/settings-menu';
 import Setup from './src/setup';
-
-// Modules that doesn't necessarily export anything, but must be imported to function
-import './src/beacons';
-import './src/notifications';
 
 // FIXME make it possible to configure default URL on the build time
 const DEFAULT_URL = 'https://spot.8x8.vc';
@@ -48,7 +40,6 @@ export default class App extends React.Component {
 
         this._remoteControlViewRef = React.createRef();
         this._sideMenuRef = React.createRef();
-        this.store = createStore(ReducerRegistry.combineReducers(), {}, MiddlewareRegistry.applyMiddleware());
 
         this._onHideSetup = this._onHideSetup.bind(this);
         this._onResetApp = this._onResetApp.bind(this);
@@ -62,8 +53,6 @@ export default class App extends React.Component {
      * @inheritdoc
      */
     componentDidMount() {
-        this.store.dispatch(appMounted());
-
         AsyncStorage.getItem(STORAGE_KEY_RC_URL)
             .then(remoteControlUrl => {
                 this.setState({
@@ -71,15 +60,6 @@ export default class App extends React.Component {
                     remoteControlUrl: remoteControlUrl === null ? DEFAULT_URL : remoteControlUrl
                 });
             });
-    }
-
-    /**
-     * Implements {@code Component#componentWillUnmount}.
-     *
-     * @inheritdoc
-     */
-    componentWillUnmount() {
-        this.store.dispatch(appWillUnmount());
     }
 
     /**
@@ -94,10 +74,10 @@ export default class App extends React.Component {
         }
 
         return (
-            <Provider store = { this.store }>
+            <Fragment>
                 { this._renderRemoteControl() }
                 { this.state.showSetup && this._renderSetup() }
-            </Provider>
+            </Fragment>
         );
     }
 

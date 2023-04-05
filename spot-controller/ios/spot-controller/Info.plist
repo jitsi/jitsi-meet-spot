@@ -39,14 +39,6 @@
 	</dict>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Detect nearby meeting devices</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Detect nearby meeting devices</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Detect nearby meeting devices</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Detect nearby meeting devices</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Detect nearby meeting devices</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
