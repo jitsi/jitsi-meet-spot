@@ -1,4 +1,4 @@
-const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://localhost:8000';
+const TEST_SERVER_URL = process.env.TEST_SERVER_URL || 'http://127.0.0.1:8000';
 
 module.exports = {
     /**
@@ -42,7 +42,7 @@ module.exports = {
     MEETING_JOIN_WAIT: 15000,
 
     /**
-     * The maximum amount of time, in milliseconds, to allow Jitsi-Meet to load
+     * The maximum amount of time, in milliseconds, to allow Jitsi-Meet to load.
      */
     MEETING_LOAD_WAIT: 20000,
 
@@ -59,7 +59,7 @@ module.exports = {
     REMOTE_COMMAND_WAIT: 10000,
 
     /**
-     * Name of capability for the multiremote WDIO testrunner of the remote control browser
+     * Name of capability for the multiremote WDIO testrunner of the remote control browser.
      */
     REMOTE_CONTROL_BROWSER: 'remoteControlBrowser',
 
@@ -71,7 +71,7 @@ module.exports = {
     SIGNALING_DISCONNECT_TIMEOUT: 60000,
 
     /**
-     * Name of capability for the multiremote WDIO testrunner of the spot browser
+     * Name of capability for the multiremote WDIO testrunner of the spot browser.
      */
     SPOT_BROWSER: 'spotBrowser',
 
