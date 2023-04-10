@@ -5,7 +5,7 @@ describe('A Spot-Remote can connect to a Spot-TV', () => {
     const spotRemote = session.getSpotRemote();
 
     it('should manage to retrieve a join code of 6 characters', async () => {
-        await browser.url('http://localhost:8000/tv');
+        await browser.url('http://127.0.0.1:8000/tv');
 
         const joinCode = await browser.$('.setup-join-code .join-code');
 
