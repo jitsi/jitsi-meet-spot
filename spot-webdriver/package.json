@@ -17,16 +17,16 @@
         "eslint-plugin-import": "2.19.1",
         "eslint-plugin-jsdoc": "19.2.0",
         "eslint-plugin-react": "7.17.0",
-        "start-server-and-test": "1.15.2",
+        "start-server-and-test": "2.0.0",
         "wdio-chromedriver-service": "8.1.1",
         "wdio-timeline-reporter": "5.1.4"
     },
     "name": "spot-webdriver",
     "scripts": {
         "lint": "eslint .",
-        "start": "./node_modules/.bin/wdio wdio.conf.js",
+        "test": "./node_modules/.bin/wdio wdio.conf.js",
         "start-spot-client": "npm --prefix ../spot-client run start:dev",
-        "ci": "start-server-and-test start-spot-client http://localhost:8000/ start"
+        "ci": "start-server-and-test start-spot-client http://localhost:8000/ test"
     },
     "version": "0.0.1"
 }
