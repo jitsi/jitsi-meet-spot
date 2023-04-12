@@ -32,8 +32,8 @@
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5ec92357570dc8f0b7ffc1528820721c84c6af8b",
         "lodash": "4.17.21",
         "react-native-keep-awake": "4.0.0",
-        "react-native-svg": "9.13.6",
-        "react-native-svg-transformer": "0.14.3",
+        "react-native-svg": "13.9.0",
+        "react-native-svg-transformer": "1.0.0",
         "url": "0.11.0"
     }
 }
