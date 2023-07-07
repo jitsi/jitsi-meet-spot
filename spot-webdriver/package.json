@@ -9,7 +9,7 @@
         "@wdio/local-runner": "8.7.0",
         "@wdio/spec-reporter": "8.7.0",
         "babel-eslint": "10.1.0",
-        "chromedriver": "111.0.0",
+        "chromedriver": "114.0.2",
         "eslint": "6.8.0",
         "eslint-config-jitsi": "github:jitsi/eslint-config-jitsi#f9ec185a0f3d7ad39226c59ab01251c87e000c5b",
         "eslint-loader": "3.0.3",

@@ -22,6 +22,9 @@ module.exports = () => {
             },
             devMiddleware: {
                 publicPath: '/dist/'
+            },
+            client: {
+                overlay: false
             }
         },
         devtool: isProduction ? 'source-map' : 'eval-source-map',
