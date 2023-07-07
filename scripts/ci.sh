@@ -33,12 +33,6 @@ if [ -z $SKIP_BASIC_TESTS ]; then
   npm run test
   npm run build:prod
 
-  echo "Testing Spot-Integrations-Service"
-  cd ../spot-integrations-service
-  npm install
-  npm run lint
-  npm test
-
   echo "Testing Spot-Webdriver"
   cd ../spot-webdriver
   npm install
