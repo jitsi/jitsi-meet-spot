@@ -186,11 +186,6 @@ export default {
             : [ 'alpha.jitsi.net', 'beta.meet.jit.si', 'meet.jit.si' ],
 
     /**
-     * Configurations for joining meetings from various meeting providers.
-     */
-    MEETING_INTEGRATIONS: {},
-
-    /**
      * Domains which Spot can be hosted on which should place Spot into a
      * different UX mode.
      */
