@@ -151,6 +151,17 @@ export function getLoggingEndpoint(state) {
 }
 
 /**
+ * A selector which gets how long the remote should wait for a meeting to be
+ * joined before showing an option to cancel the join.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {number}
+ */
+export function getMeetingCancelTimeout(state) {
+    return state.config.MEETING_CANCEL_TIMEOUT_MS;
+}
+
+/**
  * A selector which gets the list of meeting domains that are known to support
  * meetings on Jitsi-Meet deployments.
  *

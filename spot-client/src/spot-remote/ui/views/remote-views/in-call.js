@@ -2,6 +2,7 @@ import {
     forceStopWirelessScreenshare,
     getInMeetingStatus,
     getInvitedPhoneNumber,
+    getMeetingCancelTimeout,
     hangUp,
     hideModal
 } from 'common/app-state';
@@ -35,6 +36,7 @@ export class InCall extends React.Component {
         inMeeting: PropTypes.string,
         invitedPhoneNumber: PropTypes.string,
         kicked: PropTypes.bool,
+        meetingCancelTimeout: PropTypes.number,
         meetingDisplayName: PropTypes.string,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
@@ -70,7 +72,7 @@ export class InCall extends React.Component {
             this.setState({
                 showCancelMeeting: true
             });
-        }, 10000);
+        }, this.props.meetingCancelTimeout);
     }
 
     /**
@@ -177,6 +179,7 @@ function mapStateToProps(state) {
         inMeeting,
         invitedPhoneNumber: formatPhoneNumber(getInvitedPhoneNumber(state)),
         kicked,
+        meetingCancelTimeout: getMeetingCancelTimeout(state),
         meetingDisplayName,
         showPasswordPrompt: needPassword
     };

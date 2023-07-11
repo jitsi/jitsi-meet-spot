@@ -208,6 +208,14 @@ export default {
     MEETING_JOIN_TIMEOUT_MS: 120000,
 
     /**
+     * The amount of time to wait for a meeting to be joined before showing an
+     * option to cancel the join on the remote.
+     *
+     * @type {number}
+     */
+    MEETING_CANCEL_TIMEOUT_MS: 10000,
+
+    /**
      * The user-facing name of the Spot app. Configurable in case "Spot" is not
      * the desired name.
      *
