@@ -8,7 +8,6 @@ import {
     joinScheduledMeeting,
     joinWithScreensharing
 } from 'common/app-state';
-import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isWirelessScreenshareSupported } from 'common/detection';
 import { ArrowRightAlt, Call, Event, ScreenShare } from 'common/icons';
 import { logger } from 'common/logger';
@@ -257,8 +256,6 @@ class WaitingForCallView extends React.Component {
 function mapStateToProps(state) {
     return {
         ...getInMeetingStatus(state),
-        _enableAutoUpdate: isBackendEnabled(state)
-            && Boolean(getPermanentPairingCode(state)),
         domain: getConfiguredMeetingDomain(state),
         tenant: getSpotTVTenant(state)
     };
