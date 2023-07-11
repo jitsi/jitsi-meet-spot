@@ -1,6 +1,5 @@
 import {
     hideModal,
-    isInviteEnabled,
     isVolumeControlSupported
 } from 'common/app-state';
 import { VolumeUp } from 'common/icons';
@@ -12,7 +11,6 @@ import { connect } from 'react-redux';
 
 
 import { DTMFButton, DTMFModal } from './../dtmf';
-import { InviteButton, InviteModal } from './../invite';
 import { NavButton } from './../nav';
 import { TileViewButton } from './../remote-control-menu';
 import VolumeModal from './VolumeModal';
@@ -22,7 +20,6 @@ import VolumeModal from './VolumeModal';
  */
 export class MoreModal extends React.Component {
     static propTypes = {
-        enableInvite: PropTypes.bool,
         onClose: PropTypes.func,
         supportsDtmf: PropTypes.bool,
         supportsVolumeControl: PropTypes.bool,
@@ -43,7 +40,6 @@ export class MoreModal extends React.Component {
 
         this._onShowMoreMenu = this._onShowMoreMenu.bind(this);
         this._onShowDtmfModal = this._onShowDtmfModal.bind(this);
-        this._onShowInvites = this._onShowInvites.bind(this);
         this._onShowVolumeMenu = this._onShowVolumeMenu.bind(this);
     }
 
@@ -55,8 +51,6 @@ export class MoreModal extends React.Component {
      */
     render() {
         switch (this.state.modalToDisplay) {
-        case 'invite':
-            return <InviteModal onClose = { this._onShowMoreMenu } />;
         case 'volume':
             return <VolumeModal onClose = { this._onShowMoreMenu } />;
         case 'dtmf':
@@ -80,10 +74,6 @@ export class MoreModal extends React.Component {
                             </NavButton>
                         )
                     }
-                    {
-                        this.props.enableInvite
-                            && <InviteButton onClick = { this._onShowInvites } />
-                    }
                 </div>
             </Modal>
         );
@@ -96,15 +86,6 @@ export class MoreModal extends React.Component {
      */
     _onShowDtmfModal() {
         this.setState({ modalToDisplay: 'dtmf' });
-    }
-
-    /**
-     * Displays the invite modal.
-     *
-     * @returns {void}
-     */
-    _onShowInvites() {
-        this.setState({ modalToDisplay: 'invite' });
     }
 
     /**
@@ -137,7 +118,6 @@ export class MoreModal extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        enableInvite: isInviteEnabled(state),
         supportsVolumeControl: isVolumeControlSupported(state)
     };
 }

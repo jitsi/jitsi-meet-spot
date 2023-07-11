@@ -329,14 +329,3 @@ export function isCalendarPushEnabled(state) {
 export function isScreensharingAutoJoinEnabled(state) {
     return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_AUTO_SS_JOIN;
 }
-
-/**
- * A selector which returns whether or not to display on the remote an option
- * to invite people to a meeting.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function isInviteEnabled(state) {
-    return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_INVITES;
-}
