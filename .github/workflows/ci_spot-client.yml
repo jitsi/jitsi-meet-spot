@@ -27,6 +27,32 @@ jobs:
               working-directory: 'spot-client'
               run: npm run lint
 
+    test-spot-client:
+        name: Test [spot-client]
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Step 1 - checkout
+              uses: actions/checkout@v3
+
+            - name: cd spot-client
+              run: cd spot-client
+
+            - name: Step 2 - setup node 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'npm'
+                  cache-dependency-path: spot-client/package-lock.json
+
+            - name: Step 3 - run install
+              working-directory: 'spot-client'
+              run: npm install
+
+            - name: Step 4 - run test
+              working-directory: 'spot-client'
+              run: npm run test
+
     e2e:
         name: Run e2e spot webdriver
         runs-on: macos-latest
