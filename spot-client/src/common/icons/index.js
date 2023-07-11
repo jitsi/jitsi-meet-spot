@@ -15,7 +15,6 @@ export {
     KeyboardArrowDown,
     MicOff,
     MoreVert,
-    PersonAdd,
     ScreenShare,
     Search,
     Settings,
