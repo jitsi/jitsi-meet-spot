@@ -23,8 +23,6 @@ export function findWhitelistedMeetingUrl(fieldsToSearch, knownDomains) {
             const match = _checkPattern(field, urlRegExp, excludePattern);
 
             if (match) {
-                // console.log('BOGDAN match parseURIString');
-
                 const url = parseURIString(match);
 
                 if (url) {

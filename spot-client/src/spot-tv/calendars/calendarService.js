@@ -293,16 +293,22 @@ export class CalendarService extends Emitter {
      * @returns {Array<Event>} The calendar events with meeting urls as a field.
      */
     _updateMeetingUrlOnEvents(events) {
-        return events.map(event => {
+        return events.reduce((result, event) => {
             const fieldsToSearch = event.meetingUrlFields;
 
             delete event.meetingUrlFields;
 
-            return {
-                ...event,
-                meetingUrl: findWhitelistedMeetingUrl(fieldsToSearch, this.knownDomains)
-            };
-        });
+            const meetingUrl = findWhitelistedMeetingUrl(fieldsToSearch, this.knownDomains);
+
+            if (meetingUrl) {
+                result.push({
+                    ...event,
+                    meetingUrl
+                });
+            }
+
+            return result;
+        }, []);
     }
 }
 
