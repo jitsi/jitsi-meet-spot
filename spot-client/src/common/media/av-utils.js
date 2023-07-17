@@ -50,7 +50,10 @@ export default {
             ...mediaConfiguration,
             devices: [ 'desktop' ]
         })
-        .then(jitsiLocalTracks => jitsiLocalTracks[0]);
+
+        // TODO: Skip audio track when sharing a Chrome tab. There should be a way
+        // to disable that on LJM.
+        .then(jitsiLocalTracks => jitsiLocalTracks.find(t => t.isVideoTrack()));
     },
 
     /**
