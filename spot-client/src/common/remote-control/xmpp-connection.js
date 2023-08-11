@@ -174,13 +174,13 @@ export default class XmppConnection extends Emitter {
         const JitsiMeetJS = JitsiMeetJSProvider.get();
 
         const bosh = `${this.options.configuration.bosh}?room=${roomName}`;
-        const websocket = this.options.configuration.websocket ?
-            `${this.options.configuration.websocket}?room=${roomName}` :
-            undefined;
+        const websocket = this.options.configuration.websocket
+            ? `${this.options.configuration.websocket}?room=${roomName}`
+            : undefined;
         const serviceUrl = websocket ?? bosh;
-        const websocketKeepAliveUrl = this.options.configuration.websocketKeepAliveUrl ?
-            `${this.options.configuration.websocketKeepAliveUrl}?room=${roomName}` :
-            undefined;
+        const websocketKeepAliveUrl = this.options.configuration.websocketKeepAliveUrl
+            ? `${this.options.configuration.websocketKeepAliveUrl}?room=${roomName}`
+            : undefined;
 
         this.xmppConnection = new JitsiMeetJS.JitsiConnection(
             null,
