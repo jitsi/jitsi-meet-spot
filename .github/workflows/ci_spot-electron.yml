@@ -1,8 +1,60 @@
 name: 'CI - spot-electron'
 on: [pull_request]
 jobs:
-    lint-spot-electron:
-        name: Lint [spot-electron]
+    build-spot-electron-mac:
+        name: "[spot-electron] Build on macOS"
+        runs-on: macOS-latest
+
+        steps:
+            - name: Step 1 - checkout
+              uses: actions/checkout@v3
+
+            - name: cd spot-electron
+              run: cd spot-electron
+
+            - name: Step 2 - setup node 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'npm'
+                  cache-dependency-path: spot-electron/package-lock.json
+
+            - name: Step 3 - run install
+              working-directory: 'spot-electron'
+              run: npm install
+
+            - name: Step 4 - build
+              working-directory: 'spot-electron'
+              run: npm run dist
+
+    build-spot-electron-windows:
+        name: "[spot-electron] Build on Windows"
+        runs-on: windows-latest
+
+        steps:
+            - name: Step 1 - checkout
+              uses: actions/checkout@v3
+
+            - name: cd spot-electron
+              run: cd spot-electron
+
+            - name: Step 2 - setup node 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'npm'
+                  cache-dependency-path: spot-electron/package-lock.json
+
+            - name: Step 3 - run install
+              working-directory: 'spot-electron'
+              run: npm install
+
+            - name: Step 4 - build
+              working-directory: 'spot-electron'
+              run: npm run dist
+
+    unit-tests-spot-electron:
+        name: "[spot-electron] Unit-tests"
         runs-on: ubuntu-latest
 
         steps:
@@ -27,28 +79,6 @@ jobs:
               working-directory: 'spot-electron'
               run: npm run lint
 
-    unit-tests-spot-electron:
-        name: Unit-tests [spot-electron]
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Step 1 - checkout
-              uses: actions/checkout@v3
-
-            - name: cd spot-electron
-              run: cd spot-electron
-
-            - name: Step 2 - setup node 16
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-                  cache: 'npm'
-                  cache-dependency-path: spot-electron/package-lock.json
-
-            - name: Step 3 - run install
-              working-directory: 'spot-electron'
-              run: npm install
-
-            - name: Step 4 - run test
+            - name: Step 5 - run test
               working-directory: 'spot-electron'
               run: npm run test
