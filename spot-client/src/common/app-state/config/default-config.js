@@ -1,4 +1,4 @@
-const DEFAULT_DOMAIN = process.env.XMPP_DEFAULT_DOMAIN || 'alpha.jitsi.net';
+const DEFAULT_DOMAIN = process.env.DEFAULT_DOMAIN || 'alpha.jitsi.net';
 
 /**
  * A version of the configuration with default values set. The dotenv plugin
@@ -304,7 +304,7 @@ export default {
      */
     XMPP_CONFIG: {
         bosh: process.env.XMPP_BOSH || `https://${DEFAULT_DOMAIN}/http-bind`,
-        websocket: process.env.XMPP_WEBSOCKET || `wss://${DEFAULT_DOMAIN}/xmpp-websocket`,
+        websocket: process.env.XMPP_WEBSOCKET,
         websocketKeepAliveUrl: process.env.XMPP_WEBSOCKET_KEEPALIVE_URL,
         hosts: {
             domain: process.env.XMPP_HOSTS_DOMAIN || DEFAULT_DOMAIN,
