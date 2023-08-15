@@ -55,7 +55,7 @@
         "electron-is-dev": "2.0.0",
         "electron-log": "4.4.8",
         "electron-updater": "5.3.0",
-        "is-online": "9.0.0",
+        "is-online": "10.0.0",
         "lodash": "4.17.21",
         "node-osascript": "2.1.0",
         "node-schedule": "2.1.1"
