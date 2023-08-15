@@ -2,7 +2,7 @@ name: 'CI - spot-electron'
 on: [pull_request]
 jobs:
     build-spot-electron-mac:
-        name: "[spot-electron] Build on macOS"
+        name: Build on macOS
         runs-on: macOS-latest
 
         steps:
@@ -28,7 +28,7 @@ jobs:
               run: npm run dist
 
     build-spot-electron-windows:
-        name: "[spot-electron] Build on Windows"
+        name: Build on Windows
         runs-on: windows-latest
 
         steps:
@@ -54,7 +54,7 @@ jobs:
               run: npm run dist
 
     unit-tests-spot-electron:
-        name: "[spot-electron] Unit-tests"
+        name: Unit-tests
         runs-on: ubuntu-latest
 
         steps:
