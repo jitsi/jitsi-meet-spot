@@ -30,22 +30,6 @@
             "provider": "github",
             "private": false,
             "publishAutoUpdate": true
-        },
-        "win": {
-            "extraFiles": [
-                {
-                    "from": "C:/Windows/System32/vccorlib140.dll",
-                    "to": "."
-                },
-                {
-                    "from": "C:/Windows/System32/vcruntime140.dll",
-                    "to": "."
-                },
-                {
-                    "from": "C:/Windows/System32/vcruntime140_1.dll",
-                    "to": "."
-                }
-            ]
         }
     },
     "description": "An electron application intended to be used to host a Spot-TV, to provide it additional functionality not available in browsers.",
