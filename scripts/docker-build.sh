@@ -16,6 +16,6 @@ npm run build:prod
 
 echo "{ \"spotClientVersion\": \"$TAG\" }" > ./dist/spot-client-version.json
 
-$(aws ecr get-login --no-include-email)
-docker build -t $DOCKER_REPO:$TAG .
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 103425057857.dkr.ecr.us-west-2.amazonaws.com
+docker build -t $DOCKER_REPO:$TAG --platform linux/amd64 .
 docker push $DOCKER_REPO:$TAG
