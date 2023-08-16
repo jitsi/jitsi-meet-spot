@@ -305,7 +305,6 @@ export default {
     XMPP_CONFIG: {
         bosh: process.env.XMPP_BOSH || `https://${DEFAULT_DOMAIN}/http-bind`,
         websocket: process.env.XMPP_WEBSOCKET,
-        websocketKeepAliveUrl: process.env.XMPP_WEBSOCKET_KEEPALIVE_URL,
         hosts: {
             domain: process.env.XMPP_HOSTS_DOMAIN || DEFAULT_DOMAIN,
             muc: process.env.XMPP_HOSTS_MUC_URL || `spot.${DEFAULT_DOMAIN}`
