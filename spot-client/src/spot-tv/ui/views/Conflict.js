@@ -7,6 +7,10 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
+/**
+ * Auto-retry after this time not to leave the TV in a non-working state.
+ */
+const AUTO_RETRY_TIMEOUT = 10000;
 
 /**
  * The conflict error page displayed when another Spot TV instance is already connected.
@@ -28,6 +32,24 @@ export class Conflict extends React.Component {
         super(props);
 
         this._onRetry = this._onRetry.bind(this);
+    }
+
+    /**
+     * Adds an auto-retry timer.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._autoRetryTimer = setTimeout(this._onRetry, AUTO_RETRY_TIMEOUT);
+    }
+
+    /**
+     * Clears the auto-retry timer.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        clearTimeout(this._autoRetryTimer);
     }
 
     /**
