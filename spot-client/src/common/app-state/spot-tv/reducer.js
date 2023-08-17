@@ -1,6 +1,5 @@
 import {
     SPOT_TV_CLEAR_STATE,
-    SPOT_TV_SET_FIXED_CODE_SEGMENT,
     SPOT_TV_SET_REMOTE_JOIN_CODE,
     SPOT_TV_SET_STATE
 } from './action-types';
@@ -8,7 +7,6 @@ import {
 const DEFAULT_STATE = {
     audioMuted: true,
     electron: false,
-    fixedCodeSegment: '',
     inMeeting: undefined,
     kicked: false,
     needPassword: false,
@@ -41,12 +39,6 @@ const spotTv = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case SPOT_TV_CLEAR_STATE:
         return DEFAULT_STATE;
-
-    case SPOT_TV_SET_FIXED_CODE_SEGMENT:
-        return {
-            ...state,
-            fixedCodeSegment: (action.fixedCodeSegment || '').toLowerCase()
-        };
 
     // FIXME: remove the redundancy with SPOT_TV_SET_STATE.
     case SPOT_TV_SET_REMOTE_JOIN_CODE:

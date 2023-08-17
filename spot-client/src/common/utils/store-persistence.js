@@ -38,7 +38,6 @@ const keysToStore = [
     'setup.preferredMic',
     'setup.preferredSpeaker',
     'spot-tv/backend.longLivedPairingCodeInfo',
-    'spotTv.fixedCodeSegment',
     'spotTv.volumeControlSupported',
     'spotRemote.completedOnboarding',
     'spotRemote.mostRecentCountryCode',
@@ -105,7 +104,6 @@ function parsePersistedState(state) {
             longLivedPairingCodeInfo: state['spot-tv/backend'].longLivedPairingCodeInfo
         },
         spotTv: {
-            fixedCodeSegment: state.spotTv.fixedCodeSegment,
             volumeControlSupported: state.spotTv.volumeControlSupported
         },
         spotRemote: {

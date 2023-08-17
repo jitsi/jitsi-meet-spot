@@ -1,7 +1,6 @@
 import {
     SPOT_TV_CLEAR_STATE,
     SPOT_TV_LEAVE_MEETING,
-    SPOT_TV_SET_FIXED_CODE_SEGMENT,
     SPOT_TV_SET_REMOTE_JOIN_CODE,
     SPOT_TV_SET_STATE
 } from './action-types';
@@ -28,19 +27,6 @@ export function leaveMeetingWithError(error) {
     return {
         type: SPOT_TV_LEAVE_MEETING,
         error
-    };
-}
-
-/**
- * Sets the fixed segment part of the pairing code.
- *
- * @param {string} fixedCodeSegment - The segment to set.
- * @returns {Object}
- */
-export function setFixedCodeSegment(fixedCodeSegment) {
-    return {
-        type: SPOT_TV_SET_FIXED_CODE_SEGMENT,
-        fixedCodeSegment
     };
 }
 
