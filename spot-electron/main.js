@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev');
 const process = require('process');
 
 app.setLoginItemSettings({
-    openAtLogin: true
+    openAtLogin: !isDev
 });
 
 
