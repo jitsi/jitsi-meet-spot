@@ -1,5 +1,3 @@
-import './spot-tv/middleware';
-
 import bootstrap from './bootstrap/reducer';
 import calendars from './calendars/reducer';
 import config from './config/reducer';

@@ -78,13 +78,11 @@ export class RemoteControlServer extends BaseRemoteControlService {
             });
         }
 
-        const { fixedCodeSegment } = this._options;
-
         return Promise.resolve({
             // If there's no joinCode service then create a room and let the lock
             // be set later. Setting the lock on join will throw an error about
             // not being authorized..
-            roomName: `${fixedCodeSegment}${generateRandomString(3 - fixedCodeSegment.length)}`
+            roomName: generateRandomString(3)
         });
     }
 

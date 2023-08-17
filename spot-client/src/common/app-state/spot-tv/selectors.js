@@ -9,16 +9,6 @@ export function getCurrentView(state) {
 }
 
 /**
-* A selector which returns the fixed segment of the pairing code, if any.
-*
-* @param {Object} state - The Redux state.
-* @returns {string}
- */
-export function getFixedCodeSegment(state) {
-    return state.spotTv.fixedCodeSegment || '';
-}
-
-/**
 * A selector which returns the current status of various in-meeting features.
 *
 * @param {Object} state - The Redux state.
