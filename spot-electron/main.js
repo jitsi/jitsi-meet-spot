@@ -17,6 +17,7 @@ if (isDev || process.argv.indexOf('--show-devtools') !== -1) {
 }
 
 const { createApplicationWindow } = require('./src/application-window');
+const { awsLogger } = require('./src/logger');
 
 // Imports from features that we need to load.
 // Import log transport early as it caches any logs produced even before able to send.
@@ -27,6 +28,12 @@ require('./src/bt-beacon');
 require('./src/client-control');
 require('./src/exit');
 require('./src/volume-control');
+
+process.env.USE_CLOUDWATCH_LOGS && awsLogger.maybeCreateLogStream()
+    .catch(error => {
+        console.error('Error - couldn\'t identify Cloudwatch log stream', error);
+        process.env.USE_CLOUDWATCH_LOGS = false;
+    });
 
 app.on('ready', createApplicationWindow);
 

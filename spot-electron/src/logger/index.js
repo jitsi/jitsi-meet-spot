@@ -1,4 +1,5 @@
 module.exports = {
     logger: require('./logger'),
-    fileLogger: require('./fileLogger')
+    fileLogger: require('./fileLogger'),
+    awsLogger: require('./awsLogger')
 };

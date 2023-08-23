@@ -3,7 +3,7 @@ const isDev = require('electron-is-dev');
 const process = require('process');
 
 const { defaultSpotURL } = require('../../config');
-const { logger, fileLogger } = require('../logger');
+const { logger, fileLogger, awsLogger } = require('../logger');
 const { OnlineDetector } = require('../online-detector');
 
 /**
@@ -95,6 +95,8 @@ function createApplicationWindow() {
 
     applicationWindow.webContents.on('console-message', (_, level, message) => {
         fileLogger.logToFile(level, message);
+        process.env.USE_S3_LOGS && awsLogger.logToS3(level, message);
+        process.env.USE_CLOUDWATCH_LOGS && awsLogger.logToCloudwatch(level, message);
     });
 
     onlineDetector.start();
