@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-
-import { JoinInfo } from './../components';
-
 /**
  * A React Component representing a single screen in Spot-TV. Wraps {@code View}
  * to include notifying this component's parent of the current displayed view.
@@ -47,7 +44,7 @@ class SpotView extends React.Component {
      * @inheritdoc
      */
     render() {
-        const { children, remoteControlServer, spotRoomName } = this.props;
+        const { children, remoteControlServer } = this.props;
         const childComponents = React.Children.map(children, child =>
             React.cloneElement(
                 child,
@@ -57,10 +54,6 @@ class SpotView extends React.Component {
         return (
             <View { ...this.props }>
                 { childComponents }
-                <div className = 'info-footer'>
-                    { spotRoomName && `${spotRoomName} | ` }
-                    <JoinInfo showDomain = { true } />
-                </div>
             </View>
         );
     }

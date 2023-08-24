@@ -2,7 +2,7 @@ import { RoomName } from 'common/ui';
 import { parseMeetingUrl } from 'common/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import { JoinInfo } from 'spot-tv/ui/components';
 
 /**
  * Displays current meeting information.
@@ -26,7 +26,7 @@ export default class MeetingHeader extends React.Component {
             meetingDisplayName,
             meetingUrl
         } = this.props;
-        const { host, meetingName, path } = parseMeetingUrl(meetingUrl);
+        const { meetingName } = parseMeetingUrl(meetingUrl);
 
         return (
             <div className = 'view-header'>
@@ -36,7 +36,7 @@ export default class MeetingHeader extends React.Component {
                     { meetingDisplayName || meetingName }
                 </div>
                 <div className = 'in-call-meeting-url' >
-                    { `${host}${path}/${meetingName}` }
+                    <JoinInfo showDomain = { true } />
                 </div>
             </div>
         );

@@ -27,9 +27,25 @@
 
         .in-call-name,
         .in-call-invited-phone {
+            word-wrap: break-word;
             font-size: $font-size-medium-plus;
             margin-top: 100px;
             text-align: center;
+        }
+
+        .in-call-meeting-url {
+            display: flex;
+            justify-content: center;
+            margin-top: 5px;
+            word-wrap: break-word;
+
+            .join-info {
+                margin-left: 5px;
+                
+                .join-code {
+                    color: var(--secondary-link-color);
+                }
+            }
         }
 
         .in-call-name-with-phone {

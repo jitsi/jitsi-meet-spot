@@ -1,11 +1,7 @@
-import {
-    getDisplayName,
-    getRemoteSpotTVRoomName
-} from 'common/app-state';
+import { getSpotRoomName } from 'common/app-state';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-
 
 /**
  * Displays the currently configured Spot-Room name.
@@ -40,7 +36,7 @@ export class RoomName extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        roomName: getRemoteSpotTVRoomName(state) || getDisplayName(state)
+        roomName: getSpotRoomName(state)
     };
 }
 
