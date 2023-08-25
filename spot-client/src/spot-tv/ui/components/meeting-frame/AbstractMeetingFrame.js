@@ -27,6 +27,7 @@ export default class AbstractMeetingFrame extends React.Component {
         onMeetingStart: PropTypes.func,
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
+        preferredResolution: PropTypes.string,
         preferredSpeaker: PropTypes.string,
         remoteControlServer: PropTypes.object,
         screenshareDevice: PropTypes.string,

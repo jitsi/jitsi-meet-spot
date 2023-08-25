@@ -2,9 +2,11 @@ import {
     addNotification,
     getPreferredCamera,
     getPreferredMic,
+    getPreferredResolution,
     getPreferredSpeaker,
     getWiredScreenshareInputLabel,
     setPreferredDevices,
+    setPreferredResolution,
     setSpotTVState,
     setWiredScreenshareInputIdleValue,
     setWiredScreenshareInputLabel
@@ -16,7 +18,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-
 
 import { wiredScreenshareService } from './../../../../wired-screenshare-service';
 import CameraPreview from './camera-preview';
@@ -43,6 +44,7 @@ class SelectMedia extends React.Component {
         onSuccess: PropTypes.func,
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
+        preferredResolution: PropTypes.string,
         preferredScreenshareDongle: PropTypes.string,
         preferredSpeaker: PropTypes.string,
         t: PropTypes.func
@@ -62,6 +64,7 @@ class SelectMedia extends React.Component {
             saving: false,
             selectedCamera: props.preferredCamera,
             selectedMic: props.preferredMic,
+            selectedResolution: props.preferredResolution,
             selectedScreenshareDongle: props.preferredScreenshareDongle,
             selectedSpeaker: props.preferredSpeaker
         };
@@ -69,6 +72,7 @@ class SelectMedia extends React.Component {
         this._onCameraChange = this._onCameraChange.bind(this);
         this._onDeviceListChange = this._onDeviceListChange.bind(this);
         this._onMicChange = this._onMicChange.bind(this);
+        this._onResolutionChange = this._onResolutionChange.bind(this);
         this._onScreenshareChange = this._onScreenshareChange.bind(this);
         this._onSkip = this._onSkip.bind(this);
         this._onSpeakerChange = this._onSpeakerChange.bind(this);
@@ -106,10 +110,12 @@ class SelectMedia extends React.Component {
         const {
             cameras,
             mics,
+            resolutions,
             saving,
             screenshareDongles,
             selectedCamera,
             selectedMic,
+            selectedResolution,
             selectedScreenshareDongle,
             selectedSpeaker,
             speakers
@@ -125,6 +131,15 @@ class SelectMedia extends React.Component {
                 label = { t('setup.videoIn') }
                 onChange = { this._onCameraChange }
                 type = 'camera' />
+        );
+        const resolutionSelect = (
+            <MediaSelector
+                device = { selectedResolution }
+                devices = { resolutions }
+                key = 'resolution'
+                label = { t('setup.resolutionLabel') }
+                onChange = { this._onResolutionChange }
+                type = 'resolution' />
         );
         const micSelect = (
             <MediaSelector
@@ -164,6 +179,7 @@ class SelectMedia extends React.Component {
                 <div className = 'columns'>
                     <div className = 'column'>
                         { cameraSelect }
+                        { resolutionSelect }
                         { micSelect }
                         { speakerSelect }
                         { screenshareSelect }
@@ -235,6 +251,21 @@ class SelectMedia extends React.Component {
     _getDefaultDeviceListState() {
         return {
             cameras: [],
+            resolutions: [
+                {
+                    label: this.props.t('setup.noSelection'),
+                    value: ''
+                }, {
+                    label: this.props.t('setup.resolutionHighDef'),
+                    value: '720'
+                }, {
+                    label: this.props.t('setup.resolutionFullHighDef'),
+                    value: '1080'
+                }, {
+                    label: this.props.t('setup.resolutionUltraHighDef'),
+                    value: '2160'
+                }
+            ],
             mics: [],
             screenshareDongles: [
                 {
@@ -328,6 +359,19 @@ class SelectMedia extends React.Component {
     }
 
     /**
+     * Callback invoked when the selected resolution has changed.
+     *
+     * @param {string} resolution - The selected resolution.
+     * @private
+     * @returns {void}
+     */
+    _onResolutionChange(resolution) {
+        this.setState({
+            selectedResolution: resolution
+        });
+    }
+
+    /**
      * Callback invoked when the selected mic (audioinput) has changed.
      *
      * @param {string} label - The label of the selected device.
@@ -389,6 +433,7 @@ class SelectMedia extends React.Component {
         const {
             selectedCamera,
             selectedMic,
+            selectedResolution,
             selectedScreenshareDongle,
             selectedSpeaker
         } = this.state;
@@ -423,13 +468,17 @@ class SelectMedia extends React.Component {
                     selectedSpeaker
                 ));
 
+                this.props.dispatch(setPreferredResolution(
+                    selectedResolution
+                ));
+
                 this.props.dispatch(setSpotTVState({
                     wiredScreensharingEnabled: Boolean(selectedScreenshareDongle)
                 }));
             })
             .then(() => this.props.onSuccess())
             .catch(error => {
-                logger.error('Error while saving preferred devices', { error });
+                logger.error('Error while saving preferences', { error });
 
                 this.props.dispatch(addNotification('error', 'appEvents.devicesNotSaved'));
 
@@ -450,6 +499,7 @@ function mapStateToProps(state) {
     return {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
+        preferredResolution: getPreferredResolution(state),
         preferredScreenshareDongle: getWiredScreenshareInputLabel(state),
         preferredSpeaker: getPreferredSpeaker(state)
     };

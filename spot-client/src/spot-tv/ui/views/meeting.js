@@ -12,6 +12,7 @@ import {
     getMeetingJoinTimeout,
     getPreferredCamera,
     getPreferredMic,
+    getPreferredResolution,
     getPreferredSpeaker,
     getWiredScreenshareInputLabel,
     leaveMeetingWithError,
@@ -57,6 +58,7 @@ export class Meeting extends React.Component {
         onError: PropTypes.func,
         preferredCamera: PropTypes.string,
         preferredMic: PropTypes.string,
+        preferredResolution: PropTypes.string,
         preferredSpeaker: PropTypes.string,
         processMeetingSummary: PropTypes.func,
         remoteControlServer: PropTypes.object,
@@ -141,6 +143,7 @@ export class Meeting extends React.Component {
             minDesktopSharingFramerate,
             preferredCamera,
             preferredMic,
+            preferredResolution,
             preferredSpeaker,
             remoteControlServer,
             screenshareDevice,
@@ -170,6 +173,7 @@ export class Meeting extends React.Component {
                     onMeetingStart = { this._onMeetingStart }
                     preferredCamera = { preferredCamera }
                     preferredMic = { preferredMic }
+                    preferredResolution = { preferredResolution }
                     preferredSpeaker = { preferredSpeaker }
                     remoteControlServer = { remoteControlServer }
                     screenshareDevice = { screenshareDevice }
@@ -350,6 +354,7 @@ function mapStateToProps(state) {
         showPasswordPrompt: needPassword,
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),
+        preferredResolution: getPreferredResolution(state),
         preferredSpeaker: getPreferredSpeaker(state),
         screenshareDevice: getWiredScreenshareInputLabel(state),
         waitingForMeetingStart
