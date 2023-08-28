@@ -53,6 +53,10 @@
             &:active {
                 @include active;
             }
+
+            &.modal-close {
+                font-size: 30px;
+            }
         }
     }
 }
@@ -62,7 +66,7 @@
     border-radius: 5px;
     display: flex;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 60px 20px 40px;
     max-height: calc(100vh - 40px);
     min-height: 256px;
     width: 100%;
