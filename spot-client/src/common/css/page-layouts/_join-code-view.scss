@@ -25,7 +25,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
 
-            @media #{$mq-tablet} {
+            @media #{$mqw-tablet} {
                 display: flex;
             }
         }
@@ -33,7 +33,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
 
-            @media #{$mq-tablet} {
+            @media #{$mqw-tablet} {
                 display: flex;
             }
         }
@@ -59,11 +59,11 @@
         position: absolute;
         left: 5px;
 
-        @media #{$mq-xxsmall} {
+        @media #{$mqw-xxsmall} {
             font-size: 3.5em;
         }
 
-        @media #{$mq-laptop} {
+        @media #{$mqw-laptop} {
             font-size: 2em;
         }
     }

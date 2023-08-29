@@ -18,11 +18,11 @@
     padding: 32px 16px;
     text-align: center;
 
-    @media #{$mq-xxsmall} {
+    @media #{$mqw-xxsmall} {
       width: 95%;
     }
 
-    @media #{$mq-tablet} {
+    @media #{$mqw-tablet} {
       width: 60%;
     }
 

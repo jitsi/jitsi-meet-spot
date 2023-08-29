@@ -2,23 +2,23 @@
     background-color: var(--container-bg-color);
     border-radius: 5px;
 
-    @media #{$mq-mobile-s} {
+    @media #{$mqw-mobile-s} {
         width: 80%;
     }
 
-    @media #{$mq-tablet} {
+    @media #{$mqw-tablet} {
         width: 50%;
     }
 
-    @media #{$mq-laptop} {
+    @media #{$mqw-laptop} {
         width: 50%;
     }
 
-    @media #{$mq-laptop-l} {
+    @media #{$mqw-laptop-l} {
         width: 47%;
     }
 
-    @media #{$mq-4k} {
+    @media #{$mqw-4k} {
         width: 47%;
     }
 

@@ -8,7 +8,7 @@
         text-align: center;
         width: 200px;
 
-        @media #{$mq-tablet} {
+        @media #{$mqw-tablet} {
             display: flex;
             flex: 1;
             flex-wrap: nowrap;

@@ -28,11 +28,11 @@
             padding: .8em 1.2em;
             width: 80%;
 
-            @media #{$mq-laptop} {
+            @media #{$mqw-laptop} {
                 width: 70%;
             }
         
-            @media #{$mq-laptop-l} {
+            @media #{$mqw-laptop-l} {
                 width: 60%;
             }
         }
@@ -61,11 +61,11 @@
         padding: 0;
         width: 100%;
 
-        @media #{$mq-tablet} {
+        @media #{$mqw-tablet} {
             width: 450px;
         }
     
-        @media #{$mq-laptop-l} {
+        @media #{$mqw-laptop-l} {
             width: 500px;
         }
     }
