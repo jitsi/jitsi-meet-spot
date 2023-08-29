@@ -26,7 +26,7 @@
         position: relative;
 
 
-        @media #{$mq-tablet} {
+        @media #{$mqw-tablet} {
             background-color: var(--container-bg-color);
             height: auto;
             margin: 50px;

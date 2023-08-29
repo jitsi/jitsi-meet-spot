@@ -10,7 +10,7 @@
     text-align: center;
     width: 100%;
 
-    @media #{$mq-tablet} {
+    @media #{$mqw-tablet} {
         width: 500px;
     }
 

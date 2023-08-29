@@ -9,7 +9,7 @@
     .desktop-picker {
         width: 100%;
 
-        @media #{$mq-tablet} {
+        @media #{$mqw-tablet} {
             width: 50vw;
         }
     }

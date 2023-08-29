@@ -60,7 +60,7 @@
         font-size: 1em;
         height: 36px;
 
-        @media #{$mq-tablet} {
+        @media #{$mqw-tablet} {
             height: 48px;
         }
     }
