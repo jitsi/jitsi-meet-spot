@@ -7,6 +7,7 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
+    SET_PREFERRED_RESOLUTION,
     SET_ROOM_ID,
     SET_TENANT
 } from './action-types';
@@ -108,6 +109,19 @@ export function setPreferredDevices(cameraLabel, micLabel, speakerLabel) {
         cameraLabel,
         micLabel,
         speakerLabel
+    };
+}
+
+/**
+ * Stores the video resolution that should be used when video conferencing.
+ *
+ * @param {string} resolution - The resolution value.
+ * @returns {Object}
+ */
+export function setPreferredResolution(resolution) {
+    return {
+        type: SET_PREFERRED_RESOLUTION,
+        resolution
     };
 }
 

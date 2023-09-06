@@ -42,6 +42,17 @@ export function getPreferredCamera(state) {
 }
 
 /**
+ * A selector which returns the resolution that should be
+ * used to compute video constraints.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getPreferredResolution(state) {
+    return state.setup.preferredResolution;
+}
+
+/**
  * A selector which returns the label for the microphone device that should be
  * attempted to be used when starting a call.
  *

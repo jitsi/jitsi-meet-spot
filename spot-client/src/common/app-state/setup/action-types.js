@@ -14,6 +14,8 @@ export const SET_JWT = 'SET_JWT_TOKEN';
 
 export const SET_PREFERRED_DEVICES = 'SET_PREFERRED_DEVICES';
 
+export const SET_PREFERRED_RESOLUTION = 'SET_PREFERRED_RESOLUTION';
+
 export const SET_ROOM_ID = 'SET_ROOM_ID';
 
 export const SET_TENANT = 'SET_TENANT';

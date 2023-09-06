@@ -1,5 +1,9 @@
 import { parseURIString } from '@jitsi/js-utils/uri';
 
+const ASPECT_RATIO = 16 / 9;
+
+const MIN_HEIGHT = 180;
+
 /**
  * Extrapolates a url for a meeting from given strings and matching domains.
  *
@@ -129,3 +133,33 @@ export function parseMeetingUrl(url) {
         path: pathParts.join('/')
     };
 }
+
+/**
+ * Builds the video constraints based on the preferred aspect ratio and resolution.
+ *
+ * @param {string} preferredResolution - The resolution of choice.
+ * @returns {Object}
+ */
+export const getVideoConstraints = preferredResolution => {
+    const resolution = Number(preferredResolution);
+
+    return {
+        video: {
+            aspectRatio: ASPECT_RATIO,
+            height: {
+                ideal: resolution,
+                max: resolution,
+                min: MIN_HEIGHT
+            },
+            width: {
+                ideal: resolution * ASPECT_RATIO,
+                max: resolution * ASPECT_RATIO,
+                min: MIN_HEIGHT * ASPECT_RATIO
+            },
+            frameRate: {
+                max: 30,
+                min: 15
+            }
+        }
+    };
+};

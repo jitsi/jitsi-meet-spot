@@ -58,4 +58,16 @@ describe('setup state', () => {
         expect(selectors.getPreferredMic(state)).toEqual(micLabel);
         expect(selectors.getPreferredSpeaker(state)).toEqual(speakerLabel);
     });
+
+    it('saves preferred resolution', () => {
+        const resolution = '1080';
+
+        dispatch(actions.setPreferredResolution(
+            resolution
+        ));
+
+        const state = getState();
+
+        expect(selectors.getPreferredResolution(state)).toEqual(resolution);
+    });
 });

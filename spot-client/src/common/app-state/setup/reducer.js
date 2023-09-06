@@ -6,6 +6,7 @@ import {
     SET_IS_SPOT,
     SET_JWT,
     SET_PREFERRED_DEVICES,
+    SET_PREFERRED_RESOLUTION,
     SET_TENANT
 } from './action-types';
 
@@ -17,6 +18,7 @@ const DEFAULT_STATE = {
     isSpot: false,
     preferredCamera: undefined,
     preferredMic: undefined,
+    preferredResolution: undefined,
     preferredSpeaker: undefined,
     startParams: {}
 };
@@ -74,7 +76,11 @@ const setup = (state = DEFAULT_STATE, action) => {
             preferredMic: action.micLabel,
             preferredSpeaker: action.speakerLabel
         };
-
+    case SET_PREFERRED_RESOLUTION:
+        return {
+            ...state,
+            preferredResolution: action.resolution
+        };
     case SET_TENANT:
         return {
             ...state,
