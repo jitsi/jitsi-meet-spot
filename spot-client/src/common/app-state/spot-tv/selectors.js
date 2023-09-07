@@ -1,3 +1,5 @@
+import { getDisplayName } from 'common/app-state';
+
 /**
 * A selector which returns the current view that is being displayed on Spot-TV.
 *
@@ -56,10 +58,21 @@ export function getRemoteJoinCode(state) {
  * to be displayed while in a meeting.
  *
  * @param {Object} state - The Redux state.
- * @returns {boolean}
+ * @returns {string|undefined}
  */
 export function getRemoteSpotTVRoomName(state) {
     return state.spotTv.roomName;
+}
+
+/**
+ * A selector which returns either the locally or the remotely configured name to use for the Spot-TV
+ * to be displayed while in a meeting.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string|undefined}
+ */
+export function getSpotRoomName(state) {
+    return getDisplayName(state) || getRemoteSpotTVRoomName(state);
 }
 
 /**

@@ -35,25 +35,6 @@
   margin-bottom: 5px;
 }
 
-.info-footer {
-    background: rgba(0, 0, 0, 0.3);
-    bottom: 0;
-    display: flex;
-    font-size: 1rem;
-    justify-content: flex-end;
-    padding: 10px;
-    position: fixed;
-    white-space: pre;
-    width: 100%;
-    z-index: $z-index-foreground;
-
-    pointer-events: none;
-
-    .join-info {
-        pointer-events: all;
-    }
-}
-
 .meeting-frame {
   /**
    * The background color matching jitsi-meet is used to intentionally hide
