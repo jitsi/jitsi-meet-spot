@@ -135,30 +135,54 @@ export function parseMeetingUrl(url) {
 }
 
 /**
- * Builds the video constraints based on the preferred aspect ratio and resolution.
+ * Builds the video constraints and quality objects based on the preferred
+ * aspect ratio and resolution.
  *
  * @param {string} preferredResolution - The resolution of choice.
  * @returns {Object}
  */
-export const getVideoConstraints = preferredResolution => {
+export const getVideoSettings = preferredResolution => {
     const resolution = Number(preferredResolution);
 
     return {
-        video: {
-            aspectRatio: ASPECT_RATIO,
-            height: {
-                ideal: resolution,
-                max: resolution,
-                min: MIN_HEIGHT
-            },
-            width: {
-                ideal: resolution * ASPECT_RATIO,
-                max: resolution * ASPECT_RATIO,
-                min: MIN_HEIGHT * ASPECT_RATIO
-            },
-            frameRate: {
-                max: 30,
-                min: 15
+        constraints: {
+            video: {
+                aspectRatio: ASPECT_RATIO,
+                height: {
+                    ideal: resolution,
+                    max: resolution,
+                    min: MIN_HEIGHT
+                },
+                width: {
+                    ideal: resolution * ASPECT_RATIO,
+                    max: resolution * ASPECT_RATIO,
+                    min: MIN_HEIGHT * ASPECT_RATIO
+                },
+                frameRate: {
+                    max: 30,
+                    min: 15
+                }
+            }
+        },
+        ...Boolean(resolution === 2160) && {
+            videoQuality: {
+                maxBitratesVideo: {
+                    H264: {
+                        low: 200000,
+                        standard: 500000,
+                        high: 15000000
+                    },
+                    VP8: {
+                        low: 200000,
+                        standard: 500000,
+                        high: 15000000
+                    },
+                    VP9: {
+                        low: 100000,
+                        standard: 300000,
+                        high: 15000000
+                    }
+                }
             }
         }
     };
