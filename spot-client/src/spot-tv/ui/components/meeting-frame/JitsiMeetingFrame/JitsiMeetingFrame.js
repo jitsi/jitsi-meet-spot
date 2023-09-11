@@ -9,7 +9,7 @@ import {
 } from 'common/app-state';
 import { logger } from 'common/logger';
 import { COMMANDS, MESSAGES } from 'common/remote-control';
-import { getVideoConstraints, parseMeetingUrl } from 'common/utils';
+import { getVideoSettings, parseMeetingUrl } from 'common/utils';
 import bindAll from 'lodash.bindall';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -130,7 +130,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice,
                 ...Boolean(this.props.preferredResolution) && {
-                    constraints: getVideoConstraints(this.props.preferredResolution)
+                    ...getVideoSettings(this.props.preferredResolution)
                 },
                 desktopSharingFrameRate: {
                     max: this.props.maxDesktopSharingFramerate,
