@@ -1,6 +1,5 @@
 const AdminPage = require('../page-objects/admin-page');
 const CalendarPage = require('../page-objects/calendar-page');
-const ConflictPage = require('../page-objects/conflict-page');
 const MeetingPage = require('../page-objects/meeting-page');
 const SpotUser = require('./spot-user');
 
@@ -19,7 +18,6 @@ class SpotTV extends SpotUser {
 
         this.adminPage = new AdminPage(this.driver);
         this.calendarPage = new CalendarPage(this.driver);
-        this.conflictPage = new ConflictPage(this.driver);
         this.meetingPage = new MeetingPage(this.driver);
     }
 
@@ -41,15 +39,6 @@ class SpotTV extends SpotUser {
      */
     getCalendarPage() {
         return this.calendarPage;
-    }
-
-    /**
-     * Returns the conflict page.
-     *
-     * @returns {ConflictPage}
-     */
-    getConflictPage() {
-        return this.conflictPage;
     }
 
     /**

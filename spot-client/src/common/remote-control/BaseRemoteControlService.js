@@ -99,6 +99,10 @@ export class BaseRemoteControlService extends Emitter {
             this.xmppConnection.addListener(
                 XmppConnection.CALENDAR_REFRESH_REQUESTED,
                 () => this.emit(SERVICE_UPDATES.CALENDAR_REFRESH_REQUESTED)));
+        this._listeners.push(
+            this.xmppConnection.addListener(
+                XmppConnection.CONFLICT,
+                () => this.emit(SERVICE_UPDATES.CONFLICT)));
 
         !this._p2pSignaling || logger.error('Leaked P2PSignaling instance');
         this._createP2PSignaling();

@@ -7,14 +7,6 @@ import { $iq, Strophe } from 'strophe.js';
 
 import { IQ_NAMESPACES, IQ_TIMEOUT } from './constants';
 
-/**
- * How long will the join MUC function retry on conflict error before giving up.
- * The value must be bigger than the idle client connection timeout. It's currently set to 30 seconds for the worst case
- * scenario.
- *
- * @type {number}
- */
-const CONFLICT_TIMEOUT = 35000;
 
 /**
  * XML element name for spot status added to MUC presence.
@@ -42,6 +34,11 @@ export default class XmppConnection extends Emitter {
      * @type {string}
      */
     static CALENDAR_REFRESH_REQUESTED = 'CALENDAR_REFRESH_REQUESTED';
+
+    /**
+     * Event emitted when an XMPP MUC resource conflict is detected. Re-connection is automatic.
+     */
+    static CONFLICT = 'CONFLICT';
 
     /**
      * Event emitted when the {@link isConnected} status changes.
@@ -273,12 +270,12 @@ export default class XmppConnection extends Emitter {
 
                             const timeSinceFirstConflict = Date.now() - firstConflictTimestamp;
 
-                            if (timeSinceFirstConflict <= CONFLICT_TIMEOUT) {
-                                logger.warn('Retry MUC join on conflict error', { timeSinceFirstConflict });
-                                this._conflictRetryTimeout = setTimeout(() => this._joinMuc(roomLock), 5000);
+                            logger.warn('Retry MUC join on conflict error', { timeSinceFirstConflict });
+                            this._conflictRetryTimeout = setTimeout(() => this._joinMuc(roomLock), 5000);
 
-                                return true;
-                            }
+                            this.emit(XmppConnection.CONFLICT);
+
+                            return true;
                         }
 
                         reject(error);

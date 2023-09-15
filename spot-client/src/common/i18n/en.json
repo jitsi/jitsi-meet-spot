@@ -36,7 +36,7 @@
         "pleaseWait": "Please wait",
         "reconnecting": "Reconnecting",
         "setup": "Currently in setup.",
-        "tvConflict": "An instance of {{ roomName }} is already open. Please close all other instances and try again.",
+        "tvConflict": "An instance of this room is already open. Please close all other instances.",
         "tvNotSupported": "Hosting {{ productName }} is not supported on the current browser.",
         "unexpectedError": "An unexpected error occurred.",
         "useChrome": "Please open {{ productName }} on Chrome desktop.",

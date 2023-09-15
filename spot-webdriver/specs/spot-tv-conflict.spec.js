@@ -22,9 +22,7 @@ describe('The Spot TV conflict detection logic', () => {
 
         await spotSession2.startSpotTv(true);
 
-        const conflictPage = spotTv2.getConflictPage();
-
-        await conflictPage.waitForVisible();
+        // TODO: check if the notification is displayed in Spot 2
 
         await spotTv1.cleanup();
 
