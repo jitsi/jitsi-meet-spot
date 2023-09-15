@@ -159,6 +159,11 @@ export const SERVICE_UPDATES = {
     CLIENT_MESSAGE_RECEIVED: 'message-received',
 
     /**
+     * Event emitted when there is an XMPP MUC resource conflict. Re-connection is automatic.
+     */
+    CONFLICT: 'conflict',
+
+    /**
      * Event emitted by Spot Remote when it switches to use P2P signaling channel for remote control command execution.
      */
     P2P_SIGNALING_STATE_CHANGE: 'p2p-signaling-state-change',

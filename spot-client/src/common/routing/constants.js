@@ -13,6 +13,5 @@ export const ROUTES = {
     SETUP: '/setup',
     SHARE: '/share',
     SHARE_HELP: '/share-help',
-    CONFLICT: '/conflict',
     UNSUPPORTED_BROWSER: '/unsupported-browser'
 };

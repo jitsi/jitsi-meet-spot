@@ -1,4 +1,3 @@
-export { default as Conflict } from './Conflict';
 export { default as Home } from './home';
 export { default as Meeting } from './meeting';
 export { default as OutlookOauth } from './outlook-oauth';

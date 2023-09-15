@@ -1,5 +1,6 @@
 import {
     CREATE_CONNECTION,
+    addNotification,
     destroyConnection,
     getJoinCodeRefreshRate,
     getMeetingDomainsWhitelist,
@@ -103,6 +104,10 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             [
                 SERVICE_UPDATES.CALENDAR_REFRESH_REQUESTED,
                 onCalendarRefreshRequested
+            ],
+            [
+                SERVICE_UPDATES.CONFLICT,
+                onConflict
             ],
             [
                 SERVICE_UPDATES.UNRECOVERABLE_DISCONNECT,
@@ -233,6 +238,16 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
         }
 
         /**
+         * Handles the calendar push notification received by the RCS.
+         *
+         * @returns {void}
+         */
+        function onConflict() {
+            logger.log('received conflict error');
+            dispatch(addNotification('error', 'appStatus.tvConflict'));
+        }
+
+        /**
          * Callback invoked when {@code remoteControlServer} has been
          * disconnected from an unrecoverable error.
          *
@@ -241,7 +256,6 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
          * @returns {Promise}
          */
         function onDisconnect(error) {
-            const isConflict = error === 'conflict';
             const isRecoverableError = remoteControlServer.isRecoverableRequestError(error);
             const usingPermanentPairingCode = Boolean(pairingCode);
             const canRecoverConnection = !usingPermanentPairingCode || isRecoverableError;
@@ -253,12 +267,11 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
              *
              * @type {boolean}
              */
-            const willRetry = (retry || initiallyConnected) && canRecoverConnection && !isConflict;
+            const willRetry = (retry || initiallyConnected) && canRecoverConnection;
 
             logger.error('Spot-TV disconnected from the remote control server.', {
                 error,
                 initiallyConnected,
-                isConflict,
                 isRecoverableError,
                 retry,
                 usingPermanentPairingCode,
@@ -268,7 +281,6 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
             dispatch(spotTvConnectionFailed({
                 error,
                 initiallyConnected,
-                isConflict,
                 isRecoverableError,
                 retry,
                 usingPermanentPairingCode,
@@ -304,11 +316,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }) {
 
             removeEventHandlers();
 
-            if (isConflict) {
-                history.push(ROUTES.CONFLICT);
-            } else {
-                throw error;
-            }
+            throw error;
         }
 
         /**
