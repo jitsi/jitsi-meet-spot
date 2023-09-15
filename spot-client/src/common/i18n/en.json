@@ -150,6 +150,7 @@
         "pairAsk": "Would you like to pair a permanent remote control with this room?",
         "preview": "Preview",
         "profile": "Room settings",
+        "resolutionDefault": "Default",
         "resolutionLabel": "Preferred resolution",
         "resolutionHighDef": "HD",
         "resolutionFullHighDef": "Full HD",

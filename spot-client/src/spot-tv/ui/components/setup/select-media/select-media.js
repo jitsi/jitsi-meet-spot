@@ -253,7 +253,7 @@ class SelectMedia extends React.Component {
             cameras: [],
             resolutions: [
                 {
-                    label: this.props.t('setup.noSelection'),
+                    label: this.props.t('setup.resolutionDefault'),
                     value: ''
                 }, {
                     label: this.props.t('setup.resolutionHighDef'),
