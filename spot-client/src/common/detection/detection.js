@@ -1,6 +1,7 @@
 import Bowser from 'bowser';
 import { JitsiMeetJSProvider } from 'common/vendor';
 
+// TODO: Bowser is deprecated, replace it. -saghul
 const browser = Bowser.getParser(window.navigator.userAgent);
 
 /**
@@ -92,11 +93,11 @@ export function isSupportedSpotTvBrowser() {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
     return isDesktopBrowser()
-        && (jitsiBrowserDetection.isChrome() || jitsiBrowserDetection.isElectron());
+        && (jitsiBrowserDetection.isChromiumBased() || jitsiBrowserDetection.isElectron());
 }
 
 /**
- * Returns whether or not the current environment supports wirelessly screensharing into a Spot.
+ * Returns whether or not the current environment supports wirelessly screen-sharing into a Spot.
  * Currently only Chrome works and the underlying implementation assumes getDisplayMedia is
  * available.
  *
@@ -106,9 +107,11 @@ export function isSupportedSpotTvBrowser() {
 export function isWirelessScreenshareSupported() {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    // Chrome on Android is detected by LJM to support getDisplayMedia, but then it always fails when called
-    return (isDesktopBrowser() && jitsiBrowserDetection.isChrome() && jitsiBrowserDetection.supportsGetDisplayMedia())
-        || jitsiBrowserDetection.isElectron();
+    // TODO: Firefox and Safari do support gDM, but the proxy connection fails.
+    return isDesktopBrowser()
+        && jitsiBrowserDetection.isChromiumBased()
+        && jitsiBrowserDetection.supportsGetDisplayMedia()
+        && !jitsiBrowserDetection.isElectron();
 }
 
 /**
