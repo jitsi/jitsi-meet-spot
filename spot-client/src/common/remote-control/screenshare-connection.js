@@ -1,6 +1,7 @@
 import { logger } from 'common/logger';
 import { avUtils } from 'common/media';
 import { JitsiMeetJSProvider } from 'common/vendor';
+import { DEFAULT_STUN_SERVERS } from 'common/webrtc/PeerConnection';
 
 /**
  * Manages the ProxyConnectionService between between a remote control and a
@@ -47,7 +48,9 @@ export default class ScreenshareConnection {
 
         this._proxyConnectionService
             = new JitsiMeetJS.ProxyConnectionService({
-                jitsiConnection: options.jitsiConnection,
+                pcConfig: {
+                    iceServers: DEFAULT_STUN_SERVERS
+                },
                 onConnectionClosed: () => this.options.onConnectionClosed(),
                 onRemoteStream: () => { /** No-op for Spot. */ },
                 onSendMessage: (to, data) => this.options.sendMessage(to, data)
