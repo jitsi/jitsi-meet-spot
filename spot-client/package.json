@@ -36,7 +36,7 @@
         "jest-environment-jsdom": "29.3.1",
         "jest-fetch-mock": "3.0.3",
         "jsdoc": "4.0.0",
-        "lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1560.0.0+92a5738b/lib-jitsi-meet.tgz",
+        "lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1688.0.0+dda9ec12/lib-jitsi-meet.tgz",
         "libphonenumber-js": "1.10.15",
         "lodash.bindall": "4.4.0",
         "lodash.debounce": "4.0.8",
