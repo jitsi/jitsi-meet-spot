@@ -50,7 +50,7 @@
         "@types/jest": "29.2.6",
         "@jitsi/eslint-config": "4.1.5",
         "dotenv": "16.0.3",
-        "electron": "22.3.24",
+        "electron": "22.3.25",
         "electron-builder": "23.6.0",
         "electron-notarize": "1.2.2",
         "eslint": "8.32.0",
