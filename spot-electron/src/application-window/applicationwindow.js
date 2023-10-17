@@ -35,10 +35,10 @@ function createApplicationWindow() {
 
         // Pause the online detector while in a meeting so it doesn't disrupt them.
         // Re-arm it when the meeting ends.
-        if (status !== 0) {
-            onlineDetector.pause();
-        } else {
+        if (status === 0) {
             onlineDetector.start();
+        } else {
+            onlineDetector.pause();
         }
     });
 
