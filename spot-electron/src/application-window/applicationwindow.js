@@ -30,17 +30,15 @@ function createApplicationWindow() {
 
     let showCrashPageTimeout = null;
 
-    let meetingStatus = 0; /* Not in a meeting. */
-
     clientController.addListener('meetingStatus', ({ status }) => {
         logger.info(`Current meeting status: ${status}`);
 
-        meetingStatus = status;
-
-        // Re-evaluate if we should show the offline overlay after coming back from
-        // a meeting.
-        if (meetingStatus === 0 && !onlineDetector.getLastOnlineStatus()) {
-            applicationWindow.loadFile('src/static/offline.html');
+        // Pause the online detector while in a meeting so it doesn't disrupt them.
+        // Re-arm it when the meeting ends.
+        if (status !== 0) {
+            onlineDetector.pause();
+        } else {
+            onlineDetector.start();
         }
     });
 
@@ -56,12 +54,6 @@ function createApplicationWindow() {
         clearTimeout(showCrashPageTimeout);
 
         logger.warn(`Online status changed: ${isOnline}`);
-
-        if (meetingStatus !== 0) {
-            logger.debug('Ignoring online state change while in a meeting');
-
-            return;
-        }
 
         if (isOnline) {
             applicationWindow.loadURL(defaultSpotURL);
