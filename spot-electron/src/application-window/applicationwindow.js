@@ -3,6 +3,7 @@ const isDev = require('electron-is-dev');
 const process = require('process');
 
 const { defaultSpotURL } = require('../../config');
+const { clientController } = require('../client-control');
 const { logger, fileLogger } = require('../logger');
 const { OnlineDetector } = require('../online-detector');
 
@@ -29,6 +30,18 @@ function createApplicationWindow() {
 
     let showCrashPageTimeout = null;
 
+    clientController.addListener('meetingStatus', ({ status }) => {
+        logger.info(`Current meeting status: ${status}`);
+
+        // Pause the online detector while in a meeting so it doesn't disrupt them.
+        // Re-arm it when the meeting ends.
+        if (status === 0) {
+            onlineDetector.start();
+        } else {
+            onlineDetector.pause();
+        }
+    });
+
     applicationWindow = new BrowserWindow({
         webPreferences: {
             contextIsolation: false,
@@ -39,6 +52,8 @@ function createApplicationWindow() {
     // Set event handlers
     onlineDetector.addListener(OnlineDetector.ONLINE_STATUS_CHANGED, isOnline => {
         clearTimeout(showCrashPageTimeout);
+
+        logger.warn(`Online status changed: ${isOnline}`);
 
         if (isOnline) {
             applicationWindow.loadURL(defaultSpotURL);
