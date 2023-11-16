@@ -1,5 +1,4 @@
 import {
-    hasVisibleCaretOnInitialFocus,
     isAutoFocusSupported
 } from 'common/detection';
 import PropTypes from 'prop-types';
@@ -144,11 +143,6 @@ export default class CodeInput extends React.Component {
      */
     _onRootClick() {
         if (!this.state.isFocused) {
-            if (hasVisibleCaretOnInitialFocus()) {
-                this._inputRef.current.focus();
-                this._inputRef.current.blur();
-            }
-
             this._inputRef.current.focus();
         }
     }
