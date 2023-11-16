@@ -22,8 +22,7 @@
             ],
             "extendInfo": {
                 "NSCameraUsageDescription": "Camera access is required in order to make video-calls.",
-                "NSMicrophoneUsageDescription": "Microphone access is required in order to make calls (audio/video).",
-                "NSBluetoothAlwaysUsageDescription": "Bluetooth access is required in order to detect remote controllers."
+                "NSMicrophoneUsageDescription": "Microphone access is required in order to make calls (audio/video)."
             }
         },
         "publish": {
@@ -79,7 +78,6 @@
     },
     "version": "1.0.0",
     "optionalDependencies": {
-        "@jitsi/node-ibeacons": "0.2.0",
         "win-audio": "2.0.2"
     }
 }
