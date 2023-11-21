@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { MESSAGE_TYPES, nativeController } from 'spot-tv/native-functions';
 
-import { ApiHealthCheck } from './ApiHealthCheck';
 
 /**
  * Common code shared between vendor specific meeting frame components.
@@ -46,14 +45,6 @@ export default class AbstractMeetingFrame extends React.Component {
         super(props);
 
         /**
-         * The API health checker instance.
-         *
-         * @type {ApiHealthCheck|undefined}
-         * @private
-         */
-        this._apiHealthChecks = undefined;
-
-        /**
          * The max number of participants that was at some point in the meeting. The value should be updated by
          * the vendor specific meeting frame class.
          *
@@ -73,29 +64,10 @@ export default class AbstractMeetingFrame extends React.Component {
         this.meetingType = meetingType;
 
         bindAll(this, [
-            '_onApiHealthCheckError',
             '_onMeetingCommandReceived',
             '_onMeetingJoined',
             '_onMeetingLeave'
         ]);
-    }
-
-    /**
-     * Enables and starts the API health checks.
-     *
-     * @param {Function} healthCheckFunction - A function which returns a promise which is supposed to check the API by
-     * doing a ping or other short operation which would confirm that the API is responsive. The health check will fail
-     * if the promise will not resolve withing the time limit or if rejected. Check {@link ApiHealthCheck} for more
-     * details.
-     * @protected
-     * @returns {void}
-     */
-    _enableApiHealthChecks(healthCheckFunction) {
-        this._apiHealthChecks = new ApiHealthCheck(
-            healthCheckFunction,
-            this._onApiHealthCheckError
-        );
-        this._apiHealthChecks.start();
     }
 
     /**
@@ -121,8 +93,6 @@ export default class AbstractMeetingFrame extends React.Component {
      * @returns {void}
      */
     componentWillUnmount() {
-        this._apiHealthChecks && this._apiHealthChecks.stop();
-
         this.props.remoteControlServer.removeListener(
             SERVICE_UPDATES.CLIENT_MESSAGE_RECEIVED,
             this._onMeetingCommandReceived
@@ -132,22 +102,6 @@ export default class AbstractMeetingFrame extends React.Component {
             MESSAGE_TYPES.MEETING_COMMAND,
             this._onMeetingCommandReceived
         );
-    }
-
-    /**
-     * Callback invoked when the iFrame is not responsive.
-     *
-     * @param {string} reason - The detected reason for the failed health check.
-     * @private
-     * @returns {void}
-     */
-    _onApiHealthCheckError(reason) {
-        logger.error('api health check failed', { reason });
-
-        this._onMeetingLeave({
-            errorCode: reason,
-            error: 'appEvents.meetingConnectionLost'
-        });
     }
 
     /**

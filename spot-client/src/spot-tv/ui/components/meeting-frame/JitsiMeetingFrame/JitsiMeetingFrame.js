@@ -424,8 +424,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
     _onMeetingJoined() {
         this._meetingJoined = true;
 
-        this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
-
         super._onMeetingJoined();
 
         this._trySendResizeFilmStripCommand();
