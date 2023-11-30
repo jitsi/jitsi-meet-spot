@@ -161,10 +161,14 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
                 TOOLBAR_BUTTONS: []
             },
             jwt: this.props.jwt,
-            onload: this._onMeetingLoaded,
             parentNode: this._meetingContainer,
             roomName: meetingName
         });
+
+        // Detect frame load more resiliently. Technically the `onload` option works
+        // in recent releases, but this works with older ones too.
+        this._jitsiApi.addListener('browserSupport', this._onMeetingLoaded);
+        this._jitsiApi.addListener('ready', this._onMeetingLoaded);
 
         this._jitsiApi.addListener(
             'audioMuteStatusChanged', this._onAudioMuteChange);
@@ -267,15 +271,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _leaveIfErrorDetected() {
-        // TODO: implement smarter detection of iframe errors. Currently there
-        // is no hook within the jitsi iframe api to know if the meeting
-        // encountered an error. There may also be no definitive way to know if
-        // the user has proceeded to an erroneous, non-meeting page or if a page
-        // failed to load (404).
-        if (this._meetingLoaded && this._meetingJoined) {
-            return;
-        }
-
         logger.error('error while loading meeting', {
             iFrameLoaded: this._meetingLoaded,
             meetingJoined: this._meetingJoined
@@ -422,6 +417,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @returns {void}
      */
     _onMeetingJoined() {
+        clearTimeout(this._assumeMeetingFailedTimeout);
+
         this._meetingJoined = true;
 
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
@@ -555,13 +552,16 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
 
     /**
      * Sets the internal flag for the jitsi iframe api having loaded the page.
-     * This event fires no matter the state of the page load, for example on
-     * 404.
      *
      * @private
      * @returns {void}
      */
     _onMeetingLoaded() {
+        // We are adding 2 ways to detect loading so this might trigger twice.
+        if (this._meetingLoaded) {
+            return;
+        }
+
         logger.log('meeting iframe loaded meeting page');
 
         this._meetingLoaded = true;
