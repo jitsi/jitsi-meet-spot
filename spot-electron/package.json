@@ -39,7 +39,7 @@
         "@jitsi/eslint-config": "4.1.5",
         "dotenv": "16.0.3",
         "electron": "27.0.4",
-        "electron-builder": "24.4.0",
+        "electron-builder": "24.13.3",
         "electron-notarize": "1.2.2",
         "eslint": "8.32.0",
         "eslint-plugin-import": "2.27.5",
