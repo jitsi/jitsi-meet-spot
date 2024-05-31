@@ -120,16 +120,6 @@ export default {
     },
 
     /**
-     * Returns the enumeration of error events a {@code JitsiLocalTrack} may
-     * fire.
-     *
-     * @returns {Object}
-     */
-    getTrackErrorEvents() {
-        return JitsiMeetJSProvider.get().errors.track;
-    },
-
-    /**
      * Returns the enumeration of events a {@code JitsiLocalTrack} may fire.
      *
      * @returns {Object}
