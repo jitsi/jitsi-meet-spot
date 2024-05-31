@@ -27,8 +27,6 @@ export function findWhitelistedMeetingUrl(fieldsToSearch, knownDomains) {
             const match = _checkPattern(field, urlRegExp, excludePattern);
 
             if (match) {
-                // console.log('BOGDAN match parseURIString');
-
                 const url = parseURIString(match);
 
                 if (url) {
@@ -161,27 +159,6 @@ export const getVideoSettings = preferredResolution => {
                 frameRate: {
                     max: 30,
                     min: 15
-                }
-            }
-        },
-        ...Boolean(resolution === 2160) && {
-            videoQuality: {
-                maxBitratesVideo: {
-                    H264: {
-                        low: 200000,
-                        standard: 500000,
-                        high: 15000000
-                    },
-                    VP8: {
-                        low: 200000,
-                        standard: 500000,
-                        high: 15000000
-                    },
-                    VP9: {
-                        low: 100000,
-                        standard: 300000,
-                        high: 15000000
-                    }
                 }
             }
         }
