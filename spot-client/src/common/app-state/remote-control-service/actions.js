@@ -1,6 +1,5 @@
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { logger } from 'common/logger';
-import { avUtils } from 'common/media';
 import { remoteControlClient } from 'common/remote-control';
 
 import { setSpotTVState } from './../spot-tv/actions';
@@ -50,14 +49,7 @@ export function joinWithScreensharing(meetingName, screensharingType) {
             .then(
                 () => screensharingType === 'wireless' && dispatch(setLocalWirelessScreensharing(true)),
                 error => {
-                    const events = avUtils.getTrackErrorEvents();
-
-                    if (error.name === events.CHROME_EXTENSION_USER_CANCELED) {
-                        logger.log('onGoToMeeting with screensharing canceled by the user');
-                    } else {
-                        logger.error('onGoToMeeting with screensharing rejected', { error });
-                    }
-
+                    logger.error('onGoToMeeting with screensharing rejected', { error });
                     screensharingType === 'wireless' && dispatch(setLocalWirelessScreensharing(false));
                 });
         dispatch({
