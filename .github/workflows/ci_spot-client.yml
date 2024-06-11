@@ -7,15 +7,12 @@ jobs:
 
         steps:
             - name: Step 1 - checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: cd spot-client
-              run: cd spot-client
-
-            - name: Step 2 - setup node 16
+            - name: Step 2 - setup node
               uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 20
                   cache: 'npm'
                   cache-dependency-path: spot-client/package-lock.json
 
@@ -40,7 +37,7 @@ jobs:
               run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event, running on ${{ runner.os}}, branch name ${{ github.ref}}, ."
 
             - name: Step 2 - checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Step 3 - run install [spot-client]
               working-directory: spot-client
