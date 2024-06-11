@@ -57,6 +57,10 @@ module.exports = {
             throw new Error(`No screen count command for env ${process.platform}`);
         }
 
-        return command();
+        try {
+            return command();
+        } catch(e) {
+            return 1;
+        }
     }
 };
