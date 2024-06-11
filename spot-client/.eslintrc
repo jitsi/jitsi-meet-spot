@@ -3,7 +3,8 @@
     "parser": "@babel/eslint-parser",
     "plugins": ["@babel", "import", "jest", "react"],
     "rules": {
-        "no-console": 1
+        "no-console": 1,
+        "jsdoc/newline-after-description": 0
     },
     "settings": {
         "react": {

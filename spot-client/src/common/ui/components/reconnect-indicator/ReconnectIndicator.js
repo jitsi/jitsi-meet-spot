@@ -75,7 +75,7 @@ export class ReconnectIndicator extends React.Component {
     /**
      * Implements React's {@link Component#render()}.
      *
-     * @returns {ReactElement}.
+     * @returns {ReactElement}
      */
     render() {
         if (!this.props.isReconnecting || !this.state.showIndicator) {
