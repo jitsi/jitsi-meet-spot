@@ -508,12 +508,13 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      *
      * @param {event} param0 - The event returned from the external api.
      * @param {Object} kicked - The participant that was kicked.
+     * @param {Object} kicker - The participant that performed the kick.
      * @private
      * @returns {void}
      */
-    _onParticipantKicked({ kicked }) {
+    _onParticipantKicked({ kicked, kicker }) {
         if (kicked.local) {
-            logger.log('Kicked from jitsi meeting');
+            logger.log(`Kicked from meeting by ${kicker.id}`);
 
             this.props.updateSpotTvState({
                 kicked: true
