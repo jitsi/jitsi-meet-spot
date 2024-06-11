@@ -76,17 +76,6 @@ exports.config = {
     connectionRetryCount: 3,
 
     services: [
-        [
-            'chromedriver',
-            {
-                logFileName: 'wdio-chromedriver.log', // default
-                outputDir: 'driver-logs', // overwrites the config.outputDir
-                args: [ '--silent' ]
-
-                // localhost run: force use chrome driver 105 from a different folder as the one from "Applications" gets updated automatically by company rules; latest chromedriver 106, 107 have an issue
-                // chromedriverCustomPath: '/Users/bduduman/Downloads/chromedriver',
-            }
-        ],
         [ TimelineService ]
     ],
 
