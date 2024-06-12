@@ -76,7 +76,7 @@ function createApplicationWindow() {
         });
     };
 
-    applicationWindow.webContents.on('crashed', () => {
+    applicationWindow.webContents.on('render-process-gone', () => {
         if (!onlineDetector.getLastOnlineStatus()) {
             return;
         }
@@ -109,7 +109,7 @@ function createApplicationWindow() {
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
 
     applicationWindow.webContents.on('console-message', (_, level, message) => {
-        fileLogger.logToFile(level, message);
+        fileLogger.logToFile(level, `console: ${message}`);
     });
 
     onlineDetector.start();
