@@ -50,3 +50,10 @@ jobs:
             - name: Step 5 - run tests [spot-webdriver]
               working-directory: spot-webdriver
               run: npm run ci
+
+            - name: Step 6 - Archive Test Results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                name: webdriver-results
+                path: spot-webdriver/webdriver-results/
