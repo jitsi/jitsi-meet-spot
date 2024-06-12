@@ -30,7 +30,7 @@ jobs:
 
     e2e:
         name: E2E tests
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
 
         steps:
             - name: Step 1 - info
