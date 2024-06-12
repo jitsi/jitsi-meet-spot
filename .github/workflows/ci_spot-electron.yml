@@ -7,15 +7,12 @@ jobs:
 
         steps:
             - name: Step 1 - checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: cd spot-electron
-              run: cd spot-electron
-
-            - name: Step 2 - setup node 16
-              uses: actions/setup-node@v3
+            - name: Step 2 - setup node
+              uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 20
                   cache: 'npm'
                   cache-dependency-path: spot-electron/package-lock.json
 
@@ -33,15 +30,12 @@ jobs:
 
         steps:
             - name: Step 1 - checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: cd spot-electron
-              run: cd spot-electron
-
-            - name: Step 2 - setup node 16
-              uses: actions/setup-node@v3
+            - name: Step 2 - setup node
+              uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 20
                   cache: 'npm'
                   cache-dependency-path: spot-electron/package-lock.json
 
@@ -59,15 +53,12 @@ jobs:
 
         steps:
             - name: Step 1 - checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: cd spot-electron
-              run: cd spot-electron
-
-            - name: Step 2 - setup node 16
-              uses: actions/setup-node@v3
+            - name: Step 2 - setup node
+              uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 20
                   cache: 'npm'
                   cache-dependency-path: spot-electron/package-lock.json
 
