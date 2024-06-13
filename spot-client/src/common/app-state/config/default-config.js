@@ -183,7 +183,7 @@ export default {
     MEETING_DOMAINS_WHITELIST:
         process.env.MEETING_DOMAINS_WHITELIST
             ? process.env.MEETING_DOMAINS_WHITELIST.split(',')
-            : [ 'alpha.jitsi.net', 'beta.meet.jit.si', 'meet.jit.si' ],
+            : [ 'alpha.jitsi.net', 'beta.meet.jit.si', 'meet.jit.si', '8x8.vc', 'stage.8x8.vc' ],
 
     /**
      * Domains which Spot can be hosted on which should place Spot into a
