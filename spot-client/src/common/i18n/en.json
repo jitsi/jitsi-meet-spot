@@ -102,6 +102,10 @@
         "rate": "Rate your experience",
         "thanks": "Thanks for using {{ productName }}!"
     },
+    "hangup": {
+        "confirmation" : "Are you sure you want to hang up?",
+        "button": "Hang up"
+    },
     "help": {
         "howToConnect": "Open {{ url }} in a desktop Google Chrome browser in the conference room to set it up and obtain a share key. Next enter the {{ codeLength }}-character share key in this app.",
         "isRemote": "This app is a remote controller for a conference room."
