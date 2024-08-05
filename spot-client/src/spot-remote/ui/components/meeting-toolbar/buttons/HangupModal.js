@@ -1,6 +1,5 @@
-import { hideModal, hangUp } from 'common/app-state';
+import { hangUp, hideModal } from 'common/app-state';
 import { Button, Modal } from 'common/ui';
-
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
@@ -12,6 +11,7 @@ import { connect } from 'react-redux';
 export class HangupModal extends React.Component {
     static propTypes = {
         onClose: PropTypes.func,
+        onHangup: PropTypes.func,
         t: PropTypes.func
     };
 
@@ -38,12 +38,12 @@ export class HangupModal extends React.Component {
                         <Button
                             appearance = 'primary'
                             className = 'hangup-button'
-                            color='secondary'
+                            color = 'secondary'
                             onClick = { this.props.onHangup }
                             qaId = 'hangup-button'>
-                               { t('hangup.button') }
+                            { t('hangup.button') }
                         </Button>
-                    </div>                
+                    </div>
                 </div>
             </Modal>
         );
