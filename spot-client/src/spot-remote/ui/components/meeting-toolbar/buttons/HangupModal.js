@@ -7,7 +7,7 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 /**
- * Implements a modal to adjust the volume of the spot tv remotely.
+ * Implements a modal dialog for confirming that the user wants to hang up.
  */
 export class HangupModal extends React.Component {
     static propTypes = {
