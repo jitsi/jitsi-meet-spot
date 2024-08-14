@@ -4,10 +4,11 @@
     height: 100%;
     justify-content: center;
     left: 0;
-    pointer-events: none;
     position: fixed;
     top: 0;
     width: 100%;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     .modal-shroud {
         height: 100%;
@@ -24,7 +25,9 @@
         overflow: auto;
         pointer-events: all;
         position: relative;
-
+        border: 1px solid rgb(61, 61, 61);
+        box-shadow: rgba(20, 20, 20, 0.6) 0px 4px 25px 4px;
+        border-radius: 6px;
 
         @media #{$mqw-tablet} {
             background-color: var(--container-bg-color);

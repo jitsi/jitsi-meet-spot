@@ -1,0 +1,31 @@
+.hangup-modal-select {
+    @include centered-content;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 360px;
+    text-align: center;
+    width: 100%;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .footer {
+        align-items: center;
+        display: flex;
+        padding: 24px;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .hangup-button {
+        display: block;
+        font-size: 19px;
+    }
+
+    .description {
+        font-size: 19px;
+    }
+}

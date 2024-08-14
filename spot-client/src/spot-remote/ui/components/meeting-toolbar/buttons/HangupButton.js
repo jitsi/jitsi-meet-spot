@@ -1,4 +1,4 @@
-import { hangUp } from 'common/app-state';
+import { showModal } from 'common/app-state';
 import { CallEnd } from 'common/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 
 import { NavButton } from './../../nav';
+import HangupModal from './HangupModal';
 
 /**
  * A component for leaving a meeting in progress.
@@ -39,7 +40,7 @@ HangupButton.propTypes = {
 function mapDispatchToProps(dispatch) {
     return {
         onHangup() {
-            dispatch(hangUp());
+            dispatch(showModal(HangupModal));
         }
     };
 }
