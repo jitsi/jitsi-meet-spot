@@ -1,7 +1,5 @@
 import { logger } from 'common/logger';
 
-import { generate8Characters } from '../utils';
-
 import P2PSignalingBase from './P2PSignalingBase';
 
 
@@ -134,7 +132,7 @@ export default class P2PSignalingClient extends P2PSignalingBase {
             throw new Error('No PeerConnection');
         }
 
-        const requestId = `${generate8Characters()}-${generate8Characters}`;
+        const requestId = window.crypto.randomUUID();
 
         // FIXME is there any better way to do this?
         // The 'reject' and 'resolve' methods are set when the promise is created.
