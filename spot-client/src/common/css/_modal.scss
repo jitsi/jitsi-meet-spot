@@ -8,6 +8,7 @@
     top: 0;
     width: 100%;
     backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     .modal-shroud {
         height: 100%;
