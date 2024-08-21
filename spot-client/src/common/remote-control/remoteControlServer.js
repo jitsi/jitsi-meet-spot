@@ -21,6 +21,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
         this._nextJoinCodeUpdate = null;
 
         this._onCommandReceived = this._onCommandReceived.bind(this);
+
+        // Start message IDs as a 'random' number to avoid conflicts.
+        this.msgId = Date.now();
     }
 
     /**
@@ -82,7 +85,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
             // If there's no joinCode service then create a room and let the lock
             // be set later. Setting the lock on join will throw an error about
             // not being authorized..
-            roomName: generateRandomString(3)
+            roomName: generateRandomString(3).toLowerCase()
         });
     }
 
@@ -272,7 +275,7 @@ export class RemoteControlServer extends BaseRemoteControlService {
      * @returns {Promise} - A Promise resolved when the code has been refreshed.
      */
     refreshJoinCodeWithXmpp() {
-        const roomLock = generateRandomString(3);
+        const roomLock = generateRandomString(3).toLowerCase();
 
         return this.xmppConnection.setLock(roomLock);
     }
@@ -305,6 +308,10 @@ export class RemoteControlServer extends BaseRemoteControlService {
         }
 
         newStatus.timestamp = Date.now();
+        // In the current iteration the same status message is sent both over XMPP and P2P,
+        // so to avoid it being processed again we add a unique id to it that the client can use 
+        // to ignore duplicates.
+        newStatus.msgId = this.msgId++;
 
         this.xmppConnection.updateStatus(newStatus);
 
