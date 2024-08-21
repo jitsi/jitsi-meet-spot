@@ -308,8 +308,9 @@ export class RemoteControlServer extends BaseRemoteControlService {
         }
 
         newStatus.timestamp = Date.now();
+
         // In the current iteration the same status message is sent both over XMPP and P2P,
-        // so to avoid it being processed again we add a unique id to it that the client can use 
+        // so to avoid it being processed again we add a unique id to it that the client can use
         // to ignore duplicates.
         newStatus.msgId = this.msgId++;
 
