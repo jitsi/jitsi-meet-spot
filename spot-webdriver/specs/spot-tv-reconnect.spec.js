@@ -87,7 +87,7 @@ describe('The reconnect logic', () => {
             // Spot TV needs more time, because of the MUC JID conflict
             await tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
 
-            await remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
+            await remote.getRemoteControlPage().waitWaitingForCallViewToDisplay(300 * 1000);
         });
 
         it('does not disconnect the TV from the meeting', async () => {

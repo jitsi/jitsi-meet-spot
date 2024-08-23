@@ -594,13 +594,15 @@ export class RemoteControlClient extends BaseRemoteControlService {
      * @returns {void}
      */
     _onSpotTvStatusReceived(from, state) {
-        // NOTE There will be no timestamp in the initial Spot TV presence
-        const { timestamp } = state;
+        const { msgId } = state;
 
-        const currentTimestamp = this._lastSpotState && this._lastSpotState.timestamp;
+        const previousMsgId = this._lastSpotState?.msgId;
 
-        if (currentTimestamp && timestamp && currentTimestamp >= timestamp) {
-
+        // Check if the status sent by the server was already processed.
+        // The expected value of msgId is an incremental number, messages
+        // are expected to be received in order so if the msgId is less than
+        // the previous one it means the message was already processed.
+        if (previousMsgId && (previousMsgId >= msgId)) {
             return;
         }
 
