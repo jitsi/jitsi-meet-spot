@@ -596,7 +596,7 @@ export class RemoteControlClient extends BaseRemoteControlService {
     _onSpotTvStatusReceived(from, state) {
         const { msgId } = state;
 
-        const previousMsgId = this._lastSpotState && this._lastSpotState.msgId;
+        const previousMsgId = this._lastSpotState?.msgId;
 
         // Check if the status sent by the server was already processed.
         // The expected value of msgId is an incremental number, messages
