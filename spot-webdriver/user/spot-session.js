@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const constants = require('./../constants');
 
 const QUERY_PARAM_TEST_BACKEND_REFRESH_TOKEN = 'testBackendRefreshToken';
@@ -88,7 +89,7 @@ class SpotSession {
 
         await remoteControlPage.waitForVisible();
 
-        const testMeetingName = meetingName ? meetingName : `ui-test-${Date.now()}`;
+        const testMeetingName = meetingName ? meetingName : `ui-test-${crypto.randomUUID()}`;
         const meetingInput = await remoteControlPage.getMeetingInput();
 
         await meetingInput.submitMeetingName(testMeetingName);
