@@ -142,7 +142,6 @@
         "audioOut": "Speaker",
         "audioOutTest": "Play test sound",
         "autoSyncing": "Auto syncing is in progress...",
-        "avatar": "Enter an avatar url",
         "devices": "Setup your devices",
         "enterCode": "Enter your pairing code and start your setup",
         "enterName": "Enter an email or room name (case-sensitive)",

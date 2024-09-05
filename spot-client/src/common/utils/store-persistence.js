@@ -31,7 +31,6 @@ const keysToStore = [
     'calendars.displayName',
     'backend.permanentPairingCode',
     'deviceId.deviceId',
-    'setup.avatarUrl',
     'setup.completed',
     'setup.displayName',
     'setup.preferredCamera',
@@ -86,7 +85,6 @@ function parsePersistedState(state) {
             deviceId: state.deviceId.deviceId
         },
         setup: {
-            avatarUrl: state.setup.avatarUrl,
             completed: state.setup.completed,
             displayName: state.setup.displayName,
             preferredCamera: state.setup.preferredCamera,

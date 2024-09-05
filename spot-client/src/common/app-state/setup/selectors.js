@@ -1,15 +1,4 @@
 /**
- * A selector which returns the configured url to use for the Spot-TV avatar
- * which should be displayed in meetings.
- *
- * @param {Object} state - The Redux state.
- * @returns {boolean}
- */
-export function getAvatarUrl(state) {
-    return state.setup.avatarUrl;
-}
-
-/**
  * A selector which returns the locally configured name to use for the Spot-TV
  * to be displayed while in a meeting.
  *

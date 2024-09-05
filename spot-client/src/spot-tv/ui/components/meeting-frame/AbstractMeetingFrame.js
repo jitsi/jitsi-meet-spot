@@ -12,7 +12,6 @@ import { ApiHealthCheck } from './ApiHealthCheck';
  */
 export default class AbstractMeetingFrame extends React.Component {
     static propTypes = {
-        avatarUrl: PropTypes.string,
         displayName: PropTypes.string,
         dtmfThrottleRate: PropTypes.number,
         invites: PropTypes.array,

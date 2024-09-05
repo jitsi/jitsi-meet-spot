@@ -1,6 +1,5 @@
 import {
     SETUP_COMPLETED,
-    SET_AVATAR_URL,
     SET_DISPLAY_NAME,
     SET_IS_PERMANENT_REMOTE_PAIRED,
     SET_IS_SPOT,
@@ -11,7 +10,6 @@ import {
 } from './action-types';
 
 const DEFAULT_STATE = {
-    avatarUrl: '',
     completed: false,
     displayName: undefined,
     isPermanentRemotePaired: false,
@@ -37,12 +35,6 @@ const setup = (state = DEFAULT_STATE, action) => {
         return {
             ...state,
             completed: true
-        };
-
-    case SET_AVATAR_URL:
-        return {
-            ...state,
-            avatarUrl: action.avatarUrl
         };
 
     case SET_DISPLAY_NAME:
