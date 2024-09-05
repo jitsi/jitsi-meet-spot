@@ -1,5 +1,5 @@
 # Jitsi-Meet Spot
-
+ 
 This is the mono-repo for Jitsi Meet's room integration, named Spot. This project is fairly independent of jitsi-meet (the web UI codebase) but it consumes Jitsi Meet through jitsi-meet's iFrame API.
 
 - spot-admin/ contains a mock server for testing integration between Spot and a backend service
