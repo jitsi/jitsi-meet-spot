@@ -12,9 +12,7 @@ jobs:
             - name: Step 2 - setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
-                  cache: 'npm'
-                  cache-dependency-path: spot-client/package-lock.json
+                node-version-file: '.nvmrc'
 
             - name: Step 3 - run install
               working-directory: 'spot-client'
@@ -39,19 +37,24 @@ jobs:
             - name: Step 2 - checkout
               uses: actions/checkout@v4
 
-            - name: Step 3 - run install [spot-client]
+            - name: Step 3 - setup node
+              uses: actions/setup-node@v4
+              with:
+                node-version-file: '.nvmrc'
+
+            - name: Step 4 - run install [spot-client]
               working-directory: spot-client
               run: npm install
 
-            - name: Step 4 - run install [spot-webdriver]
+            - name: Step 5 - run install [spot-webdriver]
               working-directory: spot-webdriver
               run: npm install
 
-            - name: Step 5 - run tests [spot-webdriver]
+            - name: Step 6 - run tests [spot-webdriver]
               working-directory: spot-webdriver
               run: npm run ci
 
-            - name: Step 6 - Archive Test Results
+            - name: Step 7 - Archive Test Results
               if: always()
               uses: actions/upload-artifact@v4
               with:

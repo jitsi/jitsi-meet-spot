@@ -12,9 +12,7 @@ jobs:
             - name: Step 2 - setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
-                  cache: 'npm'
-                  cache-dependency-path: spot-electron/package-lock.json
+                node-version-file: '.nvmrc'
 
             - name: Step 3 - run install
               working-directory: 'spot-electron'
@@ -35,9 +33,7 @@ jobs:
             - name: Step 2 - setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
-                  cache: 'npm'
-                  cache-dependency-path: spot-electron/package-lock.json
+                node-version-file: '.nvmrc'
 
             - name: Step 3 - run install
               working-directory: 'spot-electron'
@@ -58,9 +54,7 @@ jobs:
             - name: Step 2 - setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
-                  cache: 'npm'
-                  cache-dependency-path: spot-electron/package-lock.json
+                node-version-file: '.nvmrc'
 
             - name: Step 3 - run install
               working-directory: 'spot-electron'
