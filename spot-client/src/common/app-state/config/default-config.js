@@ -44,15 +44,6 @@ export default {
     },
 
     /**
-     * The avatar image to display in the meetings list when a participant of
-     * the meeting has no gravatar configured.
-     *
-     * @type {string}
-     */
-    DEFAULT_AVATAR_URL: process.env.DEFAULT_AVATAR_URL
-        || `https://${DEFAULT_DOMAIN}/images/avatar.png`,
-
-    /**
      * The app background image to display. By default a solid color is
      * displayed as the background.
      *

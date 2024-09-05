@@ -53,17 +53,6 @@ export function getCalendarConfig(state) {
 }
 
 /**
-* A selector which returns the configured default avatar URL to display for
-* people without avatar URLs.
-*
-* @param {Object} state - The Redux state.
-* @returns {string}
-*/
-export function getDefaultAvatarUrl(state) {
-    return state.config.DEFAULT_AVATAR_URL;
-}
-
-/**
 * A selector which returns which Jitsi-Meet deployment domain to direct
 * meetings to which do not specify a domain.
 *
