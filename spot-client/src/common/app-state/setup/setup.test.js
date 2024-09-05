@@ -20,13 +20,6 @@ describe('setup state', () => {
         expect(selectors.isSetupComplete(getState())).toBe(true);
     });
 
-    it('saves the avatar url', () => {
-        const avatarUrl = 'new-url';
-
-        dispatch(actions.setAvatarUrl(avatarUrl));
-        expect(selectors.getAvatarUrl(getState())).toBe(avatarUrl);
-    });
-
     it('saves the display name', () => {
         const displayName = 'new-name';
 

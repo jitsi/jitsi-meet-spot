@@ -1,8 +1,6 @@
 import {
-    getAvatarUrl,
     getCalendarName,
     getDisplayName,
-    setAvatarUrl,
     setDisplayName
 } from 'common/app-state';
 import { Button, Input } from 'common/ui';
@@ -13,15 +11,12 @@ import { connect } from 'react-redux';
 
 
 /**
- * Prompts to set a display name and an avatar url for the Spot-TV to use during
- * meetings.
+ * Prompts to set a display name and for the Spot-TV to use during meetings.
  */
 export class Profile extends React.Component {
     static propTypes = {
-        avatarUrl: PropTypes.string,
         dispatch: PropTypes.func,
         displayName: PropTypes.string,
-        onSetAvatarUrl: PropTypes.func,
         onSetDisplayName: PropTypes.func,
         onSuccess: PropTypes.func,
         t: PropTypes.func
@@ -37,11 +32,9 @@ export class Profile extends React.Component {
         super(props);
 
         this.state = {
-            avatarUrl: props.avatarUrl || '',
             displayName: props.displayName || ''
         };
 
-        this._onAvatarUrlChange = this._onAvatarUrlChange.bind(this);
         this._onDisplayNameChange = this._onDisplayNameChange.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
     }
@@ -64,10 +57,6 @@ export class Profile extends React.Component {
                         onChange = { this._onDisplayNameChange }
                         placeholder = { t('setup.name') }
                         value = { this.state.displayName } />
-                    <Input
-                        onChange = { this._onAvatarUrlChange }
-                        placeholder = { t('setup.avatar') }
-                        value = { this.state.avatarUrl } />
                 </div>
                 <div className = 'setup-buttons'>
                     <Button onClick = { this._onSubmit }>
@@ -76,20 +65,6 @@ export class Profile extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Callback invoked to update the known entered room avatar url.
-     *
-     * @param {Event} event - The change event for updating the entered avatar
-     * url.
-     * @private
-     * @returns {void}
-     */
-    _onAvatarUrlChange(event) {
-        this.setState({
-            avatarUrl: event.target.value
-        });
     }
 
     /**
@@ -107,7 +82,7 @@ export class Profile extends React.Component {
     }
 
     /**
-     * Callback invoked to save the entered display name and avatar url.
+     * Callback invoked to save the entered display name.
      *
      * @private
      * @returns {void}
@@ -117,9 +92,7 @@ export class Profile extends React.Component {
             return;
         }
 
-        this.props.onSetAvatarUrl(this.state.avatarUrl.trim());
         this.props.onSetDisplayName(this.state.displayName.trim());
-
         this.props.onSuccess();
     }
 }
@@ -134,7 +107,6 @@ export class Profile extends React.Component {
  */
 function mapStateToProps(state) {
     return {
-        avatarUrl: getAvatarUrl(state),
         displayName: getDisplayName(state) || getCalendarName(state)
     };
 }
@@ -148,10 +120,6 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
     return {
-        onSetAvatarUrl(avatarUrl) {
-            dispatch(setAvatarUrl(avatarUrl));
-        },
-
         onSetDisplayName(displayName) {
             dispatch(setDisplayName(displayName));
         }

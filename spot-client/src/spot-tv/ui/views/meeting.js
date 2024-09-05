@@ -1,6 +1,5 @@
 import {
     addNotification,
-    getAvatarUrl,
     getDesktopSharingFramerate,
     getDisplayName,
     getDtmfThrottleRate,
@@ -41,7 +40,6 @@ import {
  */
 export class Meeting extends React.Component {
     static propTypes = {
-        avatarUrl: PropTypes.string,
         disconnectAllTemporaryRemotes: PropTypes.func,
         displayName: PropTypes.string,
         dtmfThrottleRate: PropTypes.number,
@@ -133,7 +131,6 @@ export class Meeting extends React.Component {
         }
 
         const {
-            avatarUrl,
             displayName,
             dtmfThrottleRate,
             jitsiAppName,
@@ -158,7 +155,6 @@ export class Meeting extends React.Component {
         return (
             <div className = { `meeting-view ${meetingLoaded ? '' : 'loading'}` }>
                 <MeetingFrame
-                    avatarUrl = { avatarUrl }
                     displayName = { displayName }
                     dtmfThrottleRate = { dtmfThrottleRate }
                     invites = { invites }
@@ -340,7 +336,6 @@ function mapStateToProps(state) {
     } = getInMeetingStatus(state);
 
     return {
-        avatarUrl: getAvatarUrl(state),
         displayName: getDisplayName(state),
         dtmfThrottleRate: getDtmfThrottleRate(state),
         jitsiAppName: getJitsiAppName(state),

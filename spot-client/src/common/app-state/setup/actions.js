@@ -1,6 +1,5 @@
 import {
     SETUP_COMPLETED,
-    SET_AVATAR_URL,
     SET_CUSTOMER_ID,
     SET_DISPLAY_NAME,
     SET_IS_PERMANENT_REMOTE_PAIRED,
@@ -12,18 +11,6 @@ import {
     SET_TENANT
 } from './action-types';
 
-/**
- * Updates the preferred avatar URL to use for Spot-TV while in a meeting.
- *
- * @param {string} avatarUrl - The URL to an image.
- * @returns {Object}
- */
-export function setAvatarUrl(avatarUrl) {
-    return {
-        type: SET_AVATAR_URL,
-        avatarUrl
-    };
-}
 
 /**
  * Sets the customer ID assigned to the room's owner.

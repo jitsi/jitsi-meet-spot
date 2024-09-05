@@ -205,7 +205,6 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._jitsiApi.addListener(
             'videoMuteStatusChanged', this._onVideoMuteChange);
 
-        this._jitsiApi.executeCommand('avatarUrl', this.props.avatarUrl || '');
         this._jitsiApi.executeCommand(
             'displayName',
             this.props.displayName
