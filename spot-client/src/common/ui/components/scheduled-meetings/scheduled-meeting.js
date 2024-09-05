@@ -6,7 +6,6 @@ import { withTranslation } from 'react-i18next';
 
 
 import { Button } from './../button';
-import Avatar from './avatar';
 
 /**
  * Displays details about a meeting and response to clicks.
@@ -76,23 +75,6 @@ export class ScheduledMeeting extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    /**
-     * Creates a React Element for each meeting participant for displaying that
-     * participant's avatar.
-     *
-     * @param {Array<Object>} participants - The event participants to display
-     * as avatars.
-     * @private
-     * @returns {Array<ReactElement>}
-     */
-    _generateAvatars(participants = []) {
-        return participants.map(participant => (
-            <Avatar
-                email = { participant.email }
-                key = { participant.email } />
-        ));
     }
 
     /**
