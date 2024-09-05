@@ -16,7 +16,7 @@ describe('The reconnect logic', () => {
 
         await session.connectRemoteToTV();
 
-        await session.joinMeeting(null, { skipJoinVerification: true });
+        await session.joinMeeting();
 
         // wait first for TV to join as remote is a bit slower (loads after tv is connected)
         await tv.getMeetingPage().waitForMeetingJoined();
