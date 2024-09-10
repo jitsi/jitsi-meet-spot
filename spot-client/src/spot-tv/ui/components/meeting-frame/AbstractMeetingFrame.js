@@ -143,10 +143,11 @@ export default class AbstractMeetingFrame extends React.Component {
     _onApiHealthCheckError(reason) {
         logger.error('api health check failed', { reason });
 
-        this._onMeetingLeave({
-            errorCode: reason,
-            error: 'appEvents.meetingConnectionLost'
-        });
+        // TODO: monitor logs and figure out why we get this failure when things are ok (well, are they?!).
+        // this._onMeetingLeave({
+        //    errorCode: reason,
+        //    error: 'appEvents.meetingConnectionLost'
+        // });
     }
 
     /**
