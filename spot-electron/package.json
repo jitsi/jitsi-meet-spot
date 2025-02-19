@@ -35,12 +35,12 @@
     "devDependencies": {
         "@babel/eslint-parser": "7.19.1",
         "@babel/preset-env": "7.20.2",
+        "@electron/notarize": "2.5.0",
         "@types/jest": "29.2.6",
         "@jitsi/eslint-config": "4.1.5",
         "dotenv": "16.0.3",
         "electron": "34.2.0",
         "electron-builder": "24.13.3",
-        "electron-notarize": "1.2.2",
         "eslint": "8.32.0",
         "eslint-plugin-import": "2.27.5",
         "eslint-plugin-jsdoc": "48.2.9",
