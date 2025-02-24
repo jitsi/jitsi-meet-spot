@@ -1,25 +1,34 @@
-import JitsiMeetJS from 'lib-jitsi-meet';
+/* global JitsiMeetJS */
 
 /**
- * Prevent JitsiMeetJS from spamming the console.
+ * A flag to track whether the JitsiMeetJS library has been initialized.
  */
-JitsiMeetJS.setLogLevel('trace');
-
-const loggers = {
-    'modules/RTC/TraceablePeerConnection.js': 'info',
-    'modules/statistics/CallStats.js': 'info',
-    'modules/xmpp/strophe.util.js': 'log'
-};
-
-for (const [ id, level ] of Object.entries(loggers)) {
-    JitsiMeetJS.setLogLevelById(level, id);
-}
+let _initialized = false;
 
 /**
  * A wrapper around the global JitsiMeetJS, as loaded by lib-jitsi-meet.
  */
 export default {
     get() {
-        return JitsiMeetJS;
+        if (!_initialized) {
+            // Prevent JitsiMeetJS from spamming the console.
+            JitsiMeetJS.setLogLevel('trace');
+
+            const loggers = {
+                'modules/RTC/TraceablePeerConnection.js': 'info',
+                'modules/statistics/CallStats.js': 'info',
+                'modules/xmpp/strophe.util.js': 'log'
+            };
+
+            for (const [ id, level ] of Object.entries(loggers)) {
+                JitsiMeetJS.setLogLevelById(level, id);
+            }
+
+            JitsiMeetJS.init({});
+
+            _initialized = true;
+        }
+
+        return window.JitsiMeetJS;
     }
 };

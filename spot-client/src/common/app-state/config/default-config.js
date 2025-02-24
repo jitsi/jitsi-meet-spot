@@ -71,6 +71,14 @@ export default {
         || `https://${DEFAULT_DOMAIN}/external_api.js`,
 
     /**
+     * The URL from which to load lib-jitsi-meet.
+     *
+     * @type {string}
+     */
+    LJM_SRC: process.env.LJM_SRC
+        || `https://${DEFAULT_DOMAIN}/libs/lib-jitsi-meet.min.js`,
+
+    /**
      * Configuration object for websites which can be opened from the app.
      */
     EXTERNAL_LINKS: {
