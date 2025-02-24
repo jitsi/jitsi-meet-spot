@@ -4,6 +4,7 @@ import reducers, {
     getDesktopSharingFramerate,
     getDeviceId,
     getExternalApiUrl,
+    getLjmUrl,
     routeChanged,
     setBootstrapStarted,
     setDefaultValues,
@@ -157,7 +158,10 @@ history.listen(location => {
     store.dispatch(routeChanged(location));
 });
 
-loadScript(getExternalApiUrl(reduxState))
+Promise.all([
+    loadScript(getExternalApiUrl(reduxState)),
+    loadScript(getLjmUrl(reduxState))
+])
     .then(() => {
         render(
             <Provider store = { store }>

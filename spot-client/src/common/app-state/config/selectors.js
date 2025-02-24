@@ -98,6 +98,16 @@ export function getExternalApiUrl(state) {
 }
 
 /**
+ * A selector which returns the URL for loading lib-jitsi-meet.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {string}
+ */
+export function getLjmUrl(state) {
+    return state.config.LJM_SRC;
+}
+
+/**
  * A selector which returns how often the Spot-TV should change its join code.
  *
  * @param {Object} state - The Redux state.
