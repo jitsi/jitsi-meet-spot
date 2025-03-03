@@ -16,10 +16,10 @@ exports.default = async function notarizing(context) {
         return;
     }
 
-    console.info('Notarizing Mac app...');
-
     const appName = context.packager.appInfo.productFilename;
     const appPath = `${appOutDir}/${appName}.app`;
+
+    console.info(`Notarizing Mac app: ${appPath}`);
 
     return await notarize({
         appPath,
