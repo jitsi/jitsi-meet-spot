@@ -69,6 +69,7 @@
                     "target": "zip"
                 }
             ],
+            "notarize": false,
             "extendInfo": {
                 "NSCameraUsageDescription": "Camera access is required in order to make video-calls.",
                 "NSMicrophoneUsageDescription": "Microphone access is required in order to make calls (audio/video)."
