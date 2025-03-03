@@ -203,8 +203,6 @@ export default {
             return;
         }
 
-        JitsiMeetJSProvider.get().init({});
-
         this._onDeviceListChange = debounce(
             this._onDeviceListChange.bind(this),
             500
