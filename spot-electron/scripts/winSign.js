@@ -12,7 +12,7 @@ exports.default = async function(configuration) {
         console.info(`Signing: ${configuration.path}`);
 
         try {
-            const out = execSync(`smctl sign --keypair-alias=${process.env.CODE_SIGNER_KEYPAIR_ALIAS} --input "${configuration.path}"`);
+            const out = execSync(`smctl sign --verbose --keypair-alias=${process.env.CODE_SIGNER_KEYPAIR_ALIAS} --input="${configuration.path}"`);
 
             if (out.toString().includes('FAILED')) {
                 throw new Error(out.toString());
