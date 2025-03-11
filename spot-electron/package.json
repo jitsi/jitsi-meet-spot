@@ -75,6 +75,12 @@
                 "NSMicrophoneUsageDescription": "Microphone access is required in order to make calls (audio/video)."
             }
         },
+        "win": {
+            "signingHashAlgorithms": ["sha256"],
+            "signtoolOptions": {
+                "sign": "scripts/customSign.js"
+            }
+        },
         "publish": {
             "provider": "github",
             "private": false,
