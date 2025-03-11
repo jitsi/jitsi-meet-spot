@@ -11,11 +11,17 @@ exports.default = async function(configuration) {
     if (configuration.path) {
         console.info(`Signing: ${configuration.path}`);
 
-        execSync(`smctl sign --keypair-alias=${process.env.CODE_SIGNER_KEYPAIR_ALIAS} --input "${configuration.path}" --verbose`,
-            {
-                stdio: 'inherit'
+        try {
+            const out = execSync(`smctl sign --keypair-alias=${process.env.CODE_SIGNER_KEYPAIR_ALIAS} --input "${configuration.path}"`);
+
+            if (out.toString().includes('FAILED')) {
+                throw new Error(out.toString());
             }
-        );
+        } catch(err) {
+            console.error(`Failed to sign: ${configuration.path}`);
+            console.error(err);
+            process.exit(1);
+        }
 
         console.info(`Signed: ${configuration.path}`);
     }
