@@ -77,9 +77,7 @@
         },
         "win": {
             "signingHashAlgorithms": ["sha256"],
-            "signtoolOptions": {
-                "sign": "scripts/customSign.js"
-            }
+            "sign": "scripts/customSign.js"
         },
         "publish": {
             "provider": "github",
