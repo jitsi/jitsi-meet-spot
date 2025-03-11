@@ -8,7 +8,9 @@ exports.default = async function(configuration) {
         console.info('No parameters found, skipping signing...');
         return;
     }
-    if(configuration.path) {
+    console.log(configuration);
+    if (configuration.path) {
+        console.info(`Signing: ${configuration.path}`);
         execSync(`smctl sign --keypair-alias=${process.env.CODE_SIGNER_KEYPAIR_ALIAS} --input "${configuration.path}"`);
     }
 };
