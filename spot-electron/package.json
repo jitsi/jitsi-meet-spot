@@ -15,7 +15,8 @@
     "main": "main.js",
     "scripts": {
         "dist": "electron-builder",
-        "lint": "eslint .",
+        "lint": "eslint . --max-warnings 0",
+        "lint:fix": "eslint . --max-warnings 0 --fix",
         "postinstall": "patch-package",
         "start": "electron .",
         "test": "jest ."
