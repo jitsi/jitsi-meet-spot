@@ -1,6 +1,6 @@
 {
     "name": "spot-electron",
-    "version": "2.0.0",
+    "version": "0.0.0",
     "description": "An electron application intended to be used to host a Spot-TV, to provide it additional functionality not available in browsers.",
     "author": {
         "name": "Jitsi Team",
