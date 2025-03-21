@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 
 const { execSync } = require('child_process');
 const process = require('process');
