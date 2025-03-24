@@ -19,7 +19,7 @@ const STORE_PERSISTENCE_KEY = 'spot';
 let cachedState;
 
 /**
- * A list of store values that should trigger persistance updating if the value
+ * A list of store values that should trigger persistence updating if the value
  * has changed.
  *
  * @private
@@ -35,6 +35,7 @@ const keysToStore = [
     'setup.displayName',
     'setup.preferredCamera',
     'setup.preferredMic',
+    'setup.preferredResolution',
     'setup.preferredSpeaker',
     'spot-tv/backend.longLivedPairingCodeInfo',
     'spotTv.volumeControlSupported',
