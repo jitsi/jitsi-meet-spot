@@ -15,9 +15,8 @@ export default {
             JitsiMeetJS.setLogLevel('trace');
 
             const loggers = {
-                'modules/RTC/TraceablePeerConnection.js': 'info',
-                'modules/statistics/CallStats.js': 'info',
-                'modules/xmpp/strophe.util.js': 'log'
+                'modules/RTC/TraceablePeerConnection': 'info',
+                'modules/xmpp/strophe.util': 'log'
             };
 
             for (const [ id, level ] of Object.entries(loggers)) {
