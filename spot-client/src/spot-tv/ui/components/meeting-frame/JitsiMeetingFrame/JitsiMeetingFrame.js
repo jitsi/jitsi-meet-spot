@@ -139,6 +139,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
                 disableDeepLinking: true,
                 displayName: this.props.displayName,
                 enableDisplayNameInStats: true,
+                iAmSpot: true,
                 prejoinPageEnabled: false,
                 prejoinConfig: {
                     enabled: false
