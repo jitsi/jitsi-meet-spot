@@ -1,6 +1,5 @@
 /* global JitsiMeetExternalAPI */
 
-
 import {
     getClientAspectRatio,
     getFilmStripAspectRatioSplit,
@@ -132,6 +131,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
                 ...Boolean(this.props.preferredResolution) && {
                     ...getVideoSettings(this.props.preferredResolution)
                 },
+                defaultLocalDisplayName: DEFAULT_DISPLAY_NAME,
                 desktopSharingFrameRate: {
                     max: this.props.maxDesktopSharingFramerate,
                     min: this.props.minDesktopSharingFramerate
@@ -140,13 +140,17 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
                 displayName: this.props.displayName,
                 enableDisplayNameInStats: true,
                 iAmSpot: true,
-                prejoinPageEnabled: false,
+                notificationTimeouts: {
+                    extraLong: 15000,
+                    sticky: 15000
+                },
                 prejoinConfig: {
                     enabled: false
                 },
                 startScreenSharing: Boolean(this.props.screenshareDevice)
                     && this.props.startWithScreenshare,
-                startWithVideoMuted: Boolean(this.props.startWithVideoMuted)
+                startWithVideoMuted: Boolean(this.props.startWithVideoMuted),
+                toolbarButtons: []
             },
             devices: {
                 audioInput: this.props.preferredMic,
@@ -156,10 +160,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             interfaceConfigOverwrite: {
                 APP_NAME: this.props.jitsiAppName,
                 AUTO_PIN_LATEST_SCREEN_SHARE: true,
-                DEFAULT_LOCAL_DISPLAY_NAME: DEFAULT_DISPLAY_NAME,
-                ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
-                SHOW_CHROME_EXTENSION_BANNER: false,
-                TOOLBAR_BUTTONS: []
+                SHOW_CHROME_EXTENSION_BANNER: false
             },
             jwt: this.props.jwt,
             parentNode: this._meetingContainer,
