@@ -8,13 +8,6 @@ const { logger, fileLogger } = require('../logger');
 const { OnlineDetector } = require('../online-detector');
 
 /**
- * The constant is included into the user agent part to allow feature detection in future.
- *
- * @type {string}
- */
-const SPOT_ELECTRON_FEATURE_VERSION = 'SpotElectron/1';
-
-/**
  * This is the reference for the main window. May be exposed from this scope later, but we don't have
  * any reasons to do it yet.
  */
@@ -100,10 +93,6 @@ function createApplicationWindow() {
     applicationWindow.on('closed', () => {
         onlineDetector.destroy();
     });
-
-    applicationWindow.webContents.setUserAgent(
-        `${applicationWindow.webContents.getUserAgent()} ${SPOT_ELECTRON_FEATURE_VERSION}`
-    );
 
     applicationWindow.loadURL(defaultSpotURL);
     logger.info(`Spot started with Spot-TV URL ${defaultSpotURL}`);
