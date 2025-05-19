@@ -185,7 +185,7 @@ export function setAudioMute(mute) {
 
 /**
  * Sends a command to Spot-TV to change its hand raised setting.
- * 
+ *
  * @param {boolean} handRaised - Whether to raise or lower the hand.
  * @returns {Function}
  */

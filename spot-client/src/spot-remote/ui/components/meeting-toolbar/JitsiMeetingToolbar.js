@@ -5,8 +5,8 @@ import { ScreenshareButton } from './../screenshare';
 import {
     AudioMuteButton,
     HangupButton,
-    VideoMuteButton,
-    RaiseHandButton
+    RaiseHandButton,
+    VideoMuteButton
 } from './buttons';
 
 /**

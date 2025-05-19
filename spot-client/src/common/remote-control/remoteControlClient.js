@@ -333,7 +333,8 @@ export class RemoteControlClient extends BaseRemoteControlService {
 
     /**
      * Requests a {@code RemoteControlServer} to raise or lower the hand.
-     * 
+     *
+     * @param {boolean} handRaised - Whether or not Spot should raise its hand.
      * @returns {Promise} Resolves if the command has been acknowledged.
      * */
     setRaiseHand(handRaised) {

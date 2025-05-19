@@ -2,7 +2,7 @@ import {
     getInMeetingStatus,
     getOptimisticHandRaisedState,
     isRaiseHandPending,
-    setRaiseHand,
+    setRaiseHand
 } from 'common/app-state';
 import { PanToolOutlined } from 'common/icons';
 import PropTypes from 'prop-types';
@@ -41,8 +41,8 @@ export function RaiseHandButton({ changePending, onSetRaiseHand, handRaised }) {
 
 RaiseHandButton.propTypes = {
     changePending: PropTypes.bool,
-    onSetRaiseHand: PropTypes.func,
-    handRaised: PropTypes.bool
+    handRaised: PropTypes.bool,
+    onSetRaiseHand: PropTypes.func
 };
 
 /**

@@ -335,7 +335,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
 
     /**
      * Callback invoked when a participant has raised their hand.
-     * 
+     *
      * @param {Object} event - The event returned from the external api.
      * @param {string} event.id - The endpoint ID of the participant.
      * @param {number} event.handRaised - Timestamp of when the hand was raised or 0 if not raised.
