@@ -332,6 +332,15 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Requests a {@code RemoteControlServer} to raise or lower the hand.
+     * 
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     * */
+    setRaiseHand(handRaised) {
+        return this._sendCommand(COMMANDS.SET_RAISE_HAND, { handRaised });
+    }
+
+    /**
      * Requests a {@code RemoteControlServer} to change its screensharing status.
      * Turning on the screensharing will enable wired screensharing, while
      * turning off applies to both wired and wireless screensharing.

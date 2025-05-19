@@ -5,7 +5,8 @@ import { ScreenshareButton } from './../screenshare';
 import {
     AudioMuteButton,
     HangupButton,
-    VideoMuteButton
+    VideoMuteButton,
+    RaiseHandButton
 } from './buttons';
 
 /**
@@ -21,6 +22,7 @@ export default function JitsiMeetingToolbar() {
             <AudioMuteButton />
             <HangupButton />
             <VideoMuteButton />
+            <RaiseHandButton />
             <MoreButton />
         </div>
     );
