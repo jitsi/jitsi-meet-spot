@@ -14,9 +14,9 @@ describe('RaiseHandButton', () => {
 
         raiseHandButton = mount(
             <RaiseHandButton
-                onSetRaiseHand={setRaiseHandCallback}
-                t={mockT}
-                handRaised={false} />
+                handRaised = { false }
+                onSetRaiseHand = { setRaiseHandCallback }
+                t = { mockT } />
         );
     });
 
@@ -37,6 +37,7 @@ describe('RaiseHandButton', () => {
 
         it('displays pending state correctly when hand is not raised and action is pending', () => {
             raiseHandButton.setProps({ changePending: true });
+
             // Assuming PanToolTwoTone is the icon for hand not raised
             expect(raiseHandButton.find(PanToolOutlined).length).toBe(1);
         });
