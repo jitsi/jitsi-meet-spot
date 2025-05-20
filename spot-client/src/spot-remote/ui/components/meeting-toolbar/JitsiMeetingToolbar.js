@@ -17,13 +17,17 @@ import {
  */
 export default function JitsiMeetingToolbar() {
     return (
-        <div className = 'in-call-nav'>
-            <ScreenshareButton />
-            <AudioMuteButton />
-            <HangupButton />
-            <VideoMuteButton />
-            <RaiseHandButton />
-            <MoreButton />
+        <div className='in-call-nav-container'>
+            <div className = 'in-call-nav'>
+                <VideoMuteButton />
+                <AudioMuteButton />
+                <HangupButton />
+            </div>
+            <div className = 'in-call-nav'>
+                <ScreenshareButton />
+                <RaiseHandButton />
+                <MoreButton />
+            </div>
         </div>
     );
 }

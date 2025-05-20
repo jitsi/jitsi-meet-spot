@@ -47,7 +47,7 @@ RaiseHandButton.propTypes = {
 
 /**
  * Selects parts of the Redux state to pass in with the props of
- * {@code VideoMuteButton}.
+ * {@code RaiseHandButton}.
  *
  * @param {Object} state - The Redux state.
  * @private
