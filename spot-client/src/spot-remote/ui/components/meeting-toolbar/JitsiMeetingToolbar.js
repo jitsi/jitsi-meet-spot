@@ -17,7 +17,7 @@ import {
  */
 export default function JitsiMeetingToolbar() {
     return (
-        <div className='in-call-nav-container'>
+        <div className = 'in-call-nav-container'>
             <div className = 'in-call-nav'>
                 <VideoMuteButton />
                 <AudioMuteButton />
