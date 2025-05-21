@@ -7,8 +7,8 @@
     position: fixed;
     top: 0;
     width: 100%;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 
     .modal-shroud {
         height: 100%;
@@ -30,7 +30,7 @@
         border-radius: 6px;
 
         @media #{$mqw-tablet} {
-            background-color: var(--container-bg-color);
+            background:  var(--container-bg-color-fallback);
             height: auto;
             margin: 50px;
             width: unset;
