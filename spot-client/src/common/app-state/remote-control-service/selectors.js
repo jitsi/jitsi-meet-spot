@@ -97,7 +97,7 @@ export function isRaiseHandPending(state) {
     const handRaised = state.remoteControlService.handRaised;
 
     return Boolean(
-        handRaised && handRaised.requestState === asyncActionRequestStates.PENDING);
+        handRaised?.requestState === asyncActionRequestStates.PENDING);
 }
 
 /**
