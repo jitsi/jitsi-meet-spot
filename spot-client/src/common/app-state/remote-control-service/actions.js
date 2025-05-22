@@ -11,6 +11,7 @@ import {
     JOIN_AD_HOC_MEETING,
     JOIN_SCHEDULED_MEETING,
     JOIN_WITH_SCREENSHARING,
+    RAISE_HAND,
     RECONNECTION_SCHEDULE_UPDATED,
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
@@ -180,6 +181,21 @@ export function setAudioMute(mute) {
         AUDIO_MUTE,
         mute
     ).then(() => dispatch(setSpotTVState({ audioMuted: mute })));
+}
+
+/**
+ * Sends a command to Spot-TV to change its hand raised setting.
+ *
+ * @param {boolean} handRaised - Whether to raise or lower the hand.
+ * @returns {Function}
+ */
+export function setRaiseHand(handRaised) {
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlClient.setRaiseHand(handRaised),
+        RAISE_HAND,
+        handRaised
+    ).then(() => dispatch(setSpotTVState({ handRaised })));
 }
 
 /**

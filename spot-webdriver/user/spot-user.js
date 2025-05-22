@@ -217,7 +217,7 @@ class SpotUser {
                 timeout: constants.SIGNALING_DISCONNECT_TIMEOUT,
                 timeoutMsg: `signaling still connected with ${this._remoteControlServiceName}`
             }
-            );
+        );
     }
 
 }

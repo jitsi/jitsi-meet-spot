@@ -5,6 +5,7 @@ const constants = require('../constants');
 const PageObject = require('./page-object');
 
 const AUDIO_MUTED_INDICATOR = '.audio-muted-status';
+const RAISED_HANDS_INDICATOR = '#raisedHandsCountLabel';
 const MEETING_IFRAME = '#jitsiConferenceFrame0';
 const MEETING_VIEW = '.meeting-view';
 const VIDEO_MUTED_INDICATOR = '.video-muted-status';
@@ -93,7 +94,26 @@ class MeetingPage extends PageObject {
 
         const loadingCurtainEl = await this.select('.loading-curtain');
 
-        await loadingCurtainEl.waitForExist({ timeout: constants.MEETING_LOAD_WAIT, reverse: true});
+        await loadingCurtainEl.waitForExist({ timeout: constants.MEETING_LOAD_WAIT,
+            reverse: true });
+    }
+
+    /**
+     * Waits for the Jitsi-Meet meeting to either show or not show the
+     * raised hands indicator.
+     *
+     * @param {boolean} raised - Whether it is expected that the raised hands
+     * indicator be displayed or not.
+     * @returns {void}
+     */
+    async waitForHandRaisedStateToBe(raised) {
+        await this._executeWithingMeetingFrame(async () => {
+            if (raised) {
+                await this.waitForElementDisplayed(RAISED_HANDS_INDICATOR);
+            } else {
+                await this.waitForElementHidden(RAISED_HANDS_INDICATOR);
+            }
+        });
     }
 
     /**

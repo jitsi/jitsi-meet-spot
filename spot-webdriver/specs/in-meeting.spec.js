@@ -28,6 +28,21 @@ describe('While in a meeting ', () => {
         await spotTVMeetingPage.waitForAudioMutedStateToBe(false);
     });
 
+    it('can toggle raise hand', async () => {
+        const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
+        const spotTVMeetingPage = spotTV.getMeetingPage();
+
+        await spotRemoteInMeetingPage.raiseHand();
+
+        await spotRemoteInMeetingPage.waitForHandRaisedStateToBe(true);
+        await spotTVMeetingPage.waitForHandRaisedStateToBe(true);
+
+        await spotRemoteInMeetingPage.lowerHand();
+
+        await spotRemoteInMeetingPage.waitForHandRaisedStateToBe(false);
+        await spotTVMeetingPage.waitForHandRaisedStateToBe(false);
+    });
+
     it('can toggle video mute', async () => {
         const spotRemoteInMeetingPage = spotRemote.getInMeetingPage();
         const spotTVMeetingPage = spotTV.getMeetingPage();

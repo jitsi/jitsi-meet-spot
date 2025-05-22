@@ -36,6 +36,11 @@ export const COMMANDS = {
     SET_AUDIO_MUTE: 'setAudioMute',
 
     /**
+     * Set raised or lowered hand.
+     */
+    SET_RAISE_HAND: 'setRaiseHand',
+
+    /**
      * Start the screensharing flow or stop screensharing.
      */
     SET_SCREENSHARING: 'setScreensharing',

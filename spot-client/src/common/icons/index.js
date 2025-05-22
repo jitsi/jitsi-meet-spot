@@ -29,6 +29,7 @@ export {
 export { default as BorderAllOutlined } from '@mui/icons-material/BorderAllOutlined';
 export { default as MicNoneOutlined } from '@mui/icons-material/MicNoneOutlined';
 export { default as MicOffOutlined } from '@mui/icons-material/MicOffOutlined';
+export { default as PanToolOutlined } from '@mui/icons-material/PanToolOutlined';
 export { default as ScreenShareOutlined } from '@mui/icons-material/ScreenShareOutlined';
 export { default as VideocamOutlined } from '@mui/icons-material/VideocamOutlined';
 export { default as VideocamOffOutlined } from '@mui/icons-material/VideocamOffOutlined';

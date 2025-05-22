@@ -59,7 +59,7 @@ module.exports = {
 
         try {
             return command();
-        } catch(e) {
+        } catch (e) {
             return 1;
         }
     }

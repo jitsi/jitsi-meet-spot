@@ -59,9 +59,11 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
          */
         this._isAudioMuted = false;
         this._isFilmstripVisible = true;
+        this._isHandRaised = false;
         this._isInTileView = false;
         this._isScreensharing = false;
         this._isVideoMuted = false;
+        this._localParticipantId = '';
 
         this._participants = new Map();
 
@@ -76,6 +78,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onParticipantKicked',
             '_onParticipantLeft',
             '_onPasswordRequired',
+            '_onRaiseHandChange',
             '_onReportDeviceError',
             '_onScreenshareChange',
             '_onScreenshareDeviceConnected',
@@ -194,6 +197,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             'passwordRequired', this._onPasswordRequired);
         this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
+        this._jitsiApi.addListener(
+            'raiseHandUpdated', this._onRaiseHandChange);
         this._jitsiApi.addListener(
             'readyToClose', this._onMeetingLeave);
         this._jitsiApi.addListener(
@@ -331,6 +336,31 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
     }
 
     /**
+     * Callback invoked when a participant has raised their hand.
+     *
+     * @param {Object} event - The event returned from the external api.
+     * @param {string} event.id - The endpoint ID of the participant.
+     * @param {number} event.handRaised - Timestamp of when the hand was raised or 0 if not raised.
+     * @private
+     * @returns {void}
+     */
+    _onRaiseHandChange({ id, handRaised }) {
+        // Ignoring raise hand change for non local participant;
+        if (this._localParticipantId !== id) {
+            return;
+        }
+
+        logger.log('hand raise changed', {
+            from: this._isHandRaised,
+            to: handRaised
+        });
+
+        this._isHandRaised = Boolean(handRaised);
+
+        this.props.updateSpotTvState({ handRaised: this._isHandRaised });
+    }
+
+    /**
      * Callback invoked when a Spot-Remote has sent this Spot-TV a message or
      * command that should be acted upon while in a meeting.
      *
@@ -370,6 +400,12 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         case COMMANDS.SET_AUDIO_MUTE:
             if (this._isAudioMuted !== data.mute) {
                 this._jitsiApi.executeCommand('toggleAudio');
+            }
+            break;
+
+        case COMMANDS.SET_RAISE_HAND:
+            if (this._isHandRaised !== data.handRaised) {
+                this._jitsiApi.executeCommand('toggleRaiseHand');
             }
             break;
 
@@ -417,10 +453,11 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
      * @private
      * @returns {void}
      */
-    _onMeetingJoined() {
+    _onMeetingJoined({ id }) {
         clearTimeout(this._assumeMeetingFailedTimeout);
 
         this._meetingJoined = true;
+        this._localParticipantId = id;
 
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
 

@@ -6,8 +6,10 @@ const AUDIO_MUTE_BUTTON = '.mute-audio';
 const AUDIO_UNMUTE_BUTTON = '.unmute-audio';
 const CANCEL_MEETING_BUTTON = '.cancel-meeting';
 const HANG_UP_BUTTON = '.hangup';
+const LOWER_HAND_BUTTON = '.lower-hand';
 const MORE_BUTTON = '.more';
 const MORE_MODAL = '.more-modal';
+const RAISE_HAND_BUTTON = '.raise-hand';
 const REMOTE_CONTROL = '.in-call';
 const SKIP_FEEDBACK_BUTTON = '.skip-feedback';
 const START_SHARE_BUTTON = '.start-share-button';
@@ -123,6 +125,45 @@ class SpotRemoteInMeetingPage extends PageObject {
         }
 
         await this.waitForElementDisplayed(MORE_MODAL);
+    }
+
+    /**
+     * Raises the hand.
+     *
+     * @returns {void}
+     */
+    async raiseHand() {
+        const raiseHandButton = await this.select(RAISE_HAND_BUTTON);
+
+        await raiseHandButton.click();
+    }
+
+    /**
+     * Lowers the hand.
+     *
+     * @returns {void}
+     */
+    async lowerHand() {
+        const lowerHandButton = await this.select(LOWER_HAND_BUTTON);
+
+        await lowerHandButton.click();
+    }
+
+    /**
+     * Waits for the hand raise button to be in raised/lowered state.
+     *
+     * @param {boolean} raised - The state in which the hand raise button needs
+     * to be in.
+     * @returns {void}
+     */
+    async waitForHandRaisedStateToBe(raised) {
+        await this.waitForBooleanState(
+            raised,
+            {
+                onStateSelector: LOWER_HAND_BUTTON,
+                offStateSelector: RAISE_HAND_BUTTON,
+                waitTime: constants.REMOTE_COMMAND_WAIT
+            });
     }
 
     /**

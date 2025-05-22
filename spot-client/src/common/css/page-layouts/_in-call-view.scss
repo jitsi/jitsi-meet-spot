@@ -7,9 +7,15 @@
         align-items: center;
         align-content: center;
         display: flex;
-        flex: 1;
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .in-call-nav-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 100%;
     }
 
     .nav-button {
@@ -17,7 +23,7 @@
     }
 
     .view-header {
-        flex: 1;
+        flex: 3;
     }
 }
 

@@ -20,6 +20,7 @@ export function getInMeetingStatus(state) {
     return {
         audioMuted: state.spotTv.audioMuted,
         inMeeting: state.spotTv.inMeeting,
+        handRaised: state.spotTv.handRaised,
         kicked: state.spotTv.kicked,
         meetingDisplayName: state.spotTv.meetingDisplayName,
         needPassword: state.spotTv.needPassword,

@@ -17,6 +17,20 @@ export function getOptimisticAudioMuteState(state) {
 }
 
 /**
+ * A selector which returns the desired raise hand state of any pending raise
+ * hand request.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean|undefined} The boolean for the pending raise hand state
+ * will be returned if a request is pending, otherwise undefined is returned.
+ */
+export function getOptimisticHandRaisedState(state) {
+    return isRaiseHandPending(state)
+        ? state.remoteControlService.handRaised.expectedState
+        : undefined;
+}
+
+/**
  * A selector which returns the desired tile view state of any pending tile
  * view request.
  *
@@ -70,6 +84,20 @@ export function isConnectionPending(state) {
     const connect = state.remoteControlService.connect;
 
     return Boolean(connect && connect.requestState === asyncActionRequestStates.PENDING);
+}
+
+/**
+ * A selector which returns whether or a not a raise hand change command
+ * is currently in flight.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isRaiseHandPending(state) {
+    const handRaised = state.remoteControlService.handRaised;
+
+    return Boolean(
+        handRaised?.requestState === asyncActionRequestStates.PENDING);
 }
 
 /**
