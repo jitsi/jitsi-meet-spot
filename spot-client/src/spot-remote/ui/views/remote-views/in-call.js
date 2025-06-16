@@ -190,7 +190,8 @@ function mapStateToProps(state) {
         inMeeting,
         kicked,
         meetingDisplayName,
-        needPassword
+        needPassword,
+        recordingConsentDialogOpen
     } = getInMeetingStatus(state);
 
     return {
@@ -199,7 +200,7 @@ function mapStateToProps(state) {
         kicked,
         meetingCancelTimeout: getMeetingCancelTimeout(state),
         meetingDisplayName,
-        recordingConsentDialogOpen: state.spotTv?.recordingConsentDialogOpen,
+        recordingConsentDialogOpen,
         showPasswordPrompt: needPassword
     };
 }
