@@ -4,7 +4,8 @@ import {
     getInvitedPhoneNumber,
     getMeetingCancelTimeout,
     hangUp,
-    hideModal
+    hideModal,
+    showModal
 } from 'common/app-state';
 import { LoadingIcon, Modal } from 'common/ui';
 import PropTypes from 'prop-types';
@@ -22,6 +23,7 @@ import {
     MeetingHeader,
     PasswordPrompt
 } from '../../components';
+import { RecordingConsentDialog } from '../../components/recording-consent'; // Add this import
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 import { MeetingToolbar } from './../../components/meeting-toolbar';
@@ -40,8 +42,10 @@ export class InCall extends React.Component {
         meetingDisplayName: PropTypes.string,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
+        onShowModal: PropTypes.func, // Add this line
         onShowScreenshareModal: PropTypes.func,
         onSubmitPassword: PropTypes.func,
+        recordingConsentDialogOpen: PropTypes.bool, // Add this line
         showPasswordPrompt: PropTypes.bool,
         t: PropTypes.func
     };
@@ -81,10 +85,24 @@ export class InCall extends React.Component {
      *
      * @inheritdoc
      */
-    componentDidUpdate() {
-        if (this._showCancelMeetingTimeout && this.props.inMeeting) {
+    componentDidUpdate(prevProps) {
+        // Handle recording consent dialog state changes
+        const { recordingConsentDialogOpen: prevDialogOpen } = prevProps;
+        const {
+            inMeeting,
+            recordingConsentDialogOpen: currentDialogOpen
+        } = this.props;
+
+        if (this._showCancelMeetingTimeout && inMeeting) {
             clearTimeout(this._showCancelMeetingTimeout);
             this._showCancelMeetingTimeout = null;
+        }
+
+        // Only show or hide the recording consent dialog if its state has changed
+        if (!prevDialogOpen && currentDialogOpen) {
+            this.props.onShowModal(RecordingConsentDialog);
+        } else if (prevDialogOpen && !currentDialogOpen) {
+            this.props.hideModal(); // Use this.props to avoid shadowing
         }
     }
 
@@ -181,6 +199,7 @@ function mapStateToProps(state) {
         kicked,
         meetingCancelTimeout: getMeetingCancelTimeout(state),
         meetingDisplayName,
+        recordingConsentDialogOpen: state.spotTv?.recordingConsentDialogOpen,
         showPasswordPrompt: needPassword
     };
 }
@@ -219,6 +238,16 @@ function mapDispatchToProps(dispatch) {
          */
         onHangUp() {
             return dispatch(hangUp(true));
+        },
+
+        /**
+         * Shows a modal with the specified component.
+         *
+         * @param {React.Component} component - The component to show in the modal.
+         * @returns {void}
+         */
+        onShowModal(component) {
+            dispatch(showModal(component));
         },
 
         /**

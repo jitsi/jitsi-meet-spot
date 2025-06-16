@@ -21,6 +21,12 @@ export const COMMANDS = {
     GO_TO_MEETING: 'goToMeeting',
 
     /**
+     * Grant recording consent for the current meeting with the option
+     * unmute parameter devices.
+     */
+    GRANT_RECORDING_CONSENT: 'grantRecordingConsent',
+
+    /**
      * End the current meeting.
      */
     HANG_UP: 'hangup',

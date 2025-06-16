@@ -56,6 +56,7 @@ const presenceToStore = [
     'kicked',
     'meetingDisplayName',
     'needPassword',
+    'recordingConsentDialogOpen',
     'remoteJoinCode',
     'roomName',
     'screensharing',

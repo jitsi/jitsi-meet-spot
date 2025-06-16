@@ -79,6 +79,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onParticipantLeft',
             '_onPasswordRequired',
             '_onRaiseHandChange',
+            '_onRecordingConsentDialogOpen',
             '_onReportDeviceError',
             '_onScreenshareChange',
             '_onScreenshareDeviceConnected',
@@ -201,6 +202,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             'raiseHandUpdated', this._onRaiseHandChange);
         this._jitsiApi.addListener(
             'readyToClose', this._onMeetingLeave);
+        this._jitsiApi.addListener(
+            'recordingConsentDialogOpen', this._onRecordingConsentDialogOpen);
         this._jitsiApi.addListener(
             'screenSharingStatusChanged', this._onScreenshareChange);
         this._jitsiApi.addListener(
@@ -392,7 +395,12 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             }
 
             break;
-
+        case COMMANDS.GRANT_RECORDING_CONSENT:
+            this._jitsiApi.executeCommand(
+                'grantRecordingConsent',
+                data.unmute
+            );
+            break;
         case COMMANDS.SEND_TOUCH_TONES:
             this._playTouchTone(data.tones);
             break;
@@ -621,6 +629,24 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         logger.error('device error occurred within the meeting', {
             type,
             message
+        });
+    }
+
+    /**
+     * Callback invoked when the recording consent dialog is opened.
+     * This is used to update the sport remote state to show the recording consent
+     * dialog view.
+     *
+     * @param {boolean} open - Whether the recording consent dialog is
+     * currently open or not.
+     * @private
+     * @returns {void}
+     */
+    _onRecordingConsentDialogOpen({ open }) {
+        logger.log('recording consent dialog state open changed: ', open);
+
+        this.props.updateSpotTvState({
+            recordingConsentDialogOpen: open
         });
     }
 
