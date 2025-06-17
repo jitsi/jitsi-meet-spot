@@ -76,8 +76,8 @@
         "build:dev": "webpack --config ./webpack.config.js --progress",
         "build:prod": "NODE_ENV=production webpack --config ./webpack.config.js --progress",
         "docs": "jsdoc -c ./jsdoc.config.js",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
+        "lint": "eslint . --max-warnings=0",
+        "lint:fix": "eslint . --fix --max-warnings=0",
         "start:dev": "webpack-dev-server",
         "test": "jest"
     },

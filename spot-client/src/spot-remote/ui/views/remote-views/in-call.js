@@ -23,7 +23,7 @@ import {
     MeetingHeader,
     PasswordPrompt
 } from '../../components';
-import { RecordingConsentDialog } from '../../components/recording-consent'; // Add this import
+import RecordingConsentDialog from '../../components/recording-consent/RecordingConsentDialog';
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 
 import { MeetingToolbar } from './../../components/meeting-toolbar';
@@ -42,10 +42,10 @@ export class InCall extends React.Component {
         meetingDisplayName: PropTypes.string,
         onForceStopWirelessScreenshare: PropTypes.func,
         onHangUp: PropTypes.func,
-        onShowModal: PropTypes.func, // Add this line
+        onShowModal: PropTypes.func,
         onShowScreenshareModal: PropTypes.func,
         onSubmitPassword: PropTypes.func,
-        recordingConsentDialogOpen: PropTypes.bool, // Add this line
+        recordingConsentDialogOpen: PropTypes.bool,
         showPasswordPrompt: PropTypes.bool,
         t: PropTypes.func
     };

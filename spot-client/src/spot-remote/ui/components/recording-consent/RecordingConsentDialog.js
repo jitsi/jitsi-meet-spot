@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
  * when a recording is in progress. The dialog provides two options: consent to
  * recording while remaining muted, or consent to recording and unmute the user.
  */
-export class RecordingConsentDialog extends React.Component {
+class RecordingConsentDialog extends React.Component {
     static propTypes = {
         onConsent: PropTypes.func,
         onConsentWithUnmute: PropTypes.func,
