@@ -114,6 +114,12 @@
         "enterCode": "Enter a share key",
         "visibleAt": "Your key is visible on the {{ productName }} TV"
     },
+    "recording": {
+        "understand": "I understand, keep me muted for now",
+        "understandAndUnmute": "I understand, please unmute me",
+        "inProgressTitle": "Recording in progress",
+        "inProgressDescription": "This meeting is being recorded and analyzed by AI. Your audio and video have been muted. If you choose to unmute, you consent to being recorded."
+    },
     "screenshare": {
         "alreadyActive": "Cannot start wireless screenshare while screenshare is active.",
         "controlRoom": "Use your computer to control the meeting room",

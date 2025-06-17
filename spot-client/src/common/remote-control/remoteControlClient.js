@@ -306,6 +306,18 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Requests a {@code RemoteControlServer} to grant or consent
+     * for recording the meeting.
+     * @param {boolean} unmute - Whether or not to also unmute the devices.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     *
+     */
+    grantRecordingConsent(unmute) {
+        return this._sendCommand(COMMANDS.GRANT_RECORDING_CONSENT, { unmute });
+    }
+
+
+    /**
      * Requests a {@code RemoteControlServer} to send touch tones into a meeting.
      * This is intended for interaction with an IVR requesting additional
      * conference details for dialing in.

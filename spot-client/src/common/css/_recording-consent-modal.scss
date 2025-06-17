@@ -1,0 +1,41 @@
+.recording-consent-modal {
+    @include centered-content;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    min-width: 360px;
+    width: 600px;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer {
+        display: flex;
+        gap: 12px;
+    }
+    
+   // Rule that applies to all classes starting with 'understand-button'
+    [class*="understand-button"] {
+        flex: 1;
+        font-size: 21px;
+        font-weight: 600;
+    }
+    
+    .understand-button-unmute {
+        background-color: white;
+        color: black;
+    }
+
+    .description {
+        font-size: 21px;
+        font-weight: 400;
+        padding-bottom: 40px;
+    }
+
+    .title {
+        font-size: 29px;
+        font-weight: 600;
+        padding-bottom: 40px;
+    }
+}
