@@ -1,3 +1,4 @@
+import { hideModal } from 'common/app-state';
 import { remoteControlClient } from 'common/remote-control';
 import { Button, Modal } from 'common/ui';
 import PropTypes from 'prop-types';
@@ -12,6 +13,7 @@ import { connect } from 'react-redux';
  */
 class RecordingConsentDialog extends React.Component {
     static propTypes = {
+        hideModal: PropTypes.func,
         onConsent: PropTypes.func,
         onConsentWithUnmute: PropTypes.func,
         t: PropTypes.func
@@ -25,6 +27,8 @@ class RecordingConsentDialog extends React.Component {
      */
     _onConsent = () => {
         remoteControlClient.grantRecordingConsent(false);
+
+        this.props.hideModal();
     };
 
     /**
@@ -35,6 +39,8 @@ class RecordingConsentDialog extends React.Component {
      */
     _onConsentWithUnmute = () => {
         remoteControlClient.grantRecordingConsent(true);
+
+        this.props.hideModal();
     };
 
     /**
@@ -80,4 +86,24 @@ class RecordingConsentDialog extends React.Component {
     }
 }
 
-export default connect(null, null)(withTranslation()(RecordingConsentDialog));
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param {Function} dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch) {
+    return {
+        /**
+         * Closes the currently displayed modal.
+         *
+         * @returns {void}
+         */
+        hideModal() {
+            dispatch(hideModal());
+        }
+    };
+}
+
+export default connect(null, mapDispatchToProps)(withTranslation()(RecordingConsentDialog));

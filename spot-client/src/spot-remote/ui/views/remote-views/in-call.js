@@ -101,8 +101,6 @@ export class InCall extends React.Component {
         // Only show or hide the recording consent dialog if its state has changed
         if (!prevDialogOpen && currentDialogOpen) {
             this.props.onShowModal(RecordingConsentDialog);
-        } else if (prevDialogOpen && !currentDialogOpen) {
-            this.props.hideModal(); // Use this.props to avoid shadowing
         }
     }
 
