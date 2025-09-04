@@ -486,14 +486,14 @@ export default class XmppConnection extends Emitter {
             ...newStatus
         };
 
-        this.room
-            && this.room.addToPresence(
-                SPOT_STATUS_ELEMENT_NAME, {
-                    value: JSON.stringify(this._spotStatus),
-                    attributes: {
-                        xmlns: SPOT_XMLNS
-                    }
-                });
+        this.room?.addOrReplaceInPresence(
+            SPOT_STATUS_ELEMENT_NAME, {
+                value: JSON.stringify(this._spotStatus),
+                attributes: {
+                    xmlns: SPOT_XMLNS
+                }
+            }
+        );
 
         this._sendPresence();
     }
@@ -756,7 +756,7 @@ export default class XmppConnection extends Emitter {
      * @returns {string}
      */
     getRoomFullJid() {
-        return this.room && this.room.myroomjid;
+        return this.room?.myroomjid;
     }
 
     /**
@@ -847,7 +847,7 @@ export default class XmppConnection extends Emitter {
      * @returns {void}
      */
     _sendPresence() {
-        this.room && this.room.sendPresence();
+        this.room?.sendPresence();
     }
 
     /**
