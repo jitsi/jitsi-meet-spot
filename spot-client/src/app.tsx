@@ -1,3 +1,6 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom';
 
 import {
     apiMessageReceived,
@@ -19,10 +22,6 @@ import {
     Notifications,
     ReconnectIndicator
 } from 'common/ui';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import {
     Help,
     JoinCodeEntry,
@@ -54,24 +53,27 @@ import 'spot-tv/analytics';
 // This import enables tunneling Electron logs through the spot-client logging service
 import 'spot-tv/electron-logs';
 
+interface Props extends RouteComponentProps {
+    dispatch: (action: any) => void;
+    productName: string;
+    spotClientVersion: string;
+}
+
+interface State {
+    hideCursor: boolean;
+}
+
 /**
  * The root of the application which determines what view should be displayed.
  */
-export class App extends React.Component {
-    static propTypes = {
-        dispatch: PropTypes.func,
-        location: PropTypes.object,
-        productName: PropTypes.string,
-        spotClientVersion: PropTypes.string
-    };
-
+export class App extends React.Component<Props, State> {
     /**
      * Initializes a new {@code App} instance.
      *
-     * @param {Object} props - The read-only properties with which the new
+     * @param {Props} props - The read-only properties with which the new
      * instance is to be initialized.
      */
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -156,17 +158,17 @@ export class App extends React.Component {
      * Implements React's {@link Component#render()}.
      *
      * @inheritdoc
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
     render() {
         const rootClassName
             = `app ${this.state.hideCursor ? 'idleCursor' : ''}`;
 
         return (
-            <ErrorBoundary errorComponent = { FatalError }>
+            <ErrorBoundary errorComponent={FatalError}>
                 <IdleCursorDetector
-                    onCursorIdleChange = { this._onCursorIdleChange }>
-                    <div className = { rootClassName }>
+                    onCursorIdleChange={this._onCursorIdleChange}>
+                    <div className={rootClassName}>
                         <Background />
                         <Notifications />
                         <Switch>
@@ -177,24 +179,24 @@ export class App extends React.Component {
                                  */
                             }
                             <SpotTvRestrictedRoute
-                                path = { ROUTES.MEETING }
-                                render = { this._renderMeetingView } />
+                                path={ROUTES.MEETING}
+                                render={this._renderMeetingView} />
                             <SpotTvRestrictedRoute
-                                path = { ROUTES.OUTLOOK_OAUTH }
-                                render = { this._renderOutlookOauthView } />
+                                path={ROUTES.OUTLOOK_OAUTH}
+                                render={this._renderOutlookOauthView} />
                             <SpotTvRestrictedRoute
-                                path = { ROUTES.SETUP }
-                                render = { this._renderSetupView }
-                                requireSetup = { false } />
+                                path={ROUTES.SETUP}
+                                render={this._renderSetupView}
+                                requireSetup={false} />
                             <Redirect
-                                from = { ROUTES.OLD_HOME }
-                                to = { ROUTES.HOME } />
+                                from={ROUTES.OLD_HOME}
+                                to={ROUTES.HOME} />
                             <SpotTvRestrictedRoute
-                                path = { ROUTES.HOME }
-                                render = { this._renderHomeView } />
+                                path={ROUTES.HOME}
+                                render={this._renderHomeView} />
                             <Route
-                                path = { ROUTES.UNSUPPORTED_BROWSER }
-                                render = { this._renderUnsupportedBrowserView } />
+                                path={ROUTES.UNSUPPORTED_BROWSER}
+                                render={this._renderUnsupportedBrowserView} />
 
                             {
 
@@ -203,24 +205,24 @@ export class App extends React.Component {
                                  */
                             }
                             <Route
-                                path = { ROUTES.HELP }
-                                render = { this._renderHelpView } />
+                                path={ROUTES.HELP}
+                                render={this._renderHelpView} />
                             <Route
-                                path = { ROUTES.SHARE }
-                                render = { this._renderShareView } />
+                                path={ROUTES.SHARE}
+                                render={this._renderShareView} />
                             <Route
-                                path = { ROUTES.SHARE_HELP }
-                                render = { this._renderShareHelpView } />
+                                path={ROUTES.SHARE_HELP}
+                                render={this._renderShareHelpView} />
                             <Route
-                                path = { ROUTES.REMOTE_CONTROL }
-                                render = { this._renderRemoteControlView } />
-                            <Route render = { this._renderJoinCodeEntry } />
+                                path={ROUTES.REMOTE_CONTROL}
+                                render={this._renderRemoteControlView} />
+                            <Route render={this._renderJoinCodeEntry} />
                         </Switch>
                     </div>
                     <ModalManager />
                     <ReconnectIndicator />
                     <FeedbackOverlay />
-                    { isElectron() && <ExitElectron /> }
+                    {isElectron() && <ExitElectron />}
                 </IdleCursorDetector>
             </ErrorBoundary>
         );
@@ -233,7 +235,7 @@ export class App extends React.Component {
      * @private
      * @returns {void}
      */
-    _onCursorIdleChange(cursorIsIdle) {
+    private _onCursorIdleChange(cursorIsIdle: boolean): void {
         this.setState({ hideCursor: cursorIsIdle });
     }
 
@@ -244,7 +246,7 @@ export class App extends React.Component {
      * @private
      * @returns {void}
      */
-    _onKeyDown() {
+    private _onKeyDown(): void {
         document.body.classList.remove('using-mouse');
     }
 
@@ -254,7 +256,7 @@ export class App extends React.Component {
      * @private
      * @returns {void}
      */
-    _onMouseDown() {
+    private _onMouseDown(): void {
         document.body.classList.add('using-mouse');
     }
 
@@ -264,7 +266,7 @@ export class App extends React.Component {
      * @param {Object} event - The message event posted.
      * @returns {void}
      */
-    _onPostMessage({ data }) {
+    private _onPostMessage({ data }: { data: any }): void {
         try {
             const parsedMessage = typeof data === 'object' ? data : JSON.parse(data);
 
@@ -285,7 +287,7 @@ export class App extends React.Component {
      * @private
      * @returns {void}
      */
-    _onTouchStart() {
+    private _onTouchStart(): void {
         /** No-op. */
     }
 
@@ -293,9 +295,9 @@ export class App extends React.Component {
      * Returns the Spot-Remote help view.
      *
      * @private
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
-    _renderHelpView() {
+    private _renderHelpView(): JSX.Element {
         return this._renderSpotRemoteViewWithHelp(Help);
     }
 
@@ -303,9 +305,9 @@ export class App extends React.Component {
      * Returns the Spot TV home (calendar) view.
      *
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderHomeView() {
+    private _renderHomeView(): JSX.Element {
         return this._renderSpotViewWithRemoteControl(Home, 'home');
     }
 
@@ -313,9 +315,9 @@ export class App extends React.Component {
      * Returns the Spot-Remote join code entry view.
      *
      * @private
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
-    _renderJoinCodeEntry() {
+    private _renderJoinCodeEntry(): JSX.Element {
         return this._renderSpotRemoteViewWithHelp(JoinCodeEntry);
     }
 
@@ -323,9 +325,9 @@ export class App extends React.Component {
      * Returns the Spot TV in-meeting view.
      *
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderMeetingView() {
+    private _renderMeetingView(): JSX.Element {
         return this._renderSpotViewWithRemoteControl(Meeting, 'meeting');
     }
 
@@ -333,9 +335,9 @@ export class App extends React.Component {
      * Returns the Spot-TV view for processing an Outlook oauth redirect.
      *
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderOutlookOauthView() {
+    private _renderOutlookOauthView(): JSX.Element {
         return <OutlookOauth />;
     }
 
@@ -343,9 +345,9 @@ export class App extends React.Component {
      * Returns the Spot-Remote remote control view.
      *
      * @private
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
-    _renderRemoteControlView() {
+    private _renderRemoteControlView(): JSX.Element {
         return this._renderSpotRemoteViewWithHelp(RemoteControl);
     }
 
@@ -353,11 +355,11 @@ export class App extends React.Component {
      * Returns the Spot TV setup view.
      *
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderSetupView() {
+    private _renderSetupView(): JSX.Element {
         return (
-            <SpotView name = { 'setup' }>
+            <SpotView name={'setup'}>
                 <Setup />
                 <FeedbackOpener />
             </SpotView>
@@ -368,9 +370,9 @@ export class App extends React.Component {
      * Returns the Spot-Remote view explaining how to use share mode.
      *
      * @private
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
-    _renderShareHelpView() {
+    private _renderShareHelpView(): JSX.Element {
         return this._renderSpotRemoteViewWithHelp(ShareHelp);
     }
 
@@ -378,19 +380,19 @@ export class App extends React.Component {
      * Returns the Spot-Remote share-only mode view.
      *
      * @private
-     * @returns {ReactElement}
+     * @returns {JSX.Element}
      */
-    _renderShareView() {
+    private _renderShareView(): JSX.Element {
         return this._renderSpotRemoteViewWithHelp(ShareView);
     }
 
     /**
      * Helper for displaying a consistent view across Spot-Remote views.
      *
-     * @param {Component} View - The Spot-Remove view component to show.
-     * @returns {ReactElement}
+     * @param {React.ComponentType} View - The Spot-Remove view component to show.
+     * @returns {JSX.Element}
      */
-    _renderSpotRemoteViewWithHelp(View) {
+    private _renderSpotRemoteViewWithHelp(View: React.ComponentType): JSX.Element {
         return (
             <div>
                 <View />
@@ -403,18 +405,18 @@ export class App extends React.Component {
      * Helper to ensure all Spot TV views share the same wrapper responsible
      * for maintaining the remote control service.
      *
-     * @param {ReactComponent} View - The child to display within the remote
+     * @param {React.ComponentType} View - The child to display within the remote
      * control service loader.
      * @param {string} name - The name associate with the view. Used for remotes
      * to identify what view the spot is showing.
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderSpotViewWithRemoteControl(View, name) {
+    private _renderSpotViewWithRemoteControl(View: React.ComponentType, name: string): JSX.Element {
         return (
             <SpotTVRemoteControlLoader>
                 <WiredScreenshareDetector />
-                <SpotView name = { name }>
+                <SpotView name={name}>
                     <View />
                 </SpotView>
             </SpotTVRemoteControlLoader>
@@ -426,11 +428,11 @@ export class App extends React.Component {
      * current environment.
      *
      * @private
-     * @returns {ReactComponent}
+     * @returns {JSX.Element}
      */
-    _renderUnsupportedBrowserView() {
+    private _renderUnsupportedBrowserView(): JSX.Element {
         return (
-            <SpotView name = { 'unsupported' }>
+            <SpotView name={'unsupported'}>
                 <UnsupportedBrowser />
             </SpotView>
         );
@@ -444,7 +446,7 @@ export class App extends React.Component {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state) {
+function mapStateToProps(state: any) {
     return {
         spotClientVersion: getSpotClientVersion(state),
         productName: getProductName(state)

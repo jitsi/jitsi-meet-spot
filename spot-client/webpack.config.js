@@ -52,16 +52,16 @@ module.exports = () => {
                             require.resolve('@babel/plugin-proposal-optional-chaining')
                         ]
                     },
-                    test: /\.js$/
+                    test: /\.js$|\.ts$|\.tsx$/
                 }
             ]
         },
         plugins: [
             detectCircularDeps
-                && new CircularDependencyPlugin({
-                    exclude: /node_modules/,
-                    failOnError: true
-                }),
+            && new CircularDependencyPlugin({
+                exclude: /node_modules/,
+                failOnError: true
+            }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
@@ -93,6 +93,7 @@ module.exports = () => {
             minimize: isProduction
         },
         resolve: {
+            extensions: [ '.js', '.ts', '.tsx' ],
             modules: [ path.resolve('./src'), path.resolve('./node_modules') ]
         }
     };

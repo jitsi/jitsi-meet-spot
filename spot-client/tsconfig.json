@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "es6"
+        ],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "common/*": [
+                "src/common/*"
+            ],
+            "spot-remote/*": [
+                "src/spot-remote/*"
+            ],
+            "spot-tv/*": [
+                "src/spot-tv/*"
+            ]
+        }
+    },
+    "include": [
+        "src/app.tsx",
+        "src/spot-tv/routing/SpotTvRestrictedRoute.tsx"
+    ]
+}
