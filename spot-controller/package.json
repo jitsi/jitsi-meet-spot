@@ -30,7 +30,7 @@
         "@react-native-async-storage/async-storage": "1.17.3",
         "events": "3.0.0",
         "jitsi-meet-logger": "github:jitsi/jitsi-meet-logger#5ec92357570dc8f0b7ffc1528820721c84c6af8b",
-        "lodash": "4.17.21",
+        "lodash": "4.17.23",
         "react-native-keep-awake": "4.0.0",
         "react-native-svg": "9.13.6",
         "react-native-svg-transformer": "0.14.3",
