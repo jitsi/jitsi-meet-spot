@@ -7,10 +7,10 @@ jobs:
 
         steps:
             - name: Step 1 - checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
 
             - name: Step 2 - setup node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
               with:
                 node-version-file: '.nvmrc'
 
@@ -35,10 +35,10 @@ jobs:
               run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event, running on ${{ runner.os}}, branch name ${{ github.ref}}, ."
 
             - name: Step 2 - checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
 
             - name: Step 3 - setup node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
               with:
                 node-version-file: '.nvmrc'
 
@@ -56,7 +56,7 @@ jobs:
 
             - name: Step 7 - Archive Test Results
               if: always()
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
               with:
                 name: webdriver-results
                 path: spot-webdriver/webdriver-results/
