@@ -16,7 +16,8 @@ import {
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
-    VIDEO_MUTE
+    VIDEO_MUTE,
+    WHITEBOARD
 } from './actionTypes';
 
 /**
@@ -211,6 +212,21 @@ export function setTileView(tileView) {
         TILE_VIEW,
         tileView
     ).then(() => dispatch(setSpotTVState({ tileView })));
+}
+
+/**
+ * Sends a command to Spot-TV to show or hide the whiteboard.
+ *
+ * @param {boolean} whiteboardOpen - Whether the whiteboard should be shown or hidden.
+ * @returns {Function}
+ */
+export function setWhiteboard(whiteboardOpen) {
+    return dispatch => createAsyncActionWithStates(
+        dispatch,
+        () => remoteControlClient.setWhiteboard(whiteboardOpen),
+        WHITEBOARD,
+        whiteboardOpen
+    ).then(() => dispatch(setSpotTVState({ whiteboardOpen })));
 }
 
 /**

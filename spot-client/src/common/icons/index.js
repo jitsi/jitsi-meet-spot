@@ -34,5 +34,6 @@ export { default as ScreenShareOutlined } from '@mui/icons-material/ScreenShareO
 export { default as VideocamOutlined } from '@mui/icons-material/VideocamOutlined';
 export { default as VideocamOffOutlined } from '@mui/icons-material/VideocamOffOutlined';
 
+export { default as Whiteboard } from './whiteboard-icon';
 export { default as WiredScreenshare } from './wired-screenshare-icon';
 export { default as WirelessScreenshare } from './wireless-screenshare-icon';

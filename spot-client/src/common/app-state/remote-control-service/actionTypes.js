@@ -27,3 +27,5 @@ export const SCREENSHARE = 'SCREENSHARE';
 export const TILE_VIEW = 'TILE_VIEW';
 
 export const VIDEO_MUTE = 'VIDEO_MUTE';
+
+export const WHITEBOARD = 'WHITEBOARD';

@@ -61,9 +61,12 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._isFilmstripVisible = true;
         this._isHandRaised = false;
         this._isInTileView = false;
+        this._isLocalModerator = false;
         this._isScreensharing = false;
         this._isVideoMuted = false;
+        this._isWhiteboardOpen = false;
         this._localParticipantId = '';
+        this._pendingRoleChange = null;
 
         this._participants = new Map();
 
@@ -77,6 +80,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onParticipantJoined',
             '_onParticipantKicked',
             '_onParticipantLeft',
+            '_onParticipantRoleChanged',
             '_onPasswordRequired',
             '_onRaiseHandChange',
             '_onRecordingConsentDialogOpen',
@@ -87,6 +91,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             '_onSendMessageToRemoteControl',
             '_onTileViewChanged',
             '_onVideoMuteChange',
+            '_onWhiteboardStatusChanged',
             '_setMeetingContainerRef'
         ]);
 
@@ -195,6 +200,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._jitsiApi.addListener(
             'participantLeft', this._onParticipantLeft);
         this._jitsiApi.addListener(
+            'participantRoleChanged', this._onParticipantRoleChanged);
+        this._jitsiApi.addListener(
             'passwordRequired', this._onPasswordRequired);
         this._jitsiApi.addListener(
             'proxyConnectionEvent', this._onSendMessageToRemoteControl);
@@ -214,6 +221,8 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             'videoConferenceLeft', this._onMeetingLeft);
         this._jitsiApi.addListener(
             'videoMuteStatusChanged', this._onVideoMuteChange);
+        this._jitsiApi.addListener(
+            'whiteboardStatusChanged', this._onWhiteboardStatusChanged);
 
         this._jitsiApi.executeCommand(
             'displayName',
@@ -242,12 +251,15 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this.props.updateSpotTvState({
             audioMuted: false,
             inMeeting: '',
+            isLocalModerator: false,
             kicked: false,
             meetingDisplayName: '',
             needPassword: false,
             screensharingType: undefined,
             tileView: false,
-            videoMuted: false
+            videoMuted: false,
+            whiteboardInitialized: false,
+            whiteboardOpen: false
         });
     }
 
@@ -432,6 +444,12 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
             }
             break;
 
+        case COMMANDS.SET_WHITEBOARD:
+            if (this._isWhiteboardOpen !== data.whiteboardOpen) {
+                this._jitsiApi.executeCommand('toggleWhiteboard', data.whiteboardOpen);
+            }
+            break;
+
         case COMMANDS.SET_VIDEO_MUTE:
             if (this._isVideoMuted !== data.mute) {
                 this._jitsiApi.executeCommand('toggleVideo');
@@ -466,6 +484,14 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
 
         this._meetingJoined = true;
         this._localParticipantId = id;
+
+        if (this._pendingRoleChange?.id === id) {
+            const isLocalModerator = this._pendingRoleChange.role === 'moderator';
+
+            this._isLocalModerator = isLocalModerator;
+            this.props.updateSpotTvState({ isLocalModerator });
+            this._pendingRoleChange = null;
+        }
 
         this._enableApiHealthChecks(() => this._jitsiApi.isVideoMuted());
 
@@ -581,6 +607,35 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._participants.delete(id);
 
         this._maybeToggleFilmstripVisibility();
+    }
+
+    /**
+     * Callback invoked when a participant's role changes in the meeting.
+     * Used to track whether the local participant is a moderator.
+     *
+     * @param {Object} event - The role change event from JitsiMeetExternalAPI.
+     * @param {string} event.id - The endpoint ID of the participant.
+     * @param {string} event.role - The new role ('moderator' or 'none').
+     * @private
+     * @returns {void}
+     */
+    _onParticipantRoleChanged({ id, role }) {
+        if (!this._localParticipantId) {
+            this._pendingRoleChange = {
+                id,
+                role
+            };
+
+            return;
+        }
+        if (this._localParticipantId !== id) {
+            return;
+        }
+
+        const isLocalModerator = role === 'moderator';
+
+        this._isLocalModerator = isLocalModerator;
+        this.props.updateSpotTvState({ isLocalModerator });
     }
 
     /**
@@ -806,6 +861,35 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame {
         this._isVideoMuted = muted;
 
         this.props.updateSpotTvState({ videoMuted: muted });
+    }
+
+    /**
+     * Callback invoked after the whiteboard is shown or hidden from within
+     * the Jitsi-Meet meeting.
+     *
+     * @param {Object} event - The whiteboard status event from
+     * JitsiMeetExternalAPI.
+     * @param {string} event.status - The whiteboard status ('SHOWN',
+     * 'INSTANTIATED', 'HIDDEN', 'RESET', 'FORBIDDEN').
+     * @private
+     * @returns {void}
+     */
+    _onWhiteboardStatusChanged({ status }) {
+        const isOpen = status === 'SHOWN' || status === 'INSTANTIATED';
+        const isInitialized = status !== 'RESET' && status !== 'FORBIDDEN';
+
+        logger.log('Whiteboard status changed', {
+            from: this._isWhiteboardOpen,
+            to: isOpen,
+            status
+        });
+
+        this._isWhiteboardOpen = isOpen;
+
+        this.props.updateSpotTvState({
+            whiteboardInitialized: isInitialized,
+            whiteboardOpen: isOpen
+        });
     }
 
     /**

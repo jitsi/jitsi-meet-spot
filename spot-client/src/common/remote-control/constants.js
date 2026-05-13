@@ -57,6 +57,11 @@ export const COMMANDS = {
     SET_TILE_VIEW: 'setTileView',
 
     /**
+     * Show or hide the whiteboard.
+     */
+    SET_WHITEBOARD: 'setWhiteboard',
+
+    /**
      * Set video mute on or off.
      */
     SET_VIDEO_MUTE: 'setVideoMute',

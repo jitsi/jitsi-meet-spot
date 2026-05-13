@@ -385,6 +385,17 @@ export class RemoteControlClient extends BaseRemoteControlService {
     }
 
     /**
+     * Requests a {@code RemoteControlServer} to show or hide the whiteboard.
+     *
+     * @param {boolean} whiteboardOpen - Whether or not the whiteboard should
+     * be shown.
+     * @returns {Promise} Resolves if the command has been acknowledged.
+     */
+    setWhiteboard(whiteboardOpen) {
+        return this._sendCommand(COMMANDS.SET_WHITEBOARD, { whiteboardOpen });
+    }
+
+    /**
      * Requests a {@code RemoteControlServer} to change its video mute status.
      *
      * @param {boolean} mute - Whether or not {@code RemoteControlServer} should
