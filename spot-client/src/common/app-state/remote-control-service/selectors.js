@@ -156,6 +156,34 @@ export function isVideoMutePending(state) {
 }
 
 /**
+ * A selector which returns the desired whiteboard state of any pending
+ * whiteboard toggle request.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean|undefined} The boolean for the pending whiteboard state
+ * will be returned if a request is pending, otherwise undefined is returned.
+ */
+export function getOptimisticWhiteboardState(state) {
+    return isWhiteboardChangePending(state)
+        ? state.remoteControlService.whiteboard.expectedState
+        : undefined;
+}
+
+/**
+ * A selector which returns whether or not a whiteboard toggle command
+ * is currently in flight.
+ *
+ * @param {Object} state - The Redux state.
+ * @returns {boolean}
+ */
+export function isWhiteboardChangePending(state) {
+    const whiteboard = state.remoteControlService.whiteboard;
+
+    return Boolean(
+        whiteboard && whiteboard.requestState === asyncActionRequestStates.PENDING);
+}
+
+/**
  * A selector which returns whether or a not the local Spot-Remote is
  * actively screensharing wirelessly.
  *

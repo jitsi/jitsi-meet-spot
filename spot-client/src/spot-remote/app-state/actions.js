@@ -53,6 +53,7 @@ const presenceToStore = [
     'electron',
     'inMeeting',
     'invitedPhoneNumber',
+    'isLocalModerator',
     'kicked',
     'meetingDisplayName',
     'needPassword',
@@ -68,6 +69,8 @@ const presenceToStore = [
     'view',
     'volumeControlSupported',
     'waitingForMeetingStart',
+    'whiteboardInitialized',
+    'whiteboardOpen',
     'wiredScreensharingEnabled'
 ];
 

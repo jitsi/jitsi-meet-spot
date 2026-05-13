@@ -6,7 +6,8 @@ import {
     AudioMuteButton,
     HangupButton,
     RaiseHandButton,
-    VideoMuteButton
+    VideoMuteButton,
+    WhiteboardButton
 } from './buttons';
 
 /**
@@ -25,6 +26,7 @@ export default function JitsiMeetingToolbar() {
             </div>
             <div className = 'in-call-nav'>
                 <ScreenshareButton />
+                <WhiteboardButton />
                 <RaiseHandButton />
                 <MoreButton />
             </div>

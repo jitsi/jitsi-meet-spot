@@ -7,7 +7,8 @@ import {
     REMOTE_CONTROL_UPDATE_SCREENSHARE_STATE,
     SCREENSHARE,
     TILE_VIEW,
-    VIDEO_MUTE
+    VIDEO_MUTE,
+    WHITEBOARD
 } from './actionTypes';
 
 const DEFAULT_STATE = {
@@ -66,6 +67,9 @@ const remoteControlService = (state = DEFAULT_STATE, action) => {
 
     case VIDEO_MUTE:
         return updateStateForAsyncAction(state, 'videoMute', action);
+
+    case WHITEBOARD:
+        return updateStateForAsyncAction(state, 'whiteboard', action);
 
     default:
         return state;
