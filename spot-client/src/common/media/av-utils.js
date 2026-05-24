@@ -1,16 +1,11 @@
 
 import { logger } from 'common/logger';
 import { JitsiMeetJSProvider } from 'common/vendor';
-import debounce from 'lodash.debounce';
 
 /**
  * Encapsulates all media and media-devices related calls into one object.
  */
 export default {
-    /**
-     * Whether or not JitsiMeetJS has had initialized called on it. Used to
-     * prevent multiple initialization calls.
-     */
     _initialized: false,
 
     _cachedDeviceList: null,
@@ -85,23 +80,20 @@ export default {
      *
      * @returns {Promise<Array>}
      */
-    enumerateDevices() {
-        this._initializeWebRTC();
+    async enumerateDevices() {
+        await this._initializeWebRTC();
 
-        const JitsiMeetJS = JitsiMeetJSProvider.get();
+        return navigator.mediaDevices.enumerateDevices()
+            .then(deviceList => {
+                this._cachedDeviceList = deviceList;
 
-        // TODO: implementing handling of gum permissions being denied
-        return JitsiMeetJS.mediaDevices.isDevicePermissionGranted()
-            .then(hasPermission => {
-                if (hasPermission) {
-                    return Promise.resolve();
-                }
-
-                return this.createLocalTracks()
-                    .then(tracks => tracks.forEach(track => track.dispose()));
+                return deviceList;
             })
-            .then(() => new Promise(resolve =>
-                JitsiMeetJS.mediaDevices.enumerateDevices(resolve)));
+            .catch(error => {
+                logger.error('Failed to enumerate devices', error);
+
+                return [];
+            });
     },
 
     /**
@@ -185,8 +177,8 @@ export default {
      * @private
      * @returns {void}
      */
-    _createTracks(options) {
-        this._initializeWebRTC();
+    async _createTracks(options) {
+        await this._initializeWebRTC();
 
         return JitsiMeetJSProvider.get().createLocalTracks(options);
     },
@@ -198,21 +190,33 @@ export default {
      * @private
      * @returns {void}
      */
-    _initializeWebRTC() {
+    async _initializeWebRTC() {
         if (this._initialized) {
             return;
         }
 
-        this._onDeviceListChange = debounce(
-            this._onDeviceListChange.bind(this),
-            500
-        );
-
-        JitsiMeetJSProvider.get().mediaDevices.addEventListener(
-            JitsiMeetJSProvider.get().events.mediaDevices.DEVICE_LIST_CHANGED,
-            this._onDeviceListChange);
-
         this._initialized = true;
+
+        const d = Promise.withResolvers();
+
+        navigator.mediaDevices.addEventListener('devicechange', async () => {
+            const deviceList = await navigator.mediaDevices.enumerateDevices();
+
+            this._onDeviceListChange(deviceList);
+        });
+
+        // Bootstrap the device list.
+        const options = {
+            audio: true,
+            video: true
+        };
+
+        navigator.mediaDevices.getUserMedia(options).then(stream => {
+            stream.getTracks().forEach(track => track.stop());
+            this.enumerateDevices().finally(d.resolve);
+        });
+
+        return d.promise;
     },
 
     /*
