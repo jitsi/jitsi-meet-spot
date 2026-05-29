@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
     build-spot-electron-mac:
         name: Build on macOS
-        runs-on: macOS-latest
+        runs-on: macos-15
 
         steps:
             - name: Step 1 - checkout

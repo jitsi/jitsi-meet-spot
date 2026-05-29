@@ -6,7 +6,22 @@ const screenInfo = require('./screen-info');
 
 const DESKTOP_SOURCE_NAME = screenInfo.getScreenCount() > 1 ? 'Screen 1' : 'Entire screen';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+// Pin the browser so WebdriverIO downloads a managed Chrome for Testing build
+// instead of using whatever Google Chrome happens to be preinstalled on the CI
+// runner image.
+const BROWSER_VERSION = process.env.BROWSER_VERSION || 'stable';
 const PATH_TO_FAKE_VIDEO = path.resolve(__dirname, 'resources', constants.FAKE_SCREENSHARE_FILE_NAME);
+
+// The E2E job runs on a headless Linux runner. --headless=new gives a reliable
+// fake-media pipeline (getUserMedia stalls on the macOS runners), and
+// --no-sandbox / --disable-dev-shm-usage are required for Chrome to launch in
+// the GitHub Linux runner environment.
+const LINUX_CI_ARGS = [
+    '--headless=new',
+    '--no-sandbox',
+    '--disable-dev-shm-usage'
+];
 
 exports.config = {
     specs: [ path.resolve(__dirname, 'specs', '**/*.spec.js') ],
@@ -33,12 +48,14 @@ exports.config = {
         spotBrowser: {
             capabilities: {
                 browserName: 'chrome',
+                browserVersion: BROWSER_VERSION,
                 'goog:chromeOptions': {
                     args: [
                         'use-fake-device-for-media-stream',
                         'use-fake-ui-for-media-stream',
                         `use-file-for-fake-video-capture=${PATH_TO_FAKE_VIDEO}`,
-                        '--ignore-certificate-errors'
+                        '--ignore-certificate-errors',
+                        ...LINUX_CI_ARGS
                     ]
                 }
             }
@@ -46,8 +63,13 @@ exports.config = {
         remoteControlBrowser: {
             capabilities: {
                 browserName: 'chrome',
+                browserVersion: BROWSER_VERSION,
                 'goog:chromeOptions': {
-                    args: [ `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`, '--ignore-certificate-errors' ]
+                    args: [
+                        `auto-select-desktop-capture-source=${DESKTOP_SOURCE_NAME}`,
+                        '--ignore-certificate-errors',
+                        ...LINUX_CI_ARGS
+                    ]
                 }
             }
         }
