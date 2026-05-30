@@ -86,7 +86,7 @@ So adding a native feature triggered by the TV = listen for a new command on `cl
 
 ## Build / packaging (`package.json` `build`, electron-builder)
 - `npm run dist` runs `tsc` then `electron-builder` with `appId` `org.jitsi.spot`, productName `Spot`. The `files` glob packages `dist/**/*` and `src/static/**/*`; packaged installers are written to `release/` (`directories.output`) so they don't collide with the compiled `dist/`. The `afterSign`/`win.sign` hooks point at the **compiled** `dist/scripts/notarize.js` / `dist/scripts/winSign.js` (sources in `src/scripts/`).
-- **macOS:** universal `dmg` + `zip`, hardened runtime, `entitlements.mac.plist` (camera/mic). Notarization runs in `afterSign` via `dist/scripts/notarize.js`, but **only if** `NOTARIZE_TEAM_ID`, `NOTARIZE_APPLE_ID`, and `NOTARIZE_APPLE_ID_PASSWORD` env vars are set (otherwise skipped).
+- **macOS:** universal `dmg`, hardened runtime, `entitlements.mac.plist` (camera/mic). Notarization runs in `afterSign` via `dist/scripts/notarize.js`, but **only if** `NOTARIZE_TEAM_ID`, `NOTARIZE_APPLE_ID`, and `NOTARIZE_APPLE_ID_PASSWORD` env vars are set (otherwise skipped). NOTE: the `zip` target was dropped — `electron-updater` uses the mac `zip` for auto-updates, so re-add a `zip` mac target if macOS auto-update is needed.
 - **Windows:** custom signer `dist/scripts/winSign.js` shelling out to `smctl sign`, gated on the `CODE_SIGNER_KEYPAIR_ALIAS` env var (skipped if unset).
 - **Publish/auto-update:** `publish.provider: github` with `publishAutoUpdate: true`, which is what `electron-updater` consumes at runtime.
 - **Not verifiable in a headless sandbox:** `electron .` (needs a display) and `npm run dist` (needs signing/native toolchains). CI builds these on macOS/Windows runners.

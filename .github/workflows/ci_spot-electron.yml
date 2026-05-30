@@ -25,13 +25,11 @@ jobs:
             - name: Step 4 - build
               run: npm run dist --workspace spot-electron
 
-            - name: Step 5 - upload installers
+            - name: Step 5 - upload installer
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
               with:
                 name: spot-electron-macos
-                path: |
-                    spot-electron/release/*.dmg
-                    spot-electron/release/*.zip
+                path: spot-electron/release/*.dmg
                 if-no-files-found: error
                 retention-days: 14
 
