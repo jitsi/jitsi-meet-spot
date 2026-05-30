@@ -4,6 +4,7 @@ on: [pull_request]
 # Unit tests / lint / typecheck for spot-electron run in the main `CI` workflow
 # (root `npm run test` / `lint` / `typecheck`). This workflow only does the
 # platform-specific packaging (electron-builder) which must run on mac/windows.
+# The packaged installers are uploaded as artifacts so a PR's output can be downloaded and tested.
 jobs:
     build-spot-electron-mac:
         name: Build on macOS
@@ -24,6 +25,16 @@ jobs:
             - name: Step 4 - build
               run: npm run dist --workspace spot-electron
 
+            - name: Step 5 - upload installers
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+              with:
+                name: spot-electron-macos
+                path: |
+                    spot-electron/release/*.dmg
+                    spot-electron/release/*.zip
+                if-no-files-found: error
+                retention-days: 14
+
     build-spot-electron-windows:
         name: Build on Windows
         runs-on: windows-latest
@@ -42,3 +53,11 @@ jobs:
 
             - name: Step 4 - build
               run: npm run dist --workspace spot-electron
+
+            - name: Step 5 - upload installer
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+              with:
+                name: spot-electron-windows
+                path: spot-electron/release/*.exe
+                if-no-files-found: error
+                retention-days: 14
