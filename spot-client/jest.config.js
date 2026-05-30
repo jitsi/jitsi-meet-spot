@@ -8,9 +8,9 @@ module.exports = {
     collectCoverage: true,
     coverageDirectory: 'coverage',
     modulePaths: [ '<rootDir>/src' ],
-    setupFilesAfterEnv: [ '<rootDir>/setupTests.js' ],
+    setupFilesAfterEnv: [ '<rootDir>/setupTests.ts' ],
     testEnvironment: 'jsdom',
-    testMatch: [ '<rootDir>/src/**/?(*.)+(test).js?(x)' ],
+    testMatch: [ '<rootDir>/src/**/?(*.)+(test).[jt]s?(x)' ],
     transformIgnorePatterns: [ '<rootDir>/node_modules/(?!@jitsi/js-utils)' ],
     verbose: true
 };

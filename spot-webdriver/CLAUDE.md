@@ -2,32 +2,33 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This is the `spot-webdriver` subproject: WebdriverIO 8 + Jasmine Selenium E2E tests that drive `spot-client` (running as Spot-TV and Spot-Remote) in Chrome via chromedriver. See the root `CLAUDE.md` for the monorepo overview. There is no source code to build here — it is purely a test harness.
+This is the `spot-webdriver` subproject: **WebdriverIO 9 + Jasmine** Selenium E2E tests that drive `spot-client` (running as Spot-TV and Spot-Remote) in Chrome. See the root `CLAUDE.md` for the monorepo overview. It is **strict TypeScript** + **native ESM** and is an npm-workspaces member. There is no build step — WebdriverIO loads the `.ts` specs/config directly via `tsx`; `tsc --noEmit` is used only for type-checking. wdio 9 **auto-manages the Chrome-for-Testing driver** (the old `chromedriver` dep + `.npmrc` are gone).
 
 ## Commands
 
-Run from inside `spot-webdriver/` (no root `package.json` exists in the monorepo).
+Install once from the **repository root**. The scripts below run from inside `spot-webdriver/` (or from root with `npm run <script> --workspace spot-webdriver`):
 
 ```bash
-npm install                # also force-downloads a Chrome-for-Testing chromedriver (see .npmrc)
-
-npm run ci                 # full flow: start the spot-client dev server, wait for it, then run tests
-npm test                   # run all specs against an ALREADY-running client (./node_modules/.bin/wdio wdio.conf.js)
+npm run ci                 # full flow: start the spot-client dev server, wait for it, then run the E2E suite
+npm run e2e                # run all specs against an ALREADY-running client (wdio run wdio.conf.ts)
 npm run start-spot-client  # just start the client dev server (npm --prefix ../spot-client run start:dev)
-npm run lint               # eslint .
+npm run lint               # eslint . (flat config)
+npm run typecheck          # tsc --noEmit -p tsconfig.json (strict)
 ```
 
-- `npm run ci` is `start-server-and-test start-spot-client http://127.0.0.1:8000/ test` — it boots `../spot-client`'s dev server, polls `http://127.0.0.1:8000/` until it responds, runs the test suite, then tears the server down. This is exactly what CI does.
-- `npm test` assumes a Spot deployment is already serving at `http://127.0.0.1:8000` (override with `TEST_SERVER_URL`). Use it when iterating with a manually-started client.
-- **Run a single spec** (no npm script for it — call the binary directly):
+- The E2E script is named `e2e` (not `test`) so the monorepo-wide `npm run test` unit-test sweep does not try to launch the browser suite. `npm run typecheck` and `npm run lint` DO participate in the root sweeps.
+- `npm run ci` is `start-server-and-test start-spot-client http://127.0.0.1:8000/ e2e` — it boots `../spot-client`'s dev server, polls until it responds, runs the suite, then tears the server down. This is exactly what CI does.
+- `npm run e2e` assumes a Spot deployment is already serving at `http://127.0.0.1:8000` (override with `TEST_SERVER_URL`). Use it when iterating with a manually-started client.
+- **The E2E run is Linux-only** — Chrome's fake-getUserMedia pipeline stalls on the macOS runners, so the run is verified on the Linux CI job, not locally on macOS. typecheck/lint are the local gates.
+- **Run a single spec** (no npm script — call the binary directly):
   ```bash
-  npx wdio run ./wdio.conf.js --spec specs/join-code.spec.js
+  npx wdio run ./wdio.conf.ts --spec specs/join-code.spec.ts
   ```
 
-### Environment variables (read in `wdio.conf.js` and `constants/index.js`)
+### Environment variables (read in `wdio.conf.ts` and `constants/index.ts`)
 
 - `TEST_SERVER_URL` — base URL of the Spot deployment under test (default `http://127.0.0.1:8000`). Drives the `/tv` and `/help` URLs and the join-code entry URL in `constants/index.js`.
-- `BACKEND_REFRESH_TOKEN` — when set, enables "backend mode" tests; specs that require it are gated behind `SpotSession.isBackendEnabled()` and `pending()` otherwise (see `user/spot-session.js`, README for how to obtain the token from `localStorage`).
+- `BACKEND_REFRESH_TOKEN` — when set, enables "backend mode" tests; specs that require it are gated behind `SpotSession.isBackendEnabled()` and `pending()` otherwise (see `user/spot-session.ts`, README for how to obtain the token from `localStorage`).
 - `BROWSER_VERSION` (default `stable`), `LOG_LEVEL` (default `info`), `MAX_INSTANCES` (default `1`).
 
 ## Architecture
@@ -36,7 +37,7 @@ Three layers sit between a `.spec.js` file and the browser: **specs → users/se
 
 ### Two browsers, "multiremote"
 
-`wdio.conf.js` declares **two named capabilities** under a single multiremote session: `spotBrowser` and `remoteControlBrowser` (names exported as `constants.SPOT_BROWSER` / `constants.REMOTE_CONTROL_BROWSER`). One browser plays the Spot-TV, the other the Spot-Remote, so a single test exercises a real TV ↔ Remote interaction. Because it is multiremote, you never use the global `browser` directly for driver calls — instead everything indexes by capability name: `browser[this.driver]...`, where `this.driver` is the capability name string (`'spotBrowser'` / `'remoteControlBrowser'`). The base `PageObject` and `SpotUser` classes always route through `browser[this.driver]`.
+`wdio.conf.ts` declares **two named capabilities** under a single multiremote session: `spotBrowser` and `remoteControlBrowser` (names exported as `constants.SPOT_BROWSER` / `constants.REMOTE_CONTROL_BROWSER`, with a `BrowserName` union type). One browser plays the Spot-TV, the other the Spot-Remote, so a single test exercises a real TV ↔ Remote interaction. Because it is multiremote, you never use the global `browser` directly for driver calls — instead you resolve the per-capability instance. The base `PageObject` and `SpotUser` classes expose a `protected get _browser(): WebdriverIO.Browser` getter (backed by the `driverFor(name)` helper in `helpers/driver.ts`) and always route driver calls through `this._browser`. `this.driver` holds the capability name (typed `BrowserName`).
 
 Both Chrome instances launch with `use-fake-device-for-media-stream`, `use-fake-ui-for-media-stream`, `use-file-for-fake-video-capture=resources/static-image.y4m`, and `--ignore-certificate-errors`. The `remoteControlBrowser` additionally gets `auto-select-desktop-capture-source=<screen>` for screenshare tests. On CI the headless Linux args (`--headless=new`, `--no-sandbox`, `--disable-dev-shm-usage`) are appended.
 
@@ -58,26 +59,28 @@ Notable page objects: `calendar-page.js` (TV home; scrapes the join code, naviga
 
 ### `specs/` — Jasmine specs
 
-`describe/it`, async/await throughout. Convention: create a session at the top of `describe` via `spotSessionStore.createSession()`, drive flows through the session/user/page-object methods, assert with Jasmine `expect`. Files: `adhoc-meeting`, `in-meeting`, `join-code`, `share-mode`, `spot-tv-conflict`, `spot-tv-reconnect`, `waiting-for-tv`, `wireless-screenshare`. Several suites are currently disabled with `xdescribe`/`xit` (e.g. `wireless-screenshare.spec.js`) — check for the `x` prefix before assuming a spec runs. Backend-only cases call `pending()` when `BACKEND_REFRESH_TOKEN` is unset.
+`describe/it`, async/await throughout. Convention: create a session at the top of `describe` via `spotSessionStore.createSession()`, drive flows through the session/user/page-object methods, assert with Jasmine `expect`. Files: `adhoc-meeting`, `in-meeting`, `join-code`, `share-mode`, `spot-tv-conflict`, `spot-tv-reconnect`, `waiting-for-tv`, `wireless-screenshare` (all `*.spec.ts`). Several suites are currently disabled with `xdescribe`/`xit` (e.g. `wireless-screenshare.spec.ts`) — check for the `x` prefix before assuming a spec runs. Backend-only cases call `pending()` when `BACKEND_REFRESH_TOKEN` is unset. NOTE: `spot-tv-conflict.spec.ts` references an undefined `conflictPage` — a pre-existing bug that only executes in backend mode; it carries a `// @ts-expect-error` and should be finished by adding a real ConflictPage page object.
 
-There are **no global wdio hooks** in `wdio.conf.js` and no shared `afterAll`; teardown is explicit. `SpotUser.cleanup()` (restore network, disconnect RCS, clear storage, navigate to `about:blank`) — invoked either directly on a user or via `SpotSession.cleanup()` (which cleans up both the remote and the TV) — is called within specs that need it (e.g. `spot-tv-conflict.spec.js` calls `spotTv1.cleanup()`).
+There are **no global wdio hooks** in `wdio.conf.ts` and no shared `afterAll`; teardown is explicit. `SpotUser.cleanup()` (restore network, disconnect RCS, clear storage, navigate to `about:blank`) — invoked either directly on a user or via `SpotSession.cleanup()` (which cleans up both the remote and the TV) — is called within specs that need it (e.g. `spot-tv-conflict.spec.ts` calls `spotTv1.cleanup()`).
 
 ### Supporting modules
 
-- `constants/index.js` — all timeouts (`MAX_PAGE_LOAD_WAIT` 120000, `MEETING_JOIN_WAIT`, `P2P_ESTABLISHED_WAIT`, `SIGNALING_DISCONNECT_TIMEOUT`, etc.), URL builders derived from `TEST_SERVER_URL`, capability-name constants, and the fake-video filename. `wdio.conf.js` sets Jasmine's `defaultTimeoutInterval` to `MAX_PAGE_LOAD_WAIT + 30000`.
-- `screen-info/index.js` — shells out (`system_profiler` on macOS, `xdpyinfo` on Linux, `wmic` on Windows) to count monitors; `wdio.conf.js` uses this to pick the `auto-select-desktop-capture-source` name (`Screen 1` vs `Entire screen`).
-- `resources/static-image.y4m` — the fake camera feed. A static image is used deliberately so the fake camera can stand in for a screenshare dongle source without tripping Spot-TV's camera-change auto-join detection (see comment in `constants/index.js`).
+- `constants/index.ts` — all timeouts (`MAX_PAGE_LOAD_WAIT` 120000, `MEETING_JOIN_WAIT`, `P2P_ESTABLISHED_WAIT`, `SIGNALING_DISCONNECT_TIMEOUT`, etc.) as **named exports**, URL builders derived from `TEST_SERVER_URL`, capability-name constants, the fake-video filename, and the `BrowserName` type. Import with `import * as constants from '../constants/index.js'`. `wdio.conf.ts` sets Jasmine's `defaultTimeoutInterval` to `MAX_PAGE_LOAD_WAIT + 30000`.
+- `screen-info/index.ts` — shells out (`system_profiler` on macOS, `xdpyinfo` on Linux, `wmic` on Windows) to count monitors; `wdio.conf.ts` uses this to pick the `auto-select-desktop-capture-source` name (`Screen 1` vs `Entire screen`).
+- `helpers/driver.ts` — `driverFor(name)` resolves a capability name to its `WebdriverIO.Browser` in the multiremote session; the base classes' `_browser` getter wraps it.
+- `types/globals.d.ts` — ambient `Window.spot` declaration (typed `Record<string, any>`) for the `execute()` callbacks that poll app internals.
+- `resources/static-image.y4m` — the fake camera feed. A static image is used deliberately so the fake camera can stand in for a screenshare dongle source without tripping Spot-TV's camera-change auto-join detection.
 
 ### Reporters / output
 
-`wdio.conf.js` uses the `spec`, `junit`, and `timeline` (`wdio-timeline-reporter`, with screenshots `before:click`) reporters. JUnit XML and the timeline (with embedded images) are written to `./webdriver-results`, which CI archives as the `webdriver-results` artifact.
+`wdio.conf.ts` uses the `spec` and `junit` reporters; JUnit XML is written to `./webdriver-results`, which CI archives as the `webdriver-results` artifact. (The old `wdio-timeline-reporter` was dropped — it predates wdio 9 and risked breaking the run.)
 
 ## Conventions
 
-- **CommonJS only** — every file uses `require`/`module.exports` (no ES module `import`). `babel.config.js` targets Node 14 via `@babel/preset-env`; WebdriverIO loads specs through `@babel/register`.
-- **Never call the global `browser` for driver actions** in new code — index by capability (`browser[this.driver]`) so the action targets the correct TV or Remote browser. The global `browser` is declared as an ESLint global only because of one legacy spec.
+- **Strict TypeScript + native ESM.** `"type": "module"`; `tsconfig.json` extends the repo base with `module`/`moduleResolution: NodeNext`, `target: ES2023`, `lib: ["ES2023", "DOM"]` (DOM for the `window`/`localStorage`/`document` referenced inside `execute()` callbacks), and `types: ["node", "@wdio/globals/types", "jasmine"]`. **Relative imports carry explicit `.js` extensions** even from `.ts`. No build step — wdio runs the `.ts` directly via `tsx`; `tsc --noEmit` only type-checks.
+- **Never call the global `browser` for driver actions** in new code — route through `this._browser` (from the base `PageObject` / `SpotUser`) so the action targets the correct TV or Remote browser. The global `browser` remains for the one legacy `join-code` spec.
 - **Selectors live in page objects** as top-level constants; specs and user models stay selector-free.
-- **App-internal polling** goes through `browser[driver].execute(...)` against `window.spot.*`; keep that code defensive (try/catch returning a falsy default) since it runs during connect/reconnect races.
-- **Lint** extends `eslint-config-jitsi` + its jsdoc config (`.eslintrc`); JSDoc on methods is expected, `max-len` 120, `no-console` is a warning. `.eslintignore` excludes `node_modules`.
-- **chromedriver** is pinned and force-downloaded from the Chrome-for-Testing bucket via `.npmrc` (`chromedriver_force_download=true`, `chromedriver_cdnbinariesurl=...`) so the binary matches the managed Chrome build rather than whatever is preinstalled.
-- **CI runs on Linux only.** The E2E job in `.github/workflows/ci_spot-client.yml` runs on `ubuntu-latest`, installs both `spot-client` and `spot-webdriver`, and runs `npm run ci` from `spot-webdriver`. Chrome's fake-getUserMedia pipeline stalls on macOS runners, so keep E2E on Linux headless with `--no-sandbox`.
+- **App-internal polling** goes through `this._browser.execute(...)` against `window.spot.*` (ambiently typed `Record<string, any>`); keep that code defensive (try/catch returning a falsy default) since it runs during connect/reconnect races. wdio 9 `execute` accepts async functions, so the old `executeAsync(done => ...)` style was replaced with `execute(async () => ...)`.
+- **Lint** is the eslint flat config (`eslint.config.mjs`): `@eslint/js` + `typescript-eslint` recommended, jasmine/node/browser globals, `max-len` 120, `no-console` warn. `@typescript-eslint/no-explicit-any` is **off** here because the harness reaches into the app's untyped `window.spot.*` internals.
+- **Driver management** is automatic in wdio 9 (no `chromedriver` dep / `.npmrc`); the managed Chrome-for-Testing build is selected via `browserVersion` in the capabilities.
+- **CI runs on Linux only.** The E2E job in `.github/workflows/ci_spot-client.yml` runs on `ubuntu-latest`, installs at the workspace root, and runs `npm run ci` from `spot-webdriver`. Chrome's fake-getUserMedia pipeline stalls on macOS runners, so keep E2E on Linux headless with `--no-sandbox`.

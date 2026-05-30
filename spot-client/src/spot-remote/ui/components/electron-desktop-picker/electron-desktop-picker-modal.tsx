@@ -1,0 +1,100 @@
+import { Modal } from 'common/ui';
+import React from 'react';
+
+
+import DesktopPicker from './desktop-picker';
+
+/**
+ * The type of the callback invoked to submit DesktopCapturerSource information.
+ */
+type OnSourceChoose = (id?: string, type?: string) => void;
+
+/**
+ * The type of the state of {@code ElectronDesktopPickerModal}.
+ */
+interface IState {
+    onSourceChoose: OnSourceChoose | null;
+}
+
+/**
+ * Modal for displaying the component {@code DesktopPicker}.
+ */
+export default class ElectronDesktopPickerModal extends React.Component<Record<string, never>, IState> {
+    /**
+     * Initializes a new {@code ElectronDesktopPickerModal} instance.
+     *
+     * @param props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props: Record<string, never>) {
+        super(props);
+
+        this.state = {
+            onSourceChoose: null
+        };
+
+        this._onClose = this._onClose.bind(this);
+    }
+
+    /**
+     * Sets the global variable required by lib-jitsi-meet for the screensharing
+     * flow in Electron.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        window.JitsiMeetScreenObtainer = {
+            openDesktopPicker: (_options: any, onSourceChoose: OnSourceChoose) => {
+                this.setState({ onSourceChoose });
+            }
+        };
+    }
+
+    /**
+     * Unsets the global variable required by lib-jitsi-meet.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        window.JitsiMeetScreenObtainer = undefined;
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        if (!this.state.onSourceChoose) {
+            return null;
+        }
+
+        return (
+            <Modal
+                onClose = { this._onClose }
+                rootClassName = 'electron-desktop-picker-modal'>
+                <DesktopPicker
+                    onCancel = { this._onClose }
+                    onSelect = { this._onClose } />
+            </Modal>
+        );
+    }
+
+    /**
+     * Callback invoked to submit DesktopCapturerSource information.
+     *
+     * @param id - The id of the DesktopCapturerSource to pass into
+     * the onSourceChoose callback.
+     * @param type - The type of the DesktopCapturerSource to pass into
+     * the onSourceChoose callback.
+     * @returns {void}
+     */
+    _onClose(id?: string, type?: string) {
+        if (this.state.onSourceChoose) {
+            this.state.onSourceChoose(id, type);
+        }
+
+        this.setState({ onSourceChoose: null });
+    }
+}

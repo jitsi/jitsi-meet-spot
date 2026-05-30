@@ -1,0 +1,12 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ES2023",
+        "lib": ["ES2023", "DOM"],
+        "types": ["node", "@wdio/globals/types", "jasmine"],
+        "noEmit": true
+    },
+    "include": ["**/*.ts"]
+}

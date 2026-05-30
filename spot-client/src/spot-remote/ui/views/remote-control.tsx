@@ -1,0 +1,115 @@
+import {
+    getCalendarEvents,
+    getCurrentView,
+    isConnectedToSpot,
+    isConnectionEstablished
+} from 'common/app-state';
+import { logger } from 'common/logger';
+import { LoadingIcon, View } from 'common/ui';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+
+import './../../analytics';
+
+import {
+    ElectronDesktopPickerModal,
+    WaitingForSpotTVOverlay
+} from './../components';
+import { WithRemoteControl } from './../loaders';
+import { Feedback, InCall, WaitingForCall } from './remote-views';
+
+interface IProps {
+    events?: any[];
+    history?: any;
+    isWaitingForSpotTV?: boolean;
+    t?: (key: string) => string;
+    view?: string;
+}
+
+/**
+ * Displays the remote control view for controlling a Spot-TV instance from an
+ * instance of Spot-Remote. This view has sub-views for interacting with
+ * Spot-TV in its different states.
+ */
+export class RemoteControl extends React.PureComponent<IProps> {
+    /**
+     * Creates new instance of {@code RemoteControl} component.
+     *
+     * @param props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props: IProps) {
+        super(props);
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     */
+    render() {
+        return (
+            <View name = 'remoteControl'>
+                <WithRemoteControl>
+                    { this._getView() }
+                    <ElectronDesktopPickerModal />
+                </WithRemoteControl>
+            </View>
+        );
+    }
+
+    /**
+     * A state machine which determines what content should be displayed
+     * within the view.
+     *
+     * @private
+     * @returns
+     */
+    _getView() {
+        if (this.props.isWaitingForSpotTV) {
+            logger.log('remote-control show waiting for Spot TV');
+
+            return <WaitingForSpotTVOverlay />;
+        }
+
+        // FIXME if those subview would subclass View we would also have analytics
+        logger.log(`remote-control view: ${this.props.view}`);
+
+        switch (this.props.view) {
+        case 'admin':
+            return <div>currently in admin tools</div>;
+        case 'feedback':
+            return (
+                <Feedback />
+            );
+        case 'home':
+            return <WaitingForCall events = { this.props.events } />;
+        case 'meeting':
+            return <InCall />;
+        case 'setup':
+            return <div>{ this.props.t?.('appStatus.setup') }</div>;
+        default:
+            return <LoadingIcon />;
+        }
+    }
+}
+
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code RemoteControls}.
+ *
+ * @param state - The Redux state.
+ * @private
+ * @returns
+ */
+function mapStateToProps(state: any) {
+    return {
+        events: getCalendarEvents(state),
+        view: getCurrentView(state),
+        isWaitingForSpotTV: isConnectionEstablished(state) && !isConnectedToSpot(state)
+    };
+}
+
+export default connect(mapStateToProps)(withTranslation()(RemoteControl));

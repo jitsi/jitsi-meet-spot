@@ -1,6 +1,8 @@
-1. Have `node`, `npm` and all that installed.
+1. Have `node` (see `.nvmrc`), `npm` and all that installed.
 
-2. Install `nodemon` globally.
+2. Install dependencies. This is an npm-workspaces monorepo, so run `npm install` once from
+   the repository root (it installs every subproject, spot-admin included). `start:dev` uses
+   `tsx` from the workspace — no global `nodemon` is needed anymore.
 
 3. Got to `spot-admin` dir.
 
@@ -40,7 +42,7 @@ It should try to use the backend for getting join codes and MUC room names.
 11. Connect tv using the `LLPC` shown in Terminal of spot-admin and use it (Step 10)
 
 12. Both remote and tv should be loaded with calendar having the following meetings: Meeting 1, Meeting 2, Meeting 3 (this are created from spot-admin backend)
-    - https://github.com/jitsi/jitsi-meet-spot/blob/master/spot-admin/backend/calendar.js#L67
+    - https://github.com/jitsi/jitsi-meet-spot/blob/master/spot-admin/src/backend/calendar.ts
 
 ## Note:
 

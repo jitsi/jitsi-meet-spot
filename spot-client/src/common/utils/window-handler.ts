@@ -1,0 +1,47 @@
+/**
+ * A set up utilities wrapping native window methods to prevent direct access
+ * of the global window.
+ */
+export default {
+    /**
+     * Returns the url that is hosting this Spot instance, excluding any query
+     * params and fragments.
+     *
+     * @returns {string}
+     */
+    getBaseUrl(): string {
+        const origin = window.location.origin;
+        const pathParts = window.location.pathname.split('/');
+
+        pathParts.length = pathParts.length - 1;
+
+        const newPath = pathParts.reduce((accumulator, currentValue) => {
+            if (currentValue) {
+                return `${accumulator}/${currentValue}`;
+            }
+
+            return accumulator;
+        }, '');
+
+        return `${origin}${newPath}`;
+    },
+
+    /**
+     * Opens a popup window with the provided url.
+     *
+     * @param url - The url to go to in the new window.
+     * @returns {void}
+     */
+    openNewWindow(url: string): void {
+        window.open(url, '_blank', 'noopener');
+    },
+
+    /**
+     * Reloads the current page by visiting the origin.
+     *
+     * @returns {void}
+     */
+    reload(): void {
+        window.location.reload();
+    }
+};

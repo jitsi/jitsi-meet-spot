@@ -2,9 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This is a **monorepo** for Jitsi Meet's meeting-room integration ("Spot"). There is **no root `package.json`** — each subproject is independent, with its own dependencies, scripts, and a **`<subproject>/CLAUDE.md`** documenting it in detail. `cd` into a subproject before running its `npm` commands, and consult that subproject's CLAUDE.md for build/lint/test/run and internal architecture.
+This is an **npm-workspaces monorepo** for Jitsi Meet's meeting-room integration ("Spot"). The root `package.json` declares the workspaces and fans out shared scripts; each subproject still has its own dependencies, scripts, and a **`<subproject>/CLAUDE.md>`** documenting it in detail. Consult that subproject's CLAUDE.md for internal architecture.
 
-Node version is pinned in `.nvmrc` (currently 22); run `nvm use` and `npm install` per subproject.
+Everything is **TypeScript** (strict, via the shared `tsconfig.base.json` each subproject extends) and **Node 24** (pinned in `.nvmrc`). **spot-prosody is excluded** from the workspace/TS setup (it's Lua).
+
+```bash
+nvm use            # Node 24
+npm install        # ONE install at the root installs every workspace (single root lockfile)
+
+# Root scripts fan out across workspaces (`--workspaces --if-present`):
+npm run lint       # eslint (flat config) in every workspace
+npm run typecheck  # tsc --noEmit (strict) in every workspace
+npm run test       # jest unit tests (spot-admin, spot-electron, spot-controller, spot-client)
+npm run build      # builds the buildable workspaces (spot-admin/electron tsc, spot-client webpack prod)
+
+# Target one workspace:
+npm run <script> --workspace spot-client
+```
+
+Note: the spot-webdriver E2E suite is **not** part of `npm run test` (its script is `e2e`, run via `npm run ci` from `spot-webdriver`, and only on Linux). Some build/run steps aren't reproducible on every host — Electron packaging (`spot-electron` `dist`) needs mac/windows + signing, the React Native build (`spot-controller`) needs Xcode/Android SDK, and E2E needs headless Linux Chrome.
 
 ## Subprojects
 
@@ -25,4 +41,6 @@ Spot runs in one of two modes, selected by the presence of certain config values
 
 ## Working across the repo
 
-Each subproject is built, linted, and tested from its own directory (see its CLAUDE.md). `scripts/ci.sh` runs the full lint+test+build sweep across all of them, mirroring CI; the workflows in `.github/workflows/` run spot-client unit tests and the spot-webdriver E2E job on Linux.
+Run the shared gates from the root (they fan out to every workspace): `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`. `scripts/ci.sh` does a full root `npm ci` + that sweep (and the E2E suite when `ENABLE_WEBDRIVER` is set), mirroring CI. The GitHub workflows in `.github/workflows/`: **`ci.yml`** installs once at the root and runs lint/typecheck/test/build plus the spot-webdriver E2E job (Linux); **`ci_spot-electron.yml`** does the platform-specific Electron packaging on macOS/Windows.
+
+Conventions shared across subprojects: strict TS (`tsconfig.base.json`), ESLint **flat config** (`eslint.config.mjs`) built on `typescript-eslint` (the eslintrc-era `@jitsi/eslint-config` was dropped), the lint/TS toolchain hoisted to the **root** `devDependencies`. The Node-side subprojects (`spot-admin`, `spot-electron`, `spot-webdriver`) are native **ESM** (`"type": "module"`, `NodeNext`, `.js` import extensions); the bundled ones (`spot-client` via webpack, `spot-controller` via Metro) use bundler resolution with extensionless imports. **React (17) and React Native (0.68) majors are intentionally held** (React 17 keeps the enzyme test suite working), which transitively pins the libraries whose latest releases require React 18 (MUI, react-redux, react-router, …) to their latest React-17-compatible versions.

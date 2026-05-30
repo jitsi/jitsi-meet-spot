@@ -2,6 +2,7 @@
 #
 .env
 dist
+release
 lib
 webdriver-results
 driver-logs
@@ -48,6 +49,10 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+
+# TypeScript
+#
+*.tsbuildinfo
 
 # BUCK
 buck-out/

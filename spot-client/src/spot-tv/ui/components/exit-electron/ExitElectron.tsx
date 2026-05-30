@@ -1,0 +1,91 @@
+import { Cancel } from 'common/icons';
+import React from 'react';
+
+
+import { nativeCommands } from '../../../native-functions';
+
+import ExitVerification from './ExitVerification';
+
+/**
+ * The type of the React {@code Component} state of {@code ExitElectron}.
+ */
+interface IState {
+    showExitVerification: boolean;
+}
+
+/**
+ * Provides UI for exiting the electron application, which normally may not be
+ * exit-able due to kiosk mode.
+ */
+export default class ExitElectron extends React.Component<Record<string, never>, IState> {
+    /**
+     * Initializes a new {@code ExitElectron} instance.
+     *
+     * @param props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props: Record<string, never>) {
+        super(props);
+
+        this.state = {
+            showExitVerification: false
+        };
+
+        this._onHideOverlay = this._onHideOverlay.bind(this);
+        this._onShowCloseOverlay = this._onShowCloseOverlay.bind(this);
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        if (this.state.showExitVerification) {
+            return (
+                <ExitVerification
+                    onCancel = { this._onHideOverlay }
+                    onVerification = { this._onExit } />
+            );
+        }
+
+        return (
+            <a
+                className = 'close-electron-button'
+                onClick = { this._onShowCloseOverlay }>
+                <Cancel />
+            </a>
+        );
+    }
+
+
+    /**
+     * Instructs the electron app to exit.
+     *
+     * @returns {void}
+     */
+    _onExit() {
+        nativeCommands.sendExitApp();
+    }
+
+    /**
+     * Hides the component asking to confirm application exit.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onHideOverlay() {
+        this.setState({ showExitVerification: false });
+    }
+
+    /**
+     * Displays the component asking for confirmation of application exit.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShowCloseOverlay() {
+        this.setState({ showExitVerification: true });
+    }
+}

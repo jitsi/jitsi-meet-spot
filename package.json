@@ -1,0 +1,43 @@
+{
+    "name": "jitsi-meet-spot",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Monorepo for Jitsi Meet's meeting-room integration (Spot): Spot-TV / Spot-Remote web client, Electron host, React Native controller, E2E tests and a mock backend.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:jitsi/jitsi-meet-spot.git"
+    },
+    "engines": {
+        "node": ">=24",
+        "npm": ">=10"
+    },
+    "workspaces": [
+        "spot-admin",
+        "spot-electron",
+        "spot-webdriver",
+        "spot-controller",
+        "spot-client"
+    ],
+    "overrides": {
+        "@xmldom/xmldom": "0.8.7",
+        "cheerio": "1.0.0-rc.12",
+        "react-is": "18.3.1"
+    },
+    "scripts": {
+        "build": "npm run build --workspaces --if-present",
+        "lint": "npm run lint --workspaces --if-present",
+        "lint:fix": "npm run lint:fix --workspaces --if-present",
+        "test": "npm run test --workspaces --if-present",
+        "typecheck": "npm run typecheck --workspaces --if-present"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^24.12.4",
+        "cross-env": "^10.1.0",
+        "eslint": "^10.4.0",
+        "globals": "^17.6.0",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.60.0"
+    }
+}

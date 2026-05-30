@@ -1,5 +1,9 @@
 name: 'CI - spot-electron'
 on: [pull_request]
+
+# Unit tests / lint / typecheck for spot-electron run in the main `CI` workflow
+# (root `npm run test` / `lint` / `typecheck`). This workflow only does the
+# platform-specific packaging (electron-builder) which must run on mac/windows.
 jobs:
     build-spot-electron-mac:
         name: Build on macOS
@@ -14,13 +18,11 @@ jobs:
               with:
                 node-version-file: '.nvmrc'
 
-            - name: Step 3 - run install
-              working-directory: 'spot-electron'
-              run: npm install
+            - name: Step 3 - install (workspaces)
+              run: npm ci
 
             - name: Step 4 - build
-              working-directory: 'spot-electron'
-              run: npm run dist
+              run: npm run dist --workspace spot-electron
 
     build-spot-electron-windows:
         name: Build on Windows
@@ -35,35 +37,8 @@ jobs:
               with:
                 node-version-file: '.nvmrc'
 
-            - name: Step 3 - run install
-              working-directory: 'spot-electron'
-              run: npm install
+            - name: Step 3 - install (workspaces)
+              run: npm ci
 
             - name: Step 4 - build
-              working-directory: 'spot-electron'
-              run: npm run dist
-
-    unit-tests-spot-electron:
-        name: Unit-tests
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Step 1 - checkout
-              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
-
-            - name: Step 2 - setup node
-              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
-              with:
-                node-version-file: '.nvmrc'
-
-            - name: Step 3 - run install
-              working-directory: 'spot-electron'
-              run: npm install
-
-            - name: Step 4 - run lint
-              working-directory: 'spot-electron'
-              run: npm run lint
-
-            - name: Step 5 - run test
-              working-directory: 'spot-electron'
-              run: npm run test
+              run: npm run dist --workspace spot-electron

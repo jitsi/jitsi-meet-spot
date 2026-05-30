@@ -1,0 +1,160 @@
+import {
+    getInMeetingStatus,
+    hideModal,
+    startWiredScreensharing,
+    startWirelessScreensharing,
+    stopScreenshare
+} from 'common/app-state';
+import { isWirelessScreenshareSupported } from 'common/detection';
+import { Modal } from 'common/ui';
+import React from 'react';
+import { connect } from 'react-redux';
+
+
+import ScreensharePicker from './ScreensharePicker';
+
+/**
+ * The type of the props of {@link ScreenshareModal}.
+ */
+interface IProps {
+    onHideModal?: () => void;
+    onStartWiredScreenshare?: () => void;
+    onStartWirelessScreenshare?: () => Promise<unknown>;
+    onStopScreensharing?: () => Promise<unknown>;
+    screensharingType?: string;
+    wiredScreensharingEnabled?: boolean;
+}
+
+/**
+ * Wraps {@code ScreensharePicker} so it can be displayed in a modal.
+ */
+export class ScreenshareModal extends React.Component<IProps> {
+    _isWirelessScreenshareSupported: boolean;
+
+    /**
+     * Initializes a new {@code ScreenshareModal} instance.
+     *
+     * @param props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props: IProps) {
+        super(props);
+
+        this._onStopScreenshare = this._onStopScreenshare.bind(this);
+        this._isWirelessScreenshareSupported = isWirelessScreenshareSupported();
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        return (
+            <Modal
+                onClose = { this.props.onHideModal }
+                rootClassName = 'screenshare'>
+                <ScreensharePicker
+                    onStartWiredScreenshare
+                        = { this.props.onStartWiredScreenshare }
+                    onStartWirelessScreenshare
+                        = { this.props.onStartWirelessScreenshare }
+                    onStopScreensharing
+                        = { this._onStopScreenshare }
+                    screensharingType = { this.props.screensharingType }
+                    wiredScreenshareEnabled
+                        = { this.props.wiredScreensharingEnabled }
+                    wirelessScreenshareEnabled
+                        = { this._isWirelessScreenshareSupported } />
+            </Modal>
+        );
+    }
+
+    /**
+     * Turns off any active screenshare.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onStopScreenshare() {
+        this.props.onStopScreensharing?.()
+            .then(() => {
+                // Special case to immediately close the modal when stopping
+                // screenshare while only wireless screenshare is available.
+                if (this._isWirelessScreenshareSupported
+                    && !this.props.wiredScreensharingEnabled) {
+                    this.props.onHideModal?.();
+                }
+            });
+    }
+}
+
+/**
+ * Selects parts of the Redux state to pass in with the props of
+ * {@code ScreenshareModal}.
+ *
+ * @param state - The Redux state.
+ * @private
+ * @returns {Object}
+ */
+function mapStateToProps(state: any) {
+    const {
+        screensharingType,
+        wiredScreensharingEnabled
+    } = getInMeetingStatus(state);
+
+    return {
+        screensharingType,
+        wiredScreensharingEnabled
+    };
+}
+
+/**
+ * Creates actions which can update Redux state.
+ *
+ * @param dispatch - The Redux dispatch function to update state.
+ * @private
+ * @returns {Object}
+ */
+function mapDispatchToProps(dispatch: any) {
+    return {
+        /**
+         * Sets the {@code ScreenshareModal} to be hidden.
+         *
+         * @returns {void}
+         */
+        onHideModal() {
+            dispatch(hideModal());
+        },
+
+        /**
+         * Triggers the wireless screensharing flow to be started.
+         *
+         * @returns {Promise}
+         */
+        onStartWirelessScreenshare() {
+            return dispatch(startWirelessScreensharing());
+        },
+
+        /**
+         * Triggers wired screensharing to be enabled.
+         *
+         * @returns {void}
+         */
+        onStartWiredScreenshare() {
+            dispatch(startWiredScreensharing());
+        },
+
+        /**
+         * Turns off any active screenshare.
+         *
+         * @returns {Promise}
+         */
+        onStopScreensharing() {
+            return dispatch(stopScreenshare());
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScreenshareModal);
