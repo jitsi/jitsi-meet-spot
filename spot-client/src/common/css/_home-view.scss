@@ -1,24 +1,28 @@
+@use "media-queries";
+@use "mixins";
+@use "variables";
+
 .spot-home {
     background-color: var(--container-bg-color);
     border-radius: 5px;
 
-    @media #{$mqw-mobile-s} {
+    @media #{media-queries.$mqw-mobile-s} {
         width: 80%;
     }
 
-    @media #{$mqw-tablet} {
+    @media #{media-queries.$mqw-tablet} {
         width: 50%;
     }
 
-    @media #{$mqw-laptop} {
+    @media #{media-queries.$mqw-laptop} {
         width: 50%;
     }
 
-    @media #{$mqw-laptop-l} {
+    @media #{media-queries.$mqw-laptop-l} {
         width: 47%;
     }
 
-    @media #{$mqw-4k} {
+    @media #{media-queries.$mqw-4k} {
         width: 47%;
     }
 
@@ -57,7 +61,7 @@
         text-align: center;
 
         h1 {
-            font-size: $font-size-medium-plus;
+            font-size: variables.$font-size-medium-plus;
         }
 
         .setup-instructions {
@@ -67,7 +71,7 @@
 
         .setup-join-code {
             color: #6aafeb;
-            font-size: $font-size-large;
+            font-size: variables.$font-size-large;
 
             .join-info {
                 color: inherit;
@@ -86,6 +90,6 @@
 
 .modal-open {
     .spot-home {
-        @include modal-open
+        @include mixins.modal-open
     }
 }

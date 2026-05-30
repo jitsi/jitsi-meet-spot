@@ -1,5 +1,7 @@
+@use "../mixins";
+
 .more-modal {
-    @include centered-content;
+    @include mixins.centered-content;
 
     display: flex;
     justify-content: space-around;

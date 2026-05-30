@@ -1,3 +1,5 @@
+@use "../../mixins";
+
 .admin-entry {
     align-items: center;
     border-top: var(--separator-border);
@@ -16,7 +18,7 @@
     }
 
     .pairing-code {
-        @include join-code;
+        @include mixins.join-code;
     }
 
     &:last-child {

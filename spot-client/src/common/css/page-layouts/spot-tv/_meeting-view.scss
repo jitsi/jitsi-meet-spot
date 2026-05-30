@@ -1,3 +1,5 @@
+@use "../../variables";
+
 .meeting-view {
     height: 100vh;
     width: 100vw;
@@ -15,7 +17,7 @@
         position: absolute;
         top: 0;
         width: 100vw;
-        z-index: $z-index-cover-base;
+        z-index: variables.$z-index-cover-base;
     }
 
     .meetingMouseHider {
@@ -39,7 +41,7 @@
             }
 
             svg {
-                font-size: $font-size-x-large;
+                font-size: variables.$font-size-x-large;
             }
         }
     }

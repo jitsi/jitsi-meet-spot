@@ -1,3 +1,5 @@
+@use "mixins";
+
 .close-electron-button {
     color: red;
     cursor: pointer;
@@ -11,7 +13,7 @@
   margin: 8px 0px 16px;
 
   input {
-    @include input-reset;
+    @include mixins.input-reset;
     color: white;
     font-size: 32px;
     line-height: 44px;

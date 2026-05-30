@@ -1,3 +1,5 @@
+@use "variables";
+
 .meeting {
     background-color: var(--container-bg-color);
     cursor: pointer;
@@ -36,7 +38,7 @@
     .meeting-date,
     .meeting-time,
     .meeting-url {
-        font-size: $font-size-small;
+        font-size: variables.$font-size-small;
     }
 
     .meeting-join {

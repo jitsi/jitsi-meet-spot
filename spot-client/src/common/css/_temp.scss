@@ -1,3 +1,5 @@
+@use "mixins";
+
 /**
  * In this file is placeholder CSS, used until designs are received. No CSS to
  * be used on the final product should be included here.
@@ -62,7 +64,7 @@ body.using-mouse :focus {
 }
 
 .loading {
-    @include centered-content;
+    @include mixins.centered-content;
 
     min-height: 100vh;
     width: 100%;

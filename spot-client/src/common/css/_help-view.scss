@@ -1,14 +1,18 @@
+@use "media-queries";
+@use "mixins";
+@use "variables";
+
 .help-view {
-  @include spot-remote-view-layout;
+  @include mixins.spot-remote-view-layout;
 
   .title {
     padding: 1.5em;
     text-align: center;
-    font-size: $font-size-x-large;
+    font-size: variables.$font-size-x-large;
   }
 
   .help-dialog {
-    @include centered-content;
+    @include mixins.centered-content;
     display: block;
 
     background-color: var(--container-bg-color);
@@ -18,16 +22,16 @@
     padding: 32px 16px;
     text-align: center;
 
-    @media #{$mqw-xxsmall} {
+    @media #{media-queries.$mqw-xxsmall} {
       width: 95%;
     }
 
-    @media #{$mqw-tablet} {
+    @media #{media-queries.$mqw-tablet} {
       width: 60%;
     }
 
     .help-message {
-      font-size: $font-size-medium-plus;
+      font-size: variables.$font-size-medium-plus;
 
       .spot-home-link {
         text-decoration: none;

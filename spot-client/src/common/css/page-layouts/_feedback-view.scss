@@ -1,17 +1,21 @@
+@use "../media-queries";
+@use "../mixins";
+@use "../variables";
+
 .feedback-opener {
     bottom: 5px;
     cursor: pointer;
     position: fixed;
     right: 5px;
-    z-index: $z-index-foreground;
+    z-index: variables.$z-index-foreground;
 }
 
 .app-feedback-overlay.status-overlay {
     background: #1C2025;
-    z-index: $z-index-above-all;
+    z-index: variables.$z-index-above-all;
 
     * {
-        z-index: $z-index-above-all;
+        z-index: variables.$z-index-above-all;
     }
 
     .feedback-form {
@@ -24,7 +28,7 @@
 }
 
 .feedback-view {
-    @include spot-remote-view-layout;
+    @include mixins.spot-remote-view-layout;
 
     .feedback-form {
         display: flex;
@@ -38,16 +42,16 @@
         padding: 32px 16px; 
         text-align: center;
 
-        @media #{$mqw-xxsmall} {
+        @media #{media-queries.$mqw-xxsmall} {
             width: 100%;
         }
 
-        @media #{$mqw-tablet} {
+        @media #{media-queries.$mqw-tablet} {
             width: 50%;
         }
 
         .cta {
-            font-size: $font-size-medium-plus;
+            font-size: variables.$font-size-medium-plus;
         }
 
         .message-help {
@@ -60,7 +64,7 @@
         }
 
         .remote-message {
-            @include inherit-reset;
+            @include mixins.inherit-reset;
 
             background-color: var(--feedback-background);
             border-radius: 5px;

@@ -1,5 +1,7 @@
+@use "mixins";
+
 .hangup-modal-select {
-    @include centered-content;
+    @include mixins.centered-content;
     flex-direction: column;
     justify-content: center;
     min-width: 360px;

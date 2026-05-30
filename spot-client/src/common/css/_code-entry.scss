@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 .code-entry {
     cursor: pointer;
     display: flex;
@@ -6,8 +9,8 @@
     position: relative;
 
     .box {
-        @include centered-content;
-        @include join-code;
+        @include mixins.centered-content;
+        @include mixins.join-code;
 
         /**
          * Using initial-box sizing is important for mobile Safari to properly
@@ -46,7 +49,7 @@
         bottom: 0;
         caret-color: transparent;
         color: transparent;
-        font-size: $font-size-x-large;
+        font-size: variables.$font-size-x-large;
         left: 0;
         letter-spacing: 2em;
         overflow: hidden;
@@ -55,7 +58,7 @@
         resize: none;
         top: 0;
         width: 100%;
-        z-index: $z-index-base;
+        z-index: variables.$z-index-base;
 
         &:focus {
             outline: none;
