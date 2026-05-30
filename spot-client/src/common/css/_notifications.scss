@@ -1,3 +1,5 @@
+@use "variables";
+
 .notifications {
     opacity: 0.5;
     overflow: hidden;
@@ -5,7 +7,7 @@
     text-align: center;
     top: 0;
     width: 100%;
-    z-index: $z-index-foreground;
+    z-index: variables.$z-index-foreground;
 
     .notification {
         padding: 5px;

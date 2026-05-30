@@ -1,7 +1,9 @@
+@use "variables";
+
 .reconnect-indicator {
     bottom:  10;
     display: flex;
     position: fixed;
     left: 10;
-    z-index: $z-index-above-all;
+    z-index: variables.$z-index-above-all;
 }

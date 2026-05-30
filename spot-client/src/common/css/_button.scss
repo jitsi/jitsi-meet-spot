@@ -1,8 +1,11 @@
+@use "media-queries";
+@use "variables";
+
 .button {
     border-radius: 5px;
     color: white;
     cursor: pointer;
-    font-size: $font-size-small;
+    font-size: variables.$font-size-small;
     padding: 8px 32px;
 
     &:focus {
@@ -60,7 +63,7 @@
         font-size: 1em;
         height: 36px;
 
-        @media #{$mqw-tablet} {
+        @media #{media-queries.$mqw-tablet} {
             height: 48px;
         }
     }

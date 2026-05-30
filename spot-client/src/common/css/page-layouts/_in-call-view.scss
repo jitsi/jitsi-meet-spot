@@ -1,5 +1,8 @@
+@use "../mixins";
+@use "../variables";
+
 .in-call {
-    @include spot-remote-view-layout;
+    @include mixins.spot-remote-view-layout;
 
     justify-content: space-between;
 
@@ -34,7 +37,7 @@
         .in-call-name,
         .in-call-invited-phone {
             word-wrap: break-word;
-            font-size: $font-size-medium-plus;
+            font-size: variables.$font-size-medium-plus;
             margin-top: 100px;
             text-align: center;
         }
@@ -55,7 +58,7 @@
         }
 
         .in-call-name-with-phone {
-            font-size: $font-size-medium;
+            font-size: variables.$font-size-medium;
             text-align: center;
         }
     }

@@ -1,3 +1,5 @@
+@use "../variables";
+
 .status-overlay {
     background: var(--backdrop-color);
     height: 100vh;
@@ -5,7 +7,7 @@
     position: absolute;
     top: 0;
     width: 100vw;
-    z-index: $z-index-cover-base;
+    z-index: variables.$z-index-cover-base;
 
     .status-overlay-text-frame {
         display: block;
@@ -21,7 +23,7 @@
         text-align: center;
       
         h1 {
-            font-size: $font-size-medium-plus;
+            font-size: variables.$font-size-medium-plus;
         }
       
         .status-overlay-text {

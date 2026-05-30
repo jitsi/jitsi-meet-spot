@@ -1,3 +1,6 @@
+@use "media-queries";
+@use "mixins";
+
 .electron-desktop-picker-modal {
     z-index: 11;
 
@@ -9,7 +12,7 @@
     .desktop-picker {
         width: 100%;
 
-        @media #{$mqw-tablet} {
+        @media #{media-queries.$mqw-tablet} {
             width: 50vw;
         }
     }
@@ -18,7 +21,7 @@
 .desktop-picker {
     .picker-tabs {
         button {
-            @include button-reset;
+            @include mixins.button-reset;
             border: 0;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
@@ -39,7 +42,7 @@
     }
 
     .picker-choice {
-        @include button-reset;
+        @include mixins.button-reset;
         background-color: rgba(0, 0, 0, 0);
         border: 0;
         border-radius: 5px;

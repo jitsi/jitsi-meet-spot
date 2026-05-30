@@ -1,3 +1,5 @@
+@use "mixins";
+
 .join-code {
-    @include join-code;
+    @include mixins.join-code;
 }

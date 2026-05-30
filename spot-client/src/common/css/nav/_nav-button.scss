@@ -1,3 +1,6 @@
+@use "../mixins";
+@use "../variables";
+
 .nav-button {
     align-items: center;
     background-color: transparent;
@@ -18,7 +21,7 @@
     }
 
     .nav-icon-container {
-        @include centered-content;
+        @include mixins.centered-content;
 
         border: 1px solid;
         border-radius: 50%;
@@ -51,7 +54,7 @@
     }
 
     .nav-label-container {
-        @include centered-content;
+        @include mixins.centered-content;
 
         flex-grow: 1;
         margin: auto;
@@ -61,7 +64,7 @@
          */
         position: relative;
         white-space: nowrap;
-        width: calc(#{$font-size-large} * 2.5);
+        width: calc(#{variables.$font-size-large} * 2.5);
     }
 
     /**
@@ -106,7 +109,7 @@
     justify-content: center;
 
     .nav-item {
-        @include button-reset;
+        @include mixins.button-reset;
         border: 0;
         border-radius: 0;
         border-top: 2px solid transparent;

@@ -1,5 +1,7 @@
+@use "mixins";
+
 .recording-consent-modal {
-    @include centered-content;
+    @include mixins.centered-content;
     flex-direction: column;
     font-family: 'Arial', sans-serif;
     min-width: 360px;

@@ -1,16 +1,20 @@
+@use "media-queries";
+@use "mixins";
+@use "variables";
+
 .share-select-view {
-    @include centered-content;
+    @include mixins.centered-content;
 }
 
 .screenshare-select {
-    @include centered-content;
+    @include mixins.centered-content;
     flex-direction: column;
     justify-content: center;
     min-width: 360px;
     text-align: center;
     width: 100%;
 
-    @media #{$mqw-tablet} {
+    @media #{media-queries.$mqw-tablet} {
         width: 500px;
     }
 
@@ -38,7 +42,7 @@
     }
 
     .icon i {
-        font-size: $font-size-xxx-large;
+        font-size: variables.$font-size-xxx-large;
     }
 
     .cta-button {

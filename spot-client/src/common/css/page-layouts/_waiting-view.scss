@@ -1,5 +1,8 @@
+@use "../media-queries";
+@use "../mixins";
+
 .waiting-view {
-    @include spot-remote-view-layout;
+    @include mixins.spot-remote-view-layout;
 
     .waiting-sub-view {
         align-items: center;
@@ -28,11 +31,11 @@
             padding: .8em 1.2em;
             width: 80%;
 
-            @media #{$mqw-laptop} {
+            @media #{media-queries.$mqw-laptop} {
                 width: 70%;
             }
         
-            @media #{$mqw-laptop-l} {
+            @media #{media-queries.$mqw-laptop-l} {
                 width: 60%;
             }
         }
@@ -49,28 +52,28 @@
     }
 
     .meeting-name-entry-view {
-        @include centered-content;
+        @include mixins.centered-content;
 
         flex: 1;
     }
 
     .share-select-view {
-        @include centered-content;
+        @include mixins.centered-content;
         align-items: initial;
         margin: auto;
         padding: 0;
         width: 100%;
 
-        @media #{$mqw-tablet} {
+        @media #{media-queries.$mqw-tablet} {
             width: 450px;
         }
     
-        @media #{$mqw-laptop-l} {
+        @media #{media-queries.$mqw-laptop-l} {
             width: 500px;
         }
     }
 
     .number-entry-view {
-        @include centered-content;
+        @include mixins.centered-content;
     }  
 }

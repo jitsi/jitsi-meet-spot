@@ -1,12 +1,14 @@
+@use "variables";
+
 .clock {
     text-align: center;
 
     .date {
         color: var(--container-sub-content-font-color);
-        font-size: $font-size-medium-plus;
+        font-size: variables.$font-size-medium-plus;
     }
 
     .time {
-        font-size: $font-size-x-large;
+        font-size: variables.$font-size-x-large;
     }
 }

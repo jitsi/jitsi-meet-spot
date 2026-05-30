@@ -1,3 +1,6 @@
+@use "media-queries";
+@use "mixins";
+
 .modal {
     align-items: center;
     display: flex;
@@ -29,7 +32,7 @@
         box-shadow: rgba(20, 20, 20, 0.6) 0px 4px 25px 4px;
         border-radius: 6px;
 
-        @media #{$mqw-tablet} {
+        @media #{media-queries.$mqw-tablet} {
             background:  var(--container-bg-color-fallback);
             height: auto;
             margin: 50px;
@@ -45,7 +48,7 @@
         }
 
         .close {
-            @include button-reset;
+            @include mixins.button-reset;
 
             background-color: transparent;
             border: 0;
@@ -54,7 +57,7 @@
             right: 10px;
 
             &:active {
-                @include active;
+                @include mixins.active;
             }
 
             &.modal-close {

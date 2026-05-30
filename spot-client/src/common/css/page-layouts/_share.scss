@@ -1,5 +1,8 @@
+@use "../mixins";
+@use "../variables";
+
 .share-view-contents {
-    @include spot-remote-view-layout;
+    @include mixins.spot-remote-view-layout;
 
     justify-content: center;
 }
@@ -12,7 +15,7 @@
 
     .title,
     .description {
-        font-size: $font-size-large;
+        font-size: variables.$font-size-large;
         text-align: center;
     }
 
@@ -22,7 +25,7 @@
         margin: 50px 0;
 
         .selection {
-            @include button-reset;
+            @include mixins.button-reset;
 
             align-items: center;
             border-radius: 5px;

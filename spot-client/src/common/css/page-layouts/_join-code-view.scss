@@ -1,5 +1,8 @@
+@use "../media-queries";
+@use "../mixins";
+
 .join-code-view {
-    @include spot-remote-view-layout;
+    @include mixins.spot-remote-view-layout;
 
     justify-content: center;
     position: relative;
@@ -17,7 +20,7 @@
     }
 
     .code-entry-wrapper {
-        @include centered-content;
+        @include mixins.centered-content;
 
         margin: 56px 0 48px;
 
@@ -25,7 +28,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
 
-            @media #{$mqw-tablet} {
+            @media #{media-queries.$mqw-tablet} {
                 display: flex;
             }
         }
@@ -33,7 +36,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
 
-            @media #{$mqw-tablet} {
+            @media #{media-queries.$mqw-tablet} {
                 display: flex;
             }
         }
@@ -59,11 +62,11 @@
         position: absolute;
         left: 5px;
 
-        @media #{$mqw-xxsmall} {
+        @media #{media-queries.$mqw-xxsmall} {
             font-size: 3.5em;
         }
 
-        @media #{$mqw-laptop} {
+        @media #{media-queries.$mqw-laptop} {
             font-size: 2em;
         }
     }
