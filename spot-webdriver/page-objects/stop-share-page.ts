@@ -1,0 +1,34 @@
+import type { BrowserName } from '../constants/index.js';
+
+import PageObject from './page-object.js';
+
+const STOP_SHARE_CTA = '.stop-share';
+const STOP_SHARE_BUTTON = '.stop-share-button';
+
+/**
+ * A page object for interacting with the Share Mode view of Spot-Remote for
+ * stopping any local wireless screenshare in progress.
+ */
+class StopSharePage extends PageObject {
+    /**
+     * Initializes a new {@code StopSharePage} instance.
+     *
+     * @inheritdoc
+     */
+    constructor(driver: BrowserName) {
+        super(driver, STOP_SHARE_CTA);
+    }
+
+    /**
+     * Clicks the button to stop a screenshare in progress.
+     *
+     * @returns {void}
+     */
+    async stopScreensharing(): Promise<void> {
+        const stopShareButton = await this.waitForElementDisplayed(STOP_SHARE_BUTTON);
+
+        await stopShareButton.click();
+    }
+}
+
+export default StopSharePage;

@@ -1,0 +1,74 @@
+import { logger } from 'common/logger';
+
+export const asyncActionRequestStates = {
+    DONE: 'DONE',
+    ERROR: 'ERROR',
+    PENDING: 'PENDING'
+};
+
+/**
+ * Encapsulates updating the known status of a command in flight to a Spot-TV
+ * for a state change.
+ *
+ * @param dispatch - The Redux dispatch function to update the
+ * current state of a request in flight.
+ * @param request - The function which should be executed that
+ * performs the async request. The function must return a promise.
+ * @param requestType - The type of the request. Used to reference
+ * the request in Redux.
+ * @param expectedValue - What the expected result of the request
+ * should be. Used for optimistic updating of the UI.
+ * @private
+ * @returns {Function<Promise>}
+ */
+export function createAsyncActionWithStates(  
+        dispatch: (action: any) => void,
+        request: () => Promise<any>,
+        requestType: string,
+        expectedValue: any): Promise<any> {
+    dispatch(setRequestState(
+        requestType,
+        asyncActionRequestStates.PENDING,
+        expectedValue
+    ));
+
+    return request()
+        .then(result => {
+            dispatch(setRequestState(
+                requestType,
+                asyncActionRequestStates.DONE,
+                expectedValue
+            ));
+
+            return Promise.resolve(result);
+        })
+        .catch(error => {
+            logger.error('Encountered error with async request', {
+                error,
+                expectedValue,
+                requestType
+            });
+
+            dispatch(setRequestState(requestType, asyncActionRequestStates.ERROR, expectedValue));
+
+            return Promise.reject(error);
+        });
+}
+
+/**
+ * Updates the known request state of a command to a Spot-TV.
+ *
+ * @param requestType - The type of the request to the Spot-TV.
+ * @param requestState - Whether the request is pending, completed, or
+ * has ended with an error.
+ * @param expectedState - The desired state the command is trying to make
+ * the Spot-TV change to.
+ * @returns {Object}
+ */
+function setRequestState(requestType: string, requestState: string, expectedState: any): any {
+    return {
+        type: requestType,
+        requestState,
+        expectedState
+    };
+}

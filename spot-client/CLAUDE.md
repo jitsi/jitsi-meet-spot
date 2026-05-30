@@ -2,25 +2,28 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-`spot-client` is the main Spot subproject: a single webpack bundle (React 17 + Redux + redux-thunk) that runs as **either** Spot-TV **or** Spot-Remote depending on the route. This file covers spot-client internals; see the root `CLAUDE.md` for the monorepo-wide overview. Run all commands from inside `spot-client/`.
+`spot-client` is the main Spot subproject: a single webpack bundle (**strict TypeScript**, React 17 + Redux + redux-thunk) that runs as **either** Spot-TV **or** Spot-Remote depending on the route. This file covers spot-client internals; see the root `CLAUDE.md` for the monorepo-wide overview. It's an npm-workspaces member — `npm install` once at the repo root; the scripts below run from `spot-client/` (or `--workspace spot-client` from root).
 
 ## Commands
 
 ```bash
-npm install
 npm run start:dev          # webpack-dev-server on http://0.0.0.0:8000 (serves dist/ at /dist/)
 npm run build:dev          # development webpack build into dist/
 npm run build:prod         # production build (NODE_ENV=production, minified, source maps)
-npm run lint               # eslint . --max-warnings=0 (any warning fails)
+npm run build              # alias for build:prod (used by the root `npm run build`)
+npm run typecheck          # tsc --noEmit -p tsconfig.json (strict; the real type gate)
+npm run lint               # eslint . (flat config, eslint.config.mjs)
 npm run lint:fix           # eslint --fix
 npm test                   # jest (collects coverage into coverage/ by default)
 npm run docs               # jsdoc -c ./jsdoc.config.js -> dist/jsdoc
 ```
 
+**TypeScript toolchain:** the webpack bundle and jest both transpile `.ts`/`.tsx` via **babel `@babel/preset-typescript`** (type-stripping only — no type-checking in the build/test path), so type errors surface only from `npm run typecheck` (a separate `tsc --noEmit`). Run typecheck after edits.
+
 Single tests (jest has no `npm` wrapper for filtering, call it directly):
 
 ```bash
-npx jest src/common/emitter/Emitter.test.js     # one file
+npx jest src/common/emitter/Emitter.test.ts     # one file
 npx jest -t "partial test name"                 # by test name
 npx jest --watch                                # watch mode
 ```
@@ -69,9 +72,10 @@ Runtime config is `window.JitsiMeetSpotConfig`, set in `config.js` (copied into 
 
 ## Conventions
 
-- **Absolute imports from `src/`.** Both webpack (`resolve.modules` includes `./src`) and jest (`modulePaths: ['<rootDir>/src']`) resolve `common/...`, `spot-tv/...`, `spot-remote/...`. Use these instead of long relative paths.
-- **Tests are colocated** as `*.test.js` next to the code (`testMatch: src/**/*.test.js`). Environment is jsdom; component tests use `enzyme` with the React-17 adapter (`@wojtekmaj/enzyme-adapter-react-17`, configured in `setupTests.js`). `setupTests.js` also forces `TZ=UTC` (in `jest.config.js`), mocks `common/logger` and `common/vendor` (so `lib-jitsi-meet` is stubbed), and enables `jest-fetch-mock`. `transformIgnorePatterns` whitelists `@jitsi/js-utils` for transpilation. Per the style guide, unit tests are committed selectively (favor standalone/utility modules); critical paths are covered by WebdriverIO tests in the `spot-webdriver/` subproject.
-- **Linting is strict.** `@jitsi/eslint-config` + its `/jsdoc` and `/react` configs, `@babel/eslint-parser`, `--max-warnings=0`. **JSDoc comments are expected on methods/components** (the jsdoc rules enforce this); `no-console` is a warning (and warnings fail). Lint covers the whole project (`eslint .`), not just `src/`.
+- **Strict TypeScript.** `tsconfig.json` extends the repo's `tsconfig.base.json` (strict, `noUnusedLocals/Parameters`, `isolatedModules`) with `jsx: react`, `module`/`moduleResolution: ESNext`/`Bundler`, and `allowJs: true`/`checkJs: false` (a migration safety net — no `.js` remain in `src/` now). `@typescript-eslint/no-explicit-any` is **off**: use `any`/`unknown` freely at the untyped boundaries (lib-jitsi-meet via `common/vendor`, the Jitsi external API, `window.spot`, loosely-typed Redux actions/state). Asset imports (`*.scss`, `*.svg`, fonts) and `window.*` globals are declared in `src/global.d.ts`; untyped packages (strophe.js, @jitsi/logger, @jitsi/js-utils/*, the enzyme adapter) are declared in the script-style `src/modules.d.ts`.
+- **Absolute imports from `src/`.** webpack (`resolve.modules` includes `./src`), jest (`modulePaths: ['<rootDir>/src']`), and tsc (`paths` for `common/*`, `spot-tv/*`, `spot-remote/*` — `baseUrl` is deprecated in TS6) all resolve `common/...`, `spot-tv/...`, `spot-remote/...`. Imports are extensionless. Use these instead of long relative paths.
+- **Tests are colocated** as `*.test.ts(x)` next to the code (`testMatch: src/**/*.test.[jt]s?(x)`). Environment is jsdom; component tests use `enzyme` with the React-17 adapter (`@wojtekmaj/enzyme-adapter-react-17`, configured in `setupTests.ts`). `setupTests.ts` forces `TZ=UTC` (in `jest.config.js`), mocks `common/logger` and `common/vendor` (so `lib-jitsi-meet` is stubbed) and `strophe.js` (its old UMD can't load under jest 30 + jsdom), and enables `jest-fetch-mock`. `transformIgnorePatterns` whitelists `@jitsi/js-utils`. Per the style guide, unit tests are committed selectively (favor standalone/utility modules); critical paths are covered by WebdriverIO tests in `spot-webdriver/`.
+- **Linting** is the eslint **flat config** (`eslint.config.mjs`): `@eslint/js` + `typescript-eslint` recommended (the eslintrc-era `@jitsi/eslint-config` + its jsdoc/react configs were dropped). `no-console` is a warning; `no-unused-vars` ignores `^_`-prefixed and rest-siblings (matching tsc). Lint covers the whole project (`eslint .`).
 - **Global SCSS, not CSS modules.** Styles live centrally under `src/common/css/` (imported once via `import 'common/css'` in `src/index.js`); this is deliberate — see `docs/style-guide.md` and `docs/adding-css.md` (use `em` units + media queries for the wide range of TV/phone resolutions). Do not add per-component CSS modules.
 - **Icons** are added per `docs/adding-new-icons.md`: material icons re-exported from `src/common/icons/`, custom icons packed into a ligature font via icomoon (`selection.json` + font files), then wrapped as components and exported from the icons feature so all icons are used the same way.
 - **Logging & analytics:** log liberally for debuggability but **never log personally identifiable information** (only the random device-id). Send analytics events for major user actions (`src/common/analytics/`, `src/spot-tv/analytics/`, `src/spot-remote/analytics/`).

@@ -29,7 +29,7 @@ module.exports = () => {
         },
         devtool: isProduction ? 'source-map' : 'eval-source-map',
         entry: {
-            app: './src/index.js'
+            app: './src/index'
         },
         mode,
         module: {
@@ -44,15 +44,8 @@ module.exports = () => {
                 },
                 {
                     loader: 'babel-loader',
-
                     exclude: /node_modules/,
-                    options: {
-                        plugins: [
-                            require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
-                            require.resolve('@babel/plugin-proposal-optional-chaining')
-                        ]
-                    },
-                    test: /\.js$/
+                    test: /\.[jt]sx?$/
                 }
             ]
         },
@@ -93,7 +86,12 @@ module.exports = () => {
             minimize: isProduction
         },
         resolve: {
-            modules: [ path.resolve('./src'), path.resolve('./node_modules') ]
+            extensions: [ '.tsx', '.ts', '.jsx', '.js', '.json' ],
+
+            // `path.resolve('./src')` enables absolute imports (common/..., spot-tv/..., spot-remote/...);
+            // the bare 'node_modules' (not an absolute path) keeps webpack's standard upward lookup so
+            // workspace-hoisted deps in the monorepo root node_modules are found.
+            modules: [ path.resolve('./src'), 'node_modules' ]
         }
     };
 };

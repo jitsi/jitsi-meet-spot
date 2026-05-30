@@ -1,0 +1,18 @@
+{
+    "//": "Shared strict TypeScript base for every Spot subproject. Each subproject extends this and sets target/module/moduleResolution/jsx/lib/types to fit its runtime (Node, webpack, React Native).",
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true
+    }
+}

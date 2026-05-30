@@ -2,33 +2,37 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-`spot-controller` is the native React Native (0.68, React 17) iOS/Android app for the dedicated in-room Spot-Remote. It does not reimplement the remote UI: it loads the web Spot-Remote in a `react-native-webview` and layers native-only capabilities (keep-awake, a side menu, deployment switching, a JS<->native message bridge) around it. Run all commands below from inside `spot-controller/`.
+`spot-controller` is the native React Native (**0.68, React 17 — both deliberately held**) iOS/Android app for the dedicated in-room Spot-Remote. It does not reimplement the remote UI: it loads the web Spot-Remote in a `react-native-webview` and layers native-only capabilities (keep-awake, a side menu, deployment switching, a JS<->native message bridge) around it. It is written in **strict TypeScript** (`.ts`/`.tsx`) and is an npm-workspaces member. Run the npm scripts from inside `spot-controller/` (or from the repo root with `--workspace spot-controller`).
 
 ## Commands
 
-Only two npm scripts exist (`package.json`):
+```bash
+npm run lint        # eslint . (flat config)
+npm run lint:fix    # eslint . --fix
+npm run typecheck   # tsc --noEmit -p tsconfig.json (strict)
+npm test            # jest (ts-jest) — unit tests for the React-Native-independent modules
+```
 
-- `npm run lint` — runs `eslint .` over the whole subproject.
-- `npm install` triggers `postinstall` -> `jetify` (the `jetifier` AndroidX migration step). You do not run `jetify` manually.
+Metro is the bundler (no `tsc` build step); type-checking is `npm run typecheck`. The RN-ecosystem deps are **held at their RN-0.68-compatible versions** (bumping them requires an RN upgrade, which is out of scope here).
 
-There is **no test script and no test runner** (no jest config, no `__tests__`, no `*.test.js`). Do not invent a test command.
+**Testing scope:** jest + `ts-jest` run in a Node env (`tsconfig.spec.json`, CommonJS) and cover only the React-Native-**independent** logic (the `src/api` message bridge). Component rendering needs the native runtime / RN jest preset, which isn't available in this environment, so those aren't unit-tested here.
 
-There is also **no `start` script**. Running the app uses the React Native CLI directly (see `README.md`):
+There is **no `start` script**. Running the app uses the React Native CLI directly (see `README.md`):
 
 ```
-npm install                 # also runs jetify via postinstall
+npm install                 # (jetify is no longer a postinstall — run it manually before an Android build if needed)
 cd ios && pod install       # iOS only, then return to spot-controller/
 react-native run-ios        # or run from Xcode (spot-controller.xcworkspace)
 react-native run-android
 ```
 
-`react-native run-*` starts the Metro bundler itself; there is no separate bundler script.
+`react-native run-*` starts the Metro bundler itself; there is no separate bundler script. The native iOS/Android build is **not verifiable in this sandbox** (needs Xcode/Android SDK).
 
 ## Architecture
 
-Entry chain: `index.js` registers the root component (`AppRegistry.registerComponent('spot-controller', () => App)`) -> `App.js`.
+Entry chain: `index.ts` registers the root component (`AppRegistry.registerComponent('spot-controller', () => App)`) -> `App.tsx`.
 
-`App.js` is the router and the only stateful top-level component. On mount it reads the AsyncStorage key `remote-control-url` (constant `STORAGE_KEY_RC_URL`); if unset it falls back to `DEFAULT_URL = 'https://spot.8x8.vc'`. Its `render` returns a `Fragment` of:
+`App.tsx` is the router and the only stateful top-level component. On mount it reads the AsyncStorage key `remote-control-url` (constant `STORAGE_KEY_RC_URL`); if unset it falls back to `DEFAULT_URL = 'https://spot.8x8.vc'`. Its `render` returns a `Fragment` of:
 
 - A `react-native-side-menu` (`SideMenu`) wrapping `RemoteControl` (`src/remote-control`, the WebView stack), with `src/settings-menu/SettingsMenu.js` as the drawer.
 - `src/setup.js` (`Setup`) overlaid only when `state.showSetup` is true.
@@ -56,16 +60,17 @@ Native modules (consumed from JS as `NativeModules.AppInfo`): the `AppInfo` modu
 Supporting modules:
 - `src/logger/` re-exports a `jitsi-meet-logger` instance (`getLogger('jitsi-meet-spot-controller', ...)`).
 - `src/icons/` — an `Icon` component that renders an imported SVG as a fill-colored icon.
-- `src/styles.js` — shared StyleSheet fragments (full-screen black background, centered content, webView flex).
-- `src/LoadingScreen.js` — full-screen `ActivityIndicator`, used as the loading/background placeholder throughout.
+- `src/styles.ts` — shared `StyleSheet.create` fragments (full-screen black background, centered content, webView flex).
+- `src/LoadingScreen.tsx` — full-screen `ActivityIndicator`, used as the loading/background placeholder throughout.
 
 The `android/` and `ios/` directories are full native projects (Gradle / CocoaPods + Xcode workspace, each with a `fastlane/` setup).
 
 ## Conventions
 
-- **Import style / lint:** ESLint config (`.eslintrc`) extends `eslint-config-jitsi` plus its `/jsdoc` and `/react` configs; only override is `jsdoc/check-tag-names: 0`. This enforces Jitsi's import ordering and **JSDoc on methods** — match the existing `@inheritdoc` / `@private` / `@returns` doc-block style on every class method when adding code. `react.version` is pinned to `16.8.2` in lint settings even though React 17 is installed.
-- **Components** are mostly class components using static `propTypes` (via `prop-types`); follow that pattern rather than hooks. Method handlers are `_`-prefixed and `.bind(this)` in the constructor.
-- **Module layout:** feature folders (`remote-control/`, `settings-menu/`, `icons/`, `logger/`) each have an `index.js` barrel that re-exports the implementation file; import from the folder, not the file.
-- **SVG as components:** `metro.config.js` wires `react-native-svg-transformer` so `.svg` files under `assets/icons/` are imported as React components (`import refresh from '../../assets/icons/refresh.svg'`). `svg` is removed from `assetExts` and added to `sourceExts`. Note `rn-cli.config.js` also exists, blacklisting `android/`, `ios/`, and `nodejs-assets/` from the bundler.
-- **Babel:** `babel.config.js` uses `metro-react-native-babel-preset` with `unstable_disableES6Transforms: true`.
-- **Native build quirks:** iOS requires `cd ios && pod install` before first build; `jetify` runs automatically on install for Android AndroidX compatibility. The default deployment URL is hardcoded in `App.js` (`DEFAULT_URL`) — there is a `FIXME` to make it build-time configurable, so don't assume it is.
+- **Strict TypeScript.** `tsconfig.json` extends the repo base with `module: ESNext` / `moduleResolution: Bundler` (metro bundles), `jsx: react-native`, `lib: ["ESNext", "DOM"]`, and `types: ["node", "react", "react-native", "jest"]`. **`noImplicitOverride` is turned off here** (React class components override lifecycle methods pervasively — this extra, non-strict-family flag would force `override` on every one); the core `strict` family stays on. Relative imports are **extensionless** (metro/bundler resolution).
+- **Components** are class components typed as `React.Component<Props, State>` / `React.PureComponent<Props>`; `propTypes`/`prop-types` were replaced by **TypeScript prop interfaces** (e.g. `SpotWebviewProps`, reused by `RemoteControl`). Method handlers are `_`-prefixed and `.bind(this)` in the constructor. Refs use `React.createRef<T>()`.
+- **Lint:** eslint flat config (`eslint.config.mjs`): `@eslint/js` + `typescript-eslint` recommended, with RN/jest globals. The React-specific eslint plugin is intentionally NOT used (its peer range doesn't yet cover eslint 10, and TS now covers prop typing).
+- **Module layout:** feature folders (`remote-control/`, `settings-menu/`, `icons/`, `logger/`) each have an `index.ts` barrel that re-exports the implementation file; import from the folder, not the file.
+- **SVG as components:** `metro.config.js` wires `react-native-svg-transformer` so `.svg` files under `assets/icons/` are imported as React components (`import refresh from '../../assets/icons/refresh.svg'`). The `*.svg` module is typed (`React.FC<SvgProps>`) in `declarations.d.ts`. `rn-cli.config.js` blacklists `android/`/`ios/`/`nodejs-assets/`. The Node tooling config files (`babel.config.js`, `metro.config.js`, `rn-cli.config.js`, `jest.config.js`) stay CommonJS `.js` as RN/metro expects.
+- **Untyped deps** (`react-native-keep-awake`, the `jitsi-meet-logger` github dep) are declared in `declarations.d.ts`.
+- **Native build quirks:** iOS requires `cd ios && pod install` before first build. `jetify` (Android AndroidX) is **no longer a `postinstall`** (it would scan the hoisted root `node_modules`); run it manually before an Android build if a dep needs it. The default deployment URL is hardcoded in `App.tsx` (`DEFAULT_URL`) — there is a `FIXME` to make it build-time configurable, so don't assume it is.

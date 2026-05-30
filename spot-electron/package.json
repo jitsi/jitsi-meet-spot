@@ -12,46 +12,50 @@
         "url": "git@github.com:jitsi/jitsi-meet-spot.git"
     },
     "license": "Apache-2",
-    "main": "main.js",
+    "type": "module",
+    "main": "dist/main.js",
     "scripts": {
-        "dist": "electron-builder",
-        "lint": "eslint . --max-warnings 0",
-        "lint:fix": "eslint . --max-warnings 0 --fix",
-        "postinstall": "patch-package",
-        "start": "electron .",
-        "test": "jest ."
+        "build": "tsc -p tsconfig.build.json",
+        "dist": "npm run build && electron-builder",
+        "start": "npm run build && electron .",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+        "typecheck": "tsc --noEmit -p tsconfig.json"
     },
     "dependencies": {
-        "@jitsi/logger": "2.0.1",
-        "electron-debug": "3.2.0",
-        "electron-is-dev": "2.0.0",
-        "electron-log": "4.4.8",
-        "electron-updater": "6.3.0",
-        "is-online": "9.0.0",
-        "lodash": "4.17.21",
+        "@jitsi/logger": "2.1.1",
+        "electron-debug": "4.1.0",
+        "electron-is-dev": "3.0.1",
+        "electron-log": "5.4.4",
+        "electron-updater": "6.8.3",
+        "is-online": "12.0.2",
+        "lodash": "4.18.1",
         "node-osascript": "2.1.0",
         "node-schedule": "2.1.1"
     },
     "devDependencies": {
-        "@babel/eslint-parser": "7.19.1",
-        "@babel/preset-env": "7.20.2",
-        "@electron/notarize": "2.4.0",
-        "@jitsi/eslint-config": "4.1.5",
-        "@types/jest": "29.2.6",
-        "dotenv": "16.0.3",
-        "electron": "35.0.3",
-        "electron-builder": "24.13.3",
-        "eslint": "8.32.0",
-        "eslint-plugin-import": "2.27.5",
-        "eslint-plugin-jsdoc": "48.2.9",
-        "jest": "29.3.1",
-        "patch-package": "^8.0.0"
+        "@electron/notarize": "3.1.1",
+        "@types/jest": "30.0.0",
+        "@types/lodash": "4.17.24",
+        "@types/node-schedule": "2.1.8",
+        "electron": "42.3.0",
+        "electron-builder": "26.8.1",
+        "jest": "30.4.2",
+        "ts-jest": "29.4.11"
     },
     "optionalDependencies": {
-        "win-audio": "2.0.2"
+        "win-audio": "3.0.5"
     },
     "build": {
-        "afterSign": "scripts/notarize.js",
+        "afterSign": "dist/scripts/notarize.js",
+        "directories": {
+            "output": "release"
+        },
+        "files": [
+            "dist/**/*",
+            "src/static/**/*"
+        ],
         "productName": "Spot",
         "appId": "org.jitsi.spot",
         "mac": {
@@ -77,8 +81,10 @@
             }
         },
         "win": {
-            "signingHashAlgorithms": ["sha256"],
-            "sign": "scripts/winSign.js"
+            "signtoolOptions": {
+                "signingHashAlgorithms": ["sha256"],
+                "sign": "dist/scripts/winSign.js"
+            }
         },
         "publish": {
             "provider": "github",
