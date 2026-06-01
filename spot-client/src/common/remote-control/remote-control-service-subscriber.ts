@@ -1,4 +1,5 @@
 // FIXME Reaching directly because of circular dependency
+import type { RootState } from 'common/app-state';
 import { getTenant } from 'common/app-state/setup/selectors';
 
 import remoteControlClient from './remoteControlClient';
@@ -9,7 +10,7 @@ import remoteControlServer from './remoteControlServer';
  * {@code remoteControlServer} methods to sync with changes to the redux state.
  */
 export default class RemoteControlServiceSubscriber {
-    private _previousRoomName: string;
+    private _previousRoomName: string | undefined;
     private _previousSpotTvState: any;
     private _previousTenant: string | undefined;
     private _previousCalendarEvents: any[];
@@ -33,7 +34,7 @@ export default class RemoteControlServiceSubscriber {
      * app-state updates and notify the remote control services.
      * @returns {void}
      */
-    onUpdate(state: any): void {
+    onUpdate(state: RootState): void {
         const newSpotTvState = state.spotTv;
         const newCalendarEvents = state.calendars.events || [];
         const newRoomName = state.setup.displayName;

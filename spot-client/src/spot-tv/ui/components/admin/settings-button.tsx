@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { hideModal, isModalOpen, showModal } from 'common/app-state';
 import { Settings } from 'common/icons';
 import React, { useCallback } from 'react';
@@ -41,7 +42,7 @@ function SettingsButton(props: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isAdminModalOpen: isModalOpen(state, AdminModal)
     };

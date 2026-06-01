@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { isReconnecting } from 'common/app-state';
 import { Sync } from 'common/icons';
 import React from 'react';
@@ -115,7 +116,7 @@ export class ReconnectIndicator extends React.Component<IProps, IState> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isReconnecting: isReconnecting(state)
     };

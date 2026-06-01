@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     forceStopWirelessScreenshare,
     getInMeetingStatus,
@@ -190,7 +191,7 @@ export class InCall extends React.Component<IInCallProps, IInCallState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const {
         inMeeting,
         kicked,

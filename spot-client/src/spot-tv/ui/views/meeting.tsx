@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     addNotification,
     getDesktopSharingFramerate,
@@ -348,7 +349,7 @@ export class Meeting extends React.Component<IProps, IState> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     // Intentionally pass the config object separately to avoid a new object
     // from the selector triggering a re-render.
     const {

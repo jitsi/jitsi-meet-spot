@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { Button, LoadingIcon } from 'common/ui';
 import React, { useCallback, useState } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -83,7 +84,7 @@ export function PermanentPairingCode(props: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const pairingInfo = getLongLivedPairingCodeInfo(state);
 
     return {

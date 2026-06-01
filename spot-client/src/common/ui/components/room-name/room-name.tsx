@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getSpotRoomName } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -36,7 +37,7 @@ export class RoomName extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         roomName: getSpotRoomName(state)
     };

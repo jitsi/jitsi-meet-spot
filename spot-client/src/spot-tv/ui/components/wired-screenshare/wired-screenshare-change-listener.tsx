@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +56,7 @@ export class WiredScreenshareChangeListener extends React.PureComponent<IProps> 
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         hasScreenshareDevice: isDeviceConnectedForWiredScreensharing(state)
     };

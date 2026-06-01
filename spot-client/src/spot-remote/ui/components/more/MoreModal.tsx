@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     hideModal,
     isVolumeControlSupported
@@ -146,7 +147,7 @@ export class MoreModal extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         supportsVolumeControl: isVolumeControlSupported(state)
     };

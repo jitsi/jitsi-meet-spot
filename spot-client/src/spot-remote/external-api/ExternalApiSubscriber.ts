@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { EVENTS } from './constants';
 
 /**
@@ -26,7 +27,7 @@ export class ExternalApiSubscriber {
      * app-state updates and notify any external listeners.
      * @returns {void}
      */
-    onUpdate(state: any): void {
+    onUpdate(state: RootState): void {
         const { view } = state.spotTv;
 
         if (this._previousView !== view) {

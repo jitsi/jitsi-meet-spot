@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { isSpot } from 'common/app-state';
 import { ROUTES } from 'common/routing';
 import React from 'react';
@@ -66,7 +67,7 @@ export class FatalError extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isSpotTV: isSpot(state)
     };

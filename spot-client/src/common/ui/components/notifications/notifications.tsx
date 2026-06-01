@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getAllNotifications, removeNotification } from 'common/app-state';
 import { logger } from 'common/logger';
 import React from 'react';
@@ -104,7 +105,7 @@ export class Notifications extends React.PureComponent<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToPros(state: any) {
+function mapStateToPros(state: RootState) {
     return {
         notifications: getAllNotifications(state)
     };

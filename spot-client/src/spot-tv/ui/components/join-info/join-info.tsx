@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getRemoteJoinCode, getShareDomain } from 'common/app-state';
 import { RemoteJoinCode } from 'common/ui';
 import { windowHandler } from 'common/utils';
@@ -67,7 +68,7 @@ class JoinInfo extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         remoteJoinCode: getRemoteJoinCode(state),
         shareDomain: getShareDomain(state)

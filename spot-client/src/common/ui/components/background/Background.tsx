@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getBackgroundUrl } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -39,7 +40,7 @@ export function Background({ backgroundUrl }: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         backgroundUrl: getBackgroundUrl(state)
     };

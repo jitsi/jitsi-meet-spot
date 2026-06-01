@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import { analytics } from 'common/analytics';
 import {
     isConnectionEstablished,
@@ -103,7 +104,7 @@ export class SpotTVRemoteControlLoader extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isAttemptingConnection: isConnectionPending(state),
         isBackendEnabled: isBackendEnabled(state),

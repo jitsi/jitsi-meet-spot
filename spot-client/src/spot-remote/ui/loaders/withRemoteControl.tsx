@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import { isConnectionEstablished } from 'common/app-state';
 import { history } from 'common/history';
 import { remoteControlClient } from 'common/remote-control';
@@ -141,7 +142,7 @@ function mapDispatchToProps(dispatch: any) {
  * @param state - The Redux state.
  * @private
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isConnected: isConnectionEstablished(state)
     };

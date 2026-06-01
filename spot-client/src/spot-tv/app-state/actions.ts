@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     CREATE_CONNECTION,
     addNotification,
@@ -387,7 +388,7 @@ export function createSpotTVRemoteControlConnection({ pairingCode, retry }: {
  * join code and jwt.
  */
 function createConnection(
-        state: any,
+        state: RootState,
         backend: SpotTvBackendService | null,
         permanentPairingCode?: string
 ): Promise<any> {

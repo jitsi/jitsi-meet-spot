@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isSupportedSpotTvBrowser } from 'common/detection';
 import { ROUTES } from 'common/routing';
@@ -54,7 +55,7 @@ export class SpotTvRestrictedRoute extends React.PureComponent<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isBackendSetupComplete: isBackendEnabled(state)
             ? Boolean(getPermanentPairingCode(state))

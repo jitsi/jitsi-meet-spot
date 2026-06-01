@@ -25,10 +25,10 @@ import type { IWiredScreenshareState } from './wired-screenshare/reducer';
  * (the bare feature imports in `src/index.tsx` / `src/app.tsx` activate those
  * registrations before the store is created).
  *
- * This type is intentionally **additive**: it is not yet wired into
- * `createStore` (the registry combines reducers as a loose `Reducer`), and the
- * many `state: any` selectors / `mapStateToProps` are migrated to `RootState`
- * incrementally. See PENDING.md §2 "Tighten `any` at boundaries".
+ * This type is not yet wired into `createStore` (the registry combines
+ * reducers as a loose `Reducer`), but selectors and `mapStateToProps` now
+ * consume it. A few non-Redux holdouts remain — see PENDING.md §2 "Tighten
+ * `any` at boundaries".
  */
 export interface RootState {
     // Core slices, statically combined in `./index.ts`.

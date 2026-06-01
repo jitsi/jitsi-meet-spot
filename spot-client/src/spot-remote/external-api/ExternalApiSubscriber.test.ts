@@ -1,3 +1,5 @@
+import type { RootState } from 'common/app-state';
+
 import { EVENTS } from './constants';
 import { ExternalApiSubscriber } from './ExternalApiSubscriber';
 
@@ -25,7 +27,7 @@ describe('ExternalApiSubscriber', () => {
                 spotTv: {
                     view: viewName
                 }
-            });
+            } as unknown as RootState);
         }
 
         beforeEach(() => {

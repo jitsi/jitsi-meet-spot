@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     getOptimisticHandRaisedState,
@@ -52,7 +53,7 @@ export function RaiseHandButton({ changePending, onSetRaiseHand, handRaised }: I
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const optimisticHandRaisedState = getOptimisticHandRaisedState(state);
 
     return {

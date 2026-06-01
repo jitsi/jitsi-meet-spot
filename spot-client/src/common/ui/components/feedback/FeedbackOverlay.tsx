@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     hideFeedback,
     isAppFeedbackShown,
@@ -55,7 +56,7 @@ export function FeedbackOverlay(props: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         displayFeedback: isAppFeedbackShown(state)
     };

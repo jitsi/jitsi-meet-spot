@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getProductName } from 'common/app-state';
 import { StatusOverlay } from 'common/ui';
 import React from 'react';
@@ -37,7 +38,7 @@ export function WaitingForSpotTVOverlay({ productName, t }: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         productName: getProductName(state)
     };

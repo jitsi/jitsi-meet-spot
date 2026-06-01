@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getClientAspectRatio,
     getFilmStripAspectRatioSplit,
@@ -1011,7 +1012,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         filmStripThresholdWidth: getFilmStripThresholdWidth(state),
         clientAspectRatio: getClientAspectRatio(state),
