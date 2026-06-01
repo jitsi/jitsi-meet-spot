@@ -5,7 +5,7 @@ import {
     WIRED_SCREENSHARE_SET_INPUT_LABEL
 } from './action-types';
 
-interface IWiredScreenshareState {
+export interface IWiredScreenshareState {
     available: boolean;
     deviceLabel: string | undefined;
     idleValue: string | undefined;

@@ -28,6 +28,8 @@ const reducers = {
 
 export default reducers;
 
+export type { RootState } from './types';
+
 export * from './api';
 export * from './bootstrap';
 export * from './calendars/actions';

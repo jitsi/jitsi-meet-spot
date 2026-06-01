@@ -9,7 +9,7 @@ import {
     SET_TENANT
 } from './action-types';
 
-interface ISetupState {
+export interface ISetupState {
     completed: boolean;
     displayName?: string;
     isPermanentRemotePaired: boolean;

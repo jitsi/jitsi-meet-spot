@@ -9,7 +9,11 @@ import {
 * @param action - The Redux state update payload.
 * @returns
 */
-const deviceId = (state: any = { }, action: any) => {
+export interface IDeviceIdState {
+    deviceId?: string;
+}
+
+const deviceId = (state: IDeviceIdState = { }, action: any): IDeviceIdState => {
     switch (action.type) {
 
     case SET_DEVICE_ID: {

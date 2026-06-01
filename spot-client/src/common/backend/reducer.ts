@@ -4,7 +4,11 @@ import {
     SET_PERMANENT_PAIRING_CODE
 } from './actionTypes';
 
-ReducerRegistry.register('backend', (state: any = { }, action: any) => {
+export interface IBackendState {
+    permanentPairingCode?: string;
+}
+
+ReducerRegistry.register('backend', (state: IBackendState = { }, action: any) => {
     switch (action.type) {
     case SET_PERMANENT_PAIRING_CODE:
         return {

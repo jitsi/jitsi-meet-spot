@@ -11,7 +11,11 @@ import {
  * @param action - The Redux state update payload.
  * @returns
  */
-const route = (state: any = { location: history.location }, action: any) => {
+export interface IRouteState {
+    location: typeof history.location;
+}
+
+const route = (state: IRouteState = { location: history.location }, action: any): IRouteState => {
     switch (action.type) {
     case ROUTE_CHANGED:
         return {

@@ -4,7 +4,7 @@ import {
     SPOT_TV_SET_STATE
 } from './action-types';
 
-interface ISpotTvState {
+export interface ISpotTvState {
     audioMuted: boolean;
     electron: boolean;
     inMeeting?: any;

@@ -17,7 +17,15 @@ import {
  * @param action - The Redux state update payload.
  * @returns
  */
-ReducerRegistry.register('spotRemote', (state: any = { }, action: any) => {
+export interface ISpotRemoteState {
+    apiReceivedJoinCode?: string;
+    completedOnboarding?: boolean;
+    countryCode?: string;
+    mostRecentCountryCode?: string;
+    roomInfo?: any;
+}
+
+ReducerRegistry.register('spotRemote', (state: ISpotRemoteState = { }, action: any) => {
     switch (action.type) {
     case SPOT_REMOTE_API_JOIN_CODE_RECEIVED:
         return {

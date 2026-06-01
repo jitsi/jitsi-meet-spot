@@ -4,7 +4,7 @@ import {
     CALENDAR_SET_EVENTS
 } from './action-types';
 
-interface ICalendarState {
+export interface ICalendarState {
     calendarType?: any;
     displayName?: any;
     email?: any;
