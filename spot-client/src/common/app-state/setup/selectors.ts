@@ -1,3 +1,5 @@
+import type { RootState } from '../types';
+
 /**
  * A selector which returns the locally configured name to use for the Spot-TV
  * to be displayed while in a meeting.
@@ -5,7 +7,7 @@
  * @param state - The Redux state.
  * @returns {boolean}
  */
-export function getDisplayName(state: any) {
+export function getDisplayName(state: RootState) {
     return state.setup.displayName;
 }
 
@@ -15,7 +17,7 @@ export function getDisplayName(state: any) {
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getJwt(state: any) {
+export function getJwt(state: RootState) {
     return state.setup.jwt;
 }
 
@@ -26,7 +28,7 @@ export function getJwt(state: any) {
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getPreferredCamera(state: any) {
+export function getPreferredCamera(state: RootState) {
     return state.setup.preferredCamera;
 }
 
@@ -37,7 +39,9 @@ export function getPreferredCamera(state: any) {
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getPreferredResolution(state: any) {
+// `: any` boundary — the stored value is `string | number`, but some consumers
+// (select-media, meeting) type the prop as `string`. Tighten once those props widen.
+export function getPreferredResolution(state: RootState): any {
     return state.setup.preferredResolution;
 }
 
@@ -48,7 +52,7 @@ export function getPreferredResolution(state: any) {
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getPreferredMic(state: any) {
+export function getPreferredMic(state: RootState) {
     return state.setup.preferredMic;
 }
 
@@ -59,7 +63,7 @@ export function getPreferredMic(state: any) {
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getPreferredSpeaker(state: any) {
+export function getPreferredSpeaker(state: RootState) {
     return state.setup.preferredSpeaker;
 }
 
@@ -69,7 +73,7 @@ export function getPreferredSpeaker(state: any) {
  * @param state - The Redux state.
  * @returns {Object}
  */
-export function getStartParams(state: any) {
+export function getStartParams(state: RootState) {
     return state.setup.startParams || {};
 }
 
@@ -79,7 +83,7 @@ export function getStartParams(state: any) {
  * @param state - The Redux store.
  * @returns {?string}
  */
-export function getTenant(state: any) {
+export function getTenant(state: RootState) {
     return state.setup.tenant;
 }
 
@@ -89,7 +93,7 @@ export function getTenant(state: any) {
  * @param state - The Redux store.
  * @returns {boolean}
  */
-export function isPermanentRemotePaired(state: any) {
+export function isPermanentRemotePaired(state: RootState) {
     return state.setup.isPermanentRemotePaired;
 }
 
@@ -99,7 +103,7 @@ export function isPermanentRemotePaired(state: any) {
  * @param state - The Redux state.
  * @returns {boolean}
  */
-export function isSetupComplete(state: any) {
+export function isSetupComplete(state: RootState) {
     return state.setup.completed;
 }
 
@@ -110,6 +114,6 @@ export function isSetupComplete(state: any) {
 * @param state - The Redux state.
 * @returns {boolean}
 */
-export function isSpot(state: any) {
+export function isSpot(state: RootState) {
     return state.setup.isSpot;
 }

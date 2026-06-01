@@ -1,4 +1,4 @@
-import { getConfiguredMeetingDomain, getTenant } from 'common/app-state';
+import { getConfiguredMeetingDomain, getTenant, type RootState } from 'common/app-state';
 
 /**
  * A selector which returns which Jitsi-Meet deployment domain to direct
@@ -7,7 +7,7 @@ import { getConfiguredMeetingDomain, getTenant } from 'common/app-state';
  * @param state - The Redux state.
  * @returns {string}
  */
-export function getDefaultMeetingDomain(state: any): string {
+export function getDefaultMeetingDomain(state: RootState): string {
     const domain = getConfiguredMeetingDomain(state);
     const tenant = getTenant(state);
 

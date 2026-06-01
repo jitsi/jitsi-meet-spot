@@ -1,4 +1,4 @@
-import { getSpotServicesConfig } from '../app-state';
+import { getSpotServicesConfig, type RootState } from '../app-state';
 
 /**
  * Returns the permanent pairing code to be used by Spot TV and Spot Remotes which stay connected to the service for
@@ -7,8 +7,8 @@ import { getSpotServicesConfig } from '../app-state';
  * @param state - The Redux state.
  * @returns
  */
-export function getPermanentPairingCode(state: any): string {
-    return state.backend.permanentPairingCode;
+export function getPermanentPairingCode(state: RootState): string {
+    return state.backend.permanentPairingCode as string;
 }
 
 /**
@@ -17,6 +17,6 @@ export function getPermanentPairingCode(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function isBackendEnabled(state: any): boolean {
+export function isBackendEnabled(state: RootState): boolean {
     return Boolean(getSpotServicesConfig(state).pairingServiceUrl);
 }

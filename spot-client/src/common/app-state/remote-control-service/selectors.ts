@@ -1,6 +1,7 @@
 import { asyncActionRequestStates } from 'common/async-actions';
 
 import { getInMeetingStatus } from '../spot-tv/selectors';
+import type { RootState } from '../types';
 
 /**
  * A selector which returns the desired audio mute state of any pending audio
@@ -10,7 +11,7 @@ import { getInMeetingStatus } from '../spot-tv/selectors';
  * @returns The boolean for the pending audio mute state
  * will be returned if a request is pending, otherwise undefined is returned.
  */
-export function getOptimisticAudioMuteState(state: any): boolean | undefined {
+export function getOptimisticAudioMuteState(state: RootState): boolean | undefined {
     return isAudioMutePending(state)
         ? state.remoteControlService.audioMute.expectedState
         : undefined;
@@ -24,7 +25,7 @@ export function getOptimisticAudioMuteState(state: any): boolean | undefined {
  * @returns The boolean for the pending raise hand state
  * will be returned if a request is pending, otherwise undefined is returned.
  */
-export function getOptimisticHandRaisedState(state: any): boolean | undefined {
+export function getOptimisticHandRaisedState(state: RootState): boolean | undefined {
     return isRaiseHandPending(state)
         ? state.remoteControlService.handRaised.expectedState
         : undefined;
@@ -38,7 +39,7 @@ export function getOptimisticHandRaisedState(state: any): boolean | undefined {
  * @returns The boolean for the pending tile view state
  * will be returned if a request is pending, otherwise undefined is returned.
  */
-export function getOptimisticTileViewState(state: any): boolean | undefined {
+export function getOptimisticTileViewState(state: RootState): boolean | undefined {
     return isTileViewChangePending(state)
         ? state.remoteControlService.tileView.expectedState
         : undefined;
@@ -52,7 +53,7 @@ export function getOptimisticTileViewState(state: any): boolean | undefined {
  * @returns The boolean for the pending video mute state
  * will be returned if a request is pending, otherwise undefined is returned.
  */
-export function getOptimisticVideoMuteState(state: any): boolean | undefined {
+export function getOptimisticVideoMuteState(state: RootState): boolean | undefined {
     return isVideoMutePending(state)
         ? state.remoteControlService.videoMute.expectedState
         : undefined;
@@ -65,7 +66,7 @@ export function getOptimisticVideoMuteState(state: any): boolean | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function isAudioMutePending(state: any): boolean {
+export function isAudioMutePending(state: RootState): boolean {
     const audioMute = state.remoteControlService.audioMute;
 
     return Boolean(
@@ -80,7 +81,7 @@ export function isAudioMutePending(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isConnectionPending(state: any): boolean {
+export function isConnectionPending(state: RootState): boolean {
     const connect = state.remoteControlService.connect;
 
     return Boolean(connect && connect.requestState === asyncActionRequestStates.PENDING);
@@ -93,7 +94,7 @@ export function isConnectionPending(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isRaiseHandPending(state: any): boolean {
+export function isRaiseHandPending(state: RootState): boolean {
     const handRaised = state.remoteControlService.handRaised;
 
     return Boolean(
@@ -107,7 +108,7 @@ export function isRaiseHandPending(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isConnectionEstablished(state: any): boolean {
+export function isConnectionEstablished(state: RootState): boolean {
     const connect = state.remoteControlService.connect;
 
     return Boolean(connect && connect.requestState === asyncActionRequestStates.DONE);
@@ -121,7 +122,7 @@ export function isConnectionEstablished(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isReconnecting(state: any): boolean {
+export function isReconnecting(state: RootState): boolean {
     return Boolean(state.remoteControlService.isReconnectScheduled)
         && !isConnectionEstablished(state);
 }
@@ -133,7 +134,7 @@ export function isReconnecting(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isTileViewChangePending(state: any): boolean {
+export function isTileViewChangePending(state: RootState): boolean {
     const tileView = state.remoteControlService.tileView;
 
     return Boolean(
@@ -147,7 +148,7 @@ export function isTileViewChangePending(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isVideoMutePending(state: any): boolean {
+export function isVideoMutePending(state: RootState): boolean {
     const videoMute = state.remoteControlService.videoMute;
 
     return Boolean(
@@ -163,7 +164,7 @@ export function isVideoMutePending(state: any): boolean {
  * @returns The boolean for the pending whiteboard state
  * will be returned if a request is pending, otherwise undefined is returned.
  */
-export function getOptimisticWhiteboardState(state: any): boolean | undefined {
+export function getOptimisticWhiteboardState(state: RootState): boolean | undefined {
     return isWhiteboardChangePending(state)
         ? state.remoteControlService.whiteboard.expectedState
         : undefined;
@@ -176,7 +177,7 @@ export function getOptimisticWhiteboardState(state: any): boolean | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function isWhiteboardChangePending(state: any): boolean {
+export function isWhiteboardChangePending(state: RootState): boolean {
     const whiteboard = state.remoteControlService.whiteboard;
 
     return Boolean(
@@ -190,7 +191,7 @@ export function isWhiteboardChangePending(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isWirelessScreensharingLocally(state: any): boolean {
+export function isWirelessScreensharingLocally(state: RootState): boolean {
     return Boolean(state.remoteControlService.isWirelessScreensharing);
 }
 
@@ -200,7 +201,7 @@ export function isWirelessScreensharingLocally(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isWirelessScreensharingPending(state: any): boolean {
+export function isWirelessScreensharingPending(state: RootState): boolean {
     const inMeetingState = getInMeetingStatus(state);
 
     if (inMeetingState.inMeeting) {

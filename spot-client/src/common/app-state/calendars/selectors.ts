@@ -1,4 +1,5 @@
 import { getCalendarConfig } from '../config/selectors';
+import type { RootState } from '../types';
 
 import { calendarTypes } from './constants';
 
@@ -8,7 +9,7 @@ import { calendarTypes } from './constants';
  * @param state - The Redux state.
  * @returns
  */
-export function isCalendarEnabled(state: any): boolean {
+export function isCalendarEnabled(state: RootState): boolean {
     const { BACKEND } = getCalendarConfig(state);
 
     return Boolean(BACKEND && BACKEND.SERVICE_URL);
@@ -21,7 +22,7 @@ export function isCalendarEnabled(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function getCalendarEmail(state: any): string {
+export function getCalendarEmail(state: RootState): string {
     return state.calendars.email;
 }
 
@@ -32,7 +33,7 @@ export function getCalendarEmail(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function getCalendarError(state: any): string {
+export function getCalendarError(state: RootState): string {
     return state.calendars.error;
 }
 
@@ -43,7 +44,7 @@ export function getCalendarError(state: any): string {
 * @param state - The Redux state.
 * @returns
 */
-export function getCalendarEvents(state: any): Array<any> {
+export function getCalendarEvents(state: RootState): Array<any> {
     return state.calendars.events;
 }
 
@@ -54,7 +55,7 @@ export function getCalendarEvents(state: any): Array<any> {
 * @param state - The Redux state.
 * @returns
 */
-export function getCalendarName(state: any): string {
+export function getCalendarName(state: RootState): string {
     return state.calendars.displayName;
 }
 
@@ -64,7 +65,7 @@ export function getCalendarName(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function getCalendarType(state: any): string {
+export function getCalendarType(state: RootState): string {
     const { BACKEND } = getCalendarConfig(state);
 
     if (BACKEND && BACKEND.SERVICE_URL) {
@@ -81,6 +82,6 @@ export function getCalendarType(state: any): string {
 * @param state - The Redux state.
 * @returns
 */
-export function hasCalendarBeenFetched(state: any): boolean {
+export function hasCalendarBeenFetched(state: RootState): boolean {
     return state.calendars.hasSetEvents;
 }

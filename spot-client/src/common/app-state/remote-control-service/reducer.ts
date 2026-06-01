@@ -14,6 +14,7 @@ import {
 export interface IRemoteControlServiceState {
     audioMute?: any;
     connect?: any;
+    handRaised?: any;
     isReconnectScheduled?: boolean;
     isWirelessScreensharing: boolean;
     joinWithScreensharing?: any;

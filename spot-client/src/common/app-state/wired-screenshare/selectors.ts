@@ -1,4 +1,6 @@
 
+import type { RootState } from '../types';
+
 /**
  * A selector which returns the video input device to use when screensharing
  * through a physical connection.
@@ -6,7 +8,7 @@
  * @param state - The Redux state.
  * @returns
  */
-export function getWiredScreenshareInputLabel(state: any) {
+export function getWiredScreenshareInputLabel(state: RootState) {
     return state.wiredScreenshare.deviceLabel;
 }
 
@@ -17,7 +19,8 @@ export function getWiredScreenshareInputLabel(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function getWiredScreenshareInputIdleValue(state: any) {
+// `: any` boundary — the value is a `string`, but the consumer prop is typed `number`.
+export function getWiredScreenshareInputIdleValue(state: RootState): any {
     return state.wiredScreenshare.idleValue;
 }
 
@@ -28,7 +31,7 @@ export function getWiredScreenshareInputIdleValue(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function isDeviceConnectedForWiredScreensharing(state: any) {
+export function isDeviceConnectedForWiredScreensharing(state: RootState) {
     return Boolean(state.wiredScreenshare.isDeviceConnected);
 }
 
@@ -39,6 +42,6 @@ export function isDeviceConnectedForWiredScreensharing(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function isWiredScreenshareInputAvailable(state: any) {
+export function isWiredScreenshareInputAvailable(state: RootState) {
     return Boolean(state.wiredScreenshare.available);
 }

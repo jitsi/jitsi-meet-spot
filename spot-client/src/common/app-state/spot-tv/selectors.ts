@@ -1,4 +1,4 @@
-import { getDisplayName } from 'common/app-state';
+import { getDisplayName, type RootState } from 'common/app-state';
 
 /**
 * A selector which returns the current view that is being displayed on Spot-TV.
@@ -6,7 +6,7 @@ import { getDisplayName } from 'common/app-state';
 * @param state - The Redux state.
 * @returns
 */
-export function getCurrentView(state: any): string {
+export function getCurrentView(state: RootState): string {
     return state.spotTv.view;
 }
 
@@ -16,7 +16,7 @@ export function getCurrentView(state: any): string {
 * @param state - The Redux state.
 * @returns
 */
-export function getInMeetingStatus(state: any): any {
+export function getInMeetingStatus(state: RootState): any {
     return {
         audioMuted: state.spotTv.audioMuted,
         inMeeting: state.spotTv.inMeeting,
@@ -41,7 +41,7 @@ export function getInMeetingStatus(state: any): any {
  * @param state - The Redux state.
  * @returns
  */
-export function getInvitedPhoneNumber(state: any): string | undefined {
+export function getInvitedPhoneNumber(state: RootState): string | undefined {
     return state.spotTv.invitedPhoneNumber;
 }
 
@@ -52,8 +52,8 @@ export function getInvitedPhoneNumber(state: any): string | undefined {
 * @param state - The Redux state.
 * @returns
 */
-export function getRemoteJoinCode(state: any): string {
-    return state.spotTv.remoteJoinCode;
+export function getRemoteJoinCode(state: RootState): string {
+    return state.spotTv.remoteJoinCode as string;
 }
 
 /**
@@ -63,7 +63,7 @@ export function getRemoteJoinCode(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function getRemoteSpotTVRoomName(state: any): string | undefined {
+export function getRemoteSpotTVRoomName(state: RootState): string | undefined {
     return state.spotTv.roomName;
 }
 
@@ -74,7 +74,7 @@ export function getRemoteSpotTVRoomName(state: any): string | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function getSpotRoomName(state: any): string | undefined {
+export function getSpotRoomName(state: RootState): string | undefined {
     return getDisplayName(state) || getRemoteSpotTVRoomName(state);
 }
 
@@ -84,7 +84,7 @@ export function getSpotRoomName(state: any): string | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function getSpotTVTenant(state: any): string | undefined {
+export function getSpotTVTenant(state: RootState): string | undefined {
     return state.spotTv.tenant;
 }
 
@@ -95,7 +95,7 @@ export function getSpotTVTenant(state: any): string | undefined {
 * @param state - The Redux state.
 * @returns
 */
-export function isConnectedToSpot(state: any): boolean {
+export function isConnectedToSpot(state: RootState): boolean {
     return Boolean(state.spotTv.spotId);
 }
 
@@ -106,7 +106,7 @@ export function isConnectedToSpot(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isVolumeControlSupported(state: any): boolean {
+export function isVolumeControlSupported(state: RootState): boolean {
     const { electron, volumeControlSupported } = state.spotTv;
 
     return Boolean(electron || volumeControlSupported);

@@ -1,10 +1,12 @@
+import type { RootState } from 'common/app-state';
+
 /**
  * Is it ok to do the update.
  *
  * @param state - The Redux state.
  * @returns
  */
-export function isOkToUpdate(state: any): boolean {
+export function isOkToUpdate(state: RootState): boolean {
     return state['common/auto-update'].okToUpdate;
 }
 
@@ -14,7 +16,7 @@ export function isOkToUpdate(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isTimeForNightlyReload(state: any): boolean {
+export function isTimeForNightlyReload(state: RootState): boolean {
     return state['common/auto-update'].isNightlyReloadTime;
 }
 
@@ -24,7 +26,7 @@ export function isTimeForNightlyReload(state: any): boolean {
  * @param state - The Redux state.
  * @returns
  */
-export function isWebUpdateAvailable(state: any): boolean {
+export function isWebUpdateAvailable(state: RootState): boolean {
     return state['common/auto-update'].webUpdateAvailable;
 }
 
@@ -35,6 +37,6 @@ export function isWebUpdateAvailable(state: any): boolean {
  * @private
  * @returns
  */
-export function _getLastLoadTime(state: any): Date {
+export function _getLastLoadTime(state: RootState): Date {
     return state['common/auto-update']._lastLoadTime;
 }
