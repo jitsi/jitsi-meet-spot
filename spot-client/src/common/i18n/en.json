@@ -87,8 +87,8 @@
         "waitingForStart": "Currently waiting for the conference to start."
     },
     "countdown": {
-        "timeLeft": "{{ count }} second",
-        "timeLeft_plural": "{{ count }} seconds"
+        "timeLeft_one": "{{ count }} second",
+        "timeLeft_other": "{{ count }} seconds"
     },
     "dial": {
         "dial": "Dial a number",
