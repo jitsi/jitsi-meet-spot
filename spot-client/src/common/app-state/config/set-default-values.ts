@@ -1,5 +1,6 @@
 import merge from 'lodash.merge';
 
+import type { RootState } from '../types';
 import defaultConfig from './default-config';
 import {
     getJwtDomains,
@@ -16,7 +17,10 @@ import {
  */
 export function setDefaultValues(config: any): any {
     const configWithDefaults = merge({}, defaultConfig, config);
-    const state = { config: configWithDefaults };
+
+    // A synthetic partial state: the config selectors below only read `.config`,
+    // and this runs before the real store exists.
+    const state = { config: configWithDefaults } as unknown as RootState;
     const configuredWhitelistedDomains = getMeetingDomainsWhitelist(state);
     const configuredJwtDomains = getJwtDomains(state);
     const allWhitelistedDomains = [

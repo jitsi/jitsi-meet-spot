@@ -1,3 +1,5 @@
+import type { RootState } from '../types';
+
 /**
  * A selector which returns the name of an application to advertise which has
  * integration with Jitsi-Meet-Spot.
@@ -5,7 +7,7 @@
  * @param state - The Redux state.
  * @returns
  */
-export function getAdvertisementAppName(state: any) {
+export function getAdvertisementAppName(state: RootState) {
     return state.config.ADVERTISEMENT && state.config.ADVERTISEMENT.APP_NAME;
 }
 
@@ -16,7 +18,7 @@ export function getAdvertisementAppName(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getAnalyticsAppKey(state: any) {
+export function getAnalyticsAppKey(state: RootState) {
     return state.config.LOGGING.ANALYTICS_APP_KEY;
 }
 
@@ -27,7 +29,7 @@ export function getAnalyticsAppKey(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getJitsiAppName(state: any) {
+export function getJitsiAppName(state: RootState) {
     return state.config.LOGGING.JITSI_APP_NAME;
 }
 
@@ -37,7 +39,7 @@ export function getJitsiAppName(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getBackgroundUrl(state: any) {
+export function getBackgroundUrl(state: RootState) {
     return state.config.DEFAULT_BACKGROUND_IMAGE_URL;
 }
 
@@ -48,7 +50,7 @@ export function getBackgroundUrl(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function getCalendarConfig(state: any) {
+export function getCalendarConfig(state: RootState) {
     return state.config.CALENDARS;
 }
 
@@ -59,7 +61,7 @@ export function getCalendarConfig(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function getConfiguredMeetingDomain(state: any) {
+export function getConfiguredMeetingDomain(state: RootState) {
     return state.config.DEFAULT_MEETING_DOMAIN;
 }
 
@@ -70,7 +72,7 @@ export function getConfiguredMeetingDomain(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getDesktopSharingFramerate(state: any) {
+export function getDesktopSharingFramerate(state: RootState) {
     return {
         max: state.config.MEDIA.SS_MAX_FPS,
         min: state.config.MEDIA.SS_MIN_FPS
@@ -83,7 +85,7 @@ export function getDesktopSharingFramerate(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getDtmfThrottleRate(state: any) {
+export function getDtmfThrottleRate(state: RootState) {
     return state.config.TEMPORARY_FEATURE_FLAGS.DTMF_THROTTLE_RATE;
 }
 
@@ -93,7 +95,7 @@ export function getDtmfThrottleRate(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getExternalApiUrl(state: any) {
+export function getExternalApiUrl(state: RootState) {
     return state.config.EXTERNAL_API_SRC;
 }
 
@@ -103,7 +105,7 @@ export function getExternalApiUrl(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getLjmUrl(state: any) {
+export function getLjmUrl(state: RootState) {
     return state.config.LJM_SRC;
 }
 
@@ -113,7 +115,7 @@ export function getLjmUrl(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getJoinCodeRefreshRate(state: any) {
+export function getJoinCodeRefreshRate(state: RootState) {
     return state.config.JOIN_CODE_REFRESH_RATE
         || 1000 * 60 * 60; // One hour.
 }
@@ -124,7 +126,7 @@ export function getJoinCodeRefreshRate(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getJwtDomains(state: any) {
+export function getJwtDomains(state: RootState) {
     return state.config.SPOT_SERVICES.jwtDomains;
 }
 
@@ -134,7 +136,7 @@ export function getJwtDomains(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getKickTemporaryRemotesOnMeetingEnd(state: any) {
+export function getKickTemporaryRemotesOnMeetingEnd(state: RootState) {
     return state.config.KICK_TEMPORARY_REMOTES_ON_MEETING_END;
 }
 
@@ -145,7 +147,7 @@ export function getKickTemporaryRemotesOnMeetingEnd(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function getLoggingEndpoint(state: any) {
+export function getLoggingEndpoint(state: RootState) {
     return state.config.LOGGING.ENDPOINT;
 }
 
@@ -156,7 +158,7 @@ export function getLoggingEndpoint(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getMeetingCancelTimeout(state: any) {
+export function getMeetingCancelTimeout(state: RootState) {
     return state.config.MEETING_CANCEL_TIMEOUT_MS;
 }
 
@@ -167,7 +169,7 @@ export function getMeetingCancelTimeout(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getMeetingDomainsWhitelist(state: any) {
+export function getMeetingDomainsWhitelist(state: RootState) {
     return state.config.MEETING_DOMAINS_WHITELIST;
 }
 
@@ -178,7 +180,7 @@ export function getMeetingDomainsWhitelist(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getMeetingJoinTimeout(state: any) {
+export function getMeetingJoinTimeout(state: RootState) {
     return state.config.MEETING_JOIN_TIMEOUT_MS;
 }
 
@@ -188,7 +190,7 @@ export function getMeetingJoinTimeout(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getPrivacyPolicyURL(state: any) {
+export function getPrivacyPolicyURL(state: RootState) {
     return state.config.EXTERNAL_LINKS.PRIVACY;
 }
 
@@ -198,7 +200,7 @@ export function getPrivacyPolicyURL(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getProductName(state: any) {
+export function getProductName(state: RootState) {
     return state.config.PRODUCT_NAME;
 }
 
@@ -209,7 +211,7 @@ export function getProductName(state: any) {
 * @param state - The Redux state.
 * @returns
 */
-export function getRemoteControlServerConfig(state: any) {
+export function getRemoteControlServerConfig(state: RootState) {
     return state.config.XMPP_CONFIG;
 }
 
@@ -220,7 +222,7 @@ export function getRemoteControlServerConfig(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getShareDomain(state: any) {
+export function getShareDomain(state: RootState) {
     return state.config.MODE_DOMAINS.SHARE;
 }
 
@@ -230,7 +232,7 @@ export function getShareDomain(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getSpotClientVersion(state: any) {
+export function getSpotClientVersion(state: RootState) {
     return state.config.SPOT_CLIENT_VERSION;
 }
 
@@ -241,7 +243,7 @@ export function getSpotClientVersion(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getSpotServicesConfig(state: any) {
+export function getSpotServicesConfig(state: RootState) {
     return state.config.SPOT_SERVICES;
 }
 
@@ -252,7 +254,7 @@ export function getSpotServicesConfig(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getTermsAndConditionsURL(state: any) {
+export function getTermsAndConditionsURL(state: RootState) {
     return state.config.EXTERNAL_LINKS.TERMS;
 }
 
@@ -262,7 +264,7 @@ export function getTermsAndConditionsURL(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getFilmStripThresholdWidth(state: any) {
+export function getFilmStripThresholdWidth(state: RootState) {
     return state.config.FILMSTRIP_SIZE.THRESHOLD_WIDTH;
 }
 
@@ -272,7 +274,7 @@ export function getFilmStripThresholdWidth(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getClientAspectRatio(state: any) {
+export function getClientAspectRatio(state: RootState) {
     return state.config.FILMSTRIP_SIZE.ASPECT_RATIO;
 }
 
@@ -282,7 +284,7 @@ export function getClientAspectRatio(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getFilmStripAspectRatioSplit(state: any) {
+export function getFilmStripAspectRatioSplit(state: RootState) {
     return state.config.FILMSTRIP_SIZE.ASPECT_RATIO_SPLIT;
 }
 
@@ -293,7 +295,7 @@ export function getFilmStripAspectRatioSplit(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getUpdateStartHour(state: any) {
+export function getUpdateStartHour(state: RootState) {
     return state.config.UPDATES.START_HOUR;
 }
 
@@ -304,7 +306,7 @@ export function getUpdateStartHour(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function getUpdateEndHour(state: any) {
+export function getUpdateEndHour(state: RootState) {
     return state.config.UPDATES.END_HOUR;
 }
 
@@ -314,7 +316,7 @@ export function getUpdateEndHour(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function isCalendarPushEnabled(state: any) {
+export function isCalendarPushEnabled(state: RootState) {
     return state.config.CALENDARS.PUSH_NOTIFICATIONS_ENABLED;
 }
 
@@ -325,6 +327,6 @@ export function isCalendarPushEnabled(state: any) {
  * @param state - The Redux state.
  * @returns
  */
-export function isScreensharingAutoJoinEnabled(state: any) {
+export function isScreensharingAutoJoinEnabled(state: RootState) {
     return state.config.TEMPORARY_FEATURE_FLAGS.ENABLE_AUTO_SS_JOIN;
 }

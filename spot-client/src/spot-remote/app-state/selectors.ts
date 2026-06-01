@@ -1,4 +1,4 @@
-import { getConfiguredMeetingDomain, getSpotTVTenant } from 'common/app-state';
+import { getConfiguredMeetingDomain, getSpotTVTenant, type RootState } from 'common/app-state';
 
 /**
  * A selector which returns the last received join code from the external API.
@@ -6,8 +6,8 @@ import { getConfiguredMeetingDomain, getSpotTVTenant } from 'common/app-state';
  * @param state - The Redux state.
  * @returns
  */
-export function getApiReceivedJoinCode(state: any): string {
-    return state.spotRemote.apiReceivedJoinCode;
+export function getApiReceivedJoinCode(state: RootState): string {
+    return state.spotRemote.apiReceivedJoinCode as string;
 }
 
 /**
@@ -16,7 +16,7 @@ export function getApiReceivedJoinCode(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function getCountryCode(state: any): string | undefined {
+export function getCountryCode(state: RootState): string | undefined {
     return state.spotRemote.countryCode;
 }
 
@@ -26,7 +26,7 @@ export function getCountryCode(state: any): string | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function getMostRecentCountryCode(state: any): string | undefined {
+export function getMostRecentCountryCode(state: RootState): string | undefined {
     return state.spotRemote.mostRecentCountryCode;
 }
 
@@ -37,7 +37,7 @@ export function getMostRecentCountryCode(state: any): string | undefined {
  * @param state - The Redux state.
  * @returns
  */
-export function getDefaultMeetingDomain(state: any): string {
+export function getDefaultMeetingDomain(state: RootState): string {
     const domain = getConfiguredMeetingDomain(state);
     const tenant = getSpotTVTenant(state);
 
@@ -50,6 +50,6 @@ export function getDefaultMeetingDomain(state: any): string {
  * @param state - The Redux state.
  * @returns
  */
-export function isOnboardingComplete(state: any): boolean {
+export function isOnboardingComplete(state: RootState): boolean {
     return Boolean(state.spotRemote.completedOnboarding);
 }
