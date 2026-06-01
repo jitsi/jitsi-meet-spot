@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getDisplayName, setSpotTVState } from 'common/app-state';
 import { View } from 'common/ui';
 import React from 'react';
@@ -77,7 +78,7 @@ class SpotView extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         spotRoomName: getDisplayName(state)
     };

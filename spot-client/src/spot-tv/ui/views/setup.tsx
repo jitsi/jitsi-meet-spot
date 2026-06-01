@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import { getStartParams, setSetupCompleted } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
@@ -155,7 +156,7 @@ export class Setup extends React.Component<IProps, IState> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const { skipPairRemote, skipSelectMedia } = getStartParams(state);
 
     return {

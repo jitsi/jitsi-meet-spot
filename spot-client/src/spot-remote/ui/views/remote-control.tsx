@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getCalendarEvents,
     getCurrentView,
@@ -104,7 +105,7 @@ export class RemoteControl extends React.PureComponent<IProps> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         events: getCalendarEvents(state),
         view: getCurrentView(state),

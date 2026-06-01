@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { isAnyModalOpen } from 'common/app-state';
 import { logger } from 'common/logger';
 import React from 'react';
@@ -86,7 +87,7 @@ class View extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isAnyModalOpen: isAnyModalOpen(state)
     };

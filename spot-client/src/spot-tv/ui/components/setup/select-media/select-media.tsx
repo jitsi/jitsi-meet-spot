@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     addNotification,
     getPreferredCamera,
@@ -529,7 +530,7 @@ class SelectMedia extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         preferredCamera: getPreferredCamera(state),
         preferredMic: getPreferredMic(state),

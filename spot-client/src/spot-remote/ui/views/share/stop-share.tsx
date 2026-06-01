@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getInMeetingStatus, getInvitedPhoneNumber } from 'common/app-state';
 import { ScreenShare } from 'common/icons';
 import { Button, LoadingIcon } from 'common/ui';
@@ -72,7 +73,7 @@ export class StopShare extends React.Component<IProps> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const {
         meetingDisplayName,
         inMeeting

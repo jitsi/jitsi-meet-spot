@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getCurrentModal } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -51,7 +52,7 @@ export class ModalManager extends React.PureComponent<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         ...getCurrentModal(state)
     };

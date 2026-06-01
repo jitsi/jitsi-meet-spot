@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     addNotification,
     getCalendarError,
@@ -290,7 +291,7 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         calendarError: getCalendarError(state),
         enableAutoUpdate: isBackendEnabled(state)

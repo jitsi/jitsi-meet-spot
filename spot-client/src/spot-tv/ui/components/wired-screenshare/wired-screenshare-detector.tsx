@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     getWiredScreenshareInputIdleValue,
@@ -195,7 +196,7 @@ class WiredScreenshareDetector extends React.PureComponent<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const { inMeeting } = getInMeetingStatus(state);
 
     return {

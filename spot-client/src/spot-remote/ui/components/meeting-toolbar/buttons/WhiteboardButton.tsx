@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     getOptimisticWhiteboardState,
@@ -20,13 +21,13 @@ export default function WhiteboardButton(): JSX.Element | null {
     const dispatch = useDispatch();
 
     const optimisticWhiteboardState = useSelector(getOptimisticWhiteboardState);
-    const inMeetingWhiteboardOpen = useSelector((state: any) => getInMeetingStatus(state).whiteboardOpen);
+    const inMeetingWhiteboardOpen = useSelector((state: RootState) => getInMeetingStatus(state).whiteboardOpen);
     const whiteboardOpen = typeof optimisticWhiteboardState === 'undefined'
         ? inMeetingWhiteboardOpen
         : optimisticWhiteboardState;
     const changePending = useSelector(isWhiteboardChangePending);
-    const isLocalModerator = useSelector((state: any) => Boolean(state.spotTv.isLocalModerator));
-    const isWhiteboardInitialized = useSelector((state: any) => Boolean(state.spotTv.whiteboardInitialized));
+    const isLocalModerator = useSelector((state: RootState) => Boolean(state.spotTv.isLocalModerator));
+    const isWhiteboardInitialized = useSelector((state: RootState) => Boolean(state.spotTv.whiteboardInitialized));
 
     const onClick = useCallback(() => {
         if (changePending) {

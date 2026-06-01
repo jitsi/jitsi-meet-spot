@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { addNotification, getProductName, getStartParams } from 'common/app-state';
 import { logger } from 'common/logger';
 import { CodeInput, LoadingIcon } from 'common/ui';
@@ -171,7 +172,7 @@ export class SyncWithBackend extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         productName: getProductName(state),
         llpc: getStartParams(state).llpc

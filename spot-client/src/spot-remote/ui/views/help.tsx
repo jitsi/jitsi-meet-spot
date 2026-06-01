@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import {
     getPrivacyPolicyURL,
     getProductName,
@@ -115,7 +116,7 @@ class Help extends React.Component<IProps> {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         codeLength: isSpotControllerApp() && isBackendEnabled(state) ? 8 : 6,
         privacyPolicyURL: getPrivacyPolicyURL(state),

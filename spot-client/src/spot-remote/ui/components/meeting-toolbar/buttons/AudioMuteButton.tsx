@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     getOptimisticAudioMuteState,
@@ -52,7 +53,7 @@ export function AudioMuteButton({ audioMuted, changePending, onSetAudioMute }: I
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const optimisticMuteState = getOptimisticAudioMuteState(state);
 
     return {

@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     getOptimisticVideoMuteState,
@@ -52,7 +53,7 @@ export function VideoMuteButton({ changePending, onSetVideoMute, videoMuted }: I
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const optimisticMuteState = getOptimisticVideoMuteState(state);
 
     return {

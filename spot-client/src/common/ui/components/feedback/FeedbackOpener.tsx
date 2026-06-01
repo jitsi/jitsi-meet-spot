@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getCurrentView, showFeedback } from 'common/app-state';
 import { Feedback } from 'common/icons';
 import React from 'react';
@@ -45,7 +46,7 @@ export function FeedbackOpener(props: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         show: getCurrentView(state) !== 'feedback'
     };

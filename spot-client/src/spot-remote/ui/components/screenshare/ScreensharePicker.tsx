@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getAdvertisementAppName,
     getShareDomain
@@ -319,7 +320,7 @@ export class ScreensharePicker extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         advertisedAppName: getAdvertisementAppName(state),
         shareDomain: getShareDomain(state)

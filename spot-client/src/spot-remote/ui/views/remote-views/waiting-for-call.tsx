@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import {
     dialOut,
     getConfiguredMeetingDomain,
@@ -261,7 +262,7 @@ class WaitingForCallView extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         ...getInMeetingStatus(state),
         domain: getConfiguredMeetingDomain(state),

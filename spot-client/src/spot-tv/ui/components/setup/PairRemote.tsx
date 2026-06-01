@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { isPermanentRemotePaired } from 'common/app-state';
 import { Button } from 'common/ui';
 import React, { useEffect } from 'react';
@@ -84,7 +85,7 @@ export function PairRemote(props: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         code: (getLongLivedPairingCodeInfo(state) || {}).code,
         isPairingComplete: isPermanentRemotePaired(state)

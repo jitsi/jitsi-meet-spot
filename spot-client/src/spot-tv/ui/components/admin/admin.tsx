@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { hideModal } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { Modal } from 'common/ui';
@@ -119,7 +120,7 @@ class AdminModal extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isBackendEnabled: isBackendEnabled(state)
     };

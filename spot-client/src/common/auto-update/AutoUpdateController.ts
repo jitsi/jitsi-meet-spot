@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import {
     BOOTSTRAP_COMPLETE,
     getCurrentRoute,
@@ -49,7 +50,7 @@ allowedRoutes.push(ROUTES.SHARE_HELP);
 allowedRoutes.push(ROUTES.CODE);
 allowedRoutes.push(ROUTES.HELP);
 
-StateListenerRegistry.register((state: any, prevSelection: any) => {
+StateListenerRegistry.register((state: RootState, prevSelection: any) => {
     const enableAutoUpdate = isBackendEnabled(state) && Boolean(getPermanentPairingCode(state));
     const currentRoute = getCurrentRoute(state);
     const currentView = getCurrentView(state);

@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { addNotification, getProductName } from 'common/app-state';
 import { logger } from 'common/logger';
 import { Button, LoadingIcon, StatusOverlay } from 'common/ui';
@@ -182,7 +183,7 @@ export class ExitVerification extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         productName: getProductName(state)
     };

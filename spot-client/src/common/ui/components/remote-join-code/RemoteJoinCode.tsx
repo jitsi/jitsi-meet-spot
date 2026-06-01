@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getRemoteJoinCode } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -40,7 +41,7 @@ export function RemoteJoinCode(props: IRemoteJoinCodeProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         remoteJoinCode: getRemoteJoinCode(state)
     };

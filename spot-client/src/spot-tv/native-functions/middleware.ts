@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import { SPOT_TV_SET_REMOTE_JOIN_CODE, SPOT_TV_SET_STATE, getCurrentView } from 'common/app-state';
 import { BOOTSTRAP_COMPLETE } from 'common/app-state/bootstrap';
 import { MiddlewareRegistry, StateListenerRegistry } from 'common/redux';
@@ -10,7 +11,7 @@ import nativeController from './native-controller';
 /**
  * State listener to listen to meeting status changes.
  */
-StateListenerRegistry.register((state: any) => getCurrentView(state) === 'meeting', (inMeeting: boolean) => {
+StateListenerRegistry.register((state: RootState) => getCurrentView(state) === 'meeting', (inMeeting: boolean) => {
     nativeCommands.sendMeetingStatus(inMeeting ? 1 : 0);
 });
 

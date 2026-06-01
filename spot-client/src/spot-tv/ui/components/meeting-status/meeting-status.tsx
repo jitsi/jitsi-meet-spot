@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getInMeetingStatus } from 'common/app-state';
 import { MicOff, VideocamOff } from 'common/icons';
 import React from 'react';
@@ -54,7 +55,7 @@ export class MeetingStatus extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         ...getInMeetingStatus(state)
     };

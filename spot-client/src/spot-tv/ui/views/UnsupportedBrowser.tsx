@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { getProductName } from 'common/app-state';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
@@ -38,7 +39,7 @@ export function UnsupportedBrowser({ productName, t }: IProps) {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         productName: getProductName(state)
     };

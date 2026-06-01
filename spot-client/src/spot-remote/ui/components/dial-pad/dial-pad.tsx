@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import { addNotification, getSpotServicesConfig } from 'common/app-state';
 import { phoneAuthorize } from 'common/backend';
 import { logger } from 'common/logger';
@@ -348,7 +349,7 @@ function mapDispatchToProps(dispatch: any) {
  * @private
  * @returns
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const { phoneAuthorizeServiceUrl } = getSpotServicesConfig(state);
     const countryCode = getCountryCode(state);
     const mostRecentCountryCode = getMostRecentCountryCode(state);

@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getInMeetingStatus,
     hideModal,
@@ -114,7 +115,7 @@ export class ScreenshareButton extends React.Component<IProps> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const {
         screensharingType,
         wiredScreensharingEnabled

@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     hideModal,
     isModalOpen,
@@ -50,7 +51,7 @@ export function MoreButton({ isMoreModalOpen, onHideModal, onShowMoreModal }: IP
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         isMoreModalOpen: isModalOpen(state, MoreModal)
     };

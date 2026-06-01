@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getCalendarName,
     getDisplayName,
@@ -108,7 +109,7 @@ export class Profile extends React.Component<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         displayName: getDisplayName(state) || getCalendarName(state)
     };

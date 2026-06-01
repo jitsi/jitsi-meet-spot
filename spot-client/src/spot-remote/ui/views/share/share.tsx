@@ -1,3 +1,4 @@
+import type { RootState } from 'common/app-state';
 import {
     getCurrentView,
     getInMeetingStatus,
@@ -223,7 +224,7 @@ export class Share extends React.PureComponent<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const isWirelessScreensharing = isWirelessScreensharingLocally(state);
     const inMeetingState = getInMeetingStatus(state);
 

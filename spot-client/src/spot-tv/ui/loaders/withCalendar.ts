@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import {
     calendarTypes,
     getCalendarConfig,
@@ -182,7 +183,7 @@ export class CalendarLoader extends AbstractLoader<IProps, IState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     const calendarEmail = getCalendarEmail(state);
     const calendarType = getCalendarType(state);
     const jwt = getJwt(state);

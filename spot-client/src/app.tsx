@@ -1,4 +1,5 @@
 
+import type { RootState } from 'common/app-state';
 import {
     apiMessageReceived,
     getProductName,
@@ -449,7 +450,7 @@ export class App extends React.Component<IAppProps, IAppState> {
  * @private
  * @returns {Object}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: RootState) {
     return {
         spotClientVersion: getSpotClientVersion(state),
         productName: getProductName(state)
