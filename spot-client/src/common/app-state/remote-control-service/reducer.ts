@@ -11,7 +11,7 @@ import {
     WHITEBOARD
 } from './actionTypes';
 
-interface IRemoteControlServiceState {
+export interface IRemoteControlServiceState {
     audioMute?: any;
     connect?: any;
     isReconnectScheduled?: boolean;

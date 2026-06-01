@@ -2,7 +2,7 @@ import { ROUTE_CHANGED } from '../route/actionTypes';
 
 import { MODAL_HIDE, MODAL_SHOW } from './actionTypes';
 
-interface IModalState {
+export interface IModalState {
     modal: any;
     modalProps: any;
 }

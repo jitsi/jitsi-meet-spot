@@ -9,7 +9,7 @@ import {
     SET_WEB_UPDATE_AVAILABLE
 } from './actionTypes';
 
-interface IAutoUpdateState {
+export interface IAutoUpdateState {
     isNightlyReloadTime: boolean;
     okToUpdate: boolean;
     webUpdateAvailable: boolean;

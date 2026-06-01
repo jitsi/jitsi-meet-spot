@@ -1,6 +1,6 @@
 import { FEEDBACK_HIDE, FEEDBACK_SHOW } from './actionTypes';
 
-interface IFeedbackState {
+export interface IFeedbackState {
     show: boolean;
 }
 

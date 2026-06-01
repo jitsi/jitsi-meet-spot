@@ -4,7 +4,11 @@ import {
     SET_LONG_LIVED_PAIRING_CODE_INFO
 } from './actionTypes';
 
-ReducerRegistry.register('spot-tv/backend', (state: any = { }, action: any) => {
+export interface ISpotTvBackendState {
+    longLivedPairingCodeInfo?: any;
+}
+
+ReducerRegistry.register('spot-tv/backend', (state: ISpotTvBackendState = { }, action: any) => {
     switch (action.type) {
     case SET_LONG_LIVED_PAIRING_CODE_INFO:
         return {

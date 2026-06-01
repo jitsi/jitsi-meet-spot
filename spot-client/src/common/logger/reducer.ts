@@ -2,7 +2,11 @@ import { ReducerRegistry } from '../redux';
 
 import { SET_LOGGING_SERVICE } from './action-types';
 
-ReducerRegistry.register('logger', (state: any = { }, action: any) => {
+export interface ILoggerState {
+    loggingService?: any;
+}
+
+ReducerRegistry.register('logger', (state: ILoggerState = { }, action: any) => {
     switch (action.type) {
     case SET_LOGGING_SERVICE:
         return {

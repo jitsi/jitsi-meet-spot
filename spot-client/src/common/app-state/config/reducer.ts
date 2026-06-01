@@ -5,6 +5,12 @@
  * @param state - The current Redux state for the 'setup' feature.
  * @returns
  */
-const config = (state: any = {}): any => state;
+// The config slice mirrors the runtime `window.JitsiMeetSpotConfig` bag (see
+// `default-config.ts`), which is loosely typed; tightened incrementally later.
+export interface IConfigState {
+    [key: string]: any;
+}
+
+const config = (state: IConfigState = {}): IConfigState => state;
 
 export default config;

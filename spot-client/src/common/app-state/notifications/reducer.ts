@@ -8,7 +8,7 @@ interface INotification {
     [key: string]: any;
 }
 
-interface INotificationsState {
+export interface INotificationsState {
     notifications: INotification[];
 }
 

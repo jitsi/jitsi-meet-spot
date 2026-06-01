@@ -1,6 +1,6 @@
 import { BOOTSTRAP_COMPLETE, BOOTSTRAP_STARTED } from './action-types';
 
-interface IBootstrapState {
+export interface IBootstrapState {
     complete: boolean;
 }
 
