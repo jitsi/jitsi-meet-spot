@@ -33,17 +33,17 @@ Circular-dependency detection is opt-in: `DETECT_CIRCULAR_DEPS=1 npm run build:d
 ## Architecture
 
 ### One bundle, two roles — entry flow
-The build has a single entry, `src/index.js`. It is responsible for **bootstrapping before React renders**:
+The build has a single entry, `src/index.tsx`. It is responsible for **bootstrapping before React renders**:
 - builds the Redux store from `ReducerRegistry.combineReducers(reducers)` + `MiddlewareRegistry.applyMiddleware(thunk)`, seeded with persisted state, `startParams` (parsed query string), and config defaults via `setDefaultValues(window.JitsiMeetSpotConfig)`;
 - subscribes `StateListenerRegistry`, the `RemoteControlServiceSubscriber`, and the `ExternalApiSubscriber` to the store;
 - **loads `lib-jitsi-meet` and the Jitsi Meet external API at runtime** (`loadScript(getExternalApiUrl(...))` / `getLjmUrl(...)`, reading `config.EXTERNAL_API_SRC` / `config.LJM_SRC`) — these are **not bundled** — then renders `<App>`.
 
-`src/app.js` (`App` component) is a React Router `<Switch>` whose route decides the role:
+`src/app.tsx` (`App` component) is a React Router `<Switch>` whose route decides the role:
 - **Spot-TV** routes (`ROUTES.MEETING`, `ROUTES.HOME`, `ROUTES.SETUP`, `ROUTES.OUTLOOK_OAUTH`) are wrapped in `SpotTvRestrictedRoute` and `SpotTVRemoteControlLoader`; views come from `spot-tv/ui` (`src/spot-tv/`).
 - **Spot-Remote** routes (`ROUTES.HELP`, `ROUTES.SHARE`, `ROUTES.SHARE_HELP`, `ROUTES.REMOTE_CONTROL`, and the catch-all `JoinCodeEntry`) come from `spot-remote/ui` (`src/spot-remote/`).
 - Shared code lives in `src/common/`. When changing a feature, decide whether it affects the TV side, the Remote side, or both.
 
-The **bare imports** at the top of `src/index.js` and `src/app.js` (e.g. `import 'common/css'`, `import 'common/i18n'`, `import 'spot-tv/analytics'`, `import 'spot-tv/auto-update'`) exist for side effects: importing a feature entry is what **activates its registry registrations**. Removing such an import silently disables that feature.
+The **bare imports** at the top of `src/index.tsx` and `src/app.tsx` (e.g. `import 'common/css'`, `import 'common/i18n'`, `import 'spot-tv/analytics'`, `import 'spot-tv/auto-update'`) exist for side effects: importing a feature entry is what **activates its registry registrations**. Removing such an import silently disables that feature.
 
 ### Redux + the registry pattern (`src/common/redux/`)
 Features avoid inter-feature dependencies by registering with three singletons rather than wiring into a central file:
@@ -57,10 +57,10 @@ Note the split: **core reducers are imported directly** in `src/common/app-state
 TVs and Remotes communicate by joining a shared XMPP **MUC** (Prosody) and exchanging presence/messages, optionally upgrading to a **P2P** signaling channel for low latency.
 - `BaseRemoteControlService.js` — shared base (extends `common/emitter`); owns the `XmppConnection` and P2P signaling. `connect(options)` joins/creates the MUC.
 - `remoteControlServer.js` — the **Spot-TV** subclass (processes commands, broadcasts status). Exported as `remoteControlServer`.
-- `remoteControlClient.js` — the **Spot-Remote** subclass (sends commands). Exported as `remoteControlClient`; `src/index.js` calls `remoteControlClient.configureWirelessScreensharing(...)`.
+- `remoteControlClient.js` — the **Spot-Remote** subclass (sends commands). Exported as `remoteControlClient`; `src/index.tsx` calls `remoteControlClient.configureWirelessScreensharing(...)`.
 - `xmpp-connection.js` — Strophe-based MUC/presence layer. `P2PSignalingBase/Client/Server.js` + `P2PReconnectTrait.js` — the P2P path.
 - `screenshare-connection.js` — wireless screensharing: manages a `ProxyConnectionService` so a Remote can push desktop video directly into the Jitsi meeting, with the TV brokering.
-- `remote-control-service-subscriber.js` — bridges Redux state changes to the service (its `onUpdate` is called on every store change from `src/index.js`).
+- `remote-control-service-subscriber.js` — bridges Redux state changes to the service (its `onUpdate` is called on every store change from `src/index.tsx`).
 
 The conferencing UI itself is **Jitsi Meet embedded via the external iframe API** (`new JitsiMeetExternalAPI(...)` in `src/spot-tv/ui/components/meeting-frame/JitsiMeetingFrame/JitsiMeetingFrame.js`), not custom WebRTC UI. `lib-jitsi-meet` is accessed through `common/vendor` (`JitsiMeetJSProvider`), which is mocked in tests.
 
@@ -72,11 +72,11 @@ Runtime config is `window.JitsiMeetSpotConfig`, set in `config.js` (copied into 
 
 ## Conventions
 
-- **Strict TypeScript.** `tsconfig.json` extends the repo's `tsconfig.base.json` (strict, `noUnusedLocals/Parameters`, `isolatedModules`) with `jsx: react`, `module`/`moduleResolution: ESNext`/`Bundler`, and `allowJs: true`/`checkJs: false` (a migration safety net — no `.js` remain in `src/` now). `@typescript-eslint/no-explicit-any` is **off**: use `any`/`unknown` freely at the untyped boundaries (lib-jitsi-meet via `common/vendor`, the Jitsi external API, `window.spot`, loosely-typed Redux actions/state). Asset imports (`*.scss`, `*.svg`, fonts) and `window.*` globals are declared in `src/global.d.ts`; untyped packages (strophe.js, @jitsi/logger, @jitsi/js-utils/*, the enzyme adapter) are declared in the script-style `src/modules.d.ts`.
+- **Strict TypeScript.** `tsconfig.json` extends the repo's `tsconfig.base.json` (strict, `noUnusedLocals/Parameters`, `isolatedModules`) with `jsx: react` and `module`/`moduleResolution: ESNext`/`Bundler`. The JS→TS migration is complete: no `.js` remain in `src/` and `allowJs` is off. `@typescript-eslint/no-explicit-any` is **off**: use `any`/`unknown` freely at the untyped boundaries (lib-jitsi-meet via `common/vendor`, the Jitsi external API, `window.spot`, loosely-typed Redux actions/state). Asset imports (`*.scss`, `*.svg`, fonts) and `window.*` globals are declared in `src/global.d.ts`; untyped packages (strophe.js, @jitsi/logger, @jitsi/js-utils/*, the enzyme adapter) are declared in the script-style `src/modules.d.ts`.
 - **Absolute imports from `src/`.** webpack (`resolve.modules` includes `./src`), jest (`modulePaths: ['<rootDir>/src']`), and tsc (`paths` for `common/*`, `spot-tv/*`, `spot-remote/*` — `baseUrl` is deprecated in TS6) all resolve `common/...`, `spot-tv/...`, `spot-remote/...`. Imports are extensionless. Use these instead of long relative paths.
 - **Tests are colocated** as `*.test.ts(x)` next to the code (`testMatch: src/**/*.test.[jt]s?(x)`). Environment is jsdom; component tests use `enzyme` with the React-17 adapter (`@wojtekmaj/enzyme-adapter-react-17`, configured in `setupTests.ts`). `setupTests.ts` forces `TZ=UTC` (in `jest.config.js`), mocks `common/logger` and `common/vendor` (so `lib-jitsi-meet` is stubbed) and `strophe.js` (its old UMD can't load under jest 30 + jsdom), and enables `jest-fetch-mock`. `transformIgnorePatterns` whitelists `@jitsi/js-utils`. Per the style guide, unit tests are committed selectively (favor standalone/utility modules); critical paths are covered by WebdriverIO tests in `spot-webdriver/`.
 - **Linting** is the eslint **flat config** (`eslint.config.mjs`): `@eslint/js` + `typescript-eslint` recommended (the eslintrc-era `@jitsi/eslint-config` + its jsdoc/react configs were dropped). `no-console` is a warning; `no-unused-vars` ignores `^_`-prefixed and rest-siblings (matching tsc). Lint covers the whole project (`eslint .`).
-- **Global SCSS, not CSS modules.** Styles live centrally under `src/common/css/` (imported once via `import 'common/css'` in `src/index.js`); this is deliberate — see `docs/style-guide.md` and `docs/adding-css.md` (use `em` units + media queries for the wide range of TV/phone resolutions). Do not add per-component CSS modules.
+- **Global SCSS, not CSS modules.** Styles live centrally under `src/common/css/` (imported once via `import 'common/css'` in `src/index.tsx`); this is deliberate — see `docs/style-guide.md` and `docs/adding-css.md` (use `em` units + media queries for the wide range of TV/phone resolutions). Do not add per-component CSS modules.
 - **Icons** are added per `docs/adding-new-icons.md`: material icons re-exported from `src/common/icons/`, custom icons packed into a ligature font via icomoon (`selection.json` + font files), then wrapped as components and exported from the icons feature so all icons are used the same way.
 - **Logging & analytics:** log liberally for debuggability but **never log personally identifiable information** (only the random device-id). Send analytics events for major user actions (`src/common/analytics/`, `src/spot-tv/analytics/`, `src/spot-remote/analytics/`).
 

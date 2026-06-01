@@ -4,9 +4,8 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     {
-        // `config.js` is a runtime browser config artifact; `src/**/*.js` are files
-        // not yet migrated to TypeScript (removed from this ignore once migration completes).
-        ignores: [ 'dist/**', 'coverage/**', 'node_modules/**', 'src/**/*.js', 'config.js' ]
+        // `config.js` is a runtime browser config artifact (not part of the TS sources).
+        ignores: [ 'dist/**', 'coverage/**', 'node_modules/**', 'config.js' ]
     },
     {
         files: ['**/*.{ts,tsx}'],

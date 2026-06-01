@@ -12,8 +12,6 @@
             "spot-tv/*": ["./src/spot-tv/*"],
             "spot-remote/*": ["./src/spot-remote/*"]
         },
-        "allowJs": true,
-        "checkJs": false,
         "noEmit": true,
         "esModuleInterop": true,
         "resolveJsonModule": true,
