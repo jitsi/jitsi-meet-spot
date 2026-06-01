@@ -24,20 +24,20 @@ Bumping them is a project of its own.
 | `react-router-dom` | 5.3.4 | 6 / 7 | v6 supports React 17 but is a **routing API rewrite** (`Switch`→`Routes`, `useHistory`→`useNavigate`, element props, etc.) touching `app.tsx` and the route loaders; v7 also requires React 18. |
 | `i18next` | 22.4.6 | 26.x | Not React-18-blocked, but a 4-major jump with init/API changes — migrate + retest the i18n setup. |
 | `react-i18next` | 11.18.6 | 17.x | Same (6-major jump; `Trans`/init changes). Peer allows React 17, so it can go independently of the React bump. |
-| `strophe.js` | 1.2.16 | 4.x | Latest is a **release candidate** (`4.0.0-rc`); major API + ESM change. XMPP layer is covered by spot-webdriver E2E (and mocked in jest), so validate there. |
+| `strophe.js` | 1.2.16 | — (**held by decision**) | **Decision (2026-06): keep at 1.2.16, do not upgrade.** 4.x is a from-scratch ESM rewrite shipping only as a release candidate (`4.0.0-rc`). The direct surface here is small (`$iq` builder + `Strophe.getResourceFromJid`, ~7 sites in `common/remote-control/`; the live transport is lib-jitsi-meet's own Strophe), but jest fully mocks strophe so the only real gate is the Linux-only E2E — not worth the RC risk. Revisit only if a stable 4.x ships and there's a concrete need. |
 | spot-controller RN-ecosystem deps (`react-native-webview`, `react-native-side-menu`, `react-native-svg`, `react-native-keep-awake`, `@react-native-async-storage/async-storage`) | as-is | latest | Tied to RN 0.68 — bump together with the React Native upgrade. |
 
 ### Build tooling held (lower priority, would only need config tweaks)
 
-- **spot-client**: `css-loader` 6→7, `style-loader` 3→4, `webpack-cli` 5→7, `webpack-dev-server` 4→5 — deferred to avoid webpack-config churn; current versions build fine.
 - **spot-controller**: `metro-react-native-babel-preset` 0.76 — tied to RN 0.68.
+
+(spot-client's `css-loader`/`style-loader`/`webpack-cli`/`webpack-dev-server` bumps are **done** — see [§4 Done](#4-done-post-migration-follow-ups).)
 
 ---
 
 ## 2. Code / tooling cleanups (small, safe)
 
-- **spot-client `tsconfig.json`** still has `allowJs: true` / `checkJs: false` (a safety net during migration). No `.js` remain under `src/`, so this can be set to `allowJs: false`, and `src/**/*.js` can be removed from the `ignores` in `eslint.config.mjs`.
-- **spot-webdriver `specs/spot-tv-conflict.spec.ts`** references an undefined `conflictPage` (a **pre-existing** bug; the test is backend-gated and `pending()`s otherwise). It currently carries a `// @ts-expect-error`. Finish it by implementing a real `ConflictPage` page object.
+- **spot-webdriver `specs/spot-tv-conflict.spec.ts`** carries a `// @ts-expect-error` over a call to an undefined `conflictPage.clickRetry()` (a **pre-existing** dangling reference; the test is backend-gated and `pending()`s in CI). ⚠️ **Do _not_ "implement a real ConflictPage"** — the conflict view + retry button + the old `conflict-page.js` page object were **deliberately removed** in commit `64b59626` ("conflict is now silent background retry + an error notification"; the `conflict-view`/`conflict-retry` selectors no longer exist). Re-scope to a spec fix: drop the `@ts-expect-error` + `clickRetry()` line and assert the `appStatus.tvConflict` error notification, then wait for `CalendarPage` recovery (reuse `page-objects/notifications.ts`). Value is typecheck/lint only — the spec `pending()`s in the open-source Linux E2E job.
 - **Tighten `any` at boundaries** — spot-client uses `any`/`unknown` where it meets untyped surfaces (lib-jitsi-meet via `common/vendor`, the Jitsi external API, `window.spot`, loosely-typed Redux actions/state; `@typescript-eslint/no-explicit-any` is off there). A typed `RootState` + action unions + typed `common/vendor` could be introduced incrementally. Similarly, spot-electron's `node-osascript` / `win-audio` are typed via loose ambient declarations.
 - **Docs generation** — `spot-client` `npm run docs` still runs `jsdoc`; consider `typedoc` now that the source is TypeScript.
 
@@ -50,3 +50,10 @@ These all pass their TS/lint/typecheck gates locally; the runtime/packaging step
 - **spot-webdriver E2E** — needs headless **Linux** Chrome (the `ci.yml` E2E job). Confirm the wdio 9 + TS suite is green on the PR.
 - **electron-builder packaging** (`spot-electron` `npm run dist`) — mac (dmg/zip, notarization) and Windows (signing); gated on signing secrets. Runs in `ci_spot-electron.yml`.
 - **React Native native build** (`spot-controller`) — `cd ios && pod install` + Xcode, and Android Gradle. Note: the `jetify` postinstall was removed (it would scan the hoisted root `node_modules`); run `npx jetify` manually before an Android build if a dependency needs it.
+
+---
+
+## 4. Done (post-migration follow-ups)
+
+- **spot-client build-tooling bumps** (commit `1c4f5442`) — `css-loader` 7.1.4, `style-loader` 4.0.0, `webpack-cli` 7.0.3, `webpack-dev-server` 5.2.4; `start:dev` → `webpack serve`. No webpack-config changes were needed (no loader options, no CSS modules, devServer already on the v5 API). Verified: typecheck/lint/build:prod/jest (229) + a `webpack serve` smoke test.
+- **spot-client `allowJs` cleanup** (commit `1c4f5442`) — dropped `allowJs`/`checkJs` from `tsconfig.json` and removed `src/**/*.js` from the eslint flat-config ignores; fixed stale `src/index.js`/`src/app.js` → `.tsx` references in `spot-client/CLAUDE.md`.
