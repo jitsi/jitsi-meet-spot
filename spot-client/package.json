@@ -32,7 +32,7 @@
         "bowser": "2.14.1",
         "circular-dependency-plugin": "5.2.2",
         "copy-webpack-plugin": "11.0.0",
-        "css-loader": "6.7.3",
+        "css-loader": "7.1.4",
         "dayjs": "1.11.21",
         "dotenv": "16.0.3",
         "dotenv-webpack": "8.0.1",
@@ -65,10 +65,10 @@
         "sass-loader": "17.0.0",
         "string-replace-loader": "3.1.0",
         "strophe.js": "1.2.16",
-        "style-loader": "3.3.1",
+        "style-loader": "4.0.0",
         "webpack": "5.107.2",
-        "webpack-cli": "5.0.1",
-        "webpack-dev-server": "4.13.2",
+        "webpack-cli": "7.0.3",
+        "webpack-dev-server": "5.2.4",
         "write-file-webpack-plugin": "4.5.1"
     },
     "overrides": {
@@ -86,7 +86,7 @@
         "docs": "jsdoc -c ./jsdoc.config.js",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "start:dev": "webpack-dev-server",
+        "start:dev": "webpack serve",
         "test": "jest",
         "typecheck": "tsc --noEmit -p tsconfig.json"
     },
