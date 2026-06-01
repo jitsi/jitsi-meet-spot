@@ -4,7 +4,7 @@ import SpotTV from '../user/spot-tv-user.js';
 import type SpotRemote from '../user/spot-remote-user.js';
 
 describe('The Spot TV conflict detection logic', () => {
-    it('should detect the conflict after timeout and allow to retry', async (): Promise<void> => {
+    it('should notify of the conflict and recover once the other Spot-TV leaves', async (): Promise<void> => {
         if (!SpotSession.isBackendEnabled()) {
             pending();
 
@@ -23,12 +23,13 @@ describe('The Spot TV conflict detection logic', () => {
 
         await spotSession2.startSpotTv(true);
 
-        // TODO: check if the notification is displayed in Spot 2
+        // Spot 2 cannot join because Spot 1 already holds the room, so it shows an
+        // error notification while it keeps retrying the join in the background.
+        await spotTv2.getNotifications().waitForErrorToDisplay();
 
+        // Once the original Spot-TV leaves, Spot 2's background retry succeeds and it
+        // recovers to the calendar (home) view on its own — there is no manual retry.
         await spotTv1.cleanup();
-
-        // @ts-expect-error conflictPage page-object is not implemented (pre-existing)
-        await conflictPage.clickRetry();
 
         await spotTv2.getCalendarPage().waitForVisible();
     });
