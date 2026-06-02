@@ -15,7 +15,6 @@ npm run typecheck          # tsc --noEmit -p tsconfig.json (strict; the real typ
 npm run lint               # eslint . (flat config, eslint.config.mjs)
 npm run lint:fix           # eslint --fix
 npm test                   # jest (collects coverage into coverage/ by default)
-npm run docs               # jsdoc -c ./jsdoc.config.js -> dist/jsdoc
 ```
 
 **TypeScript toolchain:** the webpack bundle and jest both transpile `.ts`/`.tsx` via **babel `@babel/preset-typescript`** (type-stripping only — no type-checking in the build/test path), so type errors surface only from `npm run typecheck` (a separate `tsc --noEmit`). Run typecheck after edits.
