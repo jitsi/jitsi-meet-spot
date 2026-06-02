@@ -13,14 +13,19 @@ declare global {
         /** Runtime config injected by `config.js` (see `common/app-state/config`). */
         JitsiMeetSpotConfig?: Record<string, any>;
 
-        /** The Jitsi Meet external (iframe) API constructor, loaded at runtime. */
-        JitsiMeetExternalAPI?: any;
+        /**
+         * The Jitsi Meet external (iframe) API constructor, loaded at runtime.
+         * The instance surface is large and used loosely, so it stays `any`.
+         */
+        JitsiMeetExternalAPI?: new (domain: string, options: Record<string, any>) => any;
 
         /** Screensharing source picker hook consumed by lib-jitsi-meet in Electron. */
-        JitsiMeetScreenObtainer?: any;
+        JitsiMeetScreenObtainer?: {
+            openDesktopPicker(options: any, onSourceChoose: any): void;
+        };
 
-        /** E2E test hooks exposed by the app (see spot-webdriver). */
-        spot?: Record<string, any>;
+        /** Debug/E2E hooks exposed by the app under the `spot` namespace (see spot-webdriver). */
+        spot?: Record<string, unknown>;
     }
 }
 
