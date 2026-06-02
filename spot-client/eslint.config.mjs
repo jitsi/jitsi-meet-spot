@@ -39,7 +39,7 @@ export default tseslint.config(
         languageOptions: { sourceType: 'module', globals: { ...globals.node } }
     },
     {
-        // Node tooling config files (webpack.config.js, jest.config.js, babel.config.js, jsdoc.config.js).
+        // Node tooling config files (webpack.config.js, jest.config.js, babel.config.js).
         files: ['*.{js,cjs}'],
         extends: [ js.configs.recommended ],
         languageOptions: { sourceType: 'commonjs', globals: { ...globals.node } }
