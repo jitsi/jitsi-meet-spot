@@ -189,7 +189,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
             path
         } = parseMeetingUrl(this.props.meetingUrl ?? '');
 
-        this._jitsiApi = new window.JitsiMeetExternalAPI(`${host}${path}`, {
+        this._jitsiApi = new window.JitsiMeetExternalAPI!(`${host}${path}`, {
             configOverwrite: {
                 _desktopSharingSourceDevice: this.props.screenshareDevice,
                 ...Boolean(this.props.preferredResolution) && {

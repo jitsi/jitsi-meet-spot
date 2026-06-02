@@ -8,7 +8,8 @@ import reducers, {
     routeChanged,
     setBootstrapStarted,
     setDefaultValues,
-    setSetupCompleted
+    setSetupCompleted,
+    type RootState
 } from 'common/app-state';
 import { SpotBackendService, setPermanentPairingCode } from 'common/backend';
 import { globalDebugger } from 'common/debugging';
@@ -32,7 +33,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createStore } from 'redux';
+import { createStore, type Reducer } from 'redux';
 import { thunk } from 'redux-thunk';
 import 'common/css';
 import { ExternalApiSubscriber } from 'spot-remote/external-api';
@@ -47,7 +48,10 @@ for (const [ key, value ] of queryParams.entries()) {
 }
 
 const store = createStore(
-    ReducerRegistry.combineReducers(reducers),
+    // Registered feature slices are added at runtime, so the registry combines
+    // reducers as a loose `Reducer`; assert the full shape here so `getState()`
+    // and downstream consumers are typed as `RootState`.
+    ReducerRegistry.combineReducers(reducers) as Reducer<RootState>,
     defaultsDeep({}, {
         spotTv: {
             // This needs to overwrite the persisted value if it's defined in the params
