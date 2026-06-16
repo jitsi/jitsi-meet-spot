@@ -53,6 +53,7 @@ The **app vs. server split is deliberate**: `app.ts` only builds and wires the E
 | `PUT /pair/regenerate` | `refresh-code.ts` (`refreshController`) | none (refresh token in body) | Refresh an access token. Body: `{ refreshToken }`. |
 | `GET /room/info` | `room-info.ts` (`roomInfoController`) | `Bearer <accessToken>` | Return `{ countryCode, id, mucUrl, name }` for the room matching the token. |
 | `GET /calendar?tzid=...` | `calendar.ts` (`calendarRequestController`) | `Bearer <accessToken>` | Return `{ events: [...] }` — 11 synthetic "Meeting N" events with `meetingLink: https://meet.jit.si/meetingN`. `tzid` is required but not actually used. |
+| `GET /health` | inline in `app.ts` | none | Returns 200. Readiness probe for the E2E harness (`start-server-and-test`) to wait on before launching the browser suite. |
 
 Routing matters: `/pair` maps to **register-device** semantics, and the short-lived (`SHORT_LIVED`) vs long-lived (`LONG_LIVED`) distinction recurs across pairing codes and access tokens — a Spot-Remote pairs with a short-lived code (no refresh token returned), a Spot-TV pairs with the long-lived code (gets a refresh token).
 
@@ -75,7 +76,7 @@ Controllers identify the room by **linear scan** over `spots.values()` comparing
 ### Configuration via environment (read in `src/server.ts` and controllers)
 
 `import 'dotenv/config'` (top of `server.ts`) loads a `.env` in `spot-admin/`. Recognized vars:
-- **Room seeding** (`server.ts`): `JWT` (its decoded `spotRoomId` claim becomes the room id, else a random id is used — decoded with `jwt-decode` v4's named `jwtDecode` export), `JWT_SHORT_LIVED`, `TENANT`, `COUNTRY_CODE`.
+- **Room seeding** (`server.ts`): `JWT` (its decoded `spotRoomId` claim becomes the room id, else a random id is used — decoded with `jwt-decode` v4's named `jwtDecode` export), `JWT_SHORT_LIVED`, `TENANT`, `COUNTRY_CODE`, `REFRESH_TOKEN` (seeds the long-lived access token's refresh token to a fixed value instead of a random one — used by the spot-webdriver backend E2E run so the client can be handed a known `BACKEND_REFRESH_TOKEN` up front; preserved across regenerations).
 - **Fault injection** (per-controller, a probability 0–1, parsed to a number): `REG_DEVICE_FAILURE_RATE`, `REFRESH_CODE_FAILURE_RATE`, `REFRESH_CODE_REJECT_RATE`, `ROOM_INFO_FAILURE_RATE`, `CALENDAR_FAILURE_RATE`. When the random roll hits, the endpoint returns 500 (or 401 for the reject rate) so you can test client retry/error handling.
 
 ### How `spot-client` points at it

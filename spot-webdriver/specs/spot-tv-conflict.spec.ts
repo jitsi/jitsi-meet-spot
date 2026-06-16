@@ -32,5 +32,10 @@ describe('The Spot TV conflict detection logic', () => {
         await spotTv1.cleanup();
 
         await spotTv2.getCalendarPage().waitForVisible();
+
+        // In backend mode every TV resolves to the same backend room/MUC, so leave none behind:
+        // an un-cleaned Spot 2 would still occupy the shared room and trip the conflict-retry
+        // path on the next spec's Spot-TV.
+        await spotTv2.cleanup();
     });
 });

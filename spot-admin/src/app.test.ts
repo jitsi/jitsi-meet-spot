@@ -153,4 +153,31 @@ describe('spot-admin app', () => {
             expect(res.status).toBe(401);
         });
     });
+
+    describe('GET /health', () => {
+        it('returns 200 without authentication', async () => {
+            const res = await request(app).get('/health');
+
+            expect(res.status).toBe(200);
+        });
+    });
+
+    describe('seeded refresh token', () => {
+        it('uses the seeded refresh token and accepts it at /pair/regenerate', async () => {
+            const seededRoom = new SpotRoom('seeded-room', { refreshToken: 'e2e-backend-refresh-token' });
+            const seededApp = createApp(new Map([ [ seededRoom.id, seededRoom ] ]));
+
+            expect(seededRoom.getAccessToken().refreshToken).toBe('e2e-backend-refresh-token');
+
+            const res = await request(seededApp)
+                .put('/pair/regenerate')
+                .send({ refreshToken: 'e2e-backend-refresh-token' });
+
+            expect(res.status).toBe(200);
+            expect(res.body.accessToken).toBeTruthy();
+
+            // The refresh token survives the regeneration triggered by /pair/regenerate.
+            expect(seededRoom.getAccessToken().refreshToken).toBe('e2e-backend-refresh-token');
+        });
+    });
 });

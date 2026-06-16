@@ -28,6 +28,7 @@ function createSpots(): Spots {
     const spot1 = new SpotRoom(spot1Id, {
         countryCode: process.env.COUNTRY_CODE,
         jwt,
+        refreshToken: process.env.REFRESH_TOKEN,
         shortLivedJwt: process.env.JWT_SHORT_LIVED,
         tenant: process.env.TENANT
     });

@@ -33,6 +33,7 @@ export class SpotRoom {
     private _shortLivedToken!: TokenStructure;
     private _pairingCode!: PairingCodeStructure;
     private _remotePairingCode!: PairingCodeStructure;
+    private _seedRefreshToken?: string;
 
     /**
      * Creates a new room and seeds all four credential structures.
@@ -40,8 +41,9 @@ export class SpotRoom {
      * @param id - The Spot room ID.
      * @param options - Optional seed values.
      */
-    constructor(id: string, { countryCode, jwt, shortLivedJwt, name, tenant }: SpotRoomOptions) {
+    constructor(id: string, { countryCode, jwt, refreshToken, shortLivedJwt, name, tenant }: SpotRoomOptions) {
         this.id = id;
+        this._seedRefreshToken = refreshToken;
         this.generateLongLivedPairingCode('12345678');
         this.regenerateAccessToken(jwt);
         this.regenerateShortLivedAccessToken(shortLivedJwt);
@@ -59,7 +61,11 @@ export class SpotRoom {
      * @returns The new access token structure.
      */
     regenerateAccessToken(jwt?: string): TokenStructure {
-        const newRefreshToken = this._accessToken?.refreshToken ?? `refresh${generateRandomString()}`;
+        // Preserve any existing refresh token across regenerations; otherwise fall back to the
+        // seeded one (if provided) before generating a random one. The seed keeps the refresh
+        // token deterministic for the E2E backend tests.
+        const newRefreshToken
+            = this._accessToken?.refreshToken ?? this._seedRefreshToken ?? `refresh${generateRandomString()}`;
 
         this._accessToken = {
             accessToken: jwt || generateRandomString(),
