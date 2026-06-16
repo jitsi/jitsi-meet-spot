@@ -37,9 +37,10 @@ The build has a single entry, `src/index.tsx`. It is responsible for **bootstrap
 - subscribes `StateListenerRegistry`, the `RemoteControlServiceSubscriber`, and the `ExternalApiSubscriber` to the store;
 - **loads `lib-jitsi-meet` and the Jitsi Meet external API at runtime** (`loadScript(getExternalApiUrl(...))` / `getLjmUrl(...)`, reading `config.EXTERNAL_API_SRC` / `config.LJM_SRC`) — these are **not bundled** — then renders `<App>`.
 
-`src/app.tsx` (`App` component) is a React Router `<Switch>` whose route decides the role:
-- **Spot-TV** routes (`ROUTES.MEETING`, `ROUTES.HOME`, `ROUTES.SETUP`, `ROUTES.OUTLOOK_OAUTH`) are wrapped in `SpotTvRestrictedRoute` and `SpotTVRemoteControlLoader`; views come from `spot-tv/ui` (`src/spot-tv/`).
-- **Spot-Remote** routes (`ROUTES.HELP`, `ROUTES.SHARE`, `ROUTES.SHARE_HELP`, `ROUTES.REMOTE_CONTROL`, and the catch-all `JoinCodeEntry`) come from `spot-remote/ui` (`src/spot-remote/`).
+`src/app.tsx` (`App` component) is a React Router (**v7**) `<Routes>` whose route decides the role:
+- **Spot-TV** routes (`ROUTES.MEETING`, `ROUTES.HOME`, `ROUTES.SETUP`, `ROUTES.OUTLOOK_OAUTH`) wrap their `element` in `SpotTvRestrictedRoute` (an element guard that renders the view or `<Navigate>`s away) and `SpotTVRemoteControlLoader`; views come from `spot-tv/ui` (`src/spot-tv/`).
+- **Spot-Remote** routes (`ROUTES.HELP`, `ROUTES.SHARE`, `ROUTES.SHARE_HELP`, `ROUTES.REMOTE_CONTROL`, and the `path="*"` catch-all `JoinCodeEntry`) come from `spot-remote/ui` (`src/spot-remote/`).
+- The router is an `unstable_HistoryRouter` over the shared `common/history` singleton (so thunks/services can navigate imperatively via `pushRoute`); `index.tsx` passes it the app `basename`. Class components that still need router props use the `common/routing/withRouter` shim (hooks-based).
 - Shared code lives in `src/common/`. When changing a feature, decide whether it affects the TV side, the Remote side, or both.
 
 The **bare imports** at the top of `src/index.tsx` and `src/app.tsx` (e.g. `import 'common/css'`, `import 'common/i18n'`, `import 'spot-tv/analytics'`, `import 'spot-tv/auto-update'`) exist for side effects: importing a feature entry is what **activates its registry registrations**. Removing such an import silently disables that feature.
