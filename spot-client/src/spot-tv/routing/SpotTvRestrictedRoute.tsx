@@ -4,18 +4,21 @@ import { isSupportedSpotTvBrowser } from 'common/detection';
 import { ROUTES } from 'common/routing';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 
 interface IProps {
+    children?: React.ReactNode;
     isBackendSetupComplete?: boolean;
     requireSetup?: boolean;
-    [key: string]: any;
 }
 
 /**
- * Creates a Route which only allows the view to be displayed if on a supported
- * browser, otherwise redirects to the unsupported browser route.
+ * Wraps a route's element so it is only displayed on a supported browser and,
+ * optionally, once setup is complete; otherwise it redirects to the unsupported
+ * browser or setup route. (In React Router v6+ {@code <Routes>} only accepts
+ * {@code <Route>} children, so this is now an element guard rather than a route
+ * itself.)
  */
 export class SpotTvRestrictedRoute extends React.PureComponent<IProps> {
     static defaultProps = {
@@ -30,20 +33,20 @@ export class SpotTvRestrictedRoute extends React.PureComponent<IProps> {
      */
     render() {
         if (!isSupportedSpotTvBrowser()) {
-            return <Redirect to = { ROUTES.UNSUPPORTED_BROWSER } />;
+            return <Navigate
+                replace = { true }
+                to = { ROUTES.UNSUPPORTED_BROWSER } />;
         }
 
-        const {
-            requireSetup,
-            isBackendSetupComplete,
-            ...routeProps
-        } = this.props;
+        const { requireSetup, isBackendSetupComplete } = this.props;
 
         if (requireSetup && !isBackendSetupComplete) {
-            return <Redirect to = { ROUTES.SETUP } />;
+            return <Navigate
+                replace = { true }
+                to = { ROUTES.SETUP } />;
         }
 
-        return <Route { ...routeProps } />;
+        return <>{ this.props.children }</>;
     }
 }
 

@@ -3,12 +3,11 @@ import type { RootState } from 'common/app-state';
 import { getStartParams, setSetupCompleted } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
+import { ROUTES, withRouter } from 'common/routing';
 import { Modal } from 'common/ui';
 import { getBoolean } from 'common/utils';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import { withCalendar } from '../loaders';
 

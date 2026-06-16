@@ -12,6 +12,12 @@ function getBaseName(): string {
     return idx === -1 ? '/' : pathname.substring(0, idx + 1);
 }
 
-export const history = createBrowserHistory({
-    basename: getBaseName()
-});
+/**
+ * The basename (aka subdirectory) the app is served from. {@code history@5}
+ * dropped the {@code basename} option from {@code createBrowserHistory}, so it
+ * is applied at the router layer instead (passed to {@code <HistoryRouter>} in
+ * {@code index.tsx}).
+ */
+export const basename = getBaseName();
+
+export const history = createBrowserHistory();

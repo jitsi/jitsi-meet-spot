@@ -1,8 +1,8 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import * as detection from 'common/detection';
 import { ROUTES } from 'common/routing';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { SpotTvRestrictedRoute } from './SpotTvRestrictedRoute';
 
@@ -15,23 +15,22 @@ jest.mock('common/detection', () => {
 
 describe('SpotTvRestrictedRoute', () => {
     const MOCK_ROUTE = '/mock-route';
+    const PROTECTED_CONTENT = 'protected-content';
 
     let isSupportedBrowserSpy: jest.SpyInstance;
-    let pathRenderSpy: jest.Mock;
-    let currentPath: string | undefined;
 
     beforeEach(() => {
         isSupportedBrowserSpy = jest.spyOn(detection, 'isSupportedSpotTvBrowser');
         isSupportedBrowserSpy.mockReturnValue(true);
-
-        pathRenderSpy = jest.fn();
-        currentPath = undefined;
     });
 
     /**
-     * Helper to mount {@code SpotTvRestrictedRoute} so it can be tested.
+     * Helper to render {@code SpotTvRestrictedRoute} so it can be tested. The
+     * route table mirrors the real app: the guarded route renders the protected
+     * content while the unsupported-browser and setup routes render markers the
+     * assertions can detect a redirect by.
      *
-     * @param props - Prop to pass into the route.
+     * @param props - Props to pass into the route.
      * @private
      * @returns
      */
@@ -43,18 +42,23 @@ describe('SpotTvRestrictedRoute', () => {
             <MemoryRouter
                 initialEntries = { [ MOCK_ROUTE ] }
                 initialIndex = { 0 }>
-                <SpotTvRestrictedRoute
-                    isBackendSetupComplete = { isBackendSetupComplete }
-                    path = { MOCK_ROUTE }
-                    render = { pathRenderSpy }
-                    requireSetup = { requireSetup } />
-                <Route
-                    path = '*'
-                    render = { ({ location }) => {
-                        currentPath = location.pathname;
-
-                        return null;
-                    } } />
+                <Routes>
+                    <Route
+                        element = {
+                            <SpotTvRestrictedRoute
+                                isBackendSetupComplete = { isBackendSetupComplete }
+                                requireSetup = { requireSetup }>
+                                <div>{ PROTECTED_CONTENT }</div>
+                            </SpotTvRestrictedRoute>
+                        }
+                        path = { MOCK_ROUTE } />
+                    <Route
+                        element = { <div>unsupported</div> }
+                        path = { ROUTES.UNSUPPORTED_BROWSER } />
+                    <Route
+                        element = { <div>setup</div> }
+                        path = { ROUTES.SETUP } />
+                </Routes>
             </MemoryRouter>
         );
     }
@@ -70,8 +74,8 @@ describe('SpotTvRestrictedRoute', () => {
                 requireSetup: false
             });
 
-            expect(pathRenderSpy).not.toHaveBeenCalled();
-            expect(currentPath).toBe(ROUTES.UNSUPPORTED_BROWSER);
+            expect(screen.queryByText(PROTECTED_CONTENT)).toBeNull();
+            expect(screen.getByText('unsupported')).toBeInTheDocument();
         });
     });
 
@@ -82,8 +86,8 @@ describe('SpotTvRestrictedRoute', () => {
                 requireSetup: true
             });
 
-            expect(pathRenderSpy).not.toHaveBeenCalled();
-            expect(currentPath).toBe(ROUTES.SETUP);
+            expect(screen.queryByText(PROTECTED_CONTENT)).toBeNull();
+            expect(screen.getByText('setup')).toBeInTheDocument();
         });
 
         it('proceeds to the route if setup is complete', () => {
@@ -92,8 +96,7 @@ describe('SpotTvRestrictedRoute', () => {
                 requireSetup: true
             });
 
-            expect(pathRenderSpy).toHaveBeenCalled();
-            expect(currentPath).toBe(MOCK_ROUTE);
+            expect(screen.getByText(PROTECTED_CONTENT)).toBeInTheDocument();
         });
     });
 });

@@ -1,5 +1,15 @@
+import { TextDecoder, TextEncoder } from 'util';
+
 import '@testing-library/jest-dom';
 import fetchMock from 'jest-fetch-mock';
+
+// React Router v7 references TextEncoder/TextDecoder at module-load time, but
+// jsdom does not expose them as globals, so polyfill them from Node's `util`
+// before any test module imports react-router-dom.
+Object.assign(global, {
+    TextDecoder,
+    TextEncoder
+});
 
 jest.mock('./src/common/logger');
 

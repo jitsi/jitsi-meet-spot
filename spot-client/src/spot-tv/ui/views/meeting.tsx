@@ -19,12 +19,11 @@ import {
     storePhoneNumberFromInvites
 } from 'common/app-state';
 import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
+import { ROUTES, withRouter } from 'common/routing';
 import { Loading } from 'common/ui';
 import { findWhitelistedMeetingUrl } from 'common/utils';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import { disconnectAllTemporaryRemotes, setMeetingSummary } from './../../app-state';
 import {

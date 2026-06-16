@@ -14,7 +14,7 @@ import reducers, {
 import { SpotBackendService, setPermanentPairingCode } from 'common/backend';
 import { globalDebugger } from 'common/debugging';
 import { isElectron } from 'common/detection';
-import { history } from 'common/history';
+import { basename, history } from 'common/history';
 import { logger } from 'common/logger';
 import 'common/i18n';
 import { MiddlewareRegistry, ReducerRegistry, StateListenerRegistry } from 'common/redux';
@@ -32,7 +32,7 @@ import defaultsDeep from 'lodash.defaultsdeep';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 import { createStore, type Reducer } from 'redux';
 import { thunk } from 'redux-thunk';
 import 'common/css';
@@ -160,7 +160,7 @@ remoteControlClient.configureWirelessScreensharing({
     desktopSharingFrameRate: getDesktopSharingFramerate(reduxState)
 });
 
-history.listen((location: any) => {
+history.listen(({ location }) => {
     store.dispatch(routeChanged(location));
 });
 
@@ -171,9 +171,16 @@ Promise.all([
     .then(() => {
         createRoot(document.getElementById('root') as HTMLElement).render(
             <Provider store = { store }>
-                <Router history = { history }>
+                <HistoryRouter
+
+                    // `history@5`'s `BrowserHistory` is structurally compatible
+                    // but lacks the `createURL`/`encodeLocation` members React
+                    // Router adds to its own vendored `History` type, so cast at
+                    // this single integration point.
+                    basename = { basename }
+                    history = { history as any }>
                     <App />
-                </Router>
+                </HistoryRouter>
             </Provider>
         );
     });
