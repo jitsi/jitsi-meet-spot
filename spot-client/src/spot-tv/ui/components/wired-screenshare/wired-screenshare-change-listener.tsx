@@ -2,13 +2,11 @@ import type { RootState } from 'common/app-state';
 import { isDeviceConnectedForWiredScreensharing } from 'common/app-state';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 
 interface IProps {
     children?: any;
     hasScreenshareDevice?: boolean;
-    history?: any;
     onDeviceConnected?: (...args: any[]) => void;
     onDeviceDisconnected?: (...args: any[]) => void;
 }
@@ -62,5 +60,4 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-export default withRouter(
-    connect(mapStateToProps)(WiredScreenshareChangeListener));
+export default connect(mapStateToProps)(WiredScreenshareChangeListener);

@@ -10,12 +10,11 @@ import { getPermanentPairingCode, isBackendEnabled } from 'common/backend';
 import { isSpotControllerApp } from 'common/detection';
 import { HelpOutline } from 'common/icons';
 import { logger } from 'common/logger';
-import { ROUTES } from 'common/routing';
+import { ROUTES, withRouter } from 'common/routing';
 import { Button, CodeInput, Loading, View } from 'common/ui';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import {
     connectToSpotTV,

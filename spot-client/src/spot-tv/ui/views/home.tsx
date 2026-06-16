@@ -17,7 +17,6 @@ import { getRandomMeetingName } from 'common/utils';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 
 import { redirectToMeeting } from '../../app-state';
@@ -43,7 +42,6 @@ interface IHomeProps {
     enableAutoUpdate?: boolean;
     events?: any[];
     hasFetchedEvents?: boolean;
-    history?: any;
     isCalendarEnabled?: boolean;
     isSetupComplete?: boolean;
     onGoToMeetingCommand?: (data: any) => void;
@@ -335,10 +333,8 @@ function mapDispatchToProps(dispatch: any) {
     };
 }
 
-export default withRouter(
-    withCalendar(
-        connect(mapStateToProps, mapDispatchToProps)(
-            withTranslation()(Home)
-        )
+export default withCalendar(
+    connect(mapStateToProps, mapDispatchToProps)(
+        withTranslation()(Home)
     )
 );

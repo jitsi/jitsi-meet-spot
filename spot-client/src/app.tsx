@@ -22,7 +22,7 @@ import {
 } from 'common/ui';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import {
     Help,
     JoinCodeEntry,
@@ -56,7 +56,6 @@ import 'spot-tv/electron-logs';
 
 interface IAppProps {
     dispatch: (action: any) => any;
-    location?: any;
     productName?: string;
     spotClientVersion?: string;
 }
@@ -173,32 +172,51 @@ export class App extends React.Component<IAppProps, IAppState> {
                     <div className = { rootClassName }>
                         <Background />
                         <Notifications />
-                        <Switch>
+                        <Routes>
                             {
 
                                 /**
                                  * Spot-TV specific routes.
                                  */
                             }
-                            <SpotTvRestrictedRoute
-                                path = { ROUTES.MEETING }
-                                render = { this._renderMeetingView } />
-                            <SpotTvRestrictedRoute
-                                path = { ROUTES.OUTLOOK_OAUTH }
-                                render = { this._renderOutlookOauthView } />
-                            <SpotTvRestrictedRoute
-                                path = { ROUTES.SETUP }
-                                render = { this._renderSetupView }
-                                requireSetup = { false } />
-                            <Redirect
-                                from = { ROUTES.OLD_HOME }
-                                to = { ROUTES.HOME } />
-                            <SpotTvRestrictedRoute
-                                path = { ROUTES.HOME }
-                                render = { this._renderHomeView } />
                             <Route
-                                path = { ROUTES.UNSUPPORTED_BROWSER }
-                                render = { this._renderUnsupportedBrowserView } />
+                                element = {
+                                    <SpotTvRestrictedRoute>
+                                        { this._renderMeetingView() }
+                                    </SpotTvRestrictedRoute>
+                                }
+                                path = { ROUTES.MEETING } />
+                            <Route
+                                element = {
+                                    <SpotTvRestrictedRoute>
+                                        { this._renderOutlookOauthView() }
+                                    </SpotTvRestrictedRoute>
+                                }
+                                path = { ROUTES.OUTLOOK_OAUTH } />
+                            <Route
+                                element = {
+                                    <SpotTvRestrictedRoute requireSetup = { false }>
+                                        { this._renderSetupView() }
+                                    </SpotTvRestrictedRoute>
+                                }
+                                path = { ROUTES.SETUP } />
+                            <Route
+                                element = {
+                                    <Navigate
+                                        replace = { true }
+                                        to = { ROUTES.HOME } />
+                                }
+                                path = { ROUTES.OLD_HOME } />
+                            <Route
+                                element = {
+                                    <SpotTvRestrictedRoute>
+                                        { this._renderHomeView() }
+                                    </SpotTvRestrictedRoute>
+                                }
+                                path = { ROUTES.HOME } />
+                            <Route
+                                element = { this._renderUnsupportedBrowserView() }
+                                path = { ROUTES.UNSUPPORTED_BROWSER } />
 
                             {
 
@@ -207,19 +225,21 @@ export class App extends React.Component<IAppProps, IAppState> {
                                  */
                             }
                             <Route
-                                path = { ROUTES.HELP }
-                                render = { this._renderHelpView } />
+                                element = { this._renderHelpView() }
+                                path = { ROUTES.HELP } />
                             <Route
-                                path = { ROUTES.SHARE }
-                                render = { this._renderShareView } />
+                                element = { this._renderShareView() }
+                                path = { ROUTES.SHARE } />
                             <Route
-                                path = { ROUTES.SHARE_HELP }
-                                render = { this._renderShareHelpView } />
+                                element = { this._renderShareHelpView() }
+                                path = { ROUTES.SHARE_HELP } />
                             <Route
-                                path = { ROUTES.REMOTE_CONTROL }
-                                render = { this._renderRemoteControlView } />
-                            <Route render = { this._renderJoinCodeEntry } />
-                        </Switch>
+                                element = { this._renderRemoteControlView() }
+                                path = { ROUTES.REMOTE_CONTROL } />
+                            <Route
+                                element = { this._renderJoinCodeEntry() }
+                                path = '*' />
+                        </Routes>
                     </div>
                     <ModalManager />
                     <ReconnectIndicator />
@@ -457,4 +477,4 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-export default connect(mapStateToProps)(withRouter(App as React.ComponentType<any>));
+export default connect(mapStateToProps)(App);
