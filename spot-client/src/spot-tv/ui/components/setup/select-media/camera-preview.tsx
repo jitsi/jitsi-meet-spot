@@ -41,7 +41,7 @@ interface IState {
  * Displays a video element previewing the selected video input device.
  */
 export class CameraPreview extends React.PureComponent<IProps, IState> {
-    _ref: React.RefObject<HTMLVideoElement>;
+    _ref: React.RefObject<HTMLVideoElement | null>;
     _previewTrack: any;
 
     /**

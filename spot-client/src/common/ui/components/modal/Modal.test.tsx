@@ -1,32 +1,32 @@
-import { shallow } from 'enzyme';
-import type { ShallowWrapper } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import Modal from './Modal';
 
 describe('Modal', () => {
     let Child: jest.Mock;
-    let modal: ShallowWrapper;
+    let container: HTMLElement;
     let onCloseSpy: jest.Mock;
 
     beforeEach(() => {
         Child = jest.fn().mockReturnValue(<>test</>);
         onCloseSpy = jest.fn();
 
-        modal = shallow(
+        ({ container } = render(
             <Modal onClose = { onCloseSpy }>
                 <Child />
             </Modal>
-        );
+        ));
     });
 
     it('triggers the close callback', () => {
-        modal.find('[data-qa-id="modal-close"]').simulate('click');
+        fireEvent.click(container.querySelector('[data-qa-id="modal-close"]')!);
 
         expect(onCloseSpy).toHaveBeenCalled();
     });
 
     it('displays children', () => {
-        expect(modal.exists(Child)).toBe(true);
+        expect(Child).toHaveBeenCalled();
+        expect(screen.getByText('test')).toBeInTheDocument();
     });
 });

@@ -1,17 +1,17 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 import CodeInput from './CodeInput';
 
 describe('CodeInput', () => {
-    let codeInput: ReactWrapper;
+    let container: HTMLElement;
     let onChangeSpy: jest.Mock;
 
     beforeEach(() => {
         onChangeSpy = jest.fn();
-        codeInput = mount(<CodeInput onChange = { onChangeSpy } />);
+        ({ container } = render(<CodeInput onChange = { onChangeSpy } />));
 
-        codeInput.find('.code-entry').simulate('click');
+        fireEvent.click(container.querySelector('.code-entry')!);
     });
 
     /**
@@ -22,10 +22,9 @@ describe('CodeInput', () => {
      * @returns {void}
      */
     function setValue(value: string) {
-        const input = codeInput.find('.hidden-user-input');
+        const input = container.querySelector('.hidden-user-input')!;
 
-        (input.at(0).instance() as unknown as HTMLInputElement).value = value;
-        input.simulate('change');
+        fireEvent.change(input, { target: { value } });
     }
 
     test('notifies of value change', () => {
@@ -41,9 +40,8 @@ describe('CodeInput', () => {
     test('displays the entered value', () => {
         setValue('abcdef');
 
-        const displayedValue = codeInput
-            .find('.box')
-            .reduce((acc: string, box) => acc + box.text(), '');
+        const displayedValue = Array.from(container.querySelectorAll('.box'))
+            .reduce((acc: string, box) => acc + box.textContent, '');
 
         expect(displayedValue).toEqual('abcdef');
     });

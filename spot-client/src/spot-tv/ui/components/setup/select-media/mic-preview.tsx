@@ -20,7 +20,7 @@ interface IState {
  * Displays a volume meter for previewing the selected audio input device.
  */
 export default class MicPreview extends React.PureComponent<IProps, IState> {
-    _ref: React.RefObject<HTMLDivElement>;
+    _ref: React.RefObject<HTMLDivElement | null>;
 
     /**
      * Initializes a new {@code MicPreview} instance.

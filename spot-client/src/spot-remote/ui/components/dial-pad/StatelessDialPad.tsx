@@ -38,7 +38,7 @@ export class StatelessDialPad extends React.Component<IProps> {
         value: ''
     };
 
-    _countryCodePickerWrapperRef: React.RefObject<HTMLDivElement>;
+    _countryCodePickerWrapperRef: React.RefObject<HTMLDivElement | null>;
     _countryCodePickerTriggerRef: React.RefObject<any>;
 
     /**

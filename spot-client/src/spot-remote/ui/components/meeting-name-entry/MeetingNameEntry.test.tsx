@@ -1,5 +1,5 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
 
 
@@ -9,7 +9,6 @@ describe('MeetingNameEntry', () => {
     const MEETING_NAME = 'mock-meeting-name';
     const PLACEHOLDER = 'test-placeholder';
 
-    let meetingNameEntry: ReactWrapper;
     let onChangeCallback: jest.Mock;
     let onSubmitCallback: jest.Mock;
 
@@ -17,7 +16,7 @@ describe('MeetingNameEntry', () => {
         onChangeCallback = jest.fn();
         onSubmitCallback = jest.fn();
 
-        meetingNameEntry = mount(
+        render(
             <MeetingNameEntry
                 meetingName = { MEETING_NAME }
                 onChange = { onChangeCallback }
@@ -28,17 +27,17 @@ describe('MeetingNameEntry', () => {
     });
 
     it('shows the placeholder', () => {
-        expect(meetingNameEntry.find('input').props().placeholder).toEqual(PLACEHOLDER);
+        expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', PLACEHOLDER);
     });
 
     it('submits the name by clicking the submit button', () => {
-        meetingNameEntry.find('button').simulate('submit');
+        fireEvent.submit(screen.getByRole('button'));
 
         expect(onSubmitCallback).toHaveBeenCalled();
     });
 
     it('submits the name by pressing enter', () => {
-        meetingNameEntry.find('input').simulate('submit');
+        fireEvent.submit(screen.getByRole('textbox'));
 
         expect(onSubmitCallback).toHaveBeenCalled();
     });

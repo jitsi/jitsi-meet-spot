@@ -11,25 +11,17 @@ surfaced along the way.
 
 ## 1. Held dependency upgrades
 
-These are pinned to their latest **React-17-compatible** versions because React 17
-and React Native 0.68 majors are held (React 17 keeps the enzyme test suite working).
-Bumping them is a project of its own.
+`spot-client` is on **React 19** (+ react-redux 9, MUI 9, React Testing Library) and
+`spot-controller` is on **Expo SDK 56** (React Native 0.85, React 19) — see
+[§4 Done](#4-done-post-migration-follow-ups). The whole monorepo now runs a single React 19.
+The remaining holds below are deps deferred by scope or by decision.
 
 | Dependency | Current (held) | Target | Blocker / work required |
 |---|---|---|---|
-| `react` / `react-dom` | 17.0.2 | 19.x | Enzyme has **no adapter past React 17**. Requires migrating spot-client's component tests off `enzyme` (→ React Testing Library) before/with the bump. Unblocks everything below. |
-| `react-native` | 0.68.5 | 0.8x | Large native iOS/Android upgrade (Gradle, CocoaPods, AndroidX, new architecture). Needs Xcode + Android SDK to verify; couples with the React 18 bump. |
-| `react-redux` | 8.1.3 | 9.x | Requires React 18. |
-| `@mui/material`, `@mui/icons-material` | 5.18.0 | 6/7.x | Requires React 18. |
-| `react-router-dom` | 5.3.4 | 6 / 7 | v6 supports React 17 but is a **routing API rewrite** (`Switch`→`Routes`, `useHistory`→`useNavigate`, element props, etc.) touching `app.tsx` and the route loaders; v7 also requires React 18. |
+| `react-router-dom` | 5.3.4 | 6 / 7 | Out of the requested React-upgrade scope, so left at v5 — **now verified running under React 19** (typecheck/build/229 tests green; the v5 `<Router history>` / `Switch` / `withRouter` API still works). v6 is a **routing API rewrite** (`Switch`→`Routes`, `useHistory`→`useNavigate`, element props, …) touching `app.tsx` and the route loaders; v7 also requires React 18+. |
 | `strophe.js` | 1.2.16 | — (**held by decision**) | **Decision (2026-06): keep at 1.2.16, do not upgrade.** 4.x is a from-scratch ESM rewrite shipping only as a release candidate (`4.0.0-rc`). The direct surface here is small (`$iq` builder + `Strophe.getResourceFromJid`, ~7 sites in `common/remote-control/`; the live transport is lib-jitsi-meet's own Strophe), but jest fully mocks strophe so the only real gate is the Linux-only E2E — not worth the RC risk. Revisit only if a stable 4.x ships and there's a concrete need. |
-| spot-controller RN-ecosystem deps (`react-native-webview`, `react-native-side-menu`, `react-native-svg`, `react-native-keep-awake`, `@react-native-async-storage/async-storage`) | as-is | latest | Tied to RN 0.68 — bump together with the React Native upgrade. |
 
-### Build tooling held (lower priority, would only need config tweaks)
-
-- **spot-controller**: `metro-react-native-babel-preset` 0.76 — tied to RN 0.68.
-
-(spot-client's `css-loader`/`style-loader`/`webpack-cli`/`webpack-dev-server` bumps are **done** — see [§4 Done](#4-done-post-migration-follow-ups).)
+(spot-client's `css-loader`/`style-loader`/`webpack-cli`/`webpack-dev-server` bumps are **done**, and spot-controller's whole RN-ecosystem dep set was replaced by the **Expo SDK 56** migration — see [§4 Done](#4-done-post-migration-follow-ups).)
 
 ---
 
@@ -44,12 +36,21 @@ These all pass their TS/lint/typecheck gates locally; the runtime/packaging step
 
 - **spot-webdriver E2E** — needs headless **Linux** Chrome (the `ci.yml` E2E job). Confirm the wdio 9 + TS suite is green on the PR.
 - **electron-builder packaging** (`spot-electron` `npm run dist`) — mac (dmg/zip, notarization) and Windows (signing); gated on signing secrets. Runs in `ci_spot-electron.yml`.
-- **React Native native build** (`spot-controller`) — `cd ios && pod install` + Xcode, and Android Gradle. Note: the `jetify` postinstall was removed (it would scan the hoisted root `node_modules`); run `npx jetify` manually before an Android build if a dependency needs it.
+- **spot-controller native build** (now an **Expo** app) — **verified building locally** on this host (iOS simulator `xcodebuild` → `Spot.app`, Android `gradlew assembleDebug` → `app-debug.apk`, both with JDK 17). `ios/`/`android/` are gitignored (Continuous Native Generation): a fresh checkout runs `npm install && npx expo prebuild` then `expo run:ios`/`run:android`. Still unverified: on-device runtime behavior, App Store / Play release signing, and an EAS (or CI prebuild) release pipeline to replace the old fastlane setup (the previous `ios/fastlane` + `android/fastlane` are in git history).
 
 ---
 
 ## 4. Done (post-migration follow-ups)
 
+- **spot-controller → Expo SDK 56 (RN 0.85, React 19)** — migrated the bare RN 0.68 / React 17 controller to the **Expo managed workflow**, which is what unblocked removing spot-client's single-React aliases (above) and ended the controller's native-maintenance burden. The app is a thin WebView wrapper with one custom native module, so managed/prebuild was the right call.
+  - **Dep swaps:** custom `AppInfo` native module (`ios/.../AppInfo.m` + `android/.../AppInfoModule.java`) → **`expo-application`** (eliminating all hand-written native code); `react-native-keep-awake` → **`expo-keep-awake`** (lifecycle `activateKeepAwakeAsync`/`deactivateKeepAwake`); dead **`react-native-side-menu`** → **`react-native-drawer-layout`** (+ `react-native-gesture-handler`/`react-native-reanimated` + the `react-native-worklets/plugin` babel plugin; swipe-to-open preserved, imperative `openMenu(false)` → controlled `menuOpen` state, root wrapped in `GestureHandlerRootView`). `react-native-webview`/`react-native-svg`/`async-storage` re-pinned to SDK 56; removed `@types/react-native` (RN 0.85 ships its own types), `metro-react-native-babel-preset`, `jetifier`, `redux-thunk`/`lodash` (unused). Added `expo-build-properties` (Android cleartext), `expo-splash-screen`, `expo-system-ui`.
+  - **RN 0.85 API fixes:** `AppState.removeEventListener` → store the `addEventListener` subscription and `.remove()` it; `StyleSheet.absoluteFillObject` → `StyleSheet.absoluteFill` (object form retained in RN 0.85 types).
+  - **Config / tooling:** new `app.config.js` (dynamic; preserves bundle id `org.jitsi.spot`, name `Spot`, `SPOT_APP_ID`/`SPOT_VERSION` env overrides, orientation, ATS arbitrary-loads, Android cleartext + `allowBackup=false`, black bg + splash, icon from `assets/icon.png`); `babel.config.js` → `babel-preset-expo` + worklets plugin; monorepo-aware `metro.config.js` (`expo/metro-config` + `watchFolders`/`nodeModulesPaths` + `react-native-svg-transformer/expo`); `index.ts` → `registerRootComponent`; removed obsolete `rn-cli.config.js`. **Continuous Native Generation:** `ios/`/`android/` are now `expo prebuild`-generated and **gitignored** (the old 69 committed native files + `fastlane/` are in git history).
+  - **Verified building on this host:** `npx expo prebuild --clean` + iOS simulator `xcodebuild` (→ `Spot.app`, **BUILD SUCCEEDED**) and Android `gradlew assembleDebug` (→ 188 MB `app-debug.apk`, **BUILD SUCCESSFUL**), both on **JDK 17** (Gradle 9.3.1 + AGP). Controller `typecheck`/`lint`/`test` (6) green. Not verified: on-device runtime, release signing, EAS/CI release pipeline (see §3).
+- **React 19 + react-redux 9 + MUI 9 + enzyme→RTL** — bumped spot-client to `react`/`react-dom` **19.2.7** (`@types/react` 19.2.17, `@types/react-dom` 19.2.3), `react-redux` **9.3.0**, `@mui/material`/`@mui/icons-material` **9.1.1** (MUI's versioning jumped 5→6→7→9; peers React 17–19). Removed `enzyme` + `@types/enzyme` + `@wojtekmaj/enzyme-adapter-react-17` (no React-19 adapter exists) and migrated all **20 enzyme component tests to React Testing Library** (`@testing-library/react` 16.3.2, `/dom` 10.4.1, `/jest-dom` 6.9.1, `/user-event` 14.6.1); `setupTests.ts` now registers jest-dom instead of the enzyme adapter. No other deps needed bumping (`@emotion/*` already latest; `react-router-dom` 5 stays — verified on React 19; `react-is` override left at 18.3.1 — only react-router 5 still consumes it).
+  - **Single-React (was the key gotcha):** while the RN spot-controller was still on React 17, the root hoisted React 17 and spot-client's root-hoisted deps (`@emotion/react`, `react-transition-group`) bound React 17 while `@mui`/RTL bound spot-client's nested React 19 — two React copies ("Invalid hook call"; the webpack `DuplicatesPlugin` rejects it). This was bridged with spot-client-scoped `resolve.alias`/`moduleNameMapper`/tsconfig `paths`. **Those aliases have since been removed** — the Expo SDK 56 migration (below) put the controller on React 19, so both workspaces pin the same `react@19.2.3` and a single React hoists to the root. The `fullySpecified: false` webpack rule for MUI 9's ESM extensionless subpath imports stays.
+  - **React-19 code changes:** `ReactDOM.render` → `createRoot` (`index.tsx`); 7 class-field `RefObject<T>` → `RefObject<T | null>` (React 19 `createRef` typing); `JSX.Element` → `React.JSX.Element` (`WhiteboardButton`); a `connect()` children-typing cast (`withRemoteControl`); `HelpOutline` icon (dropped in MUI 9) re-exported as `HelpOutlined` from `common/icons`. (No propTypes/findDOMNode/string-refs/legacy-context existed; all `defaultProps` are on class components, which React 19 still supports.)
+  - **Verified:** root `typecheck`/`lint`/`test` (269 tests: 229 spot-client + 40 others)/`build` all green (build reports a single React, no duplicates). Not verifiable locally: spot-webdriver E2E (Linux CI) and real-browser runtime.
 - **spot-client build-tooling bumps** (commit `1c4f5442`) — `css-loader` 7.1.4, `style-loader` 4.0.0, `webpack-cli` 7.0.3, `webpack-dev-server` 5.2.4; `start:dev` → `webpack serve`. No webpack-config changes were needed (no loader options, no CSS modules, devServer already on the v5 API). Verified: typecheck/lint/build:prod/jest (229) + a `webpack serve` smoke test.
 - **spot-client `allowJs` cleanup** (commit `1c4f5442`) — dropped `allowJs`/`checkJs` from `tsconfig.json` and removed `src/**/*.js` from the eslint flat-config ignores; fixed stale `src/index.js`/`src/app.js` → `.tsx` references in `spot-client/CLAUDE.md`.
 - **Typed `RootState` rollout** (commits `8d71d342`, `8e2d61b0`, `de2f336f`) — added `common/app-state/types.ts` aggregating all 17 store slices and migrated the reducers + all 16 `selectors.ts` + every `mapStateToProps`/`useSelector`/store-subscriber consumer off `state: any` (repo-wide 163 → 5; the 5 are deliberate non-Redux holdouts). Details/remaining in §2.

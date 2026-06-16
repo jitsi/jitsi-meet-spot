@@ -35,6 +35,15 @@ module.exports = () => {
         module: {
             rules: [
                 {
+                    // MUI 9 ships native ESM (.mjs) that uses extensionless subpath imports
+                    // (e.g. `react-transition-group/TransitionGroupContext`). webpack 5 otherwise
+                    // requires fully-specified requests inside ESM; relax that so they resolve.
+                    test: /\.m?js$/,
+                    resolve: {
+                        fullySpecified: false
+                    }
+                },
+                {
                     test: /\.(css|scss)$/,
                     use: [ 'style-loader', 'css-loader', 'sass-loader' ]
                 },

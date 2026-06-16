@@ -150,4 +150,9 @@ function mapStateToProps(state: RootState) {
 
 const ConnectedRemoteControlLoader = withRouter(RemoteControlLoader as any);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectedRemoteControlLoader as any);
+// Cast to a component type that accepts `children`: react-redux 9's `connect` infers empty
+// own-props from the `as any` wrapped component and so would otherwise reject the children
+// passed by `<WithRemoteControl>...</WithRemoteControl>` (see remote-control.tsx).
+export default connect(mapStateToProps, mapDispatchToProps)(
+    ConnectedRemoteControlLoader as any
+) as React.ComponentType<IProps>;

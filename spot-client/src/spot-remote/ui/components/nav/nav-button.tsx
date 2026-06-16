@@ -23,7 +23,7 @@ export default class NavButton extends React.Component<IProps> {
         type: 'button'
     };
 
-    _buttonRef: React.RefObject<HTMLButtonElement>;
+    _buttonRef: React.RefObject<HTMLButtonElement | null>;
 
     /**
      * Initializes a new {@code NavButton} instance.

@@ -1,4 +1,4 @@
-import { type ShallowWrapper, shallow } from 'enzyme';
+import { act, render } from '@testing-library/react';
 import React from 'react';
 
 import IdleCursorDetector from './IdleCursorDetector';
@@ -6,7 +6,7 @@ import IdleCursorDetector from './IdleCursorDetector';
 describe('IdleCursorDetector', () => {
     const TIME_LIMIT = 100;
 
-    let idleCursorDetector: ShallowWrapper;
+    let unmount: () => void;
     let listenerMap: { [event: string]: (...args: any[]) => void };
     let onChangeSpy: jest.Mock;
 
@@ -25,15 +25,17 @@ describe('IdleCursorDetector', () => {
             });
 
         onChangeSpy = jest.fn();
-        idleCursorDetector = shallow(
+        ({ unmount } = render(
             <IdleCursorDetector
                 onCursorIdleChange = { onChangeSpy }
                 timeLimit = { TIME_LIMIT } />
-        );
+        ));
     });
 
     it('assumes mouse starts as inactive', () => {
-        jest.advanceTimersByTime(TIME_LIMIT);
+        act(() => {
+            jest.advanceTimersByTime(TIME_LIMIT);
+        });
         expect(onChangeSpy).not.toHaveBeenCalled();
     });
 
@@ -44,12 +46,14 @@ describe('IdleCursorDetector', () => {
 
     it('notifies when the cursor becomes inactive again', () => {
         listenerMap.mousemove();
-        jest.advanceTimersByTime(TIME_LIMIT);
+        act(() => {
+            jest.advanceTimersByTime(TIME_LIMIT);
+        });
         expect(onChangeSpy).toHaveBeenCalledWith(true);
     });
 
     it('does not notify of activity change after unmount', () => {
-        idleCursorDetector.unmount();
+        unmount();
         listenerMap.mousemove();
         expect(onChangeSpy).not.toHaveBeenCalled();
     });

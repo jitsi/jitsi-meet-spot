@@ -30,7 +30,7 @@ import {
 } from 'common/utils';
 import defaultsDeep from 'lodash.defaultsdeep';
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createStore, type Reducer } from 'redux';
@@ -169,12 +169,11 @@ Promise.all([
     loadScript(getLjmUrl(reduxState))
 ])
     .then(() => {
-        render(
+        createRoot(document.getElementById('root') as HTMLElement).render(
             <Provider store = { store }>
                 <Router history = { history }>
                     <App />
                 </Router>
-            </Provider>,
-            document.getElementById('root')
+            </Provider>
         );
     });

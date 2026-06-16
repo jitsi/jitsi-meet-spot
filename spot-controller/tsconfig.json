@@ -6,7 +6,7 @@
         "target": "ESNext",
         "jsx": "react-native",
         "lib": ["ESNext", "DOM"],
-        "types": ["node", "react", "react-native", "jest"],
+        "types": ["node", "jest"],
         "noEmit": true,
         "allowJs": false,
         "noImplicitOverride": false

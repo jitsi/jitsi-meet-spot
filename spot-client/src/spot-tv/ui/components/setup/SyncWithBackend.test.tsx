@@ -1,6 +1,5 @@
+import { fireEvent, render } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { LoadingIcon } from 'common/ui';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
 
 
@@ -12,21 +11,21 @@ describe('SyncWithBackend', () => {
     let onAttemptSyncSpy: jest.Mock;
     let onSuccessSpy: jest.Mock;
     let onSyncErrorSpy: jest.Mock;
-    let syncWithBackend: ReactWrapper;
+    let container: HTMLElement;
 
     beforeEach(() => {
         onAttemptSyncSpy = jest.fn();
         onSuccessSpy = jest.fn();
         onSyncErrorSpy = jest.fn();
 
-        syncWithBackend = mount(
+        ({ container } = render(
             <SyncWithBackend
                 onAttemptSync = { onAttemptSyncSpy }
                 onStartAutoSync = { jest.fn() }
                 onSuccess = { onSuccessSpy }
                 onSyncError = { onSyncErrorSpy }
                 t = { mockT } />
-        );
+        ));
     });
 
     /**
@@ -37,20 +36,19 @@ describe('SyncWithBackend', () => {
      * @returns {void}
      */
     function setValue(joinCode: string) {
-        const input = syncWithBackend.find('textarea');
+        const input = container.querySelector('textarea') as HTMLTextAreaElement;
 
-        (input.at(0).instance() as unknown as HTMLTextAreaElement).value = joinCode;
-        input.simulate('change');
+        fireEvent.change(input, { target: { value: joinCode } });
     }
 
     it('shows a loading icon', () => {
         onAttemptSyncSpy.mockImplementation(() => Promise.resolve());
 
-        expect(syncWithBackend.find(LoadingIcon).length).toBe(0);
+        expect(container.querySelectorAll('.loading-icon')).toHaveLength(0);
 
         setValue(MOCK_JOIN_CODE);
 
-        expect(syncWithBackend.find(LoadingIcon).length).toBe(1);
+        expect(container.querySelectorAll('.loading-icon')).toHaveLength(1);
     });
 
     it('calls the success callback', () => {

@@ -1,5 +1,4 @@
-import { VideocamOffOutlined, VideocamOutlined } from 'common/icons';
-import { ReactWrapper, mount } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 
@@ -8,63 +7,74 @@ import { VideoMuteButton } from './VideoMuteButton';
 describe('VideoMuteButton', () => {
     let setVideoMuteCallback: jest.Mock;
 
-    let videoMuteButton: ReactWrapper;
+    let container: HTMLElement;
+    let rerender: (ui: React.ReactElement) => void;
 
     beforeEach(() => {
         setVideoMuteCallback = jest.fn();
 
-        videoMuteButton = mount(
+        ({ container, rerender } = render(
             <VideoMuteButton
                 onSetVideoMute = { setVideoMuteCallback }
                 videoMuted = { false } />
-        );
-    });
-
-    afterEach(() => {
-        videoMuteButton.unmount();
+        ));
     });
 
     describe('when not muted', () => {
         it('displays UI showing no mute', () => {
-            expect(videoMuteButton.find(VideocamOutlined).length).toBe(1);
-            expect(videoMuteButton.find(VideocamOffOutlined).length).toBe(0);
+            expect(container.querySelectorAll('[data-testid="VideocamOutlinedIcon"]')).toHaveLength(1);
+            expect(container.querySelectorAll('[data-testid="VideocamOffOutlinedIcon"]')).toHaveLength(0);
         });
 
         it('notifies of mute action', () => {
-            videoMuteButton.find('button').simulate('click');
+            fireEvent.click(screen.getByRole('button'));
 
             expect(setVideoMuteCallback).toHaveBeenCalledWith(true);
         });
 
         it('displays pending state when unmute is still processing', () => {
-            videoMuteButton.setProps({ changePending: true });
+            rerender(
+                <VideoMuteButton
+                    changePending = { true }
+                    onSetVideoMute = { setVideoMuteCallback }
+                    videoMuted = { false } />
+            );
 
-            expect(videoMuteButton.find(VideocamOutlined).length).toBe(1);
-            expect(videoMuteButton.find(VideocamOffOutlined).length).toBe(0);
+            expect(container.querySelectorAll('[data-testid="VideocamOutlinedIcon"]')).toHaveLength(1);
+            expect(container.querySelectorAll('[data-testid="VideocamOffOutlinedIcon"]')).toHaveLength(0);
         });
     });
 
     describe('when muted', () => {
         beforeEach(() => {
-            videoMuteButton.setProps({ videoMuted: true });
+            rerender(
+                <VideoMuteButton
+                    onSetVideoMute = { setVideoMuteCallback }
+                    videoMuted = { true } />
+            );
         });
 
         it('displays UI showing mute', () => {
-            expect(videoMuteButton.find(VideocamOutlined).length).toBe(0);
-            expect(videoMuteButton.find(VideocamOffOutlined).length).toBe(1);
+            expect(container.querySelectorAll('[data-testid="VideocamOutlinedIcon"]')).toHaveLength(0);
+            expect(container.querySelectorAll('[data-testid="VideocamOffOutlinedIcon"]')).toHaveLength(1);
         });
 
         it('notifies of unmute action', () => {
-            videoMuteButton.find('button').simulate('click');
+            fireEvent.click(screen.getByRole('button'));
 
             expect(setVideoMuteCallback).toHaveBeenCalledWith(false);
         });
 
         it('displays pending state when mute is still processing', () => {
-            videoMuteButton.setProps({ changePending: true });
+            rerender(
+                <VideoMuteButton
+                    changePending = { true }
+                    onSetVideoMute = { setVideoMuteCallback }
+                    videoMuted = { true } />
+            );
 
-            expect(videoMuteButton.find(VideocamOutlined).length).toBe(0);
-            expect(videoMuteButton.find(VideocamOffOutlined).length).toBe(1);
+            expect(container.querySelectorAll('[data-testid="VideocamOutlinedIcon"]')).toHaveLength(0);
+            expect(container.querySelectorAll('[data-testid="VideocamOffOutlinedIcon"]')).toHaveLength(1);
         });
     });
 });

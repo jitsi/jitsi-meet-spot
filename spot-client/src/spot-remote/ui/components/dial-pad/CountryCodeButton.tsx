@@ -24,7 +24,7 @@ interface IProps {
  * Displays a button with a country flag and country name based on a country code.
  */
 export default class CountryCodeButton extends React.PureComponent<IProps> {
-    _countryCodePickerTriggerRef: React.RefObject<HTMLButtonElement>;
+    _countryCodePickerTriggerRef: React.RefObject<HTMLButtonElement | null>;
 
     /**
      * Initializes a new {@code CountryCodeButton} instance.
