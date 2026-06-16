@@ -1,17 +1,23 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { render } from '@testing-library/react';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
 import { StatusOverlay } from './StatusOverlay';
 
 describe('StatusOverlay', () => {
     const TEST_TITLE = 'test-title';
 
-    let statusOverlay: ShallowWrapper;
+    const store = createStore((state = { config: {} }) => state);
 
     it('renders the passed in title', () => {
-        statusOverlay = shallow(<StatusOverlay title = { TEST_TITLE } />);
+        const { container } = render(
+            <Provider store = { store }>
+                <StatusOverlay title = { TEST_TITLE } />
+            </Provider>
+        );
 
-        expect(statusOverlay.text()).toBe(TEST_TITLE);
+        expect(container.textContent).toBe(TEST_TITLE);
     });
 
     it('renders the passed in children', () => {
@@ -20,13 +26,15 @@ describe('StatusOverlay', () => {
             <div key = '2'>test2</div>
         ];
 
-        statusOverlay = shallow(
-            <StatusOverlay title = { TEST_TITLE }>
-                { children }
-            </StatusOverlay>
+        const { container } = render(
+            <Provider store = { store }>
+                <StatusOverlay title = { TEST_TITLE }>
+                    { children }
+                </StatusOverlay>
+            </Provider>
         );
 
-        expect(statusOverlay.find('.status-overlay-text').children().length)
+        expect(container.querySelector('.status-overlay-text')?.children.length)
             .toBe(children.length);
     });
 });

@@ -1,7 +1,6 @@
 
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { LoadingIcon } from 'common/ui';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
 
 import { PermanentPairingCode } from './PermanentPairingCode';
@@ -9,54 +8,48 @@ import { PermanentPairingCode } from './PermanentPairingCode';
 describe('PermanentPairingCode', () => {
     const TEST_PAIRING_CODE = '123456';
 
-    let permanentPairingCode: ReactWrapper;
+    let container: HTMLElement;
     let refreshPairingCodeSpy: jest.Mock;
 
     beforeEach(() => {
         refreshPairingCodeSpy = jest.fn().mockReturnValue(Promise.resolve());
 
-        permanentPairingCode = mount(
+        ({ container } = render(
             <PermanentPairingCode
                 pairingCode = { TEST_PAIRING_CODE }
                 refreshPairingCode = { refreshPairingCodeSpy }
                 t = { mockT } />
-        );
-    });
-
-    afterEach(() => {
-        permanentPairingCode.unmount();
+        ));
     });
 
     describe('on click', () => {
-        it('displays a loading icon', () => {
-            permanentPairingCode.find('button').simulate('click');
+        it('displays a loading icon', async () => {
+            fireEvent.click(container.querySelector('button')!);
 
-            expect(permanentPairingCode.find(LoadingIcon).length).toBe(1);
+            expect(container.querySelectorAll('.loading-icon')).toHaveLength(1);
+
+            // Flush the pending state update from the resolved refresh promise
+            // so it does not leak past the end of the test.
+            await act(async () => {
+                await Promise.resolve();
+            });
         });
 
         it('calls to refresh the code', () => {
-            permanentPairingCode.find('button').simulate('click');
+            fireEvent.click(container.querySelector('button')!);
 
-            const refreshCompletePromise = new Promise(resolve => process.nextTick(resolve));
-
-            return refreshCompletePromise
-                .then(() => expect(refreshPairingCodeSpy).toHaveBeenCalled());
+            return waitFor(() => expect(refreshPairingCodeSpy).toHaveBeenCalled());
         });
 
         it('displays the code', () => {
             refreshPairingCodeSpy.mockReturnValue(Promise.resolve());
 
-            permanentPairingCode.find('button').simulate('click');
+            fireEvent.click(container.querySelector('button')!);
 
-            const refreshCompletePromise = new Promise(resolve => process.nextTick(resolve));
-
-            return refreshCompletePromise
-                .then(() => {
-                    permanentPairingCode.update();
-
-                    expect(permanentPairingCode.find('.pairing-code').text())
-                        .toEqual(TEST_PAIRING_CODE);
-                });
+            return waitFor(() => {
+                expect(container.querySelector('.pairing-code')!.textContent)
+                    .toEqual(TEST_PAIRING_CODE);
+            });
         });
     });
 });

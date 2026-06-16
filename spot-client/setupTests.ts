@@ -1,8 +1,5 @@
-import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
+import '@testing-library/jest-dom';
 import fetchMock from 'jest-fetch-mock';
-
-Enzyme.configure({ adapter: new EnzymeAdapter() });
 
 jest.mock('./src/common/logger');
 

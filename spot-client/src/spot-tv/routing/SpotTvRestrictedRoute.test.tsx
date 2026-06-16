@@ -1,8 +1,8 @@
+import { render } from '@testing-library/react';
 import * as detection from 'common/detection';
 import { ROUTES } from 'common/routing';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import { SpotTvRestrictedRoute } from './SpotTvRestrictedRoute';
 
@@ -18,13 +18,14 @@ describe('SpotTvRestrictedRoute', () => {
 
     let isSupportedBrowserSpy: jest.SpyInstance;
     let pathRenderSpy: jest.Mock;
-    let restrictedRoute: ReactWrapper;
+    let currentPath: string | undefined;
 
     beforeEach(() => {
         isSupportedBrowserSpy = jest.spyOn(detection, 'isSupportedSpotTvBrowser');
         isSupportedBrowserSpy.mockReturnValue(true);
 
         pathRenderSpy = jest.fn();
+        currentPath = undefined;
     });
 
     /**
@@ -37,8 +38,8 @@ describe('SpotTvRestrictedRoute', () => {
     function renderRestrictedRoute({ isBackendSetupComplete, requireSetup }: {
         isBackendSetupComplete: boolean;
         requireSetup: boolean;
-    }): ReactWrapper {
-        return mount(
+    }) {
+        return render(
             <MemoryRouter
                 initialEntries = { [ MOCK_ROUTE ] }
                 initialIndex = { 0 }>
@@ -47,6 +48,13 @@ describe('SpotTvRestrictedRoute', () => {
                     path = { MOCK_ROUTE }
                     render = { pathRenderSpy }
                     requireSetup = { requireSetup } />
+                <Route
+                    path = '*'
+                    render = { ({ location }) => {
+                        currentPath = location.pathname;
+
+                        return null;
+                    } } />
             </MemoryRouter>
         );
     }
@@ -57,53 +65,35 @@ describe('SpotTvRestrictedRoute', () => {
         });
 
         it('redirects to the unsupported page', () => {
-            restrictedRoute = renderRestrictedRoute({
+            renderRestrictedRoute({
                 isBackendSetupComplete: false,
                 requireSetup: false
             });
 
             expect(pathRenderSpy).not.toHaveBeenCalled();
-            expect(
-              (restrictedRoute
-                  .find('Router')
-                  .prop('history') as any)
-                  .location
-                  .pathname
-            ).toBe(ROUTES.UNSUPPORTED_BROWSER);
+            expect(currentPath).toBe(ROUTES.UNSUPPORTED_BROWSER);
         });
     });
 
     describe('with setup required', () => {
         it('redirects to setup if not complete', () => {
-            restrictedRoute = renderRestrictedRoute({
+            renderRestrictedRoute({
                 isBackendSetupComplete: false,
                 requireSetup: true
             });
 
             expect(pathRenderSpy).not.toHaveBeenCalled();
-            expect(
-              (restrictedRoute
-                  .find('Router')
-                  .prop('history') as any)
-                  .location
-                  .pathname
-            ).toBe(ROUTES.SETUP);
+            expect(currentPath).toBe(ROUTES.SETUP);
         });
 
         it('proceeds to the route if setup is complete', () => {
-            restrictedRoute = renderRestrictedRoute({
+            renderRestrictedRoute({
                 isBackendSetupComplete: true,
                 requireSetup: true
             });
 
             expect(pathRenderSpy).toHaveBeenCalled();
-            expect(
-                (restrictedRoute
-                    .find('Router')
-                    .prop('history') as any)
-                    .location
-                    .pathname
-            ).toBe(MOCK_ROUTE);
+            expect(currentPath).toBe(MOCK_ROUTE);
         });
     });
 });

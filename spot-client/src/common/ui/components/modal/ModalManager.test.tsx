@@ -1,36 +1,36 @@
-import { shallow } from 'enzyme';
-import type { ShallowWrapper } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ModalManager } from './ModalManager';
 
 describe('ModalManager', () => {
     let mockModal: jest.Mock;
-    let modalManager: ShallowWrapper;
 
     beforeEach(() => {
         mockModal = jest.fn().mockReturnValue(<>test modal</>);
-        modalManager = shallow(<ModalManager />);
     });
 
     it('hides itself if there is no modal to display', () => {
-        expect(modalManager.isEmptyRender()).toEqual(true);
+        const { container } = render(<ModalManager />);
+
+        expect(container).toBeEmptyDOMElement();
     });
 
     it('displays the modal', () => {
-        modalManager.setProps({ modal: mockModal });
+        render(<ModalManager modal = { mockModal } />);
 
-        expect(modalManager.exists(mockModal)).toBe(true);
+        expect(screen.getByText('test modal')).toBeInTheDocument();
     });
 
     it('passes props to the modal', () => {
         const modalProps = { someProps: 'value' };
 
-        modalManager.setProps({
-            modal: mockModal,
-            modalProps
-        });
+        render(
+            <ModalManager
+                modal = { mockModal }
+                modalProps = { modalProps } />
+        );
 
-        expect(modalManager.find(mockModal).props()).toEqual(modalProps);
+        expect(mockModal).toHaveBeenCalledWith(modalProps, undefined);
     });
 });

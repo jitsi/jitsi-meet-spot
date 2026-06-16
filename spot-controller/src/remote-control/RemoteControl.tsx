@@ -17,6 +17,7 @@ interface RemoteControlState {
  */
 export default class RemoteControl extends React.Component<SpotWebviewProps, RemoteControlState> {
     private _webViewRef = React.createRef<SpotWebview>();
+    private _appStateSubscription?: ReturnType<typeof AppState.addEventListener>;
 
     /**
      * Initializes a new {@code RemoteControl} instance.
@@ -40,7 +41,7 @@ export default class RemoteControl extends React.Component<SpotWebviewProps, Rem
      * @inheritdoc
      */
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        this._appStateSubscription = AppState.addEventListener('change', this._handleAppStateChange);
     }
 
     /**
@@ -49,7 +50,7 @@ export default class RemoteControl extends React.Component<SpotWebviewProps, Rem
      * @inheritdoc
      */
     componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        this._appStateSubscription?.remove();
     }
 
     /**

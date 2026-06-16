@@ -11,14 +11,6 @@ declare module '*.svg' {
     export default content;
 }
 
-declare module 'react-native-keep-awake' {
-    import type { ComponentType } from 'react';
-
-    const KeepAwake: ComponentType;
-
-    export default KeepAwake;
-}
-
 declare module 'jitsi-meet-logger' {
     interface JitsiLogger {
         trace(...args: unknown[]): void;

@@ -1,5 +1,7 @@
-import { AppRegistry } from 'react-native';
+import { registerRootComponent } from 'expo';
 
 import App from './App';
 
-AppRegistry.registerComponent('spot-controller', () => App);
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App)
+// and sets up the Expo environment for both `expo run:*` (dev client) and stores.
+registerRootComponent(App);

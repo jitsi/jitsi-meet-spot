@@ -17,7 +17,7 @@ import { NavButton } from './../../nav';
  *
  * @returns {ReactElement}
  */
-export default function WhiteboardButton(): JSX.Element | null {
+export default function WhiteboardButton(): React.JSX.Element | null {
     const dispatch = useDispatch();
 
     const optimisticWhiteboardState = useSelector(getOptimisticWhiteboardState);

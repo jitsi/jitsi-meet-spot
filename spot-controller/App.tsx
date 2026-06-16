@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Fragment } from 'react';
-import SideMenu from 'react-native-side-menu';
+import { Drawer } from 'react-native-drawer-layout';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import LoadingScreen from './src/LoadingScreen';
 import { logger } from './src/logger';
@@ -21,6 +22,7 @@ const STORAGE_KEY_RC_URL = 'remote-control-url';
  */
 interface AppState {
     loading: boolean;
+    menuOpen: boolean;
     remoteControlUrl: string | null;
     showSetup: boolean;
     includeResetInUrl?: boolean;
@@ -32,7 +34,6 @@ interface AppState {
  */
 export default class App extends React.Component<Record<string, never>, AppState> {
     private _remoteControlViewRef = React.createRef<RemoteControl>();
-    private _sideMenuRef = React.createRef<SideMenu>();
 
     /**
      * Initializes a new {@code App} instance.
@@ -45,14 +46,18 @@ export default class App extends React.Component<Record<string, never>, AppState
 
         this.state = {
             loading: true,
+            menuOpen: false,
             remoteControlUrl: null,
             showSetup: false
         };
 
+        this._onCloseMenu = this._onCloseMenu.bind(this);
         this._onHideSetup = this._onHideSetup.bind(this);
+        this._onOpenMenu = this._onOpenMenu.bind(this);
         this._onResetApp = this._onResetApp.bind(this);
         this._onShowSetup = this._onShowSetup.bind(this);
         this._onSubmitEnteredUrl = this._onSubmitEnteredUrl.bind(this);
+        this._renderSettingsMenu = this._renderSettingsMenu.bind(this);
     }
 
     /**
@@ -77,15 +82,19 @@ export default class App extends React.Component<Record<string, never>, AppState
      * @returns {ReactElement}
      */
     render() {
-        if (this.state.loading) {
-            return <LoadingScreen />;
-        }
-
         return (
-            <Fragment>
-                { this._renderRemoteControl() }
-                { this.state.showSetup && this._renderSetup() }
-            </Fragment>
+            <GestureHandlerRootView style = {{ flex: 1 }}>
+                {
+                    this.state.loading
+                        ? <LoadingScreen />
+                        : (
+                            <Fragment>
+                                { this._renderRemoteControl() }
+                                { this.state.showSetup && this._renderSetup() }
+                            </Fragment>
+                        )
+                }
+            </GestureHandlerRootView>
         );
     }
 
@@ -119,14 +128,16 @@ export default class App extends React.Component<Record<string, never>, AppState
         const { remoteControlUrl } = this.state;
 
         return (
-            <SideMenu
-                menu = { this._renderSettingsMenu() }
-                openMenuOffset = { 250 }
-                ref = { this._sideMenuRef }>
+            <Drawer
+                drawerStyle = {{ width: 250 }}
+                onClose = { this._onCloseMenu }
+                onOpen = { this._onOpenMenu }
+                open = { this.state.menuOpen }
+                renderDrawerContent = { this._renderSettingsMenu }>
                 <RemoteControl
                     ref = { this._remoteControlViewRef }
                     url = { remoteControlUrl ?? DEFAULT_URL } />
-            </SideMenu>
+            </Drawer>
         );
     }
 
@@ -145,6 +156,15 @@ export default class App extends React.Component<Record<string, never>, AppState
     }
 
     /**
+     * Marks the settings side menu as closed (e.g. after a swipe-close gesture).
+     *
+     * @returns {void}
+     */
+    _onCloseMenu() {
+        this.setState({ menuOpen: false });
+    }
+
+    /**
      * Stops showing the dev setup screen.
      *
      * @returns {void}
@@ -156,13 +176,22 @@ export default class App extends React.Component<Record<string, never>, AppState
     }
 
     /**
+     * Marks the settings side menu as open (e.g. after a swipe-open gesture).
+     *
+     * @returns {void}
+     */
+    _onOpenMenu() {
+        this.setState({ menuOpen: true });
+    }
+
+    /**
      * Triggers the webview component to reset back to its initial state.
      *
      * @private
      * @returns {void}
      */
     _onResetApp() {
-        this._sideMenuRef.current?.openMenu(false);
+        this.setState({ menuOpen: false });
 
         this._remoteControlViewRef.current?.clearStorage();
 

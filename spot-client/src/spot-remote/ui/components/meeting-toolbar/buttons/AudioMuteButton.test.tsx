@@ -1,6 +1,5 @@
-import { MicNoneOutlined, MicOffOutlined } from 'common/icons';
+import { render, fireEvent } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 
 
@@ -11,64 +10,78 @@ const AudioMuteButton: any = AudioMuteButtonImpl;
 describe('AudioMuteButton', () => {
     let setAudioMuteCallback: jest.Mock;
 
-    let audioMuteButton: ReactWrapper;
+    let container: HTMLElement;
+    let rerender: (ui: React.ReactElement) => void;
 
     beforeEach(() => {
         setAudioMuteCallback = jest.fn();
 
-        audioMuteButton = mount(
+        ({ container, rerender } = render(
             <AudioMuteButton
                 audioMuted = { false }
                 onSetAudioMute = { setAudioMuteCallback }
                 t = { mockT } />
-        );
-    });
-
-    afterEach(() => {
-        audioMuteButton.unmount();
+        ));
     });
 
     describe('when not muted', () => {
         it('displays UI showing no mute', () => {
-            expect(audioMuteButton.find(MicNoneOutlined).length).toBe(1);
-            expect(audioMuteButton.find(MicOffOutlined).length).toBe(0);
+            expect(container.querySelectorAll('[data-testid="MicNoneOutlinedIcon"]')).toHaveLength(1);
+            expect(container.querySelectorAll('[data-testid="MicOffOutlinedIcon"]')).toHaveLength(0);
         });
 
         it('notifies of mute action', () => {
-            audioMuteButton.find('button').simulate('click');
+            fireEvent.click(container.querySelector('button')!);
 
             expect(setAudioMuteCallback).toHaveBeenCalledWith(true);
         });
 
         it('displays pending state when unmute is still processing', () => {
-            audioMuteButton.setProps({ changePending: true });
+            rerender(
+                <AudioMuteButton
+                    audioMuted = { false }
+                    changePending = { true }
+                    onSetAudioMute = { setAudioMuteCallback }
+                    t = { mockT } />
+            );
 
-            expect(audioMuteButton.find(MicNoneOutlined).length).toBe(1);
-            expect(audioMuteButton.find(MicOffOutlined).length).toBe(0);
+            expect(container.querySelectorAll('[data-testid="MicNoneOutlinedIcon"]')).toHaveLength(1);
+            expect(container.querySelectorAll('[data-testid="MicOffOutlinedIcon"]')).toHaveLength(0);
         });
     });
 
     describe('when muted', () => {
         beforeEach(() => {
-            audioMuteButton.setProps({ audioMuted: true });
+            rerender(
+                <AudioMuteButton
+                    audioMuted = { true }
+                    onSetAudioMute = { setAudioMuteCallback }
+                    t = { mockT } />
+            );
         });
 
         it('displays UI showing mute', () => {
-            expect(audioMuteButton.find(MicNoneOutlined).length).toBe(0);
-            expect(audioMuteButton.find(MicOffOutlined).length).toBe(1);
+            expect(container.querySelectorAll('[data-testid="MicNoneOutlinedIcon"]')).toHaveLength(0);
+            expect(container.querySelectorAll('[data-testid="MicOffOutlinedIcon"]')).toHaveLength(1);
         });
 
         it('notifies of unmute action', () => {
-            audioMuteButton.find('button').simulate('click');
+            fireEvent.click(container.querySelector('button')!);
 
             expect(setAudioMuteCallback).toHaveBeenCalledWith(false);
         });
 
         it('displays pending state when mute is still processing', () => {
-            audioMuteButton.setProps({ changePending: true });
+            rerender(
+                <AudioMuteButton
+                    audioMuted = { true }
+                    changePending = { true }
+                    onSetAudioMute = { setAudioMuteCallback }
+                    t = { mockT } />
+            );
 
-            expect(audioMuteButton.find(MicNoneOutlined).length).toBe(0);
-            expect(audioMuteButton.find(MicOffOutlined).length).toBe(1);
+            expect(container.querySelectorAll('[data-testid="MicNoneOutlinedIcon"]')).toHaveLength(0);
+            expect(container.querySelectorAll('[data-testid="MicOffOutlinedIcon"]')).toHaveLength(1);
         });
     });
 });

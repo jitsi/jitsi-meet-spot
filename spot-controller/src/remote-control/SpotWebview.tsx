@@ -1,12 +1,12 @@
+import * as Application from 'expo-application';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import React from 'react';
 import {
     Button,
-    NativeModules,
     StyleSheet,
     Text,
     View
 } from 'react-native';
-import KeepAwake from 'react-native-keep-awake';
 import { WebView } from 'react-native-webview';
 import { WebViewErrorEvent } from 'react-native-webview/lib/WebViewTypes';
 import url from 'url';
@@ -15,8 +15,6 @@ import api from '../api';
 
 import LoadingScreen from '../LoadingScreen';
 import styles from '../styles';
-
-const { AppInfo } = NativeModules;
 
 /**
  * The constant is included into the user agent part to allow feature detection in future.
@@ -64,7 +62,18 @@ export default class SpotRemoteWebView extends React.PureComponent<SpotWebviewPr
         this.userAgentString
             = __DEV__
                 ? SPOT_CLIENT_FEATURE_VERSION
-                : `${SPOT_CLIENT_FEATURE_VERSION} ${AppInfo.name}/${AppInfo.version}(${AppInfo.buildNumber})`;
+                : `${SPOT_CLIENT_FEATURE_VERSION} ${Application.applicationName ?? ''}`
+                    + `/${Application.nativeApplicationVersion ?? ''}`
+                    + `(${Application.nativeBuildVersion ?? ''})`;
+    }
+
+    /**
+     * Keeps the device screen awake while the Spot-Remote is shown.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        activateKeepAwakeAsync();
     }
 
     // Override the meta tag with values that are known not allow this app to
@@ -87,6 +96,15 @@ export default class SpotRemoteWebView extends React.PureComponent<SpotWebviewPr
         if (prevProps.url !== this.props.url) {
             this._resolveUrl();
         }
+    }
+
+    /**
+     * Stops keeping the device screen awake.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        deactivateKeepAwake();
     }
 
     /**
@@ -122,8 +140,7 @@ export default class SpotRemoteWebView extends React.PureComponent<SpotWebviewPr
         }
 
         return (
-            <View style = {{ ...StyleSheet.absoluteFillObject }}>
-                <KeepAwake />
+            <View style = {{ ...StyleSheet.absoluteFill }}>
                 {
                     this.state.webViewError
                         ? this._renderWebviewError()

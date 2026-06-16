@@ -1,5 +1,5 @@
+import { act, fireEvent, render } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -8,17 +8,17 @@ import { fetchExitPassword } from 'spot-tv/app-state';
 
 import { ExitVerification } from './ExitVerification';
 
-const SELECT_EXIT_CONFIRMATION = { 'data-qa-id': 'exit-electron-confirmation' };
-const SELECT_LOADING_SCREEN = { 'data-qa-id': 'exit-electron-loading' };
-const SELECT_PASSWORD_PROMPT = { 'data-qa-id': 'exit-electron-password-prompt' };
+const SELECT_EXIT_CONFIRMATION = '[data-qa-id="exit-electron-confirmation"]';
+const SELECT_LOADING_SCREEN = '[data-qa-id="exit-electron-loading"]';
+const SELECT_PASSWORD_PROMPT = '[data-qa-id="exit-electron-password-prompt"]';
 
-const SELECT_PASSWORD_INPUT = { 'data-qa-id': 'exit-electron-password-input' };
+const SELECT_PASSWORD_INPUT = '[data-qa-id="exit-electron-password-input"]';
 
-const SELECT_CANCEL_BUTTON = { 'data-qa-id': 'exit-electron-cancel' };
-const SELECT_CONFIRM_BUTTON = { 'data-qa-id': 'exit-electron-confirm' };
+const SELECT_CANCEL_BUTTON = '[data-qa-id="exit-electron-cancel"]';
+const SELECT_CONFIRM_BUTTON = '[data-qa-id="exit-electron-confirm"]';
 
 describe('ExitVerification', () => {
-    let exitComponent: ReactWrapper;
+    let container: HTMLElement;
     let onCancel: jest.Mock;
     let onPasswordInvalid: jest.Mock;
     let onVerification: jest.Mock;
@@ -32,7 +32,7 @@ describe('ExitVerification', () => {
     });
 
     const mountExitComponent = () => {
-        exitComponent = mount(
+        ({ container } = render(
             <Provider store = { store }>
                 <ExitVerification
                     onCancel = { onCancel }
@@ -40,16 +40,16 @@ describe('ExitVerification', () => {
                     onVerification = { onVerification }
                     t = { mockT } />
             </Provider>
-        );
+        ));
     };
 
-    const selectConfirmButton = () => exitComponent.find(SELECT_CONFIRM_BUTTON).first();
-    const selectCancelButton = () => exitComponent.find(SELECT_CANCEL_BUTTON).first();
+    const selectConfirmButton = () => container.querySelector(SELECT_CONFIRM_BUTTON) as HTMLElement;
+    const selectCancelButton = () => container.querySelector(SELECT_CANCEL_BUTTON) as HTMLElement;
 
     describe('displays the exit confirmation if there is no password', () => {
         let returnExitPassword: Promise<undefined>;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             returnExitPassword = Promise.resolve(undefined);
 
             (fetchExitPassword as jest.Mock).mockReturnValue(returnExitPassword);
@@ -58,32 +58,32 @@ describe('ExitVerification', () => {
 
             expect(fetchExitPassword).toHaveBeenCalled();
 
-            // need to do .update() after componentDidMount called fetchExitPassword and the setState
-            return returnExitPassword.then(() => {
-                exitComponent.update();
-
-                expect(exitComponent.exists(SELECT_EXIT_CONFIRMATION)).toEqual(true);
+            // wait for componentDidMount's fetchExitPassword and the resulting setState
+            await act(async () => {
+                await returnExitPassword;
             });
+
+            expect(container.querySelector(SELECT_EXIT_CONFIRMATION)).toBeInTheDocument();
         });
         it('and calls onVerified when the confirm button is clicked', () => {
-            const button = selectConfirmButton().find('button');
+            const button = selectConfirmButton();
 
-            button.simulate('click');
+            fireEvent.click(button);
 
             expect(onCancel).not.toHaveBeenCalled();
             expect(onVerification).toHaveBeenCalled();
         });
         it('and calls onCancel when the cancel button is clicked', () => {
             // https://github.com/wojtekmaj/enzyme-adapter-react-17/issues/45
-            const button = selectCancelButton().find('button');
+            const button = selectCancelButton();
 
-            button.simulate('click');
+            fireEvent.click(button);
 
             expect(onVerification).not.toHaveBeenCalled();
             expect(onCancel).toHaveBeenCalled();
         });
     });
-    it('displays the loading view if fetch exit password takes time', () => {
+    it('displays the loading view if fetch exit password takes time', async () => {
         jest.useFakeTimers();
 
         const returnExitPassword = new Promise(resolve => {
@@ -94,17 +94,19 @@ describe('ExitVerification', () => {
 
         mountExitComponent();
 
-        jest.runAllTimers();
-
-        expect(exitComponent.exists(SELECT_LOADING_SCREEN)).toEqual(true);
-
-        return returnExitPassword.then(() => {
-            exitComponent.update();
-
-            expect(exitComponent.exists(SELECT_LOADING_SCREEN)).toEqual(false);
+        act(() => {
+            jest.runAllTimers();
         });
+
+        expect(container.querySelector(SELECT_LOADING_SCREEN)).toBeInTheDocument();
+
+        await act(async () => {
+            await returnExitPassword;
+        });
+
+        expect(container.querySelector(SELECT_LOADING_SCREEN)).toBeNull();
     });
-    it('displays the password prompt and does the verification', () => {
+    it('displays the password prompt and does the verification', async () => {
         const TEST_PASSWORD = '12345';
         const returnExitPassword = Promise.resolve(TEST_PASSWORD);
 
@@ -112,25 +114,27 @@ describe('ExitVerification', () => {
 
         mountExitComponent();
 
-        return returnExitPassword.then(() => {
-            exitComponent.update();
-
-            expect(exitComponent.exists(SELECT_PASSWORD_PROMPT)).toEqual(true);
-
-            exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: `${TEST_PASSWORD}1234` } });
-
-            const button = selectConfirmButton().find('button');
-
-            button.simulate('click');
-
-            expect(onVerification).not.toHaveBeenCalled();
-            expect(onPasswordInvalid).toHaveBeenCalled();
-
-            exitComponent.find(SELECT_PASSWORD_INPUT).simulate('change', { target: { value: TEST_PASSWORD } });
-
-            button.simulate('click');
-
-            expect(onVerification).toHaveBeenCalled();
+        await act(async () => {
+            await returnExitPassword;
         });
+
+        expect(container.querySelector(SELECT_PASSWORD_PROMPT)).toBeInTheDocument();
+
+        const input = container.querySelector(SELECT_PASSWORD_INPUT) as HTMLInputElement;
+
+        fireEvent.change(input, { target: { value: `${TEST_PASSWORD}1234` } });
+
+        const button = selectConfirmButton();
+
+        fireEvent.click(button);
+
+        expect(onVerification).not.toHaveBeenCalled();
+        expect(onPasswordInvalid).toHaveBeenCalled();
+
+        fireEvent.change(input, { target: { value: TEST_PASSWORD } });
+
+        fireEvent.click(button);
+
+        expect(onVerification).toHaveBeenCalled();
     });
 });

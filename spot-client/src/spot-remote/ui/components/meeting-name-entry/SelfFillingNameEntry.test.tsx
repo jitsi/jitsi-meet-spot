@@ -1,6 +1,6 @@
 import { mockT } from 'common/test-mocks';
 import * as utils from 'common/utils';
-import { ReactWrapper, mount } from 'enzyme';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 
@@ -16,9 +16,14 @@ describe('SelfFillingNameEntry', () => {
     const RANDOM_MEETING = 'random placeholder';
     const { animationRevealRate, animationStartDelay } = SelfFillingNameEntry.defaultProps;
 
+    // When no animating placeholder is set and there is no tenant, the input
+    // falls back to displaying the 'adhoc.enterName' translation key.
+    const EMPTY_PLACEHOLDER = 'adhoc.enterName';
+
     let onSubmitCallback: jest.Mock;
     let randomNameSpy: jest.SpyInstance;
-    let selfFillingNameEntry: ReactWrapper;
+    let container: HTMLElement;
+    let unmount: () => void;
 
     beforeEach(() => {
         jest.useFakeTimers();
@@ -28,16 +33,26 @@ describe('SelfFillingNameEntry', () => {
 
         onSubmitCallback = jest.fn();
 
-        selfFillingNameEntry = mount(
+        ({ container, unmount } = render(
             <SelfFillingNameEntry
                 onSubmit = { onSubmitCallback }
                 t = { mockT } />
-        );
+        ));
     });
 
     afterEach(() => {
-        selfFillingNameEntry.unmount();
+        unmount();
     });
+
+    /**
+     * Returns the meeting name input element.
+     *
+     * @private
+     * @returns {HTMLInputElement}
+     */
+    function getInput(): HTMLInputElement {
+        return container.querySelector('input') as HTMLInputElement;
+    }
 
     /**
      * Sets the entered meeting name.
@@ -47,59 +62,75 @@ describe('SelfFillingNameEntry', () => {
      * @returns {void}
      */
     function setInputValue(newValue: string) {
-        const input = selfFillingNameEntry.find('input');
-
-        (input.instance() as unknown as HTMLInputElement).value = newValue;
-        input.simulate('change');
+        fireEvent.change(getInput(), { target: { value: newValue } });
     }
 
     /**
-     * Returns the current animating placeholder from the component state.
+     * Returns the current animating placeholder as reflected by the rendered
+     * input. The component renders the animating placeholder as the input's
+     * placeholder attribute; when there is no animating placeholder the input
+     * falls back to the 'adhoc.enterName' translation key.
      *
      * @private
      * @returns {string}
      */
     function getAnimatingPlaceholder(): string {
-        return (selfFillingNameEntry.state() as { animatingPlaceholder: string; }).animatingPlaceholder;
+        const placeholder = getInput().getAttribute('placeholder');
+
+        return placeholder === EMPTY_PLACEHOLDER ? '' : placeholder ?? '';
     }
 
     describe('animated name display', () => {
         it('starts after a delay', () => {
-            jest.advanceTimersByTime(animationStartDelay - 1);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay - 1);
+            });
 
             expect(getAnimatingPlaceholder()).toBe('');
 
-            jest.advanceTimersByTime(animationRevealRate + 1);
+            act(() => {
+                jest.advanceTimersByTime(animationRevealRate + 1);
+            });
 
             expect(getAnimatingPlaceholder())
                 .toBe(RANDOM_MEETING.slice(0, 1));
         });
 
         it('shows one character at a time', () => {
-            jest.advanceTimersByTime(animationStartDelay);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay);
+            });
 
             for (let i = 0; i < RANDOM_MEETING.length; i++) {
-                jest.advanceTimersByTime(100);
+                act(() => {
+                    jest.advanceTimersByTime(100);
+                });
                 expect(getAnimatingPlaceholder())
                     .toBe(RANDOM_MEETING.slice(0, i + 1));
             }
         });
 
         it('stops when a name is entered', () => {
-            jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            });
 
             setInputValue('any');
 
             expect(getAnimatingPlaceholder()).toBe('');
 
             // Advance timers by some length of time
-            jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            });
 
             expect(getAnimatingPlaceholder()).toBe('');
         });
 
         it('resumes when an entered name is cleared and input blurred', () => {
-            jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            });
 
             setInputValue('any');
 
@@ -107,9 +138,11 @@ describe('SelfFillingNameEntry', () => {
 
             setInputValue('');
 
-            selfFillingNameEntry.find('input').simulate('blur');
+            fireEvent.blur(getInput());
 
-            jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            act(() => {
+                jest.advanceTimersByTime(animationStartDelay + animationRevealRate);
+            });
 
             expect(getAnimatingPlaceholder()).toBe(RANDOM_MEETING[0]);
         });
@@ -122,7 +155,7 @@ describe('SelfFillingNameEntry', () => {
          * @returns {void}
          */
         function submit() {
-            selfFillingNameEntry.find('input').simulate('submit');
+            fireEvent.submit(getInput());
         }
 
         describe('with no name entered', () => {
@@ -132,7 +165,9 @@ describe('SelfFillingNameEntry', () => {
             });
 
             it('provides the random name being animated', () => {
-                jest.advanceTimersByTime(animationStartDelay);
+                act(() => {
+                    jest.advanceTimersByTime(animationStartDelay);
+                });
 
                 submit();
                 expect(onSubmitCallback).toHaveBeenCalledWith(RANDOM_MEETING);

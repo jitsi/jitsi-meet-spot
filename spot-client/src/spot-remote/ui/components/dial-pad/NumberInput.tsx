@@ -45,7 +45,7 @@ interface IProps {
  * Displays an input for entering and showing the entered phone number.
  */
 export default class NumberInput extends React.Component<IProps> {
-    _inputRef: React.RefObject<HTMLInputElement>;
+    _inputRef: React.RefObject<HTMLInputElement | null>;
 
     /**
      * Initializes a new {@code NumberInput} instance.

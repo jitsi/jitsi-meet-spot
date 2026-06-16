@@ -10,7 +10,6 @@ declare module 'strophe.js';
 declare module '@jitsi/logger';
 declare module '@jitsi/js-utils/random';
 declare module '@jitsi/js-utils/uri';
-declare module '@wojtekmaj/enzyme-adapter-react-17';
 
 // Non-code asset imports handled by webpack loaders (style/css/sass-loader, asset/inline).
 declare module '*.scss';

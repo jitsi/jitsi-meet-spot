@@ -10,7 +10,6 @@ export {
     ExpandLess,
     ExpandMore,
     Feedback,
-    HelpOutline,
     HighlightOff,
     KeyboardArrowDown,
     MicOff,
@@ -25,6 +24,10 @@ export {
     VideocamOff,
     VolumeUp
 } from '@mui/icons-material';
+
+// MUI 9's icon set dropped the base Filled-theme `HelpOutline`; the Outlined-theme `HelpOutlined`
+// is the equivalent glyph. Re-export it under the original name so call sites stay unchanged.
+export { HelpOutlined as HelpOutline } from '@mui/icons-material';
 
 export { default as BorderAllOutlined } from '@mui/icons-material/BorderAllOutlined';
 export { default as MicNoneOutlined } from '@mui/icons-material/MicNoneOutlined';

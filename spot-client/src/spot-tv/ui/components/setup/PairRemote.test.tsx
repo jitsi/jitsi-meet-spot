@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import { mockT } from 'common/test-mocks';
-import { mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 
 
@@ -9,24 +9,30 @@ describe('PairRemote', () => {
     const MOCK_PAIR_CODE = '12345678';
 
     let onSuccessSpy: jest.Mock;
-    let pairRemote: ReactWrapper;
+    let rerender: (ui: React.ReactElement) => void;
 
     beforeEach(() => {
         onSuccessSpy = jest.fn();
 
-        pairRemote = mount(
+        ({ rerender } = render(
             <PairRemote
                 code = { MOCK_PAIR_CODE }
                 isPairingComplete = { false }
                 onSuccess = { onSuccessSpy }
                 t = { mockT } />
-        );
+        ));
     });
 
     it('proceeds automatically when a remote is paired', () => {
         expect(onSuccessSpy).not.toHaveBeenCalled();
 
-        pairRemote.setProps({ isPairingComplete: true });
+        rerender(
+            <PairRemote
+                code = { MOCK_PAIR_CODE }
+                isPairingComplete = { true }
+                onSuccess = { onSuccessSpy }
+                t = { mockT } />
+        );
 
         expect(onSuccessSpy).toHaveBeenCalled();
     });

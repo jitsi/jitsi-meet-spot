@@ -33,7 +33,7 @@ export default class CodeInput extends React.Component<IProps, IState> {
         length: 6
     };
 
-    _inputRef: React.RefObject<HTMLTextAreaElement>;
+    _inputRef: React.RefObject<HTMLTextAreaElement | null>;
     _isAutoFocusSupported: boolean;
 
     /**

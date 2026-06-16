@@ -1,33 +1,23 @@
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// Expo Metro config with monorepo support and react-native-svg-transformer.
+const { getDefaultConfig } = require('expo/metro-config');
+const path = require('path');
 
-const {
-    getDefaultConfig
-} = require('metro-config');
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '..');
 
-module.exports = (async () => {
-    const { resolver: {
-        sourceExts,
-        assetExts
-    } } = await getDefaultConfig();
+const config = getDefaultConfig(projectRoot);
 
-    return {
-        transformer: {
-            babelTransformerPath: require.resolve('react-native-svg-transformer'),
-            getTransformOptions: async () => ({
-                transform: {
-                    experimentalImportSupport: false,
-                    inlineRequires: false
-                }
-            })
-        },
-        resolver: {
-            assetExts: assetExts.filter(ext => ext !== 'svg'),
-            sourceExts: [ ...sourceExts, 'svg' ]
-        }
-    };
-})();
+// Monorepo: watch the workspace root and resolve modules from both the project's
+// own node_modules and the hoisted root node_modules.
+config.watchFolders = [ workspaceRoot ];
+config.resolver.nodeModulesPaths = [
+    path.resolve(projectRoot, 'node_modules'),
+    path.resolve(workspaceRoot, 'node_modules')
+];
+
+// react-native-svg-transformer: import `.svg` files under assets/ as React components.
+config.transformer.babelTransformerPath = require.resolve('react-native-svg-transformer/expo');
+config.resolver.assetExts = config.resolver.assetExts.filter(ext => ext !== 'svg');
+config.resolver.sourceExts = [ ...config.resolver.sourceExts, 'svg' ];
+
+module.exports = config;

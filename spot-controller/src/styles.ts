@@ -10,7 +10,7 @@ export default StyleSheet.create({
     },
 
     fullScreen: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         backgroundColor: BACKGROUND_COLOR
     },
 
