@@ -14,12 +14,11 @@ surfaced along the way.
 `spot-client` is on **React 19** (+ react-redux 9, MUI 9, React Testing Library) and
 `spot-controller` is on **Expo SDK 56** (React Native 0.85, React 19) — see
 [§4 Done](#4-done-post-migration-follow-ups). The whole monorepo now runs a single React 19.
-`react-router-dom` is now on **v7** (see [§4 Done](#4-done-post-migration-follow-ups)); the one
-remaining hold below is a dep deferred **by decision**.
+`react-router-dom` is now on **v7** and `strophe.js` on **v4** (both [§4 Done](#4-done-post-migration-follow-ups)).
 
-| Dependency | Current (held) | Target | Blocker / work required |
-|---|---|---|---|
-| `strophe.js` | 1.2.16 | — (**held by decision**) | **Decision (2026-06): keep at 1.2.16, do not upgrade.** 4.x is a from-scratch ESM rewrite shipping only as a release candidate (`4.0.0-rc`). The direct surface here is small (`$iq` builder + `Strophe.getResourceFromJid`, ~7 sites in `common/remote-control/`; the live transport is lib-jitsi-meet's own Strophe), but jest fully mocks strophe so the only real gate is the Linux-only E2E — not worth the RC risk. Revisit only if a stable 4.x ships and there's a concrete need. |
+**No dependency upgrades are currently held.** The last one, `strophe.js`, was deferred by
+decision while 4.x was RC-only; stable `4.0.0` shipped (2026-06-03) and it has been upgraded —
+see [§4 Done](#4-done-post-migration-follow-ups).
 
 (spot-client's `css-loader`/`style-loader`/`webpack-cli`/`webpack-dev-server` bumps are **done**, and spot-controller's whole RN-ecosystem dep set was replaced by the **Expo SDK 56** migration — see [§4 Done](#4-done-post-migration-follow-ups).)
 
@@ -42,6 +41,7 @@ These all pass their TS/lint/typecheck gates locally; the runtime/packaging step
 
 ## 4. Done (post-migration follow-ups)
 
+- **strophe.js 1.2.16 → 4.0.0** — the dep previously held "by decision" (4.x was RC-only). Stable `4.0.0` shipped to npm (2026-06-03); it's dual-format (CJS + ESM + UMD), has **zero** runtime deps (peer `jsdom`/`ws` are Node-only, not bundled — webpack resolves the `browser` ESM condition), and ships its own TS types. So the ambient `declare module 'strophe.js'` shim was dropped (and the stale comments in `global.d.ts` + the jest-mock rationale tidied). The now-real `$iq()` type (string attrs) surfaced two ack-IQ builders in `xmpp-connection.ts` passing `getAttribute()` values (`string | null`); strophe omits `!= null` attrs at runtime in **both** versions, so conditionally spreading `id`/`to` preserves behaviour and satisfies tsc. spot-client uses strophe only as a stanza builder (`$iq`) + `Strophe.getResourceFromJid`, never opening a `Strophe.Connection` or doing SASL auth (lib-jitsi-meet owns the live XMPP/auth via its own separately-bundled strophe), so strophe 4's WebCrypto/SCRAM path is never exercised here — and the React-Native concern is moot (strophe runs only in the browser bundle + the spot-controller WebView, never Hermes). **Verified:** typecheck/lint/test (229 spot-client)/prod build all green (bundle unchanged at 1.43 MiB). jest hard-mocks strophe, so the only real end-to-end gate is the Linux spot-webdriver E2E (`e2e` / `e2e-backend`).
 - **react-router-dom 5.3.4 → 7.17.0** — the routing API rewrite deferred above. v7 peers React 18+ (we're on 19) and Node 20+ (we're on 24); the standalone `history` package is a direct dep again, bumped 4.x → 5.3.0 (RR7 no longer pulls it).
   - **Routing (`app.tsx`):** `<Switch>` → `<Routes>`; `render`/`component` → `element`; the no-path catch-all → `path="*"`. v7 matches exact + ranked (vs v5 ordered-prefix) — all routes are distinct top-level paths, so behaviour is preserved. `<Redirect from to>` → `<Route element={<Navigate replace />}>`. `<Routes>` only accepts `<Route>` children, so `SpotTvRestrictedRoute` is no longer a route: it's an **element guard** wrapping the view in `children`, returning `<Navigate replace>` (unsupported browser / needs setup) or the children.
   - **`withRouter` (removed in v6):** new `common/routing/withRouter.tsx` shim injects the v5-style `history`/`location`/`match`/`navigate` props via `useLocation`/`useNavigate`/`useParams` for the 3 class components that use them (`meeting`, `setup`, `join-code-entry`). Dropped entirely from `App`, `Home`, `WiredScreenshareChangeListener`, `RemoteControlLoader` — each only declared but never read an injected router prop.
