@@ -5,7 +5,9 @@
     "scripts": {
         "e2e": "wdio run wdio.conf.ts",
         "start-spot-client": "npm --prefix ../spot-client run start:dev",
+        "start-spot-admin": "npm --prefix ../spot-admin run start:dev",
         "ci": "start-server-and-test start-spot-client http://127.0.0.1:8000/ e2e",
+        "ci:backend": "cross-env REFRESH_TOKEN=e2e-backend-refresh-token BACKEND_REFRESH_TOKEN=e2e-backend-refresh-token PAIRING_SERVICE_URL=http://localhost:8001/pair ROOM_KEEPER_SERVICE_URL=http://localhost:8001/room/info CALENDAR_SERVICE_URL='http://localhost:8001/calendar?tzid={tzid}' start-server-and-test start-spot-admin http://127.0.0.1:8001/health start-spot-client http://127.0.0.1:8000/ e2e",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "typecheck": "tsc --noEmit -p tsconfig.json"

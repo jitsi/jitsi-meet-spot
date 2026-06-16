@@ -22,6 +22,12 @@ export function createApp(spots: Spots): Express {
     app.use(cors());
     app.use(express.json());
 
+    // Unauthenticated readiness probe used by the E2E harness (start-server-and-test)
+    // to wait for the mock backend before launching the browser suite.
+    app.get('/health', (_req, res) => {
+        res.sendStatus(200);
+    });
+
     app.put('/pair', (req, res) => registerDeviceController(spots, req, res));
     app.post('/pair/code', (req, res) => remotePairingCodeController(spots, req, res));
     app.put('/pair/regenerate', (req, res) => refreshController(spots, req, res));

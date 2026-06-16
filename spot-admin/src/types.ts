@@ -29,6 +29,14 @@ export interface PairingCodeStructure extends ExpiresInfo {
 export interface SpotRoomOptions {
     countryCode?: string;
     jwt?: string;
+
+    /**
+     * A fixed refresh token to seed the room's long-lived access token with,
+     * instead of generating a random one. Used by the E2E backend tests so the
+     * client can be handed a known refresh token up front (see the
+     * `BACKEND_REFRESH_TOKEN` env var in spot-webdriver).
+     */
+    refreshToken?: string;
     shortLivedJwt?: string;
     name?: string;
     tenant?: string;

@@ -5,15 +5,15 @@ describe('A Spot-Remote can connect to a Spot-TV', () => {
     const spotRemote = session.getSpotRemote();
 
     it('should manage to retrieve a join code of 6 characters', async (): Promise<void> => {
-        await browser.url('http://127.0.0.1:8000/tv');
+        // Drive the TV through the session (rather than a raw `browser.url('/tv')`) so the
+        // backend refresh token is supplied in backend mode — otherwise the TV never pairs,
+        // never joins the MUC, and never renders a join code. In open-source mode the param is
+        // empty and the TV auto-connects exactly as before.
+        await session.startSpotTv();
 
-        const joinCode = await browser.$('.setup-join-code .join-code');
+        const joinCode = await session.getSpotTV().getShortLivedPairingCode();
 
-        await joinCode.waitForExist();
-        const joinCodeTextEl = await joinCode.getText();
-        const text = Array.isArray(joinCodeTextEl) ? joinCodeTextEl[0] : joinCodeTextEl;
-
-        expect(text.length).toBe(6);
+        expect(joinCode.length).toBe(6);
     });
 
     it('using a code', async (): Promise<void> => {

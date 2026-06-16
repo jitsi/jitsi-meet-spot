@@ -61,3 +61,36 @@ jobs:
               with:
                 name: webdriver-results
                 path: spot-webdriver/webdriver-results/
+
+    e2e-backend:
+        name: E2E tests (backend mode)
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Step 1 - info
+              run: echo "🎉 Triggered by a ${{ github.event_name }} event on ${{ runner.os }}, branch ${{ github.ref }}."
+
+            - name: Step 2 - checkout
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+
+            - name: Step 3 - setup node
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+              with:
+                node-version-file: '.nvmrc'
+
+            - name: Step 4 - install
+              run: npm ci
+
+            # `npm run ci:backend` boots the spot-admin mock backend and the spot-client dev
+            # server configured to talk to it, then runs the WebdriverIO suite in backend mode
+            # (BACKEND_REFRESH_TOKEN set), exercising the backend-only specs that otherwise pend.
+            - name: Step 5 - run E2E in backend mode [spot-webdriver]
+              working-directory: spot-webdriver
+              run: npm run ci:backend
+
+            - name: Step 6 - Archive Test Results
+              if: always()
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+              with:
+                name: webdriver-results-backend
+                path: spot-webdriver/webdriver-results/

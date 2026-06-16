@@ -9,15 +9,18 @@ This is the `spot-webdriver` subproject: **WebdriverIO 9 + Jasmine** Selenium E2
 Install once from the **repository root**. The scripts below run from inside `spot-webdriver/` (or from root with `npm run <script> --workspace spot-webdriver`):
 
 ```bash
-npm run ci                 # full flow: start the spot-client dev server, wait for it, then run the E2E suite
+npm run ci                 # full flow (open-source mode): start the spot-client dev server, wait for it, then run the E2E suite
+npm run ci:backend         # full flow (backend mode): also boots spot-admin, points spot-client at it, runs the suite with BACKEND_REFRESH_TOKEN set
 npm run e2e                # run all specs against an ALREADY-running client (wdio run wdio.conf.ts)
 npm run start-spot-client  # just start the client dev server (npm --prefix ../spot-client run start:dev)
+npm run start-spot-admin   # just start the spot-admin mock backend (npm --prefix ../spot-admin run start:dev)
 npm run lint               # eslint . (flat config)
 npm run typecheck          # tsc --noEmit -p tsconfig.json (strict)
 ```
 
 - The E2E script is named `e2e` (not `test`) so the monorepo-wide `npm run test` unit-test sweep does not try to launch the browser suite. `npm run typecheck` and `npm run lint` DO participate in the root sweeps.
-- `npm run ci` is `start-server-and-test start-spot-client http://127.0.0.1:8000/ e2e` — it boots `../spot-client`'s dev server, polls until it responds, runs the suite, then tears the server down. This is exactly what CI does.
+- `npm run ci` is `start-server-and-test start-spot-client http://127.0.0.1:8000/ e2e` — it boots `../spot-client`'s dev server, polls until it responds, runs the suite, then tears the server down. This is exactly what the `e2e` CI job does (open-source mode).
+- `npm run ci:backend` additionally boots the `../spot-admin` mock backend and starts spot-client in **backend mode**: a single `cross-env` sets the spot-client build-time vars (`PAIRING_SERVICE_URL`/`ROOM_KEEPER_SERVICE_URL`/`CALENDAR_SERVICE_URL` → `localhost:8001`), seeds spot-admin with a fixed `REFRESH_TOKEN`, and hands the suite the same value as `BACKEND_REFRESH_TOKEN`. `start-server-and-test` gates on spot-admin's `/health` then spot-client's `/`. This is the `e2e-backend` CI job, and it's what makes the backend-only specs (`spot-tv-conflict`, `waiting-for-tv`, `adhoc-meeting`, the backend blocks of `spot-tv-reconnect`/`share-mode`) actually run instead of `pending()`. (`cross-env` is a root-hoisted devDependency.)
 - `npm run e2e` assumes a Spot deployment is already serving at `http://127.0.0.1:8000` (override with `TEST_SERVER_URL`). Use it when iterating with a manually-started client.
 - **The E2E run is Linux-only** — Chrome's fake-getUserMedia pipeline stalls on the macOS runners, so the run is verified on the Linux CI job, not locally on macOS. typecheck/lint are the local gates.
 - **Run a single spec** (no npm script — call the binary directly):
@@ -83,4 +86,4 @@ There are **no global wdio hooks** in `wdio.conf.ts` and no shared `afterAll`; t
 - **App-internal polling** goes through `this._browser.execute(...)` against `window.spot.*` (ambiently typed `Record<string, any>`); keep that code defensive (try/catch returning a falsy default) since it runs during connect/reconnect races. wdio 9 `execute` accepts async functions, so the old `executeAsync(done => ...)` style was replaced with `execute(async () => ...)`.
 - **Lint** is the eslint flat config (`eslint.config.mjs`): `@eslint/js` + `typescript-eslint` recommended, jasmine/node/browser globals, `max-len` 120, `no-console` warn. `@typescript-eslint/no-explicit-any` is **off** here because the harness reaches into the app's untyped `window.spot.*` internals.
 - **Driver management** is automatic in wdio 9 (no `chromedriver` dep / `.npmrc`); the managed Chrome-for-Testing build is selected via `browserVersion` in the capabilities.
-- **CI runs on Linux only.** The E2E job in `.github/workflows/ci_spot-client.yml` runs on `ubuntu-latest`, installs at the workspace root, and runs `npm run ci` from `spot-webdriver`. Chrome's fake-getUserMedia pipeline stalls on macOS runners, so keep E2E on Linux headless with `--no-sandbox`.
+- **CI runs on Linux only.** The two E2E jobs in `.github/workflows/ci.yml` (`e2e` → `npm run ci`, open-source mode; `e2e-backend` → `npm run ci:backend`, backend mode) both run on `ubuntu-latest`, install at the workspace root, and run from `spot-webdriver`. Chrome's fake-getUserMedia pipeline stalls on macOS runners, so keep E2E on Linux headless with `--no-sandbox`.

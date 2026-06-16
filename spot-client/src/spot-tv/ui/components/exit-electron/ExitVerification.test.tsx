@@ -74,7 +74,6 @@ describe('ExitVerification', () => {
             expect(onVerification).toHaveBeenCalled();
         });
         it('and calls onCancel when the cancel button is clicked', () => {
-            // https://github.com/wojtekmaj/enzyme-adapter-react-17/issues/45
             const button = selectCancelButton();
 
             fireEvent.click(button);
