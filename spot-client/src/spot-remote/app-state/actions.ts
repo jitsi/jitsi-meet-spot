@@ -19,7 +19,7 @@ import {
     isBackendEnabled,
     setPermanentPairingCode
 } from 'common/backend';
-import { history } from 'common/history';
+import { pushRoute } from 'common/history';
 import { logger } from 'common/logger';
 import {
     CONNECTION_EVENTS,
@@ -213,7 +213,7 @@ export function connectToSpotTV(joinCode: string, shareMode: boolean) {
 
             dispatch(clearSpotTVState());
 
-            history.push(ROUTES.CODE);
+            pushRoute(ROUTES.CODE);
 
             // Assumption alert: CLOSED_BY_SERVER can only happen when a
             // temporary remote has been removed from the muc at the end of a
@@ -374,7 +374,7 @@ export function exitShareMode() {
             type: SPOT_REMOTE_EXIT_SHARE_MODE
         });
 
-        history.push(ROUTES.REMOTE_CONTROL);
+        pushRoute(ROUTES.REMOTE_CONTROL);
     };
 }
 

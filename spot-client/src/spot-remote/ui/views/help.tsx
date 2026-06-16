@@ -7,7 +7,7 @@ import {
 } from 'common/app-state';
 import { isBackendEnabled } from 'common/backend';
 import { isSpotControllerApp } from 'common/detection';
-import { history } from 'common/history';
+import { pushRoute } from 'common/history';
 import { ROUTES } from 'common/routing';
 import { Button, View } from 'common/ui';
 import { windowHandler } from 'common/utils';
@@ -136,7 +136,7 @@ function mapDispatchToProps(dispatch: any) {
     return {
         onContinue() {
             dispatch(setHasCompletedOnboarding());
-            history.push(ROUTES.CODE);
+            pushRoute(ROUTES.CODE);
         }
     };
 }
