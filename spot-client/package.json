@@ -71,7 +71,7 @@
         "write-file-webpack-plugin": "4.5.1"
     },
     "overrides": {
-        "@xmldom/xmldom": "0.8.7"
+        "@xmldom/xmldom": "0.8.13"
     },
     "engines": {
         "node": ">=24",
