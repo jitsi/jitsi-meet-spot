@@ -20,7 +20,7 @@ import {
 import { setSpotInstanceInfo } from 'common/app-state/device-id';
 import { createAsyncActionWithStates } from 'common/async-actions';
 import { isBackendEnabled, setPermanentPairingCode } from 'common/backend';
-import { history } from 'common/history';
+import { pushRoute } from 'common/history';
 import { logger } from 'common/logger';
 import {
     CLIENT_TYPES,
@@ -629,7 +629,7 @@ export function redirectToMeeting(meetingNameOrUrl: string, { invites, meetingDi
             redirectUrl += `&meetingDisplayName=${encodeURIComponent(meetingDisplayName)}`;
         }
 
-        history.push(redirectUrl);
+        pushRoute(redirectUrl);
 
         return Promise.resolve();
     };

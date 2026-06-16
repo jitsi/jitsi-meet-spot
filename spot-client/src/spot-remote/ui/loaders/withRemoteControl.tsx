@@ -1,7 +1,7 @@
 
 import type { RootState } from 'common/app-state';
 import { isConnectionEstablished } from 'common/app-state';
-import { history } from 'common/history';
+import { pushRoute } from 'common/history';
 import { remoteControlClient } from 'common/remote-control';
 import { ROUTES } from 'common/routing';
 import { AbstractLoader, Loading } from 'common/ui';
@@ -97,7 +97,7 @@ export class RemoteControlLoader extends AbstractLoader<IProps> {
         }
 
         // Redirect to the join code entry page
-        history.push(ROUTES.CODE);
+        pushRoute(ROUTES.CODE);
 
         return Promise.reject('The connection must be started by the join code entry page');
     }
