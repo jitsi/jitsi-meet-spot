@@ -6,7 +6,6 @@
  * augmentations.
  */
 
-declare module 'strophe.js';
 declare module '@jitsi/logger';
 declare module '@jitsi/js-utils/random';
 declare module '@jitsi/js-utils/uri';

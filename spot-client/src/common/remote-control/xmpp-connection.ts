@@ -653,9 +653,9 @@ export default class XmppConnection extends Emitter {
         }
 
         const ack = $iq({
-            id: command.id,
             type: 'result',
-            to: command.from
+            ...(command.id ? { id: command.id } : {}),
+            ...(command.from ? { to: command.from } : {})
         });
 
         this.room.connection.send(ack);
@@ -767,9 +767,9 @@ export default class XmppConnection extends Emitter {
         this.options.onMessageReceived?.(parsedIq);
 
         const ack = $iq({
-            id: parsedIq.id,
-            to: parsedIq.from,
-            type: 'result'
+            type: 'result',
+            ...(parsedIq.id ? { id: parsedIq.id } : {}),
+            ...(parsedIq.from ? { to: parsedIq.from } : {})
         });
 
         this.room.connection.send(ack);
