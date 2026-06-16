@@ -22,10 +22,10 @@ jest.mock('common/vendor', () => {
     };
 });
 
-// strophe.js 1.2.16 is an old UMD that relied on a CommonJS top-level `this` (no
-// longer provided under jest 30), so it cannot be imported directly in jsdom. The
-// XMPP layer is covered by the spot-webdriver E2E tests; here it is only imported
-// transitively, so a light mock is sufficient.
+// The XMPP layer is covered by the spot-webdriver E2E tests; in unit tests
+// strophe.js is only imported transitively for stanza building, so a light mock
+// isolating it is sufficient (and keeps the real module out of jsdom). spot-client
+// only uses the $iq builder and Strophe.getResourceFromJid.
 jest.mock('strophe.js', () => ({
     $iq: jest.fn(),
     Strophe: {

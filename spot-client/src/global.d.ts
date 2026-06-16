@@ -2,7 +2,7 @@
  * Browser globals the app attaches to `window`.
  *
  * NOTE: ambient declarations for non-code asset imports (*.scss etc.) and for
- * untyped packages (strophe.js, @jitsi/logger, ...) live in `modules.d.ts` — a
+ * untyped packages (@jitsi/logger, @jitsi/js-utils/*) live in `modules.d.ts` — a
  * *script* file — because `declare module` in this module file (it has
  * `export {}`) would be treated as augmentation and would not satisfy
  * side-effect imports / installed JS packages.
