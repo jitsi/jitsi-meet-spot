@@ -68,7 +68,9 @@ export function createApplicationWindow(): void {
         });
     };
 
-    applicationWindow.webContents.on('render-process-gone', () => {
+    applicationWindow.webContents.on('render-process-gone', (_event, details) => {
+        logger.error(`Render process error: ${details.reason} exitCode=${details.exitCode}`);
+
         if (!onlineDetector.getLastOnlineStatus()) {
             return;
         }
@@ -76,11 +78,8 @@ export function createApplicationWindow(): void {
         loadCrashedPage();
     });
 
-    applicationWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
-        logger.error('Failed to load', {
-            errorCode,
-            errorDescription
-        });
+    applicationWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+        logger.error(`Failed to load ${validatedURL}: (${errorCode}) ${errorDescription}`);
 
         if (!onlineDetector.getLastOnlineStatus()) {
             return;
