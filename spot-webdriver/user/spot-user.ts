@@ -68,6 +68,22 @@ class SpotUser {
     async clearStorage(): Promise<void> {
         await this._browser.execute(() => {
             try {
+                // Also drop the permanent pairing code from the live Redux state,
+                // not just from storage. The app keeps it in memory and re-persists
+                // it whenever a watched value changes (e.g. on the disconnect that
+                // cleanup performs right after this), which would restore it on the
+                // next load and make the app auto-reconnect past the join code entry
+                // view. Dispatching the raw action (the type is a stable app
+                // constant) keeps the harness free of app imports.
+                window.spot.store.dispatch({
+                    type: 'SET_PERMANENT_PAIRING_CODE',
+                    permanentPairingCode: undefined
+                });
+            } catch {
+                // Ignore - the store may not be available on this page.
+            }
+
+            try {
                 localStorage.clear();
             } catch {
                 // Ignore storage access errors.
