@@ -4,12 +4,9 @@ import * as constants from '../constants/index.js';
 import PageObject from './page-object.js';
 
 const AUDIO_MUTED_INDICATOR = '.audio-muted-status';
-const RAISED_HANDS_INDICATOR = '#raisedHandsCountLabel';
 const MEETING_IFRAME = '#jitsiConferenceFrame0';
 const MEETING_VIEW = '.meeting-view';
 const VIDEO_MUTED_INDICATOR = '.video-muted-status';
-
-const JITSI_MEET_TILE_VIEW_LAYOUT = '#videoconference_page.tile-view';
 
 /**
  * A page object for interacting with the in-meeting view of Spot-TV.
@@ -57,15 +54,9 @@ class MeetingPage extends PageObject {
      * @returns {boolean}
      */
     async isInTileView(): Promise<boolean> {
-        let tileViewDisplayed = false;
+        const { tileView } = await this._getSpotTvState();
 
-        await this._executeWithingMeetingFrame(async () => {
-            const tileViewLayoutEl = await this.select(JITSI_MEET_TILE_VIEW_LAYOUT);
-
-            tileViewDisplayed = await tileViewLayoutEl.isExisting();
-        });
-
-        return tileViewDisplayed;
+        return Boolean(tileView);
     }
 
     /**
@@ -106,13 +97,13 @@ class MeetingPage extends PageObject {
      * @returns {void}
      */
     async waitForHandRaisedStateToBe(raised: boolean): Promise<void> {
-        await this._executeWithingMeetingFrame(async () => {
-            if (raised) {
-                await this.waitForElementDisplayed(RAISED_HANDS_INDICATOR);
-            } else {
-                await this.waitForElementHidden(RAISED_HANDS_INDICATOR);
+        await this._browser.waitUntil(
+            async () => Boolean((await this._getSpotTvState()).handRaised) === raised,
+            {
+                timeout: constants.REMOTE_COMMAND_WAIT,
+                timeoutMsg: `Spot-TV hand raised state did not become ${raised}`
             }
-        });
+        );
     }
 
     /**
@@ -124,15 +115,13 @@ class MeetingPage extends PageObject {
      * @returns {void}
      */
     async waitForTileViewStateToBe(enabled: boolean): Promise<void> {
-        await this._executeWithingMeetingFrame(async () => {
-            if (enabled) {
-                await this.waitForElementDisplayed(JITSI_MEET_TILE_VIEW_LAYOUT);
-            } else {
-                const meetTileViewLayout = await this.select(JITSI_MEET_TILE_VIEW_LAYOUT);
-
-                await meetTileViewLayout.waitForExist({ reverse: true });
+        await this._browser.waitUntil(
+            async () => Boolean((await this._getSpotTvState()).tileView) === enabled,
+            {
+                timeout: constants.REMOTE_COMMAND_WAIT,
+                timeoutMsg: `Spot-TV tile view state did not become ${enabled}`
             }
-        });
+        );
     }
 
     /**
@@ -151,26 +140,23 @@ class MeetingPage extends PageObject {
     }
 
     /**
-     * Switches driver context to perform actions within the Jitsi-Meet meeting
-     * page itself.
+     * Reads the Spot-TV's view of the current meeting state from its Redux
+     * store. The Spot-TV mirrors the Jitsi-Meet conference state (hand raise,
+     * tile view, ...) into this store from the Jitsi-Meet external API events,
+     * so the harness can poll it directly instead of reaching into the
+     * cross-origin Jitsi-Meet iframe (which is brittle under frame switching).
      *
-     * @param task - The actions to perform while in the context of
-     * the Jitsi-Meet frame.
      * @private
-     * @returns {void}
+     * @returns {Promise<{ handRaised?: boolean; tileView?: boolean; }>}
      */
-    async _executeWithingMeetingFrame(task: () => Promise<void>): Promise<void> {
-        const meetingFrameEl = await this.waitForElementDisplayed(MEETING_IFRAME, constants.MEETING_LOAD_WAIT);
-
-        await this._browser.switchToFrame(meetingFrameEl);
-
-        const largeVideoContainerEl = await this._browser.$('#largeVideoContainer');
-
-        await largeVideoContainerEl.waitForDisplayed();
-
-        await task();
-
-        await this._browser.switchToParentFrame();
+    async _getSpotTvState(): Promise<{ handRaised?: boolean; tileView?: boolean; }> {
+        return await this._browser.execute(() => {
+            try {
+                return window.spot.store.getState().spotTv;
+            } catch {
+                return {};
+            }
+        });
     }
 }
 
