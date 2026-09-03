@@ -29,6 +29,15 @@ export const config: WebdriverIO.MultiremoteConfig = {
     exclude: [],
 
     maxInstances: MAX_INSTANCES,
+
+    // These specs drive a real, external Jitsi-Meet deployment, so a few are
+    // occasionally flaky for reasons outside this repo (e.g. reconnect timing,
+    // recovering to the calendar after cancelling a meeting join). Retry a
+    // failed spec file rather than failing the whole run on a transient flake;
+    // a genuinely broken spec still fails every attempt.
+    specFileRetries: 2,
+    specFileRetriesDeferred: true,
+
     capabilities: {
         spotBrowser: {
             capabilities: {
