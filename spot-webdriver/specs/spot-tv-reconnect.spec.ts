@@ -68,6 +68,13 @@ describe('The reconnect logic', () => {
             await tv.getLoadingScreen().waitForReconnectingToDisappear(100 * 1000);
 
             await remote.getRemoteControlPage().waitWaitingForCallViewToDisplay();
+
+            // This is the only spec that pairs a permanent remote, which injects
+            // a permanent pairing code. Clean both up so the code does not leak
+            // into the following specs, where the join code page would otherwise
+            // restore it, auto-reconnect and never render the join code view.
+            await remote.cleanup();
+            await tv.cleanup();
         });
 
         it('both Spot TV and temporary Spot Remote will reconnect', async () => {
