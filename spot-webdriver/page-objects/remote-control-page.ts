@@ -8,7 +8,7 @@ const MEET_NOW_BUTTON = '#meet-now';
 const REMOTE_CONTROL = '.remoteControl-view';
 const SHARE_CONTENT_BUTTON = '#share-content';
 const WAITING_FOR_CALL_SUBVIEW = '.waiting-for-call-view';
-const WAITING_FOR_SPOT_TV_LABEL = '#waiting-for-spot-tv]';
+const WAITING_FOR_SPOT_TV_LABEL = '#waiting-for-spot-tv';
 
 /**
  * A page object for interacting with the waiting view of Spot-Remote.
