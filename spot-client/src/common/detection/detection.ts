@@ -107,7 +107,9 @@ export function isSupportedSpotTvBrowser(): boolean {
 export function isWirelessScreenshareSupported(): boolean {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    // TODO: Firefox and Safari do support gDM, but the proxy connection fails.
+    // The direct-cast screenshare uses a plain RTCPeerConnection, so Firefox and
+    // Safari could work as well, but system-audio capture via getDisplayMedia and
+    // the flow as a whole are only verified on Chromium, so keep the gate there.
     return isDesktopBrowser()
         && jitsiBrowserDetection.isChromiumBased()
         && jitsiBrowserDetection.supportsGetDisplayMedia()
