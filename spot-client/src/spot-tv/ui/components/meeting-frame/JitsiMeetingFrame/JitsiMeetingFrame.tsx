@@ -89,6 +89,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
     _localParticipantId: string;
     _pendingRoleChange: { id: string; role: string; } | null;
     _participants: Map<string, string>;
+    _wirelessScreenshareJid: string | null;
     _jitsiApi: any;
     _meetingContainer: HTMLElement | null;
     _meetingLoaded: boolean;
@@ -123,6 +124,13 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
         this._localParticipantId = '';
         this._pendingRoleChange = null;
 
+        /**
+         * The jid of the Spot-Remote currently establishing or running a
+         * wireless (direct-cast) screenshare. Screenshare signals coming back
+         * out of the Jitsi-Meet meeting are relayed to this jid.
+         */
+        this._wirelessScreenshareJid = null;
+
         this._participants = new Map();
 
         bindAll(this, [
@@ -143,7 +151,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
             '_onScreenshareChange',
             '_onScreenshareDeviceConnected',
             '_onScreenshareDeviceDisconnected',
-            '_onSendMessageToRemoteControl',
+            '_onExternalShareSignal',
             '_onTileViewChanged',
             '_onVideoMuteChange',
             '_onWhiteboardStatusChanged',
@@ -259,7 +267,7 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
         this._jitsiApi.addListener(
             'passwordRequired', this._onPasswordRequired);
         this._jitsiApi.addListener(
-            'proxyConnectionEvent', this._onSendMessageToRemoteControl);
+            'externalShareSignal', this._onExternalShareSignal);
         this._jitsiApi.addListener(
             'raiseHandUpdated', this._onRaiseHandChange);
         this._jitsiApi.addListener(
@@ -524,8 +532,28 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
             break;
 
         case MESSAGES.CLIENT_LEFT:
+            // If the Spot-Remote that left was the active wireless sharer, tell
+            // the Jitsi-Meet meeting to tear down its side of the screenshare.
+            if (data.from === this._wirelessScreenshareJid) {
+                this._wirelessScreenshareJid = null;
+                this._jitsiApi.sendExternalShareSignal({ kind: 'stop' });
+            }
+            break;
+
         case MESSAGES.CLIENT_PROXY_MESSAGE:
-            this._jitsiApi.sendProxyConnectionEvent(data);
+            // The active sharer is whoever sent the most recent offer; remember
+            // it so screenshare signals coming back out of the meeting can be
+            // routed to it. A relayed stop from that sharer clears it.
+            if (data.data?.kind === 'offer') {
+                this._wirelessScreenshareJid = data.from;
+            }
+
+            this._jitsiApi.sendExternalShareSignal(data.data);
+
+            if (data.data?.kind === 'stop'
+                    && data.from === this._wirelessScreenshareJid) {
+                this._wirelessScreenshareJid = null;
+            }
             break;
         }
     }
@@ -825,24 +853,26 @@ export class JitsiMeetingFrame extends AbstractMeetingFrame<IProps, IState> {
     }
 
     /**
-     * Passes a message from {@code JitsiMeetExternalAPI} to a specified
-     * instance of Spot-Remote.
+     * Relays a direct-cast screenshare signal emitted by
+     * {@code JitsiMeetExternalAPI} to the Spot-Remote currently sharing.
      *
-     * @param event - The object holding information on what and how to
-     * send the message.
-     * @param event.to - The jid of the remote control which should
-     * receive the message.
-     * @param event.data - Details of the message.
+     * @param event - The event holding the screenshare signal.
+     * @param event.signal - The screenshare signal (answer/candidate/stop) to
+     * send back to the sharing Spot-Remote.
      * @private
      * @returns {void}
      */
-    _onSendMessageToRemoteControl({ to, data }: { data: any; to: string; }) {
-        logger.log('got proxy message from iframe', {
-            to,
-            data
-        });
+    _onExternalShareSignal({ signal }: { signal: any; }) {
+        logger.log('got external share signal from iframe', { signal });
 
-        this.props.remoteControlServer.sendMessageToRemoteControl(to, data);
+        if (!this._wirelessScreenshareJid) {
+            logger.warn('dropping external share signal - no active sharer');
+
+            return;
+        }
+
+        this.props.remoteControlServer.sendMessageToRemoteControl(
+            this._wirelessScreenshareJid, signal);
     }
 
     /**
