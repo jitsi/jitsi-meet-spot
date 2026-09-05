@@ -39,7 +39,7 @@
         "@types/jest": "30.0.0",
         "@types/lodash": "4.17.24",
         "@types/node-schedule": "2.1.8",
-        "electron": "42.4.0",
+        "electron": "44.2.0",
         "electron-builder": "26.15.3",
         "jest": "30.4.2",
         "ts-jest": "29.4.11"

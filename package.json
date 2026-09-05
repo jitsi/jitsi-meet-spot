@@ -20,8 +20,6 @@
         "spot-client"
     ],
     "overrides": {
-        "@xmldom/xmldom": "0.8.13",
-        "cheerio": "1.0.0-rc.12",
         "react-is": "18.3.1"
     },
     "scripts": {
