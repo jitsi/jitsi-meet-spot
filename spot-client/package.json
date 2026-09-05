@@ -57,7 +57,7 @@
         "react-dom": "19.2.3",
         "react-i18next": "17.0.8",
         "react-redux": "9.3.0",
-        "react-router-dom": "^7.17.0",
+        "react-router-dom": "^7.18.3",
         "redux": "5.0.1",
         "redux-thunk": "3.1.0",
         "sass": "1.100.0",
@@ -67,11 +67,8 @@
         "style-loader": "4.0.0",
         "webpack": "5.107.2",
         "webpack-cli": "7.0.3",
-        "webpack-dev-server": "5.2.4",
+        "webpack-dev-server": "^5.2.6",
         "write-file-webpack-plugin": "4.5.1"
-    },
-    "overrides": {
-        "@xmldom/xmldom": "0.8.13"
     },
     "engines": {
         "node": ">=24",
