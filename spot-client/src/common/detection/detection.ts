@@ -98,8 +98,9 @@ export function isSupportedSpotTvBrowser(): boolean {
 
 /**
  * Returns whether or not the current environment supports wirelessly screen-sharing into a Spot.
- * Currently only Chrome works and the underlying implementation assumes getDisplayMedia is
- * available.
+ * The direct-cast implementation uses a plain {@code RTCPeerConnection}, so any desktop browser
+ * with {@code getDisplayMedia} can share; system audio capture is still Chromium-only but the
+ * flow degrades gracefully to video-only elsewhere.
  *
  * @private
  * @returns {boolean}
@@ -107,9 +108,7 @@ export function isSupportedSpotTvBrowser(): boolean {
 export function isWirelessScreenshareSupported(): boolean {
     const jitsiBrowserDetection = JitsiMeetJSProvider.get().util.browser;
 
-    // TODO: Firefox and Safari do support gDM, but the proxy connection fails.
     return isDesktopBrowser()
-        && jitsiBrowserDetection.isChromiumBased()
         && jitsiBrowserDetection.supportsGetDisplayMedia()
         && !jitsiBrowserDetection.isElectron();
 }

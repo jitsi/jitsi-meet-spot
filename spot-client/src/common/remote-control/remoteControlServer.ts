@@ -2,7 +2,6 @@
 import { globalDebugger } from 'common/debugging';
 import { logger } from 'common/logger';
 import { generateRandomString } from 'common/utils';
-import { $iq } from 'strophe.js';
 
 import { BaseRemoteControlService } from './BaseRemoteControlService';
 import P2PSignalingServer from './P2PSignalingServer';
@@ -412,24 +411,12 @@ export class RemoteControlServer extends BaseRemoteControlService {
         if (type === 'unavailable') {
             logger.log('presence update of a Spot-Remote leaving', { from });
 
-            // A {@code RemoteControlServer} needs to inform at least the
-            // Jitsi-Meet meeting that a {@code RemoteControlClient} has left,
-            // in case some cleanup of wireless screensharing is needed.
-            const iq = $iq({ type: 'set' })
-                .c('jingle', {
-                    xmlns: 'urn:xmpp:jingle:1',
-                    action: 'unavailable'
-                })
-                .c('details')
-                .t('unavailable')
-                .up();
-
+            // A {@code RemoteControlServer} needs to inform the Jitsi-Meet
+            // meeting that a {@code RemoteControlClient} has left, in case it was
+            // wirelessly screensharing and its share needs to be torn down.
             this._notifySpotRemoteMessageReceived(
                 MESSAGES.CLIENT_LEFT,
-                {
-                    from,
-                    data: { iq: iq.toString() }
-                }
+                { from }
             );
 
             this.emit(

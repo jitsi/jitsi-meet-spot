@@ -509,9 +509,11 @@ export class RemoteControlClient extends BaseRemoteControlService {
                 this._wirelessScreensharingConfiguration || {},
 
             /**
-             * The {@code JitsiConnection} instance will be used to fetch TURN credentials.
+             * The ICE/TURN servers used to establish the direct peer connection
+             * with the Jitsi-Meet meeting. Sourced the same way as the P2P
+             * signaling channel so both ends share the same TURN configuration.
              */
-            jitsiConnection: this.xmppConnection.getJitsiConnection(),
+            getIceServers: () => this._getP2PIceServers(),
 
             /**
              * Callback invoked when the connection has been closed

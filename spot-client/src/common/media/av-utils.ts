@@ -12,7 +12,6 @@ interface AvUtils {
     _videoDeviceListChangeListeners: Set<DeviceListChangeListener>;
 
     createLocalAudioTrack(micDeviceId: string): Promise<any>;
-    createLocalDesktopTrack(mediaConfiguration: any): Promise<any>;
     createLocalTracks(): Promise<any[]>;
     createLocalVideoTrack(cameraDeviceId: string): Promise<any>;
     enumerateDevices(): Promise<any>;
@@ -56,28 +55,6 @@ const avUtils: AvUtils = {
             devices: [ 'audio' ]
         })
         .then(jitsiLocalTracks => jitsiLocalTracks[0]);
-    },
-
-    /**
-     * Creates a new {@code JitsiLocalTrack} for a desktop stream with the
-     * provided media configuration.
-     *
-     * @param mediaConfiguration - Configuration for how the desktop
-     * stream should be constrained.
-     * @param mediaConfiguration.desktopSharingFrameRate - The
-     * frames per second which should be captured from the desktop sharing
-     * source. Can include a "max" and "min" key, both being numbers.
-     * @returns {Promise<JitsiLocalTrack>}
-     */
-    createLocalDesktopTrack(mediaConfiguration) {
-        return this._createTracks({
-            ...mediaConfiguration,
-            devices: [ 'desktop' ]
-        })
-
-        // TODO: Skip audio track when sharing a Chrome tab. There should be a way
-        // to disable that on LJM.
-        .then(jitsiLocalTracks => jitsiLocalTracks.find((t: any) => t.isVideoTrack()));
     },
 
     /**
