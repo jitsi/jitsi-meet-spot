@@ -14,10 +14,7 @@ import { connect } from 'react-redux';
 
 import './../../analytics';
 
-import {
-    ElectronDesktopPickerModal,
-    WaitingForSpotTVOverlay
-} from './../components';
+import { WaitingForSpotTVOverlay } from './../components';
 import { WithRemoteControl } from './../loaders';
 import { Feedback, InCall, WaitingForCall } from './remote-views';
 
@@ -55,7 +52,6 @@ export class RemoteControl extends React.PureComponent<IProps> {
             <View name = 'remoteControl'>
                 <WithRemoteControl>
                     { this._getView() }
-                    <ElectronDesktopPickerModal />
                 </WithRemoteControl>
             </View>
         );

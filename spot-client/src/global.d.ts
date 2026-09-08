@@ -19,11 +19,6 @@ declare global {
          */
         JitsiMeetExternalAPI?: new (domain: string, options: Record<string, any>) => any;
 
-        /** Screensharing source picker hook consumed by lib-jitsi-meet in Electron. */
-        JitsiMeetScreenObtainer?: {
-            openDesktopPicker(options: any, onSourceChoose: any): void;
-        };
-
         /** Debug/E2E hooks exposed by the app under the `spot` namespace (see spot-webdriver). */
         spot?: Record<string, unknown>;
     }

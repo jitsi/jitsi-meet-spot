@@ -19,10 +19,7 @@ import { connect } from 'react-redux';
 
 
 import { exitShareMode } from './../../../app-state';
-import {
-    ElectronDesktopPickerModal,
-    WaitingForSpotTVOverlay
-} from './../../components';
+import { WaitingForSpotTVOverlay } from './../../components';
 import { WithRemoteControl } from './../../loaders';
 import ModeSelect from './mode-select';
 import StopShare from './stop-share';
@@ -106,7 +103,6 @@ export class Share extends React.PureComponent<IProps, IState> {
                     <div className = 'share-view-contents'>
                         { this._renderSubView() }
                     </div>
-                    <ElectronDesktopPickerModal />
                 </WithRemoteControl>
             </View>
         );
