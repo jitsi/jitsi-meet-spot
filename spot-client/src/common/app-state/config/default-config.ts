@@ -40,8 +40,8 @@ export default {
     },
 
     /**
-     * The app background image to display. By default a solid color is
-     * displayed as the background.
+     * The app background image to display. By default Spot-TV displays an
+     * animated wave pattern and Spot-Remote a solid color.
      */
     DEFAULT_BACKGROUND_IMAGE_URL: process.env.DEFAULT_BACKGROUND_IMAGE_URL
         || '',

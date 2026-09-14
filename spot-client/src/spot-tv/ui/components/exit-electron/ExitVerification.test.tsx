@@ -25,7 +25,7 @@ describe('ExitVerification', () => {
     let store: any;
 
     beforeEach(() => {
-        store = createStore((state = { config: {} }) => state);
+        store = createStore((state = { config: {}, setup: {} }) => state);
         onCancel = jest.fn();
         onPasswordInvalid = jest.fn();
         onVerification = jest.fn();
