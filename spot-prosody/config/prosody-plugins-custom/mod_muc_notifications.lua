@@ -68,6 +68,10 @@ function handle_room_notification (event)
 
 	local session = {};
 	session.auth_token = event.request.headers["authorization"];
+	if not session.auth_token then
+		module:log("error", "Notification received without an Authorization header");
+		return 401;
+	end
 	local prefixStart, prefixEnd = session.auth_token:find("Bearer ");
     if prefixStart ~= 1 then
 		module:log("error", "Invalid authorization header format. The header must start with the string 'Bearer '");
@@ -79,6 +83,23 @@ function handle_room_notification (event)
 
 	if not token_valid then
 		module:log("error", "Error validating token: %s; %s", err1, err2);
+		return 403;
+	end
+
+	-- Ensure the token authorizes the room it is trying to notify. The
+	-- 'spotRoomId' claim (bound to session.spot_room during verification)
+	-- must match the room addressed by 'spot-room-muc-url'. Without this
+	-- check any validly-signed token could broadcast to any room. A '*'
+	-- claim authorizes any room.
+	local room_node = jid.split(room_jid);
+	local auth_room = session.spot_room;
+	if not auth_room then
+		module:log("error", "Token has no room claim; refusing notification to %s", room_jid);
+		return 403;
+	end
+	if auth_room ~= '*'
+			and (room_node == nil or string.lower(room_node) ~= string.lower(auth_room)) then
+		module:log("error", "Token not authorized for room %s", room_jid);
 		return 403;
 	end
 
