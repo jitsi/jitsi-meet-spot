@@ -13,7 +13,7 @@ describe('KickedOverlay', () => {
         jest.useFakeTimers();
 
         const callback = jest.fn();
-        const store = createStore((state = { config: {} }) => state);
+        const store = createStore((state = { config: {}, setup: {} }) => state);
 
         render(
             <Provider store = { store }>

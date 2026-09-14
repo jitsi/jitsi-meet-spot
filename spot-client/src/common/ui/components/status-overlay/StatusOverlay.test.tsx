@@ -8,7 +8,7 @@ import { StatusOverlay } from './StatusOverlay';
 describe('StatusOverlay', () => {
     const TEST_TITLE = 'test-title';
 
-    const store = createStore((state = { config: {} }) => state);
+    const store = createStore((state = { config: {}, setup: {} }) => state);
 
     it('renders the passed in title', () => {
         const { container } = render(

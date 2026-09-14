@@ -23,3 +23,28 @@
     justify-content: center;
     width: 100%;
 }
+
+/**
+ * The default animated wave background (see WaveBackground.tsx). The palette
+ * deliberately spans only from pure black to --backdrop-color, the default
+ * background color, so the UI keeps its usual contrast on top of it.
+ */
+.wave-background {
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    &__base {
+        fill: #000;
+    }
+
+    &__ribbon {
+        fill: var(--backdrop-color);
+
+        &--edge {
+            stroke: var(--backdrop-color);
+            stroke-opacity: 0.9;
+            stroke-width: 2;
+        }
+    }
+}
