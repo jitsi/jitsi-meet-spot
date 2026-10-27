@@ -2,6 +2,11 @@
  * Ambient module declarations for runtime dependencies that ship no TypeScript
  * types of their own (or, for `win-audio`, are an optional Windows-only dep that
  * is absent on other platforms).
+ *
+ * `win-audio` and `@jitsi/logger` are CommonJS modules whose exports Node's ESM
+ * loader cannot detect as named exports, so they are declared with a default
+ * export only: a named import would type-check but fail at runtime with
+ * "does not provide an export named ...".
  */
 
 declare module 'node-osascript' {
@@ -23,8 +28,12 @@ declare module 'win-audio' {
         set(value: number): void;
     }
 
-    export const speaker: AudioDevice;
-    export const mic: AudioDevice;
+    const winAudio: {
+        speaker: AudioDevice;
+        mic: AudioDevice;
+    };
+
+    export default winAudio;
 }
 
 declare module '@jitsi/logger' {
@@ -37,13 +46,15 @@ declare module '@jitsi/logger' {
         error(...args: unknown[]): void;
     }
 
-    export function getLogger(
-        id?: string,
-        transports?: unknown,
-        options?: { disableCallerInfo?: boolean; }
-    ): JitsiLogger;
+    const jitsiLogger: {
+        getLogger(
+            id?: string,
+            transports?: unknown,
+            options?: { disableCallerInfo?: boolean; }
+        ): JitsiLogger;
+        levels: Record<string, string | number>;
+        addGlobalTransport(transport: unknown): void;
+    };
 
-    export const levels: Record<string, string | number>;
-
-    export function addGlobalTransport(transport: unknown): void;
+    export default jitsiLogger;
 }

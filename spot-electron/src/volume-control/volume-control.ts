@@ -114,9 +114,9 @@ class VolumeControl {
      * @returns {Promise<number>}
      */
     private async _getWin32Volume(): Promise<number> {
-        const { speaker } = await import('win-audio');
+        const { default: winAudio } = await import('win-audio');
 
-        return speaker.get();
+        return winAudio.speaker.get();
     }
 
     /**
@@ -144,9 +144,9 @@ class VolumeControl {
      * @returns {Promise<void>}
      */
     private async _setWin32Volume(value: number): Promise<void> {
-        const { speaker } = await import('win-audio');
+        const { default: winAudio } = await import('win-audio');
 
-        speaker.set(value);
+        winAudio.speaker.set(value);
     }
 }
 

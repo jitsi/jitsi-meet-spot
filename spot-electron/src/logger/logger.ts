@@ -1,6 +1,6 @@
-import { getLogger } from '@jitsi/logger';
+import JitsiLogger from '@jitsi/logger';
 
-const jitsiLogger = getLogger('spot-electron', undefined, {
+const jitsiLogger = JitsiLogger.getLogger('spot-electron', undefined, {
     disableCallerInfo: true
 });
 

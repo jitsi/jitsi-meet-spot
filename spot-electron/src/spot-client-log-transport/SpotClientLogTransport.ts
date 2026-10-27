@@ -1,11 +1,11 @@
-import { levels } from '@jitsi/logger';
+import JitsiLogger from '@jitsi/logger';
 
 import { clientController, events } from '../client-control/index.js';
 
 /**
  * Log levels supported by the jitsi logger.
  */
-const levelNames = Object.keys(levels).map(l => l.toLowerCase());
+const levelNames = Object.keys(JitsiLogger.levels).map(l => l.toLowerCase());
 
 const LOG_CACHE_SIZE = 1000;
 
